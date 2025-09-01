@@ -39,7 +39,12 @@ namespace Nebula
             }
             return buffer;
         }
-        public static NetId NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, NetId initialObject)
+
+        public static Variant GetDeserializeContext(NetId obj)
+        {
+            return new Variant();
+        }
+        public static NetId NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, Variant ctx)
         {
             if (NetRunner.Instance.IsServer) {
                 var id = HLBytes.UnpackInt8(buffer);

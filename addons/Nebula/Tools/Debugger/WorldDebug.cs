@@ -272,6 +272,15 @@ namespace Nebula.Internal.Editor
 
             return result;
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db = null;
+            }
+            base.Dispose(disposing);
+        }
     }
 }
 

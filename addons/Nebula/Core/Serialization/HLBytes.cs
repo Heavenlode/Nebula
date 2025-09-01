@@ -279,6 +279,11 @@ namespace Nebula.Serialization
             buffer.pointer += varVal.Length;
         }
 
+        public static void Pack(HLBuffer buffer, HLBuffer varVal, bool packLength = false, bool packType = false)
+        {
+            Pack(buffer, varVal.bytes, packLength, packType);
+        }
+
         public static void Pack(HLBuffer buffer, string varVal, bool packType = false)
         {
             if (packType)

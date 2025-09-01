@@ -108,13 +108,20 @@ namespace Nebula.Serialization.Serializers
             netProps[prop.NodePath + ":" + prop.Name] = value;
             SetMeta("NETWORK_PROPS", netProps);
 #endif
-            lerpableChangeQueue[prop.NodePath + ":" + prop.Name] = new LerpableChangeQueue
+            if (lerpableChangeQueue.TryGetValue(prop.NodePath + ":" + prop.Name, out var lerpableChange))
             {
-                Prop = prop,
-                From = oldVal,
-                To = value,
-                Weight = 0.0f
-            };
+                lerpableChange.To = value;
+            }
+            else
+            {
+                lerpableChangeQueue[prop.NodePath + ":" + prop.Name] = new LerpableChangeQueue
+                {
+                    Prop = prop,
+                    From = oldVal,
+                    To = value,
+                    Weight = 0.0f
+                };
+            }
         }
 
 
@@ -319,7 +326,8 @@ namespace Nebula.Serialization.Serializers
                 var propSegment = propertiesUpdated[i];
                 HLBytes.Pack(buffer, propSegment);
             }
-            for (var i = 0; i < propertiesUpdated.Length; i++) {
+            for (var i = 0; i < propertiesUpdated.Length; i++)
+            {
                 var propSegment = propertiesUpdated[i];
                 // Finally, pack the variable values as byte segments
                 for (var j = 0; j < BitConstants.BitsInByte; j++)
@@ -334,14 +342,15 @@ namespace Nebula.Serialization.Serializers
                     var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
                     var propNode = wrapper.Node.GetNode(prop.NodePath);
                     var varVal = propNode.Get(prop.Name);
-                    if (varVal.VariantType == Variant.Type.Object) {
+                    if (varVal.VariantType == Variant.Type.Object)
+                    {
                         var callable = ProtocolRegistry.Instance.GetStaticMethodCallable(prop, StaticMethodType.NetworkSerialize);
                         if (callable == null)
                         {
                             Debugger.Instance.Log($"No NetworkSerialize method found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
                             continue;
                         }
-                        HLBytes.Pack(buffer, callable.Value.Call(currentWorld, peerId, propNode).As<HLBuffer>().bytes);
+                        HLBytes.Pack(buffer, callable.Value.Call(currentWorld, peerId, varVal).As<HLBuffer>().bytes);
                     }
                     else
                     {
@@ -391,7 +400,7 @@ namespace Nebula.Serialization.Serializers
                 {
                     // TODO: If this is too fast, it creates a jitter effect
                     // But if it's too slow it creates a lag / swimming effect
-                    toLerp.Weight = Math.Min(toLerp.Weight + delta * 5, 1.0);
+                    toLerp.Weight = Math.Min(toLerp.Weight + delta * 10, 1.0);
                     double result = -1;
                     if (lerpNode.HasMethod("NetworkLerp" + toLerp.Prop.Name))
                     {
@@ -415,13 +424,16 @@ namespace Nebula.Serialization.Serializers
                         }
                         else
                         {
-                            lerpNode.Set(toLerp.Prop.Name, toLerp.To);
-                            lerpableChangeQueue.Remove(queueKey);
+                            toLerp.Weight = 1.0;
                         }
                     }
 
                     if ((float)toLerp.Weight >= 1.0)
+                    {
+                        lerpNode.Set(toLerp.Prop.Name, toLerp.To);
                         lerpableChangeQueue.Remove(queueKey);
+                        continue;
+                    }
                 }
                 lerpableChangeQueue[queueKey] = toLerp;
             }

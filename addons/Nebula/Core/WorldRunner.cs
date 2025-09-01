@@ -26,7 +26,8 @@ namespace Nebula
         public enum PeerSyncStatus
         {
             INITIAL,
-            IN_WORLD
+            IN_WORLD,
+            DISCONNECTED
         }
 
         public struct PeerState
@@ -38,8 +39,21 @@ namespace Nebula
             public string Token;
             public Dictionary<NetId, byte> WorldToPeerNodeMap;
             public Dictionary<byte, NetId> PeerToWorldNodeMap;
+
+            /// <summary>
+            /// A list of nodes that the player is aware of in the world (i.e. has spawned locally)
+            /// </summary>
             public Dictionary<NetId, bool> SpawnAware;
+
+            /// <summary>
+            /// A bit list of nodeIds that are available to the peer.
+            /// </summary>
             public long AvailableNodes;
+
+            /// <summary>
+            /// A list of nodes that the player owns (i.e. InputAuthority == peer
+            /// </summary>
+            public HashSet<INetNode> OwnedNodes;
         }
 
         internal struct QueuedFunction
@@ -124,6 +138,8 @@ namespace Nebula
             }
         }
 
+        Callable _OnPeerDisconnected;
+
         public override void _Ready()
         {
             base._Ready();
@@ -149,6 +165,19 @@ namespace Nebula
                     return;
                 }
                 DebugEnet.Compress(ENetConnection.CompressionMode.RangeCoder);
+                _OnPeerDisconnected = Callable.From((NetPeer peer) =>
+                {
+                    if (AutoPlayerCleanup)
+                    {
+                        CleanupPlayer(peer);
+                        return;
+                    }
+                    var newPeerState = PeerStates[peer];
+                    newPeerState.Tick = CurrentTick;
+                    newPeerState.Status = PeerSyncStatus.DISCONNECTED;
+                    SetPeerState(peer, newPeerState);
+                });
+                NetRunner.Instance.Connect("OnPeerDisconnected", _OnPeerDisconnected);
 
                 Log($"World {WorldId} debug server started on port {DebugEnet.GetLocalPort()}", Debugger.DebugLevel.VERBOSE);
             }
@@ -164,6 +193,7 @@ namespace Nebula
                     peer.PeerDisconnect(0);
                 }
                 DebugEnet.Destroy();
+                NetRunner.Instance.Disconnect("OnPeerDisconnected", _OnPeerDisconnected);
             }
         }
 
@@ -225,6 +255,46 @@ namespace Nebula
         [Signal]
         public delegate void OnPlayerJoinedEventHandler(UUID peerId);
 
+
+        /// <summary>
+        /// When a player disconnects, we automatically dispose of their data in the World. If you wish to manually handle this,
+        /// (e.g. you wish to save their data first), then set this to false, and call <see cref="CleanupPlayer"/> when you are ready to dispose of their data yourself.
+        /// <see cref="CleanupPlayer"/> is all that is needed to fully dispose of their data on the server, including freeing their owned nodes (when <see cref="NetworkController.DespawnOnUnowned"/> is true).
+        /// </summary>
+        public bool AutoPlayerCleanup = true;
+
+        /// <summary>
+        /// Immediately disconnects the player from the world and frees all of their data from the server, including freeing their owned nodes (when <see cref="NetworkController.DespawnOnUnowned"/> is true).
+        /// </summary>
+        /// <param name="peer"></param>
+        public void CleanupPlayer(NetPeer peer)
+        {
+            if (!NetRunner.Instance.IsServer) return;
+
+            if (peer.IsActive())
+            {
+                peer.PeerDisconnect(0);
+            }
+
+            var peerState = PeerStates[peer];
+            foreach (var node in peerState.OwnedNodes)
+            {
+                if (node.Network.DespawnOnUnowned)
+                {
+                    node.Node.QueueFree();
+                }
+                else
+                {
+                    node.Network.SetInputAuthority(null);
+                }
+            }
+            PeerStates.Remove(peer);
+            NetRunner.Instance.Peers.Remove(NetRunner.Instance.GetPeerId(peer));
+            NetRunner.Instance.WorldPeerMap.Remove(NetRunner.Instance.GetPeerId(peer));
+            NetRunner.Instance.PeerWorldMap.Remove(peer);
+            NetRunner.Instance.PeerIds.Remove(peer);
+        }
+
         private int _frameCounter = 0;
         /// <summary>
         /// This method is executed every tick on the Server side, and kicks off all logic which processes and sends data to every client.
@@ -284,7 +354,7 @@ namespace Nebula
                 }
                 var functionNode = queuedFunction.Node.GetNode(queuedFunction.FunctionInfo.NodePath) as INetNode;
                 functionNode.Network.IsInboundCall = true;
-                functionNode.Network.Owner.Node.Call(queuedFunction.FunctionInfo.Name, args);
+                functionNode.Node.Call(queuedFunction.FunctionInfo.Name, args);
                 functionNode.Network.IsInboundCall = false;
 
                 if (DebugEnet != null)
@@ -332,6 +402,10 @@ namespace Nebula
             var exportedState = ExportState(peers);
             foreach (var peer in peers)
             {
+                if (PeerStates[peer].Status == PeerSyncStatus.DISCONNECTED)
+                {
+                    continue;
+                }
                 var buffer = new HLBuffer();
                 HLBytes.Pack(buffer, CurrentTick);
                 HLBytes.Pack(buffer, exportedState[peer].bytes);
@@ -450,13 +524,6 @@ namespace Nebula
             PeerStates[peer] = state;
         }
 
-        public void QueuePeerState(NetPeer peer, PeerSyncStatus status)
-        {
-            var newState = PeerStates[peer];
-            newState.Status = status;
-            newState.Tick = CurrentTick;
-            pendingSyncStates[peer] = newState;
-        }
         public byte GetPeerNodeId(NetPeer peer, NetNodeWrapper node)
         {
             if (node == null) return 0;
@@ -565,7 +632,7 @@ namespace Nebula
 
             node.Network.IsClientSpawn = true;
             node.Network.CurrentWorld = this;
-            node.Network.InputAuthority = inputAuthority;
+            node.Network.SetInputAuthority(inputAuthority);
             if (parent == null)
             {
                 node.Network.NetParent = RootScene;
@@ -593,7 +660,8 @@ namespace Nebula
                 Token = token,
                 WorldToPeerNodeMap = [],
                 PeerToWorldNodeMap = [],
-                SpawnAware = []
+                SpawnAware = [],
+                OwnedNodes = []
             };
         }
 
@@ -730,17 +798,10 @@ namespace Nebula
                 var newPeerState = PeerStates[peer];
                 newPeerState.Tick = tick;
                 newPeerState.Status = PeerSyncStatus.IN_WORLD;
-                // The first time a peer acknowledges a tick, we know they are in the zone
+                // The first time a peer acknowledges a tick, we know they are in the World
                 SetPeerState(peer, newPeerState);
             }
-            // if (pendingSyncStates.TryGetValue(peer, out PendingSyncState pendingSyncState))
-            // {
-            //     if (pendingSyncState.tick <= tick)
-            //     {
-            //         PeerState[peer] = pendingSyncState.state;
-            //         pendingSyncStates.Remove(peer);
-            //     }
-            // }
+
             foreach (var node in NetScenes.Values)
             {
                 for (var serializerIdx = 0; serializerIdx < node.Serializers.Length; serializerIdx++)
@@ -792,7 +853,7 @@ namespace Nebula
                 }
                 var functionNode = queuedFunction.Node.GetNode(queuedFunction.FunctionInfo.NodePath) as INetNode;
                 functionNode.Network.IsInboundCall = true;
-                functionNode.Network.Owner.Node.Call(queuedFunction.FunctionInfo.Name, args);
+                functionNode.Node.Call(queuedFunction.FunctionInfo.Name, args);
                 functionNode.Network.IsInboundCall = false;
             }
             queuedNetFunctions.Clear();

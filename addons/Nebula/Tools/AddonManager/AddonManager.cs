@@ -73,7 +73,7 @@ namespace Nebula.Internal.Editor {
             string repoName = repoUrl.Split('/')[^1];
 
             // Get the project root directory and construct addons path
-            string addonsDir = ProjectSettings.GlobalizePath("res://addons/NebulaAddons");
+            string addonsDir = ProjectSettings.GlobalizePath("res://addons");
             
             // Ensure the addons directory exists
             if (!DirAccess.DirExistsAbsolute(addonsDir))

@@ -15,7 +15,7 @@ const ServerDebugClient = preload("res://addons/Nebula/Tools/Debugger/server_deb
 var server_debug_client_instance: Window
 
 const NetSceneInspector = preload("res://addons/Nebula/Tools/Inspector/NetSceneInspector.cs")
-const AddonManager = preload("res://addons/Nebula/Tools/AddonManager/addon_manager.tscn")
+# const AddonManager = preload("res://addons/Nebula/Tools/AddonManager/addon_manager.tscn")
 const ToolMenu = preload("res://addons/Nebula/Tools/tool_menu.tscn")
 
 var net_scene_inspector_instance: NetSceneInspector
@@ -36,9 +36,9 @@ func _get_plugin_name():
 
 func _enter_tree():
 
-    tool_menu_instance = ToolMenu.instantiate()
+    # tool_menu_instance = ToolMenu.instantiate()
 
-    add_tool_submenu_item("Nebula", tool_menu_instance)
+    # add_tool_submenu_item("Nebula", tool_menu_instance)
 
     add_autoload_singleton(AUTOLOAD_DEBUGGER, "res://addons/Nebula/Utils/Debugger/Debugger.cs")
     add_autoload_singleton(AUTOLOAD_ENV, "res://addons/Nebula/Utils/Env/Env.cs")
@@ -72,12 +72,12 @@ func _enter_tree():
     net_scene_inspector_instance = NetSceneInspector.new()
     add_inspector_plugin(net_scene_inspector_instance)
 
-    addon_manager_instance = AddonManager.instantiate()
-    add_child(addon_manager_instance)
-    addon_manager_instance.call("SetPluginRoot", self)
+    # addon_manager_instance = AddonManager.instantiate()
+    # add_child(addon_manager_instance)
+    # addon_manager_instance.call("SetPluginRoot", self)
 
 func _exit_tree():
-    addon_manager_instance.queue_free()
+    # addon_manager_instance.queue_free()
 
     remove_inspector_plugin(net_scene_inspector_instance)
 
@@ -97,7 +97,7 @@ func _exit_tree():
     remove_autoload_singleton(AUTOLOAD_DATA_TRANSFORMER)
     remove_autoload_singleton(AUTOLOAD_ENV)
     remove_autoload_singleton(AUTOLOAD_DEBUGGER)
-    remove_tool_menu_item("Nebula")
+    # remove_tool_menu_item("Nebula")
 
 var menu_item_ids: int = 0
 func _register_menu_item(label: String, on_click: Callable):

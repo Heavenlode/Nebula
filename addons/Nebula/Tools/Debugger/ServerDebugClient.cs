@@ -37,6 +37,7 @@ namespace Nebula.Internal.Editor
         {
             Title = "Server Debug Client (Online)";
             db?.Dispose();
+            Debugger.EditorInstance.Log("Connected to debug server", Debugger.DebugLevel.VERBOSE);
             foreach (var child in GetNode("Container/TabContainer").GetChildren())
             {
                 child.QueueFree();
@@ -61,20 +62,30 @@ namespace Nebula.Internal.Editor
 
         public override void _Process(double delta)
         {
+            return;
             while (true)
             {
                 Godot.Collections.Array enetEvent;
-                try {
+                try
+                {
                     enetEvent = debugConnection.Service();
-                } catch (Exception e) {
-                    Debugger.EditorInstance.Log($"Error servicing debug connection: {e}. Attempting to reconnect...", Debugger.DebugLevel.VERBOSE);
-                    try {
+                }
+                catch
+                {
+                    try
+                    {
+                        if (debugConnection != null)
+                        {
+                            debugConnection.Destroy();
+                            debugConnection = null;
+                        }
                         debugConnection = new ENetConnection();
                         debugConnection.CreateHost();
                         debugConnection.Compress(ENetConnection.CompressionMode.RangeCoder);
-                        var result = debugConnection.ConnectToHost("127.0.0.1", NetRunner.DebugPort);
-                        Debugger.EditorInstance.Log("Connected to debug server", Debugger.DebugLevel.VERBOSE);
-                    } catch (Exception err) {
+                        debugConnection.ConnectToHost("127.0.0.1", NetRunner.DebugPort);
+                    }
+                    catch (Exception err)
+                    {
                         Debugger.EditorInstance.Log($"Error creating debug connection: {err}", Debugger.DebugLevel.VERBOSE);
                         return;
                     }
@@ -124,6 +135,11 @@ namespace Nebula.Internal.Editor
                 {
                     db.Dispose();
                     db = null;
+                }
+                if (debugConnection != null)
+                {
+                    debugConnection.Destroy();
+                    debugConnection = null;
                 }
             }
             base.Dispose(disposing);

@@ -48,7 +48,7 @@ namespace Nebula
                 var networkScene = "";
                 if (netNode.Network.IsNetScene())
                 {
-                    networkScene = netNode.Network.Owner.Node.SceneFilePath;
+                    networkScene = netNode.Node.SceneFilePath;
                 }
                 else
                 {

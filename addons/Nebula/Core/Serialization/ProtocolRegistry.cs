@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Godot;
 using Godot.Collections;
+using Nebula.Utility.Tools;
 
 namespace Nebula.Serialization
 {
@@ -50,7 +51,14 @@ namespace Nebula.Serialization
         protected override void Dispose(bool disposing)
         {
             STATIC_METHOD_CALLABLES.Clear();
+            SCENES_CACHE.Clear();
             base.Dispose(disposing);
+        }
+
+        public override void _ExitTree()
+        {
+            Instance = null;
+            base._ExitTree();
         }
 
         public void Load()
@@ -235,6 +243,11 @@ namespace Nebula.Serialization
         /// <returns>The property.</returns>
         public ProtocolNetProperty UnpackProperty(string scene, int propertyId)
         {
+            if (!resource.PROPERTIES_LOOKUP.ContainsKey(scene) || !resource.PROPERTIES_LOOKUP[scene].ContainsKey(propertyId))
+            {
+                // Debugger.Instance.Log($"Property {propertyId} not found in scene {scene}", Debugger.DebugLevel.ERROR);
+                throw new Exception($"Property {propertyId} not found in scene {scene}");
+            }
             return resource.PROPERTIES_LOOKUP[scene][propertyId];
         }
 
@@ -377,6 +390,18 @@ namespace Nebula.Serialization
                     if (method == null)
                         throw new ArgumentException($"Static method {methodName} not found in {staticMethod.ReflectionPath}");
 
+
+                    MethodInfo helperMethod = null;
+
+                    if (serializationType == StaticMethodType.NetworkDeserialize)
+                    {
+                        helperMethod = type.GetMethod("GetDeserializeContext", BindingFlags.Public | BindingFlags.Static);
+                        if (helperMethod == null)
+                        {
+                            throw new ArgumentException($"Helper method {methodName} not found in {staticMethod.ReflectionPath}");
+                        }
+                    }
+
                     // Create a callable that wraps the static method
                     // TODO: Find a way so this isn't special-cased for every serialization type.
                     // At time of writing, Callable doesn't support variable arguments.
@@ -390,7 +415,15 @@ namespace Nebula.Serialization
                             callable = Callable.From((WorldRunner currentWorld, NetPeer peer, GodotObject obj) => method.Invoke(null, [currentWorld, peer, obj]) as GodotObject);
                             break;
                         case StaticMethodType.NetworkDeserialize:
-                            callable = Callable.From((WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, GodotObject initialObject) => method.Invoke(null, [currentWorld, peer, buffer, initialObject]) as GodotObject);
+                            callable = Callable.From((WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, GodotObject initialObject) =>
+                            {
+                                // Fucking C# 'as' operator doesn't work with value types. Gotta box this shit.
+                                object ctxObj = helperMethod.Invoke(null, [initialObject]);
+                                if (ctxObj is not Variant ctx)
+                                    throw new InvalidCastException($"GetDeserializeContext in {staticMethod.ReflectionPath} didn't return a Variant.");
+                                var result = method.Invoke(null, new object[] { currentWorld, peer, buffer, ctx }) as GodotObject;
+                                return result;
+                            });
                             break;
                         case StaticMethodType.BsonDeserialize:
                             callable = Callable.From((Variant context, byte[] bson, GodotObject initialObject) => method.Invoke(null, [context, bson, initialObject]) as GodotObject);

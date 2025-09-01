@@ -3,6 +3,7 @@
     <AdditionalFiles Include="**\*.tscn" />
     <PackageReference Include="LiteDB" Version="5.0.21" />
     <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
+    <PackageReference Include="FixedMathSharp" Version="1.2.2" />
     <PackageReference Include="Fody" Version="6.8.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -3,9 +3,7 @@ using System.ComponentModel;
 using Godot;
 using Nebula.Serialization;
 using Nebula.Serialization.Serializers;
-using Nebula.Utility.Tools;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 
 namespace Nebula
 {
@@ -18,6 +16,7 @@ namespace Nebula
 	[SerialTypeIdentifier("NetNode"), Icon("res://addons/Nebula/Core/NetNode3D.png")]
 	public partial class NetNode3D : Node3D, INetNode, INotifyPropertyChanged, INetSerializable<NetNode3D>, IBsonSerializable<NetNode3D>
 	{
+		public Node Node => this;
 		public NetworkController Network { get; internal set; }
 		public NetNode3D() {
 			Network = new NetworkController(this);
@@ -69,7 +68,12 @@ namespace Nebula
 			HLBytes.Pack(buffer, staticChildId);
 			return buffer;
 		}
-		public static NetNode3D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, NetNode3D initialObject)
+
+		public static Variant GetDeserializeContext(NetNode3D obj)
+        {
+            return new Variant();
+        }
+		public static NetNode3D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, Variant ctx)
 		{
 			var networkID = HLBytes.UnpackByte(buffer);
 			if (networkID == 0)
@@ -85,7 +89,7 @@ namespace Nebula
 			return node;
 		}
 
-		public BsonValue BsonSerialize(Variant context)
+		public virtual BsonValue BsonSerialize(Variant context)
 		{
 			var doc = new BsonDocument();
 			if (Network.IsNetScene())

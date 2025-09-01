@@ -79,7 +79,7 @@ namespace Nebula.Serialization.Serializers
             newNode.Network.NetId = networkId;
             newNode.Network.CurrentWorld = currentWorld;
             newNode.SetupSerializers();
-            nodeOut = newNode.Network.Owner;
+            nodeOut = newNode.Network.AttachedNetNode;
             NetRunner.Instance.AddChild(nodeOut.Node);
             if (networkParent != null)
             {

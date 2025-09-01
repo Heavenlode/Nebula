@@ -15,9 +15,15 @@ namespace Nebula
 	*/
 	public partial class NetworkController : RefCounted
 	{
-		public NetNodeWrapper Owner { get; internal set; }
+		public NetNodeWrapper AttachedNetNode { get; internal set; }
+
+		/// <summary>
+        /// If true, the node will be despawned when the peer that owns it disconnects, otherwise the InputAuthority will simply be set to null.
+        /// </summary>
+		public bool DespawnOnUnowned = false;
+
 		public bool IsNetScene() {
-			return ProtocolRegistry.Instance.IsNetScene(Owner.Node.SceneFilePath);
+			return ProtocolRegistry.Instance.IsNetScene(AttachedNetNode.Node.SceneFilePath);
 		}
 
 		internal HashSet<NetNodeWrapper> NetSceneChildren = [];
@@ -49,7 +55,7 @@ namespace Nebula
 				if (!IsWorldReady) return;
 				if (NetParent != null && NetParent.Node is INetNode _netNodeParent)
 				{
-					_netNodeParent.Network.NetSceneChildren.Remove(Owner);
+					_netNodeParent.Network.NetSceneChildren.Remove(AttachedNetNode);
 				}
 			}
 		}
@@ -92,14 +98,14 @@ namespace Nebula
 				{
 					if (IsNetScene() && NetParent != null && NetParent.Node is INetNode _netNodeParent)
 					{
-						_netNodeParent.Network.NetSceneChildren.Remove(Owner);
+						_netNodeParent.Network.NetSceneChildren.Remove(AttachedNetNode);
 					}
 				}
 				_networkParentId = value;
 				{
 					if (IsNetScene() && value != null && CurrentWorld.GetNodeFromNetId(value).Node is INetNode _netNodeParent)
 					{
-						_netNodeParent.Network.NetSceneChildren.Add(Owner);
+						_netNodeParent.Network.NetSceneChildren.Add(AttachedNetNode);
 					}
 				}
 			}
@@ -124,13 +130,23 @@ namespace Nebula
 				Debugger.Instance.Log($"Node {owner.GetPath()} does not implement INetNode", Debugger.DebugLevel.ERROR);
 				return;
 			}
-			Owner = new NetNodeWrapper(owner);
+			AttachedNetNode = new NetNodeWrapper(owner);
 		}
 
 		[Signal]
 		public delegate void NetPropertyChangedEventHandler(string nodePath, StringName propertyName);
 		public NetId NetId { get; internal set; }
-		public NetPeer InputAuthority { get; internal set; } = null;
+		public NetPeer InputAuthority { get; private set; } = null;
+		public void SetInputAuthority(NetPeer inputAuthority)
+		{
+			if (!NetRunner.Instance.IsServer) throw new Exception("InputAuthority can only be set on the server");
+			if (CurrentWorld == null) throw new Exception("Can only set input authority after node is assigned to a world");
+			if (InputAuthority != null) {
+				CurrentWorld.GetPeerWorldState(InputAuthority).Value.OwnedNodes.Remove(AttachedNetNode.Node as INetNode);
+            }
+			CurrentWorld.GetPeerWorldState(inputAuthority).Value.OwnedNodes.Add(AttachedNetNode.Node as INetNode);
+			InputAuthority = inputAuthority;
+		}
 
 		public bool IsCurrentOwner
 		{
@@ -151,7 +167,7 @@ namespace Nebula
 		public enum NetworkChildrenSearchToggle { INCLUDE_SCENES, EXCLUDE_SCENES, ONLY_SCENES }
 		public IEnumerable<NetNodeWrapper> GetNetworkChildren(NetworkChildrenSearchToggle searchToggle = NetworkChildrenSearchToggle.EXCLUDE_SCENES, bool nestedSceneChildren = true)
 		{
-			var children = Owner.Node.GetChildren();
+			var children = AttachedNetNode.Node.GetChildren();
 			while (children.Count > 0)
 			{
 				var child = children[0];
@@ -197,7 +213,7 @@ namespace Nebula
 			CurrentWorld = world;
 			if (IsNetScene())
 			{
-				if (!world.CheckStaticInitialization(Owner))
+				if (!world.CheckStaticInitialization(AttachedNetNode))
 				{
 					return;
 				}
@@ -214,7 +230,7 @@ namespace Nebula
 				{
 					return;
 				}
-				foreach (var nodePropertyDetail in ProtocolRegistry.Instance.ListProperties(Owner.Node.SceneFilePath))
+				foreach (var nodePropertyDetail in ProtocolRegistry.Instance.ListProperties(AttachedNetNode.Node.SceneFilePath))
 				{
 					var nodePath = nodePropertyDetail["nodePath"].AsString();
 					var nodeProps = nodePropertyDetail["properties"].As<Godot.Collections.Array<ProtocolNetProperty>>();
@@ -224,7 +240,7 @@ namespace Nebula
 					{
 						if (property.Metadata.TypeIdentifier == "NetNode")
 						{
-							var node = Owner.Node.GetNode(nodePath);
+							var node = AttachedNetNode.Node.GetNode(nodePath);
 							var prop = node.Get(property.Name);
 							var tempNetNode = prop.As<RefCounted>();
 							if (tempNetNode == null)
@@ -236,24 +252,24 @@ namespace Nebula
 								var referencedNodeInWorld = CurrentWorld.GetNodeFromNetId(netNode.Network._prepareNetId).Node as INetNode;
 								if (referencedNodeInWorld.Network.IsNetScene() && !string.IsNullOrEmpty(netNode.Network._prepareStaticChildPath))
 								{
-									referencedNodeInWorld = referencedNodeInWorld.Network.Owner.Node.GetNodeOrNull(netNode.Network._prepareStaticChildPath) as INetNode;
+									referencedNodeInWorld = referencedNodeInWorld.Node.GetNodeOrNull(netNode.Network._prepareStaticChildPath) as INetNode;
 								}
-								node.Set(property.Name, referencedNodeInWorld.Network.Owner);
+								node.Set(property.Name, referencedNodeInWorld.Network.AttachedNetNode);
 							}
 						}
 					}
 
 					// Ensure all property changes are linked up to the signal
-					var networkChild = Owner.Node.GetNodeOrNull<INetNode>(nodePath);
+					var networkChild = AttachedNetNode.Node.GetNodeOrNull<INetNode>(nodePath);
 					if (networkChild == null)
 					{
 						continue;
 					}
-					if (networkChild.Network.Owner.Node is INotifyPropertyChanged propertyChangeNode)
+					if (networkChild.Node is INotifyPropertyChanged propertyChangeNode)
 					{
 						propertyChangeNode.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
 						{
-							if (!ProtocolRegistry.Instance.LookupProperty(Owner.Node.SceneFilePath, nodePath, e.PropertyName, out _))
+							if (!ProtocolRegistry.Instance.LookupProperty(AttachedNetNode.Node.SceneFilePath, nodePath, e.PropertyName, out _))
 							{
 								return;
 							}
@@ -267,7 +283,7 @@ namespace Nebula
 				}
 
 				if (IsNetScene()) {
-					(Owner.Node as INetNode).SetupSerializers();
+					(AttachedNetNode.Node as INetNode).SetupSerializers();
 				}
 				foreach (var initialSetProp in InitialSetNetProperties)
 				{
@@ -298,13 +314,13 @@ namespace Nebula
 					child._WorldReady();
 				});
 			}
-			Owner.Node.Call("_WorldReady");
+			AttachedNetNode.Node.Call("_WorldReady");
 			IsWorldReady = true;
 		}
 
 		public virtual void _NetworkProcess(Tick tick)
 		{
-			Owner.Node.Call("_NetworkProcess", tick);
+			AttachedNetNode.Node.Call("_NetworkProcess", tick);
 		}
 
 		public Godot.Collections.Dictionary<int, Variant> GetInput()
@@ -316,7 +332,7 @@ namespace Nebula
 			byte netId;
 			if (NetRunner.Instance.IsServer)
 			{
-				netId = CurrentWorld.GetPeerNodeId(InputAuthority, Owner);
+				netId = CurrentWorld.GetPeerNodeId(InputAuthority, AttachedNetNode);
 			}
 			else
 			{
@@ -339,10 +355,10 @@ namespace Nebula
 		{
 			if (IsNetScene())
 			{
-				return Owner.Node.GetPathTo(Owner.Node);
+				return AttachedNetNode.Node.GetPathTo(AttachedNetNode.Node);
 			}
 
-			return NetParent.Node.GetPathTo(Owner.Node);
+			return NetParent.Node.GetPathTo(AttachedNetNode.Node);
 		}
 	}
 }

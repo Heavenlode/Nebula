@@ -1,0 +1,290 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  commentId: T:Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  id: WorldDebug.NetFunctionCalledEventHandler
+  parent: Nebula.Internal.Editor
+  children:
+  - Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.BeginInvoke(System.Int32,System.String,System.AsyncCallback,System.Object)
+  - Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.Invoke(System.Int32,System.String)
+  langs:
+  - csharp
+  - vb
+  name: WorldDebug.NetFunctionCalledEventHandler
+  nameWithType: WorldDebug.NetFunctionCalledEventHandler
+  fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void WorldDebug.NetFunctionCalledEventHandler(int frameId, string functionIndex)
+    parameters:
+    - id: frameId
+      type: System.Int32
+    - id: functionIndex
+      type: System.String
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub WorldDebug.NetFunctionCalledEventHandler(frameId As Integer, functionIndex As String)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  langs:
+  - csharp
+  - vb
+  name: NetFunctionCalledEventHandler(object, nint)
+  nameWithType: WorldDebug.NetFunctionCalledEventHandler.NetFunctionCalledEventHandler(object, nint)
+  fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.NetFunctionCalledEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public NetFunctionCalledEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.#ctor*
+  nameWithType.vb: WorldDebug.NetFunctionCalledEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.Invoke(System.Int32,System.String)
+  commentId: M:Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.Invoke(System.Int32,System.String)
+  id: Invoke(System.Int32,System.String)
+  parent: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(int, string)
+  nameWithType: WorldDebug.NetFunctionCalledEventHandler.Invoke(int, string)
+  fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.Invoke(int, string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual void Invoke(int frameId, string functionIndex)
+    parameters:
+    - id: frameId
+      type: System.Int32
+    - id: functionIndex
+      type: System.String
+    content.vb: Public Overridable Sub Invoke(frameId As Integer, functionIndex As String)
+  overload: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.Invoke*
+  nameWithType.vb: WorldDebug.NetFunctionCalledEventHandler.Invoke(Integer, String)
+  fullName.vb: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.Invoke(Integer, String)
+  name.vb: Invoke(Integer, String)
+- uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.BeginInvoke(System.Int32,System.String,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.BeginInvoke(System.Int32,System.String,System.AsyncCallback,System.Object)
+  id: BeginInvoke(System.Int32,System.String,System.AsyncCallback,System.Object)
+  parent: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(int, string, AsyncCallback, object)
+  nameWithType: WorldDebug.NetFunctionCalledEventHandler.BeginInvoke(int, string, AsyncCallback, object)
+  fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.BeginInvoke(int, string, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(int frameId, string functionIndex, AsyncCallback callback, object @object)
+    parameters:
+    - id: frameId
+      type: System.Int32
+    - id: functionIndex
+      type: System.String
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(frameId As Integer, functionIndex As String, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.BeginInvoke*
+  nameWithType.vb: WorldDebug.NetFunctionCalledEventHandler.BeginInvoke(Integer, String, AsyncCallback, Object)
+  fullName.vb: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.BeginInvoke(Integer, String, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(Integer, String, AsyncCallback, Object)
+- uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: WorldDebug.NetFunctionCalledEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.EndInvoke*
+references:
+- uid: Nebula.Internal.Editor
+  commentId: N:Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Internal.Editor
+  nameWithType: Nebula.Internal.Editor
+  fullName: Nebula.Internal.Editor
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.#ctor*
+  commentId: Overload:Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.#ctor
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.html#Nebula_Internal_Editor_WorldDebug_NetFunctionCalledEventHandler__ctor_System_Object_System_IntPtr_
+  name: NetFunctionCalledEventHandler
+  nameWithType: WorldDebug.NetFunctionCalledEventHandler.NetFunctionCalledEventHandler
+  fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.NetFunctionCalledEventHandler
+  nameWithType.vb: WorldDebug.NetFunctionCalledEventHandler.New
+  fullName.vb: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.Invoke*
+  commentId: Overload:Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.Invoke
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.html#Nebula_Internal_Editor_WorldDebug_NetFunctionCalledEventHandler_Invoke_System_Int32_System_String_
+  name: Invoke
+  nameWithType: WorldDebug.NetFunctionCalledEventHandler.Invoke
+  fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.Invoke
+- uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.html#Nebula_Internal_Editor_WorldDebug_NetFunctionCalledEventHandler_BeginInvoke_System_Int32_System_String_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: WorldDebug.NetFunctionCalledEventHandler.BeginInvoke
+  fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.EndInvoke*
+  commentId: Overload:Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.html#Nebula_Internal_Editor_WorldDebug_NetFunctionCalledEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: WorldDebug.NetFunctionCalledEventHandler.EndInvoke
+  fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.EndInvoke

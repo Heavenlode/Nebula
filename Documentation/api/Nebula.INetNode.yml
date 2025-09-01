@@ -1,0 +1,196 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.INetNode
+  commentId: T:Nebula.INetNode
+  id: INetNode
+  parent: Nebula
+  children:
+  - Nebula.INetNode.Network
+  - Nebula.INetNode.Node
+  - Nebula.INetNode.Serializers
+  - Nebula.INetNode.SetupSerializers
+  langs:
+  - csharp
+  - vb
+  name: INetNode
+  nameWithType: INetNode
+  fullName: Nebula.INetNode
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    This provides a common interface for NetNode, NetNode2D, and NetNode3D.
+
+    This is necessary because they don't share an inheritance chain.
+
+    For example, NetNode2D inherits from Node2D, while NetNode ineherits from Node.
+
+    NetNode2D cannot inherit from NetNode because it needs Node2D functionality and C# does not support multiple inheritance.
+  example: []
+  syntax:
+    content: public interface INetNode
+    content.vb: Public Interface INetNode
+- uid: Nebula.INetNode.SetupSerializers
+  commentId: M:Nebula.INetNode.SetupSerializers
+  id: SetupSerializers
+  parent: Nebula.INetNode
+  langs:
+  - csharp
+  - vb
+  name: SetupSerializers()
+  nameWithType: INetNode.SetupSerializers()
+  fullName: Nebula.INetNode.SetupSerializers()
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: void SetupSerializers()
+    content.vb: Sub SetupSerializers()
+  overload: Nebula.INetNode.SetupSerializers*
+- uid: Nebula.INetNode.Node
+  commentId: P:Nebula.INetNode.Node
+  id: Node
+  parent: Nebula.INetNode
+  langs:
+  - csharp
+  - vb
+  name: Node
+  nameWithType: INetNode.Node
+  fullName: Nebula.INetNode.Node
+  type: Property
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: This allows us to access the Node without having to manually cast it every time we want to access it.
+  example: []
+  syntax:
+    content: Node Node { get; }
+    parameters: []
+    return:
+      type: Godot.Node
+    content.vb: ReadOnly Property Node As Node
+  overload: Nebula.INetNode.Node*
+- uid: Nebula.INetNode.Network
+  commentId: P:Nebula.INetNode.Network
+  id: Network
+  parent: Nebula.INetNode
+  langs:
+  - csharp
+  - vb
+  name: Network
+  nameWithType: INetNode.Network
+  fullName: Nebula.INetNode.Network
+  type: Property
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: NetworkController Network { get; }
+    parameters: []
+    return:
+      type: Nebula.NetworkController
+    content.vb: ReadOnly Property Network As NetworkController
+  overload: Nebula.INetNode.Network*
+- uid: Nebula.INetNode.Serializers
+  commentId: P:Nebula.INetNode.Serializers
+  id: Serializers
+  parent: Nebula.INetNode
+  langs:
+  - csharp
+  - vb
+  name: Serializers
+  nameWithType: INetNode.Serializers
+  fullName: Nebula.INetNode.Serializers
+  type: Property
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: IStateSerializer[] Serializers { get; }
+    parameters: []
+    return:
+      type: Nebula.Serialization.Serializers.IStateSerializer[]
+    content.vb: ReadOnly Property Serializers As IStateSerializer()
+  overload: Nebula.INetNode.Serializers*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.INetNode.SetupSerializers*
+  commentId: Overload:Nebula.INetNode.SetupSerializers
+  isExternal: true
+  href: Nebula.INetNode.html#Nebula_INetNode_SetupSerializers
+  name: SetupSerializers
+  nameWithType: INetNode.SetupSerializers
+  fullName: Nebula.INetNode.SetupSerializers
+- uid: Nebula.INetNode.Node*
+  commentId: Overload:Nebula.INetNode.Node
+  isExternal: true
+  href: Nebula.INetNode.html#Nebula_INetNode_Node
+  name: Node
+  nameWithType: INetNode.Node
+  fullName: Nebula.INetNode.Node
+- uid: Godot.Node
+  commentId: T:Godot.Node
+  parent: Godot
+  isExternal: true
+  name: Node
+  nameWithType: Node
+  fullName: Godot.Node
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.INetNode.Network*
+  commentId: Overload:Nebula.INetNode.Network
+  isExternal: true
+  href: Nebula.INetNode.html#Nebula_INetNode_Network
+  name: Network
+  nameWithType: INetNode.Network
+  fullName: Nebula.INetNode.Network
+- uid: Nebula.NetworkController
+  commentId: T:Nebula.NetworkController
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetworkController.html
+  name: NetworkController
+  nameWithType: NetworkController
+  fullName: Nebula.NetworkController
+- uid: Nebula.INetNode.Serializers*
+  commentId: Overload:Nebula.INetNode.Serializers
+  isExternal: true
+  href: Nebula.INetNode.html#Nebula_INetNode_Serializers
+  name: Serializers
+  nameWithType: INetNode.Serializers
+  fullName: Nebula.INetNode.Serializers
+- uid: Nebula.Serialization.Serializers.IStateSerializer[]
+  isExternal: true
+  href: Nebula.Serialization.Serializers.IStateSerializer.html
+  name: IStateSerializer[]
+  nameWithType: IStateSerializer[]
+  fullName: Nebula.Serialization.Serializers.IStateSerializer[]
+  nameWithType.vb: IStateSerializer()
+  fullName.vb: Nebula.Serialization.Serializers.IStateSerializer()
+  name.vb: IStateSerializer()
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer
+    name: IStateSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer
+    name: IStateSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html
+  - name: (
+  - name: )

@@ -1,0 +1,865 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.Serializers.DespawnSerializer
+  commentId: T:Nebula.Serialization.Serializers.DespawnSerializer
+  id: DespawnSerializer
+  parent: Nebula.Serialization.Serializers
+  children:
+  - Nebula.Serialization.Serializers.DespawnSerializer.#ctor(Nebula.NetNodeWrapper)
+  - Nebula.Serialization.Serializers.DespawnSerializer.Acknowledge(Nebula.WorldRunner,Godot.ENetPacketPeer,System.Int32)
+  - Nebula.Serialization.Serializers.DespawnSerializer.Begin
+  - Nebula.Serialization.Serializers.DespawnSerializer.Cleanup
+  - Nebula.Serialization.Serializers.DespawnSerializer.Export(Nebula.WorldRunner,Godot.ENetPacketPeer)
+  - Nebula.Serialization.Serializers.DespawnSerializer.Import(Nebula.WorldRunner,Nebula.Serialization.HLBuffer,Nebula.NetNodeWrapper@)
+  - Nebula.Serialization.Serializers.DespawnSerializer.PhysicsProcess(System.Double)
+  langs:
+  - csharp
+  - vb
+  name: DespawnSerializer
+  nameWithType: DespawnSerializer
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/Serializers/DespawnSerializer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  syntax:
+    content: 'public class DespawnSerializer : IStateSerializer'
+    content.vb: Public Class DespawnSerializer Implements IStateSerializer
+  inheritance:
+  - System.Object
+  implements:
+  - Nebula.Serialization.Serializers.IStateSerializer
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.#ctor(Nebula.NetNodeWrapper)
+  commentId: M:Nebula.Serialization.Serializers.DespawnSerializer.#ctor(Nebula.NetNodeWrapper)
+  id: '#ctor(Nebula.NetNodeWrapper)'
+  parent: Nebula.Serialization.Serializers.DespawnSerializer
+  langs:
+  - csharp
+  - vb
+  name: DespawnSerializer(NetNodeWrapper)
+  nameWithType: DespawnSerializer.DespawnSerializer(NetNodeWrapper)
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.DespawnSerializer(Nebula.NetNodeWrapper)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/Serializers/DespawnSerializer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  syntax:
+    content: public DespawnSerializer(NetNodeWrapper node)
+    parameters:
+    - id: node
+      type: Nebula.NetNodeWrapper
+    content.vb: Public Sub New(node As NetNodeWrapper)
+  overload: Nebula.Serialization.Serializers.DespawnSerializer.#ctor*
+  nameWithType.vb: DespawnSerializer.New(NetNodeWrapper)
+  fullName.vb: Nebula.Serialization.Serializers.DespawnSerializer.New(Nebula.NetNodeWrapper)
+  name.vb: New(NetNodeWrapper)
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.Begin
+  commentId: M:Nebula.Serialization.Serializers.DespawnSerializer.Begin
+  id: Begin
+  parent: Nebula.Serialization.Serializers.DespawnSerializer
+  langs:
+  - csharp
+  - vb
+  name: Begin()
+  nameWithType: DespawnSerializer.Begin()
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.Begin()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/Serializers/DespawnSerializer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  example: []
+  syntax:
+    content: public void Begin()
+    content.vb: Public Sub Begin()
+  overload: Nebula.Serialization.Serializers.DespawnSerializer.Begin*
+  implements:
+  - Nebula.Serialization.Serializers.IStateSerializer.Begin
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.Import(Nebula.WorldRunner,Nebula.Serialization.HLBuffer,Nebula.NetNodeWrapper@)
+  commentId: M:Nebula.Serialization.Serializers.DespawnSerializer.Import(Nebula.WorldRunner,Nebula.Serialization.HLBuffer,Nebula.NetNodeWrapper@)
+  id: Import(Nebula.WorldRunner,Nebula.Serialization.HLBuffer,Nebula.NetNodeWrapper@)
+  parent: Nebula.Serialization.Serializers.DespawnSerializer
+  langs:
+  - csharp
+  - vb
+  name: Import(WorldRunner, HLBuffer, out NetNodeWrapper)
+  nameWithType: DespawnSerializer.Import(WorldRunner, HLBuffer, out NetNodeWrapper)
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.Import(Nebula.WorldRunner, Nebula.Serialization.HLBuffer, out Nebula.NetNodeWrapper)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/Serializers/DespawnSerializer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: Client-side only. Receive and deserialize binary received from the server.
+  example: []
+  syntax:
+    content: public void Import(WorldRunner currentWorld, HLBuffer buffer, out NetNodeWrapper nodeOut)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: nodeOut
+      type: Nebula.NetNodeWrapper
+      description: ''
+    content.vb: Public Sub Import(currentWorld As WorldRunner, buffer As HLBuffer, nodeOut As NetNodeWrapper)
+  overload: Nebula.Serialization.Serializers.DespawnSerializer.Import*
+  implements:
+  - Nebula.Serialization.Serializers.IStateSerializer.Import(Nebula.WorldRunner,Nebula.Serialization.HLBuffer,Nebula.NetNodeWrapper@)
+  nameWithType.vb: DespawnSerializer.Import(WorldRunner, HLBuffer, NetNodeWrapper)
+  fullName.vb: Nebula.Serialization.Serializers.DespawnSerializer.Import(Nebula.WorldRunner, Nebula.Serialization.HLBuffer, Nebula.NetNodeWrapper)
+  name.vb: Import(WorldRunner, HLBuffer, NetNodeWrapper)
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.Cleanup
+  commentId: M:Nebula.Serialization.Serializers.DespawnSerializer.Cleanup
+  id: Cleanup
+  parent: Nebula.Serialization.Serializers.DespawnSerializer
+  langs:
+  - csharp
+  - vb
+  name: Cleanup()
+  nameWithType: DespawnSerializer.Cleanup()
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.Cleanup()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/Serializers/DespawnSerializer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  example: []
+  syntax:
+    content: public void Cleanup()
+    content.vb: Public Sub Cleanup()
+  overload: Nebula.Serialization.Serializers.DespawnSerializer.Cleanup*
+  implements:
+  - Nebula.Serialization.Serializers.IStateSerializer.Cleanup
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.Export(Nebula.WorldRunner,Godot.ENetPacketPeer)
+  commentId: M:Nebula.Serialization.Serializers.DespawnSerializer.Export(Nebula.WorldRunner,Godot.ENetPacketPeer)
+  id: Export(Nebula.WorldRunner,Godot.ENetPacketPeer)
+  parent: Nebula.Serialization.Serializers.DespawnSerializer
+  langs:
+  - csharp
+  - vb
+  name: Export(WorldRunner, ENetPacketPeer)
+  nameWithType: DespawnSerializer.Export(WorldRunner, ENetPacketPeer)
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.Export(Nebula.WorldRunner, Godot.ENetPacketPeer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/Serializers/DespawnSerializer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: Server-side only. Serialize and send data to the client.
+  example: []
+  syntax:
+    content: public HLBuffer Export(WorldRunner currentWorld, ENetPacketPeer peerId)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: peerId
+      type: Godot.ENetPacketPeer
+    return:
+      type: Nebula.Serialization.HLBuffer
+      description: ''
+    content.vb: Public Function Export(currentWorld As WorldRunner, peerId As ENetPacketPeer) As HLBuffer
+  overload: Nebula.Serialization.Serializers.DespawnSerializer.Export*
+  implements:
+  - Nebula.Serialization.Serializers.IStateSerializer.Export(Nebula.WorldRunner,Godot.ENetPacketPeer)
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.Acknowledge(Nebula.WorldRunner,Godot.ENetPacketPeer,System.Int32)
+  commentId: M:Nebula.Serialization.Serializers.DespawnSerializer.Acknowledge(Nebula.WorldRunner,Godot.ENetPacketPeer,System.Int32)
+  id: Acknowledge(Nebula.WorldRunner,Godot.ENetPacketPeer,System.Int32)
+  parent: Nebula.Serialization.Serializers.DespawnSerializer
+  langs:
+  - csharp
+  - vb
+  name: Acknowledge(WorldRunner, ENetPacketPeer, int)
+  nameWithType: DespawnSerializer.Acknowledge(WorldRunner, ENetPacketPeer, int)
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.Acknowledge(Nebula.WorldRunner, Godot.ENetPacketPeer, int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/Serializers/DespawnSerializer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  example: []
+  syntax:
+    content: public void Acknowledge(WorldRunner currentWorld, ENetPacketPeer peer, int tick)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: peer
+      type: Godot.ENetPacketPeer
+    - id: tick
+      type: System.Int32
+    content.vb: Public Sub Acknowledge(currentWorld As WorldRunner, peer As ENetPacketPeer, tick As Integer)
+  overload: Nebula.Serialization.Serializers.DespawnSerializer.Acknowledge*
+  implements:
+  - Nebula.Serialization.Serializers.IStateSerializer.Acknowledge(Nebula.WorldRunner,Godot.ENetPacketPeer,System.Int32)
+  nameWithType.vb: DespawnSerializer.Acknowledge(WorldRunner, ENetPacketPeer, Integer)
+  fullName.vb: Nebula.Serialization.Serializers.DespawnSerializer.Acknowledge(Nebula.WorldRunner, Godot.ENetPacketPeer, Integer)
+  name.vb: Acknowledge(WorldRunner, ENetPacketPeer, Integer)
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.PhysicsProcess(System.Double)
+  commentId: M:Nebula.Serialization.Serializers.DespawnSerializer.PhysicsProcess(System.Double)
+  id: PhysicsProcess(System.Double)
+  parent: Nebula.Serialization.Serializers.DespawnSerializer
+  langs:
+  - csharp
+  - vb
+  name: PhysicsProcess(double)
+  nameWithType: DespawnSerializer.PhysicsProcess(double)
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.PhysicsProcess(double)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/Serializers/DespawnSerializer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  syntax:
+    content: public void PhysicsProcess(double delta)
+    parameters:
+    - id: delta
+      type: System.Double
+    content.vb: Public Sub PhysicsProcess(delta As Double)
+  overload: Nebula.Serialization.Serializers.DespawnSerializer.PhysicsProcess*
+  nameWithType.vb: DespawnSerializer.PhysicsProcess(Double)
+  fullName.vb: Nebula.Serialization.Serializers.DespawnSerializer.PhysicsProcess(Double)
+  name.vb: PhysicsProcess(Double)
+references:
+- uid: Nebula.Serialization.Serializers
+  commentId: N:Nebula.Serialization.Serializers
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization.Serializers
+  nameWithType: Nebula.Serialization.Serializers
+  fullName: Nebula.Serialization.Serializers
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers
+    name: Serializers
+    isExternal: true
+    href: Nebula.Serialization.Serializers.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers
+    name: Serializers
+    isExternal: true
+    href: Nebula.Serialization.Serializers.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Nebula.Serialization.Serializers.IStateSerializer
+  commentId: T:Nebula.Serialization.Serializers.IStateSerializer
+  parent: Nebula.Serialization.Serializers
+  isExternal: true
+  href: Nebula.Serialization.Serializers.IStateSerializer.html
+  name: IStateSerializer
+  nameWithType: IStateSerializer
+  fullName: Nebula.Serialization.Serializers.IStateSerializer
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.#ctor*
+  commentId: Overload:Nebula.Serialization.Serializers.DespawnSerializer.#ctor
+  isExternal: true
+  href: Nebula.Serialization.Serializers.DespawnSerializer.html#Nebula_Serialization_Serializers_DespawnSerializer__ctor_Nebula_NetNodeWrapper_
+  name: DespawnSerializer
+  nameWithType: DespawnSerializer.DespawnSerializer
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.DespawnSerializer
+  nameWithType.vb: DespawnSerializer.New
+  fullName.vb: Nebula.Serialization.Serializers.DespawnSerializer.New
+  name.vb: New
+- uid: Nebula.NetNodeWrapper
+  commentId: T:Nebula.NetNodeWrapper
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetNodeWrapper.html
+  name: NetNodeWrapper
+  nameWithType: NetNodeWrapper
+  fullName: Nebula.NetNodeWrapper
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.Begin*
+  commentId: Overload:Nebula.Serialization.Serializers.DespawnSerializer.Begin
+  isExternal: true
+  href: Nebula.Serialization.Serializers.DespawnSerializer.html#Nebula_Serialization_Serializers_DespawnSerializer_Begin
+  name: Begin
+  nameWithType: DespawnSerializer.Begin
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.Begin
+- uid: Nebula.Serialization.Serializers.IStateSerializer.Begin
+  commentId: M:Nebula.Serialization.Serializers.IStateSerializer.Begin
+  parent: Nebula.Serialization.Serializers.IStateSerializer
+  isExternal: true
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Begin
+  name: Begin()
+  nameWithType: IStateSerializer.Begin()
+  fullName: Nebula.Serialization.Serializers.IStateSerializer.Begin()
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer.Begin
+    name: Begin
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Begin
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer.Begin
+    name: Begin
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Begin
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.Import*
+  commentId: Overload:Nebula.Serialization.Serializers.DespawnSerializer.Import
+  isExternal: true
+  href: Nebula.Serialization.Serializers.DespawnSerializer.html#Nebula_Serialization_Serializers_DespawnSerializer_Import_Nebula_WorldRunner_Nebula_Serialization_HLBuffer_Nebula_NetNodeWrapper__
+  name: Import
+  nameWithType: DespawnSerializer.Import
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.Import
+- uid: Nebula.Serialization.Serializers.IStateSerializer.Import(Nebula.WorldRunner,Nebula.Serialization.HLBuffer,Nebula.NetNodeWrapper@)
+  commentId: M:Nebula.Serialization.Serializers.IStateSerializer.Import(Nebula.WorldRunner,Nebula.Serialization.HLBuffer,Nebula.NetNodeWrapper@)
+  parent: Nebula.Serialization.Serializers.IStateSerializer
+  isExternal: true
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Import_Nebula_WorldRunner_Nebula_Serialization_HLBuffer_Nebula_NetNodeWrapper__
+  name: Import(WorldRunner, HLBuffer, out NetNodeWrapper)
+  nameWithType: IStateSerializer.Import(WorldRunner, HLBuffer, out NetNodeWrapper)
+  fullName: Nebula.Serialization.Serializers.IStateSerializer.Import(Nebula.WorldRunner, Nebula.Serialization.HLBuffer, out Nebula.NetNodeWrapper)
+  nameWithType.vb: IStateSerializer.Import(WorldRunner, HLBuffer, NetNodeWrapper)
+  fullName.vb: Nebula.Serialization.Serializers.IStateSerializer.Import(Nebula.WorldRunner, Nebula.Serialization.HLBuffer, Nebula.NetNodeWrapper)
+  name.vb: Import(WorldRunner, HLBuffer, NetNodeWrapper)
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer.Import(Nebula.WorldRunner,Nebula.Serialization.HLBuffer,Nebula.NetNodeWrapper@)
+    name: Import
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Import_Nebula_WorldRunner_Nebula_Serialization_HLBuffer_Nebula_NetNodeWrapper__
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.HLBuffer
+    name: HLBuffer
+    isExternal: true
+    href: Nebula.Serialization.HLBuffer.html
+  - name: ','
+  - name: " "
+  - name: out
+  - name: " "
+  - uid: Nebula.NetNodeWrapper
+    name: NetNodeWrapper
+    isExternal: true
+    href: Nebula.NetNodeWrapper.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer.Import(Nebula.WorldRunner,Nebula.Serialization.HLBuffer,Nebula.NetNodeWrapper@)
+    name: Import
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Import_Nebula_WorldRunner_Nebula_Serialization_HLBuffer_Nebula_NetNodeWrapper__
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.HLBuffer
+    name: HLBuffer
+    isExternal: true
+    href: Nebula.Serialization.HLBuffer.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.NetNodeWrapper
+    name: NetNodeWrapper
+    isExternal: true
+    href: Nebula.NetNodeWrapper.html
+  - name: )
+- uid: Nebula.WorldRunner
+  commentId: T:Nebula.WorldRunner
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner
+  nameWithType: WorldRunner
+  fullName: Nebula.WorldRunner
+- uid: Nebula.Serialization.HLBuffer
+  commentId: T:Nebula.Serialization.HLBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.HLBuffer.html
+  name: HLBuffer
+  nameWithType: HLBuffer
+  fullName: Nebula.Serialization.HLBuffer
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.Cleanup*
+  commentId: Overload:Nebula.Serialization.Serializers.DespawnSerializer.Cleanup
+  isExternal: true
+  href: Nebula.Serialization.Serializers.DespawnSerializer.html#Nebula_Serialization_Serializers_DespawnSerializer_Cleanup
+  name: Cleanup
+  nameWithType: DespawnSerializer.Cleanup
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.Cleanup
+- uid: Nebula.Serialization.Serializers.IStateSerializer.Cleanup
+  commentId: M:Nebula.Serialization.Serializers.IStateSerializer.Cleanup
+  parent: Nebula.Serialization.Serializers.IStateSerializer
+  isExternal: true
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Cleanup
+  name: Cleanup()
+  nameWithType: IStateSerializer.Cleanup()
+  fullName: Nebula.Serialization.Serializers.IStateSerializer.Cleanup()
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer.Cleanup
+    name: Cleanup
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Cleanup
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer.Cleanup
+    name: Cleanup
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Cleanup
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.Export*
+  commentId: Overload:Nebula.Serialization.Serializers.DespawnSerializer.Export
+  isExternal: true
+  href: Nebula.Serialization.Serializers.DespawnSerializer.html#Nebula_Serialization_Serializers_DespawnSerializer_Export_Nebula_WorldRunner_Godot_ENetPacketPeer_
+  name: Export
+  nameWithType: DespawnSerializer.Export
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.Export
+- uid: Nebula.Serialization.Serializers.IStateSerializer.Export(Nebula.WorldRunner,Godot.ENetPacketPeer)
+  commentId: M:Nebula.Serialization.Serializers.IStateSerializer.Export(Nebula.WorldRunner,Godot.ENetPacketPeer)
+  parent: Nebula.Serialization.Serializers.IStateSerializer
+  isExternal: true
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Export_Nebula_WorldRunner_Godot_ENetPacketPeer_
+  name: Export(WorldRunner, ENetPacketPeer)
+  nameWithType: IStateSerializer.Export(WorldRunner, ENetPacketPeer)
+  fullName: Nebula.Serialization.Serializers.IStateSerializer.Export(Nebula.WorldRunner, Godot.ENetPacketPeer)
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer.Export(Nebula.WorldRunner,Godot.ENetPacketPeer)
+    name: Export
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Export_Nebula_WorldRunner_Godot_ENetPacketPeer_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: Godot.ENetPacketPeer
+    name: ENetPacketPeer
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer.Export(Nebula.WorldRunner,Godot.ENetPacketPeer)
+    name: Export
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Export_Nebula_WorldRunner_Godot_ENetPacketPeer_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: Godot.ENetPacketPeer
+    name: ENetPacketPeer
+    isExternal: true
+  - name: )
+- uid: Godot.ENetPacketPeer
+  commentId: T:Godot.ENetPacketPeer
+  parent: Godot
+  isExternal: true
+  name: ENetPacketPeer
+  nameWithType: ENetPacketPeer
+  fullName: Godot.ENetPacketPeer
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.Acknowledge*
+  commentId: Overload:Nebula.Serialization.Serializers.DespawnSerializer.Acknowledge
+  isExternal: true
+  href: Nebula.Serialization.Serializers.DespawnSerializer.html#Nebula_Serialization_Serializers_DespawnSerializer_Acknowledge_Nebula_WorldRunner_Godot_ENetPacketPeer_System_Int32_
+  name: Acknowledge
+  nameWithType: DespawnSerializer.Acknowledge
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.Acknowledge
+- uid: Nebula.Serialization.Serializers.IStateSerializer.Acknowledge(Nebula.WorldRunner,Godot.ENetPacketPeer,System.Int32)
+  commentId: M:Nebula.Serialization.Serializers.IStateSerializer.Acknowledge(Nebula.WorldRunner,Godot.ENetPacketPeer,System.Int32)
+  parent: Nebula.Serialization.Serializers.IStateSerializer
+  isExternal: true
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Acknowledge_Nebula_WorldRunner_Godot_ENetPacketPeer_System_Int32_
+  name: Acknowledge(WorldRunner, ENetPacketPeer, int)
+  nameWithType: IStateSerializer.Acknowledge(WorldRunner, ENetPacketPeer, int)
+  fullName: Nebula.Serialization.Serializers.IStateSerializer.Acknowledge(Nebula.WorldRunner, Godot.ENetPacketPeer, int)
+  nameWithType.vb: IStateSerializer.Acknowledge(WorldRunner, ENetPacketPeer, Integer)
+  fullName.vb: Nebula.Serialization.Serializers.IStateSerializer.Acknowledge(Nebula.WorldRunner, Godot.ENetPacketPeer, Integer)
+  name.vb: Acknowledge(WorldRunner, ENetPacketPeer, Integer)
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer.Acknowledge(Nebula.WorldRunner,Godot.ENetPacketPeer,System.Int32)
+    name: Acknowledge
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Acknowledge_Nebula_WorldRunner_Godot_ENetPacketPeer_System_Int32_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: Godot.ENetPacketPeer
+    name: ENetPacketPeer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer.Acknowledge(Nebula.WorldRunner,Godot.ENetPacketPeer,System.Int32)
+    name: Acknowledge
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Acknowledge_Nebula_WorldRunner_Godot_ENetPacketPeer_System_Int32_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: Godot.ENetPacketPeer
+    name: ENetPacketPeer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.Serialization.Serializers.DespawnSerializer.PhysicsProcess*
+  commentId: Overload:Nebula.Serialization.Serializers.DespawnSerializer.PhysicsProcess
+  isExternal: true
+  href: Nebula.Serialization.Serializers.DespawnSerializer.html#Nebula_Serialization_Serializers_DespawnSerializer_PhysicsProcess_System_Double_
+  name: PhysicsProcess
+  nameWithType: DespawnSerializer.PhysicsProcess
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer.PhysicsProcess
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double

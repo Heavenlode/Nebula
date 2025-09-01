@@ -1,0 +1,4100 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetworkController
+  commentId: T:Nebula.NetworkController
+  id: NetworkController
+  parent: Nebula
+  children:
+  - Nebula.NetworkController.#ctor(Godot.Node)
+  - Nebula.NetworkController.AttachedNetNode
+  - Nebula.NetworkController.CurrentWorld
+  - Nebula.NetworkController.Despawn
+  - Nebula.NetworkController.DespawnOnUnowned
+  - Nebula.NetworkController.EmitSignalInterestChanged(Nebula.UUID,System.Int64)
+  - Nebula.NetworkController.EmitSignalNetPropertyChanged(System.String,Godot.StringName)
+  - Nebula.NetworkController.FindFromChild(Godot.Node)
+  - Nebula.NetworkController.GetInput
+  - Nebula.NetworkController.GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle,System.Boolean)
+  - Nebula.NetworkController.GetNetworkInput(System.Byte,Godot.Variant)
+  - Nebula.NetworkController.InputAuthority
+  - Nebula.NetworkController.InterestChanged
+  - Nebula.NetworkController.InterestLayers
+  - Nebula.NetworkController.IsClientSpawn
+  - Nebula.NetworkController.IsCurrentOwner
+  - Nebula.NetworkController.IsNetScene
+  - Nebula.NetworkController.IsWorldReady
+  - Nebula.NetworkController.NetId
+  - Nebula.NetworkController.NetParent
+  - Nebula.NetworkController.NetParentId
+  - Nebula.NetworkController.NetPropertyChanged
+  - Nebula.NetworkController.NodePathFromNetScene
+  - Nebula.NetworkController.PrepareSpawn(Godot.ENetPacketPeer)
+  - Nebula.NetworkController.SetInputAuthority(Godot.ENetPacketPeer)
+  - Nebula.NetworkController.SetNetworkInput(System.Byte,Godot.Variant)
+  - Nebula.NetworkController.SetPeerInterest(Nebula.UUID,System.Int64,System.Boolean)
+  - Nebula.NetworkController._NetworkProcess(System.Int32)
+  - Nebula.NetworkController._Notification(System.Int32)
+  - Nebula.NetworkController._WorldReady
+  langs:
+  - csharp
+  - vb
+  name: NetworkController
+  nameWithType: NetworkController
+  fullName: Nebula.NetworkController
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Manages the network state of a <xref href="Nebula.NetNode" data-throw-if-not-resolved="false"></xref> (including <xref href="Nebula.NetNode2D" data-throw-if-not-resolved="false"></xref> and <xref href="Nebula.NetNode3D" data-throw-if-not-resolved="false"></xref>).
+  example: []
+  syntax:
+    content: >-
+      [ScriptPath("res://addons/Nebula/Core/NetworkController.cs")]
+
+      public class NetworkController : RefCounted, IDisposable
+    content.vb: >-
+      <ScriptPath("res://addons/Nebula/Core/NetworkController.cs")>
+
+      Public Class NetworkController Inherits RefCounted Implements IDisposable
+  inheritance:
+  - System.Object
+  - Godot.GodotObject
+  - Godot.RefCounted
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - Godot.RefCounted.InitRef
+  - Godot.RefCounted.Reference
+  - Godot.RefCounted.Unreference
+  - Godot.RefCounted.GetReferenceCount
+  - Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name@,Godot.NativeInterop.NativeVariantPtrArgs,Godot.NativeInterop.godot_variant@)
+  - Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name@)
+  - Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name@)
+  - Godot.GodotObject.NotificationPostinitialize
+  - Godot.GodotObject.NotificationPredelete
+  - Godot.GodotObject.NotificationExtensionReloaded
+  - Godot.GodotObject.InstanceFromId(System.UInt64)
+  - Godot.GodotObject.IsInstanceIdValid(System.UInt64)
+  - Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
+  - Godot.GodotObject.WeakRef(Godot.GodotObject)
+  - Godot.GodotObject.Dispose
+  - Godot.GodotObject.Dispose(System.Boolean)
+  - Godot.GodotObject.ToString
+  - Godot.GodotObject.ToSignal(Godot.GodotObject,Godot.StringName)
+  - Godot.GodotObject._Get(Godot.StringName)
+  - Godot.GodotObject._GetPropertyList
+  - Godot.GodotObject._IterGet(Godot.Variant)
+  - Godot.GodotObject._IterInit(Godot.Collections.Array)
+  - Godot.GodotObject._IterNext(Godot.Collections.Array)
+  - Godot.GodotObject._PropertyCanRevert(Godot.StringName)
+  - Godot.GodotObject._PropertyGetRevert(Godot.StringName)
+  - Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
+  - Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
+  - Godot.GodotObject.Free
+  - Godot.GodotObject.GetClass
+  - Godot.GodotObject.IsClass(System.String)
+  - Godot.GodotObject.Set(Godot.StringName,Godot.Variant)
+  - Godot.GodotObject.Get(Godot.StringName)
+  - Godot.GodotObject.SetIndexed(Godot.NodePath,Godot.Variant)
+  - Godot.GodotObject.GetIndexed(Godot.NodePath)
+  - Godot.GodotObject.GetPropertyList
+  - Godot.GodotObject.GetMethodList
+  - Godot.GodotObject.PropertyCanRevert(Godot.StringName)
+  - Godot.GodotObject.PropertyGetRevert(Godot.StringName)
+  - Godot.GodotObject.Notification(System.Int32,System.Boolean)
+  - Godot.GodotObject.GetInstanceId
+  - Godot.GodotObject.SetScript(Godot.Variant)
+  - Godot.GodotObject.GetScript
+  - Godot.GodotObject.SetMeta(Godot.StringName,Godot.Variant)
+  - Godot.GodotObject.RemoveMeta(Godot.StringName)
+  - Godot.GodotObject.GetMeta(Godot.StringName,Godot.Variant)
+  - Godot.GodotObject.HasMeta(Godot.StringName)
+  - Godot.GodotObject.GetMetaList
+  - Godot.GodotObject.AddUserSignal(System.String,Godot.Collections.Array)
+  - Godot.GodotObject.HasUserSignal(Godot.StringName)
+  - Godot.GodotObject.RemoveUserSignal(Godot.StringName)
+  - Godot.GodotObject.EmitSignal(Godot.StringName,Godot.Variant[])
+  - Godot.GodotObject.EmitSignal(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+  - Godot.GodotObject.Call(Godot.StringName,Godot.Variant[])
+  - Godot.GodotObject.Call(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+  - Godot.GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])
+  - Godot.GodotObject.CallDeferred(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+  - Godot.GodotObject.SetDeferred(Godot.StringName,Godot.Variant)
+  - Godot.GodotObject.Callv(Godot.StringName,Godot.Collections.Array)
+  - Godot.GodotObject.HasMethod(Godot.StringName)
+  - Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
+  - Godot.GodotObject.HasSignal(Godot.StringName)
+  - Godot.GodotObject.GetSignalList
+  - Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
+  - Godot.GodotObject.GetIncomingConnections
+  - Godot.GodotObject.Connect(Godot.StringName,Godot.Callable,System.UInt32)
+  - Godot.GodotObject.Disconnect(Godot.StringName,Godot.Callable)
+  - Godot.GodotObject.IsConnected(Godot.StringName,Godot.Callable)
+  - Godot.GodotObject.HasConnections(Godot.StringName)
+  - Godot.GodotObject.SetBlockSignals(System.Boolean)
+  - Godot.GodotObject.IsBlockingSignals
+  - Godot.GodotObject.NotifyPropertyListChanged
+  - Godot.GodotObject.SetMessageTranslation(System.Boolean)
+  - Godot.GodotObject.CanTranslateMessages
+  - Godot.GodotObject.Tr(Godot.StringName,Godot.StringName)
+  - Godot.GodotObject.TrN(Godot.StringName,Godot.StringName,System.Int32,Godot.StringName)
+  - Godot.GodotObject.GetTranslationDomain
+  - Godot.GodotObject.SetTranslationDomain(Godot.StringName)
+  - Godot.GodotObject.IsQueuedForDeletion
+  - Godot.GodotObject.CancelFree
+  - Godot.GodotObject.EmitSignalScriptChanged
+  - Godot.GodotObject.EmitSignalPropertyListChanged
+  - Godot.GodotObject.NativeInstance
+  - Godot.GodotObject.ScriptChanged
+  - Godot.GodotObject.PropertyListChanged
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  attributes:
+  - type: Godot.ScriptPathAttribute
+    ctor: Godot.ScriptPathAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: res://addons/Nebula/Core/NetworkController.cs
+- uid: Nebula.NetworkController.DespawnOnUnowned
+  commentId: F:Nebula.NetworkController.DespawnOnUnowned
+  id: DespawnOnUnowned
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: DespawnOnUnowned
+  nameWithType: NetworkController.DespawnOnUnowned
+  fullName: Nebula.NetworkController.DespawnOnUnowned
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: If true, the node will be despawned when the peer that owns it disconnects, otherwise the InputAuthority will simply be set to null.
+  example: []
+  syntax:
+    content: public bool DespawnOnUnowned
+    return:
+      type: System.Boolean
+    content.vb: Public DespawnOnUnowned As Boolean
+- uid: Nebula.NetworkController.InterestLayers
+  commentId: F:Nebula.NetworkController.InterestLayers
+  id: InterestLayers
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: InterestLayers
+  nameWithType: NetworkController.InterestLayers
+  fullName: Nebula.NetworkController.InterestLayers
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Dictionary<UUID, long> InterestLayers
+    return:
+      type: Godot.Collections.Dictionary{Nebula.UUID,System.Int64}
+    content.vb: Public InterestLayers As Dictionary(Of UUID, Long)
+- uid: Nebula.NetworkController.IsNetScene
+  commentId: M:Nebula.NetworkController.IsNetScene
+  id: IsNetScene
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: IsNetScene()
+  nameWithType: NetworkController.IsNetScene()
+  fullName: Nebula.NetworkController.IsNetScene()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public bool IsNetScene()
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsNetScene() As Boolean
+  overload: Nebula.NetworkController.IsNetScene*
+- uid: Nebula.NetworkController.SetPeerInterest(Nebula.UUID,System.Int64,System.Boolean)
+  commentId: M:Nebula.NetworkController.SetPeerInterest(Nebula.UUID,System.Int64,System.Boolean)
+  id: SetPeerInterest(Nebula.UUID,System.Int64,System.Boolean)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: SetPeerInterest(UUID, long, bool)
+  nameWithType: NetworkController.SetPeerInterest(UUID, long, bool)
+  fullName: Nebula.NetworkController.SetPeerInterest(Nebula.UUID, long, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public void SetPeerInterest(UUID peerId, long interestLayers, bool recurse = true)
+    parameters:
+    - id: peerId
+      type: Nebula.UUID
+    - id: interestLayers
+      type: System.Int64
+    - id: recurse
+      type: System.Boolean
+    content.vb: Public Sub SetPeerInterest(peerId As UUID, interestLayers As Long, recurse As Boolean = True)
+  overload: Nebula.NetworkController.SetPeerInterest*
+  nameWithType.vb: NetworkController.SetPeerInterest(UUID, Long, Boolean)
+  fullName.vb: Nebula.NetworkController.SetPeerInterest(Nebula.UUID, Long, Boolean)
+  name.vb: SetPeerInterest(UUID, Long, Boolean)
+- uid: Nebula.NetworkController._Notification(System.Int32)
+  commentId: M:Nebula.NetworkController._Notification(System.Int32)
+  id: _Notification(System.Int32)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: _Notification(int)
+  nameWithType: NetworkController._Notification(int)
+  fullName: Nebula.NetworkController._Notification(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public override void _Notification(int what)
+    parameters:
+    - id: what
+      type: System.Int32
+    content.vb: Public Overrides Sub _Notification(what As Integer)
+  overridden: Godot.GodotObject._Notification(System.Int32)
+  overload: Nebula.NetworkController._Notification*
+  nameWithType.vb: NetworkController._Notification(Integer)
+  fullName.vb: Nebula.NetworkController._Notification(Integer)
+  name.vb: _Notification(Integer)
+- uid: Nebula.NetworkController.SetNetworkInput(System.Byte,Godot.Variant)
+  commentId: M:Nebula.NetworkController.SetNetworkInput(System.Byte,Godot.Variant)
+  id: SetNetworkInput(System.Byte,Godot.Variant)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: SetNetworkInput(byte, Variant)
+  nameWithType: NetworkController.SetNetworkInput(byte, Variant)
+  fullName: Nebula.NetworkController.SetNetworkInput(byte, Godot.Variant)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public void SetNetworkInput(byte input, Variant value)
+    parameters:
+    - id: input
+      type: System.Byte
+    - id: value
+      type: Godot.Variant
+    content.vb: Public Sub SetNetworkInput(input As Byte, value As [Variant])
+  overload: Nebula.NetworkController.SetNetworkInput*
+  nameWithType.vb: NetworkController.SetNetworkInput(Byte, Variant)
+  fullName.vb: Nebula.NetworkController.SetNetworkInput(Byte, Godot.Variant)
+  name.vb: SetNetworkInput(Byte, Variant)
+- uid: Nebula.NetworkController.GetNetworkInput(System.Byte,Godot.Variant)
+  commentId: M:Nebula.NetworkController.GetNetworkInput(System.Byte,Godot.Variant)
+  id: GetNetworkInput(System.Byte,Godot.Variant)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: GetNetworkInput(byte, Variant)
+  nameWithType: NetworkController.GetNetworkInput(byte, Variant)
+  fullName: Nebula.NetworkController.GetNetworkInput(byte, Godot.Variant)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Variant GetNetworkInput(byte input, Variant defaultValue)
+    parameters:
+    - id: input
+      type: System.Byte
+    - id: defaultValue
+      type: Godot.Variant
+    return:
+      type: Godot.Variant
+    content.vb: Public Function GetNetworkInput(input As Byte, defaultValue As [Variant]) As [Variant]
+  overload: Nebula.NetworkController.GetNetworkInput*
+  nameWithType.vb: NetworkController.GetNetworkInput(Byte, Variant)
+  fullName.vb: Nebula.NetworkController.GetNetworkInput(Byte, Godot.Variant)
+  name.vb: GetNetworkInput(Byte, Variant)
+- uid: Nebula.NetworkController.#ctor(Godot.Node)
+  commentId: M:Nebula.NetworkController.#ctor(Godot.Node)
+  id: '#ctor(Godot.Node)'
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: NetworkController(Node)
+  nameWithType: NetworkController.NetworkController(Node)
+  fullName: Nebula.NetworkController.NetworkController(Godot.Node)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public NetworkController(Node owner)
+    parameters:
+    - id: owner
+      type: Godot.Node
+    content.vb: Public Sub New(owner As Node)
+  overload: Nebula.NetworkController.#ctor*
+  nameWithType.vb: NetworkController.New(Node)
+  fullName.vb: Nebula.NetworkController.New(Godot.Node)
+  name.vb: New(Node)
+- uid: Nebula.NetworkController.SetInputAuthority(Godot.ENetPacketPeer)
+  commentId: M:Nebula.NetworkController.SetInputAuthority(Godot.ENetPacketPeer)
+  id: SetInputAuthority(Godot.ENetPacketPeer)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: SetInputAuthority(ENetPacketPeer)
+  nameWithType: NetworkController.SetInputAuthority(ENetPacketPeer)
+  fullName: Nebula.NetworkController.SetInputAuthority(Godot.ENetPacketPeer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public void SetInputAuthority(ENetPacketPeer inputAuthority)
+    parameters:
+    - id: inputAuthority
+      type: Godot.ENetPacketPeer
+    content.vb: Public Sub SetInputAuthority(inputAuthority As ENetPacketPeer)
+  overload: Nebula.NetworkController.SetInputAuthority*
+- uid: Nebula.NetworkController.FindFromChild(Godot.Node)
+  commentId: M:Nebula.NetworkController.FindFromChild(Godot.Node)
+  id: FindFromChild(Godot.Node)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: FindFromChild(Node)
+  nameWithType: NetworkController.FindFromChild(Node)
+  fullName: Nebula.NetworkController.FindFromChild(Godot.Node)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public static INetNode FindFromChild(Node node)
+    parameters:
+    - id: node
+      type: Godot.Node
+    return:
+      type: Nebula.INetNode
+    content.vb: Public Shared Function FindFromChild(node As Node) As INetNode
+  overload: Nebula.NetworkController.FindFromChild*
+- uid: Nebula.NetworkController.GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle,System.Boolean)
+  commentId: M:Nebula.NetworkController.GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle,System.Boolean)
+  id: GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle,System.Boolean)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: GetNetworkChildren(NetworkChildrenSearchToggle, bool)
+  nameWithType: NetworkController.GetNetworkChildren(NetworkController.NetworkChildrenSearchToggle, bool)
+  fullName: Nebula.NetworkController.GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public IEnumerable<NetNodeWrapper> GetNetworkChildren(NetworkController.NetworkChildrenSearchToggle searchToggle = NetworkChildrenSearchToggle.EXCLUDE_SCENES, bool nestedSceneChildren = true)
+    parameters:
+    - id: searchToggle
+      type: Nebula.NetworkController.NetworkChildrenSearchToggle
+    - id: nestedSceneChildren
+      type: System.Boolean
+    return:
+      type: System.Collections.Generic.IEnumerable{Nebula.NetNodeWrapper}
+    content.vb: Public Function GetNetworkChildren(searchToggle As NetworkController.NetworkChildrenSearchToggle = NetworkChildrenSearchToggle.EXCLUDE_SCENES, nestedSceneChildren As Boolean = True) As IEnumerable(Of NetNodeWrapper)
+  overload: Nebula.NetworkController.GetNetworkChildren*
+  nameWithType.vb: NetworkController.GetNetworkChildren(NetworkController.NetworkChildrenSearchToggle, Boolean)
+  fullName.vb: Nebula.NetworkController.GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle, Boolean)
+  name.vb: GetNetworkChildren(NetworkChildrenSearchToggle, Boolean)
+- uid: Nebula.NetworkController.Despawn
+  commentId: M:Nebula.NetworkController.Despawn
+  id: Despawn
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: Despawn()
+  nameWithType: NetworkController.Despawn()
+  fullName: Nebula.NetworkController.Despawn()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public void Despawn()
+    content.vb: Public Sub Despawn()
+  overload: Nebula.NetworkController.Despawn*
+- uid: Nebula.NetworkController.PrepareSpawn(Godot.ENetPacketPeer)
+  commentId: M:Nebula.NetworkController.PrepareSpawn(Godot.ENetPacketPeer)
+  id: PrepareSpawn(Godot.ENetPacketPeer)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: PrepareSpawn(ENetPacketPeer)
+  nameWithType: NetworkController.PrepareSpawn(ENetPacketPeer)
+  fullName: Nebula.NetworkController.PrepareSpawn(Godot.ENetPacketPeer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public void PrepareSpawn(ENetPacketPeer peer)
+    parameters:
+    - id: peer
+      type: Godot.ENetPacketPeer
+    content.vb: Public Sub PrepareSpawn(peer As ENetPacketPeer)
+  overload: Nebula.NetworkController.PrepareSpawn*
+- uid: Nebula.NetworkController._WorldReady
+  commentId: M:Nebula.NetworkController._WorldReady
+  id: _WorldReady
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: _WorldReady()
+  nameWithType: NetworkController._WorldReady()
+  fullName: Nebula.NetworkController._WorldReady()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void _WorldReady()
+    content.vb: Public Overridable Sub _WorldReady()
+  overload: Nebula.NetworkController._WorldReady*
+- uid: Nebula.NetworkController._NetworkProcess(System.Int32)
+  commentId: M:Nebula.NetworkController._NetworkProcess(System.Int32)
+  id: _NetworkProcess(System.Int32)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: _NetworkProcess(int)
+  nameWithType: NetworkController._NetworkProcess(int)
+  fullName: Nebula.NetworkController._NetworkProcess(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void _NetworkProcess(int tick)
+    parameters:
+    - id: tick
+      type: System.Int32
+    content.vb: Public Overridable Sub _NetworkProcess(tick As Integer)
+  overload: Nebula.NetworkController._NetworkProcess*
+  nameWithType.vb: NetworkController._NetworkProcess(Integer)
+  fullName.vb: Nebula.NetworkController._NetworkProcess(Integer)
+  name.vb: _NetworkProcess(Integer)
+- uid: Nebula.NetworkController.GetInput
+  commentId: M:Nebula.NetworkController.GetInput
+  id: GetInput
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: GetInput()
+  nameWithType: NetworkController.GetInput()
+  fullName: Nebula.NetworkController.GetInput()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Dictionary<int, Variant> GetInput()
+    return:
+      type: Godot.Collections.Dictionary{System.Int32,Godot.Variant}
+    content.vb: Public Function GetInput() As Dictionary(Of Integer, [Variant])
+  overload: Nebula.NetworkController.GetInput*
+- uid: Nebula.NetworkController.NodePathFromNetScene
+  commentId: M:Nebula.NetworkController.NodePathFromNetScene
+  id: NodePathFromNetScene
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: NodePathFromNetScene()
+  nameWithType: NetworkController.NodePathFromNetScene()
+  fullName: Nebula.NetworkController.NodePathFromNetScene()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public string NodePathFromNetScene()
+    return:
+      type: System.String
+    content.vb: Public Function NodePathFromNetScene() As String
+  overload: Nebula.NetworkController.NodePathFromNetScene*
+- uid: Nebula.NetworkController.EmitSignalInterestChanged(Nebula.UUID,System.Int64)
+  commentId: M:Nebula.NetworkController.EmitSignalInterestChanged(Nebula.UUID,System.Int64)
+  id: EmitSignalInterestChanged(Nebula.UUID,System.Int64)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: EmitSignalInterestChanged(UUID, long)
+  nameWithType: NetworkController.EmitSignalInterestChanged(UUID, long)
+  fullName: Nebula.NetworkController.EmitSignalInterestChanged(Nebula.UUID, long)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetworkController_ScriptSignals.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: protected void EmitSignalInterestChanged(UUID peerId, long interestLayers)
+    parameters:
+    - id: peerId
+      type: Nebula.UUID
+    - id: interestLayers
+      type: System.Int64
+    content.vb: Protected Sub EmitSignalInterestChanged(peerId As UUID, interestLayers As Long)
+  overload: Nebula.NetworkController.EmitSignalInterestChanged*
+  nameWithType.vb: NetworkController.EmitSignalInterestChanged(UUID, Long)
+  fullName.vb: Nebula.NetworkController.EmitSignalInterestChanged(Nebula.UUID, Long)
+  name.vb: EmitSignalInterestChanged(UUID, Long)
+- uid: Nebula.NetworkController.EmitSignalNetPropertyChanged(System.String,Godot.StringName)
+  commentId: M:Nebula.NetworkController.EmitSignalNetPropertyChanged(System.String,Godot.StringName)
+  id: EmitSignalNetPropertyChanged(System.String,Godot.StringName)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: EmitSignalNetPropertyChanged(string, StringName)
+  nameWithType: NetworkController.EmitSignalNetPropertyChanged(string, StringName)
+  fullName: Nebula.NetworkController.EmitSignalNetPropertyChanged(string, Godot.StringName)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetworkController_ScriptSignals.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: protected void EmitSignalNetPropertyChanged(string nodePath, StringName propertyName)
+    parameters:
+    - id: nodePath
+      type: System.String
+    - id: propertyName
+      type: Godot.StringName
+    content.vb: Protected Sub EmitSignalNetPropertyChanged(nodePath As String, propertyName As StringName)
+  overload: Nebula.NetworkController.EmitSignalNetPropertyChanged*
+  nameWithType.vb: NetworkController.EmitSignalNetPropertyChanged(String, StringName)
+  fullName.vb: Nebula.NetworkController.EmitSignalNetPropertyChanged(String, Godot.StringName)
+  name.vb: EmitSignalNetPropertyChanged(String, StringName)
+- uid: Nebula.NetworkController.AttachedNetNode
+  commentId: P:Nebula.NetworkController.AttachedNetNode
+  id: AttachedNetNode
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: AttachedNetNode
+  nameWithType: NetworkController.AttachedNetNode
+  fullName: Nebula.NetworkController.AttachedNetNode
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public NetNodeWrapper AttachedNetNode { get; }
+    parameters: []
+    return:
+      type: Nebula.NetNodeWrapper
+    content.vb: Public ReadOnly Property AttachedNetNode As NetNodeWrapper
+  overload: Nebula.NetworkController.AttachedNetNode*
+- uid: Nebula.NetworkController.CurrentWorld
+  commentId: P:Nebula.NetworkController.CurrentWorld
+  id: CurrentWorld
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: CurrentWorld
+  nameWithType: NetworkController.CurrentWorld
+  fullName: Nebula.NetworkController.CurrentWorld
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public WorldRunner CurrentWorld { get; }
+    parameters: []
+    return:
+      type: Nebula.WorldRunner
+    content.vb: Public ReadOnly Property CurrentWorld As WorldRunner
+  overload: Nebula.NetworkController.CurrentWorld*
+- uid: Nebula.NetworkController.IsWorldReady
+  commentId: P:Nebula.NetworkController.IsWorldReady
+  id: IsWorldReady
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: IsWorldReady
+  nameWithType: NetworkController.IsWorldReady
+  fullName: Nebula.NetworkController.IsWorldReady
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public bool IsWorldReady { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsWorldReady As Boolean
+  overload: Nebula.NetworkController.IsWorldReady*
+- uid: Nebula.NetworkController.NetParentId
+  commentId: P:Nebula.NetworkController.NetParentId
+  id: NetParentId
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: NetParentId
+  nameWithType: NetworkController.NetParentId
+  fullName: Nebula.NetworkController.NetParentId
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public NetId NetParentId { get; set; }
+    parameters: []
+    return:
+      type: Nebula.NetId
+    content.vb: Public Property NetParentId As NetId
+  overload: Nebula.NetworkController.NetParentId*
+- uid: Nebula.NetworkController.NetParent
+  commentId: P:Nebula.NetworkController.NetParent
+  id: NetParent
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: NetParent
+  nameWithType: NetworkController.NetParent
+  fullName: Nebula.NetworkController.NetParent
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public NetNodeWrapper NetParent { get; }
+    parameters: []
+    return:
+      type: Nebula.NetNodeWrapper
+    content.vb: Public ReadOnly Property NetParent As NetNodeWrapper
+  overload: Nebula.NetworkController.NetParent*
+- uid: Nebula.NetworkController.IsClientSpawn
+  commentId: P:Nebula.NetworkController.IsClientSpawn
+  id: IsClientSpawn
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: IsClientSpawn
+  nameWithType: NetworkController.IsClientSpawn
+  fullName: Nebula.NetworkController.IsClientSpawn
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public bool IsClientSpawn { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsClientSpawn As Boolean
+  overload: Nebula.NetworkController.IsClientSpawn*
+- uid: Nebula.NetworkController.NetId
+  commentId: P:Nebula.NetworkController.NetId
+  id: NetId
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: NetId
+  nameWithType: NetworkController.NetId
+  fullName: Nebula.NetworkController.NetId
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public NetId NetId { get; }
+    parameters: []
+    return:
+      type: Nebula.NetId
+    content.vb: Public ReadOnly Property NetId As NetId
+  overload: Nebula.NetworkController.NetId*
+- uid: Nebula.NetworkController.InputAuthority
+  commentId: P:Nebula.NetworkController.InputAuthority
+  id: InputAuthority
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: InputAuthority
+  nameWithType: NetworkController.InputAuthority
+  fullName: Nebula.NetworkController.InputAuthority
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public ENetPacketPeer InputAuthority { get; }
+    parameters: []
+    return:
+      type: Godot.ENetPacketPeer
+    content.vb: Public ReadOnly Property InputAuthority As ENetPacketPeer
+  overload: Nebula.NetworkController.InputAuthority*
+- uid: Nebula.NetworkController.IsCurrentOwner
+  commentId: P:Nebula.NetworkController.IsCurrentOwner
+  id: IsCurrentOwner
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: IsCurrentOwner
+  nameWithType: NetworkController.IsCurrentOwner
+  fullName: Nebula.NetworkController.IsCurrentOwner
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public bool IsCurrentOwner { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsCurrentOwner As Boolean
+  overload: Nebula.NetworkController.IsCurrentOwner*
+- uid: Nebula.NetworkController.InterestChanged
+  commentId: E:Nebula.NetworkController.InterestChanged
+  id: InterestChanged
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: InterestChanged
+  nameWithType: NetworkController.InterestChanged
+  fullName: Nebula.NetworkController.InterestChanged
+  type: Event
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetworkController_ScriptSignals.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public event NetworkController.InterestChangedEventHandler InterestChanged
+    return:
+      type: Nebula.NetworkController.InterestChangedEventHandler
+    content.vb: Public Event InterestChanged As NetworkController.InterestChangedEventHandler
+- uid: Nebula.NetworkController.NetPropertyChanged
+  commentId: E:Nebula.NetworkController.NetPropertyChanged
+  id: NetPropertyChanged
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: NetPropertyChanged
+  nameWithType: NetworkController.NetPropertyChanged
+  fullName: Nebula.NetworkController.NetPropertyChanged
+  type: Event
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetworkController_ScriptSignals.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public event NetworkController.NetPropertyChangedEventHandler NetPropertyChanged
+    return:
+      type: Nebula.NetworkController.NetPropertyChangedEventHandler
+    content.vb: Public Event NetPropertyChanged As NetworkController.NetPropertyChangedEventHandler
+references:
+- uid: Nebula.NetNode
+  commentId: T:Nebula.NetNode
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetNode.html
+  name: NetNode
+  nameWithType: NetNode
+  fullName: Nebula.NetNode
+- uid: Nebula.NetNode2D
+  commentId: T:Nebula.NetNode2D
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetNode2D.html
+  name: NetNode2D
+  nameWithType: NetNode2D
+  fullName: Nebula.NetNode2D
+- uid: Nebula.NetNode3D
+  commentId: T:Nebula.NetNode3D
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetNode3D.html
+  name: NetNode3D
+  nameWithType: NetNode3D
+  fullName: Nebula.NetNode3D
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Godot.GodotObject
+  commentId: T:Godot.GodotObject
+  parent: Godot
+  isExternal: true
+  name: GodotObject
+  nameWithType: GodotObject
+  fullName: Godot.GodotObject
+- uid: Godot.RefCounted
+  commentId: T:Godot.RefCounted
+  parent: Godot
+  isExternal: true
+  name: RefCounted
+  nameWithType: RefCounted
+  fullName: Godot.RefCounted
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: Godot.RefCounted.InitRef
+  commentId: M:Godot.RefCounted.InitRef
+  parent: Godot.RefCounted
+  isExternal: true
+  name: InitRef()
+  nameWithType: RefCounted.InitRef()
+  fullName: Godot.RefCounted.InitRef()
+  spec.csharp:
+  - uid: Godot.RefCounted.InitRef
+    name: InitRef
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.RefCounted.InitRef
+    name: InitRef
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.RefCounted.Reference
+  commentId: M:Godot.RefCounted.Reference
+  parent: Godot.RefCounted
+  isExternal: true
+  name: Reference()
+  nameWithType: RefCounted.Reference()
+  fullName: Godot.RefCounted.Reference()
+  spec.csharp:
+  - uid: Godot.RefCounted.Reference
+    name: Reference
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.RefCounted.Reference
+    name: Reference
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.RefCounted.Unreference
+  commentId: M:Godot.RefCounted.Unreference
+  parent: Godot.RefCounted
+  isExternal: true
+  name: Unreference()
+  nameWithType: RefCounted.Unreference()
+  fullName: Godot.RefCounted.Unreference()
+  spec.csharp:
+  - uid: Godot.RefCounted.Unreference
+    name: Unreference
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.RefCounted.Unreference
+    name: Unreference
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.RefCounted.GetReferenceCount
+  commentId: M:Godot.RefCounted.GetReferenceCount
+  parent: Godot.RefCounted
+  isExternal: true
+  name: GetReferenceCount()
+  nameWithType: RefCounted.GetReferenceCount()
+  fullName: Godot.RefCounted.GetReferenceCount()
+  spec.csharp:
+  - uid: Godot.RefCounted.GetReferenceCount
+    name: GetReferenceCount
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.RefCounted.GetReferenceCount
+    name: GetReferenceCount
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name@,Godot.NativeInterop.NativeVariantPtrArgs,Godot.NativeInterop.godot_variant@)
+  commentId: M:Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name@,Godot.NativeInterop.NativeVariantPtrArgs,Godot.NativeInterop.godot_variant@)
+  parent: Godot.RefCounted
+  isExternal: true
+  name: InvokeGodotClassMethod(in godot_string_name, NativeVariantPtrArgs, out godot_variant)
+  nameWithType: RefCounted.InvokeGodotClassMethod(in godot_string_name, NativeVariantPtrArgs, out godot_variant)
+  fullName: Godot.RefCounted.InvokeGodotClassMethod(in Godot.NativeInterop.godot_string_name, Godot.NativeInterop.NativeVariantPtrArgs, out Godot.NativeInterop.godot_variant)
+  nameWithType.vb: RefCounted.InvokeGodotClassMethod(godot_string_name, NativeVariantPtrArgs, godot_variant)
+  fullName.vb: Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant)
+  name.vb: InvokeGodotClassMethod(godot_string_name, NativeVariantPtrArgs, godot_variant)
+  spec.csharp:
+  - uid: Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name@,Godot.NativeInterop.NativeVariantPtrArgs,Godot.NativeInterop.godot_variant@)
+    name: InvokeGodotClassMethod
+    isExternal: true
+  - name: (
+  - name: in
+  - name: " "
+  - uid: Godot.NativeInterop.godot_string_name
+    name: godot_string_name
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.NativeInterop.NativeVariantPtrArgs
+    name: NativeVariantPtrArgs
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: out
+  - name: " "
+  - uid: Godot.NativeInterop.godot_variant
+    name: godot_variant
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name@,Godot.NativeInterop.NativeVariantPtrArgs,Godot.NativeInterop.godot_variant@)
+    name: InvokeGodotClassMethod
+    isExternal: true
+  - name: (
+  - uid: Godot.NativeInterop.godot_string_name
+    name: godot_string_name
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.NativeInterop.NativeVariantPtrArgs
+    name: NativeVariantPtrArgs
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.NativeInterop.godot_variant
+    name: godot_variant
+    isExternal: true
+  - name: )
+- uid: Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name@)
+  commentId: M:Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name@)
+  parent: Godot.RefCounted
+  isExternal: true
+  name: HasGodotClassMethod(in godot_string_name)
+  nameWithType: RefCounted.HasGodotClassMethod(in godot_string_name)
+  fullName: Godot.RefCounted.HasGodotClassMethod(in Godot.NativeInterop.godot_string_name)
+  nameWithType.vb: RefCounted.HasGodotClassMethod(godot_string_name)
+  fullName.vb: Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name)
+  name.vb: HasGodotClassMethod(godot_string_name)
+  spec.csharp:
+  - uid: Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name@)
+    name: HasGodotClassMethod
+    isExternal: true
+  - name: (
+  - name: in
+  - name: " "
+  - uid: Godot.NativeInterop.godot_string_name
+    name: godot_string_name
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name@)
+    name: HasGodotClassMethod
+    isExternal: true
+  - name: (
+  - uid: Godot.NativeInterop.godot_string_name
+    name: godot_string_name
+    isExternal: true
+  - name: )
+- uid: Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name@)
+  commentId: M:Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name@)
+  parent: Godot.RefCounted
+  isExternal: true
+  name: HasGodotClassSignal(in godot_string_name)
+  nameWithType: RefCounted.HasGodotClassSignal(in godot_string_name)
+  fullName: Godot.RefCounted.HasGodotClassSignal(in Godot.NativeInterop.godot_string_name)
+  nameWithType.vb: RefCounted.HasGodotClassSignal(godot_string_name)
+  fullName.vb: Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name)
+  name.vb: HasGodotClassSignal(godot_string_name)
+  spec.csharp:
+  - uid: Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name@)
+    name: HasGodotClassSignal
+    isExternal: true
+  - name: (
+  - name: in
+  - name: " "
+  - uid: Godot.NativeInterop.godot_string_name
+    name: godot_string_name
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name@)
+    name: HasGodotClassSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.NativeInterop.godot_string_name
+    name: godot_string_name
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.NotificationPostinitialize
+  commentId: F:Godot.GodotObject.NotificationPostinitialize
+  parent: Godot.GodotObject
+  isExternal: true
+  name: NotificationPostinitialize
+  nameWithType: GodotObject.NotificationPostinitialize
+  fullName: Godot.GodotObject.NotificationPostinitialize
+- uid: Godot.GodotObject.NotificationPredelete
+  commentId: F:Godot.GodotObject.NotificationPredelete
+  parent: Godot.GodotObject
+  isExternal: true
+  name: NotificationPredelete
+  nameWithType: GodotObject.NotificationPredelete
+  fullName: Godot.GodotObject.NotificationPredelete
+- uid: Godot.GodotObject.NotificationExtensionReloaded
+  commentId: F:Godot.GodotObject.NotificationExtensionReloaded
+  parent: Godot.GodotObject
+  isExternal: true
+  name: NotificationExtensionReloaded
+  nameWithType: GodotObject.NotificationExtensionReloaded
+  fullName: Godot.GodotObject.NotificationExtensionReloaded
+- uid: Godot.GodotObject.InstanceFromId(System.UInt64)
+  commentId: M:Godot.GodotObject.InstanceFromId(System.UInt64)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint64
+  name: InstanceFromId(ulong)
+  nameWithType: GodotObject.InstanceFromId(ulong)
+  fullName: Godot.GodotObject.InstanceFromId(ulong)
+  nameWithType.vb: GodotObject.InstanceFromId(ULong)
+  fullName.vb: Godot.GodotObject.InstanceFromId(ULong)
+  name.vb: InstanceFromId(ULong)
+  spec.csharp:
+  - uid: Godot.GodotObject.InstanceFromId(System.UInt64)
+    name: InstanceFromId
+    isExternal: true
+  - name: (
+  - uid: System.UInt64
+    name: ulong
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint64
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.InstanceFromId(System.UInt64)
+    name: InstanceFromId
+    isExternal: true
+  - name: (
+  - uid: System.UInt64
+    name: ULong
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint64
+  - name: )
+- uid: Godot.GodotObject.IsInstanceIdValid(System.UInt64)
+  commentId: M:Godot.GodotObject.IsInstanceIdValid(System.UInt64)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint64
+  name: IsInstanceIdValid(ulong)
+  nameWithType: GodotObject.IsInstanceIdValid(ulong)
+  fullName: Godot.GodotObject.IsInstanceIdValid(ulong)
+  nameWithType.vb: GodotObject.IsInstanceIdValid(ULong)
+  fullName.vb: Godot.GodotObject.IsInstanceIdValid(ULong)
+  name.vb: IsInstanceIdValid(ULong)
+  spec.csharp:
+  - uid: Godot.GodotObject.IsInstanceIdValid(System.UInt64)
+    name: IsInstanceIdValid
+    isExternal: true
+  - name: (
+  - uid: System.UInt64
+    name: ulong
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint64
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.IsInstanceIdValid(System.UInt64)
+    name: IsInstanceIdValid
+    isExternal: true
+  - name: (
+  - uid: System.UInt64
+    name: ULong
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint64
+  - name: )
+- uid: Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
+  commentId: M:Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: IsInstanceValid(GodotObject)
+  nameWithType: GodotObject.IsInstanceValid(GodotObject)
+  fullName: Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
+  spec.csharp:
+  - uid: Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
+    name: IsInstanceValid
+    isExternal: true
+  - name: (
+  - uid: Godot.GodotObject
+    name: GodotObject
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
+    name: IsInstanceValid
+    isExternal: true
+  - name: (
+  - uid: Godot.GodotObject
+    name: GodotObject
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.WeakRef(Godot.GodotObject)
+  commentId: M:Godot.GodotObject.WeakRef(Godot.GodotObject)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: WeakRef(GodotObject)
+  nameWithType: GodotObject.WeakRef(GodotObject)
+  fullName: Godot.GodotObject.WeakRef(Godot.GodotObject)
+  spec.csharp:
+  - uid: Godot.GodotObject.WeakRef(Godot.GodotObject)
+    name: WeakRef
+    isExternal: true
+  - name: (
+  - uid: Godot.GodotObject
+    name: GodotObject
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.WeakRef(Godot.GodotObject)
+    name: WeakRef
+    isExternal: true
+  - name: (
+  - uid: Godot.GodotObject
+    name: GodotObject
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.Dispose
+  commentId: M:Godot.GodotObject.Dispose
+  parent: Godot.GodotObject
+  isExternal: true
+  name: Dispose()
+  nameWithType: GodotObject.Dispose()
+  fullName: Godot.GodotObject.Dispose()
+  spec.csharp:
+  - uid: Godot.GodotObject.Dispose
+    name: Dispose
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Dispose
+    name: Dispose
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.Dispose(System.Boolean)
+  commentId: M:Godot.GodotObject.Dispose(System.Boolean)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: Dispose(bool)
+  nameWithType: GodotObject.Dispose(bool)
+  fullName: Godot.GodotObject.Dispose(bool)
+  nameWithType.vb: GodotObject.Dispose(Boolean)
+  fullName.vb: Godot.GodotObject.Dispose(Boolean)
+  name.vb: Dispose(Boolean)
+  spec.csharp:
+  - uid: Godot.GodotObject.Dispose(System.Boolean)
+    name: Dispose
+    isExternal: true
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Dispose(System.Boolean)
+    name: Dispose
+    isExternal: true
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Godot.GodotObject.ToString
+  commentId: M:Godot.GodotObject.ToString
+  parent: Godot.GodotObject
+  isExternal: true
+  name: ToString()
+  nameWithType: GodotObject.ToString()
+  fullName: Godot.GodotObject.ToString()
+  spec.csharp:
+  - uid: Godot.GodotObject.ToString
+    name: ToString
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.ToString
+    name: ToString
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.ToSignal(Godot.GodotObject,Godot.StringName)
+  commentId: M:Godot.GodotObject.ToSignal(Godot.GodotObject,Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: ToSignal(GodotObject, StringName)
+  nameWithType: GodotObject.ToSignal(GodotObject, StringName)
+  fullName: Godot.GodotObject.ToSignal(Godot.GodotObject, Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.ToSignal(Godot.GodotObject,Godot.StringName)
+    name: ToSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.GodotObject
+    name: GodotObject
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.ToSignal(Godot.GodotObject,Godot.StringName)
+    name: ToSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.GodotObject
+    name: GodotObject
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject._Get(Godot.StringName)
+  commentId: M:Godot.GodotObject._Get(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: _Get(StringName)
+  nameWithType: GodotObject._Get(StringName)
+  fullName: Godot.GodotObject._Get(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject._Get(Godot.StringName)
+    name: _Get
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject._Get(Godot.StringName)
+    name: _Get
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject._GetPropertyList
+  commentId: M:Godot.GodotObject._GetPropertyList
+  parent: Godot.GodotObject
+  isExternal: true
+  name: _GetPropertyList()
+  nameWithType: GodotObject._GetPropertyList()
+  fullName: Godot.GodotObject._GetPropertyList()
+  spec.csharp:
+  - uid: Godot.GodotObject._GetPropertyList
+    name: _GetPropertyList
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject._GetPropertyList
+    name: _GetPropertyList
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject._IterGet(Godot.Variant)
+  commentId: M:Godot.GodotObject._IterGet(Godot.Variant)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: _IterGet(Variant)
+  nameWithType: GodotObject._IterGet(Variant)
+  fullName: Godot.GodotObject._IterGet(Godot.Variant)
+  spec.csharp:
+  - uid: Godot.GodotObject._IterGet(Godot.Variant)
+    name: _IterGet
+    isExternal: true
+  - name: (
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject._IterGet(Godot.Variant)
+    name: _IterGet
+    isExternal: true
+  - name: (
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject._IterInit(Godot.Collections.Array)
+  commentId: M:Godot.GodotObject._IterInit(Godot.Collections.Array)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: _IterInit(Array)
+  nameWithType: GodotObject._IterInit(Array)
+  fullName: Godot.GodotObject._IterInit(Godot.Collections.Array)
+  spec.csharp:
+  - uid: Godot.GodotObject._IterInit(Godot.Collections.Array)
+    name: _IterInit
+    isExternal: true
+  - name: (
+  - uid: Godot.Collections.Array
+    name: Array
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject._IterInit(Godot.Collections.Array)
+    name: _IterInit
+    isExternal: true
+  - name: (
+  - uid: Godot.Collections.Array
+    name: Array
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject._IterNext(Godot.Collections.Array)
+  commentId: M:Godot.GodotObject._IterNext(Godot.Collections.Array)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: _IterNext(Array)
+  nameWithType: GodotObject._IterNext(Array)
+  fullName: Godot.GodotObject._IterNext(Godot.Collections.Array)
+  spec.csharp:
+  - uid: Godot.GodotObject._IterNext(Godot.Collections.Array)
+    name: _IterNext
+    isExternal: true
+  - name: (
+  - uid: Godot.Collections.Array
+    name: Array
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject._IterNext(Godot.Collections.Array)
+    name: _IterNext
+    isExternal: true
+  - name: (
+  - uid: Godot.Collections.Array
+    name: Array
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject._PropertyCanRevert(Godot.StringName)
+  commentId: M:Godot.GodotObject._PropertyCanRevert(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: _PropertyCanRevert(StringName)
+  nameWithType: GodotObject._PropertyCanRevert(StringName)
+  fullName: Godot.GodotObject._PropertyCanRevert(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject._PropertyCanRevert(Godot.StringName)
+    name: _PropertyCanRevert
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject._PropertyCanRevert(Godot.StringName)
+    name: _PropertyCanRevert
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject._PropertyGetRevert(Godot.StringName)
+  commentId: M:Godot.GodotObject._PropertyGetRevert(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: _PropertyGetRevert(StringName)
+  nameWithType: GodotObject._PropertyGetRevert(StringName)
+  fullName: Godot.GodotObject._PropertyGetRevert(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject._PropertyGetRevert(Godot.StringName)
+    name: _PropertyGetRevert
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject._PropertyGetRevert(Godot.StringName)
+    name: _PropertyGetRevert
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
+  commentId: M:Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: _Set(StringName, Variant)
+  nameWithType: GodotObject._Set(StringName, Variant)
+  fullName: Godot.GodotObject._Set(Godot.StringName, Godot.Variant)
+  spec.csharp:
+  - uid: Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
+    name: _Set
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
+    name: _Set
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
+  commentId: M:Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: _ValidateProperty(Dictionary)
+  nameWithType: GodotObject._ValidateProperty(Dictionary)
+  fullName: Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
+  spec.csharp:
+  - uid: Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
+    name: _ValidateProperty
+    isExternal: true
+  - name: (
+  - uid: Godot.Collections.Dictionary
+    name: Dictionary
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
+    name: _ValidateProperty
+    isExternal: true
+  - name: (
+  - uid: Godot.Collections.Dictionary
+    name: Dictionary
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.Free
+  commentId: M:Godot.GodotObject.Free
+  parent: Godot.GodotObject
+  isExternal: true
+  name: Free()
+  nameWithType: GodotObject.Free()
+  fullName: Godot.GodotObject.Free()
+  spec.csharp:
+  - uid: Godot.GodotObject.Free
+    name: Free
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Free
+    name: Free
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.GetClass
+  commentId: M:Godot.GodotObject.GetClass
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetClass()
+  nameWithType: GodotObject.GetClass()
+  fullName: Godot.GodotObject.GetClass()
+  spec.csharp:
+  - uid: Godot.GodotObject.GetClass
+    name: GetClass
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetClass
+    name: GetClass
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.IsClass(System.String)
+  commentId: M:Godot.GodotObject.IsClass(System.String)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: IsClass(string)
+  nameWithType: GodotObject.IsClass(string)
+  fullName: Godot.GodotObject.IsClass(string)
+  nameWithType.vb: GodotObject.IsClass(String)
+  fullName.vb: Godot.GodotObject.IsClass(String)
+  name.vb: IsClass(String)
+  spec.csharp:
+  - uid: Godot.GodotObject.IsClass(System.String)
+    name: IsClass
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.IsClass(System.String)
+    name: IsClass
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Godot.GodotObject.Set(Godot.StringName,Godot.Variant)
+  commentId: M:Godot.GodotObject.Set(Godot.StringName,Godot.Variant)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: Set(StringName, Variant)
+  nameWithType: GodotObject.Set(StringName, Variant)
+  fullName: Godot.GodotObject.Set(Godot.StringName, Godot.Variant)
+  spec.csharp:
+  - uid: Godot.GodotObject.Set(Godot.StringName,Godot.Variant)
+    name: Set
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Set(Godot.StringName,Godot.Variant)
+    name: Set
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.Get(Godot.StringName)
+  commentId: M:Godot.GodotObject.Get(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: Get(StringName)
+  nameWithType: GodotObject.Get(StringName)
+  fullName: Godot.GodotObject.Get(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.Get(Godot.StringName)
+    name: Get
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Get(Godot.StringName)
+    name: Get
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.SetIndexed(Godot.NodePath,Godot.Variant)
+  commentId: M:Godot.GodotObject.SetIndexed(Godot.NodePath,Godot.Variant)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: SetIndexed(NodePath, Variant)
+  nameWithType: GodotObject.SetIndexed(NodePath, Variant)
+  fullName: Godot.GodotObject.SetIndexed(Godot.NodePath, Godot.Variant)
+  spec.csharp:
+  - uid: Godot.GodotObject.SetIndexed(Godot.NodePath,Godot.Variant)
+    name: SetIndexed
+    isExternal: true
+  - name: (
+  - uid: Godot.NodePath
+    name: NodePath
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.SetIndexed(Godot.NodePath,Godot.Variant)
+    name: SetIndexed
+    isExternal: true
+  - name: (
+  - uid: Godot.NodePath
+    name: NodePath
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.GetIndexed(Godot.NodePath)
+  commentId: M:Godot.GodotObject.GetIndexed(Godot.NodePath)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetIndexed(NodePath)
+  nameWithType: GodotObject.GetIndexed(NodePath)
+  fullName: Godot.GodotObject.GetIndexed(Godot.NodePath)
+  spec.csharp:
+  - uid: Godot.GodotObject.GetIndexed(Godot.NodePath)
+    name: GetIndexed
+    isExternal: true
+  - name: (
+  - uid: Godot.NodePath
+    name: NodePath
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetIndexed(Godot.NodePath)
+    name: GetIndexed
+    isExternal: true
+  - name: (
+  - uid: Godot.NodePath
+    name: NodePath
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.GetPropertyList
+  commentId: M:Godot.GodotObject.GetPropertyList
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetPropertyList()
+  nameWithType: GodotObject.GetPropertyList()
+  fullName: Godot.GodotObject.GetPropertyList()
+  spec.csharp:
+  - uid: Godot.GodotObject.GetPropertyList
+    name: GetPropertyList
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetPropertyList
+    name: GetPropertyList
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.GetMethodList
+  commentId: M:Godot.GodotObject.GetMethodList
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetMethodList()
+  nameWithType: GodotObject.GetMethodList()
+  fullName: Godot.GodotObject.GetMethodList()
+  spec.csharp:
+  - uid: Godot.GodotObject.GetMethodList
+    name: GetMethodList
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetMethodList
+    name: GetMethodList
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.PropertyCanRevert(Godot.StringName)
+  commentId: M:Godot.GodotObject.PropertyCanRevert(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: PropertyCanRevert(StringName)
+  nameWithType: GodotObject.PropertyCanRevert(StringName)
+  fullName: Godot.GodotObject.PropertyCanRevert(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.PropertyCanRevert(Godot.StringName)
+    name: PropertyCanRevert
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.PropertyCanRevert(Godot.StringName)
+    name: PropertyCanRevert
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.PropertyGetRevert(Godot.StringName)
+  commentId: M:Godot.GodotObject.PropertyGetRevert(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: PropertyGetRevert(StringName)
+  nameWithType: GodotObject.PropertyGetRevert(StringName)
+  fullName: Godot.GodotObject.PropertyGetRevert(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.PropertyGetRevert(Godot.StringName)
+    name: PropertyGetRevert
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.PropertyGetRevert(Godot.StringName)
+    name: PropertyGetRevert
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.Notification(System.Int32,System.Boolean)
+  commentId: M:Godot.GodotObject.Notification(System.Int32,System.Boolean)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: Notification(int, bool)
+  nameWithType: GodotObject.Notification(int, bool)
+  fullName: Godot.GodotObject.Notification(int, bool)
+  nameWithType.vb: GodotObject.Notification(Integer, Boolean)
+  fullName.vb: Godot.GodotObject.Notification(Integer, Boolean)
+  name.vb: Notification(Integer, Boolean)
+  spec.csharp:
+  - uid: Godot.GodotObject.Notification(System.Int32,System.Boolean)
+    name: Notification
+    isExternal: true
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Notification(System.Int32,System.Boolean)
+    name: Notification
+    isExternal: true
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Godot.GodotObject.GetInstanceId
+  commentId: M:Godot.GodotObject.GetInstanceId
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetInstanceId()
+  nameWithType: GodotObject.GetInstanceId()
+  fullName: Godot.GodotObject.GetInstanceId()
+  spec.csharp:
+  - uid: Godot.GodotObject.GetInstanceId
+    name: GetInstanceId
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetInstanceId
+    name: GetInstanceId
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.SetScript(Godot.Variant)
+  commentId: M:Godot.GodotObject.SetScript(Godot.Variant)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: SetScript(Variant)
+  nameWithType: GodotObject.SetScript(Variant)
+  fullName: Godot.GodotObject.SetScript(Godot.Variant)
+  spec.csharp:
+  - uid: Godot.GodotObject.SetScript(Godot.Variant)
+    name: SetScript
+    isExternal: true
+  - name: (
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.SetScript(Godot.Variant)
+    name: SetScript
+    isExternal: true
+  - name: (
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.GetScript
+  commentId: M:Godot.GodotObject.GetScript
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetScript()
+  nameWithType: GodotObject.GetScript()
+  fullName: Godot.GodotObject.GetScript()
+  spec.csharp:
+  - uid: Godot.GodotObject.GetScript
+    name: GetScript
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetScript
+    name: GetScript
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.SetMeta(Godot.StringName,Godot.Variant)
+  commentId: M:Godot.GodotObject.SetMeta(Godot.StringName,Godot.Variant)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: SetMeta(StringName, Variant)
+  nameWithType: GodotObject.SetMeta(StringName, Variant)
+  fullName: Godot.GodotObject.SetMeta(Godot.StringName, Godot.Variant)
+  spec.csharp:
+  - uid: Godot.GodotObject.SetMeta(Godot.StringName,Godot.Variant)
+    name: SetMeta
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.SetMeta(Godot.StringName,Godot.Variant)
+    name: SetMeta
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.RemoveMeta(Godot.StringName)
+  commentId: M:Godot.GodotObject.RemoveMeta(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: RemoveMeta(StringName)
+  nameWithType: GodotObject.RemoveMeta(StringName)
+  fullName: Godot.GodotObject.RemoveMeta(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.RemoveMeta(Godot.StringName)
+    name: RemoveMeta
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.RemoveMeta(Godot.StringName)
+    name: RemoveMeta
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.GetMeta(Godot.StringName,Godot.Variant)
+  commentId: M:Godot.GodotObject.GetMeta(Godot.StringName,Godot.Variant)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetMeta(StringName, Variant)
+  nameWithType: GodotObject.GetMeta(StringName, Variant)
+  fullName: Godot.GodotObject.GetMeta(Godot.StringName, Godot.Variant)
+  spec.csharp:
+  - uid: Godot.GodotObject.GetMeta(Godot.StringName,Godot.Variant)
+    name: GetMeta
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetMeta(Godot.StringName,Godot.Variant)
+    name: GetMeta
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.HasMeta(Godot.StringName)
+  commentId: M:Godot.GodotObject.HasMeta(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: HasMeta(StringName)
+  nameWithType: GodotObject.HasMeta(StringName)
+  fullName: Godot.GodotObject.HasMeta(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.HasMeta(Godot.StringName)
+    name: HasMeta
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.HasMeta(Godot.StringName)
+    name: HasMeta
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.GetMetaList
+  commentId: M:Godot.GodotObject.GetMetaList
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetMetaList()
+  nameWithType: GodotObject.GetMetaList()
+  fullName: Godot.GodotObject.GetMetaList()
+  spec.csharp:
+  - uid: Godot.GodotObject.GetMetaList
+    name: GetMetaList
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetMetaList
+    name: GetMetaList
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.AddUserSignal(System.String,Godot.Collections.Array)
+  commentId: M:Godot.GodotObject.AddUserSignal(System.String,Godot.Collections.Array)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: AddUserSignal(string, Array)
+  nameWithType: GodotObject.AddUserSignal(string, Array)
+  fullName: Godot.GodotObject.AddUserSignal(string, Godot.Collections.Array)
+  nameWithType.vb: GodotObject.AddUserSignal(String, Array)
+  fullName.vb: Godot.GodotObject.AddUserSignal(String, Godot.Collections.Array)
+  name.vb: AddUserSignal(String, Array)
+  spec.csharp:
+  - uid: Godot.GodotObject.AddUserSignal(System.String,Godot.Collections.Array)
+    name: AddUserSignal
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Godot.Collections.Array
+    name: Array
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.AddUserSignal(System.String,Godot.Collections.Array)
+    name: AddUserSignal
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Godot.Collections.Array
+    name: Array
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.HasUserSignal(Godot.StringName)
+  commentId: M:Godot.GodotObject.HasUserSignal(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: HasUserSignal(StringName)
+  nameWithType: GodotObject.HasUserSignal(StringName)
+  fullName: Godot.GodotObject.HasUserSignal(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.HasUserSignal(Godot.StringName)
+    name: HasUserSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.HasUserSignal(Godot.StringName)
+    name: HasUserSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.RemoveUserSignal(Godot.StringName)
+  commentId: M:Godot.GodotObject.RemoveUserSignal(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: RemoveUserSignal(StringName)
+  nameWithType: GodotObject.RemoveUserSignal(StringName)
+  fullName: Godot.GodotObject.RemoveUserSignal(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.RemoveUserSignal(Godot.StringName)
+    name: RemoveUserSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.RemoveUserSignal(Godot.StringName)
+    name: RemoveUserSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.EmitSignal(Godot.StringName,Godot.Variant[])
+  commentId: M:Godot.GodotObject.EmitSignal(Godot.StringName,Godot.Variant[])
+  parent: Godot.GodotObject
+  isExternal: true
+  name: EmitSignal(StringName, params Variant[])
+  nameWithType: GodotObject.EmitSignal(StringName, params Variant[])
+  fullName: Godot.GodotObject.EmitSignal(Godot.StringName, params Godot.Variant[])
+  nameWithType.vb: GodotObject.EmitSignal(StringName, ParamArray Variant())
+  fullName.vb: Godot.GodotObject.EmitSignal(Godot.StringName, ParamArray Godot.Variant())
+  name.vb: EmitSignal(StringName, ParamArray Variant())
+  spec.csharp:
+  - uid: Godot.GodotObject.EmitSignal(Godot.StringName,Godot.Variant[])
+    name: EmitSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: params
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.EmitSignal(Godot.StringName,Godot.Variant[])
+    name: EmitSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: ParamArray
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: (
+  - name: )
+  - name: )
+- uid: Godot.GodotObject.EmitSignal(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+  commentId: M:Godot.GodotObject.EmitSignal(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: EmitSignal(StringName, ReadOnlySpan<Variant>)
+  nameWithType: GodotObject.EmitSignal(StringName, ReadOnlySpan<Variant>)
+  fullName: Godot.GodotObject.EmitSignal(Godot.StringName, System.ReadOnlySpan<Godot.Variant>)
+  nameWithType.vb: GodotObject.EmitSignal(StringName, ReadOnlySpan(Of Variant))
+  fullName.vb: Godot.GodotObject.EmitSignal(Godot.StringName, System.ReadOnlySpan(Of Godot.Variant))
+  name.vb: EmitSignal(StringName, ReadOnlySpan(Of Variant))
+  spec.csharp:
+  - uid: Godot.GodotObject.EmitSignal(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+    name: EmitSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.EmitSignal(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+    name: EmitSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  - name: )
+- uid: Godot.GodotObject.Call(Godot.StringName,Godot.Variant[])
+  commentId: M:Godot.GodotObject.Call(Godot.StringName,Godot.Variant[])
+  parent: Godot.GodotObject
+  isExternal: true
+  name: Call(StringName, params Variant[])
+  nameWithType: GodotObject.Call(StringName, params Variant[])
+  fullName: Godot.GodotObject.Call(Godot.StringName, params Godot.Variant[])
+  nameWithType.vb: GodotObject.Call(StringName, ParamArray Variant())
+  fullName.vb: Godot.GodotObject.Call(Godot.StringName, ParamArray Godot.Variant())
+  name.vb: Call(StringName, ParamArray Variant())
+  spec.csharp:
+  - uid: Godot.GodotObject.Call(Godot.StringName,Godot.Variant[])
+    name: Call
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: params
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Call(Godot.StringName,Godot.Variant[])
+    name: Call
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: ParamArray
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: (
+  - name: )
+  - name: )
+- uid: Godot.GodotObject.Call(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+  commentId: M:Godot.GodotObject.Call(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: Call(StringName, ReadOnlySpan<Variant>)
+  nameWithType: GodotObject.Call(StringName, ReadOnlySpan<Variant>)
+  fullName: Godot.GodotObject.Call(Godot.StringName, System.ReadOnlySpan<Godot.Variant>)
+  nameWithType.vb: GodotObject.Call(StringName, ReadOnlySpan(Of Variant))
+  fullName.vb: Godot.GodotObject.Call(Godot.StringName, System.ReadOnlySpan(Of Godot.Variant))
+  name.vb: Call(StringName, ReadOnlySpan(Of Variant))
+  spec.csharp:
+  - uid: Godot.GodotObject.Call(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+    name: Call
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Call(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+    name: Call
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  - name: )
+- uid: Godot.GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])
+  commentId: M:Godot.GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])
+  parent: Godot.GodotObject
+  isExternal: true
+  name: CallDeferred(StringName, params Variant[])
+  nameWithType: GodotObject.CallDeferred(StringName, params Variant[])
+  fullName: Godot.GodotObject.CallDeferred(Godot.StringName, params Godot.Variant[])
+  nameWithType.vb: GodotObject.CallDeferred(StringName, ParamArray Variant())
+  fullName.vb: Godot.GodotObject.CallDeferred(Godot.StringName, ParamArray Godot.Variant())
+  name.vb: CallDeferred(StringName, ParamArray Variant())
+  spec.csharp:
+  - uid: Godot.GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])
+    name: CallDeferred
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: params
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])
+    name: CallDeferred
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: ParamArray
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: (
+  - name: )
+  - name: )
+- uid: Godot.GodotObject.CallDeferred(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+  commentId: M:Godot.GodotObject.CallDeferred(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: CallDeferred(StringName, ReadOnlySpan<Variant>)
+  nameWithType: GodotObject.CallDeferred(StringName, ReadOnlySpan<Variant>)
+  fullName: Godot.GodotObject.CallDeferred(Godot.StringName, System.ReadOnlySpan<Godot.Variant>)
+  nameWithType.vb: GodotObject.CallDeferred(StringName, ReadOnlySpan(Of Variant))
+  fullName.vb: Godot.GodotObject.CallDeferred(Godot.StringName, System.ReadOnlySpan(Of Godot.Variant))
+  name.vb: CallDeferred(StringName, ReadOnlySpan(Of Variant))
+  spec.csharp:
+  - uid: Godot.GodotObject.CallDeferred(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+    name: CallDeferred
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.CallDeferred(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
+    name: CallDeferred
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  - name: )
+- uid: Godot.GodotObject.SetDeferred(Godot.StringName,Godot.Variant)
+  commentId: M:Godot.GodotObject.SetDeferred(Godot.StringName,Godot.Variant)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: SetDeferred(StringName, Variant)
+  nameWithType: GodotObject.SetDeferred(StringName, Variant)
+  fullName: Godot.GodotObject.SetDeferred(Godot.StringName, Godot.Variant)
+  spec.csharp:
+  - uid: Godot.GodotObject.SetDeferred(Godot.StringName,Godot.Variant)
+    name: SetDeferred
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.SetDeferred(Godot.StringName,Godot.Variant)
+    name: SetDeferred
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.Callv(Godot.StringName,Godot.Collections.Array)
+  commentId: M:Godot.GodotObject.Callv(Godot.StringName,Godot.Collections.Array)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: Callv(StringName, Array)
+  nameWithType: GodotObject.Callv(StringName, Array)
+  fullName: Godot.GodotObject.Callv(Godot.StringName, Godot.Collections.Array)
+  spec.csharp:
+  - uid: Godot.GodotObject.Callv(Godot.StringName,Godot.Collections.Array)
+    name: Callv
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Collections.Array
+    name: Array
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Callv(Godot.StringName,Godot.Collections.Array)
+    name: Callv
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Collections.Array
+    name: Array
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.HasMethod(Godot.StringName)
+  commentId: M:Godot.GodotObject.HasMethod(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: HasMethod(StringName)
+  nameWithType: GodotObject.HasMethod(StringName)
+  fullName: Godot.GodotObject.HasMethod(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.HasMethod(Godot.StringName)
+    name: HasMethod
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.HasMethod(Godot.StringName)
+    name: HasMethod
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
+  commentId: M:Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetMethodArgumentCount(StringName)
+  nameWithType: GodotObject.GetMethodArgumentCount(StringName)
+  fullName: Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
+    name: GetMethodArgumentCount
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
+    name: GetMethodArgumentCount
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.HasSignal(Godot.StringName)
+  commentId: M:Godot.GodotObject.HasSignal(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: HasSignal(StringName)
+  nameWithType: GodotObject.HasSignal(StringName)
+  fullName: Godot.GodotObject.HasSignal(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.HasSignal(Godot.StringName)
+    name: HasSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.HasSignal(Godot.StringName)
+    name: HasSignal
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.GetSignalList
+  commentId: M:Godot.GodotObject.GetSignalList
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetSignalList()
+  nameWithType: GodotObject.GetSignalList()
+  fullName: Godot.GodotObject.GetSignalList()
+  spec.csharp:
+  - uid: Godot.GodotObject.GetSignalList
+    name: GetSignalList
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetSignalList
+    name: GetSignalList
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
+  commentId: M:Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetSignalConnectionList(StringName)
+  nameWithType: GodotObject.GetSignalConnectionList(StringName)
+  fullName: Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
+    name: GetSignalConnectionList
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
+    name: GetSignalConnectionList
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.GetIncomingConnections
+  commentId: M:Godot.GodotObject.GetIncomingConnections
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetIncomingConnections()
+  nameWithType: GodotObject.GetIncomingConnections()
+  fullName: Godot.GodotObject.GetIncomingConnections()
+  spec.csharp:
+  - uid: Godot.GodotObject.GetIncomingConnections
+    name: GetIncomingConnections
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetIncomingConnections
+    name: GetIncomingConnections
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.Connect(Godot.StringName,Godot.Callable,System.UInt32)
+  commentId: M:Godot.GodotObject.Connect(Godot.StringName,Godot.Callable,System.UInt32)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: Connect(StringName, Callable, uint)
+  nameWithType: GodotObject.Connect(StringName, Callable, uint)
+  fullName: Godot.GodotObject.Connect(Godot.StringName, Godot.Callable, uint)
+  nameWithType.vb: GodotObject.Connect(StringName, Callable, UInteger)
+  fullName.vb: Godot.GodotObject.Connect(Godot.StringName, Godot.Callable, UInteger)
+  name.vb: Connect(StringName, Callable, UInteger)
+  spec.csharp:
+  - uid: Godot.GodotObject.Connect(Godot.StringName,Godot.Callable,System.UInt32)
+    name: Connect
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Callable
+    name: Callable
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.UInt32
+    name: uint
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint32
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Connect(Godot.StringName,Godot.Callable,System.UInt32)
+    name: Connect
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Callable
+    name: Callable
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.UInt32
+    name: UInteger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint32
+  - name: )
+- uid: Godot.GodotObject.Disconnect(Godot.StringName,Godot.Callable)
+  commentId: M:Godot.GodotObject.Disconnect(Godot.StringName,Godot.Callable)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: Disconnect(StringName, Callable)
+  nameWithType: GodotObject.Disconnect(StringName, Callable)
+  fullName: Godot.GodotObject.Disconnect(Godot.StringName, Godot.Callable)
+  spec.csharp:
+  - uid: Godot.GodotObject.Disconnect(Godot.StringName,Godot.Callable)
+    name: Disconnect
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Callable
+    name: Callable
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Disconnect(Godot.StringName,Godot.Callable)
+    name: Disconnect
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Callable
+    name: Callable
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.IsConnected(Godot.StringName,Godot.Callable)
+  commentId: M:Godot.GodotObject.IsConnected(Godot.StringName,Godot.Callable)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: IsConnected(StringName, Callable)
+  nameWithType: GodotObject.IsConnected(StringName, Callable)
+  fullName: Godot.GodotObject.IsConnected(Godot.StringName, Godot.Callable)
+  spec.csharp:
+  - uid: Godot.GodotObject.IsConnected(Godot.StringName,Godot.Callable)
+    name: IsConnected
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Callable
+    name: Callable
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.IsConnected(Godot.StringName,Godot.Callable)
+    name: IsConnected
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Callable
+    name: Callable
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.HasConnections(Godot.StringName)
+  commentId: M:Godot.GodotObject.HasConnections(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: HasConnections(StringName)
+  nameWithType: GodotObject.HasConnections(StringName)
+  fullName: Godot.GodotObject.HasConnections(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.HasConnections(Godot.StringName)
+    name: HasConnections
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.HasConnections(Godot.StringName)
+    name: HasConnections
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.SetBlockSignals(System.Boolean)
+  commentId: M:Godot.GodotObject.SetBlockSignals(System.Boolean)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: SetBlockSignals(bool)
+  nameWithType: GodotObject.SetBlockSignals(bool)
+  fullName: Godot.GodotObject.SetBlockSignals(bool)
+  nameWithType.vb: GodotObject.SetBlockSignals(Boolean)
+  fullName.vb: Godot.GodotObject.SetBlockSignals(Boolean)
+  name.vb: SetBlockSignals(Boolean)
+  spec.csharp:
+  - uid: Godot.GodotObject.SetBlockSignals(System.Boolean)
+    name: SetBlockSignals
+    isExternal: true
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.SetBlockSignals(System.Boolean)
+    name: SetBlockSignals
+    isExternal: true
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Godot.GodotObject.IsBlockingSignals
+  commentId: M:Godot.GodotObject.IsBlockingSignals
+  parent: Godot.GodotObject
+  isExternal: true
+  name: IsBlockingSignals()
+  nameWithType: GodotObject.IsBlockingSignals()
+  fullName: Godot.GodotObject.IsBlockingSignals()
+  spec.csharp:
+  - uid: Godot.GodotObject.IsBlockingSignals
+    name: IsBlockingSignals
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.IsBlockingSignals
+    name: IsBlockingSignals
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.NotifyPropertyListChanged
+  commentId: M:Godot.GodotObject.NotifyPropertyListChanged
+  parent: Godot.GodotObject
+  isExternal: true
+  name: NotifyPropertyListChanged()
+  nameWithType: GodotObject.NotifyPropertyListChanged()
+  fullName: Godot.GodotObject.NotifyPropertyListChanged()
+  spec.csharp:
+  - uid: Godot.GodotObject.NotifyPropertyListChanged
+    name: NotifyPropertyListChanged
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.NotifyPropertyListChanged
+    name: NotifyPropertyListChanged
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.SetMessageTranslation(System.Boolean)
+  commentId: M:Godot.GodotObject.SetMessageTranslation(System.Boolean)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: SetMessageTranslation(bool)
+  nameWithType: GodotObject.SetMessageTranslation(bool)
+  fullName: Godot.GodotObject.SetMessageTranslation(bool)
+  nameWithType.vb: GodotObject.SetMessageTranslation(Boolean)
+  fullName.vb: Godot.GodotObject.SetMessageTranslation(Boolean)
+  name.vb: SetMessageTranslation(Boolean)
+  spec.csharp:
+  - uid: Godot.GodotObject.SetMessageTranslation(System.Boolean)
+    name: SetMessageTranslation
+    isExternal: true
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.SetMessageTranslation(System.Boolean)
+    name: SetMessageTranslation
+    isExternal: true
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Godot.GodotObject.CanTranslateMessages
+  commentId: M:Godot.GodotObject.CanTranslateMessages
+  parent: Godot.GodotObject
+  isExternal: true
+  name: CanTranslateMessages()
+  nameWithType: GodotObject.CanTranslateMessages()
+  fullName: Godot.GodotObject.CanTranslateMessages()
+  spec.csharp:
+  - uid: Godot.GodotObject.CanTranslateMessages
+    name: CanTranslateMessages
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.CanTranslateMessages
+    name: CanTranslateMessages
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.Tr(Godot.StringName,Godot.StringName)
+  commentId: M:Godot.GodotObject.Tr(Godot.StringName,Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: Tr(StringName, StringName)
+  nameWithType: GodotObject.Tr(StringName, StringName)
+  fullName: Godot.GodotObject.Tr(Godot.StringName, Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.Tr(Godot.StringName,Godot.StringName)
+    name: Tr
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.Tr(Godot.StringName,Godot.StringName)
+    name: Tr
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.TrN(Godot.StringName,Godot.StringName,System.Int32,Godot.StringName)
+  commentId: M:Godot.GodotObject.TrN(Godot.StringName,Godot.StringName,System.Int32,Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: TrN(StringName, StringName, int, StringName)
+  nameWithType: GodotObject.TrN(StringName, StringName, int, StringName)
+  fullName: Godot.GodotObject.TrN(Godot.StringName, Godot.StringName, int, Godot.StringName)
+  nameWithType.vb: GodotObject.TrN(StringName, StringName, Integer, StringName)
+  fullName.vb: Godot.GodotObject.TrN(Godot.StringName, Godot.StringName, Integer, Godot.StringName)
+  name.vb: TrN(StringName, StringName, Integer, StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.TrN(Godot.StringName,Godot.StringName,System.Int32,Godot.StringName)
+    name: TrN
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.TrN(Godot.StringName,Godot.StringName,System.Int32,Godot.StringName)
+    name: TrN
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.GetTranslationDomain
+  commentId: M:Godot.GodotObject.GetTranslationDomain
+  parent: Godot.GodotObject
+  isExternal: true
+  name: GetTranslationDomain()
+  nameWithType: GodotObject.GetTranslationDomain()
+  fullName: Godot.GodotObject.GetTranslationDomain()
+  spec.csharp:
+  - uid: Godot.GodotObject.GetTranslationDomain
+    name: GetTranslationDomain
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.GetTranslationDomain
+    name: GetTranslationDomain
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.SetTranslationDomain(Godot.StringName)
+  commentId: M:Godot.GodotObject.SetTranslationDomain(Godot.StringName)
+  parent: Godot.GodotObject
+  isExternal: true
+  name: SetTranslationDomain(StringName)
+  nameWithType: GodotObject.SetTranslationDomain(StringName)
+  fullName: Godot.GodotObject.SetTranslationDomain(Godot.StringName)
+  spec.csharp:
+  - uid: Godot.GodotObject.SetTranslationDomain(Godot.StringName)
+    name: SetTranslationDomain
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.SetTranslationDomain(Godot.StringName)
+    name: SetTranslationDomain
+    isExternal: true
+  - name: (
+  - uid: Godot.StringName
+    name: StringName
+    isExternal: true
+  - name: )
+- uid: Godot.GodotObject.IsQueuedForDeletion
+  commentId: M:Godot.GodotObject.IsQueuedForDeletion
+  parent: Godot.GodotObject
+  isExternal: true
+  name: IsQueuedForDeletion()
+  nameWithType: GodotObject.IsQueuedForDeletion()
+  fullName: Godot.GodotObject.IsQueuedForDeletion()
+  spec.csharp:
+  - uid: Godot.GodotObject.IsQueuedForDeletion
+    name: IsQueuedForDeletion
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.IsQueuedForDeletion
+    name: IsQueuedForDeletion
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.CancelFree
+  commentId: M:Godot.GodotObject.CancelFree
+  parent: Godot.GodotObject
+  isExternal: true
+  name: CancelFree()
+  nameWithType: GodotObject.CancelFree()
+  fullName: Godot.GodotObject.CancelFree()
+  spec.csharp:
+  - uid: Godot.GodotObject.CancelFree
+    name: CancelFree
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.CancelFree
+    name: CancelFree
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.EmitSignalScriptChanged
+  commentId: M:Godot.GodotObject.EmitSignalScriptChanged
+  parent: Godot.GodotObject
+  isExternal: true
+  name: EmitSignalScriptChanged()
+  nameWithType: GodotObject.EmitSignalScriptChanged()
+  fullName: Godot.GodotObject.EmitSignalScriptChanged()
+  spec.csharp:
+  - uid: Godot.GodotObject.EmitSignalScriptChanged
+    name: EmitSignalScriptChanged
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.EmitSignalScriptChanged
+    name: EmitSignalScriptChanged
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.EmitSignalPropertyListChanged
+  commentId: M:Godot.GodotObject.EmitSignalPropertyListChanged
+  parent: Godot.GodotObject
+  isExternal: true
+  name: EmitSignalPropertyListChanged()
+  nameWithType: GodotObject.EmitSignalPropertyListChanged()
+  fullName: Godot.GodotObject.EmitSignalPropertyListChanged()
+  spec.csharp:
+  - uid: Godot.GodotObject.EmitSignalPropertyListChanged
+    name: EmitSignalPropertyListChanged
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject.EmitSignalPropertyListChanged
+    name: EmitSignalPropertyListChanged
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Godot.GodotObject.NativeInstance
+  commentId: P:Godot.GodotObject.NativeInstance
+  parent: Godot.GodotObject
+  isExternal: true
+  name: NativeInstance
+  nameWithType: GodotObject.NativeInstance
+  fullName: Godot.GodotObject.NativeInstance
+- uid: Godot.GodotObject.ScriptChanged
+  commentId: E:Godot.GodotObject.ScriptChanged
+  parent: Godot.GodotObject
+  isExternal: true
+  name: ScriptChanged
+  nameWithType: GodotObject.ScriptChanged
+  fullName: Godot.GodotObject.ScriptChanged
+- uid: Godot.GodotObject.PropertyListChanged
+  commentId: E:Godot.GodotObject.PropertyListChanged
+  parent: Godot.GodotObject
+  isExternal: true
+  name: PropertyListChanged
+  nameWithType: GodotObject.PropertyListChanged
+  fullName: Godot.GodotObject.PropertyListChanged
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Godot.Collections.Dictionary{Nebula.UUID,System.Int64}
+  commentId: T:Godot.Collections.Dictionary{Nebula.UUID,System.Int64}
+  parent: Godot.Collections
+  definition: Godot.Collections.Dictionary`2
+  href: Nebula.UUID.html
+  name: Dictionary<UUID, long>
+  nameWithType: Dictionary<UUID, long>
+  fullName: Godot.Collections.Dictionary<Nebula.UUID, long>
+  nameWithType.vb: Dictionary(Of UUID, Long)
+  fullName.vb: Godot.Collections.Dictionary(Of Nebula.UUID, Long)
+  name.vb: Dictionary(Of UUID, Long)
+  spec.csharp:
+  - uid: Godot.Collections.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: <
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '>'
+  spec.vb:
+  - uid: Godot.Collections.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: )
+- uid: Godot.Collections.Dictionary`2
+  commentId: T:Godot.Collections.Dictionary`2
+  isExternal: true
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: Godot.Collections.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: Godot.Collections.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: Godot.Collections.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: Godot.Collections.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: Godot.Collections
+  commentId: N:Godot.Collections
+  isExternal: true
+  name: Godot.Collections
+  nameWithType: Godot.Collections
+  fullName: Godot.Collections
+  spec.csharp:
+  - uid: Godot
+    name: Godot
+    isExternal: true
+  - name: .
+  - uid: Godot.Collections
+    name: Collections
+    isExternal: true
+  spec.vb:
+  - uid: Godot
+    name: Godot
+    isExternal: true
+  - name: .
+  - uid: Godot.Collections
+    name: Collections
+    isExternal: true
+- uid: Nebula.NetworkController.IsNetScene*
+  commentId: Overload:Nebula.NetworkController.IsNetScene
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_IsNetScene
+  name: IsNetScene
+  nameWithType: NetworkController.IsNetScene
+  fullName: Nebula.NetworkController.IsNetScene
+- uid: Nebula.NetworkController.SetPeerInterest*
+  commentId: Overload:Nebula.NetworkController.SetPeerInterest
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_SetPeerInterest_Nebula_UUID_System_Int64_System_Boolean_
+  name: SetPeerInterest
+  nameWithType: NetworkController.SetPeerInterest
+  fullName: Nebula.NetworkController.SetPeerInterest
+- uid: Nebula.UUID
+  commentId: T:Nebula.UUID
+  parent: Nebula
+  isExternal: true
+  href: Nebula.UUID.html
+  name: UUID
+  nameWithType: UUID
+  fullName: Nebula.UUID
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: Godot.GodotObject._Notification(System.Int32)
+  commentId: M:Godot.GodotObject._Notification(System.Int32)
+  parent: Godot.GodotObject
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: _Notification(int)
+  nameWithType: GodotObject._Notification(int)
+  fullName: Godot.GodotObject._Notification(int)
+  nameWithType.vb: GodotObject._Notification(Integer)
+  fullName.vb: Godot.GodotObject._Notification(Integer)
+  name.vb: _Notification(Integer)
+  spec.csharp:
+  - uid: Godot.GodotObject._Notification(System.Int32)
+    name: _Notification
+    isExternal: true
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Godot.GodotObject._Notification(System.Int32)
+    name: _Notification
+    isExternal: true
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Nebula.NetworkController._Notification*
+  commentId: Overload:Nebula.NetworkController._Notification
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController__Notification_System_Int32_
+  name: _Notification
+  nameWithType: NetworkController._Notification
+  fullName: Nebula.NetworkController._Notification
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.NetworkController.SetNetworkInput*
+  commentId: Overload:Nebula.NetworkController.SetNetworkInput
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_SetNetworkInput_System_Byte_Godot_Variant_
+  name: SetNetworkInput
+  nameWithType: NetworkController.SetNetworkInput
+  fullName: Nebula.NetworkController.SetNetworkInput
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: Godot.Variant
+  commentId: T:Godot.Variant
+  parent: Godot
+  isExternal: true
+  name: Variant
+  nameWithType: Variant
+  fullName: Godot.Variant
+- uid: Nebula.NetworkController.GetNetworkInput*
+  commentId: Overload:Nebula.NetworkController.GetNetworkInput
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_GetNetworkInput_System_Byte_Godot_Variant_
+  name: GetNetworkInput
+  nameWithType: NetworkController.GetNetworkInput
+  fullName: Nebula.NetworkController.GetNetworkInput
+- uid: Nebula.NetworkController.#ctor*
+  commentId: Overload:Nebula.NetworkController.#ctor
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController__ctor_Godot_Node_
+  name: NetworkController
+  nameWithType: NetworkController.NetworkController
+  fullName: Nebula.NetworkController.NetworkController
+  nameWithType.vb: NetworkController.New
+  fullName.vb: Nebula.NetworkController.New
+  name.vb: New
+- uid: Godot.Node
+  commentId: T:Godot.Node
+  parent: Godot
+  isExternal: true
+  name: Node
+  nameWithType: Node
+  fullName: Godot.Node
+- uid: Nebula.NetworkController.SetInputAuthority*
+  commentId: Overload:Nebula.NetworkController.SetInputAuthority
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_SetInputAuthority_Godot_ENetPacketPeer_
+  name: SetInputAuthority
+  nameWithType: NetworkController.SetInputAuthority
+  fullName: Nebula.NetworkController.SetInputAuthority
+- uid: Godot.ENetPacketPeer
+  commentId: T:Godot.ENetPacketPeer
+  parent: Godot
+  isExternal: true
+  name: ENetPacketPeer
+  nameWithType: ENetPacketPeer
+  fullName: Godot.ENetPacketPeer
+- uid: Nebula.NetworkController.FindFromChild*
+  commentId: Overload:Nebula.NetworkController.FindFromChild
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_FindFromChild_Godot_Node_
+  name: FindFromChild
+  nameWithType: NetworkController.FindFromChild
+  fullName: Nebula.NetworkController.FindFromChild
+- uid: Nebula.INetNode
+  commentId: T:Nebula.INetNode
+  parent: Nebula
+  isExternal: true
+  href: Nebula.INetNode.html
+  name: INetNode
+  nameWithType: INetNode
+  fullName: Nebula.INetNode
+- uid: Nebula.NetworkController.GetNetworkChildren*
+  commentId: Overload:Nebula.NetworkController.GetNetworkChildren
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_GetNetworkChildren_Nebula_NetworkController_NetworkChildrenSearchToggle_System_Boolean_
+  name: GetNetworkChildren
+  nameWithType: NetworkController.GetNetworkChildren
+  fullName: Nebula.NetworkController.GetNetworkChildren
+- uid: Nebula.NetworkController.NetworkChildrenSearchToggle
+  commentId: T:Nebula.NetworkController.NetworkChildrenSearchToggle
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetworkController.html
+  name: NetworkController.NetworkChildrenSearchToggle
+  nameWithType: NetworkController.NetworkChildrenSearchToggle
+  fullName: Nebula.NetworkController.NetworkChildrenSearchToggle
+  spec.csharp:
+  - uid: Nebula.NetworkController
+    name: NetworkController
+    isExternal: true
+    href: Nebula.NetworkController.html
+  - name: .
+  - uid: Nebula.NetworkController.NetworkChildrenSearchToggle
+    name: NetworkChildrenSearchToggle
+    isExternal: true
+    href: Nebula.NetworkController.NetworkChildrenSearchToggle.html
+  spec.vb:
+  - uid: Nebula.NetworkController
+    name: NetworkController
+    isExternal: true
+    href: Nebula.NetworkController.html
+  - name: .
+  - uid: Nebula.NetworkController.NetworkChildrenSearchToggle
+    name: NetworkChildrenSearchToggle
+    isExternal: true
+    href: Nebula.NetworkController.NetworkChildrenSearchToggle.html
+- uid: System.Collections.Generic.IEnumerable{Nebula.NetNodeWrapper}
+  commentId: T:System.Collections.Generic.IEnumerable{Nebula.NetNodeWrapper}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<NetNodeWrapper>
+  nameWithType: IEnumerable<NetNodeWrapper>
+  fullName: System.Collections.Generic.IEnumerable<Nebula.NetNodeWrapper>
+  nameWithType.vb: IEnumerable(Of NetNodeWrapper)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Nebula.NetNodeWrapper)
+  name.vb: IEnumerable(Of NetNodeWrapper)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: Nebula.NetNodeWrapper
+    name: NetNodeWrapper
+    isExternal: true
+    href: Nebula.NetNodeWrapper.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.NetNodeWrapper
+    name: NetNodeWrapper
+    isExternal: true
+    href: Nebula.NetNodeWrapper.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Nebula.NetworkController.Despawn*
+  commentId: Overload:Nebula.NetworkController.Despawn
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_Despawn
+  name: Despawn
+  nameWithType: NetworkController.Despawn
+  fullName: Nebula.NetworkController.Despawn
+- uid: Nebula.NetworkController.PrepareSpawn*
+  commentId: Overload:Nebula.NetworkController.PrepareSpawn
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_PrepareSpawn_Godot_ENetPacketPeer_
+  name: PrepareSpawn
+  nameWithType: NetworkController.PrepareSpawn
+  fullName: Nebula.NetworkController.PrepareSpawn
+- uid: Nebula.NetworkController._WorldReady*
+  commentId: Overload:Nebula.NetworkController._WorldReady
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController__WorldReady
+  name: _WorldReady
+  nameWithType: NetworkController._WorldReady
+  fullName: Nebula.NetworkController._WorldReady
+- uid: Nebula.NetworkController._NetworkProcess*
+  commentId: Overload:Nebula.NetworkController._NetworkProcess
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController__NetworkProcess_System_Int32_
+  name: _NetworkProcess
+  nameWithType: NetworkController._NetworkProcess
+  fullName: Nebula.NetworkController._NetworkProcess
+- uid: Nebula.NetworkController.GetInput*
+  commentId: Overload:Nebula.NetworkController.GetInput
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_GetInput
+  name: GetInput
+  nameWithType: NetworkController.GetInput
+  fullName: Nebula.NetworkController.GetInput
+- uid: Godot.Collections.Dictionary{System.Int32,Godot.Variant}
+  commentId: T:Godot.Collections.Dictionary{System.Int32,Godot.Variant}
+  parent: Godot.Collections
+  definition: Godot.Collections.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: Dictionary<int, Variant>
+  nameWithType: Dictionary<int, Variant>
+  fullName: Godot.Collections.Dictionary<int, Godot.Variant>
+  nameWithType.vb: Dictionary(Of Integer, Variant)
+  fullName.vb: Godot.Collections.Dictionary(Of Integer, Godot.Variant)
+  name.vb: Dictionary(Of Integer, Variant)
+  spec.csharp:
+  - uid: Godot.Collections.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: Godot.Collections.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+- uid: Nebula.NetworkController.NodePathFromNetScene*
+  commentId: Overload:Nebula.NetworkController.NodePathFromNetScene
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_NodePathFromNetScene
+  name: NodePathFromNetScene
+  nameWithType: NetworkController.NodePathFromNetScene
+  fullName: Nebula.NetworkController.NodePathFromNetScene
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.NetworkController.EmitSignalInterestChanged*
+  commentId: Overload:Nebula.NetworkController.EmitSignalInterestChanged
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_EmitSignalInterestChanged_Nebula_UUID_System_Int64_
+  name: EmitSignalInterestChanged
+  nameWithType: NetworkController.EmitSignalInterestChanged
+  fullName: Nebula.NetworkController.EmitSignalInterestChanged
+- uid: Nebula.NetworkController.EmitSignalNetPropertyChanged*
+  commentId: Overload:Nebula.NetworkController.EmitSignalNetPropertyChanged
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_EmitSignalNetPropertyChanged_System_String_Godot_StringName_
+  name: EmitSignalNetPropertyChanged
+  nameWithType: NetworkController.EmitSignalNetPropertyChanged
+  fullName: Nebula.NetworkController.EmitSignalNetPropertyChanged
+- uid: Godot.StringName
+  commentId: T:Godot.StringName
+  parent: Godot
+  isExternal: true
+  name: StringName
+  nameWithType: StringName
+  fullName: Godot.StringName
+- uid: Nebula.NetworkController.AttachedNetNode*
+  commentId: Overload:Nebula.NetworkController.AttachedNetNode
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_AttachedNetNode
+  name: AttachedNetNode
+  nameWithType: NetworkController.AttachedNetNode
+  fullName: Nebula.NetworkController.AttachedNetNode
+- uid: Nebula.NetNodeWrapper
+  commentId: T:Nebula.NetNodeWrapper
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetNodeWrapper.html
+  name: NetNodeWrapper
+  nameWithType: NetNodeWrapper
+  fullName: Nebula.NetNodeWrapper
+- uid: Nebula.NetworkController.CurrentWorld*
+  commentId: Overload:Nebula.NetworkController.CurrentWorld
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_CurrentWorld
+  name: CurrentWorld
+  nameWithType: NetworkController.CurrentWorld
+  fullName: Nebula.NetworkController.CurrentWorld
+- uid: Nebula.WorldRunner
+  commentId: T:Nebula.WorldRunner
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner
+  nameWithType: WorldRunner
+  fullName: Nebula.WorldRunner
+- uid: Nebula.NetworkController.IsWorldReady*
+  commentId: Overload:Nebula.NetworkController.IsWorldReady
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_IsWorldReady
+  name: IsWorldReady
+  nameWithType: NetworkController.IsWorldReady
+  fullName: Nebula.NetworkController.IsWorldReady
+- uid: Nebula.NetworkController.NetParentId*
+  commentId: Overload:Nebula.NetworkController.NetParentId
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_NetParentId
+  name: NetParentId
+  nameWithType: NetworkController.NetParentId
+  fullName: Nebula.NetworkController.NetParentId
+- uid: Nebula.NetId
+  commentId: T:Nebula.NetId
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetId.html
+  name: NetId
+  nameWithType: NetId
+  fullName: Nebula.NetId
+- uid: Nebula.NetworkController.NetParent*
+  commentId: Overload:Nebula.NetworkController.NetParent
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_NetParent
+  name: NetParent
+  nameWithType: NetworkController.NetParent
+  fullName: Nebula.NetworkController.NetParent
+- uid: Nebula.NetworkController.IsClientSpawn*
+  commentId: Overload:Nebula.NetworkController.IsClientSpawn
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_IsClientSpawn
+  name: IsClientSpawn
+  nameWithType: NetworkController.IsClientSpawn
+  fullName: Nebula.NetworkController.IsClientSpawn
+- uid: Nebula.NetworkController.NetId*
+  commentId: Overload:Nebula.NetworkController.NetId
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_NetId
+  name: NetId
+  nameWithType: NetworkController.NetId
+  fullName: Nebula.NetworkController.NetId
+- uid: Nebula.NetworkController.InputAuthority*
+  commentId: Overload:Nebula.NetworkController.InputAuthority
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_InputAuthority
+  name: InputAuthority
+  nameWithType: NetworkController.InputAuthority
+  fullName: Nebula.NetworkController.InputAuthority
+- uid: Nebula.NetworkController.IsCurrentOwner*
+  commentId: Overload:Nebula.NetworkController.IsCurrentOwner
+  isExternal: true
+  href: Nebula.NetworkController.html#Nebula_NetworkController_IsCurrentOwner
+  name: IsCurrentOwner
+  nameWithType: NetworkController.IsCurrentOwner
+  fullName: Nebula.NetworkController.IsCurrentOwner
+- uid: Nebula.NetworkController.InterestChangedEventHandler
+  commentId: T:Nebula.NetworkController.InterestChangedEventHandler
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetworkController.html
+  name: NetworkController.InterestChangedEventHandler
+  nameWithType: NetworkController.InterestChangedEventHandler
+  fullName: Nebula.NetworkController.InterestChangedEventHandler
+  spec.csharp:
+  - uid: Nebula.NetworkController
+    name: NetworkController
+    isExternal: true
+    href: Nebula.NetworkController.html
+  - name: .
+  - uid: Nebula.NetworkController.InterestChangedEventHandler
+    name: InterestChangedEventHandler
+    isExternal: true
+    href: Nebula.NetworkController.InterestChangedEventHandler.html
+  spec.vb:
+  - uid: Nebula.NetworkController
+    name: NetworkController
+    isExternal: true
+    href: Nebula.NetworkController.html
+  - name: .
+  - uid: Nebula.NetworkController.InterestChangedEventHandler
+    name: InterestChangedEventHandler
+    isExternal: true
+    href: Nebula.NetworkController.InterestChangedEventHandler.html
+- uid: Nebula.NetworkController.NetPropertyChangedEventHandler
+  commentId: T:Nebula.NetworkController.NetPropertyChangedEventHandler
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetworkController.html
+  name: NetworkController.NetPropertyChangedEventHandler
+  nameWithType: NetworkController.NetPropertyChangedEventHandler
+  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler
+  spec.csharp:
+  - uid: Nebula.NetworkController
+    name: NetworkController
+    isExternal: true
+    href: Nebula.NetworkController.html
+  - name: .
+  - uid: Nebula.NetworkController.NetPropertyChangedEventHandler
+    name: NetPropertyChangedEventHandler
+    isExternal: true
+    href: Nebula.NetworkController.NetPropertyChangedEventHandler.html
+  spec.vb:
+  - uid: Nebula.NetworkController
+    name: NetworkController
+    isExternal: true
+    href: Nebula.NetworkController.html
+  - name: .
+  - uid: Nebula.NetworkController.NetPropertyChangedEventHandler
+    name: NetPropertyChangedEventHandler
+    isExternal: true
+    href: Nebula.NetworkController.NetPropertyChangedEventHandler.html

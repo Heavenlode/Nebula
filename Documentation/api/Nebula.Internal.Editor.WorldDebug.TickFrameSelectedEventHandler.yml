@@ -1,0 +1,272 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  commentId: T:Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  id: WorldDebug.TickFrameSelectedEventHandler
+  parent: Nebula.Internal.Editor
+  children:
+  - Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.BeginInvoke(Godot.Control,System.AsyncCallback,System.Object)
+  - Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.Invoke(Godot.Control)
+  langs:
+  - csharp
+  - vb
+  name: WorldDebug.TickFrameSelectedEventHandler
+  nameWithType: WorldDebug.TickFrameSelectedEventHandler
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void WorldDebug.TickFrameSelectedEventHandler(Control tickFrame)
+    parameters:
+    - id: tickFrame
+      type: Godot.Control
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub WorldDebug.TickFrameSelectedEventHandler(tickFrame As Control)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: TickFrameSelectedEventHandler(object, nint)
+  nameWithType: WorldDebug.TickFrameSelectedEventHandler.TickFrameSelectedEventHandler(object, nint)
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.TickFrameSelectedEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public TickFrameSelectedEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.#ctor*
+  nameWithType.vb: WorldDebug.TickFrameSelectedEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.Invoke(Godot.Control)
+  commentId: M:Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.Invoke(Godot.Control)
+  id: Invoke(Godot.Control)
+  parent: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(Control)
+  nameWithType: WorldDebug.TickFrameSelectedEventHandler.Invoke(Control)
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.Invoke(Godot.Control)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual void Invoke(Control tickFrame)
+    parameters:
+    - id: tickFrame
+      type: Godot.Control
+    content.vb: Public Overridable Sub Invoke(tickFrame As Control)
+  overload: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.Invoke*
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.BeginInvoke(Godot.Control,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.BeginInvoke(Godot.Control,System.AsyncCallback,System.Object)
+  id: BeginInvoke(Godot.Control,System.AsyncCallback,System.Object)
+  parent: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(Control, AsyncCallback, object)
+  nameWithType: WorldDebug.TickFrameSelectedEventHandler.BeginInvoke(Control, AsyncCallback, object)
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.BeginInvoke(Godot.Control, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(Control tickFrame, AsyncCallback callback, object @object)
+    parameters:
+    - id: tickFrame
+      type: Godot.Control
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(tickFrame As Control, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.BeginInvoke*
+  nameWithType.vb: WorldDebug.TickFrameSelectedEventHandler.BeginInvoke(Control, AsyncCallback, Object)
+  fullName.vb: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.BeginInvoke(Godot.Control, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(Control, AsyncCallback, Object)
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: WorldDebug.TickFrameSelectedEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.EndInvoke*
+references:
+- uid: Nebula.Internal.Editor
+  commentId: N:Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Internal.Editor
+  nameWithType: Nebula.Internal.Editor
+  fullName: Nebula.Internal.Editor
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+- uid: Godot.Control
+  commentId: T:Godot.Control
+  parent: Godot
+  isExternal: true
+  name: Control
+  nameWithType: Control
+  fullName: Godot.Control
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.#ctor*
+  commentId: Overload:Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.#ctor
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.html#Nebula_Internal_Editor_WorldDebug_TickFrameSelectedEventHandler__ctor_System_Object_System_IntPtr_
+  name: TickFrameSelectedEventHandler
+  nameWithType: WorldDebug.TickFrameSelectedEventHandler.TickFrameSelectedEventHandler
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.TickFrameSelectedEventHandler
+  nameWithType.vb: WorldDebug.TickFrameSelectedEventHandler.New
+  fullName.vb: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.Invoke*
+  commentId: Overload:Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.Invoke
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.html#Nebula_Internal_Editor_WorldDebug_TickFrameSelectedEventHandler_Invoke_Godot_Control_
+  name: Invoke
+  nameWithType: WorldDebug.TickFrameSelectedEventHandler.Invoke
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.Invoke
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.html#Nebula_Internal_Editor_WorldDebug_TickFrameSelectedEventHandler_BeginInvoke_Godot_Control_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: WorldDebug.TickFrameSelectedEventHandler.BeginInvoke
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.EndInvoke*
+  commentId: Overload:Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.html#Nebula_Internal_Editor_WorldDebug_TickFrameSelectedEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: WorldDebug.TickFrameSelectedEventHandler.EndInvoke
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.EndInvoke

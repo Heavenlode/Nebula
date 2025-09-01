@@ -1,0 +1,1051 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Internal.Editor
+  commentId: N:Nebula.Internal.Editor
+  id: Nebula.Internal.Editor
+  children:
+  - Nebula.Internal.Editor.AddonManager
+  - Nebula.Internal.Editor.AddonManager.MethodName
+  - Nebula.Internal.Editor.AddonManager.PropertyName
+  - Nebula.Internal.Editor.AddonManager.SignalName
+  - Nebula.Internal.Editor.BarChart
+  - Nebula.Internal.Editor.BarChart.BarChartType
+  - Nebula.Internal.Editor.BarChart.MethodName
+  - Nebula.Internal.Editor.BarChart.PropertyName
+  - Nebula.Internal.Editor.BarChart.SignalName
+  - Nebula.Internal.Editor.DockNetScenes
+  - Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  - Nebula.Internal.Editor.DockNetScenes.MethodName
+  - Nebula.Internal.Editor.DockNetScenes.PropertyName
+  - Nebula.Internal.Editor.DockNetScenes.SignalName
+  - Nebula.Internal.Editor.Downloader
+  - Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
+  - Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  - Nebula.Internal.Editor.Downloader.MethodName
+  - Nebula.Internal.Editor.Downloader.PropertyName
+  - Nebula.Internal.Editor.Downloader.SignalName
+  - Nebula.Internal.Editor.NetSceneInspector
+  - Nebula.Internal.Editor.NetSceneInspector.MethodName
+  - Nebula.Internal.Editor.NetSceneInspector.PropertyName
+  - Nebula.Internal.Editor.NetSceneInspector.SignalName
+  - Nebula.Internal.Editor.ServerDebugClient
+  - Nebula.Internal.Editor.ServerDebugClient.MethodName
+  - Nebula.Internal.Editor.ServerDebugClient.PropertyName
+  - Nebula.Internal.Editor.ServerDebugClient.SignalName
+  - Nebula.Internal.Editor.WorldDebug
+  - Nebula.Internal.Editor.WorldDebug.LogEventHandler
+  - Nebula.Internal.Editor.WorldDebug.MethodName
+  - Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  - Nebula.Internal.Editor.WorldDebug.PropertyName
+  - Nebula.Internal.Editor.WorldDebug.SignalName
+  - Nebula.Internal.Editor.WorldDebug.TickFrameReceivedEventHandler
+  - Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  - Nebula.Internal.Editor.WorldDebug.TickFrameUpdatedEventHandler
+  - Nebula.Internal.Editor.WorldInspector
+  - Nebula.Internal.Editor.WorldInspector.MethodName
+  - Nebula.Internal.Editor.WorldInspector.PropertyName
+  - Nebula.Internal.Editor.WorldInspector.SignalName
+  langs:
+  - csharp
+  - vb
+  name: Nebula.Internal.Editor
+  nameWithType: Nebula.Internal.Editor
+  fullName: Nebula.Internal.Editor
+  type: Namespace
+  assemblies:
+  - Nebula
+references:
+- uid: Nebula.Internal.Editor.AddonManager
+  commentId: T:Nebula.Internal.Editor.AddonManager
+  isExternal: true
+  href: Nebula.Internal.Editor.AddonManager.html
+  name: AddonManager
+  nameWithType: AddonManager
+  fullName: Nebula.Internal.Editor.AddonManager
+- uid: Nebula.Internal.Editor.AddonManager.MethodName
+  commentId: T:Nebula.Internal.Editor.AddonManager.MethodName
+  isExternal: true
+  href: Nebula.Internal.Editor.AddonManager.html
+  name: AddonManager.MethodName
+  nameWithType: AddonManager.MethodName
+  fullName: Nebula.Internal.Editor.AddonManager.MethodName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.AddonManager
+    name: AddonManager
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.html
+  - name: .
+  - uid: Nebula.Internal.Editor.AddonManager.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.MethodName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.AddonManager
+    name: AddonManager
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.html
+  - name: .
+  - uid: Nebula.Internal.Editor.AddonManager.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.MethodName.html
+- uid: Nebula.Internal.Editor.AddonManager.PropertyName
+  commentId: T:Nebula.Internal.Editor.AddonManager.PropertyName
+  isExternal: true
+  href: Nebula.Internal.Editor.AddonManager.html
+  name: AddonManager.PropertyName
+  nameWithType: AddonManager.PropertyName
+  fullName: Nebula.Internal.Editor.AddonManager.PropertyName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.AddonManager
+    name: AddonManager
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.html
+  - name: .
+  - uid: Nebula.Internal.Editor.AddonManager.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.AddonManager
+    name: AddonManager
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.html
+  - name: .
+  - uid: Nebula.Internal.Editor.AddonManager.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.PropertyName.html
+- uid: Nebula.Internal.Editor.AddonManager.SignalName
+  commentId: T:Nebula.Internal.Editor.AddonManager.SignalName
+  isExternal: true
+  href: Nebula.Internal.Editor.AddonManager.html
+  name: AddonManager.SignalName
+  nameWithType: AddonManager.SignalName
+  fullName: Nebula.Internal.Editor.AddonManager.SignalName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.AddonManager
+    name: AddonManager
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.html
+  - name: .
+  - uid: Nebula.Internal.Editor.AddonManager.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.SignalName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.AddonManager
+    name: AddonManager
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.html
+  - name: .
+  - uid: Nebula.Internal.Editor.AddonManager.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.AddonManager.SignalName.html
+- uid: Nebula.Internal.Editor.Downloader
+  commentId: T:Nebula.Internal.Editor.Downloader
+  isExternal: true
+  href: Nebula.Internal.Editor.Downloader.html
+  name: Downloader
+  nameWithType: Downloader
+  fullName: Nebula.Internal.Editor.Downloader
+- uid: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
+  commentId: T:Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.Downloader.html
+  name: Downloader.DownloadCompletedEventHandler
+  nameWithType: Downloader.DownloadCompletedEventHandler
+  fullName: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.Downloader
+    name: Downloader
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.html
+  - name: .
+  - uid: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
+    name: DownloadCompletedEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.Downloader
+    name: Downloader
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.html
+  - name: .
+  - uid: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
+    name: DownloadCompletedEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler.html
+- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  commentId: T:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.Downloader.html
+  name: Downloader.DownloadFailedEventHandler
+  nameWithType: Downloader.DownloadFailedEventHandler
+  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.Downloader
+    name: Downloader
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.html
+  - name: .
+  - uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+    name: DownloadFailedEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.Downloader
+    name: Downloader
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.html
+  - name: .
+  - uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+    name: DownloadFailedEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.html
+- uid: Nebula.Internal.Editor.Downloader.MethodName
+  commentId: T:Nebula.Internal.Editor.Downloader.MethodName
+  isExternal: true
+  href: Nebula.Internal.Editor.Downloader.html
+  name: Downloader.MethodName
+  nameWithType: Downloader.MethodName
+  fullName: Nebula.Internal.Editor.Downloader.MethodName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.Downloader
+    name: Downloader
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.html
+  - name: .
+  - uid: Nebula.Internal.Editor.Downloader.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.MethodName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.Downloader
+    name: Downloader
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.html
+  - name: .
+  - uid: Nebula.Internal.Editor.Downloader.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.MethodName.html
+- uid: Nebula.Internal.Editor.Downloader.PropertyName
+  commentId: T:Nebula.Internal.Editor.Downloader.PropertyName
+  isExternal: true
+  href: Nebula.Internal.Editor.Downloader.html
+  name: Downloader.PropertyName
+  nameWithType: Downloader.PropertyName
+  fullName: Nebula.Internal.Editor.Downloader.PropertyName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.Downloader
+    name: Downloader
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.html
+  - name: .
+  - uid: Nebula.Internal.Editor.Downloader.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.Downloader
+    name: Downloader
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.html
+  - name: .
+  - uid: Nebula.Internal.Editor.Downloader.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.PropertyName.html
+- uid: Nebula.Internal.Editor.Downloader.SignalName
+  commentId: T:Nebula.Internal.Editor.Downloader.SignalName
+  isExternal: true
+  href: Nebula.Internal.Editor.Downloader.html
+  name: Downloader.SignalName
+  nameWithType: Downloader.SignalName
+  fullName: Nebula.Internal.Editor.Downloader.SignalName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.Downloader
+    name: Downloader
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.html
+  - name: .
+  - uid: Nebula.Internal.Editor.Downloader.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.SignalName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.Downloader
+    name: Downloader
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.html
+  - name: .
+  - uid: Nebula.Internal.Editor.Downloader.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.Downloader.SignalName.html
+- uid: Nebula.Internal.Editor.ServerDebugClient
+  commentId: T:Nebula.Internal.Editor.ServerDebugClient
+  isExternal: true
+  href: Nebula.Internal.Editor.ServerDebugClient.html
+  name: ServerDebugClient
+  nameWithType: ServerDebugClient
+  fullName: Nebula.Internal.Editor.ServerDebugClient
+- uid: Nebula.Internal.Editor.ServerDebugClient.MethodName
+  commentId: T:Nebula.Internal.Editor.ServerDebugClient.MethodName
+  isExternal: true
+  href: Nebula.Internal.Editor.ServerDebugClient.html
+  name: ServerDebugClient.MethodName
+  nameWithType: ServerDebugClient.MethodName
+  fullName: Nebula.Internal.Editor.ServerDebugClient.MethodName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.ServerDebugClient
+    name: ServerDebugClient
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.html
+  - name: .
+  - uid: Nebula.Internal.Editor.ServerDebugClient.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.MethodName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.ServerDebugClient
+    name: ServerDebugClient
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.html
+  - name: .
+  - uid: Nebula.Internal.Editor.ServerDebugClient.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.MethodName.html
+- uid: Nebula.Internal.Editor.ServerDebugClient.PropertyName
+  commentId: T:Nebula.Internal.Editor.ServerDebugClient.PropertyName
+  isExternal: true
+  href: Nebula.Internal.Editor.ServerDebugClient.html
+  name: ServerDebugClient.PropertyName
+  nameWithType: ServerDebugClient.PropertyName
+  fullName: Nebula.Internal.Editor.ServerDebugClient.PropertyName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.ServerDebugClient
+    name: ServerDebugClient
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.html
+  - name: .
+  - uid: Nebula.Internal.Editor.ServerDebugClient.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.ServerDebugClient
+    name: ServerDebugClient
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.html
+  - name: .
+  - uid: Nebula.Internal.Editor.ServerDebugClient.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.PropertyName.html
+- uid: Nebula.Internal.Editor.ServerDebugClient.SignalName
+  commentId: T:Nebula.Internal.Editor.ServerDebugClient.SignalName
+  isExternal: true
+  href: Nebula.Internal.Editor.ServerDebugClient.html
+  name: ServerDebugClient.SignalName
+  nameWithType: ServerDebugClient.SignalName
+  fullName: Nebula.Internal.Editor.ServerDebugClient.SignalName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.ServerDebugClient
+    name: ServerDebugClient
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.html
+  - name: .
+  - uid: Nebula.Internal.Editor.ServerDebugClient.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.SignalName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.ServerDebugClient
+    name: ServerDebugClient
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.html
+  - name: .
+  - uid: Nebula.Internal.Editor.ServerDebugClient.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.ServerDebugClient.SignalName.html
+- uid: Nebula.Internal.Editor.BarChart
+  commentId: T:Nebula.Internal.Editor.BarChart
+  isExternal: true
+  href: Nebula.Internal.Editor.BarChart.html
+  name: BarChart
+  nameWithType: BarChart
+  fullName: Nebula.Internal.Editor.BarChart
+- uid: Nebula.Internal.Editor.BarChart.BarChartType
+  commentId: T:Nebula.Internal.Editor.BarChart.BarChartType
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.BarChart.html
+  name: BarChart.BarChartType
+  nameWithType: BarChart.BarChartType
+  fullName: Nebula.Internal.Editor.BarChart.BarChartType
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.BarChart
+    name: BarChart
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.html
+  - name: .
+  - uid: Nebula.Internal.Editor.BarChart.BarChartType
+    name: BarChartType
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.BarChartType.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.BarChart
+    name: BarChart
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.html
+  - name: .
+  - uid: Nebula.Internal.Editor.BarChart.BarChartType
+    name: BarChartType
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.BarChartType.html
+- uid: Nebula.Internal.Editor.BarChart.MethodName
+  commentId: T:Nebula.Internal.Editor.BarChart.MethodName
+  isExternal: true
+  href: Nebula.Internal.Editor.BarChart.html
+  name: BarChart.MethodName
+  nameWithType: BarChart.MethodName
+  fullName: Nebula.Internal.Editor.BarChart.MethodName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.BarChart
+    name: BarChart
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.html
+  - name: .
+  - uid: Nebula.Internal.Editor.BarChart.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.MethodName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.BarChart
+    name: BarChart
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.html
+  - name: .
+  - uid: Nebula.Internal.Editor.BarChart.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.MethodName.html
+- uid: Nebula.Internal.Editor.BarChart.PropertyName
+  commentId: T:Nebula.Internal.Editor.BarChart.PropertyName
+  isExternal: true
+  href: Nebula.Internal.Editor.BarChart.html
+  name: BarChart.PropertyName
+  nameWithType: BarChart.PropertyName
+  fullName: Nebula.Internal.Editor.BarChart.PropertyName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.BarChart
+    name: BarChart
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.html
+  - name: .
+  - uid: Nebula.Internal.Editor.BarChart.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.BarChart
+    name: BarChart
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.html
+  - name: .
+  - uid: Nebula.Internal.Editor.BarChart.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.PropertyName.html
+- uid: Nebula.Internal.Editor.BarChart.SignalName
+  commentId: T:Nebula.Internal.Editor.BarChart.SignalName
+  isExternal: true
+  href: Nebula.Internal.Editor.BarChart.html
+  name: BarChart.SignalName
+  nameWithType: BarChart.SignalName
+  fullName: Nebula.Internal.Editor.BarChart.SignalName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.BarChart
+    name: BarChart
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.html
+  - name: .
+  - uid: Nebula.Internal.Editor.BarChart.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.SignalName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.BarChart
+    name: BarChart
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.html
+  - name: .
+  - uid: Nebula.Internal.Editor.BarChart.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.SignalName.html
+- uid: Nebula.Internal.Editor.WorldDebug
+  commentId: T:Nebula.Internal.Editor.WorldDebug
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.html
+  name: WorldDebug
+  nameWithType: WorldDebug
+  fullName: Nebula.Internal.Editor.WorldDebug
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameReceivedEventHandler
+  commentId: T:Nebula.Internal.Editor.WorldDebug.TickFrameReceivedEventHandler
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.html
+  name: WorldDebug.TickFrameReceivedEventHandler
+  nameWithType: WorldDebug.TickFrameReceivedEventHandler
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameReceivedEventHandler
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.TickFrameReceivedEventHandler
+    name: TickFrameReceivedEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.TickFrameReceivedEventHandler.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.TickFrameReceivedEventHandler
+    name: TickFrameReceivedEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.TickFrameReceivedEventHandler.html
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameUpdatedEventHandler
+  commentId: T:Nebula.Internal.Editor.WorldDebug.TickFrameUpdatedEventHandler
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.html
+  name: WorldDebug.TickFrameUpdatedEventHandler
+  nameWithType: WorldDebug.TickFrameUpdatedEventHandler
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameUpdatedEventHandler
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.TickFrameUpdatedEventHandler
+    name: TickFrameUpdatedEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.TickFrameUpdatedEventHandler.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.TickFrameUpdatedEventHandler
+    name: TickFrameUpdatedEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.TickFrameUpdatedEventHandler.html
+- uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  commentId: T:Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.html
+  name: WorldDebug.TickFrameSelectedEventHandler
+  nameWithType: WorldDebug.TickFrameSelectedEventHandler
+  fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+    name: TickFrameSelectedEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler
+    name: TickFrameSelectedEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.TickFrameSelectedEventHandler.html
+- uid: Nebula.Internal.Editor.WorldDebug.LogEventHandler
+  commentId: T:Nebula.Internal.Editor.WorldDebug.LogEventHandler
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.html
+  name: WorldDebug.LogEventHandler
+  nameWithType: WorldDebug.LogEventHandler
+  fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.LogEventHandler
+    name: LogEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.LogEventHandler.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.LogEventHandler
+    name: LogEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.LogEventHandler.html
+- uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  commentId: T:Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.html
+  name: WorldDebug.NetFunctionCalledEventHandler
+  nameWithType: WorldDebug.NetFunctionCalledEventHandler
+  fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+    name: NetFunctionCalledEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler
+    name: NetFunctionCalledEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.html
+- uid: Nebula.Internal.Editor.WorldDebug.MethodName
+  commentId: T:Nebula.Internal.Editor.WorldDebug.MethodName
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.html
+  name: WorldDebug.MethodName
+  nameWithType: WorldDebug.MethodName
+  fullName: Nebula.Internal.Editor.WorldDebug.MethodName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.MethodName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.MethodName.html
+- uid: Nebula.Internal.Editor.WorldDebug.PropertyName
+  commentId: T:Nebula.Internal.Editor.WorldDebug.PropertyName
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.html
+  name: WorldDebug.PropertyName
+  nameWithType: WorldDebug.PropertyName
+  fullName: Nebula.Internal.Editor.WorldDebug.PropertyName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.PropertyName.html
+- uid: Nebula.Internal.Editor.WorldDebug.SignalName
+  commentId: T:Nebula.Internal.Editor.WorldDebug.SignalName
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldDebug.html
+  name: WorldDebug.SignalName
+  nameWithType: WorldDebug.SignalName
+  fullName: Nebula.Internal.Editor.WorldDebug.SignalName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.SignalName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldDebug
+    name: WorldDebug
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldDebug.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldDebug.SignalName.html
+- uid: Nebula.Internal.Editor.WorldInspector
+  commentId: T:Nebula.Internal.Editor.WorldInspector
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldInspector.html
+  name: WorldInspector
+  nameWithType: WorldInspector
+  fullName: Nebula.Internal.Editor.WorldInspector
+- uid: Nebula.Internal.Editor.WorldInspector.MethodName
+  commentId: T:Nebula.Internal.Editor.WorldInspector.MethodName
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldInspector.html
+  name: WorldInspector.MethodName
+  nameWithType: WorldInspector.MethodName
+  fullName: Nebula.Internal.Editor.WorldInspector.MethodName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldInspector
+    name: WorldInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldInspector.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.MethodName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldInspector
+    name: WorldInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldInspector.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.MethodName.html
+- uid: Nebula.Internal.Editor.WorldInspector.PropertyName
+  commentId: T:Nebula.Internal.Editor.WorldInspector.PropertyName
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldInspector.html
+  name: WorldInspector.PropertyName
+  nameWithType: WorldInspector.PropertyName
+  fullName: Nebula.Internal.Editor.WorldInspector.PropertyName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldInspector
+    name: WorldInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldInspector.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldInspector
+    name: WorldInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldInspector.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.PropertyName.html
+- uid: Nebula.Internal.Editor.WorldInspector.SignalName
+  commentId: T:Nebula.Internal.Editor.WorldInspector.SignalName
+  isExternal: true
+  href: Nebula.Internal.Editor.WorldInspector.html
+  name: WorldInspector.SignalName
+  nameWithType: WorldInspector.SignalName
+  fullName: Nebula.Internal.Editor.WorldInspector.SignalName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.WorldInspector
+    name: WorldInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldInspector.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.SignalName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.WorldInspector
+    name: WorldInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.WorldInspector.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.WorldInspector.SignalName.html
+- uid: Nebula.Internal.Editor.DockNetScenes
+  commentId: T:Nebula.Internal.Editor.DockNetScenes
+  isExternal: true
+  href: Nebula.Internal.Editor.DockNetScenes.html
+  name: DockNetScenes
+  nameWithType: DockNetScenes
+  fullName: Nebula.Internal.Editor.DockNetScenes
+- uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  commentId: T:Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.DockNetScenes.html
+  name: DockNetScenes.InspectNodeEventHandler
+  nameWithType: DockNetScenes.InspectNodeEventHandler
+  fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.DockNetScenes
+    name: DockNetScenes
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.html
+  - name: .
+  - uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+    name: InspectNodeEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.DockNetScenes
+    name: DockNetScenes
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.html
+  - name: .
+  - uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+    name: InspectNodeEventHandler
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.html
+- uid: Nebula.Internal.Editor.DockNetScenes.MethodName
+  commentId: T:Nebula.Internal.Editor.DockNetScenes.MethodName
+  isExternal: true
+  href: Nebula.Internal.Editor.DockNetScenes.html
+  name: DockNetScenes.MethodName
+  nameWithType: DockNetScenes.MethodName
+  fullName: Nebula.Internal.Editor.DockNetScenes.MethodName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.DockNetScenes
+    name: DockNetScenes
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.html
+  - name: .
+  - uid: Nebula.Internal.Editor.DockNetScenes.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.MethodName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.DockNetScenes
+    name: DockNetScenes
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.html
+  - name: .
+  - uid: Nebula.Internal.Editor.DockNetScenes.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.MethodName.html
+- uid: Nebula.Internal.Editor.DockNetScenes.PropertyName
+  commentId: T:Nebula.Internal.Editor.DockNetScenes.PropertyName
+  isExternal: true
+  href: Nebula.Internal.Editor.DockNetScenes.html
+  name: DockNetScenes.PropertyName
+  nameWithType: DockNetScenes.PropertyName
+  fullName: Nebula.Internal.Editor.DockNetScenes.PropertyName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.DockNetScenes
+    name: DockNetScenes
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.html
+  - name: .
+  - uid: Nebula.Internal.Editor.DockNetScenes.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.DockNetScenes
+    name: DockNetScenes
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.html
+  - name: .
+  - uid: Nebula.Internal.Editor.DockNetScenes.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.PropertyName.html
+- uid: Nebula.Internal.Editor.DockNetScenes.SignalName
+  commentId: T:Nebula.Internal.Editor.DockNetScenes.SignalName
+  isExternal: true
+  href: Nebula.Internal.Editor.DockNetScenes.html
+  name: DockNetScenes.SignalName
+  nameWithType: DockNetScenes.SignalName
+  fullName: Nebula.Internal.Editor.DockNetScenes.SignalName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.DockNetScenes
+    name: DockNetScenes
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.html
+  - name: .
+  - uid: Nebula.Internal.Editor.DockNetScenes.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.SignalName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.DockNetScenes
+    name: DockNetScenes
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.html
+  - name: .
+  - uid: Nebula.Internal.Editor.DockNetScenes.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.DockNetScenes.SignalName.html
+- uid: Nebula.Internal.Editor.NetSceneInspector
+  commentId: T:Nebula.Internal.Editor.NetSceneInspector
+  isExternal: true
+  href: Nebula.Internal.Editor.NetSceneInspector.html
+  name: NetSceneInspector
+  nameWithType: NetSceneInspector
+  fullName: Nebula.Internal.Editor.NetSceneInspector
+- uid: Nebula.Internal.Editor.NetSceneInspector.MethodName
+  commentId: T:Nebula.Internal.Editor.NetSceneInspector.MethodName
+  isExternal: true
+  href: Nebula.Internal.Editor.NetSceneInspector.html
+  name: NetSceneInspector.MethodName
+  nameWithType: NetSceneInspector.MethodName
+  fullName: Nebula.Internal.Editor.NetSceneInspector.MethodName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.NetSceneInspector
+    name: NetSceneInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.NetSceneInspector.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.MethodName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.NetSceneInspector
+    name: NetSceneInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.NetSceneInspector.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.MethodName.html
+- uid: Nebula.Internal.Editor.NetSceneInspector.PropertyName
+  commentId: T:Nebula.Internal.Editor.NetSceneInspector.PropertyName
+  isExternal: true
+  href: Nebula.Internal.Editor.NetSceneInspector.html
+  name: NetSceneInspector.PropertyName
+  nameWithType: NetSceneInspector.PropertyName
+  fullName: Nebula.Internal.Editor.NetSceneInspector.PropertyName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.NetSceneInspector
+    name: NetSceneInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.NetSceneInspector.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.NetSceneInspector
+    name: NetSceneInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.NetSceneInspector.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.PropertyName.html
+- uid: Nebula.Internal.Editor.NetSceneInspector.SignalName
+  commentId: T:Nebula.Internal.Editor.NetSceneInspector.SignalName
+  isExternal: true
+  href: Nebula.Internal.Editor.NetSceneInspector.html
+  name: NetSceneInspector.SignalName
+  nameWithType: NetSceneInspector.SignalName
+  fullName: Nebula.Internal.Editor.NetSceneInspector.SignalName
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.NetSceneInspector
+    name: NetSceneInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.NetSceneInspector.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.SignalName.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.NetSceneInspector
+    name: NetSceneInspector
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.html
+  - name: .
+  - uid: Nebula.Internal.Editor.NetSceneInspector.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Internal.Editor.NetSceneInspector.SignalName.html
+- uid: Nebula.Internal.Editor
+  commentId: N:Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Internal.Editor
+  nameWithType: Nebula.Internal.Editor
+  fullName: Nebula.Internal.Editor
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html

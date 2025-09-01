@@ -1,0 +1,1743 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.HLBytes
+  commentId: T:Nebula.Serialization.HLBytes
+  id: HLBytes
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.HLBytes.#ctor
+  - Nebula.Serialization.HLBytes.AddRange(System.Byte[]@,System.Byte[])
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Godot.Quaternion,System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Godot.Vector2,System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Godot.Vector3,System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Nebula.Serialization.HLBuffer,System.Boolean,System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Boolean,System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Byte)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Byte[],System.Boolean,System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int16,System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int32,System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int32[],System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int64,System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Single,System.Boolean)
+  - Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.String,System.Boolean)
+  - Nebula.Serialization.HLBytes.PackArray(Nebula.Serialization.HLBuffer,Godot.Collections.Array,System.Boolean)
+  - Nebula.Serialization.HLBytes.PackDictionary(Nebula.Serialization.HLBuffer,Godot.Collections.Dictionary,System.Boolean)
+  - Nebula.Serialization.HLBytes.PackVariant(Nebula.Serialization.HLBuffer,Godot.Variant,System.Boolean,System.Boolean)
+  - Nebula.Serialization.HLBytes.UnpackArray(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackBool(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackByte(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackByteArray(Nebula.Serialization.HLBuffer,System.Int32,System.Boolean)
+  - Nebula.Serialization.HLBytes.UnpackDictionary(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackFloat(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackInt16(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackInt32(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackInt32Array(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackInt64(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackInt8(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackQuaternion(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackString(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackVariant(Nebula.Serialization.HLBuffer,System.Int32,System.Nullable{Godot.Variant.Type})
+  - Nebula.Serialization.HLBytes.UnpackVector2(Nebula.Serialization.HLBuffer)
+  - Nebula.Serialization.HLBytes.UnpackVector3(Nebula.Serialization.HLBuffer)
+  langs:
+  - csharp
+  - vb
+  name: HLBytes
+  nameWithType: HLBytes
+  fullName: Nebula.Serialization.HLBytes
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Converts variables and <xref href="Godot.Variant?text=Godot+variants" data-throw-if-not-resolved="false"></xref> into binary and vice-versa. <xref href="Nebula.Serialization.HLBuffer" data-throw-if-not-resolved="false"></xref> is the medium of storage.
+  example: []
+  syntax:
+    content: public class HLBytes
+    content.vb: Public Class HLBytes
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Serialization.HLBytes.AddRange(System.Byte[]@,System.Byte[])
+  commentId: M:Nebula.Serialization.HLBytes.AddRange(System.Byte[]@,System.Byte[])
+  id: AddRange(System.Byte[]@,System.Byte[])
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: AddRange(ref byte[], byte[])
+  nameWithType: HLBytes.AddRange(ref byte[], byte[])
+  fullName: Nebula.Serialization.HLBytes.AddRange(ref byte[], byte[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void AddRange(ref byte[] array, byte[] toAdd)
+    parameters:
+    - id: array
+      type: System.Byte[]
+    - id: toAdd
+      type: System.Byte[]
+    content.vb: Public Shared Sub AddRange(array As Byte(), toAdd As Byte())
+  overload: Nebula.Serialization.HLBytes.AddRange*
+  nameWithType.vb: HLBytes.AddRange(Byte(), Byte())
+  fullName.vb: Nebula.Serialization.HLBytes.AddRange(Byte(), Byte())
+  name.vb: AddRange(Byte(), Byte())
+- uid: Nebula.Serialization.HLBytes.PackVariant(Nebula.Serialization.HLBuffer,Godot.Variant,System.Boolean,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.PackVariant(Nebula.Serialization.HLBuffer,Godot.Variant,System.Boolean,System.Boolean)
+  id: PackVariant(Nebula.Serialization.HLBuffer,Godot.Variant,System.Boolean,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: PackVariant(HLBuffer, Variant, bool, bool)
+  nameWithType: HLBytes.PackVariant(HLBuffer, Variant, bool, bool)
+  fullName: Nebula.Serialization.HLBytes.PackVariant(Nebula.Serialization.HLBuffer, Godot.Variant, bool, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void PackVariant(HLBuffer buffer, Variant varVal, bool packLength = false, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: Godot.Variant
+    - id: packLength
+      type: System.Boolean
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub PackVariant(buffer As HLBuffer, varVal As [Variant], packLength As Boolean = False, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.PackVariant*
+  nameWithType.vb: HLBytes.PackVariant(HLBuffer, Variant, Boolean, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.PackVariant(Nebula.Serialization.HLBuffer, Godot.Variant, Boolean, Boolean)
+  name.vb: PackVariant(HLBuffer, Variant, Boolean, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Godot.Vector3,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Godot.Vector3,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,Godot.Vector3,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, Vector3, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, Vector3, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Godot.Vector3, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, Vector3 varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: Godot.Vector3
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Vector3, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Vector3, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Godot.Vector3, Boolean)
+  name.vb: Pack(HLBuffer, Vector3, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Godot.Vector2,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Godot.Vector2,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,Godot.Vector2,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, Vector2, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, Vector2, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Godot.Vector2, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, Vector2 varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: Godot.Vector2
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Vector2, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Vector2, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Godot.Vector2, Boolean)
+  name.vb: Pack(HLBuffer, Vector2, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Godot.Quaternion,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Godot.Quaternion,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,Godot.Quaternion,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, Quaternion, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, Quaternion, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Godot.Quaternion, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, Quaternion varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: Godot.Quaternion
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Quaternion, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Quaternion, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Godot.Quaternion, Boolean)
+  name.vb: Pack(HLBuffer, Quaternion, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Single,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Single,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,System.Single,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, float, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, float, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, float, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, float varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: System.Single
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Single, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Single, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Single, Boolean)
+  name.vb: Pack(HLBuffer, Single, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Byte)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Byte)
+  id: Pack(Nebula.Serialization.HLBuffer,System.Byte)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, byte)
+  nameWithType: HLBytes.Pack(HLBuffer, byte)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, byte)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, byte varVal)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: System.Byte
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Byte)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Byte)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Byte)
+  name.vb: Pack(HLBuffer, Byte)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int16,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int16,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,System.Int16,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, short, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, short, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, short, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, short varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: System.Int16
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Short, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Short, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Short, Boolean)
+  name.vb: Pack(HLBuffer, Short, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int32,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int32,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,System.Int32,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, int, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, int, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, int, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, int varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: System.Int32
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Integer, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Integer, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Integer, Boolean)
+  name.vb: Pack(HLBuffer, Integer, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int64,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int64,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,System.Int64,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, long, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, long, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, long, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, long varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: System.Int64
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Long, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Long, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Long, Boolean)
+  name.vb: Pack(HLBuffer, Long, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Boolean,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Boolean,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,System.Boolean,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, bool, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, bool, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, bool, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, bool varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: System.Boolean
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Boolean, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Boolean, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Boolean, Boolean)
+  name.vb: Pack(HLBuffer, Boolean, Boolean)
+- uid: Nebula.Serialization.HLBytes.PackArray(Nebula.Serialization.HLBuffer,Godot.Collections.Array,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.PackArray(Nebula.Serialization.HLBuffer,Godot.Collections.Array,System.Boolean)
+  id: PackArray(Nebula.Serialization.HLBuffer,Godot.Collections.Array,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: PackArray(HLBuffer, Array, bool)
+  nameWithType: HLBytes.PackArray(HLBuffer, Array, bool)
+  fullName: Nebula.Serialization.HLBytes.PackArray(Nebula.Serialization.HLBuffer, Godot.Collections.Array, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void PackArray(HLBuffer buffer, Array varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: Godot.Collections.Array
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub PackArray(buffer As HLBuffer, varVal As Array, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.PackArray*
+  nameWithType.vb: HLBytes.PackArray(HLBuffer, Array, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.PackArray(Nebula.Serialization.HLBuffer, Godot.Collections.Array, Boolean)
+  name.vb: PackArray(HLBuffer, Array, Boolean)
+- uid: Nebula.Serialization.HLBytes.PackDictionary(Nebula.Serialization.HLBuffer,Godot.Collections.Dictionary,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.PackDictionary(Nebula.Serialization.HLBuffer,Godot.Collections.Dictionary,System.Boolean)
+  id: PackDictionary(Nebula.Serialization.HLBuffer,Godot.Collections.Dictionary,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: PackDictionary(HLBuffer, Dictionary, bool)
+  nameWithType: HLBytes.PackDictionary(HLBuffer, Dictionary, bool)
+  fullName: Nebula.Serialization.HLBytes.PackDictionary(Nebula.Serialization.HLBuffer, Godot.Collections.Dictionary, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void PackDictionary(HLBuffer buffer, Dictionary varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: Godot.Collections.Dictionary
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub PackDictionary(buffer As HLBuffer, varVal As Dictionary, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.PackDictionary*
+  nameWithType.vb: HLBytes.PackDictionary(HLBuffer, Dictionary, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.PackDictionary(Nebula.Serialization.HLBuffer, Godot.Collections.Dictionary, Boolean)
+  name.vb: PackDictionary(HLBuffer, Dictionary, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int32[],System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Int32[],System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,System.Int32[],System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, int[], bool)
+  nameWithType: HLBytes.Pack(HLBuffer, int[], bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, int[], bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, int[] varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: System.Int32[]
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Integer(), packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Integer(), Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Integer(), Boolean)
+  name.vb: Pack(HLBuffer, Integer(), Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Byte[],System.Boolean,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.Byte[],System.Boolean,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,System.Byte[],System.Boolean,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, byte[], bool, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, byte[], bool, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, byte[], bool, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, byte[] varVal, bool packLength = false, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: System.Byte[]
+    - id: packLength
+      type: System.Boolean
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As Byte(), packLength As Boolean = False, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, Byte(), Boolean, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Byte(), Boolean, Boolean)
+  name.vb: Pack(HLBuffer, Byte(), Boolean, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Nebula.Serialization.HLBuffer,System.Boolean,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,Nebula.Serialization.HLBuffer,System.Boolean,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,Nebula.Serialization.HLBuffer,System.Boolean,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, HLBuffer, bool, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, HLBuffer, bool, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Nebula.Serialization.HLBuffer, bool, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, HLBuffer varVal, bool packLength = false, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: Nebula.Serialization.HLBuffer
+    - id: packLength
+      type: System.Boolean
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As HLBuffer, packLength As Boolean = False, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, HLBuffer, Boolean, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, Nebula.Serialization.HLBuffer, Boolean, Boolean)
+  name.vb: Pack(HLBuffer, HLBuffer, Boolean, Boolean)
+- uid: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.String,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer,System.String,System.Boolean)
+  id: Pack(Nebula.Serialization.HLBuffer,System.String,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: Pack(HLBuffer, string, bool)
+  nameWithType: HLBytes.Pack(HLBuffer, string, bool)
+  fullName: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, string, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void Pack(HLBuffer buffer, string varVal, bool packType = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: varVal
+      type: System.String
+    - id: packType
+      type: System.Boolean
+    content.vb: Public Shared Sub Pack(buffer As HLBuffer, varVal As String, packType As Boolean = False)
+  overload: Nebula.Serialization.HLBytes.Pack*
+  nameWithType.vb: HLBytes.Pack(HLBuffer, String, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.Pack(Nebula.Serialization.HLBuffer, String, Boolean)
+  name.vb: Pack(HLBuffer, String, Boolean)
+- uid: Nebula.Serialization.HLBytes.UnpackVariant(Nebula.Serialization.HLBuffer,System.Int32,System.Nullable{Godot.Variant.Type})
+  commentId: M:Nebula.Serialization.HLBytes.UnpackVariant(Nebula.Serialization.HLBuffer,System.Int32,System.Nullable{Godot.Variant.Type})
+  id: UnpackVariant(Nebula.Serialization.HLBuffer,System.Int32,System.Nullable{Godot.Variant.Type})
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackVariant(HLBuffer, int, Type?)
+  nameWithType: HLBytes.UnpackVariant(HLBuffer, int, Variant.Type?)
+  fullName: Nebula.Serialization.HLBytes.UnpackVariant(Nebula.Serialization.HLBuffer, int, Godot.Variant.Type?)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Variant? UnpackVariant(HLBuffer buffer, int length = 0, Variant.Type? knownType = null)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: length
+      type: System.Int32
+    - id: knownType
+      type: System.Nullable{Godot.Variant.Type}
+    return:
+      type: System.Nullable{Godot.Variant}
+    content.vb: Public Shared Function UnpackVariant(buffer As HLBuffer, length As Integer = 0, knownType As [Variant].Type? = Nothing) As [Variant]?
+  overload: Nebula.Serialization.HLBytes.UnpackVariant*
+  nameWithType.vb: HLBytes.UnpackVariant(HLBuffer, Integer, Variant.Type?)
+  fullName.vb: Nebula.Serialization.HLBytes.UnpackVariant(Nebula.Serialization.HLBuffer, Integer, Godot.Variant.Type?)
+  name.vb: UnpackVariant(HLBuffer, Integer, Type?)
+- uid: Nebula.Serialization.HLBytes.UnpackVector2(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackVector2(Nebula.Serialization.HLBuffer)
+  id: UnpackVector2(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackVector2(HLBuffer)
+  nameWithType: HLBytes.UnpackVector2(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackVector2(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector2 UnpackVector2(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: Godot.Vector2
+    content.vb: Public Shared Function UnpackVector2(buffer As HLBuffer) As Vector2
+  overload: Nebula.Serialization.HLBytes.UnpackVector2*
+- uid: Nebula.Serialization.HLBytes.UnpackVector3(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackVector3(Nebula.Serialization.HLBuffer)
+  id: UnpackVector3(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackVector3(HLBuffer)
+  nameWithType: HLBytes.UnpackVector3(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackVector3(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector3 UnpackVector3(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function UnpackVector3(buffer As HLBuffer) As Vector3
+  overload: Nebula.Serialization.HLBytes.UnpackVector3*
+- uid: Nebula.Serialization.HLBytes.UnpackQuaternion(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackQuaternion(Nebula.Serialization.HLBuffer)
+  id: UnpackQuaternion(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackQuaternion(HLBuffer)
+  nameWithType: HLBytes.UnpackQuaternion(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackQuaternion(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Quaternion UnpackQuaternion(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: Godot.Quaternion
+    content.vb: Public Shared Function UnpackQuaternion(buffer As HLBuffer) As Quaternion
+  overload: Nebula.Serialization.HLBytes.UnpackQuaternion*
+- uid: Nebula.Serialization.HLBytes.UnpackFloat(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackFloat(Nebula.Serialization.HLBuffer)
+  id: UnpackFloat(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackFloat(HLBuffer)
+  nameWithType: HLBytes.UnpackFloat(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackFloat(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static float UnpackFloat(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: System.Single
+    content.vb: Public Shared Function UnpackFloat(buffer As HLBuffer) As Single
+  overload: Nebula.Serialization.HLBytes.UnpackFloat*
+- uid: Nebula.Serialization.HLBytes.UnpackByte(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackByte(Nebula.Serialization.HLBuffer)
+  id: UnpackByte(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackByte(HLBuffer)
+  nameWithType: HLBytes.UnpackByte(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackByte(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Alias for <xref href="Nebula.Serialization.HLBytes.UnpackInt8(Nebula.Serialization.HLBuffer)" data-throw-if-not-resolved="false"></xref>
+  example: []
+  syntax:
+    content: public static byte UnpackByte(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+      description: ''
+    return:
+      type: System.Byte
+      description: ''
+    content.vb: Public Shared Function UnpackByte(buffer As HLBuffer) As Byte
+  overload: Nebula.Serialization.HLBytes.UnpackByte*
+- uid: Nebula.Serialization.HLBytes.UnpackInt8(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackInt8(Nebula.Serialization.HLBuffer)
+  id: UnpackInt8(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackInt8(HLBuffer)
+  nameWithType: HLBytes.UnpackInt8(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackInt8(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static byte UnpackInt8(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: System.Byte
+    content.vb: Public Shared Function UnpackInt8(buffer As HLBuffer) As Byte
+  overload: Nebula.Serialization.HLBytes.UnpackInt8*
+- uid: Nebula.Serialization.HLBytes.UnpackInt32(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackInt32(Nebula.Serialization.HLBuffer)
+  id: UnpackInt32(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackInt32(HLBuffer)
+  nameWithType: HLBytes.UnpackInt32(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackInt32(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static int UnpackInt32(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function UnpackInt32(buffer As HLBuffer) As Integer
+  overload: Nebula.Serialization.HLBytes.UnpackInt32*
+- uid: Nebula.Serialization.HLBytes.UnpackInt16(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackInt16(Nebula.Serialization.HLBuffer)
+  id: UnpackInt16(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackInt16(HLBuffer)
+  nameWithType: HLBytes.UnpackInt16(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackInt16(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static short UnpackInt16(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: System.Int16
+    content.vb: Public Shared Function UnpackInt16(buffer As HLBuffer) As Short
+  overload: Nebula.Serialization.HLBytes.UnpackInt16*
+- uid: Nebula.Serialization.HLBytes.UnpackInt64(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackInt64(Nebula.Serialization.HLBuffer)
+  id: UnpackInt64(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackInt64(HLBuffer)
+  nameWithType: HLBytes.UnpackInt64(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackInt64(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static long UnpackInt64(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: System.Int64
+    content.vb: Public Shared Function UnpackInt64(buffer As HLBuffer) As Long
+  overload: Nebula.Serialization.HLBytes.UnpackInt64*
+- uid: Nebula.Serialization.HLBytes.UnpackBool(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackBool(Nebula.Serialization.HLBuffer)
+  id: UnpackBool(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackBool(HLBuffer)
+  nameWithType: HLBytes.UnpackBool(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackBool(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static bool UnpackBool(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function UnpackBool(buffer As HLBuffer) As Boolean
+  overload: Nebula.Serialization.HLBytes.UnpackBool*
+- uid: Nebula.Serialization.HLBytes.UnpackArray(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackArray(Nebula.Serialization.HLBuffer)
+  id: UnpackArray(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackArray(HLBuffer)
+  nameWithType: HLBytes.UnpackArray(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackArray(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Array UnpackArray(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: Godot.Collections.Array
+    content.vb: Public Shared Function UnpackArray(buffer As HLBuffer) As Array
+  overload: Nebula.Serialization.HLBytes.UnpackArray*
+- uid: Nebula.Serialization.HLBytes.UnpackDictionary(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackDictionary(Nebula.Serialization.HLBuffer)
+  id: UnpackDictionary(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackDictionary(HLBuffer)
+  nameWithType: HLBytes.UnpackDictionary(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackDictionary(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Dictionary UnpackDictionary(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: Godot.Collections.Dictionary
+    content.vb: Public Shared Function UnpackDictionary(buffer As HLBuffer) As Dictionary
+  overload: Nebula.Serialization.HLBytes.UnpackDictionary*
+- uid: Nebula.Serialization.HLBytes.UnpackInt32Array(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackInt32Array(Nebula.Serialization.HLBuffer)
+  id: UnpackInt32Array(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackInt32Array(HLBuffer)
+  nameWithType: HLBytes.UnpackInt32Array(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackInt32Array(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static int[] UnpackInt32Array(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: System.Int32[]
+    content.vb: Public Shared Function UnpackInt32Array(buffer As HLBuffer) As Integer()
+  overload: Nebula.Serialization.HLBytes.UnpackInt32Array*
+- uid: Nebula.Serialization.HLBytes.UnpackByteArray(Nebula.Serialization.HLBuffer,System.Int32,System.Boolean)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackByteArray(Nebula.Serialization.HLBuffer,System.Int32,System.Boolean)
+  id: UnpackByteArray(Nebula.Serialization.HLBuffer,System.Int32,System.Boolean)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackByteArray(HLBuffer, int, bool)
+  nameWithType: HLBytes.UnpackByteArray(HLBuffer, int, bool)
+  fullName: Nebula.Serialization.HLBytes.UnpackByteArray(Nebula.Serialization.HLBuffer, int, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static byte[] UnpackByteArray(HLBuffer buffer, int length = 0, bool untilEnd = false)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: length
+      type: System.Int32
+    - id: untilEnd
+      type: System.Boolean
+    return:
+      type: System.Byte[]
+    content.vb: Public Shared Function UnpackByteArray(buffer As HLBuffer, length As Integer = 0, untilEnd As Boolean = False) As Byte()
+  overload: Nebula.Serialization.HLBytes.UnpackByteArray*
+  nameWithType.vb: HLBytes.UnpackByteArray(HLBuffer, Integer, Boolean)
+  fullName.vb: Nebula.Serialization.HLBytes.UnpackByteArray(Nebula.Serialization.HLBuffer, Integer, Boolean)
+  name.vb: UnpackByteArray(HLBuffer, Integer, Boolean)
+- uid: Nebula.Serialization.HLBytes.UnpackString(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackString(Nebula.Serialization.HLBuffer)
+  id: UnpackString(Nebula.Serialization.HLBuffer)
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: UnpackString(HLBuffer)
+  nameWithType: HLBytes.UnpackString(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackString(Nebula.Serialization.HLBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static string UnpackString(HLBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    return:
+      type: System.String
+    content.vb: Public Shared Function UnpackString(buffer As HLBuffer) As String
+  overload: Nebula.Serialization.HLBytes.UnpackString*
+- uid: Nebula.Serialization.HLBytes.#ctor
+  commentId: M:Nebula.Serialization.HLBytes.#ctor
+  id: '#ctor'
+  parent: Nebula.Serialization.HLBytes
+  langs:
+  - csharp
+  - vb
+  name: HLBytes()
+  nameWithType: HLBytes.HLBytes()
+  fullName: Nebula.Serialization.HLBytes.HLBytes()
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Serialization/HLBytes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public HLBytes()
+    content.vb: Public Sub New()
+  overload: Nebula.Serialization.HLBytes.#ctor*
+  nameWithType.vb: HLBytes.New()
+  fullName.vb: Nebula.Serialization.HLBytes.New()
+  name.vb: New()
+references:
+- uid: Godot.Variant
+  commentId: T:Godot.Variant
+  parent: Godot
+  isExternal: true
+  name: Variant
+  nameWithType: Variant
+  fullName: Godot.Variant
+- uid: Nebula.Serialization.HLBuffer
+  commentId: T:Nebula.Serialization.HLBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.HLBuffer.html
+  name: HLBuffer
+  nameWithType: HLBuffer
+  fullName: Nebula.Serialization.HLBuffer
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Serialization.HLBytes.AddRange*
+  commentId: Overload:Nebula.Serialization.HLBytes.AddRange
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_AddRange_System_Byte____System_Byte___
+  name: AddRange
+  nameWithType: HLBytes.AddRange
+  fullName: Nebula.Serialization.HLBytes.AddRange
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.HLBytes.PackVariant*
+  commentId: Overload:Nebula.Serialization.HLBytes.PackVariant
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_PackVariant_Nebula_Serialization_HLBuffer_Godot_Variant_System_Boolean_System_Boolean_
+  name: PackVariant
+  nameWithType: HLBytes.PackVariant
+  fullName: Nebula.Serialization.HLBytes.PackVariant
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.Serialization.HLBytes.Pack*
+  commentId: Overload:Nebula.Serialization.HLBytes.Pack
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_Pack_Nebula_Serialization_HLBuffer_Godot_Vector3_System_Boolean_
+  name: Pack
+  nameWithType: HLBytes.Pack
+  fullName: Nebula.Serialization.HLBytes.Pack
+- uid: Godot.Vector3
+  commentId: T:Godot.Vector3
+  parent: Godot
+  isExternal: true
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Godot.Vector3
+- uid: Godot.Vector2
+  commentId: T:Godot.Vector2
+  parent: Godot
+  isExternal: true
+  name: Vector2
+  nameWithType: Vector2
+  fullName: Godot.Vector2
+- uid: Godot.Quaternion
+  commentId: T:Godot.Quaternion
+  parent: Godot
+  isExternal: true
+  name: Quaternion
+  nameWithType: Quaternion
+  fullName: Godot.Quaternion
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: System.Int16
+  commentId: T:System.Int16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: short
+  nameWithType: short
+  fullName: short
+  nameWithType.vb: Short
+  fullName.vb: Short
+  name.vb: Short
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: Nebula.Serialization.HLBytes.PackArray*
+  commentId: Overload:Nebula.Serialization.HLBytes.PackArray
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_PackArray_Nebula_Serialization_HLBuffer_Godot_Collections_Array_System_Boolean_
+  name: PackArray
+  nameWithType: HLBytes.PackArray
+  fullName: Nebula.Serialization.HLBytes.PackArray
+- uid: Godot.Collections.Array
+  commentId: T:Godot.Collections.Array
+  parent: Godot.Collections
+  isExternal: true
+  name: Array
+  nameWithType: Array
+  fullName: Godot.Collections.Array
+- uid: Godot.Collections
+  commentId: N:Godot.Collections
+  isExternal: true
+  name: Godot.Collections
+  nameWithType: Godot.Collections
+  fullName: Godot.Collections
+  spec.csharp:
+  - uid: Godot
+    name: Godot
+    isExternal: true
+  - name: .
+  - uid: Godot.Collections
+    name: Collections
+    isExternal: true
+  spec.vb:
+  - uid: Godot
+    name: Godot
+    isExternal: true
+  - name: .
+  - uid: Godot.Collections
+    name: Collections
+    isExternal: true
+- uid: Nebula.Serialization.HLBytes.PackDictionary*
+  commentId: Overload:Nebula.Serialization.HLBytes.PackDictionary
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_PackDictionary_Nebula_Serialization_HLBuffer_Godot_Collections_Dictionary_System_Boolean_
+  name: PackDictionary
+  nameWithType: HLBytes.PackDictionary
+  fullName: Nebula.Serialization.HLBytes.PackDictionary
+- uid: Godot.Collections.Dictionary
+  commentId: T:Godot.Collections.Dictionary
+  parent: Godot.Collections
+  isExternal: true
+  name: Dictionary
+  nameWithType: Dictionary
+  fullName: Godot.Collections.Dictionary
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.Serialization.HLBytes.UnpackVariant*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackVariant
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackVariant_Nebula_Serialization_HLBuffer_System_Int32_System_Nullable_Godot_Variant_Type__
+  name: UnpackVariant
+  nameWithType: HLBytes.UnpackVariant
+  fullName: Nebula.Serialization.HLBytes.UnpackVariant
+- uid: System.Nullable{Godot.Variant.Type}
+  commentId: T:System.Nullable{Godot.Variant.Type}
+  parent: System
+  definition: System.Nullable`1
+  name: Variant.Type?
+  nameWithType: Variant.Type?
+  fullName: Godot.Variant.Type?
+  spec.csharp:
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: .
+  - uid: Godot.Variant.Type
+    name: Type
+    isExternal: true
+  - name: '?'
+  spec.vb:
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: .
+  - uid: Godot.Variant.Type
+    name: Type
+    isExternal: true
+  - name: '?'
+- uid: System.Nullable{Godot.Variant}
+  commentId: T:System.Nullable{Godot.Variant}
+  parent: System
+  definition: System.Nullable`1
+  name: Variant?
+  nameWithType: Variant?
+  fullName: Godot.Variant?
+  spec.csharp:
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: '?'
+  spec.vb:
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.HLBytes.UnpackVector2*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackVector2
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackVector2_Nebula_Serialization_HLBuffer_
+  name: UnpackVector2
+  nameWithType: HLBytes.UnpackVector2
+  fullName: Nebula.Serialization.HLBytes.UnpackVector2
+- uid: Nebula.Serialization.HLBytes.UnpackVector3*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackVector3
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackVector3_Nebula_Serialization_HLBuffer_
+  name: UnpackVector3
+  nameWithType: HLBytes.UnpackVector3
+  fullName: Nebula.Serialization.HLBytes.UnpackVector3
+- uid: Nebula.Serialization.HLBytes.UnpackQuaternion*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackQuaternion
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackQuaternion_Nebula_Serialization_HLBuffer_
+  name: UnpackQuaternion
+  nameWithType: HLBytes.UnpackQuaternion
+  fullName: Nebula.Serialization.HLBytes.UnpackQuaternion
+- uid: Nebula.Serialization.HLBytes.UnpackFloat*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackFloat
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackFloat_Nebula_Serialization_HLBuffer_
+  name: UnpackFloat
+  nameWithType: HLBytes.UnpackFloat
+  fullName: Nebula.Serialization.HLBytes.UnpackFloat
+- uid: Nebula.Serialization.HLBytes.UnpackInt8(Nebula.Serialization.HLBuffer)
+  commentId: M:Nebula.Serialization.HLBytes.UnpackInt8(Nebula.Serialization.HLBuffer)
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackInt8_Nebula_Serialization_HLBuffer_
+  name: UnpackInt8(HLBuffer)
+  nameWithType: HLBytes.UnpackInt8(HLBuffer)
+  fullName: Nebula.Serialization.HLBytes.UnpackInt8(Nebula.Serialization.HLBuffer)
+  spec.csharp:
+  - uid: Nebula.Serialization.HLBytes.UnpackInt8(Nebula.Serialization.HLBuffer)
+    name: UnpackInt8
+    isExternal: true
+    href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackInt8_Nebula_Serialization_HLBuffer_
+  - name: (
+  - uid: Nebula.Serialization.HLBuffer
+    name: HLBuffer
+    isExternal: true
+    href: Nebula.Serialization.HLBuffer.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.HLBytes.UnpackInt8(Nebula.Serialization.HLBuffer)
+    name: UnpackInt8
+    isExternal: true
+    href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackInt8_Nebula_Serialization_HLBuffer_
+  - name: (
+  - uid: Nebula.Serialization.HLBuffer
+    name: HLBuffer
+    isExternal: true
+    href: Nebula.Serialization.HLBuffer.html
+  - name: )
+- uid: Nebula.Serialization.HLBytes.UnpackByte*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackByte
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackByte_Nebula_Serialization_HLBuffer_
+  name: UnpackByte
+  nameWithType: HLBytes.UnpackByte
+  fullName: Nebula.Serialization.HLBytes.UnpackByte
+- uid: Nebula.Serialization.HLBytes.UnpackInt8*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackInt8
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackInt8_Nebula_Serialization_HLBuffer_
+  name: UnpackInt8
+  nameWithType: HLBytes.UnpackInt8
+  fullName: Nebula.Serialization.HLBytes.UnpackInt8
+- uid: Nebula.Serialization.HLBytes.UnpackInt32*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackInt32
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackInt32_Nebula_Serialization_HLBuffer_
+  name: UnpackInt32
+  nameWithType: HLBytes.UnpackInt32
+  fullName: Nebula.Serialization.HLBytes.UnpackInt32
+- uid: Nebula.Serialization.HLBytes.UnpackInt16*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackInt16
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackInt16_Nebula_Serialization_HLBuffer_
+  name: UnpackInt16
+  nameWithType: HLBytes.UnpackInt16
+  fullName: Nebula.Serialization.HLBytes.UnpackInt16
+- uid: Nebula.Serialization.HLBytes.UnpackInt64*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackInt64
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackInt64_Nebula_Serialization_HLBuffer_
+  name: UnpackInt64
+  nameWithType: HLBytes.UnpackInt64
+  fullName: Nebula.Serialization.HLBytes.UnpackInt64
+- uid: Nebula.Serialization.HLBytes.UnpackBool*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackBool
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackBool_Nebula_Serialization_HLBuffer_
+  name: UnpackBool
+  nameWithType: HLBytes.UnpackBool
+  fullName: Nebula.Serialization.HLBytes.UnpackBool
+- uid: Nebula.Serialization.HLBytes.UnpackArray*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackArray
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackArray_Nebula_Serialization_HLBuffer_
+  name: UnpackArray
+  nameWithType: HLBytes.UnpackArray
+  fullName: Nebula.Serialization.HLBytes.UnpackArray
+- uid: Nebula.Serialization.HLBytes.UnpackDictionary*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackDictionary
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackDictionary_Nebula_Serialization_HLBuffer_
+  name: UnpackDictionary
+  nameWithType: HLBytes.UnpackDictionary
+  fullName: Nebula.Serialization.HLBytes.UnpackDictionary
+- uid: Nebula.Serialization.HLBytes.UnpackInt32Array*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackInt32Array
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackInt32Array_Nebula_Serialization_HLBuffer_
+  name: UnpackInt32Array
+  nameWithType: HLBytes.UnpackInt32Array
+  fullName: Nebula.Serialization.HLBytes.UnpackInt32Array
+- uid: Nebula.Serialization.HLBytes.UnpackByteArray*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackByteArray
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackByteArray_Nebula_Serialization_HLBuffer_System_Int32_System_Boolean_
+  name: UnpackByteArray
+  nameWithType: HLBytes.UnpackByteArray
+  fullName: Nebula.Serialization.HLBytes.UnpackByteArray
+- uid: Nebula.Serialization.HLBytes.UnpackString*
+  commentId: Overload:Nebula.Serialization.HLBytes.UnpackString
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes_UnpackString_Nebula_Serialization_HLBuffer_
+  name: UnpackString
+  nameWithType: HLBytes.UnpackString
+  fullName: Nebula.Serialization.HLBytes.UnpackString
+- uid: Nebula.Serialization.HLBytes.#ctor*
+  commentId: Overload:Nebula.Serialization.HLBytes.#ctor
+  isExternal: true
+  href: Nebula.Serialization.HLBytes.html#Nebula_Serialization_HLBytes__ctor
+  name: HLBytes
+  nameWithType: HLBytes.HLBytes
+  fullName: Nebula.Serialization.HLBytes.HLBytes
+  nameWithType.vb: HLBytes.New
+  fullName.vb: Nebula.Serialization.HLBytes.New
+  name.vb: New

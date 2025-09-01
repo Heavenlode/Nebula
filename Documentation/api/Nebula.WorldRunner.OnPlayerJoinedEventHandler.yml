@@ -1,0 +1,237 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler
+  commentId: T:Nebula.WorldRunner.OnPlayerJoinedEventHandler
+  id: WorldRunner.OnPlayerJoinedEventHandler
+  parent: Nebula
+  children:
+  - Nebula.WorldRunner.OnPlayerJoinedEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke(Nebula.UUID,System.AsyncCallback,System.Object)
+  - Nebula.WorldRunner.OnPlayerJoinedEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.WorldRunner.OnPlayerJoinedEventHandler.Invoke(Nebula.UUID)
+  langs:
+  - csharp
+  - vb
+  name: WorldRunner.OnPlayerJoinedEventHandler
+  nameWithType: WorldRunner.OnPlayerJoinedEventHandler
+  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void WorldRunner.OnPlayerJoinedEventHandler(UUID peerId)
+    parameters:
+    - id: peerId
+      type: Nebula.UUID
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub WorldRunner.OnPlayerJoinedEventHandler(peerId As UUID)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.WorldRunner.OnPlayerJoinedEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.WorldRunner.OnPlayerJoinedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnPlayerJoinedEventHandler(object, nint)
+  nameWithType: WorldRunner.OnPlayerJoinedEventHandler.OnPlayerJoinedEventHandler(object, nint)
+  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler.OnPlayerJoinedEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public OnPlayerJoinedEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.WorldRunner.OnPlayerJoinedEventHandler.#ctor*
+  nameWithType.vb: WorldRunner.OnPlayerJoinedEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.WorldRunner.OnPlayerJoinedEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler.Invoke(Nebula.UUID)
+  commentId: M:Nebula.WorldRunner.OnPlayerJoinedEventHandler.Invoke(Nebula.UUID)
+  id: Invoke(Nebula.UUID)
+  parent: Nebula.WorldRunner.OnPlayerJoinedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(UUID)
+  nameWithType: WorldRunner.OnPlayerJoinedEventHandler.Invoke(UUID)
+  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler.Invoke(Nebula.UUID)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void Invoke(UUID peerId)
+    parameters:
+    - id: peerId
+      type: Nebula.UUID
+    content.vb: Public Overridable Sub Invoke(peerId As UUID)
+  overload: Nebula.WorldRunner.OnPlayerJoinedEventHandler.Invoke*
+- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke(Nebula.UUID,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke(Nebula.UUID,System.AsyncCallback,System.Object)
+  id: BeginInvoke(Nebula.UUID,System.AsyncCallback,System.Object)
+  parent: Nebula.WorldRunner.OnPlayerJoinedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(UUID, AsyncCallback, object)
+  nameWithType: WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke(UUID, AsyncCallback, object)
+  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke(Nebula.UUID, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(UUID peerId, AsyncCallback callback, object @object)
+    parameters:
+    - id: peerId
+      type: Nebula.UUID
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(peerId As UUID, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke*
+  nameWithType.vb: WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke(UUID, AsyncCallback, Object)
+  fullName.vb: Nebula.WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke(Nebula.UUID, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(UUID, AsyncCallback, Object)
+- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.WorldRunner.OnPlayerJoinedEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.WorldRunner.OnPlayerJoinedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: WorldRunner.OnPlayerJoinedEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.WorldRunner.OnPlayerJoinedEventHandler.EndInvoke*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.UUID
+  commentId: T:Nebula.UUID
+  parent: Nebula
+  isExternal: true
+  href: Nebula.UUID.html
+  name: UUID
+  nameWithType: UUID
+  fullName: Nebula.UUID
+- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler.#ctor*
+  commentId: Overload:Nebula.WorldRunner.OnPlayerJoinedEventHandler.#ctor
+  isExternal: true
+  href: Nebula.WorldRunner.OnPlayerJoinedEventHandler.html#Nebula_WorldRunner_OnPlayerJoinedEventHandler__ctor_System_Object_System_IntPtr_
+  name: OnPlayerJoinedEventHandler
+  nameWithType: WorldRunner.OnPlayerJoinedEventHandler.OnPlayerJoinedEventHandler
+  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler.OnPlayerJoinedEventHandler
+  nameWithType.vb: WorldRunner.OnPlayerJoinedEventHandler.New
+  fullName.vb: Nebula.WorldRunner.OnPlayerJoinedEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler.Invoke*
+  commentId: Overload:Nebula.WorldRunner.OnPlayerJoinedEventHandler.Invoke
+  isExternal: true
+  href: Nebula.WorldRunner.OnPlayerJoinedEventHandler.html#Nebula_WorldRunner_OnPlayerJoinedEventHandler_Invoke_Nebula_UUID_
+  name: Invoke
+  nameWithType: WorldRunner.OnPlayerJoinedEventHandler.Invoke
+  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler.Invoke
+- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.WorldRunner.OnPlayerJoinedEventHandler.html#Nebula_WorldRunner_OnPlayerJoinedEventHandler_BeginInvoke_Nebula_UUID_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke
+  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler.EndInvoke*
+  commentId: Overload:Nebula.WorldRunner.OnPlayerJoinedEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.WorldRunner.OnPlayerJoinedEventHandler.html#Nebula_WorldRunner_OnPlayerJoinedEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: WorldRunner.OnPlayerJoinedEventHandler.EndInvoke
+  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler.EndInvoke

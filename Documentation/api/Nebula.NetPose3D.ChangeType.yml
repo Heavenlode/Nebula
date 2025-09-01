@@ -1,0 +1,100 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetPose3D.ChangeType
+  commentId: T:Nebula.NetPose3D.ChangeType
+  id: NetPose3D.ChangeType
+  parent: Nebula
+  children:
+  - Nebula.NetPose3D.ChangeType.Delta
+  - Nebula.NetPose3D.ChangeType.Keyframe
+  langs:
+  - csharp
+  - vb
+  name: NetPose3D.ChangeType
+  nameWithType: NetPose3D.ChangeType
+  fullName: Nebula.NetPose3D.ChangeType
+  type: Enum
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public enum NetPose3D.ChangeType
+    content.vb: Public Enum NetPose3D.ChangeType
+- uid: Nebula.NetPose3D.ChangeType.Delta
+  commentId: F:Nebula.NetPose3D.ChangeType.Delta
+  id: Delta
+  parent: Nebula.NetPose3D.ChangeType
+  langs:
+  - csharp
+  - vb
+  name: Delta
+  nameWithType: NetPose3D.ChangeType.Delta
+  fullName: Nebula.NetPose3D.ChangeType.Delta
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: Delta = 1
+    return:
+      type: Nebula.NetPose3D.ChangeType
+- uid: Nebula.NetPose3D.ChangeType.Keyframe
+  commentId: F:Nebula.NetPose3D.ChangeType.Keyframe
+  id: Keyframe
+  parent: Nebula.NetPose3D.ChangeType
+  langs:
+  - csharp
+  - vb
+  name: Keyframe
+  nameWithType: NetPose3D.ChangeType.Keyframe
+  fullName: Nebula.NetPose3D.ChangeType.Keyframe
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: Keyframe = 2
+    return:
+      type: Nebula.NetPose3D.ChangeType
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.NetPose3D.ChangeType
+  commentId: T:Nebula.NetPose3D.ChangeType
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetPose3D.html
+  name: NetPose3D.ChangeType
+  nameWithType: NetPose3D.ChangeType
+  fullName: Nebula.NetPose3D.ChangeType
+  spec.csharp:
+  - uid: Nebula.NetPose3D
+    name: NetPose3D
+    isExternal: true
+    href: Nebula.NetPose3D.html
+  - name: .
+  - uid: Nebula.NetPose3D.ChangeType
+    name: ChangeType
+    isExternal: true
+    href: Nebula.NetPose3D.ChangeType.html
+  spec.vb:
+  - uid: Nebula.NetPose3D
+    name: NetPose3D
+    isExternal: true
+    href: Nebula.NetPose3D.html
+  - name: .
+  - uid: Nebula.NetPose3D.ChangeType
+    name: ChangeType
+    isExternal: true
+    href: Nebula.NetPose3D.ChangeType.html

@@ -1,0 +1,172 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Utility.Tools.Debugger.DebugLevel
+  commentId: T:Nebula.Utility.Tools.Debugger.DebugLevel
+  id: Debugger.DebugLevel
+  parent: Nebula.Utility.Tools
+  children:
+  - Nebula.Utility.Tools.Debugger.DebugLevel.ERROR
+  - Nebula.Utility.Tools.Debugger.DebugLevel.INFO
+  - Nebula.Utility.Tools.Debugger.DebugLevel.VERBOSE
+  - Nebula.Utility.Tools.Debugger.DebugLevel.WARN
+  langs:
+  - csharp
+  - vb
+  name: Debugger.DebugLevel
+  nameWithType: Debugger.DebugLevel
+  fullName: Nebula.Utility.Tools.Debugger.DebugLevel
+  type: Enum
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public enum Debugger.DebugLevel
+    content.vb: Public Enum Debugger.DebugLevel
+- uid: Nebula.Utility.Tools.Debugger.DebugLevel.ERROR
+  commentId: F:Nebula.Utility.Tools.Debugger.DebugLevel.ERROR
+  id: ERROR
+  parent: Nebula.Utility.Tools.Debugger.DebugLevel
+  langs:
+  - csharp
+  - vb
+  name: ERROR
+  nameWithType: Debugger.DebugLevel.ERROR
+  fullName: Nebula.Utility.Tools.Debugger.DebugLevel.ERROR
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: ERROR = 0
+    return:
+      type: Nebula.Utility.Tools.Debugger.DebugLevel
+- uid: Nebula.Utility.Tools.Debugger.DebugLevel.WARN
+  commentId: F:Nebula.Utility.Tools.Debugger.DebugLevel.WARN
+  id: WARN
+  parent: Nebula.Utility.Tools.Debugger.DebugLevel
+  langs:
+  - csharp
+  - vb
+  name: WARN
+  nameWithType: Debugger.DebugLevel.WARN
+  fullName: Nebula.Utility.Tools.Debugger.DebugLevel.WARN
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: WARN = 1
+    return:
+      type: Nebula.Utility.Tools.Debugger.DebugLevel
+- uid: Nebula.Utility.Tools.Debugger.DebugLevel.INFO
+  commentId: F:Nebula.Utility.Tools.Debugger.DebugLevel.INFO
+  id: INFO
+  parent: Nebula.Utility.Tools.Debugger.DebugLevel
+  langs:
+  - csharp
+  - vb
+  name: INFO
+  nameWithType: Debugger.DebugLevel.INFO
+  fullName: Nebula.Utility.Tools.Debugger.DebugLevel.INFO
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: INFO = 2
+    return:
+      type: Nebula.Utility.Tools.Debugger.DebugLevel
+- uid: Nebula.Utility.Tools.Debugger.DebugLevel.VERBOSE
+  commentId: F:Nebula.Utility.Tools.Debugger.DebugLevel.VERBOSE
+  id: VERBOSE
+  parent: Nebula.Utility.Tools.Debugger.DebugLevel
+  langs:
+  - csharp
+  - vb
+  name: VERBOSE
+  nameWithType: Debugger.DebugLevel.VERBOSE
+  fullName: Nebula.Utility.Tools.Debugger.DebugLevel.VERBOSE
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: VERBOSE = 3
+    return:
+      type: Nebula.Utility.Tools.Debugger.DebugLevel
+references:
+- uid: Nebula.Utility.Tools
+  commentId: N:Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Utility.Tools
+  nameWithType: Nebula.Utility.Tools
+  fullName: Nebula.Utility.Tools
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Utility.Tools.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Utility.Tools.html
+- uid: Nebula.Utility.Tools.Debugger.DebugLevel
+  commentId: T:Nebula.Utility.Tools.Debugger.DebugLevel
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.Debugger.html
+  name: Debugger.DebugLevel
+  nameWithType: Debugger.DebugLevel
+  fullName: Nebula.Utility.Tools.Debugger.DebugLevel
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.DebugLevel
+    name: DebugLevel
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.DebugLevel.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.DebugLevel
+    name: DebugLevel
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.DebugLevel.html

@@ -1,0 +1,119 @@
+{
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.md",
+          "**/*.yml"
+        ],
+        "exclude": [
+          "**/obj/**",
+          "**/bin/**",
+          "_site/**"
+        ]
+      }
+    ],
+    "metadata": [
+      {
+        "src": [
+          {
+            "files": [
+              "Nebula.dll"
+            ],
+            "src": "../.godot/mono/temp/bin/Debug/"
+          }
+        ],
+        "dest": "api",
+        "shouldSkipMarkup": false,
+        "disableGitFeatures": false,
+        "disableDefaultFilter": false,
+        "noRestore": false,
+        "namespaceLayout": "flattened",
+        "memberLayout": "separatePages",
+        "allowCompilationErrors": false
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "**/*.png",
+          "**/*.jpg",
+          "**/*.gif"
+        ],
+        "exclude": [
+          "**/obj/**",
+          "**/bin/**"
+        ]
+      },
+      {
+        "files": [
+          "Nebula.xml"
+        ],
+        "src": "../.godot/mono/temp/bin/Debug/"
+      }
+    ],
+    "output": "_site",
+    "globalMetadataFiles": [],
+    "fileMetadataFiles": [],
+    "template": [
+      "default",
+      "modern"
+    ],
+    "postProcessors": [],
+    "markdownEngineName": "markdig",
+    "noLangKeyword": false,
+    "keepFileLink": false,
+    "disableGitFeatures": false,
+    "disableDefaultTemplate": false,
+    "schemaLicense": "http://schema.org/licenses/by-4.0/",
+    "xref": [],
+    "lruSize": 0,
+    "markdownEngineProperties": {
+      "enableSourceInfo": true
+    },
+    "overwrite": [],
+    "externalReference": [],
+    "sitemap": {
+      "baseUrl": "https://heavenlode.com/nebula/",
+      "priority": 0.5,
+      "changefreq": "monthly"
+    }
+  },
+  "pdf": {
+    "content": [
+      {
+        "files": [
+          "**/*.md"
+        ],
+        "exclude": [
+          "**/obj/**",
+          "**/bin/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "**/*.png",
+          "**/*.jpg",
+          "**/*.gif"
+        ],
+        "exclude": [
+          "**/obj/**",
+          "**/bin/**"
+        ]
+      }
+    ],
+    "output": "_site_pdf",
+    "wkhtmltopdf": {
+      "additionalArguments": "--enable-local-file-access"
+    },
+    "tocResource": [
+      {
+        "files": [
+          "toc.yml"
+        ]
+      }
+    ]
+  }
+}

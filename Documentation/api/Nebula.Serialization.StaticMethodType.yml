@@ -1,0 +1,113 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.StaticMethodType
+  commentId: T:Nebula.Serialization.StaticMethodType
+  id: StaticMethodType
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.StaticMethodType.BsonDeserialize
+  - Nebula.Serialization.StaticMethodType.NetworkDeserialize
+  - Nebula.Serialization.StaticMethodType.NetworkSerialize
+  langs:
+  - csharp
+  - vb
+  name: StaticMethodType
+  nameWithType: StaticMethodType
+  fullName: Nebula.Serialization.StaticMethodType
+  type: Enum
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public enum StaticMethodType
+    content.vb: Public Enum StaticMethodType
+- uid: Nebula.Serialization.StaticMethodType.NetworkSerialize
+  commentId: F:Nebula.Serialization.StaticMethodType.NetworkSerialize
+  id: NetworkSerialize
+  parent: Nebula.Serialization.StaticMethodType
+  langs:
+  - csharp
+  - vb
+  name: NetworkSerialize
+  nameWithType: StaticMethodType.NetworkSerialize
+  fullName: Nebula.Serialization.StaticMethodType.NetworkSerialize
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: NetworkSerialize = 1
+    return:
+      type: Nebula.Serialization.StaticMethodType
+- uid: Nebula.Serialization.StaticMethodType.NetworkDeserialize
+  commentId: F:Nebula.Serialization.StaticMethodType.NetworkDeserialize
+  id: NetworkDeserialize
+  parent: Nebula.Serialization.StaticMethodType
+  langs:
+  - csharp
+  - vb
+  name: NetworkDeserialize
+  nameWithType: StaticMethodType.NetworkDeserialize
+  fullName: Nebula.Serialization.StaticMethodType.NetworkDeserialize
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: NetworkDeserialize = 2
+    return:
+      type: Nebula.Serialization.StaticMethodType
+- uid: Nebula.Serialization.StaticMethodType.BsonDeserialize
+  commentId: F:Nebula.Serialization.StaticMethodType.BsonDeserialize
+  id: BsonDeserialize
+  parent: Nebula.Serialization.StaticMethodType
+  langs:
+  - csharp
+  - vb
+  name: BsonDeserialize
+  nameWithType: StaticMethodType.BsonDeserialize
+  fullName: Nebula.Serialization.StaticMethodType.BsonDeserialize
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: BsonDeserialize = 4
+    return:
+      type: Nebula.Serialization.StaticMethodType
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.StaticMethodType
+  commentId: T:Nebula.Serialization.StaticMethodType
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.StaticMethodType.html
+  name: StaticMethodType
+  nameWithType: StaticMethodType
+  fullName: Nebula.Serialization.StaticMethodType

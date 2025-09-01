@@ -1,0 +1,151 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Internal.Editor.BarChart.BarChartType
+  commentId: T:Nebula.Internal.Editor.BarChart.BarChartType
+  id: BarChart.BarChartType
+  parent: Nebula.Internal.Editor
+  children:
+  - Nebula.Internal.Editor.BarChart.BarChartType.Call
+  - Nebula.Internal.Editor.BarChart.BarChartType.Egress
+  - Nebula.Internal.Editor.BarChart.BarChartType.Log
+  langs:
+  - csharp
+  - vb
+  name: BarChart.BarChartType
+  nameWithType: BarChart.BarChartType
+  fullName: Nebula.Internal.Editor.BarChart.BarChartType
+  type: Enum
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public enum BarChart.BarChartType
+    content.vb: Public Enum BarChart.BarChartType
+- uid: Nebula.Internal.Editor.BarChart.BarChartType.Call
+  commentId: F:Nebula.Internal.Editor.BarChart.BarChartType.Call
+  id: Call
+  parent: Nebula.Internal.Editor.BarChart.BarChartType
+  langs:
+  - csharp
+  - vb
+  name: Call
+  nameWithType: BarChart.BarChartType.Call
+  fullName: Nebula.Internal.Editor.BarChart.BarChartType.Call
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: Call = 0
+    return:
+      type: Nebula.Internal.Editor.BarChart.BarChartType
+- uid: Nebula.Internal.Editor.BarChart.BarChartType.Log
+  commentId: F:Nebula.Internal.Editor.BarChart.BarChartType.Log
+  id: Log
+  parent: Nebula.Internal.Editor.BarChart.BarChartType
+  langs:
+  - csharp
+  - vb
+  name: Log
+  nameWithType: BarChart.BarChartType.Log
+  fullName: Nebula.Internal.Editor.BarChart.BarChartType.Log
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: Log = 1
+    return:
+      type: Nebula.Internal.Editor.BarChart.BarChartType
+- uid: Nebula.Internal.Editor.BarChart.BarChartType.Egress
+  commentId: F:Nebula.Internal.Editor.BarChart.BarChartType.Egress
+  id: Egress
+  parent: Nebula.Internal.Editor.BarChart.BarChartType
+  langs:
+  - csharp
+  - vb
+  name: Egress
+  nameWithType: BarChart.BarChartType.Egress
+  fullName: Nebula.Internal.Editor.BarChart.BarChartType.Egress
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: Egress = 2
+    return:
+      type: Nebula.Internal.Editor.BarChart.BarChartType
+references:
+- uid: Nebula.Internal.Editor
+  commentId: N:Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Internal.Editor
+  nameWithType: Nebula.Internal.Editor
+  fullName: Nebula.Internal.Editor
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+- uid: Nebula.Internal.Editor.BarChart.BarChartType
+  commentId: T:Nebula.Internal.Editor.BarChart.BarChartType
+  parent: Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.Internal.Editor.BarChart.html
+  name: BarChart.BarChartType
+  nameWithType: BarChart.BarChartType
+  fullName: Nebula.Internal.Editor.BarChart.BarChartType
+  spec.csharp:
+  - uid: Nebula.Internal.Editor.BarChart
+    name: BarChart
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.html
+  - name: .
+  - uid: Nebula.Internal.Editor.BarChart.BarChartType
+    name: BarChartType
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.BarChartType.html
+  spec.vb:
+  - uid: Nebula.Internal.Editor.BarChart
+    name: BarChart
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.html
+  - name: .
+  - uid: Nebula.Internal.Editor.BarChart.BarChartType
+    name: BarChartType
+    isExternal: true
+    href: Nebula.Internal.Editor.BarChart.BarChartType.html

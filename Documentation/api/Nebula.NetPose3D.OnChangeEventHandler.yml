@@ -1,0 +1,221 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetPose3D.OnChangeEventHandler
+  commentId: T:Nebula.NetPose3D.OnChangeEventHandler
+  id: NetPose3D.OnChangeEventHandler
+  parent: Nebula
+  children:
+  - Nebula.NetPose3D.OnChangeEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.NetPose3D.OnChangeEventHandler.BeginInvoke(System.AsyncCallback,System.Object)
+  - Nebula.NetPose3D.OnChangeEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.NetPose3D.OnChangeEventHandler.Invoke
+  langs:
+  - csharp
+  - vb
+  name: NetPose3D.OnChangeEventHandler
+  nameWithType: NetPose3D.OnChangeEventHandler
+  fullName: Nebula.NetPose3D.OnChangeEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void NetPose3D.OnChangeEventHandler()
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub NetPose3D.OnChangeEventHandler()
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.NetPose3D.OnChangeEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.NetPose3D.OnChangeEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.NetPose3D.OnChangeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnChangeEventHandler(object, nint)
+  nameWithType: NetPose3D.OnChangeEventHandler.OnChangeEventHandler(object, nint)
+  fullName: Nebula.NetPose3D.OnChangeEventHandler.OnChangeEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public OnChangeEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.NetPose3D.OnChangeEventHandler.#ctor*
+  nameWithType.vb: NetPose3D.OnChangeEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.NetPose3D.OnChangeEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.NetPose3D.OnChangeEventHandler.Invoke
+  commentId: M:Nebula.NetPose3D.OnChangeEventHandler.Invoke
+  id: Invoke
+  parent: Nebula.NetPose3D.OnChangeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke()
+  nameWithType: NetPose3D.OnChangeEventHandler.Invoke()
+  fullName: Nebula.NetPose3D.OnChangeEventHandler.Invoke()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void Invoke()
+    content.vb: Public Overridable Sub Invoke()
+  overload: Nebula.NetPose3D.OnChangeEventHandler.Invoke*
+- uid: Nebula.NetPose3D.OnChangeEventHandler.BeginInvoke(System.AsyncCallback,System.Object)
+  commentId: M:Nebula.NetPose3D.OnChangeEventHandler.BeginInvoke(System.AsyncCallback,System.Object)
+  id: BeginInvoke(System.AsyncCallback,System.Object)
+  parent: Nebula.NetPose3D.OnChangeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(AsyncCallback, object)
+  nameWithType: NetPose3D.OnChangeEventHandler.BeginInvoke(AsyncCallback, object)
+  fullName: Nebula.NetPose3D.OnChangeEventHandler.BeginInvoke(System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(AsyncCallback callback, object @object)
+    parameters:
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.NetPose3D.OnChangeEventHandler.BeginInvoke*
+  nameWithType.vb: NetPose3D.OnChangeEventHandler.BeginInvoke(AsyncCallback, Object)
+  fullName.vb: Nebula.NetPose3D.OnChangeEventHandler.BeginInvoke(System.AsyncCallback, Object)
+  name.vb: BeginInvoke(AsyncCallback, Object)
+- uid: Nebula.NetPose3D.OnChangeEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.NetPose3D.OnChangeEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.NetPose3D.OnChangeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: NetPose3D.OnChangeEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.NetPose3D.OnChangeEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.NetPose3D.OnChangeEventHandler.EndInvoke*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.NetPose3D.OnChangeEventHandler.#ctor*
+  commentId: Overload:Nebula.NetPose3D.OnChangeEventHandler.#ctor
+  isExternal: true
+  href: Nebula.NetPose3D.OnChangeEventHandler.html#Nebula_NetPose3D_OnChangeEventHandler__ctor_System_Object_System_IntPtr_
+  name: OnChangeEventHandler
+  nameWithType: NetPose3D.OnChangeEventHandler.OnChangeEventHandler
+  fullName: Nebula.NetPose3D.OnChangeEventHandler.OnChangeEventHandler
+  nameWithType.vb: NetPose3D.OnChangeEventHandler.New
+  fullName.vb: Nebula.NetPose3D.OnChangeEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.NetPose3D.OnChangeEventHandler.Invoke*
+  commentId: Overload:Nebula.NetPose3D.OnChangeEventHandler.Invoke
+  isExternal: true
+  href: Nebula.NetPose3D.OnChangeEventHandler.html#Nebula_NetPose3D_OnChangeEventHandler_Invoke
+  name: Invoke
+  nameWithType: NetPose3D.OnChangeEventHandler.Invoke
+  fullName: Nebula.NetPose3D.OnChangeEventHandler.Invoke
+- uid: Nebula.NetPose3D.OnChangeEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.NetPose3D.OnChangeEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.NetPose3D.OnChangeEventHandler.html#Nebula_NetPose3D_OnChangeEventHandler_BeginInvoke_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: NetPose3D.OnChangeEventHandler.BeginInvoke
+  fullName: Nebula.NetPose3D.OnChangeEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.NetPose3D.OnChangeEventHandler.EndInvoke*
+  commentId: Overload:Nebula.NetPose3D.OnChangeEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.NetPose3D.OnChangeEventHandler.html#Nebula_NetPose3D_OnChangeEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: NetPose3D.OnChangeEventHandler.EndInvoke
+  fullName: Nebula.NetPose3D.OnChangeEventHandler.EndInvoke

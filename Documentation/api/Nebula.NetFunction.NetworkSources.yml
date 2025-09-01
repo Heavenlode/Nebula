@@ -1,0 +1,121 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetFunction.NetworkSources
+  commentId: T:Nebula.NetFunction.NetworkSources
+  id: NetFunction.NetworkSources
+  parent: Nebula
+  children:
+  - Nebula.NetFunction.NetworkSources.All
+  - Nebula.NetFunction.NetworkSources.Client
+  - Nebula.NetFunction.NetworkSources.Server
+  langs:
+  - csharp
+  - vb
+  name: NetFunction.NetworkSources
+  nameWithType: NetFunction.NetworkSources
+  fullName: Nebula.NetFunction.NetworkSources
+  type: Enum
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetFunction.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public enum NetFunction.NetworkSources
+    content.vb: Public Enum NetFunction.NetworkSources
+- uid: Nebula.NetFunction.NetworkSources.Client
+  commentId: F:Nebula.NetFunction.NetworkSources.Client
+  id: Client
+  parent: Nebula.NetFunction.NetworkSources
+  langs:
+  - csharp
+  - vb
+  name: Client
+  nameWithType: NetFunction.NetworkSources.Client
+  fullName: Nebula.NetFunction.NetworkSources.Client
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetFunction.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: Client = 1
+    return:
+      type: Nebula.NetFunction.NetworkSources
+- uid: Nebula.NetFunction.NetworkSources.Server
+  commentId: F:Nebula.NetFunction.NetworkSources.Server
+  id: Server
+  parent: Nebula.NetFunction.NetworkSources
+  langs:
+  - csharp
+  - vb
+  name: Server
+  nameWithType: NetFunction.NetworkSources.Server
+  fullName: Nebula.NetFunction.NetworkSources.Server
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetFunction.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: Server = 2
+    return:
+      type: Nebula.NetFunction.NetworkSources
+- uid: Nebula.NetFunction.NetworkSources.All
+  commentId: F:Nebula.NetFunction.NetworkSources.All
+  id: All
+  parent: Nebula.NetFunction.NetworkSources
+  langs:
+  - csharp
+  - vb
+  name: All
+  nameWithType: NetFunction.NetworkSources.All
+  fullName: Nebula.NetFunction.NetworkSources.All
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetFunction.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: All = 3
+    return:
+      type: Nebula.NetFunction.NetworkSources
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.NetFunction.NetworkSources
+  commentId: T:Nebula.NetFunction.NetworkSources
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetFunction.html
+  name: NetFunction.NetworkSources
+  nameWithType: NetFunction.NetworkSources
+  fullName: Nebula.NetFunction.NetworkSources
+  spec.csharp:
+  - uid: Nebula.NetFunction
+    name: NetFunction
+    isExternal: true
+    href: Nebula.NetFunction.html
+  - name: .
+  - uid: Nebula.NetFunction.NetworkSources
+    name: NetworkSources
+    isExternal: true
+    href: Nebula.NetFunction.NetworkSources.html
+  spec.vb:
+  - uid: Nebula.NetFunction
+    name: NetFunction
+    isExternal: true
+    href: Nebula.NetFunction.html
+  - name: .
+  - uid: Nebula.NetFunction.NetworkSources
+    name: NetworkSources
+    isExternal: true
+    href: Nebula.NetFunction.NetworkSources.html

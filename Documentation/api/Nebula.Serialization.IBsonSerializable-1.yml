@@ -1,0 +1,177 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.IBsonSerializable`1
+  commentId: T:Nebula.Serialization.IBsonSerializable`1
+  id: IBsonSerializable`1
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
+  langs:
+  - csharp
+  - vb
+  name: IBsonSerializable<T>
+  nameWithType: IBsonSerializable<T>
+  fullName: Nebula.Serialization.IBsonSerializable<T>
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: 'public interface IBsonSerializable<T> : IBsonSerializableBase where T : GodotObject'
+    typeParameters:
+    - id: T
+    content.vb: Public Interface IBsonSerializable(Of T As GodotObject) Inherits IBsonSerializableBase
+  inheritedMembers:
+  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  nameWithType.vb: IBsonSerializable(Of T)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T)
+  name.vb: IBsonSerializable(Of T)
+- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
+  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
+  id: BsonDeserialize(Godot.Variant,System.Byte[],`0)
+  parent: Nebula.Serialization.IBsonSerializable`1
+  langs:
+  - csharp
+  - vb
+  name: BsonDeserialize(Variant, byte[], T)
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(Variant, byte[], T)
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Godot.Variant, byte[], T)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static abstract T BsonDeserialize(Variant context, byte[] bson, T initialObject)
+    parameters:
+    - id: context
+      type: Godot.Variant
+    - id: bson
+      type: System.Byte[]
+    - id: initialObject
+      type: '{T}'
+    return:
+      type: '{T}'
+    content.vb: Public Shared MustInherit Function BsonDeserialize(context As [Variant], bson As Byte(), initialObject As T) As T
+  overload: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize*
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(Variant, Byte(), T)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Godot.Variant, Byte(), T)
+  name.vb: BsonDeserialize(Variant, Byte(), T)
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  parent: Nebula.Serialization.IBsonSerializableBase
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+  name: BsonSerialize(Variant)
+  nameWithType: IBsonSerializableBase.BsonSerialize(Variant)
+  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+    name: BsonSerialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+  - name: (
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+    name: BsonSerialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+  - name: (
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializableBase
+  commentId: T:Nebula.Serialization.IBsonSerializableBase
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.html
+  name: IBsonSerializableBase
+  nameWithType: IBsonSerializableBase
+  fullName: Nebula.Serialization.IBsonSerializableBase
+- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize*
+  commentId: Overload:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+  name: BsonDeserialize
+  nameWithType: IBsonSerializable<T>.BsonDeserialize
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize
+- uid: Godot.Variant
+  commentId: T:Godot.Variant
+  parent: Godot
+  isExternal: true
+  name: Variant
+  nameWithType: Variant
+  fullName: Godot.Variant
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T

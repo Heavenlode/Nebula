@@ -1,0 +1,290 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.Serializers
+  commentId: N:Nebula.Serialization.Serializers
+  id: Nebula.Serialization.Serializers
+  children:
+  - Nebula.Serialization.Serializers.BitConstants
+  - Nebula.Serialization.Serializers.DespawnSerializer
+  - Nebula.Serialization.Serializers.IStateSerializer
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.MethodName
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.SignalName
+  - Nebula.Serialization.Serializers.SpawnSerializer
+  - Nebula.Serialization.Serializers.SpawnSerializer.MethodName
+  - Nebula.Serialization.Serializers.SpawnSerializer.PropertyName
+  - Nebula.Serialization.Serializers.SpawnSerializer.SignalName
+  langs:
+  - csharp
+  - vb
+  name: Nebula.Serialization.Serializers
+  nameWithType: Nebula.Serialization.Serializers
+  fullName: Nebula.Serialization.Serializers
+  type: Namespace
+  assemblies:
+  - Nebula
+references:
+- uid: Nebula.Serialization.Serializers.BitConstants
+  commentId: T:Nebula.Serialization.Serializers.BitConstants
+  isExternal: true
+  href: Nebula.Serialization.Serializers.BitConstants.html
+  name: BitConstants
+  nameWithType: BitConstants
+  fullName: Nebula.Serialization.Serializers.BitConstants
+- uid: Nebula.Serialization.Serializers.DespawnSerializer
+  commentId: T:Nebula.Serialization.Serializers.DespawnSerializer
+  isExternal: true
+  href: Nebula.Serialization.Serializers.DespawnSerializer.html
+  name: DespawnSerializer
+  nameWithType: DespawnSerializer
+  fullName: Nebula.Serialization.Serializers.DespawnSerializer
+- uid: Nebula.Serialization.Serializers.IStateSerializer
+  commentId: T:Nebula.Serialization.Serializers.IStateSerializer
+  parent: Nebula.Serialization.Serializers
+  isExternal: true
+  href: Nebula.Serialization.Serializers.IStateSerializer.html
+  name: IStateSerializer
+  nameWithType: IStateSerializer
+  fullName: Nebula.Serialization.Serializers.IStateSerializer
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
+  commentId: T:Nebula.Serialization.Serializers.NetPropertiesSerializer
+  isExternal: true
+  href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  name: NetPropertiesSerializer
+  nameWithType: NetPropertiesSerializer
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  commentId: T:Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  isExternal: true
+  href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  name: NetPropertiesSerializer.LerpableChangeQueue
+  nameWithType: NetPropertiesSerializer.LerpableChangeQueue
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
+    name: NetPropertiesSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+    name: LerpableChangeQueue
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.html
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
+    name: NetPropertiesSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+    name: LerpableChangeQueue
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.html
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.MethodName
+  commentId: T:Nebula.Serialization.Serializers.NetPropertiesSerializer.MethodName
+  isExternal: true
+  href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  name: NetPropertiesSerializer.MethodName
+  nameWithType: NetPropertiesSerializer.MethodName
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.MethodName
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
+    name: NetPropertiesSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.MethodName.html
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
+    name: NetPropertiesSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.MethodName.html
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
+  commentId: T:Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
+  isExternal: true
+  href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  name: NetPropertiesSerializer.PropertyName
+  nameWithType: NetPropertiesSerializer.PropertyName
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
+    name: NetPropertiesSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
+    name: NetPropertiesSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.html
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.SignalName
+  commentId: T:Nebula.Serialization.Serializers.NetPropertiesSerializer.SignalName
+  isExternal: true
+  href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  name: NetPropertiesSerializer.SignalName
+  nameWithType: NetPropertiesSerializer.SignalName
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.SignalName
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
+    name: NetPropertiesSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.SignalName.html
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
+    name: NetPropertiesSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.NetPropertiesSerializer.SignalName.html
+- uid: Nebula.Serialization.Serializers.SpawnSerializer
+  commentId: T:Nebula.Serialization.Serializers.SpawnSerializer
+  isExternal: true
+  href: Nebula.Serialization.Serializers.SpawnSerializer.html
+  name: SpawnSerializer
+  nameWithType: SpawnSerializer
+  fullName: Nebula.Serialization.Serializers.SpawnSerializer
+- uid: Nebula.Serialization.Serializers.SpawnSerializer.MethodName
+  commentId: T:Nebula.Serialization.Serializers.SpawnSerializer.MethodName
+  isExternal: true
+  href: Nebula.Serialization.Serializers.SpawnSerializer.html
+  name: SpawnSerializer.MethodName
+  nameWithType: SpawnSerializer.MethodName
+  fullName: Nebula.Serialization.Serializers.SpawnSerializer.MethodName
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer
+    name: SpawnSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.MethodName.html
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer
+    name: SpawnSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.MethodName.html
+- uid: Nebula.Serialization.Serializers.SpawnSerializer.PropertyName
+  commentId: T:Nebula.Serialization.Serializers.SpawnSerializer.PropertyName
+  isExternal: true
+  href: Nebula.Serialization.Serializers.SpawnSerializer.html
+  name: SpawnSerializer.PropertyName
+  nameWithType: SpawnSerializer.PropertyName
+  fullName: Nebula.Serialization.Serializers.SpawnSerializer.PropertyName
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer
+    name: SpawnSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer
+    name: SpawnSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.PropertyName.html
+- uid: Nebula.Serialization.Serializers.SpawnSerializer.SignalName
+  commentId: T:Nebula.Serialization.Serializers.SpawnSerializer.SignalName
+  isExternal: true
+  href: Nebula.Serialization.Serializers.SpawnSerializer.html
+  name: SpawnSerializer.SignalName
+  nameWithType: SpawnSerializer.SignalName
+  fullName: Nebula.Serialization.Serializers.SpawnSerializer.SignalName
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer
+    name: SpawnSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.SignalName.html
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer
+    name: SpawnSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers.SpawnSerializer.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Serialization.Serializers.SpawnSerializer.SignalName.html
+- uid: Nebula.Serialization.Serializers
+  commentId: N:Nebula.Serialization.Serializers
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization.Serializers
+  nameWithType: Nebula.Serialization.Serializers
+  fullName: Nebula.Serialization.Serializers
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers
+    name: Serializers
+    isExternal: true
+    href: Nebula.Serialization.Serializers.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers
+    name: Serializers
+    isExternal: true
+    href: Nebula.Serialization.Serializers.html

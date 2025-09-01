@@ -1,0 +1,242 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetRunner.OnPeerConnectedEventHandler
+  commentId: T:Nebula.NetRunner.OnPeerConnectedEventHandler
+  id: NetRunner.OnPeerConnectedEventHandler
+  parent: Nebula
+  children:
+  - Nebula.NetRunner.OnPeerConnectedEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.NetRunner.OnPeerConnectedEventHandler.BeginInvoke(Godot.ENetPacketPeer,System.AsyncCallback,System.Object)
+  - Nebula.NetRunner.OnPeerConnectedEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.NetRunner.OnPeerConnectedEventHandler.Invoke(Godot.ENetPacketPeer)
+  langs:
+  - csharp
+  - vb
+  name: NetRunner.OnPeerConnectedEventHandler
+  nameWithType: NetRunner.OnPeerConnectedEventHandler
+  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void NetRunner.OnPeerConnectedEventHandler(ENetPacketPeer peer)
+    parameters:
+    - id: peer
+      type: Godot.ENetPacketPeer
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub NetRunner.OnPeerConnectedEventHandler(peer As ENetPacketPeer)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.NetRunner.OnPeerConnectedEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.NetRunner.OnPeerConnectedEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.NetRunner.OnPeerConnectedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnPeerConnectedEventHandler(object, nint)
+  nameWithType: NetRunner.OnPeerConnectedEventHandler.OnPeerConnectedEventHandler(object, nint)
+  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler.OnPeerConnectedEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public OnPeerConnectedEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.NetRunner.OnPeerConnectedEventHandler.#ctor*
+  nameWithType.vb: NetRunner.OnPeerConnectedEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.NetRunner.OnPeerConnectedEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.NetRunner.OnPeerConnectedEventHandler.Invoke(Godot.ENetPacketPeer)
+  commentId: M:Nebula.NetRunner.OnPeerConnectedEventHandler.Invoke(Godot.ENetPacketPeer)
+  id: Invoke(Godot.ENetPacketPeer)
+  parent: Nebula.NetRunner.OnPeerConnectedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(ENetPacketPeer)
+  nameWithType: NetRunner.OnPeerConnectedEventHandler.Invoke(ENetPacketPeer)
+  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler.Invoke(Godot.ENetPacketPeer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void Invoke(ENetPacketPeer peer)
+    parameters:
+    - id: peer
+      type: Godot.ENetPacketPeer
+    content.vb: Public Overridable Sub Invoke(peer As ENetPacketPeer)
+  overload: Nebula.NetRunner.OnPeerConnectedEventHandler.Invoke*
+- uid: Nebula.NetRunner.OnPeerConnectedEventHandler.BeginInvoke(Godot.ENetPacketPeer,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.NetRunner.OnPeerConnectedEventHandler.BeginInvoke(Godot.ENetPacketPeer,System.AsyncCallback,System.Object)
+  id: BeginInvoke(Godot.ENetPacketPeer,System.AsyncCallback,System.Object)
+  parent: Nebula.NetRunner.OnPeerConnectedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(ENetPacketPeer, AsyncCallback, object)
+  nameWithType: NetRunner.OnPeerConnectedEventHandler.BeginInvoke(ENetPacketPeer, AsyncCallback, object)
+  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler.BeginInvoke(Godot.ENetPacketPeer, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(ENetPacketPeer peer, AsyncCallback callback, object @object)
+    parameters:
+    - id: peer
+      type: Godot.ENetPacketPeer
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(peer As ENetPacketPeer, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.NetRunner.OnPeerConnectedEventHandler.BeginInvoke*
+  nameWithType.vb: NetRunner.OnPeerConnectedEventHandler.BeginInvoke(ENetPacketPeer, AsyncCallback, Object)
+  fullName.vb: Nebula.NetRunner.OnPeerConnectedEventHandler.BeginInvoke(Godot.ENetPacketPeer, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(ENetPacketPeer, AsyncCallback, Object)
+- uid: Nebula.NetRunner.OnPeerConnectedEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.NetRunner.OnPeerConnectedEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.NetRunner.OnPeerConnectedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: NetRunner.OnPeerConnectedEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.NetRunner.OnPeerConnectedEventHandler.EndInvoke*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Godot.ENetPacketPeer
+  commentId: T:Godot.ENetPacketPeer
+  parent: Godot
+  isExternal: true
+  name: ENetPacketPeer
+  nameWithType: ENetPacketPeer
+  fullName: Godot.ENetPacketPeer
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.NetRunner.OnPeerConnectedEventHandler.#ctor*
+  commentId: Overload:Nebula.NetRunner.OnPeerConnectedEventHandler.#ctor
+  isExternal: true
+  href: Nebula.NetRunner.OnPeerConnectedEventHandler.html#Nebula_NetRunner_OnPeerConnectedEventHandler__ctor_System_Object_System_IntPtr_
+  name: OnPeerConnectedEventHandler
+  nameWithType: NetRunner.OnPeerConnectedEventHandler.OnPeerConnectedEventHandler
+  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler.OnPeerConnectedEventHandler
+  nameWithType.vb: NetRunner.OnPeerConnectedEventHandler.New
+  fullName.vb: Nebula.NetRunner.OnPeerConnectedEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.NetRunner.OnPeerConnectedEventHandler.Invoke*
+  commentId: Overload:Nebula.NetRunner.OnPeerConnectedEventHandler.Invoke
+  isExternal: true
+  href: Nebula.NetRunner.OnPeerConnectedEventHandler.html#Nebula_NetRunner_OnPeerConnectedEventHandler_Invoke_Godot_ENetPacketPeer_
+  name: Invoke
+  nameWithType: NetRunner.OnPeerConnectedEventHandler.Invoke
+  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler.Invoke
+- uid: Nebula.NetRunner.OnPeerConnectedEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.NetRunner.OnPeerConnectedEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.NetRunner.OnPeerConnectedEventHandler.html#Nebula_NetRunner_OnPeerConnectedEventHandler_BeginInvoke_Godot_ENetPacketPeer_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: NetRunner.OnPeerConnectedEventHandler.BeginInvoke
+  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.NetRunner.OnPeerConnectedEventHandler.EndInvoke*
+  commentId: Overload:Nebula.NetRunner.OnPeerConnectedEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.NetRunner.OnPeerConnectedEventHandler.html#Nebula_NetRunner_OnPeerConnectedEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: NetRunner.OnPeerConnectedEventHandler.EndInvoke
+  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler.EndInvoke

@@ -1,0 +1,221 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.INetSerializable`1
+  commentId: T:Nebula.Serialization.INetSerializable`1
+  id: INetSerializable`1
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
+  - Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
+  langs:
+  - csharp
+  - vb
+  name: INetSerializable<T>
+  nameWithType: INetSerializable<T>
+  fullName: Nebula.Serialization.INetSerializable<T>
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: 'public interface INetSerializable<T> where T : GodotObject'
+    typeParameters:
+    - id: T
+    content.vb: Public Interface INetSerializable(Of T As GodotObject)
+  nameWithType.vb: INetSerializable(Of T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T)
+  name.vb: INetSerializable(Of T)
+- uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
+  commentId: M:Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
+  id: GetDeserializeContext(`0)
+  parent: Nebula.Serialization.INetSerializable`1
+  langs:
+  - csharp
+  - vb
+  name: GetDeserializeContext(T)
+  nameWithType: INetSerializable<T>.GetDeserializeContext(T)
+  fullName: Nebula.Serialization.INetSerializable<T>.GetDeserializeContext(T)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static abstract Variant GetDeserializeContext(T obj)
+    parameters:
+    - id: obj
+      type: '{T}'
+    return:
+      type: Godot.Variant
+    content.vb: Public Shared MustInherit Function GetDeserializeContext(obj As T) As [Variant]
+  overload: Nebula.Serialization.INetSerializable`1.GetDeserializeContext*
+  nameWithType.vb: INetSerializable(Of T).GetDeserializeContext(T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).GetDeserializeContext(T)
+- uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
+  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
+  id: NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
+  parent: Nebula.Serialization.INetSerializable`1
+  langs:
+  - csharp
+  - vb
+  name: NetworkSerialize(WorldRunner, ENetPacketPeer, T)
+  nameWithType: INetSerializable<T>.NetworkSerialize(WorldRunner, ENetPacketPeer, T)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, T)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static abstract HLBuffer NetworkSerialize(WorldRunner currentWorld, ENetPacketPeer peer, T obj)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: peer
+      type: Godot.ENetPacketPeer
+    - id: obj
+      type: '{T}'
+    return:
+      type: Nebula.Serialization.HLBuffer
+    content.vb: Public Shared MustInherit Function NetworkSerialize(currentWorld As WorldRunner, peer As ENetPacketPeer, obj As T) As HLBuffer
+  overload: Nebula.Serialization.INetSerializable`1.NetworkSerialize*
+  nameWithType.vb: INetSerializable(Of T).NetworkSerialize(WorldRunner, ENetPacketPeer, T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, T)
+- uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  id: NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  parent: Nebula.Serialization.INetSerializable`1
+  langs:
+  - csharp
+  - vb
+  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
+  nameWithType: INetSerializable<T>.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static abstract T NetworkDeserialize(WorldRunner currentWorld, ENetPacketPeer peer, HLBuffer buffer, Variant ctx)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: peer
+      type: Godot.ENetPacketPeer
+    - id: buffer
+      type: Nebula.Serialization.HLBuffer
+    - id: ctx
+      type: Godot.Variant
+    return:
+      type: '{T}'
+    content.vb: Public Shared MustInherit Function NetworkDeserialize(currentWorld As WorldRunner, peer As ENetPacketPeer, buffer As HLBuffer, ctx As [Variant]) As T
+  overload: Nebula.Serialization.INetSerializable`1.NetworkDeserialize*
+  nameWithType.vb: INetSerializable(Of T).NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext*
+  commentId: Overload:Nebula.Serialization.INetSerializable`1.GetDeserializeContext
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
+  name: GetDeserializeContext
+  nameWithType: INetSerializable<T>.GetDeserializeContext
+  fullName: Nebula.Serialization.INetSerializable<T>.GetDeserializeContext
+  nameWithType.vb: INetSerializable(Of T).GetDeserializeContext
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).GetDeserializeContext
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Godot.Variant
+  commentId: T:Godot.Variant
+  parent: Godot
+  isExternal: true
+  name: Variant
+  nameWithType: Variant
+  fullName: Godot.Variant
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize*
+  commentId: Overload:Nebula.Serialization.INetSerializable`1.NetworkSerialize
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
+  name: NetworkSerialize
+  nameWithType: INetSerializable<T>.NetworkSerialize
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize
+  nameWithType.vb: INetSerializable(Of T).NetworkSerialize
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkSerialize
+- uid: Nebula.WorldRunner
+  commentId: T:Nebula.WorldRunner
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner
+  nameWithType: WorldRunner
+  fullName: Nebula.WorldRunner
+- uid: Godot.ENetPacketPeer
+  commentId: T:Godot.ENetPacketPeer
+  parent: Godot
+  isExternal: true
+  name: ENetPacketPeer
+  nameWithType: ENetPacketPeer
+  fullName: Godot.ENetPacketPeer
+- uid: Nebula.Serialization.HLBuffer
+  commentId: T:Nebula.Serialization.HLBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.HLBuffer.html
+  name: HLBuffer
+  nameWithType: HLBuffer
+  fullName: Nebula.Serialization.HLBuffer
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize*
+  commentId: Overload:Nebula.Serialization.INetSerializable`1.NetworkDeserialize
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+  name: NetworkDeserialize
+  nameWithType: INetSerializable<T>.NetworkDeserialize
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize
+  nameWithType.vb: INetSerializable(Of T).NetworkDeserialize
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize

@@ -1,0 +1,184 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.WorldRunner.DebugDataType
+  commentId: T:Nebula.WorldRunner.DebugDataType
+  id: WorldRunner.DebugDataType
+  parent: Nebula
+  children:
+  - Nebula.WorldRunner.DebugDataType.CALLS
+  - Nebula.WorldRunner.DebugDataType.EXPORT
+  - Nebula.WorldRunner.DebugDataType.LOGS
+  - Nebula.WorldRunner.DebugDataType.PAYLOADS
+  - Nebula.WorldRunner.DebugDataType.PEERS
+  - Nebula.WorldRunner.DebugDataType.TICK
+  langs:
+  - csharp
+  - vb
+  name: WorldRunner.DebugDataType
+  nameWithType: WorldRunner.DebugDataType
+  fullName: Nebula.WorldRunner.DebugDataType
+  type: Enum
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public enum WorldRunner.DebugDataType
+    content.vb: Public Enum WorldRunner.DebugDataType
+- uid: Nebula.WorldRunner.DebugDataType.TICK
+  commentId: F:Nebula.WorldRunner.DebugDataType.TICK
+  id: TICK
+  parent: Nebula.WorldRunner.DebugDataType
+  langs:
+  - csharp
+  - vb
+  name: TICK
+  nameWithType: WorldRunner.DebugDataType.TICK
+  fullName: Nebula.WorldRunner.DebugDataType.TICK
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: TICK = 0
+    return:
+      type: Nebula.WorldRunner.DebugDataType
+- uid: Nebula.WorldRunner.DebugDataType.PAYLOADS
+  commentId: F:Nebula.WorldRunner.DebugDataType.PAYLOADS
+  id: PAYLOADS
+  parent: Nebula.WorldRunner.DebugDataType
+  langs:
+  - csharp
+  - vb
+  name: PAYLOADS
+  nameWithType: WorldRunner.DebugDataType.PAYLOADS
+  fullName: Nebula.WorldRunner.DebugDataType.PAYLOADS
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: PAYLOADS = 1
+    return:
+      type: Nebula.WorldRunner.DebugDataType
+- uid: Nebula.WorldRunner.DebugDataType.EXPORT
+  commentId: F:Nebula.WorldRunner.DebugDataType.EXPORT
+  id: EXPORT
+  parent: Nebula.WorldRunner.DebugDataType
+  langs:
+  - csharp
+  - vb
+  name: EXPORT
+  nameWithType: WorldRunner.DebugDataType.EXPORT
+  fullName: Nebula.WorldRunner.DebugDataType.EXPORT
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: EXPORT = 2
+    return:
+      type: Nebula.WorldRunner.DebugDataType
+- uid: Nebula.WorldRunner.DebugDataType.LOGS
+  commentId: F:Nebula.WorldRunner.DebugDataType.LOGS
+  id: LOGS
+  parent: Nebula.WorldRunner.DebugDataType
+  langs:
+  - csharp
+  - vb
+  name: LOGS
+  nameWithType: WorldRunner.DebugDataType.LOGS
+  fullName: Nebula.WorldRunner.DebugDataType.LOGS
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: LOGS = 3
+    return:
+      type: Nebula.WorldRunner.DebugDataType
+- uid: Nebula.WorldRunner.DebugDataType.PEERS
+  commentId: F:Nebula.WorldRunner.DebugDataType.PEERS
+  id: PEERS
+  parent: Nebula.WorldRunner.DebugDataType
+  langs:
+  - csharp
+  - vb
+  name: PEERS
+  nameWithType: WorldRunner.DebugDataType.PEERS
+  fullName: Nebula.WorldRunner.DebugDataType.PEERS
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: PEERS = 4
+    return:
+      type: Nebula.WorldRunner.DebugDataType
+- uid: Nebula.WorldRunner.DebugDataType.CALLS
+  commentId: F:Nebula.WorldRunner.DebugDataType.CALLS
+  id: CALLS
+  parent: Nebula.WorldRunner.DebugDataType
+  langs:
+  - csharp
+  - vb
+  name: CALLS
+  nameWithType: WorldRunner.DebugDataType.CALLS
+  fullName: Nebula.WorldRunner.DebugDataType.CALLS
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: CALLS = 5
+    return:
+      type: Nebula.WorldRunner.DebugDataType
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.WorldRunner.DebugDataType
+  commentId: T:Nebula.WorldRunner.DebugDataType
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner.DebugDataType
+  nameWithType: WorldRunner.DebugDataType
+  fullName: Nebula.WorldRunner.DebugDataType
+  spec.csharp:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.DebugDataType
+    name: DebugDataType
+    isExternal: true
+    href: Nebula.WorldRunner.DebugDataType.html
+  spec.vb:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.DebugDataType
+    name: DebugDataType
+    isExternal: true
+    href: Nebula.WorldRunner.DebugDataType.html

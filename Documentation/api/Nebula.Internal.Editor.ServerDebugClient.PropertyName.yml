@@ -1,0 +1,1364 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Internal.Editor.ServerDebugClient.PropertyName
+  commentId: T:Nebula.Internal.Editor.ServerDebugClient.PropertyName
+  id: ServerDebugClient.PropertyName
+  parent: Nebula.Internal.Editor
+  children:
+  - Nebula.Internal.Editor.ServerDebugClient.PropertyName.#ctor
+  - Nebula.Internal.Editor.ServerDebugClient.PropertyName.debugConnection
+  - Nebula.Internal.Editor.ServerDebugClient.PropertyName.debugPanelScene
+  langs:
+  - csharp
+  - vb
+  name: ServerDebugClient.PropertyName
+  nameWithType: ServerDebugClient.PropertyName
+  fullName: Nebula.Internal.Editor.ServerDebugClient.PropertyName
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  summary: Cached StringNames for the properties and fields contained in this class, for fast lookup.
+  example: []
+  syntax:
+    content: 'public class ServerDebugClient.PropertyName : Window.PropertyName'
+    content.vb: Public Class ServerDebugClient.PropertyName Inherits Window.PropertyName
+  inheritance:
+  - System.Object
+  - Godot.GodotObject.PropertyName
+  - Godot.Node.PropertyName
+  - Godot.Viewport.PropertyName
+  - Godot.Window.PropertyName
+  inheritedMembers:
+  - Godot.Window.PropertyName.Mode
+  - Godot.Window.PropertyName.Title
+  - Godot.Window.PropertyName.InitialPosition
+  - Godot.Window.PropertyName.Position
+  - Godot.Window.PropertyName.Size
+  - Godot.Window.PropertyName.CurrentScreen
+  - Godot.Window.PropertyName.MousePassthroughPolygon
+  - Godot.Window.PropertyName.Visible
+  - Godot.Window.PropertyName.WrapControls
+  - Godot.Window.PropertyName.Transient
+  - Godot.Window.PropertyName.TransientToFocused
+  - Godot.Window.PropertyName.Exclusive
+  - Godot.Window.PropertyName.Unresizable
+  - Godot.Window.PropertyName.Borderless
+  - Godot.Window.PropertyName.AlwaysOnTop
+  - Godot.Window.PropertyName.Transparent
+  - Godot.Window.PropertyName.Unfocusable
+  - Godot.Window.PropertyName.PopupWindow
+  - Godot.Window.PropertyName.ExtendToTitle
+  - Godot.Window.PropertyName.MousePassthrough
+  - Godot.Window.PropertyName.SharpCorners
+  - Godot.Window.PropertyName.ExcludeFromCapture
+  - Godot.Window.PropertyName.PopupWMHint
+  - Godot.Window.PropertyName.MinimizeDisabled
+  - Godot.Window.PropertyName.MaximizeDisabled
+  - Godot.Window.PropertyName.ForceNative
+  - Godot.Window.PropertyName.MinSize
+  - Godot.Window.PropertyName.MaxSize
+  - Godot.Window.PropertyName.KeepTitleVisible
+  - Godot.Window.PropertyName.ContentScaleSize
+  - Godot.Window.PropertyName.ContentScaleMode
+  - Godot.Window.PropertyName.ContentScaleAspect
+  - Godot.Window.PropertyName.ContentScaleStretch
+  - Godot.Window.PropertyName.ContentScaleFactor
+  - Godot.Window.PropertyName.AutoTranslate
+  - Godot.Window.PropertyName.Theme
+  - Godot.Window.PropertyName.ThemeTypeVariation
+  - Godot.Viewport.PropertyName.Disable3D
+  - Godot.Viewport.PropertyName.UseXR
+  - Godot.Viewport.PropertyName.OwnWorld3D
+  - Godot.Viewport.PropertyName.World3D
+  - Godot.Viewport.PropertyName.World2D
+  - Godot.Viewport.PropertyName.TransparentBg
+  - Godot.Viewport.PropertyName.HandleInputLocally
+  - Godot.Viewport.PropertyName.Snap2DTransformsToPixel
+  - Godot.Viewport.PropertyName.Snap2DVerticesToPixel
+  - Godot.Viewport.PropertyName.Msaa2D
+  - Godot.Viewport.PropertyName.Msaa3D
+  - Godot.Viewport.PropertyName.ScreenSpaceAA
+  - Godot.Viewport.PropertyName.UseTaa
+  - Godot.Viewport.PropertyName.UseDebanding
+  - Godot.Viewport.PropertyName.UseOcclusionCulling
+  - Godot.Viewport.PropertyName.MeshLodThreshold
+  - Godot.Viewport.PropertyName.DebugDraw
+  - Godot.Viewport.PropertyName.UseHdr2D
+  - Godot.Viewport.PropertyName.Scaling3DMode
+  - Godot.Viewport.PropertyName.Scaling3DScale
+  - Godot.Viewport.PropertyName.TextureMipmapBias
+  - Godot.Viewport.PropertyName.AnisotropicFilteringLevel
+  - Godot.Viewport.PropertyName.FsrSharpness
+  - Godot.Viewport.PropertyName.VrsMode
+  - Godot.Viewport.PropertyName.VrsUpdateMode
+  - Godot.Viewport.PropertyName.VrsTexture
+  - Godot.Viewport.PropertyName.CanvasItemDefaultTextureFilter
+  - Godot.Viewport.PropertyName.CanvasItemDefaultTextureRepeat
+  - Godot.Viewport.PropertyName.AudioListenerEnable2D
+  - Godot.Viewport.PropertyName.AudioListenerEnable3D
+  - Godot.Viewport.PropertyName.PhysicsObjectPicking
+  - Godot.Viewport.PropertyName.PhysicsObjectPickingSort
+  - Godot.Viewport.PropertyName.PhysicsObjectPickingFirstOnly
+  - Godot.Viewport.PropertyName.GuiDisableInput
+  - Godot.Viewport.PropertyName.GuiSnapControlsToPixels
+  - Godot.Viewport.PropertyName.GuiEmbedSubwindows
+  - Godot.Viewport.PropertyName.SdfOversize
+  - Godot.Viewport.PropertyName.SdfScale
+  - Godot.Viewport.PropertyName.PositionalShadowAtlasSize
+  - Godot.Viewport.PropertyName.PositionalShadowAtlas16Bits
+  - Godot.Viewport.PropertyName.PositionalShadowAtlasQuad0
+  - Godot.Viewport.PropertyName.PositionalShadowAtlasQuad1
+  - Godot.Viewport.PropertyName.PositionalShadowAtlasQuad2
+  - Godot.Viewport.PropertyName.PositionalShadowAtlasQuad3
+  - Godot.Viewport.PropertyName.CanvasTransform
+  - Godot.Viewport.PropertyName.GlobalCanvasTransform
+  - Godot.Viewport.PropertyName.CanvasCullMask
+  - Godot.Viewport.PropertyName.Oversampling
+  - Godot.Viewport.PropertyName.OversamplingOverride
+  - Godot.Node.PropertyName._ImportPath
+  - Godot.Node.PropertyName.Name
+  - Godot.Node.PropertyName.UniqueNameInOwner
+  - Godot.Node.PropertyName.SceneFilePath
+  - Godot.Node.PropertyName.Owner
+  - Godot.Node.PropertyName.Multiplayer
+  - Godot.Node.PropertyName.ProcessMode
+  - Godot.Node.PropertyName.ProcessPriority
+  - Godot.Node.PropertyName.ProcessPhysicsPriority
+  - Godot.Node.PropertyName.ProcessThreadGroup
+  - Godot.Node.PropertyName.ProcessThreadGroupOrder
+  - Godot.Node.PropertyName.ProcessThreadMessages
+  - Godot.Node.PropertyName.PhysicsInterpolationMode
+  - Godot.Node.PropertyName.AutoTranslateMode
+  - Godot.Node.PropertyName.EditorDescription
+  - Godot.Node.PropertyName.AccessibilityName
+  - Godot.Node.PropertyName.AccessibilityDescription
+  - Godot.Node.PropertyName.AccessibilityLive
+  - Godot.Node.PropertyName.AccessibilityControlsNodes
+  - Godot.Node.PropertyName.AccessibilityDescribedByNodes
+  - Godot.Node.PropertyName.AccessibilityLabeledByNodes
+  - Godot.Node.PropertyName.AccessibilityFlowToNodes
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Internal.Editor.ServerDebugClient.PropertyName.debugConnection
+  commentId: F:Nebula.Internal.Editor.ServerDebugClient.PropertyName.debugConnection
+  id: debugConnection
+  parent: Nebula.Internal.Editor.ServerDebugClient.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: debugConnection
+  nameWithType: ServerDebugClient.PropertyName.debugConnection
+  fullName: Nebula.Internal.Editor.ServerDebugClient.PropertyName.debugConnection
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  summary: Cached name for the 'debugConnection' field.
+  example: []
+  syntax:
+    content: public static readonly StringName debugConnection
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly debugConnection As StringName
+- uid: Nebula.Internal.Editor.ServerDebugClient.PropertyName.debugPanelScene
+  commentId: F:Nebula.Internal.Editor.ServerDebugClient.PropertyName.debugPanelScene
+  id: debugPanelScene
+  parent: Nebula.Internal.Editor.ServerDebugClient.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: debugPanelScene
+  nameWithType: ServerDebugClient.PropertyName.debugPanelScene
+  fullName: Nebula.Internal.Editor.ServerDebugClient.PropertyName.debugPanelScene
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  summary: Cached name for the 'debugPanelScene' field.
+  example: []
+  syntax:
+    content: public static readonly StringName debugPanelScene
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly debugPanelScene As StringName
+- uid: Nebula.Internal.Editor.ServerDebugClient.PropertyName.#ctor
+  commentId: M:Nebula.Internal.Editor.ServerDebugClient.PropertyName.#ctor
+  id: '#ctor'
+  parent: Nebula.Internal.Editor.ServerDebugClient.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: PropertyName()
+  nameWithType: ServerDebugClient.PropertyName.PropertyName()
+  fullName: Nebula.Internal.Editor.ServerDebugClient.PropertyName.PropertyName()
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public PropertyName()
+    content.vb: Public Sub New()
+  overload: Nebula.Internal.Editor.ServerDebugClient.PropertyName.#ctor*
+  nameWithType.vb: ServerDebugClient.PropertyName.New()
+  fullName.vb: Nebula.Internal.Editor.ServerDebugClient.PropertyName.New()
+  name.vb: New()
+references:
+- uid: Nebula.Internal.Editor
+  commentId: N:Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Internal.Editor
+  nameWithType: Nebula.Internal.Editor
+  fullName: Nebula.Internal.Editor
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Godot.GodotObject.PropertyName
+  commentId: T:Godot.GodotObject.PropertyName
+  parent: Godot
+  isExternal: true
+  name: GodotObject.PropertyName
+  nameWithType: GodotObject.PropertyName
+  fullName: Godot.GodotObject.PropertyName
+  spec.csharp:
+  - uid: Godot.GodotObject
+    name: GodotObject
+    isExternal: true
+  - name: .
+  - uid: Godot.GodotObject.PropertyName
+    name: PropertyName
+    isExternal: true
+  spec.vb:
+  - uid: Godot.GodotObject
+    name: GodotObject
+    isExternal: true
+  - name: .
+  - uid: Godot.GodotObject.PropertyName
+    name: PropertyName
+    isExternal: true
+- uid: Godot.Node.PropertyName
+  commentId: T:Godot.Node.PropertyName
+  parent: Godot
+  isExternal: true
+  name: Node.PropertyName
+  nameWithType: Node.PropertyName
+  fullName: Godot.Node.PropertyName
+  spec.csharp:
+  - uid: Godot.Node
+    name: Node
+    isExternal: true
+  - name: .
+  - uid: Godot.Node.PropertyName
+    name: PropertyName
+    isExternal: true
+  spec.vb:
+  - uid: Godot.Node
+    name: Node
+    isExternal: true
+  - name: .
+  - uid: Godot.Node.PropertyName
+    name: PropertyName
+    isExternal: true
+- uid: Godot.Viewport.PropertyName
+  commentId: T:Godot.Viewport.PropertyName
+  parent: Godot
+  isExternal: true
+  name: Viewport.PropertyName
+  nameWithType: Viewport.PropertyName
+  fullName: Godot.Viewport.PropertyName
+  spec.csharp:
+  - uid: Godot.Viewport
+    name: Viewport
+    isExternal: true
+  - name: .
+  - uid: Godot.Viewport.PropertyName
+    name: PropertyName
+    isExternal: true
+  spec.vb:
+  - uid: Godot.Viewport
+    name: Viewport
+    isExternal: true
+  - name: .
+  - uid: Godot.Viewport.PropertyName
+    name: PropertyName
+    isExternal: true
+- uid: Godot.Window.PropertyName
+  commentId: T:Godot.Window.PropertyName
+  parent: Godot
+  isExternal: true
+  name: Window.PropertyName
+  nameWithType: Window.PropertyName
+  fullName: Godot.Window.PropertyName
+  spec.csharp:
+  - uid: Godot.Window
+    name: Window
+    isExternal: true
+  - name: .
+  - uid: Godot.Window.PropertyName
+    name: PropertyName
+    isExternal: true
+  spec.vb:
+  - uid: Godot.Window
+    name: Window
+    isExternal: true
+  - name: .
+  - uid: Godot.Window.PropertyName
+    name: PropertyName
+    isExternal: true
+- uid: Godot.Window.PropertyName.Mode
+  commentId: F:Godot.Window.PropertyName.Mode
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Mode
+  nameWithType: Window.PropertyName.Mode
+  fullName: Godot.Window.PropertyName.Mode
+- uid: Godot.Window.PropertyName.Title
+  commentId: F:Godot.Window.PropertyName.Title
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Title
+  nameWithType: Window.PropertyName.Title
+  fullName: Godot.Window.PropertyName.Title
+- uid: Godot.Window.PropertyName.InitialPosition
+  commentId: F:Godot.Window.PropertyName.InitialPosition
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: InitialPosition
+  nameWithType: Window.PropertyName.InitialPosition
+  fullName: Godot.Window.PropertyName.InitialPosition
+- uid: Godot.Window.PropertyName.Position
+  commentId: F:Godot.Window.PropertyName.Position
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Position
+  nameWithType: Window.PropertyName.Position
+  fullName: Godot.Window.PropertyName.Position
+- uid: Godot.Window.PropertyName.Size
+  commentId: F:Godot.Window.PropertyName.Size
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Size
+  nameWithType: Window.PropertyName.Size
+  fullName: Godot.Window.PropertyName.Size
+- uid: Godot.Window.PropertyName.CurrentScreen
+  commentId: F:Godot.Window.PropertyName.CurrentScreen
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: CurrentScreen
+  nameWithType: Window.PropertyName.CurrentScreen
+  fullName: Godot.Window.PropertyName.CurrentScreen
+- uid: Godot.Window.PropertyName.MousePassthroughPolygon
+  commentId: F:Godot.Window.PropertyName.MousePassthroughPolygon
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: MousePassthroughPolygon
+  nameWithType: Window.PropertyName.MousePassthroughPolygon
+  fullName: Godot.Window.PropertyName.MousePassthroughPolygon
+- uid: Godot.Window.PropertyName.Visible
+  commentId: F:Godot.Window.PropertyName.Visible
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Visible
+  nameWithType: Window.PropertyName.Visible
+  fullName: Godot.Window.PropertyName.Visible
+- uid: Godot.Window.PropertyName.WrapControls
+  commentId: F:Godot.Window.PropertyName.WrapControls
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: WrapControls
+  nameWithType: Window.PropertyName.WrapControls
+  fullName: Godot.Window.PropertyName.WrapControls
+- uid: Godot.Window.PropertyName.Transient
+  commentId: F:Godot.Window.PropertyName.Transient
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Transient
+  nameWithType: Window.PropertyName.Transient
+  fullName: Godot.Window.PropertyName.Transient
+- uid: Godot.Window.PropertyName.TransientToFocused
+  commentId: F:Godot.Window.PropertyName.TransientToFocused
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: TransientToFocused
+  nameWithType: Window.PropertyName.TransientToFocused
+  fullName: Godot.Window.PropertyName.TransientToFocused
+- uid: Godot.Window.PropertyName.Exclusive
+  commentId: F:Godot.Window.PropertyName.Exclusive
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Exclusive
+  nameWithType: Window.PropertyName.Exclusive
+  fullName: Godot.Window.PropertyName.Exclusive
+- uid: Godot.Window.PropertyName.Unresizable
+  commentId: F:Godot.Window.PropertyName.Unresizable
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Unresizable
+  nameWithType: Window.PropertyName.Unresizable
+  fullName: Godot.Window.PropertyName.Unresizable
+- uid: Godot.Window.PropertyName.Borderless
+  commentId: F:Godot.Window.PropertyName.Borderless
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Borderless
+  nameWithType: Window.PropertyName.Borderless
+  fullName: Godot.Window.PropertyName.Borderless
+- uid: Godot.Window.PropertyName.AlwaysOnTop
+  commentId: F:Godot.Window.PropertyName.AlwaysOnTop
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: AlwaysOnTop
+  nameWithType: Window.PropertyName.AlwaysOnTop
+  fullName: Godot.Window.PropertyName.AlwaysOnTop
+- uid: Godot.Window.PropertyName.Transparent
+  commentId: F:Godot.Window.PropertyName.Transparent
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Transparent
+  nameWithType: Window.PropertyName.Transparent
+  fullName: Godot.Window.PropertyName.Transparent
+- uid: Godot.Window.PropertyName.Unfocusable
+  commentId: F:Godot.Window.PropertyName.Unfocusable
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Unfocusable
+  nameWithType: Window.PropertyName.Unfocusable
+  fullName: Godot.Window.PropertyName.Unfocusable
+- uid: Godot.Window.PropertyName.PopupWindow
+  commentId: F:Godot.Window.PropertyName.PopupWindow
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: PopupWindow
+  nameWithType: Window.PropertyName.PopupWindow
+  fullName: Godot.Window.PropertyName.PopupWindow
+- uid: Godot.Window.PropertyName.ExtendToTitle
+  commentId: F:Godot.Window.PropertyName.ExtendToTitle
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: ExtendToTitle
+  nameWithType: Window.PropertyName.ExtendToTitle
+  fullName: Godot.Window.PropertyName.ExtendToTitle
+- uid: Godot.Window.PropertyName.MousePassthrough
+  commentId: F:Godot.Window.PropertyName.MousePassthrough
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: MousePassthrough
+  nameWithType: Window.PropertyName.MousePassthrough
+  fullName: Godot.Window.PropertyName.MousePassthrough
+- uid: Godot.Window.PropertyName.SharpCorners
+  commentId: F:Godot.Window.PropertyName.SharpCorners
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: SharpCorners
+  nameWithType: Window.PropertyName.SharpCorners
+  fullName: Godot.Window.PropertyName.SharpCorners
+- uid: Godot.Window.PropertyName.ExcludeFromCapture
+  commentId: F:Godot.Window.PropertyName.ExcludeFromCapture
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: ExcludeFromCapture
+  nameWithType: Window.PropertyName.ExcludeFromCapture
+  fullName: Godot.Window.PropertyName.ExcludeFromCapture
+- uid: Godot.Window.PropertyName.PopupWMHint
+  commentId: F:Godot.Window.PropertyName.PopupWMHint
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: PopupWMHint
+  nameWithType: Window.PropertyName.PopupWMHint
+  fullName: Godot.Window.PropertyName.PopupWMHint
+- uid: Godot.Window.PropertyName.MinimizeDisabled
+  commentId: F:Godot.Window.PropertyName.MinimizeDisabled
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: MinimizeDisabled
+  nameWithType: Window.PropertyName.MinimizeDisabled
+  fullName: Godot.Window.PropertyName.MinimizeDisabled
+- uid: Godot.Window.PropertyName.MaximizeDisabled
+  commentId: F:Godot.Window.PropertyName.MaximizeDisabled
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: MaximizeDisabled
+  nameWithType: Window.PropertyName.MaximizeDisabled
+  fullName: Godot.Window.PropertyName.MaximizeDisabled
+- uid: Godot.Window.PropertyName.ForceNative
+  commentId: F:Godot.Window.PropertyName.ForceNative
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: ForceNative
+  nameWithType: Window.PropertyName.ForceNative
+  fullName: Godot.Window.PropertyName.ForceNative
+- uid: Godot.Window.PropertyName.MinSize
+  commentId: F:Godot.Window.PropertyName.MinSize
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: MinSize
+  nameWithType: Window.PropertyName.MinSize
+  fullName: Godot.Window.PropertyName.MinSize
+- uid: Godot.Window.PropertyName.MaxSize
+  commentId: F:Godot.Window.PropertyName.MaxSize
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: MaxSize
+  nameWithType: Window.PropertyName.MaxSize
+  fullName: Godot.Window.PropertyName.MaxSize
+- uid: Godot.Window.PropertyName.KeepTitleVisible
+  commentId: F:Godot.Window.PropertyName.KeepTitleVisible
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: KeepTitleVisible
+  nameWithType: Window.PropertyName.KeepTitleVisible
+  fullName: Godot.Window.PropertyName.KeepTitleVisible
+- uid: Godot.Window.PropertyName.ContentScaleSize
+  commentId: F:Godot.Window.PropertyName.ContentScaleSize
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: ContentScaleSize
+  nameWithType: Window.PropertyName.ContentScaleSize
+  fullName: Godot.Window.PropertyName.ContentScaleSize
+- uid: Godot.Window.PropertyName.ContentScaleMode
+  commentId: F:Godot.Window.PropertyName.ContentScaleMode
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: ContentScaleMode
+  nameWithType: Window.PropertyName.ContentScaleMode
+  fullName: Godot.Window.PropertyName.ContentScaleMode
+- uid: Godot.Window.PropertyName.ContentScaleAspect
+  commentId: F:Godot.Window.PropertyName.ContentScaleAspect
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: ContentScaleAspect
+  nameWithType: Window.PropertyName.ContentScaleAspect
+  fullName: Godot.Window.PropertyName.ContentScaleAspect
+- uid: Godot.Window.PropertyName.ContentScaleStretch
+  commentId: F:Godot.Window.PropertyName.ContentScaleStretch
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: ContentScaleStretch
+  nameWithType: Window.PropertyName.ContentScaleStretch
+  fullName: Godot.Window.PropertyName.ContentScaleStretch
+- uid: Godot.Window.PropertyName.ContentScaleFactor
+  commentId: F:Godot.Window.PropertyName.ContentScaleFactor
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: ContentScaleFactor
+  nameWithType: Window.PropertyName.ContentScaleFactor
+  fullName: Godot.Window.PropertyName.ContentScaleFactor
+- uid: Godot.Window.PropertyName.AutoTranslate
+  commentId: F:Godot.Window.PropertyName.AutoTranslate
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: AutoTranslate
+  nameWithType: Window.PropertyName.AutoTranslate
+  fullName: Godot.Window.PropertyName.AutoTranslate
+- uid: Godot.Window.PropertyName.Theme
+  commentId: F:Godot.Window.PropertyName.Theme
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: Theme
+  nameWithType: Window.PropertyName.Theme
+  fullName: Godot.Window.PropertyName.Theme
+- uid: Godot.Window.PropertyName.ThemeTypeVariation
+  commentId: F:Godot.Window.PropertyName.ThemeTypeVariation
+  parent: Godot.Window.PropertyName
+  isExternal: true
+  name: ThemeTypeVariation
+  nameWithType: Window.PropertyName.ThemeTypeVariation
+  fullName: Godot.Window.PropertyName.ThemeTypeVariation
+- uid: Godot.Viewport.PropertyName.Disable3D
+  commentId: F:Godot.Viewport.PropertyName.Disable3D
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: Disable3D
+  nameWithType: Viewport.PropertyName.Disable3D
+  fullName: Godot.Viewport.PropertyName.Disable3D
+- uid: Godot.Viewport.PropertyName.UseXR
+  commentId: F:Godot.Viewport.PropertyName.UseXR
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: UseXR
+  nameWithType: Viewport.PropertyName.UseXR
+  fullName: Godot.Viewport.PropertyName.UseXR
+- uid: Godot.Viewport.PropertyName.OwnWorld3D
+  commentId: F:Godot.Viewport.PropertyName.OwnWorld3D
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: OwnWorld3D
+  nameWithType: Viewport.PropertyName.OwnWorld3D
+  fullName: Godot.Viewport.PropertyName.OwnWorld3D
+- uid: Godot.Viewport.PropertyName.World3D
+  commentId: F:Godot.Viewport.PropertyName.World3D
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: World3D
+  nameWithType: Viewport.PropertyName.World3D
+  fullName: Godot.Viewport.PropertyName.World3D
+- uid: Godot.Viewport.PropertyName.World2D
+  commentId: F:Godot.Viewport.PropertyName.World2D
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: World2D
+  nameWithType: Viewport.PropertyName.World2D
+  fullName: Godot.Viewport.PropertyName.World2D
+- uid: Godot.Viewport.PropertyName.TransparentBg
+  commentId: F:Godot.Viewport.PropertyName.TransparentBg
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: TransparentBg
+  nameWithType: Viewport.PropertyName.TransparentBg
+  fullName: Godot.Viewport.PropertyName.TransparentBg
+- uid: Godot.Viewport.PropertyName.HandleInputLocally
+  commentId: F:Godot.Viewport.PropertyName.HandleInputLocally
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: HandleInputLocally
+  nameWithType: Viewport.PropertyName.HandleInputLocally
+  fullName: Godot.Viewport.PropertyName.HandleInputLocally
+- uid: Godot.Viewport.PropertyName.Snap2DTransformsToPixel
+  commentId: F:Godot.Viewport.PropertyName.Snap2DTransformsToPixel
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: Snap2DTransformsToPixel
+  nameWithType: Viewport.PropertyName.Snap2DTransformsToPixel
+  fullName: Godot.Viewport.PropertyName.Snap2DTransformsToPixel
+- uid: Godot.Viewport.PropertyName.Snap2DVerticesToPixel
+  commentId: F:Godot.Viewport.PropertyName.Snap2DVerticesToPixel
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: Snap2DVerticesToPixel
+  nameWithType: Viewport.PropertyName.Snap2DVerticesToPixel
+  fullName: Godot.Viewport.PropertyName.Snap2DVerticesToPixel
+- uid: Godot.Viewport.PropertyName.Msaa2D
+  commentId: F:Godot.Viewport.PropertyName.Msaa2D
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: Msaa2D
+  nameWithType: Viewport.PropertyName.Msaa2D
+  fullName: Godot.Viewport.PropertyName.Msaa2D
+- uid: Godot.Viewport.PropertyName.Msaa3D
+  commentId: F:Godot.Viewport.PropertyName.Msaa3D
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: Msaa3D
+  nameWithType: Viewport.PropertyName.Msaa3D
+  fullName: Godot.Viewport.PropertyName.Msaa3D
+- uid: Godot.Viewport.PropertyName.ScreenSpaceAA
+  commentId: F:Godot.Viewport.PropertyName.ScreenSpaceAA
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: ScreenSpaceAA
+  nameWithType: Viewport.PropertyName.ScreenSpaceAA
+  fullName: Godot.Viewport.PropertyName.ScreenSpaceAA
+- uid: Godot.Viewport.PropertyName.UseTaa
+  commentId: F:Godot.Viewport.PropertyName.UseTaa
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: UseTaa
+  nameWithType: Viewport.PropertyName.UseTaa
+  fullName: Godot.Viewport.PropertyName.UseTaa
+- uid: Godot.Viewport.PropertyName.UseDebanding
+  commentId: F:Godot.Viewport.PropertyName.UseDebanding
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: UseDebanding
+  nameWithType: Viewport.PropertyName.UseDebanding
+  fullName: Godot.Viewport.PropertyName.UseDebanding
+- uid: Godot.Viewport.PropertyName.UseOcclusionCulling
+  commentId: F:Godot.Viewport.PropertyName.UseOcclusionCulling
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: UseOcclusionCulling
+  nameWithType: Viewport.PropertyName.UseOcclusionCulling
+  fullName: Godot.Viewport.PropertyName.UseOcclusionCulling
+- uid: Godot.Viewport.PropertyName.MeshLodThreshold
+  commentId: F:Godot.Viewport.PropertyName.MeshLodThreshold
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: MeshLodThreshold
+  nameWithType: Viewport.PropertyName.MeshLodThreshold
+  fullName: Godot.Viewport.PropertyName.MeshLodThreshold
+- uid: Godot.Viewport.PropertyName.DebugDraw
+  commentId: F:Godot.Viewport.PropertyName.DebugDraw
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: DebugDraw
+  nameWithType: Viewport.PropertyName.DebugDraw
+  fullName: Godot.Viewport.PropertyName.DebugDraw
+- uid: Godot.Viewport.PropertyName.UseHdr2D
+  commentId: F:Godot.Viewport.PropertyName.UseHdr2D
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: UseHdr2D
+  nameWithType: Viewport.PropertyName.UseHdr2D
+  fullName: Godot.Viewport.PropertyName.UseHdr2D
+- uid: Godot.Viewport.PropertyName.Scaling3DMode
+  commentId: F:Godot.Viewport.PropertyName.Scaling3DMode
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: Scaling3DMode
+  nameWithType: Viewport.PropertyName.Scaling3DMode
+  fullName: Godot.Viewport.PropertyName.Scaling3DMode
+- uid: Godot.Viewport.PropertyName.Scaling3DScale
+  commentId: F:Godot.Viewport.PropertyName.Scaling3DScale
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: Scaling3DScale
+  nameWithType: Viewport.PropertyName.Scaling3DScale
+  fullName: Godot.Viewport.PropertyName.Scaling3DScale
+- uid: Godot.Viewport.PropertyName.TextureMipmapBias
+  commentId: F:Godot.Viewport.PropertyName.TextureMipmapBias
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: TextureMipmapBias
+  nameWithType: Viewport.PropertyName.TextureMipmapBias
+  fullName: Godot.Viewport.PropertyName.TextureMipmapBias
+- uid: Godot.Viewport.PropertyName.AnisotropicFilteringLevel
+  commentId: F:Godot.Viewport.PropertyName.AnisotropicFilteringLevel
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: AnisotropicFilteringLevel
+  nameWithType: Viewport.PropertyName.AnisotropicFilteringLevel
+  fullName: Godot.Viewport.PropertyName.AnisotropicFilteringLevel
+- uid: Godot.Viewport.PropertyName.FsrSharpness
+  commentId: F:Godot.Viewport.PropertyName.FsrSharpness
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: FsrSharpness
+  nameWithType: Viewport.PropertyName.FsrSharpness
+  fullName: Godot.Viewport.PropertyName.FsrSharpness
+- uid: Godot.Viewport.PropertyName.VrsMode
+  commentId: F:Godot.Viewport.PropertyName.VrsMode
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: VrsMode
+  nameWithType: Viewport.PropertyName.VrsMode
+  fullName: Godot.Viewport.PropertyName.VrsMode
+- uid: Godot.Viewport.PropertyName.VrsUpdateMode
+  commentId: F:Godot.Viewport.PropertyName.VrsUpdateMode
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: VrsUpdateMode
+  nameWithType: Viewport.PropertyName.VrsUpdateMode
+  fullName: Godot.Viewport.PropertyName.VrsUpdateMode
+- uid: Godot.Viewport.PropertyName.VrsTexture
+  commentId: F:Godot.Viewport.PropertyName.VrsTexture
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: VrsTexture
+  nameWithType: Viewport.PropertyName.VrsTexture
+  fullName: Godot.Viewport.PropertyName.VrsTexture
+- uid: Godot.Viewport.PropertyName.CanvasItemDefaultTextureFilter
+  commentId: F:Godot.Viewport.PropertyName.CanvasItemDefaultTextureFilter
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: CanvasItemDefaultTextureFilter
+  nameWithType: Viewport.PropertyName.CanvasItemDefaultTextureFilter
+  fullName: Godot.Viewport.PropertyName.CanvasItemDefaultTextureFilter
+- uid: Godot.Viewport.PropertyName.CanvasItemDefaultTextureRepeat
+  commentId: F:Godot.Viewport.PropertyName.CanvasItemDefaultTextureRepeat
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: CanvasItemDefaultTextureRepeat
+  nameWithType: Viewport.PropertyName.CanvasItemDefaultTextureRepeat
+  fullName: Godot.Viewport.PropertyName.CanvasItemDefaultTextureRepeat
+- uid: Godot.Viewport.PropertyName.AudioListenerEnable2D
+  commentId: F:Godot.Viewport.PropertyName.AudioListenerEnable2D
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: AudioListenerEnable2D
+  nameWithType: Viewport.PropertyName.AudioListenerEnable2D
+  fullName: Godot.Viewport.PropertyName.AudioListenerEnable2D
+- uid: Godot.Viewport.PropertyName.AudioListenerEnable3D
+  commentId: F:Godot.Viewport.PropertyName.AudioListenerEnable3D
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: AudioListenerEnable3D
+  nameWithType: Viewport.PropertyName.AudioListenerEnable3D
+  fullName: Godot.Viewport.PropertyName.AudioListenerEnable3D
+- uid: Godot.Viewport.PropertyName.PhysicsObjectPicking
+  commentId: F:Godot.Viewport.PropertyName.PhysicsObjectPicking
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: PhysicsObjectPicking
+  nameWithType: Viewport.PropertyName.PhysicsObjectPicking
+  fullName: Godot.Viewport.PropertyName.PhysicsObjectPicking
+- uid: Godot.Viewport.PropertyName.PhysicsObjectPickingSort
+  commentId: F:Godot.Viewport.PropertyName.PhysicsObjectPickingSort
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: PhysicsObjectPickingSort
+  nameWithType: Viewport.PropertyName.PhysicsObjectPickingSort
+  fullName: Godot.Viewport.PropertyName.PhysicsObjectPickingSort
+- uid: Godot.Viewport.PropertyName.PhysicsObjectPickingFirstOnly
+  commentId: F:Godot.Viewport.PropertyName.PhysicsObjectPickingFirstOnly
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: PhysicsObjectPickingFirstOnly
+  nameWithType: Viewport.PropertyName.PhysicsObjectPickingFirstOnly
+  fullName: Godot.Viewport.PropertyName.PhysicsObjectPickingFirstOnly
+- uid: Godot.Viewport.PropertyName.GuiDisableInput
+  commentId: F:Godot.Viewport.PropertyName.GuiDisableInput
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: GuiDisableInput
+  nameWithType: Viewport.PropertyName.GuiDisableInput
+  fullName: Godot.Viewport.PropertyName.GuiDisableInput
+- uid: Godot.Viewport.PropertyName.GuiSnapControlsToPixels
+  commentId: F:Godot.Viewport.PropertyName.GuiSnapControlsToPixels
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: GuiSnapControlsToPixels
+  nameWithType: Viewport.PropertyName.GuiSnapControlsToPixels
+  fullName: Godot.Viewport.PropertyName.GuiSnapControlsToPixels
+- uid: Godot.Viewport.PropertyName.GuiEmbedSubwindows
+  commentId: F:Godot.Viewport.PropertyName.GuiEmbedSubwindows
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: GuiEmbedSubwindows
+  nameWithType: Viewport.PropertyName.GuiEmbedSubwindows
+  fullName: Godot.Viewport.PropertyName.GuiEmbedSubwindows
+- uid: Godot.Viewport.PropertyName.SdfOversize
+  commentId: F:Godot.Viewport.PropertyName.SdfOversize
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: SdfOversize
+  nameWithType: Viewport.PropertyName.SdfOversize
+  fullName: Godot.Viewport.PropertyName.SdfOversize
+- uid: Godot.Viewport.PropertyName.SdfScale
+  commentId: F:Godot.Viewport.PropertyName.SdfScale
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: SdfScale
+  nameWithType: Viewport.PropertyName.SdfScale
+  fullName: Godot.Viewport.PropertyName.SdfScale
+- uid: Godot.Viewport.PropertyName.PositionalShadowAtlasSize
+  commentId: F:Godot.Viewport.PropertyName.PositionalShadowAtlasSize
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: PositionalShadowAtlasSize
+  nameWithType: Viewport.PropertyName.PositionalShadowAtlasSize
+  fullName: Godot.Viewport.PropertyName.PositionalShadowAtlasSize
+- uid: Godot.Viewport.PropertyName.PositionalShadowAtlas16Bits
+  commentId: F:Godot.Viewport.PropertyName.PositionalShadowAtlas16Bits
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: PositionalShadowAtlas16Bits
+  nameWithType: Viewport.PropertyName.PositionalShadowAtlas16Bits
+  fullName: Godot.Viewport.PropertyName.PositionalShadowAtlas16Bits
+- uid: Godot.Viewport.PropertyName.PositionalShadowAtlasQuad0
+  commentId: F:Godot.Viewport.PropertyName.PositionalShadowAtlasQuad0
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: PositionalShadowAtlasQuad0
+  nameWithType: Viewport.PropertyName.PositionalShadowAtlasQuad0
+  fullName: Godot.Viewport.PropertyName.PositionalShadowAtlasQuad0
+- uid: Godot.Viewport.PropertyName.PositionalShadowAtlasQuad1
+  commentId: F:Godot.Viewport.PropertyName.PositionalShadowAtlasQuad1
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: PositionalShadowAtlasQuad1
+  nameWithType: Viewport.PropertyName.PositionalShadowAtlasQuad1
+  fullName: Godot.Viewport.PropertyName.PositionalShadowAtlasQuad1
+- uid: Godot.Viewport.PropertyName.PositionalShadowAtlasQuad2
+  commentId: F:Godot.Viewport.PropertyName.PositionalShadowAtlasQuad2
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: PositionalShadowAtlasQuad2
+  nameWithType: Viewport.PropertyName.PositionalShadowAtlasQuad2
+  fullName: Godot.Viewport.PropertyName.PositionalShadowAtlasQuad2
+- uid: Godot.Viewport.PropertyName.PositionalShadowAtlasQuad3
+  commentId: F:Godot.Viewport.PropertyName.PositionalShadowAtlasQuad3
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: PositionalShadowAtlasQuad3
+  nameWithType: Viewport.PropertyName.PositionalShadowAtlasQuad3
+  fullName: Godot.Viewport.PropertyName.PositionalShadowAtlasQuad3
+- uid: Godot.Viewport.PropertyName.CanvasTransform
+  commentId: F:Godot.Viewport.PropertyName.CanvasTransform
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: CanvasTransform
+  nameWithType: Viewport.PropertyName.CanvasTransform
+  fullName: Godot.Viewport.PropertyName.CanvasTransform
+- uid: Godot.Viewport.PropertyName.GlobalCanvasTransform
+  commentId: F:Godot.Viewport.PropertyName.GlobalCanvasTransform
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: GlobalCanvasTransform
+  nameWithType: Viewport.PropertyName.GlobalCanvasTransform
+  fullName: Godot.Viewport.PropertyName.GlobalCanvasTransform
+- uid: Godot.Viewport.PropertyName.CanvasCullMask
+  commentId: F:Godot.Viewport.PropertyName.CanvasCullMask
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: CanvasCullMask
+  nameWithType: Viewport.PropertyName.CanvasCullMask
+  fullName: Godot.Viewport.PropertyName.CanvasCullMask
+- uid: Godot.Viewport.PropertyName.Oversampling
+  commentId: F:Godot.Viewport.PropertyName.Oversampling
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: Oversampling
+  nameWithType: Viewport.PropertyName.Oversampling
+  fullName: Godot.Viewport.PropertyName.Oversampling
+- uid: Godot.Viewport.PropertyName.OversamplingOverride
+  commentId: F:Godot.Viewport.PropertyName.OversamplingOverride
+  parent: Godot.Viewport.PropertyName
+  isExternal: true
+  name: OversamplingOverride
+  nameWithType: Viewport.PropertyName.OversamplingOverride
+  fullName: Godot.Viewport.PropertyName.OversamplingOverride
+- uid: Godot.Node.PropertyName._ImportPath
+  commentId: F:Godot.Node.PropertyName._ImportPath
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: _ImportPath
+  nameWithType: Node.PropertyName._ImportPath
+  fullName: Godot.Node.PropertyName._ImportPath
+- uid: Godot.Node.PropertyName.Name
+  commentId: F:Godot.Node.PropertyName.Name
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: Name
+  nameWithType: Node.PropertyName.Name
+  fullName: Godot.Node.PropertyName.Name
+- uid: Godot.Node.PropertyName.UniqueNameInOwner
+  commentId: F:Godot.Node.PropertyName.UniqueNameInOwner
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: UniqueNameInOwner
+  nameWithType: Node.PropertyName.UniqueNameInOwner
+  fullName: Godot.Node.PropertyName.UniqueNameInOwner
+- uid: Godot.Node.PropertyName.SceneFilePath
+  commentId: F:Godot.Node.PropertyName.SceneFilePath
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: SceneFilePath
+  nameWithType: Node.PropertyName.SceneFilePath
+  fullName: Godot.Node.PropertyName.SceneFilePath
+- uid: Godot.Node.PropertyName.Owner
+  commentId: F:Godot.Node.PropertyName.Owner
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: Owner
+  nameWithType: Node.PropertyName.Owner
+  fullName: Godot.Node.PropertyName.Owner
+- uid: Godot.Node.PropertyName.Multiplayer
+  commentId: F:Godot.Node.PropertyName.Multiplayer
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: Multiplayer
+  nameWithType: Node.PropertyName.Multiplayer
+  fullName: Godot.Node.PropertyName.Multiplayer
+- uid: Godot.Node.PropertyName.ProcessMode
+  commentId: F:Godot.Node.PropertyName.ProcessMode
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessMode
+  nameWithType: Node.PropertyName.ProcessMode
+  fullName: Godot.Node.PropertyName.ProcessMode
+- uid: Godot.Node.PropertyName.ProcessPriority
+  commentId: F:Godot.Node.PropertyName.ProcessPriority
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessPriority
+  nameWithType: Node.PropertyName.ProcessPriority
+  fullName: Godot.Node.PropertyName.ProcessPriority
+- uid: Godot.Node.PropertyName.ProcessPhysicsPriority
+  commentId: F:Godot.Node.PropertyName.ProcessPhysicsPriority
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessPhysicsPriority
+  nameWithType: Node.PropertyName.ProcessPhysicsPriority
+  fullName: Godot.Node.PropertyName.ProcessPhysicsPriority
+- uid: Godot.Node.PropertyName.ProcessThreadGroup
+  commentId: F:Godot.Node.PropertyName.ProcessThreadGroup
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessThreadGroup
+  nameWithType: Node.PropertyName.ProcessThreadGroup
+  fullName: Godot.Node.PropertyName.ProcessThreadGroup
+- uid: Godot.Node.PropertyName.ProcessThreadGroupOrder
+  commentId: F:Godot.Node.PropertyName.ProcessThreadGroupOrder
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessThreadGroupOrder
+  nameWithType: Node.PropertyName.ProcessThreadGroupOrder
+  fullName: Godot.Node.PropertyName.ProcessThreadGroupOrder
+- uid: Godot.Node.PropertyName.ProcessThreadMessages
+  commentId: F:Godot.Node.PropertyName.ProcessThreadMessages
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessThreadMessages
+  nameWithType: Node.PropertyName.ProcessThreadMessages
+  fullName: Godot.Node.PropertyName.ProcessThreadMessages
+- uid: Godot.Node.PropertyName.PhysicsInterpolationMode
+  commentId: F:Godot.Node.PropertyName.PhysicsInterpolationMode
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: PhysicsInterpolationMode
+  nameWithType: Node.PropertyName.PhysicsInterpolationMode
+  fullName: Godot.Node.PropertyName.PhysicsInterpolationMode
+- uid: Godot.Node.PropertyName.AutoTranslateMode
+  commentId: F:Godot.Node.PropertyName.AutoTranslateMode
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AutoTranslateMode
+  nameWithType: Node.PropertyName.AutoTranslateMode
+  fullName: Godot.Node.PropertyName.AutoTranslateMode
+- uid: Godot.Node.PropertyName.EditorDescription
+  commentId: F:Godot.Node.PropertyName.EditorDescription
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: EditorDescription
+  nameWithType: Node.PropertyName.EditorDescription
+  fullName: Godot.Node.PropertyName.EditorDescription
+- uid: Godot.Node.PropertyName.AccessibilityName
+  commentId: F:Godot.Node.PropertyName.AccessibilityName
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityName
+  nameWithType: Node.PropertyName.AccessibilityName
+  fullName: Godot.Node.PropertyName.AccessibilityName
+- uid: Godot.Node.PropertyName.AccessibilityDescription
+  commentId: F:Godot.Node.PropertyName.AccessibilityDescription
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityDescription
+  nameWithType: Node.PropertyName.AccessibilityDescription
+  fullName: Godot.Node.PropertyName.AccessibilityDescription
+- uid: Godot.Node.PropertyName.AccessibilityLive
+  commentId: F:Godot.Node.PropertyName.AccessibilityLive
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityLive
+  nameWithType: Node.PropertyName.AccessibilityLive
+  fullName: Godot.Node.PropertyName.AccessibilityLive
+- uid: Godot.Node.PropertyName.AccessibilityControlsNodes
+  commentId: F:Godot.Node.PropertyName.AccessibilityControlsNodes
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityControlsNodes
+  nameWithType: Node.PropertyName.AccessibilityControlsNodes
+  fullName: Godot.Node.PropertyName.AccessibilityControlsNodes
+- uid: Godot.Node.PropertyName.AccessibilityDescribedByNodes
+  commentId: F:Godot.Node.PropertyName.AccessibilityDescribedByNodes
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityDescribedByNodes
+  nameWithType: Node.PropertyName.AccessibilityDescribedByNodes
+  fullName: Godot.Node.PropertyName.AccessibilityDescribedByNodes
+- uid: Godot.Node.PropertyName.AccessibilityLabeledByNodes
+  commentId: F:Godot.Node.PropertyName.AccessibilityLabeledByNodes
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityLabeledByNodes
+  nameWithType: Node.PropertyName.AccessibilityLabeledByNodes
+  fullName: Godot.Node.PropertyName.AccessibilityLabeledByNodes
+- uid: Godot.Node.PropertyName.AccessibilityFlowToNodes
+  commentId: F:Godot.Node.PropertyName.AccessibilityFlowToNodes
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityFlowToNodes
+  nameWithType: Node.PropertyName.AccessibilityFlowToNodes
+  fullName: Godot.Node.PropertyName.AccessibilityFlowToNodes
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Godot.StringName
+  commentId: T:Godot.StringName
+  parent: Godot
+  isExternal: true
+  name: StringName
+  nameWithType: StringName
+  fullName: Godot.StringName
+- uid: Nebula.Internal.Editor.ServerDebugClient.PropertyName.#ctor*
+  commentId: Overload:Nebula.Internal.Editor.ServerDebugClient.PropertyName.#ctor
+  isExternal: true
+  href: Nebula.Internal.Editor.ServerDebugClient.PropertyName.html#Nebula_Internal_Editor_ServerDebugClient_PropertyName__ctor
+  name: PropertyName
+  nameWithType: ServerDebugClient.PropertyName.PropertyName
+  fullName: Nebula.Internal.Editor.ServerDebugClient.PropertyName.PropertyName
+  nameWithType.vb: ServerDebugClient.PropertyName.New
+  fullName.vb: Nebula.Internal.Editor.ServerDebugClient.PropertyName.New
+  name.vb: New

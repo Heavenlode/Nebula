@@ -1,0 +1,121 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetworkController.NetworkChildrenSearchToggle
+  commentId: T:Nebula.NetworkController.NetworkChildrenSearchToggle
+  id: NetworkController.NetworkChildrenSearchToggle
+  parent: Nebula
+  children:
+  - Nebula.NetworkController.NetworkChildrenSearchToggle.EXCLUDE_SCENES
+  - Nebula.NetworkController.NetworkChildrenSearchToggle.INCLUDE_SCENES
+  - Nebula.NetworkController.NetworkChildrenSearchToggle.ONLY_SCENES
+  langs:
+  - csharp
+  - vb
+  name: NetworkController.NetworkChildrenSearchToggle
+  nameWithType: NetworkController.NetworkChildrenSearchToggle
+  fullName: Nebula.NetworkController.NetworkChildrenSearchToggle
+  type: Enum
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public enum NetworkController.NetworkChildrenSearchToggle
+    content.vb: Public Enum NetworkController.NetworkChildrenSearchToggle
+- uid: Nebula.NetworkController.NetworkChildrenSearchToggle.INCLUDE_SCENES
+  commentId: F:Nebula.NetworkController.NetworkChildrenSearchToggle.INCLUDE_SCENES
+  id: INCLUDE_SCENES
+  parent: Nebula.NetworkController.NetworkChildrenSearchToggle
+  langs:
+  - csharp
+  - vb
+  name: INCLUDE_SCENES
+  nameWithType: NetworkController.NetworkChildrenSearchToggle.INCLUDE_SCENES
+  fullName: Nebula.NetworkController.NetworkChildrenSearchToggle.INCLUDE_SCENES
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: INCLUDE_SCENES = 0
+    return:
+      type: Nebula.NetworkController.NetworkChildrenSearchToggle
+- uid: Nebula.NetworkController.NetworkChildrenSearchToggle.EXCLUDE_SCENES
+  commentId: F:Nebula.NetworkController.NetworkChildrenSearchToggle.EXCLUDE_SCENES
+  id: EXCLUDE_SCENES
+  parent: Nebula.NetworkController.NetworkChildrenSearchToggle
+  langs:
+  - csharp
+  - vb
+  name: EXCLUDE_SCENES
+  nameWithType: NetworkController.NetworkChildrenSearchToggle.EXCLUDE_SCENES
+  fullName: Nebula.NetworkController.NetworkChildrenSearchToggle.EXCLUDE_SCENES
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: EXCLUDE_SCENES = 1
+    return:
+      type: Nebula.NetworkController.NetworkChildrenSearchToggle
+- uid: Nebula.NetworkController.NetworkChildrenSearchToggle.ONLY_SCENES
+  commentId: F:Nebula.NetworkController.NetworkChildrenSearchToggle.ONLY_SCENES
+  id: ONLY_SCENES
+  parent: Nebula.NetworkController.NetworkChildrenSearchToggle
+  langs:
+  - csharp
+  - vb
+  name: ONLY_SCENES
+  nameWithType: NetworkController.NetworkChildrenSearchToggle.ONLY_SCENES
+  fullName: Nebula.NetworkController.NetworkChildrenSearchToggle.ONLY_SCENES
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: ONLY_SCENES = 2
+    return:
+      type: Nebula.NetworkController.NetworkChildrenSearchToggle
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.NetworkController.NetworkChildrenSearchToggle
+  commentId: T:Nebula.NetworkController.NetworkChildrenSearchToggle
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetworkController.html
+  name: NetworkController.NetworkChildrenSearchToggle
+  nameWithType: NetworkController.NetworkChildrenSearchToggle
+  fullName: Nebula.NetworkController.NetworkChildrenSearchToggle
+  spec.csharp:
+  - uid: Nebula.NetworkController
+    name: NetworkController
+    isExternal: true
+    href: Nebula.NetworkController.html
+  - name: .
+  - uid: Nebula.NetworkController.NetworkChildrenSearchToggle
+    name: NetworkChildrenSearchToggle
+    isExternal: true
+    href: Nebula.NetworkController.NetworkChildrenSearchToggle.html
+  spec.vb:
+  - uid: Nebula.NetworkController
+    name: NetworkController
+    isExternal: true
+    href: Nebula.NetworkController.html
+  - name: .
+  - uid: Nebula.NetworkController.NetworkChildrenSearchToggle
+    name: NetworkChildrenSearchToggle
+    isExternal: true
+    href: Nebula.NetworkController.NetworkChildrenSearchToggle.html

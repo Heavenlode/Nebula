@@ -1,0 +1,32 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Internal.Editor.DTO
+  commentId: N:Nebula.Internal.Editor.DTO
+  id: Nebula.Internal.Editor.DTO
+  children:
+  - Nebula.Internal.Editor.DTO.TickFrame
+  - Nebula.Internal.Editor.DTO.TickLog
+  langs:
+  - csharp
+  - vb
+  name: Nebula.Internal.Editor.DTO
+  nameWithType: Nebula.Internal.Editor.DTO
+  fullName: Nebula.Internal.Editor.DTO
+  type: Namespace
+  assemblies:
+  - Nebula
+references:
+- uid: Nebula.Internal.Editor.DTO.TickFrame
+  commentId: T:Nebula.Internal.Editor.DTO.TickFrame
+  isExternal: true
+  href: Nebula.Internal.Editor.DTO.TickFrame.html
+  name: TickFrame
+  nameWithType: TickFrame
+  fullName: Nebula.Internal.Editor.DTO.TickFrame
+- uid: Nebula.Internal.Editor.DTO.TickLog
+  commentId: T:Nebula.Internal.Editor.DTO.TickLog
+  isExternal: true
+  href: Nebula.Internal.Editor.DTO.TickLog.html
+  name: TickLog
+  nameWithType: TickLog
+  fullName: Nebula.Internal.Editor.DTO.TickLog

@@ -1,0 +1,129 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetRunner.ENetChannelId
+  commentId: T:Nebula.NetRunner.ENetChannelId
+  id: NetRunner.ENetChannelId
+  parent: Nebula
+  children:
+  - Nebula.NetRunner.ENetChannelId.Function
+  - Nebula.NetRunner.ENetChannelId.Input
+  - Nebula.NetRunner.ENetChannelId.Tick
+  langs:
+  - csharp
+  - vb
+  name: NetRunner.ENetChannelId
+  nameWithType: NetRunner.ENetChannelId
+  fullName: Nebula.NetRunner.ENetChannelId
+  type: Enum
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Describes the channels of communication used by the network.
+  example: []
+  syntax:
+    content: public enum NetRunner.ENetChannelId
+    content.vb: Public Enum NetRunner.ENetChannelId
+- uid: Nebula.NetRunner.ENetChannelId.Tick
+  commentId: F:Nebula.NetRunner.ENetChannelId.Tick
+  id: Tick
+  parent: Nebula.NetRunner.ENetChannelId
+  langs:
+  - csharp
+  - vb
+  name: Tick
+  nameWithType: NetRunner.ENetChannelId.Tick
+  fullName: Nebula.NetRunner.ENetChannelId.Tick
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Tick data sent by the server to the client, and from the client indicating the most recent tick it has received.
+  example: []
+  syntax:
+    content: Tick = 1
+    return:
+      type: Nebula.NetRunner.ENetChannelId
+- uid: Nebula.NetRunner.ENetChannelId.Input
+  commentId: F:Nebula.NetRunner.ENetChannelId.Input
+  id: Input
+  parent: Nebula.NetRunner.ENetChannelId
+  langs:
+  - csharp
+  - vb
+  name: Input
+  nameWithType: NetRunner.ENetChannelId.Input
+  fullName: Nebula.NetRunner.ENetChannelId.Input
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Input data sent from the client.
+  example: []
+  syntax:
+    content: Input = 2
+    return:
+      type: Nebula.NetRunner.ENetChannelId
+- uid: Nebula.NetRunner.ENetChannelId.Function
+  commentId: F:Nebula.NetRunner.ENetChannelId.Function
+  id: Function
+  parent: Nebula.NetRunner.ENetChannelId
+  langs:
+  - csharp
+  - vb
+  name: Function
+  nameWithType: NetRunner.ENetChannelId.Function
+  fullName: Nebula.NetRunner.ENetChannelId.Function
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: NetFunction call.
+  example: []
+  syntax:
+    content: Function = 3
+    return:
+      type: Nebula.NetRunner.ENetChannelId
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.NetRunner.ENetChannelId
+  commentId: T:Nebula.NetRunner.ENetChannelId
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetRunner.html
+  name: NetRunner.ENetChannelId
+  nameWithType: NetRunner.ENetChannelId
+  fullName: Nebula.NetRunner.ENetChannelId
+  spec.csharp:
+  - uid: Nebula.NetRunner
+    name: NetRunner
+    isExternal: true
+    href: Nebula.NetRunner.html
+  - name: .
+  - uid: Nebula.NetRunner.ENetChannelId
+    name: ENetChannelId
+    isExternal: true
+    href: Nebula.NetRunner.ENetChannelId.html
+  spec.vb:
+  - uid: Nebula.NetRunner
+    name: NetRunner
+    isExternal: true
+    href: Nebula.NetRunner.html
+  - name: .
+  - uid: Nebula.NetRunner.ENetChannelId
+    name: ENetChannelId
+    isExternal: true
+    href: Nebula.NetRunner.ENetChannelId.html

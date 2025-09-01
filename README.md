@@ -1,6 +1,6 @@
 # Nebula
 
-Simple yet powerful netcode for Godot!
+Godot C# Netcode from another galaxy 🌌
 
 ## Table of contents
 - [Nebula](#Nebula)

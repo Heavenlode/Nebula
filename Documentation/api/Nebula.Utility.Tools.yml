@@ -1,0 +1,418 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Utility.Tools
+  commentId: N:Nebula.Utility.Tools
+  id: Nebula.Utility.Tools
+  children:
+  - Nebula.Utility.Tools.Debugger
+  - Nebula.Utility.Tools.Debugger.DebugLevel
+  - Nebula.Utility.Tools.Debugger.MethodName
+  - Nebula.Utility.Tools.Debugger.PropertyName
+  - Nebula.Utility.Tools.Debugger.SignalName
+  - Nebula.Utility.Tools.Env
+  - Nebula.Utility.Tools.Env.DevelopmentModeType
+  - Nebula.Utility.Tools.Env.MethodName
+  - Nebula.Utility.Tools.Env.ProjectSettingId
+  - Nebula.Utility.Tools.Env.PropertyName
+  - Nebula.Utility.Tools.Env.SignalName
+  - Nebula.Utility.Tools.ServerClientConnector
+  - Nebula.Utility.Tools.ServerClientConnector.MethodName
+  - Nebula.Utility.Tools.ServerClientConnector.PropertyName
+  - Nebula.Utility.Tools.ServerClientConnector.SignalName
+  langs:
+  - csharp
+  - vb
+  name: Nebula.Utility.Tools
+  nameWithType: Nebula.Utility.Tools
+  fullName: Nebula.Utility.Tools
+  type: Namespace
+  assemblies:
+  - Nebula
+references:
+- uid: Nebula.Utility.Tools.Debugger
+  commentId: T:Nebula.Utility.Tools.Debugger
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.Debugger.html
+  name: Debugger
+  nameWithType: Debugger
+  fullName: Nebula.Utility.Tools.Debugger
+- uid: Nebula.Utility.Tools.Debugger.DebugLevel
+  commentId: T:Nebula.Utility.Tools.Debugger.DebugLevel
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.Debugger.html
+  name: Debugger.DebugLevel
+  nameWithType: Debugger.DebugLevel
+  fullName: Nebula.Utility.Tools.Debugger.DebugLevel
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.DebugLevel
+    name: DebugLevel
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.DebugLevel.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.DebugLevel
+    name: DebugLevel
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.DebugLevel.html
+- uid: Nebula.Utility.Tools.Debugger.MethodName
+  commentId: T:Nebula.Utility.Tools.Debugger.MethodName
+  isExternal: true
+  href: Nebula.Utility.Tools.Debugger.html
+  name: Debugger.MethodName
+  nameWithType: Debugger.MethodName
+  fullName: Nebula.Utility.Tools.Debugger.MethodName
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.MethodName.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.MethodName.html
+- uid: Nebula.Utility.Tools.Debugger.PropertyName
+  commentId: T:Nebula.Utility.Tools.Debugger.PropertyName
+  isExternal: true
+  href: Nebula.Utility.Tools.Debugger.html
+  name: Debugger.PropertyName
+  nameWithType: Debugger.PropertyName
+  fullName: Nebula.Utility.Tools.Debugger.PropertyName
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.PropertyName.html
+- uid: Nebula.Utility.Tools.Debugger.SignalName
+  commentId: T:Nebula.Utility.Tools.Debugger.SignalName
+  isExternal: true
+  href: Nebula.Utility.Tools.Debugger.html
+  name: Debugger.SignalName
+  nameWithType: Debugger.SignalName
+  fullName: Nebula.Utility.Tools.Debugger.SignalName
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.SignalName.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.SignalName.html
+- uid: Nebula.Utility.Tools.Env
+  commentId: T:Nebula.Utility.Tools.Env
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.Env.html
+  name: Env
+  nameWithType: Env
+  fullName: Nebula.Utility.Tools.Env
+- uid: Nebula.Utility.Tools.Env.DevelopmentModeType
+  commentId: T:Nebula.Utility.Tools.Env.DevelopmentModeType
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.Env.html
+  name: Env.DevelopmentModeType
+  nameWithType: Env.DevelopmentModeType
+  fullName: Nebula.Utility.Tools.Env.DevelopmentModeType
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.DevelopmentModeType
+    name: DevelopmentModeType
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.DevelopmentModeType.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.DevelopmentModeType
+    name: DevelopmentModeType
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.DevelopmentModeType.html
+- uid: Nebula.Utility.Tools.Env.ProjectSettingId
+  commentId: T:Nebula.Utility.Tools.Env.ProjectSettingId
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.Env.html
+  name: Env.ProjectSettingId
+  nameWithType: Env.ProjectSettingId
+  fullName: Nebula.Utility.Tools.Env.ProjectSettingId
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.ProjectSettingId
+    name: ProjectSettingId
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.ProjectSettingId.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.ProjectSettingId
+    name: ProjectSettingId
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.ProjectSettingId.html
+- uid: Nebula.Utility.Tools.Env.MethodName
+  commentId: T:Nebula.Utility.Tools.Env.MethodName
+  isExternal: true
+  href: Nebula.Utility.Tools.Env.html
+  name: Env.MethodName
+  nameWithType: Env.MethodName
+  fullName: Nebula.Utility.Tools.Env.MethodName
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.MethodName.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.MethodName.html
+- uid: Nebula.Utility.Tools.Env.PropertyName
+  commentId: T:Nebula.Utility.Tools.Env.PropertyName
+  isExternal: true
+  href: Nebula.Utility.Tools.Env.html
+  name: Env.PropertyName
+  nameWithType: Env.PropertyName
+  fullName: Nebula.Utility.Tools.Env.PropertyName
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.PropertyName.html
+- uid: Nebula.Utility.Tools.Env.SignalName
+  commentId: T:Nebula.Utility.Tools.Env.SignalName
+  isExternal: true
+  href: Nebula.Utility.Tools.Env.html
+  name: Env.SignalName
+  nameWithType: Env.SignalName
+  fullName: Nebula.Utility.Tools.Env.SignalName
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.SignalName.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.SignalName.html
+- uid: Nebula.Utility.Tools.ServerClientConnector
+  commentId: T:Nebula.Utility.Tools.ServerClientConnector
+  isExternal: true
+  href: Nebula.Utility.Tools.ServerClientConnector.html
+  name: ServerClientConnector
+  nameWithType: ServerClientConnector
+  fullName: Nebula.Utility.Tools.ServerClientConnector
+- uid: Nebula.Utility.Tools.ServerClientConnector.MethodName
+  commentId: T:Nebula.Utility.Tools.ServerClientConnector.MethodName
+  isExternal: true
+  href: Nebula.Utility.Tools.ServerClientConnector.html
+  name: ServerClientConnector.MethodName
+  nameWithType: ServerClientConnector.MethodName
+  fullName: Nebula.Utility.Tools.ServerClientConnector.MethodName
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.ServerClientConnector
+    name: ServerClientConnector
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.html
+  - name: .
+  - uid: Nebula.Utility.Tools.ServerClientConnector.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.MethodName.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.ServerClientConnector
+    name: ServerClientConnector
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.html
+  - name: .
+  - uid: Nebula.Utility.Tools.ServerClientConnector.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.MethodName.html
+- uid: Nebula.Utility.Tools.ServerClientConnector.PropertyName
+  commentId: T:Nebula.Utility.Tools.ServerClientConnector.PropertyName
+  isExternal: true
+  href: Nebula.Utility.Tools.ServerClientConnector.html
+  name: ServerClientConnector.PropertyName
+  nameWithType: ServerClientConnector.PropertyName
+  fullName: Nebula.Utility.Tools.ServerClientConnector.PropertyName
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.ServerClientConnector
+    name: ServerClientConnector
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.html
+  - name: .
+  - uid: Nebula.Utility.Tools.ServerClientConnector.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.ServerClientConnector
+    name: ServerClientConnector
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.html
+  - name: .
+  - uid: Nebula.Utility.Tools.ServerClientConnector.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.PropertyName.html
+- uid: Nebula.Utility.Tools.ServerClientConnector.SignalName
+  commentId: T:Nebula.Utility.Tools.ServerClientConnector.SignalName
+  isExternal: true
+  href: Nebula.Utility.Tools.ServerClientConnector.html
+  name: ServerClientConnector.SignalName
+  nameWithType: ServerClientConnector.SignalName
+  fullName: Nebula.Utility.Tools.ServerClientConnector.SignalName
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.ServerClientConnector
+    name: ServerClientConnector
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.html
+  - name: .
+  - uid: Nebula.Utility.Tools.ServerClientConnector.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.SignalName.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.ServerClientConnector
+    name: ServerClientConnector
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.html
+  - name: .
+  - uid: Nebula.Utility.Tools.ServerClientConnector.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Tools.ServerClientConnector.SignalName.html
+- uid: Nebula.Utility.Tools
+  commentId: N:Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Utility.Tools
+  nameWithType: Nebula.Utility.Tools
+  fullName: Nebula.Utility.Tools
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Utility.Tools.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Utility.Tools.html

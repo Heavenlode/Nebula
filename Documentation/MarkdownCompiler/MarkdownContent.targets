@@ -1,7 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <!-- Your existing project properties -->
- 
-  <Target Name="CopyContentFiles" BeforeTargets="CoreBuildHelp">
-    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ProjectDir)MarkdownCompiler\CopyContentFiles.ps1&quot;" />
-  </Target>
-</Project>

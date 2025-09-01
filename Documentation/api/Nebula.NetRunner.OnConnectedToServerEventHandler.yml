@@ -1,0 +1,221 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetRunner.OnConnectedToServerEventHandler
+  commentId: T:Nebula.NetRunner.OnConnectedToServerEventHandler
+  id: NetRunner.OnConnectedToServerEventHandler
+  parent: Nebula
+  children:
+  - Nebula.NetRunner.OnConnectedToServerEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.NetRunner.OnConnectedToServerEventHandler.BeginInvoke(System.AsyncCallback,System.Object)
+  - Nebula.NetRunner.OnConnectedToServerEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.NetRunner.OnConnectedToServerEventHandler.Invoke
+  langs:
+  - csharp
+  - vb
+  name: NetRunner.OnConnectedToServerEventHandler
+  nameWithType: NetRunner.OnConnectedToServerEventHandler
+  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void NetRunner.OnConnectedToServerEventHandler()
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub NetRunner.OnConnectedToServerEventHandler()
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.NetRunner.OnConnectedToServerEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.NetRunner.OnConnectedToServerEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.NetRunner.OnConnectedToServerEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnConnectedToServerEventHandler(object, nint)
+  nameWithType: NetRunner.OnConnectedToServerEventHandler.OnConnectedToServerEventHandler(object, nint)
+  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler.OnConnectedToServerEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public OnConnectedToServerEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.NetRunner.OnConnectedToServerEventHandler.#ctor*
+  nameWithType.vb: NetRunner.OnConnectedToServerEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.NetRunner.OnConnectedToServerEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.NetRunner.OnConnectedToServerEventHandler.Invoke
+  commentId: M:Nebula.NetRunner.OnConnectedToServerEventHandler.Invoke
+  id: Invoke
+  parent: Nebula.NetRunner.OnConnectedToServerEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke()
+  nameWithType: NetRunner.OnConnectedToServerEventHandler.Invoke()
+  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler.Invoke()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void Invoke()
+    content.vb: Public Overridable Sub Invoke()
+  overload: Nebula.NetRunner.OnConnectedToServerEventHandler.Invoke*
+- uid: Nebula.NetRunner.OnConnectedToServerEventHandler.BeginInvoke(System.AsyncCallback,System.Object)
+  commentId: M:Nebula.NetRunner.OnConnectedToServerEventHandler.BeginInvoke(System.AsyncCallback,System.Object)
+  id: BeginInvoke(System.AsyncCallback,System.Object)
+  parent: Nebula.NetRunner.OnConnectedToServerEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(AsyncCallback, object)
+  nameWithType: NetRunner.OnConnectedToServerEventHandler.BeginInvoke(AsyncCallback, object)
+  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler.BeginInvoke(System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(AsyncCallback callback, object @object)
+    parameters:
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.NetRunner.OnConnectedToServerEventHandler.BeginInvoke*
+  nameWithType.vb: NetRunner.OnConnectedToServerEventHandler.BeginInvoke(AsyncCallback, Object)
+  fullName.vb: Nebula.NetRunner.OnConnectedToServerEventHandler.BeginInvoke(System.AsyncCallback, Object)
+  name.vb: BeginInvoke(AsyncCallback, Object)
+- uid: Nebula.NetRunner.OnConnectedToServerEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.NetRunner.OnConnectedToServerEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.NetRunner.OnConnectedToServerEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: NetRunner.OnConnectedToServerEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.NetRunner.OnConnectedToServerEventHandler.EndInvoke*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.NetRunner.OnConnectedToServerEventHandler.#ctor*
+  commentId: Overload:Nebula.NetRunner.OnConnectedToServerEventHandler.#ctor
+  isExternal: true
+  href: Nebula.NetRunner.OnConnectedToServerEventHandler.html#Nebula_NetRunner_OnConnectedToServerEventHandler__ctor_System_Object_System_IntPtr_
+  name: OnConnectedToServerEventHandler
+  nameWithType: NetRunner.OnConnectedToServerEventHandler.OnConnectedToServerEventHandler
+  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler.OnConnectedToServerEventHandler
+  nameWithType.vb: NetRunner.OnConnectedToServerEventHandler.New
+  fullName.vb: Nebula.NetRunner.OnConnectedToServerEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.NetRunner.OnConnectedToServerEventHandler.Invoke*
+  commentId: Overload:Nebula.NetRunner.OnConnectedToServerEventHandler.Invoke
+  isExternal: true
+  href: Nebula.NetRunner.OnConnectedToServerEventHandler.html#Nebula_NetRunner_OnConnectedToServerEventHandler_Invoke
+  name: Invoke
+  nameWithType: NetRunner.OnConnectedToServerEventHandler.Invoke
+  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler.Invoke
+- uid: Nebula.NetRunner.OnConnectedToServerEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.NetRunner.OnConnectedToServerEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.NetRunner.OnConnectedToServerEventHandler.html#Nebula_NetRunner_OnConnectedToServerEventHandler_BeginInvoke_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: NetRunner.OnConnectedToServerEventHandler.BeginInvoke
+  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.NetRunner.OnConnectedToServerEventHandler.EndInvoke*
+  commentId: Overload:Nebula.NetRunner.OnConnectedToServerEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.NetRunner.OnConnectedToServerEventHandler.html#Nebula_NetRunner_OnConnectedToServerEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: NetRunner.OnConnectedToServerEventHandler.EndInvoke
+  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler.EndInvoke

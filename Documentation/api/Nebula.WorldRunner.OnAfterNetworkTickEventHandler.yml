@@ -1,0 +1,243 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
+  commentId: T:Nebula.WorldRunner.OnAfterNetworkTickEventHandler
+  id: WorldRunner.OnAfterNetworkTickEventHandler
+  parent: Nebula
+  children:
+  - Nebula.WorldRunner.OnAfterNetworkTickEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke(System.Int32,System.AsyncCallback,System.Object)
+  - Nebula.WorldRunner.OnAfterNetworkTickEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.WorldRunner.OnAfterNetworkTickEventHandler.Invoke(System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: WorldRunner.OnAfterNetworkTickEventHandler
+  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler
+  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void WorldRunner.OnAfterNetworkTickEventHandler(int tick)
+    parameters:
+    - id: tick
+      type: System.Int32
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub WorldRunner.OnAfterNetworkTickEventHandler(tick As Integer)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.WorldRunner.OnAfterNetworkTickEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnAfterNetworkTickEventHandler(object, nint)
+  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler.OnAfterNetworkTickEventHandler(object, nint)
+  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.OnAfterNetworkTickEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public OnAfterNetworkTickEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.#ctor*
+  nameWithType.vb: WorldRunner.OnAfterNetworkTickEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.Invoke(System.Int32)
+  commentId: M:Nebula.WorldRunner.OnAfterNetworkTickEventHandler.Invoke(System.Int32)
+  id: Invoke(System.Int32)
+  parent: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(int)
+  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler.Invoke(int)
+  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.Invoke(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void Invoke(int tick)
+    parameters:
+    - id: tick
+      type: System.Int32
+    content.vb: Public Overridable Sub Invoke(tick As Integer)
+  overload: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.Invoke*
+  nameWithType.vb: WorldRunner.OnAfterNetworkTickEventHandler.Invoke(Integer)
+  fullName.vb: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.Invoke(Integer)
+  name.vb: Invoke(Integer)
+- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke(System.Int32,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke(System.Int32,System.AsyncCallback,System.Object)
+  id: BeginInvoke(System.Int32,System.AsyncCallback,System.Object)
+  parent: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(int, AsyncCallback, object)
+  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke(int, AsyncCallback, object)
+  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke(int, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(int tick, AsyncCallback callback, object @object)
+    parameters:
+    - id: tick
+      type: System.Int32
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(tick As Integer, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke*
+  nameWithType.vb: WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke(Integer, AsyncCallback, Object)
+  fullName.vb: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke(Integer, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(Integer, AsyncCallback, Object)
+- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.WorldRunner.OnAfterNetworkTickEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.EndInvoke*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.#ctor*
+  commentId: Overload:Nebula.WorldRunner.OnAfterNetworkTickEventHandler.#ctor
+  isExternal: true
+  href: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.html#Nebula_WorldRunner_OnAfterNetworkTickEventHandler__ctor_System_Object_System_IntPtr_
+  name: OnAfterNetworkTickEventHandler
+  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler.OnAfterNetworkTickEventHandler
+  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.OnAfterNetworkTickEventHandler
+  nameWithType.vb: WorldRunner.OnAfterNetworkTickEventHandler.New
+  fullName.vb: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.Invoke*
+  commentId: Overload:Nebula.WorldRunner.OnAfterNetworkTickEventHandler.Invoke
+  isExternal: true
+  href: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.html#Nebula_WorldRunner_OnAfterNetworkTickEventHandler_Invoke_System_Int32_
+  name: Invoke
+  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler.Invoke
+  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.Invoke
+- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.html#Nebula_WorldRunner_OnAfterNetworkTickEventHandler_BeginInvoke_System_Int32_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke
+  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.EndInvoke*
+  commentId: Overload:Nebula.WorldRunner.OnAfterNetworkTickEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.html#Nebula_WorldRunner_OnAfterNetworkTickEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler.EndInvoke
+  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.EndInvoke

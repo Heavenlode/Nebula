@@ -1,0 +1,273 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  commentId: T:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  id: Downloader.DownloadFailedEventHandler
+  parent: Nebula.Internal.Editor
+  children:
+  - Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.BeginInvoke(System.String,System.AsyncCallback,System.Object)
+  - Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.Invoke(System.String)
+  langs:
+  - csharp
+  - vb
+  name: Downloader.DownloadFailedEventHandler
+  nameWithType: Downloader.DownloadFailedEventHandler
+  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void Downloader.DownloadFailedEventHandler(string error)
+    parameters:
+    - id: error
+      type: System.String
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub Downloader.DownloadFailedEventHandler([error] As String)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: DownloadFailedEventHandler(object, nint)
+  nameWithType: Downloader.DownloadFailedEventHandler.DownloadFailedEventHandler(object, nint)
+  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.DownloadFailedEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public DownloadFailedEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.#ctor*
+  nameWithType.vb: Downloader.DownloadFailedEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.Invoke(System.String)
+  commentId: M:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.Invoke(System.String)
+  id: Invoke(System.String)
+  parent: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(string)
+  nameWithType: Downloader.DownloadFailedEventHandler.Invoke(string)
+  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.Invoke(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual void Invoke(string error)
+    parameters:
+    - id: error
+      type: System.String
+    content.vb: Public Overridable Sub Invoke([error] As String)
+  overload: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.Invoke*
+  nameWithType.vb: Downloader.DownloadFailedEventHandler.Invoke(String)
+  fullName.vb: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.Invoke(String)
+  name.vb: Invoke(String)
+- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.BeginInvoke(System.String,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.BeginInvoke(System.String,System.AsyncCallback,System.Object)
+  id: BeginInvoke(System.String,System.AsyncCallback,System.Object)
+  parent: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(string, AsyncCallback, object)
+  nameWithType: Downloader.DownloadFailedEventHandler.BeginInvoke(string, AsyncCallback, object)
+  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.BeginInvoke(string, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(string error, AsyncCallback callback, object @object)
+    parameters:
+    - id: error
+      type: System.String
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke([error] As String, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.BeginInvoke*
+  nameWithType.vb: Downloader.DownloadFailedEventHandler.BeginInvoke(String, AsyncCallback, Object)
+  fullName.vb: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.BeginInvoke(String, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(String, AsyncCallback, Object)
+- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: Downloader.DownloadFailedEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.EndInvoke*
+references:
+- uid: Nebula.Internal.Editor
+  commentId: N:Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Internal.Editor
+  nameWithType: Nebula.Internal.Editor
+  fullName: Nebula.Internal.Editor
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.#ctor*
+  commentId: Overload:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.#ctor
+  isExternal: true
+  href: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.html#Nebula_Internal_Editor_Downloader_DownloadFailedEventHandler__ctor_System_Object_System_IntPtr_
+  name: DownloadFailedEventHandler
+  nameWithType: Downloader.DownloadFailedEventHandler.DownloadFailedEventHandler
+  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.DownloadFailedEventHandler
+  nameWithType.vb: Downloader.DownloadFailedEventHandler.New
+  fullName.vb: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.Invoke*
+  commentId: Overload:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.Invoke
+  isExternal: true
+  href: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.html#Nebula_Internal_Editor_Downloader_DownloadFailedEventHandler_Invoke_System_String_
+  name: Invoke
+  nameWithType: Downloader.DownloadFailedEventHandler.Invoke
+  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.Invoke
+- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.html#Nebula_Internal_Editor_Downloader_DownloadFailedEventHandler_BeginInvoke_System_String_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: Downloader.DownloadFailedEventHandler.BeginInvoke
+  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.EndInvoke*
+  commentId: Overload:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.html#Nebula_Internal_Editor_Downloader_DownloadFailedEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: Downloader.DownloadFailedEventHandler.EndInvoke
+  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.EndInvoke

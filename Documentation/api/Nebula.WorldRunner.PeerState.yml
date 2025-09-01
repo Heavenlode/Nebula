@@ -1,0 +1,837 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.WorldRunner.PeerState
+  commentId: T:Nebula.WorldRunner.PeerState
+  id: WorldRunner.PeerState
+  parent: Nebula
+  children:
+  - Nebula.WorldRunner.PeerState.AvailableNodes
+  - Nebula.WorldRunner.PeerState.Id
+  - Nebula.WorldRunner.PeerState.OwnedNodes
+  - Nebula.WorldRunner.PeerState.Peer
+  - Nebula.WorldRunner.PeerState.PeerToWorldNodeMap
+  - Nebula.WorldRunner.PeerState.SpawnAware
+  - Nebula.WorldRunner.PeerState.Status
+  - Nebula.WorldRunner.PeerState.Tick
+  - Nebula.WorldRunner.PeerState.Token
+  - Nebula.WorldRunner.PeerState.WorldToPeerNodeMap
+  langs:
+  - csharp
+  - vb
+  name: WorldRunner.PeerState
+  nameWithType: WorldRunner.PeerState
+  fullName: Nebula.WorldRunner.PeerState
+  type: Struct
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public struct WorldRunner.PeerState
+    content.vb: Public Structure WorldRunner.PeerState
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.GetType
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: Nebula.WorldRunner.PeerState.Peer
+  commentId: F:Nebula.WorldRunner.PeerState.Peer
+  id: Peer
+  parent: Nebula.WorldRunner.PeerState
+  langs:
+  - csharp
+  - vb
+  name: Peer
+  nameWithType: WorldRunner.PeerState.Peer
+  fullName: Nebula.WorldRunner.PeerState.Peer
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public ENetPacketPeer Peer
+    return:
+      type: Godot.ENetPacketPeer
+    content.vb: Public Peer As ENetPacketPeer
+- uid: Nebula.WorldRunner.PeerState.Tick
+  commentId: F:Nebula.WorldRunner.PeerState.Tick
+  id: Tick
+  parent: Nebula.WorldRunner.PeerState
+  langs:
+  - csharp
+  - vb
+  name: Tick
+  nameWithType: WorldRunner.PeerState.Tick
+  fullName: Nebula.WorldRunner.PeerState.Tick
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public int Tick
+    return:
+      type: System.Int32
+    content.vb: Public Tick As Integer
+- uid: Nebula.WorldRunner.PeerState.Status
+  commentId: F:Nebula.WorldRunner.PeerState.Status
+  id: Status
+  parent: Nebula.WorldRunner.PeerState
+  langs:
+  - csharp
+  - vb
+  name: Status
+  nameWithType: WorldRunner.PeerState.Status
+  fullName: Nebula.WorldRunner.PeerState.Status
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public WorldRunner.PeerSyncStatus Status
+    return:
+      type: Nebula.WorldRunner.PeerSyncStatus
+    content.vb: Public Status As WorldRunner.PeerSyncStatus
+- uid: Nebula.WorldRunner.PeerState.Id
+  commentId: F:Nebula.WorldRunner.PeerState.Id
+  id: Id
+  parent: Nebula.WorldRunner.PeerState
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: WorldRunner.PeerState.Id
+  fullName: Nebula.WorldRunner.PeerState.Id
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public UUID Id
+    return:
+      type: Nebula.UUID
+    content.vb: Public Id As UUID
+- uid: Nebula.WorldRunner.PeerState.Token
+  commentId: F:Nebula.WorldRunner.PeerState.Token
+  id: Token
+  parent: Nebula.WorldRunner.PeerState
+  langs:
+  - csharp
+  - vb
+  name: Token
+  nameWithType: WorldRunner.PeerState.Token
+  fullName: Nebula.WorldRunner.PeerState.Token
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public string Token
+    return:
+      type: System.String
+    content.vb: Public Token As String
+- uid: Nebula.WorldRunner.PeerState.WorldToPeerNodeMap
+  commentId: F:Nebula.WorldRunner.PeerState.WorldToPeerNodeMap
+  id: WorldToPeerNodeMap
+  parent: Nebula.WorldRunner.PeerState
+  langs:
+  - csharp
+  - vb
+  name: WorldToPeerNodeMap
+  nameWithType: WorldRunner.PeerState.WorldToPeerNodeMap
+  fullName: Nebula.WorldRunner.PeerState.WorldToPeerNodeMap
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Dictionary<NetId, byte> WorldToPeerNodeMap
+    return:
+      type: System.Collections.Generic.Dictionary{Nebula.NetId,System.Byte}
+    content.vb: Public WorldToPeerNodeMap As Dictionary(Of NetId, Byte)
+- uid: Nebula.WorldRunner.PeerState.PeerToWorldNodeMap
+  commentId: F:Nebula.WorldRunner.PeerState.PeerToWorldNodeMap
+  id: PeerToWorldNodeMap
+  parent: Nebula.WorldRunner.PeerState
+  langs:
+  - csharp
+  - vb
+  name: PeerToWorldNodeMap
+  nameWithType: WorldRunner.PeerState.PeerToWorldNodeMap
+  fullName: Nebula.WorldRunner.PeerState.PeerToWorldNodeMap
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Dictionary<byte, NetId> PeerToWorldNodeMap
+    return:
+      type: System.Collections.Generic.Dictionary{System.Byte,Nebula.NetId}
+    content.vb: Public PeerToWorldNodeMap As Dictionary(Of Byte, NetId)
+- uid: Nebula.WorldRunner.PeerState.SpawnAware
+  commentId: F:Nebula.WorldRunner.PeerState.SpawnAware
+  id: SpawnAware
+  parent: Nebula.WorldRunner.PeerState
+  langs:
+  - csharp
+  - vb
+  name: SpawnAware
+  nameWithType: WorldRunner.PeerState.SpawnAware
+  fullName: Nebula.WorldRunner.PeerState.SpawnAware
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: A list of nodes that the player is aware of in the world (i.e. has spawned locally)
+  example: []
+  syntax:
+    content: public Dictionary<NetId, bool> SpawnAware
+    return:
+      type: System.Collections.Generic.Dictionary{Nebula.NetId,System.Boolean}
+    content.vb: Public SpawnAware As Dictionary(Of NetId, Boolean)
+- uid: Nebula.WorldRunner.PeerState.AvailableNodes
+  commentId: F:Nebula.WorldRunner.PeerState.AvailableNodes
+  id: AvailableNodes
+  parent: Nebula.WorldRunner.PeerState
+  langs:
+  - csharp
+  - vb
+  name: AvailableNodes
+  nameWithType: WorldRunner.PeerState.AvailableNodes
+  fullName: Nebula.WorldRunner.PeerState.AvailableNodes
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: A bit list of nodeIds that are available to the peer.
+  example: []
+  syntax:
+    content: public long AvailableNodes
+    return:
+      type: System.Int64
+    content.vb: Public AvailableNodes As Long
+- uid: Nebula.WorldRunner.PeerState.OwnedNodes
+  commentId: F:Nebula.WorldRunner.PeerState.OwnedNodes
+  id: OwnedNodes
+  parent: Nebula.WorldRunner.PeerState
+  langs:
+  - csharp
+  - vb
+  name: OwnedNodes
+  nameWithType: WorldRunner.PeerState.OwnedNodes
+  fullName: Nebula.WorldRunner.PeerState.OwnedNodes
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: A list of nodes that the player owns (i.e. InputAuthority == peer
+  example: []
+  syntax:
+    content: public HashSet<INetNode> OwnedNodes
+    return:
+      type: System.Collections.Generic.HashSet{Nebula.INetNode}
+    content.vb: Public OwnedNodes As HashSet(Of INetNode)
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Godot.ENetPacketPeer
+  commentId: T:Godot.ENetPacketPeer
+  parent: Godot
+  isExternal: true
+  name: ENetPacketPeer
+  nameWithType: ENetPacketPeer
+  fullName: Godot.ENetPacketPeer
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.WorldRunner.PeerSyncStatus
+  commentId: T:Nebula.WorldRunner.PeerSyncStatus
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner.PeerSyncStatus
+  nameWithType: WorldRunner.PeerSyncStatus
+  fullName: Nebula.WorldRunner.PeerSyncStatus
+  spec.csharp:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.PeerSyncStatus
+    name: PeerSyncStatus
+    isExternal: true
+    href: Nebula.WorldRunner.PeerSyncStatus.html
+  spec.vb:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.PeerSyncStatus
+    name: PeerSyncStatus
+    isExternal: true
+    href: Nebula.WorldRunner.PeerSyncStatus.html
+- uid: Nebula.UUID
+  commentId: T:Nebula.UUID
+  parent: Nebula
+  isExternal: true
+  href: Nebula.UUID.html
+  name: UUID
+  nameWithType: UUID
+  fullName: Nebula.UUID
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Collections.Generic.Dictionary{Nebula.NetId,System.Byte}
+  commentId: T:System.Collections.Generic.Dictionary{Nebula.NetId,System.Byte}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<NetId, byte>
+  nameWithType: Dictionary<NetId, byte>
+  fullName: System.Collections.Generic.Dictionary<Nebula.NetId, byte>
+  nameWithType.vb: Dictionary(Of NetId, Byte)
+  fullName.vb: System.Collections.Generic.Dictionary(Of Nebula.NetId, Byte)
+  name.vb: Dictionary(Of NetId, Byte)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections.Generic.Dictionary{System.Byte,Nebula.NetId}
+  commentId: T:System.Collections.Generic.Dictionary{System.Byte,Nebula.NetId}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<byte, NetId>
+  nameWithType: Dictionary<byte, NetId>
+  fullName: System.Collections.Generic.Dictionary<byte, Nebula.NetId>
+  nameWithType.vb: Dictionary(Of Byte, NetId)
+  fullName.vb: System.Collections.Generic.Dictionary(Of Byte, Nebula.NetId)
+  name.vb: Dictionary(Of Byte, NetId)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: ','
+  - name: " "
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: ','
+  - name: " "
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: )
+- uid: System.Collections.Generic.Dictionary{Nebula.NetId,System.Boolean}
+  commentId: T:System.Collections.Generic.Dictionary{Nebula.NetId,System.Boolean}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<NetId, bool>
+  nameWithType: Dictionary<NetId, bool>
+  fullName: System.Collections.Generic.Dictionary<Nebula.NetId, bool>
+  nameWithType.vb: Dictionary(Of NetId, Boolean)
+  fullName.vb: System.Collections.Generic.Dictionary(Of Nebula.NetId, Boolean)
+  name.vb: Dictionary(Of NetId, Boolean)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: System.Collections.Generic.HashSet{Nebula.INetNode}
+  commentId: T:System.Collections.Generic.HashSet{Nebula.INetNode}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.HashSet`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<INetNode>
+  nameWithType: HashSet<INetNode>
+  fullName: System.Collections.Generic.HashSet<Nebula.INetNode>
+  nameWithType.vb: HashSet(Of INetNode)
+  fullName.vb: System.Collections.Generic.HashSet(Of Nebula.INetNode)
+  name.vb: HashSet(Of INetNode)
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - uid: Nebula.INetNode
+    name: INetNode
+    isExternal: true
+    href: Nebula.INetNode.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.INetNode
+    name: INetNode
+    isExternal: true
+    href: Nebula.INetNode.html
+  - name: )
+- uid: System.Collections.Generic.HashSet`1
+  commentId: T:System.Collections.Generic.HashSet`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<T>
+  nameWithType: HashSet<T>
+  fullName: System.Collections.Generic.HashSet<T>
+  nameWithType.vb: HashSet(Of T)
+  fullName.vb: System.Collections.Generic.HashSet(Of T)
+  name.vb: HashSet(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )

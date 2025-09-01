@@ -1,0 +1,430 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Utility.Nodes
+  commentId: N:Nebula.Utility.Nodes
+  id: Nebula.Utility.Nodes
+  children:
+  - Nebula.Utility.Nodes.NetTransform2D
+  - Nebula.Utility.Nodes.NetTransform2D.MethodName
+  - Nebula.Utility.Nodes.NetTransform2D.PropertyName
+  - Nebula.Utility.Nodes.NetTransform2D.SignalName
+  - Nebula.Utility.Nodes.NetTransform3D
+  - Nebula.Utility.Nodes.NetTransform3D.MethodName
+  - Nebula.Utility.Nodes.NetTransform3D.PropertyName
+  - Nebula.Utility.Nodes.NetTransform3D.SignalName
+  - Nebula.Utility.Nodes.NetworkVisibility
+  - Nebula.Utility.Nodes.NetworkVisibility.MethodName
+  - Nebula.Utility.Nodes.NetworkVisibility.PropertyName
+  - Nebula.Utility.Nodes.NetworkVisibility.SignalName
+  - Nebula.Utility.Nodes.QuantizedNetTransform3D
+  - Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
+  - Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
+  - Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
+  - Nebula.Utility.Nodes.TickTimer
+  langs:
+  - csharp
+  - vb
+  name: Nebula.Utility.Nodes
+  nameWithType: Nebula.Utility.Nodes
+  fullName: Nebula.Utility.Nodes
+  type: Namespace
+  assemblies:
+  - Nebula
+references:
+- uid: Nebula.Utility.Nodes.NetTransform2D
+  commentId: T:Nebula.Utility.Nodes.NetTransform2D
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform2D.html
+  name: NetTransform2D
+  nameWithType: NetTransform2D
+  fullName: Nebula.Utility.Nodes.NetTransform2D
+- uid: Nebula.Utility.Nodes.NetTransform2D.MethodName
+  commentId: T:Nebula.Utility.Nodes.NetTransform2D.MethodName
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform2D.html
+  name: NetTransform2D.MethodName
+  nameWithType: NetTransform2D.MethodName
+  fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.NetTransform2D
+    name: NetTransform2D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform2D.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.MethodName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.NetTransform2D
+    name: NetTransform2D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform2D.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.MethodName.html
+- uid: Nebula.Utility.Nodes.NetTransform2D.PropertyName
+  commentId: T:Nebula.Utility.Nodes.NetTransform2D.PropertyName
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform2D.html
+  name: NetTransform2D.PropertyName
+  nameWithType: NetTransform2D.PropertyName
+  fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.NetTransform2D
+    name: NetTransform2D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform2D.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.NetTransform2D
+    name: NetTransform2D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform2D.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.PropertyName.html
+- uid: Nebula.Utility.Nodes.NetTransform2D.SignalName
+  commentId: T:Nebula.Utility.Nodes.NetTransform2D.SignalName
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform2D.html
+  name: NetTransform2D.SignalName
+  nameWithType: NetTransform2D.SignalName
+  fullName: Nebula.Utility.Nodes.NetTransform2D.SignalName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.NetTransform2D
+    name: NetTransform2D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform2D.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.SignalName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.NetTransform2D
+    name: NetTransform2D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform2D.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform2D.SignalName.html
+- uid: Nebula.Utility.Nodes.NetTransform3D
+  commentId: T:Nebula.Utility.Nodes.NetTransform3D
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.html
+  name: NetTransform3D
+  nameWithType: NetTransform3D
+  fullName: Nebula.Utility.Nodes.NetTransform3D
+- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName
+  commentId: T:Nebula.Utility.Nodes.NetTransform3D.MethodName
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.html
+  name: NetTransform3D.MethodName
+  nameWithType: NetTransform3D.MethodName
+  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.NetTransform3D
+    name: NetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform3D.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.MethodName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.NetTransform3D
+    name: NetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform3D.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.MethodName.html
+- uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName
+  commentId: T:Nebula.Utility.Nodes.NetTransform3D.PropertyName
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.html
+  name: NetTransform3D.PropertyName
+  nameWithType: NetTransform3D.PropertyName
+  fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.NetTransform3D
+    name: NetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.NetTransform3D
+    name: NetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.PropertyName.html
+- uid: Nebula.Utility.Nodes.NetTransform3D.SignalName
+  commentId: T:Nebula.Utility.Nodes.NetTransform3D.SignalName
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.html
+  name: NetTransform3D.SignalName
+  nameWithType: NetTransform3D.SignalName
+  fullName: Nebula.Utility.Nodes.NetTransform3D.SignalName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.NetTransform3D
+    name: NetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform3D.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.SignalName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.NetTransform3D
+    name: NetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetTransform3D.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetTransform3D.SignalName.html
+- uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
+  commentId: T:Nebula.Utility.Nodes.QuantizedNetTransform3D
+  isExternal: true
+  href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
+  name: QuantizedNetTransform3D
+  nameWithType: QuantizedNetTransform3D
+  fullName: Nebula.Utility.Nodes.QuantizedNetTransform3D
+- uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
+  commentId: T:Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
+  isExternal: true
+  href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
+  name: QuantizedNetTransform3D.MethodName
+  nameWithType: QuantizedNetTransform3D.MethodName
+  fullName: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
+    name: QuantizedNetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
+    name: QuantizedNetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName.html
+- uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
+  commentId: T:Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
+  isExternal: true
+  href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
+  name: QuantizedNetTransform3D.PropertyName
+  nameWithType: QuantizedNetTransform3D.PropertyName
+  fullName: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
+    name: QuantizedNetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
+    name: QuantizedNetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName.html
+- uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
+  commentId: T:Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
+  isExternal: true
+  href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
+  name: QuantizedNetTransform3D.SignalName
+  nameWithType: QuantizedNetTransform3D.SignalName
+  fullName: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
+    name: QuantizedNetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
+    name: QuantizedNetTransform3D
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName.html
+- uid: Nebula.Utility.Nodes.NetworkVisibility
+  commentId: T:Nebula.Utility.Nodes.NetworkVisibility
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetworkVisibility.html
+  name: NetworkVisibility
+  nameWithType: NetworkVisibility
+  fullName: Nebula.Utility.Nodes.NetworkVisibility
+- uid: Nebula.Utility.Nodes.NetworkVisibility.MethodName
+  commentId: T:Nebula.Utility.Nodes.NetworkVisibility.MethodName
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetworkVisibility.html
+  name: NetworkVisibility.MethodName
+  nameWithType: NetworkVisibility.MethodName
+  fullName: Nebula.Utility.Nodes.NetworkVisibility.MethodName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.NetworkVisibility
+    name: NetworkVisibility
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetworkVisibility.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.MethodName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.NetworkVisibility
+    name: NetworkVisibility
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetworkVisibility.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.MethodName.html
+- uid: Nebula.Utility.Nodes.NetworkVisibility.PropertyName
+  commentId: T:Nebula.Utility.Nodes.NetworkVisibility.PropertyName
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetworkVisibility.html
+  name: NetworkVisibility.PropertyName
+  nameWithType: NetworkVisibility.PropertyName
+  fullName: Nebula.Utility.Nodes.NetworkVisibility.PropertyName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.NetworkVisibility
+    name: NetworkVisibility
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetworkVisibility.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.NetworkVisibility
+    name: NetworkVisibility
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetworkVisibility.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.PropertyName.html
+- uid: Nebula.Utility.Nodes.NetworkVisibility.SignalName
+  commentId: T:Nebula.Utility.Nodes.NetworkVisibility.SignalName
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetworkVisibility.html
+  name: NetworkVisibility.SignalName
+  nameWithType: NetworkVisibility.SignalName
+  fullName: Nebula.Utility.Nodes.NetworkVisibility.SignalName
+  spec.csharp:
+  - uid: Nebula.Utility.Nodes.NetworkVisibility
+    name: NetworkVisibility
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetworkVisibility.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.SignalName.html
+  spec.vb:
+  - uid: Nebula.Utility.Nodes.NetworkVisibility
+    name: NetworkVisibility
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes.NetworkVisibility.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Utility.Nodes.NetworkVisibility.SignalName.html
+- uid: Nebula.Utility.Nodes.TickTimer
+  commentId: T:Nebula.Utility.Nodes.TickTimer
+  parent: Nebula.Utility.Nodes
+  isExternal: true
+  href: Nebula.Utility.Nodes.TickTimer.html
+  name: TickTimer
+  nameWithType: TickTimer
+  fullName: Nebula.Utility.Nodes.TickTimer
+- uid: Nebula.Utility.Nodes
+  commentId: N:Nebula.Utility.Nodes
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Utility.Nodes
+  nameWithType: Nebula.Utility.Nodes
+  fullName: Nebula.Utility.Nodes
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes
+    name: Nodes
+    isExternal: true
+    href: Nebula.Utility.Nodes.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes
+    name: Nodes
+    isExternal: true
+    href: Nebula.Utility.Nodes.html

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Network Lifecycle </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Network Lifecycle ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Heavenlode/Nebula/blob/0.10.0/Documentation/getting-started/network-lifecycle.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="network-lifecycle">Network Lifecycle</h1>
+
+<p>In order to understand the network lifecycle, you first need to understand how the Server and Client are different from each other--despite both running the same game.</p>
+<h2 id="server-characteristics">Server characteristics</h2>
+<ul>
+<li>Runs game logic.
+<ul>
+<li>e.g. physics, collisions, scoring, etc.</li>
+<li>Does not render any display or view.</li>
+</ul>
+</li>
+<li>Alters game state.
+<ul>
+<li>Mutates the NetProperties on the NetNodes.</li>
+</ul>
+</li>
+<li>Receives and processes game inputs from clients.</li>
+<li>Maintains the entire game state
+<ul>
+<li>Sends out changes to all clients.</li>
+</ul>
+</li>
+</ul>
+<h2 id="client-characteristics">Client characteristics</h2>
+<ul>
+<li>Renders views based on data received from the server.
+<ul>
+<li>Does not run any game logic such as physics, collisions, etc.</li>
+</ul>
+</li>
+<li>Cannot directly alter game state.
+<ul>
+<li>Manually changing the NetProperties on NetNodes has no effect.</li>
+</ul>
+</li>
+<li>Sends inputs/actions to the server
+<ul>
+<li>e.g. &quot;move left&quot;, &quot;move right&quot;</li>
+</ul>
+</li>
+<li>Unaware of entire game state--only knows what the server tells it.
+<ul>
+<li>Receives changes from the server and applies it to its own game state.</li>
+</ul>
+</li>
+</ul>
+<p>With this understanding, we can now break these down one at a time.</p>
+<h2 id="game-logic--tick-processing">Game Logic / Tick Processing</h2>
+<p>Game logic is only executed by the server. For example, a game character NetNode might literally looks something like this:</p>
+<pre><code class="lang-cs">using Godot;
+using Nebula;
+
+public partial class PlayableCharacter : NetNode3D
+{
+	[NetProperty]
+	public int Money { get; set; }
+
+	public override void _NetworkProcess(int _tick)
+	{
+		base._NetworkProcess(_tick);
+		if (NetRunner.Instance.IsServer)
+		{
+			Money += 1;
+		}
+	}
+}
+</code></pre>
+<p><code>_NetworkProcess</code> is fairly similar to a Node's <code>_Process</code> with some key differences:</p>
+<ul>
+<li>For the server, it runs on a fixed interval (known as a &quot;Tick&quot;)
+<ul>
+<li>In the final step of a tick, the server sends the game state changes to all connected clients.</li>
+<li>e.g. if the game is running at 30 TPS (ticks-per-second), then the clients will receive updates up to <em>30 times per second</em> (depending on network conditions).</li>
+</ul>
+</li>
+<li>For the client, this runs <em>whenever it receives a tick from the server</em>.</li>
+</ul>
+<p>In the code example above, the logic code to increment the Money value is only run if the NetRunner is a server.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p><em>(this note isn't strictly necessary to know. if it's confusing or overwhelming, feel free to disregard)</em></p>
+<p>The game state is managed by the WorldRunner, because every World has its own unique state and logic. Everything listed earlier under the &quot;Server characteristics&quot; is what each WorldRunner does!</p>
+</div>
+<p>You might be wondering &quot;What's stopping the client from just changing the money value themselves?&quot;</p>
+<p>So if the function was instead like:</p>
+<pre><code class="lang-cs">public override void _NetworkProcess(int _tick)
+{
+	base._NetworkProcess(_tick);
+	if (NetRunner.Instance.IsServer)
+	{
+		Money += 1;
+	} else if (NetRunner.Instance.IsClient)
+	{
+		Money += 100;
+	}
+}
+</code></pre>
+<p>Is the client now cheating and getting rich? Nope, because the server doesn't know/care about the change, and no other clients/players will know about it either.</p>
+<p>So the client will temporarily see its money jump +100, and then on the next tick (the next update it receives from the server) it will be immediately overwritten by the real value that the server sends it.</p>
+<p>Wondering what the client even uses <code>_NetworkProcess</code> for? Whenever the function is run, it means the client has an update of the latest game state, so it can do things to react to game state changes:</p>
+<pre><code class="lang-cs">using Godot;
+using Nebula;
+
+public partial class PlayableCharacter : NetNode3D
+{
+	[NetProperty]
+	public int Money { get; set; }
+
+	public bool IsRich = false;
+
+	public override void _NetworkProcess(int _tick)
+	{
+		base._NetworkProcess(_tick);
+		if (NetRunner.Instance.IsServer)
+		{
+			Money += 1;
+		}
+		
+		if (NetRunner.Instance.IsClient)  {
+			if (Money &gt; 100) {
+				if (!IsRich) {
+					IsRich = true;
+					ShowRichCelebration();
+				} 
+			} else {
+				IsRich = false;
+			}
+		}
+	}
+}
+</code></pre>
+<p>In this example, the client runs some code to determine if the player's latest Money value is high enough to be considered &quot;Rich&quot;.</p>
+<p>If they are, then they can trigger some special view/UI actions such as playing particle emitters, showing popup dialogs, etc. (Things that don't happen on the server.)</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Unlike the <code>Money</code> property, <code>IsRich</code> is not a <code>NetProperty</code>. This means that it doesn't live in the game network--so it never receives updates from the server--and the client can mutate it freely.</p>
+</div>
+<h2 id="inputs">Inputs</h2>
+<p>If the client cant make any changes to the game state, then how do they even play the game?</p>
+<p>That's what inputs and NetFunctions are for. Nebula supports sending an &quot;Input&quot;</p>
+<h2 id="state-awareness-or-interest-management">State &quot;awareness&quot; (or, Interest Management)</h2>
+<p>Interest Management is a feature for the server to decide <em>who</em> gets to see <em>what.</em> Think about a game with hidden information: another player's money or items; cards in a card game; &quot;fog of war&quot;; etc.</p>
+<p>The server decides what clients are allowed to see--what nodes and property changes they are notified of. The server can disable a client's &quot;interest&quot; in a NetProperty, which means that client will no longer receive updates about that NetProperty.</p>
+<p>To hide the Money from all clients:</p>
+<pre><code class="lang-cs">[NetProperty(InterestMask = (long)InterestLayers.None)]
+public int Money { get; set; }
+</code></pre>
+<p>Now whenever Money changes, the server will not send those updates to the connected clients. It is private to only the server.</p>
+<p>To show the money to all clients:</p>
+<pre><code class="lang-cs">[NetProperty(InterestMask = (long)InterestLayers.Everyone)]
+public int Money { get; set; }
+</code></pre>
+<p>Now the server will send the new money value to all clients on every tick. It's the default <code>InterestMask</code> actually, so you can just omit it entirely for the same effect.</p>
+<p>Perhaps the most important:</p>
+<pre><code class="lang-cs">[NetProperty(InterestMask = (long)InterestLayers.Owner)]
+public int Money { get; set; }
+</code></pre>
+<p>Now only the player who &quot;owns&quot; a NetNode will receive updates about that property.</p>
+<div class="TIP">
+<h5>Tip</h5>
+<p>You can also designate your own layers beyond these three. Think of it like a 'collision layer' in Godot. It's essentially a clean slate of layers for you to customize however you want. This can be useful for team games, factions, etc.</p>
+</div>
+<h2 id="lifecycle-overview">Lifecycle Overview</h2>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Heavenlode/Nebula/blob/0.10.0/Documentation/getting-started/network-lifecycle.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

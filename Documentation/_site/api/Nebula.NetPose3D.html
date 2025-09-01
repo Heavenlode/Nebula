@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class NetPose3D </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class NetPose3D ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Nebula.NetPose3D">
+
+
+
+  <h1 id="Nebula_NetPose3D" data-uid="Nebula.NetPose3D" class="text-break">
+Class NetPose3D  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Nebula.html">Nebula</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Nebula.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ScriptPath(&quot;res://addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs&quot;)]
+public class NetPose3D : RefCounted, IDisposable, INetSerializable&lt;NetPose3D&gt;, IBsonSerializable&lt;NetPose3D&gt;, IBsonSerializableBase</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">GodotObject</span></div>
+      <div><span class="xref">RefCounted</span></div>
+      <div><span class="xref">NetPose3D</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+      <div><a class="xref" href="Nebula.Serialization.INetSerializable-1.html">INetSerializable</a>&lt;<a class="xref" href="Nebula.NetPose3D.html">NetPose3D</a>&gt;</div>
+      <div><a class="xref" href="Nebula.Serialization.IBsonSerializable-1.html">IBsonSerializable</a>&lt;<a class="xref" href="Nebula.NetPose3D.html">NetPose3D</a>&gt;</div>
+      <div><a class="xref" href="Nebula.Serialization.IBsonSerializableBase.html">IBsonSerializableBase</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <span class="xref">RefCounted.InitRef()</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.Reference()</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.Unreference()</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.GetReferenceCount()</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.InvokeGodotClassMethod(in godot_string_name, NativeVariantPtrArgs, out godot_variant)</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.HasGodotClassMethod(in godot_string_name)</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.HasGodotClassSignal(in godot_string_name)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotificationPostinitialize</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotificationPredelete</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotificationExtensionReloaded</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">GodotObject.InstanceFromId(ulong)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">GodotObject.IsInstanceIdValid(ulong)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsInstanceValid(GodotObject)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.WeakRef(GodotObject)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Dispose()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">GodotObject.Dispose(bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.ToSignal(GodotObject, StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._Get(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._GetPropertyList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._IterGet(Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._IterInit(Array)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._IterNext(Array)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">GodotObject._Notification(int)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject._PropertyCanRevert(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._PropertyGetRevert(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._Set(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._ValidateProperty(Dictionary)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Free()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetClass()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">GodotObject.IsClass(string)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Set(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Get(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetIndexed(NodePath, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetIndexed(NodePath)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetPropertyList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMethodList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.PropertyCanRevert(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.PropertyGetRevert(StringName)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">GodotObject.Notification(int, bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetInstanceId()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetScript(Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetScript()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetMeta(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.RemoveMeta(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMeta(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasMeta(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMetaList()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">GodotObject.AddUserSignal(string, Array)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasUserSignal(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.RemoveUserSignal(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.EmitSignal(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">GodotObject.EmitSignal(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Call(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">GodotObject.Call(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.CallDeferred(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">GodotObject.CallDeferred(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetDeferred(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Callv(StringName, Array)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasMethod(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMethodArgumentCount(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasSignal(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetSignalList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetSignalConnectionList(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetIncomingConnections()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">GodotObject.Connect(StringName, Callable, uint)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Disconnect(StringName, Callable)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsConnected(StringName, Callable)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasConnections(StringName)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">GodotObject.SetBlockSignals(bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsBlockingSignals()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotifyPropertyListChanged()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">GodotObject.SetMessageTranslation(bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.CanTranslateMessages()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Tr(StringName, StringName)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">GodotObject.TrN(StringName, StringName, int, StringName)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetTranslationDomain()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetTranslationDomain(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsQueuedForDeletion()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.CancelFree()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.EmitSignalScriptChanged()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.EmitSignalPropertyListChanged()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NativeInstance</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.ScriptChanged</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.PropertyListChanged</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Nebula_NetPose3D__ctor_" data-uid="Nebula.NetPose3D.#ctor*"></a>
+
+  <h3 id="Nebula_NetPose3D__ctor" data-uid="Nebula.NetPose3D.#ctor">
+  NetPose3D()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetPose3D()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Nebula_NetPose3D_KeyframeFrequency" data-uid="Nebula.NetPose3D.KeyframeFrequency">
+  KeyframeFrequency
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int KeyframeFrequency</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Nebula_NetPose3D_Owner" data-uid="Nebula.NetPose3D.Owner">
+  Owner
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ENetPacketPeer Owner</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">ENetPacketPeer</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Nebula_NetPose3D_ClientState_" data-uid="Nebula.NetPose3D.ClientState*"></a>
+
+  <h3 id="Nebula_NetPose3D_ClientState" data-uid="Nebula.NetPose3D.ClientState">
+  ClientState
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetPose3D.ChangeType ClientState { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetPose3D.html">NetPose3D</a>.<a class="xref" href="Nebula.NetPose3D.ChangeType.html">ChangeType</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetPose3D_Position_" data-uid="Nebula.NetPose3D.Position*"></a>
+
+  <h3 id="Nebula_NetPose3D_Position" data-uid="Nebula.NetPose3D.Position">
+  Position
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 Position { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Vector3</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetPose3D_Rotation_" data-uid="Nebula.NetPose3D.Rotation*"></a>
+
+  <h3 id="Nebula_NetPose3D_Rotation" data-uid="Nebula.NetPose3D.Rotation">
+  Rotation
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 Rotation { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Vector3</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Nebula_NetPose3D_ApplyDelta_" data-uid="Nebula.NetPose3D.ApplyDelta*"></a>
+
+  <h3 id="Nebula_NetPose3D_ApplyDelta_Godot_Vector3_Godot_Vector3_" data-uid="Nebula.NetPose3D.ApplyDelta(Godot.Vector3,Godot.Vector3)">
+  ApplyDelta(Vector3, Vector3)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Applies a position and rotation change based on Vector3 values.
+Position deltas are sent as shorts with 0.1 unit precision, allowing ±3276.7 units per tick.
+Rotation deltas are sent as shorts with 0.01 degree precision, allowing ±327.67 degrees per tick.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ApplyDelta(Vector3 newPosition, Vector3 newRotation)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>newPosition</code> <span class="xref">Vector3</span></dt>
+    <dd></dd>
+    <dt><code>newRotation</code> <span class="xref">Vector3</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetPose3D_ApplyKeyframe_" data-uid="Nebula.NetPose3D.ApplyKeyframe*"></a>
+
+  <h3 id="Nebula_NetPose3D_ApplyKeyframe_Godot_Vector3_Godot_Vector3_" data-uid="Nebula.NetPose3D.ApplyKeyframe(Godot.Vector3,Godot.Vector3)">
+  ApplyKeyframe(Vector3, Vector3)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ApplyKeyframe(Vector3 position, Vector3 rotation)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>position</code> <span class="xref">Vector3</span></dt>
+    <dd></dd>
+    <dt><code>rotation</code> <span class="xref">Vector3</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetPose3D_BsonSerialize_" data-uid="Nebula.NetPose3D.BsonSerialize*"></a>
+
+  <h3 id="Nebula_NetPose3D_BsonSerialize_Godot_Variant_" data-uid="Nebula.NetPose3D.BsonSerialize(Godot.Variant)">
+  BsonSerialize(Variant)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BsonValue BsonSerialize(Variant context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>context</code> <span class="xref">Variant</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">BsonValue</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetPose3D_EmitSignalOnChange_" data-uid="Nebula.NetPose3D.EmitSignalOnChange*"></a>
+
+  <h3 id="Nebula_NetPose3D_EmitSignalOnChange" data-uid="Nebula.NetPose3D.EmitSignalOnChange">
+  EmitSignalOnChange()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetPose3D_ScriptSignals.generated.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void EmitSignalOnChange()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetPose3D_NetworkProcess_" data-uid="Nebula.NetPose3D.NetworkProcess*"></a>
+
+  <h3 id="Nebula_NetPose3D_NetworkProcess_Nebula_WorldRunner_" data-uid="Nebula.NetPose3D.NetworkProcess(Nebula.WorldRunner)">
+  NetworkProcess(WorldRunner)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void NetworkProcess(WorldRunner currentWorld)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>currentWorld</code> <a class="xref" href="Nebula.WorldRunner.html">WorldRunner</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="events">Events
+</h2>
+
+
+
+  <h3 id="Nebula_NetPose3D_OnChange" data-uid="Nebula.NetPose3D.OnChange">
+  OnChange
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetPose3D_ScriptSignals.generated.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event NetPose3D.OnChangeEventHandler OnChange</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetPose3D.html">NetPose3D</a>.<a class="xref" href="Nebula.NetPose3D.OnChangeEventHandler.html">OnChangeEventHandler</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+  <h2 class="section" id="eii">Explicit Interface Implementations
+</h2>
+
+
+  <a id="Nebula_NetPose3D_BsonDeserialize_" data-uid="Nebula.NetPose3D.BsonDeserialize*"></a>
+
+  <h3 id="Nebula_NetPose3D_BsonDeserialize_Godot_Variant_System_Byte___Nebula_NetPose3D_" data-uid="Nebula.NetPose3D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetPose3D)">
+  BsonDeserialize(Variant, byte[], NetPose3D)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static NetPose3D BsonDeserialize(Variant context, byte[] bson, NetPose3D initialObject)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>context</code> <span class="xref">Variant</span></dt>
+    <dd></dd>
+    <dt><code>bson</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+    <dt><code>initialObject</code> <a class="xref" href="Nebula.NetPose3D.html">NetPose3D</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetPose3D.html">NetPose3D</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetPose3D_GetDeserializeContext_" data-uid="Nebula.NetPose3D.GetDeserializeContext*"></a>
+
+  <h3 id="Nebula_NetPose3D_GetDeserializeContext_Nebula_NetPose3D_" data-uid="Nebula.NetPose3D.GetDeserializeContext(Nebula.NetPose3D)">
+  GetDeserializeContext(NetPose3D)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static Variant GetDeserializeContext(NetPose3D obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="Nebula.NetPose3D.html">NetPose3D</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Variant</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetPose3D_NetworkDeserialize_" data-uid="Nebula.NetPose3D.NetworkDeserialize*"></a>
+
+  <h3 id="Nebula_NetPose3D_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_" data-uid="Nebula.NetPose3D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)">
+  NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static NetPose3D NetworkDeserialize(WorldRunner currentWorld, ENetPacketPeer peer, HLBuffer buffer, Variant ctx)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>currentWorld</code> <a class="xref" href="Nebula.WorldRunner.html">WorldRunner</a></dt>
+    <dd></dd>
+    <dt><code>peer</code> <span class="xref">ENetPacketPeer</span></dt>
+    <dd></dd>
+    <dt><code>buffer</code> <a class="xref" href="Nebula.Serialization.HLBuffer.html">HLBuffer</a></dt>
+    <dd></dd>
+    <dt><code>ctx</code> <span class="xref">Variant</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetPose3D.html">NetPose3D</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetPose3D_NetworkSerialize_" data-uid="Nebula.NetPose3D.NetworkSerialize*"></a>
+
+  <h3 id="Nebula_NetPose3D_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_NetPose3D_" data-uid="Nebula.NetPose3D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetPose3D)">
+  NetworkSerialize(WorldRunner, ENetPacketPeer, NetPose3D)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static HLBuffer NetworkSerialize(WorldRunner currentWorld, ENetPacketPeer peer, NetPose3D obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>currentWorld</code> <a class="xref" href="Nebula.WorldRunner.html">WorldRunner</a></dt>
+    <dd></dd>
+    <dt><code>peer</code> <span class="xref">ENetPacketPeer</span></dt>
+    <dd></dd>
+    <dt><code>obj</code> <a class="xref" href="Nebula.NetPose3D.html">NetPose3D</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.Serialization.HLBuffer.html">HLBuffer</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

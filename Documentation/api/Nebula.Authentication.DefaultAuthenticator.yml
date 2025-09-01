@@ -1,0 +1,469 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Authentication.DefaultAuthenticator
+  commentId: T:Nebula.Authentication.DefaultAuthenticator
+  id: DefaultAuthenticator
+  parent: Nebula.Authentication
+  children:
+  - Nebula.Authentication.DefaultAuthenticator.#ctor
+  - Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer
+  - Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  langs:
+  - csharp
+  - vb
+  name: DefaultAuthenticator
+  nameWithType: DefaultAuthenticator
+  fullName: Nebula.Authentication.DefaultAuthenticator
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Authentication
+  syntax:
+    content: 'public class DefaultAuthenticator : IAuthenticator'
+    content.vb: Public Class DefaultAuthenticator Implements IAuthenticator
+  inheritance:
+  - System.Object
+  implements:
+  - Nebula.Authentication.IAuthenticator
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer
+  commentId: M:Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer
+  id: ClientAuthenticateWithServer
+  parent: Nebula.Authentication.DefaultAuthenticator
+  langs:
+  - csharp
+  - vb
+  name: ClientAuthenticateWithServer()
+  nameWithType: DefaultAuthenticator.ClientAuthenticateWithServer()
+  fullName: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Authentication
+  example: []
+  syntax:
+    content: public void ClientAuthenticateWithServer()
+    content.vb: Public Sub ClientAuthenticateWithServer()
+  overload: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer*
+  implements:
+  - Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
+- uid: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  commentId: M:Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  id: ServerAuthenticateClient(Godot.ENetPacketPeer)
+  parent: Nebula.Authentication.DefaultAuthenticator
+  langs:
+  - csharp
+  - vb
+  name: ServerAuthenticateClient(ENetPacketPeer)
+  nameWithType: DefaultAuthenticator.ServerAuthenticateClient(ENetPacketPeer)
+  fullName: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Authentication
+  example: []
+  syntax:
+    content: public void ServerAuthenticateClient(ENetPacketPeer peer)
+    parameters:
+    - id: peer
+      type: Godot.ENetPacketPeer
+    content.vb: Public Sub ServerAuthenticateClient(peer As ENetPacketPeer)
+  overload: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient*
+  implements:
+  - Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+- uid: Nebula.Authentication.DefaultAuthenticator.#ctor
+  commentId: M:Nebula.Authentication.DefaultAuthenticator.#ctor
+  id: '#ctor'
+  parent: Nebula.Authentication.DefaultAuthenticator
+  langs:
+  - csharp
+  - vb
+  name: DefaultAuthenticator()
+  nameWithType: DefaultAuthenticator.DefaultAuthenticator()
+  fullName: Nebula.Authentication.DefaultAuthenticator.DefaultAuthenticator()
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Authentication
+  syntax:
+    content: public DefaultAuthenticator()
+    content.vb: Public Sub New()
+  overload: Nebula.Authentication.DefaultAuthenticator.#ctor*
+  nameWithType.vb: DefaultAuthenticator.New()
+  fullName.vb: Nebula.Authentication.DefaultAuthenticator.New()
+  name.vb: New()
+references:
+- uid: Nebula.Authentication
+  commentId: N:Nebula.Authentication
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Authentication
+  nameWithType: Nebula.Authentication
+  fullName: Nebula.Authentication
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Authentication
+    name: Authentication
+    isExternal: true
+    href: Nebula.Authentication.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Authentication
+    name: Authentication
+    isExternal: true
+    href: Nebula.Authentication.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Nebula.Authentication.IAuthenticator
+  commentId: T:Nebula.Authentication.IAuthenticator
+  parent: Nebula.Authentication
+  isExternal: true
+  href: Nebula.Authentication.IAuthenticator.html
+  name: IAuthenticator
+  nameWithType: IAuthenticator
+  fullName: Nebula.Authentication.IAuthenticator
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer*
+  commentId: Overload:Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer
+  isExternal: true
+  href: Nebula.Authentication.DefaultAuthenticator.html#Nebula_Authentication_DefaultAuthenticator_ClientAuthenticateWithServer
+  name: ClientAuthenticateWithServer
+  nameWithType: DefaultAuthenticator.ClientAuthenticateWithServer
+  fullName: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer
+- uid: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
+  commentId: M:Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
+  parent: Nebula.Authentication.IAuthenticator
+  isExternal: true
+  href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
+  name: ClientAuthenticateWithServer()
+  nameWithType: IAuthenticator.ClientAuthenticateWithServer()
+  fullName: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer()
+  spec.csharp:
+  - uid: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
+    name: ClientAuthenticateWithServer
+    isExternal: true
+    href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
+    name: ClientAuthenticateWithServer
+    isExternal: true
+    href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
+  - name: (
+  - name: )
+- uid: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient*
+  commentId: Overload:Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient
+  isExternal: true
+  href: Nebula.Authentication.DefaultAuthenticator.html#Nebula_Authentication_DefaultAuthenticator_ServerAuthenticateClient_Godot_ENetPacketPeer_
+  name: ServerAuthenticateClient
+  nameWithType: DefaultAuthenticator.ServerAuthenticateClient
+  fullName: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient
+- uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  commentId: M:Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  parent: Nebula.Authentication.IAuthenticator
+  isExternal: true
+  href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_Godot_ENetPacketPeer_
+  name: ServerAuthenticateClient(ENetPacketPeer)
+  nameWithType: IAuthenticator.ServerAuthenticateClient(ENetPacketPeer)
+  fullName: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  spec.csharp:
+  - uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+    name: ServerAuthenticateClient
+    isExternal: true
+    href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_Godot_ENetPacketPeer_
+  - name: (
+  - uid: Godot.ENetPacketPeer
+    name: ENetPacketPeer
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+    name: ServerAuthenticateClient
+    isExternal: true
+    href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_Godot_ENetPacketPeer_
+  - name: (
+  - uid: Godot.ENetPacketPeer
+    name: ENetPacketPeer
+    isExternal: true
+  - name: )
+- uid: Godot.ENetPacketPeer
+  commentId: T:Godot.ENetPacketPeer
+  parent: Godot
+  isExternal: true
+  name: ENetPacketPeer
+  nameWithType: ENetPacketPeer
+  fullName: Godot.ENetPacketPeer
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.Authentication.DefaultAuthenticator.#ctor*
+  commentId: Overload:Nebula.Authentication.DefaultAuthenticator.#ctor
+  isExternal: true
+  href: Nebula.Authentication.DefaultAuthenticator.html#Nebula_Authentication_DefaultAuthenticator__ctor
+  name: DefaultAuthenticator
+  nameWithType: DefaultAuthenticator.DefaultAuthenticator
+  fullName: Nebula.Authentication.DefaultAuthenticator.DefaultAuthenticator
+  nameWithType.vb: DefaultAuthenticator.New
+  fullName.vb: Nebula.Authentication.DefaultAuthenticator.New
+  name.vb: New

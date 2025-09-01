@@ -1,0 +1,100 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetProperty.SyncFlags
+  commentId: T:Nebula.NetProperty.SyncFlags
+  id: NetProperty.SyncFlags
+  parent: Nebula
+  children:
+  - Nebula.NetProperty.SyncFlags.LinearInterpolation
+  - Nebula.NetProperty.SyncFlags.LossyConsistency
+  langs:
+  - csharp
+  - vb
+  name: NetProperty.SyncFlags
+  nameWithType: NetProperty.SyncFlags
+  fullName: Nebula.NetProperty.SyncFlags
+  type: Enum
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetProperty.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public enum NetProperty.SyncFlags
+    content.vb: Public Enum NetProperty.SyncFlags
+- uid: Nebula.NetProperty.SyncFlags.LinearInterpolation
+  commentId: F:Nebula.NetProperty.SyncFlags.LinearInterpolation
+  id: LinearInterpolation
+  parent: Nebula.NetProperty.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: LinearInterpolation
+  nameWithType: NetProperty.SyncFlags.LinearInterpolation
+  fullName: Nebula.NetProperty.SyncFlags.LinearInterpolation
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetProperty.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: LinearInterpolation = 1
+    return:
+      type: Nebula.NetProperty.SyncFlags
+- uid: Nebula.NetProperty.SyncFlags.LossyConsistency
+  commentId: F:Nebula.NetProperty.SyncFlags.LossyConsistency
+  id: LossyConsistency
+  parent: Nebula.NetProperty.SyncFlags
+  langs:
+  - csharp
+  - vb
+  name: LossyConsistency
+  nameWithType: NetProperty.SyncFlags.LossyConsistency
+  fullName: Nebula.NetProperty.SyncFlags.LossyConsistency
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetProperty.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: LossyConsistency = 2
+    return:
+      type: Nebula.NetProperty.SyncFlags
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.NetProperty.SyncFlags
+  commentId: T:Nebula.NetProperty.SyncFlags
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetProperty.html
+  name: NetProperty.SyncFlags
+  nameWithType: NetProperty.SyncFlags
+  fullName: Nebula.NetProperty.SyncFlags
+  spec.csharp:
+  - uid: Nebula.NetProperty
+    name: NetProperty
+    isExternal: true
+    href: Nebula.NetProperty.html
+  - name: .
+  - uid: Nebula.NetProperty.SyncFlags
+    name: SyncFlags
+    isExternal: true
+    href: Nebula.NetProperty.SyncFlags.html
+  spec.vb:
+  - uid: Nebula.NetProperty
+    name: NetProperty
+    isExternal: true
+    href: Nebula.NetProperty.html
+  - name: .
+  - uid: Nebula.NetProperty.SyncFlags
+    name: SyncFlags
+    isExternal: true
+    href: Nebula.NetProperty.SyncFlags.html

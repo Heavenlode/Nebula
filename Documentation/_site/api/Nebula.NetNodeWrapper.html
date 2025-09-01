@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class NetNodeWrapper </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class NetNodeWrapper ">
+      
+      <meta name="description" content="Helper class to safely interface with NetNodes across languages (e.g. C#, GDScript) or in situations where the node type is unknown.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Nebula.NetNodeWrapper">
+
+
+
+  <h1 id="Nebula_NetNodeWrapper" data-uid="Nebula.NetNodeWrapper" class="text-break">
+Class NetNodeWrapper  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNodeWrapper_ScriptMethods.generated.cs"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Nebula.html">Nebula</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Nebula.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Helper class to safely interface with NetNodes across languages (e.g. C#, GDScript) or in situations where the node type is unknown.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ScriptPath(&quot;res://addons/Nebula/Core/NetNodeWrapper.cs&quot;)]
+public class NetNodeWrapper : RefCounted, IDisposable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">GodotObject</span></div>
+      <div><span class="xref">RefCounted</span></div>
+      <div><span class="xref">NetNodeWrapper</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <span class="xref">RefCounted.InitRef()</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.Reference()</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.Unreference()</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.GetReferenceCount()</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.InvokeGodotClassMethod(in godot_string_name, NativeVariantPtrArgs, out godot_variant)</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.HasGodotClassMethod(in godot_string_name)</span>
+    </div>
+    <div>
+      <span class="xref">RefCounted.HasGodotClassSignal(in godot_string_name)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotificationPostinitialize</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotificationPredelete</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotificationExtensionReloaded</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">GodotObject.InstanceFromId(ulong)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">GodotObject.IsInstanceIdValid(ulong)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsInstanceValid(GodotObject)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.WeakRef(GodotObject)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Dispose()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">GodotObject.Dispose(bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.ToSignal(GodotObject, StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._Get(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._GetPropertyList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._IterGet(Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._IterInit(Array)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._IterNext(Array)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">GodotObject._Notification(int)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject._PropertyCanRevert(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._PropertyGetRevert(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._Set(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._ValidateProperty(Dictionary)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Free()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetClass()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">GodotObject.IsClass(string)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Set(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Get(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetIndexed(NodePath, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetIndexed(NodePath)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetPropertyList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMethodList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.PropertyCanRevert(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.PropertyGetRevert(StringName)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">GodotObject.Notification(int, bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetInstanceId()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetScript(Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetScript()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetMeta(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.RemoveMeta(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMeta(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasMeta(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMetaList()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">GodotObject.AddUserSignal(string, Array)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasUserSignal(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.RemoveUserSignal(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.EmitSignal(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">GodotObject.EmitSignal(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Call(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">GodotObject.Call(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.CallDeferred(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">GodotObject.CallDeferred(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetDeferred(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Callv(StringName, Array)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasMethod(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMethodArgumentCount(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasSignal(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetSignalList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetSignalConnectionList(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetIncomingConnections()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">GodotObject.Connect(StringName, Callable, uint)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Disconnect(StringName, Callable)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsConnected(StringName, Callable)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasConnections(StringName)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">GodotObject.SetBlockSignals(bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsBlockingSignals()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotifyPropertyListChanged()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">GodotObject.SetMessageTranslation(bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.CanTranslateMessages()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Tr(StringName, StringName)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">GodotObject.TrN(StringName, StringName, int, StringName)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetTranslationDomain()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetTranslationDomain(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsQueuedForDeletion()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.CancelFree()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.EmitSignalScriptChanged()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.EmitSignalPropertyListChanged()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NativeInstance</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.ScriptChanged</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.PropertyListChanged</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Nebula_NetNodeWrapper_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This class automatically handles NetNode validation. For example:</p>
+<pre><code class="lang-csharp">var maybeNetNode = new NetNodeWrapper(GetNodeOrNull("MyAmbiguousNode"));
+// If MyAmbiguousNode is not a NetNode, maybeNetNode == null</code></pre>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Nebula_NetNodeWrapper__ctor_" data-uid="Nebula.NetNodeWrapper.#ctor*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper__ctor_Godot_Node_" data-uid="Nebula.NetNodeWrapper.#ctor(Godot.Node)">
+  NetNodeWrapper(Node)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetNodeWrapper(Node node)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>node</code> <span class="xref">Node</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Nebula_NetNodeWrapper_CurrentWorld_" data-uid="Nebula.NetNodeWrapper.CurrentWorld*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_CurrentWorld" data-uid="Nebula.NetNodeWrapper.CurrentWorld">
+  CurrentWorld
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WorldRunner CurrentWorld { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.WorldRunner.html">WorldRunner</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_InputAuthority_" data-uid="Nebula.NetNodeWrapper.InputAuthority*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_InputAuthority" data-uid="Nebula.NetNodeWrapper.InputAuthority">
+  InputAuthority
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ENetPacketPeer InputAuthority { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">ENetPacketPeer</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_InterestLayers_" data-uid="Nebula.NetNodeWrapper.InterestLayers*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_InterestLayers" data-uid="Nebula.NetNodeWrapper.InterestLayers">
+  InterestLayers
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;UUID, long&gt; InterestLayers { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Dictionary</span>&lt;<a class="xref" href="Nebula.UUID.html">UUID</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_IsClientSpawn_" data-uid="Nebula.NetNodeWrapper.IsClientSpawn*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_IsClientSpawn" data-uid="Nebula.NetNodeWrapper.IsClientSpawn">
+  IsClientSpawn
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsClientSpawn { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_NetId_" data-uid="Nebula.NetNodeWrapper.NetId*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_NetId" data-uid="Nebula.NetNodeWrapper.NetId">
+  NetId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetId NetId { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetId.html">NetId</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_NetParent_" data-uid="Nebula.NetNodeWrapper.NetParent*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_NetParent" data-uid="Nebula.NetNodeWrapper.NetParent">
+  NetParent
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetNodeWrapper NetParent { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetNodeWrapper.html">NetNodeWrapper</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_NetParentId_" data-uid="Nebula.NetNodeWrapper.NetParentId*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_NetParentId" data-uid="Nebula.NetNodeWrapper.NetParentId">
+  NetParentId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetId NetParentId { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetId.html">NetId</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_Network_" data-uid="Nebula.NetNodeWrapper.Network*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_Network" data-uid="Nebula.NetNodeWrapper.Network">
+  Network
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetworkController Network { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetworkController.html">NetworkController</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_Node_" data-uid="Nebula.NetNodeWrapper.Node*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_Node" data-uid="Nebula.NetNodeWrapper.Node">
+  Node
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Node Node { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Node</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_Serializers_" data-uid="Nebula.NetNodeWrapper.Serializers*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_Serializers" data-uid="Nebula.NetNodeWrapper.Serializers">
+  Serializers
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IStateSerializer[] Serializers { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.Serialization.Serializers.IStateSerializer.html">IStateSerializer</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_StaticNetworkChildren_" data-uid="Nebula.NetNodeWrapper.StaticNetworkChildren*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_StaticNetworkChildren" data-uid="Nebula.NetNodeWrapper.StaticNetworkChildren">
+  StaticNetworkChildren
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Array&lt;NetNodeWrapper&gt; StaticNetworkChildren { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Array</span>&lt;<a class="xref" href="Nebula.NetNodeWrapper.html">NetNodeWrapper</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Nebula_NetNodeWrapper_GetNetworkInput_" data-uid="Nebula.NetNodeWrapper.GetNetworkInput*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_GetNetworkInput_System_Byte_Godot_Variant_" data-uid="Nebula.NetNodeWrapper.GetNetworkInput(System.Byte,Godot.Variant)">
+  GetNetworkInput(byte, Variant)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Variant GetNetworkInput(byte input, Variant defaultValue)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>input</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd></dd>
+    <dt><code>defaultValue</code> <span class="xref">Variant</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Variant</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_IsNetScene_" data-uid="Nebula.NetNodeWrapper.IsNetScene*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_IsNetScene" data-uid="Nebula.NetNodeWrapper.IsNetScene">
+  IsNetScene()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsNetScene()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_SetNetworkInput_" data-uid="Nebula.NetNodeWrapper.SetNetworkInput*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_SetNetworkInput_System_Byte_Godot_Variant_" data-uid="Nebula.NetNodeWrapper.SetNetworkInput(System.Byte,Godot.Variant)">
+  SetNetworkInput(byte, Variant)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetNetworkInput(byte input, Variant value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>input</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd></dd>
+    <dt><code>value</code> <span class="xref">Variant</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_SetPeerInterest_" data-uid="Nebula.NetNodeWrapper.SetPeerInterest*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_SetPeerInterest_Nebula_UUID_System_Int64_System_Boolean_" data-uid="Nebula.NetNodeWrapper.SetPeerInterest(Nebula.UUID,System.Int64,System.Boolean)">
+  SetPeerInterest(UUID, long, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetPeerInterest(UUID peerId, long interestLayers, bool recurse = true)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>peerId</code> <a class="xref" href="Nebula.UUID.html">UUID</a></dt>
+    <dd></dd>
+    <dt><code>interestLayers</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+    <dt><code>recurse</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper__NetworkProcess_" data-uid="Nebula.NetNodeWrapper._NetworkProcess*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper__NetworkProcess_System_Int32_" data-uid="Nebula.NetNodeWrapper._NetworkProcess(System.Int32)">
+  _NetworkProcess(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void _NetworkProcess(int tick)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tick</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="Nebula_NetNodeWrapper_op_Equality_" data-uid="Nebula.NetNodeWrapper.op_Equality*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_op_Equality_Nebula_NetNodeWrapper_Nebula_NetNodeWrapper_" data-uid="Nebula.NetNodeWrapper.op_Equality(Nebula.NetNodeWrapper,Nebula.NetNodeWrapper)">
+  operator ==(NetNodeWrapper, NetNodeWrapper)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(NetNodeWrapper a, NetNodeWrapper b)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>a</code> <a class="xref" href="Nebula.NetNodeWrapper.html">NetNodeWrapper</a></dt>
+    <dd></dd>
+    <dt><code>b</code> <a class="xref" href="Nebula.NetNodeWrapper.html">NetNodeWrapper</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNodeWrapper_op_Inequality_" data-uid="Nebula.NetNodeWrapper.op_Inequality*"></a>
+
+  <h3 id="Nebula_NetNodeWrapper_op_Inequality_Nebula_NetNodeWrapper_Nebula_NetNodeWrapper_" data-uid="Nebula.NetNodeWrapper.op_Inequality(Nebula.NetNodeWrapper,Nebula.NetNodeWrapper)">
+  operator !=(NetNodeWrapper, NetNodeWrapper)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNodeWrapper.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(NetNodeWrapper a, NetNodeWrapper b)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>a</code> <a class="xref" href="Nebula.NetNodeWrapper.html">NetNodeWrapper</a></dt>
+    <dd></dd>
+    <dt><code>b</code> <a class="xref" href="Nebula.NetNodeWrapper.html">NetNodeWrapper</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNodeWrapper_ScriptMethods.generated.cs" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

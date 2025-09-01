@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace Nebula </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace Nebula ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Nebula">
+
+  <h1 id="Nebula" data-uid="Nebula" class="text-break">Namespace Nebula</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetFunction.html">NetFunction</a></dt>
+      <dd><p>Marks a method as a network function. Similar to an RPC.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetId.html">NetId</a></dt>
+      <dd><p>A unique identifier for a networked object. The NetId for a node is different between the server and client. On the client side, a NetId is only a byte, whereas on the server side it is an int64. The server's <a class="xref" href="Nebula.WorldRunner.html">WorldRunner</a> keeps a map of all NetIds to their corresponding value on each client for serialization.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetId.MethodName.html">NetId.MethodName</a></dt>
+      <dd><p>Cached StringNames for the methods contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetId.PropertyName.html">NetId.PropertyName</a></dt>
+      <dd><p>Cached StringNames for the properties and fields contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetId.SignalName.html">NetId.SignalName</a></dt>
+      <dd><p>Cached StringNames for the signals contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode.html">NetNode</a></dt>
+      <dd><p><a class="xref" href="Nebula.NetNode.html#Nebula_NetNode_Node">Node</a>, extended with Nebula networking capabilities. This is the most basic networked object.
+On every network tick, all NetNode nodes in the scene tree automatically have their <a class="xref" href="Nebula.NetProperty.html">network properties</a> updated with the latest data from the server.
+Then, the special <a class="xref" href="Nebula.NetNode.html#Nebula_NetNode__NetworkProcess_System_Int32_">NetworkProcess</a> method is called, which indicates that a network Tick has occurred.
+Network properties can only update on the server side.
+For a client to update network properties, they must send client inputs to the server via implementing the INetworkInputHandler interface, or network function calls via <a class="xref" href="Nebula.NetFunction.html">NetFunction</a> attributes.
+The server receives client inputs, can access them via <a class="xref" href="Nebula.NetworkController.html#Nebula_NetworkController_GetInput">GetInput()</a>, and handle them accordingly within <a class="xref" href="Nebula.NetNode.html#Nebula_NetNode__NetworkProcess_System_Int32_">NetworkProcess</a> to mutate state.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode.MethodName.html">NetNode.MethodName</a></dt>
+      <dd><p>Cached StringNames for the methods contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode.PropertyName.html">NetNode.PropertyName</a></dt>
+      <dd><p>Cached StringNames for the properties and fields contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode.SignalName.html">NetNode.SignalName</a></dt>
+      <dd><p>Cached StringNames for the signals contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode2D.html">NetNode2D</a></dt>
+      <dd><p><span class="xref">Node2D</span>, extended with Nebula networking capabilities. This is the most basic networked 2D object.
+See <a class="xref" href="Nebula.NetNode.html">NetNode</a> for more information.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode2D.MethodName.html">NetNode2D.MethodName</a></dt>
+      <dd><p>Cached StringNames for the methods contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode2D.PropertyName.html">NetNode2D.PropertyName</a></dt>
+      <dd><p>Cached StringNames for the properties and fields contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode2D.SignalName.html">NetNode2D.SignalName</a></dt>
+      <dd><p>Cached StringNames for the signals contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode3D.html">NetNode3D</a></dt>
+      <dd><p><span class="xref">Node3D</span>, extended with Nebula networking capabilities. This is the most basic networked 3D object.
+See <a class="xref" href="Nebula.NetNode.html">NetNode</a> for more information.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode3D.MethodName.html">NetNode3D.MethodName</a></dt>
+      <dd><p>Cached StringNames for the methods contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode3D.PropertyName.html">NetNode3D.PropertyName</a></dt>
+      <dd><p>Cached StringNames for the properties and fields contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNode3D.SignalName.html">NetNode3D.SignalName</a></dt>
+      <dd><p>Cached StringNames for the signals contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNodeWrapper.html">NetNodeWrapper</a></dt>
+      <dd><p>Helper class to safely interface with NetNodes across languages (e.g. C#, GDScript) or in situations where the node type is unknown.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNodeWrapper.MethodName.html">NetNodeWrapper.MethodName</a></dt>
+      <dd><p>Cached StringNames for the methods contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNodeWrapper.PropertyName.html">NetNodeWrapper.PropertyName</a></dt>
+      <dd><p>Cached StringNames for the properties and fields contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetNodeWrapper.SignalName.html">NetNodeWrapper.SignalName</a></dt>
+      <dd><p>Cached StringNames for the signals contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetPose3D.html">NetPose3D</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetPose3D.MethodName.html">NetPose3D.MethodName</a></dt>
+      <dd><p>Cached StringNames for the methods contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetPose3D.PropertyName.html">NetPose3D.PropertyName</a></dt>
+      <dd><p>Cached StringNames for the properties and fields contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetPose3D.SignalName.html">NetPose3D.SignalName</a></dt>
+      <dd><p>Cached StringNames for the signals contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetProperty.html">NetProperty</a></dt>
+      <dd><p>Mark a property as being Networked.
+The <a class="xref" href="Nebula.WorldRunner.html">WorldRunner</a> automatically processes these through the <a class="xref" href="Nebula.Serialization.Serializers.NetPropertiesSerializer.html">NetPropertiesSerializer</a> to be optimally sent across the network.
+Only changes are networked.
+When the NetNode receives a change on the property, it will also attempt to call a method <pre><code class="lang-csharp">NetNode.OnNetworkChange{PropertyName}(int tick, T oldValue, T newValue)</code></pre> on the client side if it exists.
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetRunner.html">NetRunner</a></dt>
+      <dd><p>The primary network manager for server and client. NetRunner handles the ENet stream and passing that data to the correct objects. For more information on what kind of data is sent and received on what channels, see <a class="xref" href="Nebula.NetRunner.ENetChannelId.html">NetRunner.ENetChannelId</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetRunner.MethodName.html">NetRunner.MethodName</a></dt>
+      <dd><p>Cached StringNames for the methods contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetRunner.PropertyName.html">NetRunner.PropertyName</a></dt>
+      <dd><p>Cached StringNames for the properties and fields contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetRunner.SignalName.html">NetRunner.SignalName</a></dt>
+      <dd><p>Cached StringNames for the signals contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetworkController.html">NetworkController</a></dt>
+      <dd><p>Manages the network state of a <a class="xref" href="Nebula.NetNode.html">NetNode</a> (including <a class="xref" href="Nebula.NetNode2D.html">NetNode2D</a> and <a class="xref" href="Nebula.NetNode3D.html">NetNode3D</a>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetworkController.MethodName.html">NetworkController.MethodName</a></dt>
+      <dd><p>Cached StringNames for the methods contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetworkController.PropertyName.html">NetworkController.PropertyName</a></dt>
+      <dd><p>Cached StringNames for the properties and fields contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetworkController.SignalName.html">NetworkController.SignalName</a></dt>
+      <dd><p>Cached StringNames for the signals contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.UUID.html">UUID</a></dt>
+      <dd><p>A UUID implementation for Nebula. Serializes into 16 bytes.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.UUID.MethodName.html">UUID.MethodName</a></dt>
+      <dd><p>Cached StringNames for the methods contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.UUID.PropertyName.html">UUID.PropertyName</a></dt>
+      <dd><p>Cached StringNames for the properties and fields contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.UUID.SignalName.html">UUID.SignalName</a></dt>
+      <dd><p>Cached StringNames for the signals contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.WorldRunner.html">WorldRunner</a></dt>
+      <dd><p>Manages the network state of all <a class="xref" href="Nebula.NetNode.html">NetNode</a>s in the scene.
+Inside the <a class="xref" href="Nebula.NetRunner.html">NetRunner</a> are one or more “Worlds”. Each World represents some part of the game that is isolated from other parts. For example, different maps, dungeon instances, etc. Worlds are dynamically created by calling <a class="xref" href="Nebula.NetRunner.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_">CreateWorld(UUID, PackedScene)</a>.</p>
+<p>Worlds cannot directly interact with each other and do not share state.</p>
+<p>Players only exist in one World at a time, so it can be helpful to think of the clients as being connected to a World directly.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.WorldRunner.MethodName.html">WorldRunner.MethodName</a></dt>
+      <dd><p>Cached StringNames for the methods contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.WorldRunner.PropertyName.html">WorldRunner.PropertyName</a></dt>
+      <dd><p>Cached StringNames for the properties and fields contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.WorldRunner.SignalName.html">WorldRunner.SignalName</a></dt>
+      <dd><p>Cached StringNames for the signals contained in this class, for fast lookup.</p>
+</dd>
+    </dl>
+    <h3 id="structs">
+Structs
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.WorldRunner.PeerState.html">WorldRunner.PeerState</a></dt>
+      <dd></dd>
+    </dl>
+    <h3 id="interfaces">
+Interfaces
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.INebulaAddon.html">INebulaAddon</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.INetNode.html">INetNode</a></dt>
+      <dd><p>This provides a common interface for NetNode, NetNode2D, and NetNode3D.
+This is necessary because they don't share an inheritance chain.
+For example, NetNode2D inherits from Node2D, while NetNode ineherits from Node.
+NetNode2D cannot inherit from NetNode because it needs Node2D functionality and C# does not support multiple inheritance.</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetFunction.NetworkSources.html">NetFunction.NetworkSources</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetPose3D.ChangeType.html">NetPose3D.ChangeType</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetProperty.SyncFlags.html">NetProperty.SyncFlags</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetRunner.ENetChannelId.html">NetRunner.ENetChannelId</a></dt>
+      <dd><p>Describes the channels of communication used by the network.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetworkController.NetworkChildrenSearchToggle.html">NetworkController.NetworkChildrenSearchToggle</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.WorldRunner.DebugDataType.html">WorldRunner.DebugDataType</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.WorldRunner.PeerSyncStatus.html">WorldRunner.PeerSyncStatus</a></dt>
+      <dd></dd>
+    </dl>
+    <h3 id="delegates">
+Delegates
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetPose3D.OnChangeEventHandler.html">NetPose3D.OnChangeEventHandler</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetRunner.OnConnectedToServerEventHandler.html">NetRunner.OnConnectedToServerEventHandler</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetRunner.OnPeerConnectedEventHandler.html">NetRunner.OnPeerConnectedEventHandler</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetRunner.OnPeerDisconnectedEventHandler.html">NetRunner.OnPeerDisconnectedEventHandler</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetRunner.OnWorldCreatedEventHandler.html">NetRunner.OnWorldCreatedEventHandler</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetworkController.InterestChangedEventHandler.html">NetworkController.InterestChangedEventHandler</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.NetworkController.NetPropertyChangedEventHandler.html">NetworkController.NetPropertyChangedEventHandler</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.WorldRunner.OnAfterNetworkTickEventHandler.html">WorldRunner.OnAfterNetworkTickEventHandler</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.html">WorldRunner.OnPeerSyncStatusChangeEventHandler</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Nebula.WorldRunner.OnPlayerJoinedEventHandler.html">WorldRunner.OnPlayerJoinedEventHandler</a></dt>
+      <dd></dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

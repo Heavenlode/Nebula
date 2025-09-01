@@ -1,0 +1,237 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetRunner.OnWorldCreatedEventHandler
+  commentId: T:Nebula.NetRunner.OnWorldCreatedEventHandler
+  id: NetRunner.OnWorldCreatedEventHandler
+  parent: Nebula
+  children:
+  - Nebula.NetRunner.OnWorldCreatedEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.NetRunner.OnWorldCreatedEventHandler.BeginInvoke(Nebula.WorldRunner,System.AsyncCallback,System.Object)
+  - Nebula.NetRunner.OnWorldCreatedEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.NetRunner.OnWorldCreatedEventHandler.Invoke(Nebula.WorldRunner)
+  langs:
+  - csharp
+  - vb
+  name: NetRunner.OnWorldCreatedEventHandler
+  nameWithType: NetRunner.OnWorldCreatedEventHandler
+  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void NetRunner.OnWorldCreatedEventHandler(WorldRunner world)
+    parameters:
+    - id: world
+      type: Nebula.WorldRunner
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub NetRunner.OnWorldCreatedEventHandler(world As WorldRunner)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.NetRunner.OnWorldCreatedEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.NetRunner.OnWorldCreatedEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.NetRunner.OnWorldCreatedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnWorldCreatedEventHandler(object, nint)
+  nameWithType: NetRunner.OnWorldCreatedEventHandler.OnWorldCreatedEventHandler(object, nint)
+  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler.OnWorldCreatedEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public OnWorldCreatedEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.NetRunner.OnWorldCreatedEventHandler.#ctor*
+  nameWithType.vb: NetRunner.OnWorldCreatedEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.NetRunner.OnWorldCreatedEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.NetRunner.OnWorldCreatedEventHandler.Invoke(Nebula.WorldRunner)
+  commentId: M:Nebula.NetRunner.OnWorldCreatedEventHandler.Invoke(Nebula.WorldRunner)
+  id: Invoke(Nebula.WorldRunner)
+  parent: Nebula.NetRunner.OnWorldCreatedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(WorldRunner)
+  nameWithType: NetRunner.OnWorldCreatedEventHandler.Invoke(WorldRunner)
+  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler.Invoke(Nebula.WorldRunner)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void Invoke(WorldRunner world)
+    parameters:
+    - id: world
+      type: Nebula.WorldRunner
+    content.vb: Public Overridable Sub Invoke(world As WorldRunner)
+  overload: Nebula.NetRunner.OnWorldCreatedEventHandler.Invoke*
+- uid: Nebula.NetRunner.OnWorldCreatedEventHandler.BeginInvoke(Nebula.WorldRunner,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.NetRunner.OnWorldCreatedEventHandler.BeginInvoke(Nebula.WorldRunner,System.AsyncCallback,System.Object)
+  id: BeginInvoke(Nebula.WorldRunner,System.AsyncCallback,System.Object)
+  parent: Nebula.NetRunner.OnWorldCreatedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(WorldRunner, AsyncCallback, object)
+  nameWithType: NetRunner.OnWorldCreatedEventHandler.BeginInvoke(WorldRunner, AsyncCallback, object)
+  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler.BeginInvoke(Nebula.WorldRunner, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(WorldRunner world, AsyncCallback callback, object @object)
+    parameters:
+    - id: world
+      type: Nebula.WorldRunner
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(world As WorldRunner, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.NetRunner.OnWorldCreatedEventHandler.BeginInvoke*
+  nameWithType.vb: NetRunner.OnWorldCreatedEventHandler.BeginInvoke(WorldRunner, AsyncCallback, Object)
+  fullName.vb: Nebula.NetRunner.OnWorldCreatedEventHandler.BeginInvoke(Nebula.WorldRunner, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(WorldRunner, AsyncCallback, Object)
+- uid: Nebula.NetRunner.OnWorldCreatedEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.NetRunner.OnWorldCreatedEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.NetRunner.OnWorldCreatedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: NetRunner.OnWorldCreatedEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.NetRunner.OnWorldCreatedEventHandler.EndInvoke*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.WorldRunner
+  commentId: T:Nebula.WorldRunner
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner
+  nameWithType: WorldRunner
+  fullName: Nebula.WorldRunner
+- uid: Nebula.NetRunner.OnWorldCreatedEventHandler.#ctor*
+  commentId: Overload:Nebula.NetRunner.OnWorldCreatedEventHandler.#ctor
+  isExternal: true
+  href: Nebula.NetRunner.OnWorldCreatedEventHandler.html#Nebula_NetRunner_OnWorldCreatedEventHandler__ctor_System_Object_System_IntPtr_
+  name: OnWorldCreatedEventHandler
+  nameWithType: NetRunner.OnWorldCreatedEventHandler.OnWorldCreatedEventHandler
+  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler.OnWorldCreatedEventHandler
+  nameWithType.vb: NetRunner.OnWorldCreatedEventHandler.New
+  fullName.vb: Nebula.NetRunner.OnWorldCreatedEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.NetRunner.OnWorldCreatedEventHandler.Invoke*
+  commentId: Overload:Nebula.NetRunner.OnWorldCreatedEventHandler.Invoke
+  isExternal: true
+  href: Nebula.NetRunner.OnWorldCreatedEventHandler.html#Nebula_NetRunner_OnWorldCreatedEventHandler_Invoke_Nebula_WorldRunner_
+  name: Invoke
+  nameWithType: NetRunner.OnWorldCreatedEventHandler.Invoke
+  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler.Invoke
+- uid: Nebula.NetRunner.OnWorldCreatedEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.NetRunner.OnWorldCreatedEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.NetRunner.OnWorldCreatedEventHandler.html#Nebula_NetRunner_OnWorldCreatedEventHandler_BeginInvoke_Nebula_WorldRunner_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: NetRunner.OnWorldCreatedEventHandler.BeginInvoke
+  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.NetRunner.OnWorldCreatedEventHandler.EndInvoke*
+  commentId: Overload:Nebula.NetRunner.OnWorldCreatedEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.NetRunner.OnWorldCreatedEventHandler.html#Nebula_NetRunner_OnWorldCreatedEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: NetRunner.OnWorldCreatedEventHandler.EndInvoke
+  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler.EndInvoke

@@ -5,8 +5,7 @@ VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nebula", "Nebula.csproj", "{75B1C2E3-DAC5-44FA-B27C-1A024173B636}"
 EndProject
-Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Documentation", "Documentation\Documentation.shfbproj", "{FDDC2937-9A73-4A60-946F-74E787D3B051}"
-EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +16,7 @@ Global
 		{75B1C2E3-DAC5-44FA-B27C-1A024173B636}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75B1C2E3-DAC5-44FA-B27C-1A024173B636}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75B1C2E3-DAC5-44FA-B27C-1A024173B636}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDDC2937-9A73-4A60-946F-74E787D3B051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FDDC2937-9A73-4A60-946F-74E787D3B051}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDDC2937-9A73-4A60-946F-74E787D3B051}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FDDC2937-9A73-4A60-946F-74E787D3B051}.Release|Any CPU.Build.0 = Release|Any CPU
+
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

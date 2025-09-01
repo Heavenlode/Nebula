@@ -1,0 +1,431 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  commentId: T:Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  id: NetPropertiesSerializer.LerpableChangeQueue
+  parent: Nebula.Serialization.Serializers
+  children:
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.From
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.Prop
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.To
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.Weight
+  langs:
+  - csharp
+  - vb
+  name: NetPropertiesSerializer.LerpableChangeQueue
+  nameWithType: NetPropertiesSerializer.LerpableChangeQueue
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  type: Struct
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  syntax:
+    content: public struct NetPropertiesSerializer.LerpableChangeQueue
+    content.vb: Public Structure NetPropertiesSerializer.LerpableChangeQueue
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.GetType
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.Prop
+  commentId: F:Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.Prop
+  id: Prop
+  parent: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  langs:
+  - csharp
+  - vb
+  name: Prop
+  nameWithType: NetPropertiesSerializer.LerpableChangeQueue.Prop
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.Prop
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  syntax:
+    content: public ProtocolNetProperty Prop
+    return:
+      type: Nebula.Serialization.ProtocolNetProperty
+    content.vb: Public Prop As ProtocolNetProperty
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.From
+  commentId: F:Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.From
+  id: From
+  parent: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  langs:
+  - csharp
+  - vb
+  name: From
+  nameWithType: NetPropertiesSerializer.LerpableChangeQueue.From
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.From
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  syntax:
+    content: public Variant From
+    return:
+      type: Godot.Variant
+    content.vb: Public From As [Variant]
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.To
+  commentId: F:Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.To
+  id: To
+  parent: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  langs:
+  - csharp
+  - vb
+  name: To
+  nameWithType: NetPropertiesSerializer.LerpableChangeQueue.To
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.To
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  syntax:
+    content: public Variant To
+    return:
+      type: Godot.Variant
+    content.vb: Public [To] As [Variant]
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.Weight
+  commentId: F:Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.Weight
+  id: Weight
+  parent: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
+  langs:
+  - csharp
+  - vb
+  name: Weight
+  nameWithType: NetPropertiesSerializer.LerpableChangeQueue.Weight
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue.Weight
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  syntax:
+    content: public double Weight
+    return:
+      type: System.Double
+    content.vb: Public Weight As Double
+references:
+- uid: Nebula.Serialization.Serializers
+  commentId: N:Nebula.Serialization.Serializers
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization.Serializers
+  nameWithType: Nebula.Serialization.Serializers
+  fullName: Nebula.Serialization.Serializers
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers
+    name: Serializers
+    isExternal: true
+    href: Nebula.Serialization.Serializers.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers
+    name: Serializers
+    isExternal: true
+    href: Nebula.Serialization.Serializers.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Serialization.ProtocolNetProperty
+  commentId: T:Nebula.Serialization.ProtocolNetProperty
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.ProtocolNetProperty.html
+  name: ProtocolNetProperty
+  nameWithType: ProtocolNetProperty
+  fullName: Nebula.Serialization.ProtocolNetProperty
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Godot.Variant
+  commentId: T:Godot.Variant
+  parent: Godot
+  isExternal: true
+  name: Variant
+  nameWithType: Variant
+  fullName: Godot.Variant
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double

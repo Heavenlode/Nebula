@@ -1,0 +1,463 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Internal.Editor.DTO.TickLog
+  commentId: T:Nebula.Internal.Editor.DTO.TickLog
+  id: TickLog
+  parent: Nebula.Internal.Editor.DTO
+  children:
+  - Nebula.Internal.Editor.DTO.TickLog.#ctor
+  - Nebula.Internal.Editor.DTO.TickLog.Level
+  - Nebula.Internal.Editor.DTO.TickLog.Message
+  langs:
+  - csharp
+  - vb
+  name: TickLog
+  nameWithType: TickLog
+  fullName: Nebula.Internal.Editor.DTO.TickLog
+  type: Class
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor.DTO
+  syntax:
+    content: public class TickLog
+    content.vb: Public Class TickLog
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Internal.Editor.DTO.TickLog.Message
+  commentId: F:Nebula.Internal.Editor.DTO.TickLog.Message
+  id: Message
+  parent: Nebula.Internal.Editor.DTO.TickLog
+  langs:
+  - csharp
+  - vb
+  name: Message
+  nameWithType: TickLog.Message
+  fullName: Nebula.Internal.Editor.DTO.TickLog.Message
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor.DTO
+  syntax:
+    content: public string Message
+    return:
+      type: System.String
+    content.vb: Public Message As String
+- uid: Nebula.Internal.Editor.DTO.TickLog.Level
+  commentId: F:Nebula.Internal.Editor.DTO.TickLog.Level
+  id: Level
+  parent: Nebula.Internal.Editor.DTO.TickLog
+  langs:
+  - csharp
+  - vb
+  name: Level
+  nameWithType: TickLog.Level
+  fullName: Nebula.Internal.Editor.DTO.TickLog.Level
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor.DTO
+  syntax:
+    content: public Debugger.DebugLevel Level
+    return:
+      type: Nebula.Utility.Tools.Debugger.DebugLevel
+    content.vb: Public Level As Debugger.DebugLevel
+- uid: Nebula.Internal.Editor.DTO.TickLog.#ctor
+  commentId: M:Nebula.Internal.Editor.DTO.TickLog.#ctor
+  id: '#ctor'
+  parent: Nebula.Internal.Editor.DTO.TickLog
+  langs:
+  - csharp
+  - vb
+  name: TickLog()
+  nameWithType: TickLog.TickLog()
+  fullName: Nebula.Internal.Editor.DTO.TickLog.TickLog()
+  type: Constructor
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor.DTO
+  syntax:
+    content: public TickLog()
+    content.vb: Public Sub New()
+  overload: Nebula.Internal.Editor.DTO.TickLog.#ctor*
+  nameWithType.vb: TickLog.New()
+  fullName.vb: Nebula.Internal.Editor.DTO.TickLog.New()
+  name.vb: New()
+references:
+- uid: Nebula.Internal.Editor.DTO
+  commentId: N:Nebula.Internal.Editor.DTO
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Internal.Editor.DTO
+  nameWithType: Nebula.Internal.Editor.DTO
+  fullName: Nebula.Internal.Editor.DTO
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+  - name: .
+  - uid: Nebula.Internal.Editor.DTO
+    name: DTO
+    isExternal: true
+    href: Nebula.Internal.Editor.DTO.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+  - name: .
+  - uid: Nebula.Internal.Editor.DTO
+    name: DTO
+    isExternal: true
+    href: Nebula.Internal.Editor.DTO.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.Utility.Tools.Debugger.DebugLevel
+  commentId: T:Nebula.Utility.Tools.Debugger.DebugLevel
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.Debugger.html
+  name: Debugger.DebugLevel
+  nameWithType: Debugger.DebugLevel
+  fullName: Nebula.Utility.Tools.Debugger.DebugLevel
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.DebugLevel
+    name: DebugLevel
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.DebugLevel.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.DebugLevel
+    name: DebugLevel
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.DebugLevel.html
+- uid: Nebula.Utility.Tools
+  commentId: N:Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Utility.Tools
+  nameWithType: Nebula.Utility.Tools
+  fullName: Nebula.Utility.Tools
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Utility.Tools.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Utility.Tools.html
+- uid: Nebula.Internal.Editor.DTO.TickLog.#ctor*
+  commentId: Overload:Nebula.Internal.Editor.DTO.TickLog.#ctor
+  isExternal: true
+  href: Nebula.Internal.Editor.DTO.TickLog.html#Nebula_Internal_Editor_DTO_TickLog__ctor
+  name: TickLog
+  nameWithType: TickLog.TickLog
+  fullName: Nebula.Internal.Editor.DTO.TickLog.TickLog
+  nameWithType.vb: TickLog.New
+  fullName.vb: Nebula.Internal.Editor.DTO.TickLog.New
+  name.vb: New

@@ -1,0 +1,60 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Authentication
+  commentId: N:Nebula.Authentication
+  id: Nebula.Authentication
+  children:
+  - Nebula.Authentication.DefaultAuthenticator
+  - Nebula.Authentication.IAuthenticator
+  langs:
+  - csharp
+  - vb
+  name: Nebula.Authentication
+  nameWithType: Nebula.Authentication
+  fullName: Nebula.Authentication
+  type: Namespace
+  assemblies:
+  - Nebula
+references:
+- uid: Nebula.Authentication.DefaultAuthenticator
+  commentId: T:Nebula.Authentication.DefaultAuthenticator
+  isExternal: true
+  href: Nebula.Authentication.DefaultAuthenticator.html
+  name: DefaultAuthenticator
+  nameWithType: DefaultAuthenticator
+  fullName: Nebula.Authentication.DefaultAuthenticator
+- uid: Nebula.Authentication.IAuthenticator
+  commentId: T:Nebula.Authentication.IAuthenticator
+  parent: Nebula.Authentication
+  isExternal: true
+  href: Nebula.Authentication.IAuthenticator.html
+  name: IAuthenticator
+  nameWithType: IAuthenticator
+  fullName: Nebula.Authentication.IAuthenticator
+- uid: Nebula.Authentication
+  commentId: N:Nebula.Authentication
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Authentication
+  nameWithType: Nebula.Authentication
+  fullName: Nebula.Authentication
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Authentication
+    name: Authentication
+    isExternal: true
+    href: Nebula.Authentication.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Authentication
+    name: Authentication
+    isExternal: true
+    href: Nebula.Authentication.html

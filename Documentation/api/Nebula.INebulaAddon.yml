@@ -1,0 +1,54 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.INebulaAddon
+  commentId: T:Nebula.INebulaAddon
+  id: INebulaAddon
+  parent: Nebula
+  children:
+  - Nebula.INebulaAddon.Install
+  langs:
+  - csharp
+  - vb
+  name: INebulaAddon
+  nameWithType: INebulaAddon
+  fullName: Nebula.INebulaAddon
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public interface INebulaAddon
+    content.vb: Public Interface INebulaAddon
+- uid: Nebula.INebulaAddon.Install
+  commentId: M:Nebula.INebulaAddon.Install
+  id: Install
+  parent: Nebula.INebulaAddon
+  langs:
+  - csharp
+  - vb
+  name: Install()
+  nameWithType: INebulaAddon.Install()
+  fullName: Nebula.INebulaAddon.Install()
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: void Install()
+    content.vb: Sub Install()
+  overload: Nebula.INebulaAddon.Install*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.INebulaAddon.Install*
+  commentId: Overload:Nebula.INebulaAddon.Install
+  isExternal: true
+  href: Nebula.INebulaAddon.html#Nebula_INebulaAddon_Install
+  name: Install
+  nameWithType: INebulaAddon.Install
+  fullName: Nebula.INebulaAddon.Install

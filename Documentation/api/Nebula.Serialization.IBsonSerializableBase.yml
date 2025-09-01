@@ -1,0 +1,121 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.IBsonSerializableBase
+  commentId: T:Nebula.Serialization.IBsonSerializableBase
+  id: IBsonSerializableBase
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  langs:
+  - csharp
+  - vb
+  name: IBsonSerializableBase
+  nameWithType: IBsonSerializableBase
+  fullName: Nebula.Serialization.IBsonSerializableBase
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public interface IBsonSerializableBase
+    content.vb: Public Interface IBsonSerializableBase
+- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  id: BsonSerialize(Godot.Variant)
+  parent: Nebula.Serialization.IBsonSerializableBase
+  langs:
+  - csharp
+  - vb
+  name: BsonSerialize(Variant)
+  nameWithType: IBsonSerializableBase.BsonSerialize(Variant)
+  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: BsonValue BsonSerialize(Variant context)
+    parameters:
+    - id: context
+      type: Godot.Variant
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Function BsonSerialize(context As [Variant]) As BsonValue
+  overload: Nebula.Serialization.IBsonSerializableBase.BsonSerialize*
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize*
+  commentId: Overload:Nebula.Serialization.IBsonSerializableBase.BsonSerialize
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+  name: BsonSerialize
+  nameWithType: IBsonSerializableBase.BsonSerialize
+  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize
+- uid: Godot.Variant
+  commentId: T:Godot.Variant
+  parent: Godot
+  isExternal: true
+  name: Variant
+  nameWithType: Variant
+  fullName: Godot.Variant
+- uid: MongoDB.Bson.BsonValue
+  commentId: T:MongoDB.Bson.BsonValue
+  parent: MongoDB.Bson
+  isExternal: true
+  name: BsonValue
+  nameWithType: BsonValue
+  fullName: MongoDB.Bson.BsonValue
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: MongoDB.Bson
+  commentId: N:MongoDB.Bson
+  isExternal: true
+  name: MongoDB.Bson
+  nameWithType: MongoDB.Bson
+  fullName: MongoDB.Bson
+  spec.csharp:
+  - uid: MongoDB
+    name: MongoDB
+    isExternal: true
+  - name: .
+  - uid: MongoDB.Bson
+    name: Bson
+    isExternal: true
+  spec.vb:
+  - uid: MongoDB
+    name: MongoDB
+    isExternal: true
+  - name: .
+  - uid: MongoDB.Bson
+    name: Bson
+    isExternal: true

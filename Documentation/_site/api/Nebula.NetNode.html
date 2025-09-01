@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class NetNode </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class NetNode ">
+      
+      <meta name="description" content=", extended with Nebula networking capabilities. This is the most basic networked object. On every network tick, all NetNode nodes in the scene tree automatically have their  updated with the latest data from the server. Then, the special  method is called, which indicates that a network Tick has occurred. Network properties can only update on the server side. For a client to update network properties, they must send client inputs to the server via implementing the INetworkInputHandler interface, or network function calls via  attributes. The server receives client inputs, can access them via , and handle them accordingly within  to mutate state.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Nebula.NetNode">
+
+
+
+  <h1 id="Nebula_NetNode" data-uid="Nebula.NetNode" class="text-break">
+Class NetNode  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Nebula.html">Nebula</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Nebula.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p><a class="xref" href="Nebula.NetNode.html#Nebula_NetNode_Node">Node</a>, extended with Nebula networking capabilities. This is the most basic networked object.
+On every network tick, all NetNode nodes in the scene tree automatically have their <a class="xref" href="Nebula.NetProperty.html">network properties</a> updated with the latest data from the server.
+Then, the special <a class="xref" href="Nebula.NetNode.html#Nebula_NetNode__NetworkProcess_System_Int32_">NetworkProcess</a> method is called, which indicates that a network Tick has occurred.
+Network properties can only update on the server side.
+For a client to update network properties, they must send client inputs to the server via implementing the INetworkInputHandler interface, or network function calls via <a class="xref" href="Nebula.NetFunction.html">NetFunction</a> attributes.
+The server receives client inputs, can access them via <a class="xref" href="Nebula.NetworkController.html#Nebula_NetworkController_GetInput">GetInput()</a>, and handle them accordingly within <a class="xref" href="Nebula.NetNode.html#Nebula_NetNode__NetworkProcess_System_Int32_">NetworkProcess</a> to mutate state.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[SerialTypeIdentifier(&quot;NetNode&quot;)]
+[Icon(&quot;res://addons/Nebula/Core/NetNode.png&quot;)]
+[ScriptPath(&quot;res://addons/Nebula/Core/NetNode.cs&quot;)]
+public class NetNode : Node, IDisposable, INetNode, INotifyPropertyChanged, INetSerializable&lt;NetNode&gt;, IBsonSerializable&lt;NetNode&gt;, IBsonSerializableBase</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">GodotObject</span></div>
+      <div><span class="xref">Node</span></div>
+      <div><span class="xref">NetNode</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+      <div><a class="xref" href="Nebula.INetNode.html">INetNode</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged">INotifyPropertyChanged</a></div>
+      <div><a class="xref" href="Nebula.Serialization.INetSerializable-1.html">INetSerializable</a>&lt;<a class="xref" href="Nebula.NetNode.html">NetNode</a>&gt;</div>
+      <div><a class="xref" href="Nebula.Serialization.IBsonSerializable-1.html">IBsonSerializable</a>&lt;<a class="xref" href="Nebula.NetNode.html">NetNode</a>&gt;</div>
+      <div><a class="xref" href="Nebula.Serialization.IBsonSerializableBase.html">IBsonSerializableBase</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <span class="xref">Node.NotificationEnterTree</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationExitTree</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationMovedInParent</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationReady</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationPaused</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationUnpaused</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationPhysicsProcess</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationProcess</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationParented</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationUnparented</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationSceneInstantiated</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationDragBegin</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationDragEnd</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationPathRenamed</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationChildOrderChanged</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationInternalProcess</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationInternalPhysicsProcess</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationPostEnterTree</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationDisabled</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationEnabled</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationResetPhysicsInterpolation</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationEditorPreSave</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationEditorPostSave</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationWMMouseEnter</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationWMMouseExit</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationWMWindowFocusIn</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationWMWindowFocusOut</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationWMCloseRequest</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationWMGoBackRequest</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationWMSizeChanged</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationWMDpiChange</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationVpMouseEnter</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationVpMouseExit</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationWMPositionChanged</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationOsMemoryWarning</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationTranslationChanged</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationWMAbout</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationCrash</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationOsImeUpdate</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationApplicationResumed</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationApplicationPaused</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationApplicationFocusIn</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationApplicationFocusOut</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationTextServerChanged</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationAccessibilityUpdate</span>
+    </div>
+    <div>
+      <span class="xref">Node.NotificationAccessibilityInvalidate</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetNode&lt;T&gt;(NodePath)</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetNodeOrNull&lt;T&gt;(NodePath)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Node.GetChild&lt;T&gt;(int, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Node.GetChildOrNull&lt;T&gt;(int, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.GetOwner&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetOwnerOrNull&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetParent&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetParentOrNull&lt;T&gt;()</span>
+    </div>
+    <div>
+      <span class="xref">Node._EnterTree()</span>
+    </div>
+    <div>
+      <span class="xref">Node._ExitTree()</span>
+    </div>
+    <div>
+      <span class="xref">Node._GetAccessibilityConfigurationWarnings()</span>
+    </div>
+    <div>
+      <span class="xref">Node._GetAccessibilityContainerName(Node)</span>
+    </div>
+    <div>
+      <span class="xref">Node._GetConfigurationWarnings()</span>
+    </div>
+    <div>
+      <span class="xref">Node._GetFocusedAccessibilityElement()</span>
+    </div>
+    <div>
+      <span class="xref">Node._Input(InputEvent)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">Node._Process(double)</a>
+    </div>
+    <div>
+      <span class="xref">Node._Ready()</span>
+    </div>
+    <div>
+      <span class="xref">Node._ShortcutInput(InputEvent)</span>
+    </div>
+    <div>
+      <span class="xref">Node._UnhandledInput(InputEvent)</span>
+    </div>
+    <div>
+      <span class="xref">Node._UnhandledKeyInput(InputEvent)</span>
+    </div>
+    <div>
+      <span class="xref">Node.PrintOrphanNodes()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.AddSibling(Node, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.AddChild(Node, bool, Node.InternalMode)</a>
+    </div>
+    <div>
+      <span class="xref">Node.RemoveChild(Node)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.Reparent(Node, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.GetChildCount(bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.GetChildren(bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Node.GetChild(int, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.HasNode(NodePath)</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetNode(NodePath)</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetNodeOrNull(NodePath)</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetParent()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Node.FindChild(string, bool, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Node.FindChildren(string, string, bool, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Node.FindParent(string)</a>
+    </div>
+    <div>
+      <span class="xref">Node.HasNodeAndResource(NodePath)</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetNodeAndResource(NodePath)</span>
+    </div>
+    <div>
+      <span class="xref">Node.IsInsideTree()</span>
+    </div>
+    <div>
+      <span class="xref">Node.IsPartOfEditedScene()</span>
+    </div>
+    <div>
+      <span class="xref">Node.IsAncestorOf(Node)</span>
+    </div>
+    <div>
+      <span class="xref">Node.IsGreaterThan(Node)</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetPath()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.GetPathTo(Node, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.AddToGroup(StringName, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.RemoveFromGroup(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">Node.IsInGroup(StringName)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Node.MoveChild(Node, int)</a>
+    </div>
+    <div>
+      <span class="xref">Node.GetGroups()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.GetIndex(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.PrintTree()</span>
+    </div>
+    <div>
+      <span class="xref">Node.PrintTreePretty()</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetTreeString()</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetTreeStringPretty()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Node.PropagateNotification(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.PropagateCall(StringName, Array, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetPhysicsProcess(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.GetPhysicsProcessDeltaTime()</span>
+    </div>
+    <div>
+      <span class="xref">Node.IsPhysicsProcessing()</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetProcessDeltaTime()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetProcess(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.IsProcessing()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetProcessInput(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.IsProcessingInput()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetProcessShortcutInput(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.IsProcessingShortcutInput()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetProcessUnhandledInput(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.IsProcessingUnhandledInput()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetProcessUnhandledKeyInput(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.IsProcessingUnhandledKeyInput()</span>
+    </div>
+    <div>
+      <span class="xref">Node.CanProcess()</span>
+    </div>
+    <div>
+      <span class="xref">Node.QueueAccessibilityUpdate()</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetAccessibilityElement()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetDisplayFolded(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.IsDisplayedFolded()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetProcessInternal(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.IsProcessingInternal()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetPhysicsProcessInternal(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.IsPhysicsProcessingInternal()</span>
+    </div>
+    <div>
+      <span class="xref">Node.IsPhysicsInterpolated()</span>
+    </div>
+    <div>
+      <span class="xref">Node.IsPhysicsInterpolatedAndEnabled()</span>
+    </div>
+    <div>
+      <span class="xref">Node.ResetPhysicsInterpolation()</span>
+    </div>
+    <div>
+      <span class="xref">Node.SetTranslationDomainInherited()</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetWindow()</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetLastExclusiveWindow()</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetTree()</span>
+    </div>
+    <div>
+      <span class="xref">Node.CreateTween()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Node.Duplicate(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.ReplaceBy(Node, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetSceneInstanceLoadPlaceholder(bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.GetSceneInstanceLoadPlaceholder()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Node.SetEditableInstance(Node, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.IsEditableInstance(Node)</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetViewport()</span>
+    </div>
+    <div>
+      <span class="xref">Node.QueueFree()</span>
+    </div>
+    <div>
+      <span class="xref">Node.RequestReady()</span>
+    </div>
+    <div>
+      <span class="xref">Node.IsNodeReady()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Node.SetMultiplayerAuthority(int, bool)</a>
+    </div>
+    <div>
+      <span class="xref">Node.GetMultiplayerAuthority()</span>
+    </div>
+    <div>
+      <span class="xref">Node.IsMultiplayerAuthority()</span>
+    </div>
+    <div>
+      <span class="xref">Node.RpcConfig(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">Node.GetRpcConfig()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Node.Atr(string, StringName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">Node.AtrN(string, StringName, int, StringName)</a>
+    </div>
+    <div>
+      <span class="xref">Node.Rpc(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">Node.Rpc(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">Node.RpcId(long, StringName, params Variant[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">Node.RpcId(long, StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">Node.UpdateConfigurationWarnings()</span>
+    </div>
+    <div>
+      <span class="xref">Node.CallDeferredThreadGroup(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">Node.CallDeferredThreadGroup(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">Node.SetDeferredThreadGroup(StringName, Variant)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Node.NotifyDeferredThreadGroup(int)</a>
+    </div>
+    <div>
+      <span class="xref">Node.CallThreadSafe(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">Node.CallThreadSafe(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">Node.SetThreadSafe(StringName, Variant)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Node.NotifyThreadSafe(int)</a>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalReady()</span>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalRenamed()</span>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalTreeEntered()</span>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalTreeExiting()</span>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalTreeExited()</span>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalChildEnteredTree(Node)</span>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalChildExitingTree(Node)</span>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalChildOrderChanged()</span>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalReplacingBy(Node)</span>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalEditorDescriptionChanged(Node)</span>
+    </div>
+    <div>
+      <span class="xref">Node.EmitSignalEditorStateChanged()</span>
+    </div>
+    <div>
+      <span class="xref">Node.InvokeGodotClassMethod(in godot_string_name, NativeVariantPtrArgs, out godot_variant)</span>
+    </div>
+    <div>
+      <span class="xref">Node.HasGodotClassMethod(in godot_string_name)</span>
+    </div>
+    <div>
+      <span class="xref">Node.HasGodotClassSignal(in godot_string_name)</span>
+    </div>
+    <div>
+      <span class="xref">Node.Name</span>
+    </div>
+    <div>
+      <span class="xref">Node.UniqueNameInOwner</span>
+    </div>
+    <div>
+      <span class="xref">Node.SceneFilePath</span>
+    </div>
+    <div>
+      <span class="xref">Node.Owner</span>
+    </div>
+    <div>
+      <span class="xref">Node.Multiplayer</span>
+    </div>
+    <div>
+      <span class="xref">Node.ProcessMode</span>
+    </div>
+    <div>
+      <span class="xref">Node.ProcessPriority</span>
+    </div>
+    <div>
+      <span class="xref">Node.ProcessPhysicsPriority</span>
+    </div>
+    <div>
+      <span class="xref">Node.ProcessThreadGroup</span>
+    </div>
+    <div>
+      <span class="xref">Node.ProcessThreadGroupOrder</span>
+    </div>
+    <div>
+      <span class="xref">Node.ProcessThreadMessages</span>
+    </div>
+    <div>
+      <span class="xref">Node.PhysicsInterpolationMode</span>
+    </div>
+    <div>
+      <span class="xref">Node.AutoTranslateMode</span>
+    </div>
+    <div>
+      <span class="xref">Node.EditorDescription</span>
+    </div>
+    <div>
+      <span class="xref">Node.AccessibilityName</span>
+    </div>
+    <div>
+      <span class="xref">Node.AccessibilityDescription</span>
+    </div>
+    <div>
+      <span class="xref">Node.AccessibilityLive</span>
+    </div>
+    <div>
+      <span class="xref">Node.AccessibilityControlsNodes</span>
+    </div>
+    <div>
+      <span class="xref">Node.AccessibilityDescribedByNodes</span>
+    </div>
+    <div>
+      <span class="xref">Node.AccessibilityLabeledByNodes</span>
+    </div>
+    <div>
+      <span class="xref">Node.AccessibilityFlowToNodes</span>
+    </div>
+    <div>
+      <span class="xref">Node.Ready</span>
+    </div>
+    <div>
+      <span class="xref">Node.Renamed</span>
+    </div>
+    <div>
+      <span class="xref">Node.TreeEntered</span>
+    </div>
+    <div>
+      <span class="xref">Node.TreeExiting</span>
+    </div>
+    <div>
+      <span class="xref">Node.TreeExited</span>
+    </div>
+    <div>
+      <span class="xref">Node.ChildEnteredTree</span>
+    </div>
+    <div>
+      <span class="xref">Node.ChildExitingTree</span>
+    </div>
+    <div>
+      <span class="xref">Node.ChildOrderChanged</span>
+    </div>
+    <div>
+      <span class="xref">Node.ReplacingBy</span>
+    </div>
+    <div>
+      <span class="xref">Node.EditorDescriptionChanged</span>
+    </div>
+    <div>
+      <span class="xref">Node.EditorStateChanged</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotificationPostinitialize</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotificationPredelete</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotificationExtensionReloaded</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">GodotObject.InstanceFromId(ulong)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">GodotObject.IsInstanceIdValid(ulong)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsInstanceValid(GodotObject)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.WeakRef(GodotObject)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Dispose()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">GodotObject.Dispose(bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.ToSignal(GodotObject, StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._Get(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._GetPropertyList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._IterGet(Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._IterInit(Array)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._IterNext(Array)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">GodotObject._Notification(int)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject._PropertyCanRevert(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._PropertyGetRevert(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._Set(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject._ValidateProperty(Dictionary)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Free()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetClass()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">GodotObject.IsClass(string)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Set(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Get(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetIndexed(NodePath, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetIndexed(NodePath)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetPropertyList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMethodList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.PropertyCanRevert(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.PropertyGetRevert(StringName)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">GodotObject.Notification(int, bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetInstanceId()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetScript(Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetScript()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetMeta(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.RemoveMeta(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMeta(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasMeta(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMetaList()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">GodotObject.AddUserSignal(string, Array)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasUserSignal(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.RemoveUserSignal(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.EmitSignal(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">GodotObject.EmitSignal(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Call(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">GodotObject.Call(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.CallDeferred(StringName, params Variant[])</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">GodotObject.CallDeferred(StringName, ReadOnlySpan&lt;Variant&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetDeferred(StringName, Variant)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Callv(StringName, Array)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasMethod(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetMethodArgumentCount(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasSignal(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetSignalList()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetSignalConnectionList(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetIncomingConnections()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">GodotObject.Connect(StringName, Callable, uint)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Disconnect(StringName, Callable)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsConnected(StringName, Callable)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.HasConnections(StringName)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">GodotObject.SetBlockSignals(bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsBlockingSignals()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NotifyPropertyListChanged()</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">GodotObject.SetMessageTranslation(bool)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.CanTranslateMessages()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.Tr(StringName, StringName)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">GodotObject.TrN(StringName, StringName, int, StringName)</a>
+    </div>
+    <div>
+      <span class="xref">GodotObject.GetTranslationDomain()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.SetTranslationDomain(StringName)</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.IsQueuedForDeletion()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.CancelFree()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.EmitSignalScriptChanged()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.EmitSignalPropertyListChanged()</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.NativeInstance</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.ScriptChanged</span>
+    </div>
+    <div>
+      <span class="xref">GodotObject.PropertyListChanged</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Nebula_NetNode__ctor_" data-uid="Nebula.NetNode.#ctor*"></a>
+
+  <h3 id="Nebula_NetNode__ctor" data-uid="Nebula.NetNode.#ctor">
+  NetNode()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetNode()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Nebula_NetNode_Network_" data-uid="Nebula.NetNode.Network*"></a>
+
+  <h3 id="Nebula_NetNode_Network" data-uid="Nebula.NetNode.Network">
+  Network
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetworkController Network { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetworkController.html">NetworkController</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode_Node_" data-uid="Nebula.NetNode.Node*"></a>
+
+  <h3 id="Nebula_NetNode_Node" data-uid="Nebula.NetNode.Node">
+  Node
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>This allows us to access the Node without having to manually cast it every time we want to access it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Node Node { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Node</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode_Serializers_" data-uid="Nebula.NetNode.Serializers*"></a>
+
+  <h3 id="Nebula_NetNode_Serializers" data-uid="Nebula.NetNode.Serializers">
+  Serializers
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IStateSerializer[] Serializers { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.Serialization.Serializers.IStateSerializer.html">IStateSerializer</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Nebula_NetNode_BsonSerialize_" data-uid="Nebula.NetNode.BsonSerialize*"></a>
+
+  <h3 id="Nebula_NetNode_BsonSerialize_Godot_Variant_" data-uid="Nebula.NetNode.BsonSerialize(Godot.Variant)">
+  BsonSerialize(Variant)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BsonValue BsonSerialize(Variant context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>context</code> <span class="xref">Variant</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">BsonValue</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode_NodePathFromNetScene_" data-uid="Nebula.NetNode.NodePathFromNetScene*"></a>
+
+  <h3 id="Nebula_NetNode_NodePathFromNetScene" data-uid="Nebula.NetNode.NodePathFromNetScene">
+  NodePathFromNetScene()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string NodePathFromNetScene()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode_OnPropertyChanged_" data-uid="Nebula.NetNode.OnPropertyChanged*"></a>
+
+  <h3 id="Nebula_NetNode_OnPropertyChanged_System_ComponentModel_PropertyChangedEventArgs_" data-uid="Nebula.NetNode.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
+  OnPropertyChanged(PropertyChangedEventArgs)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/PropertyChanged.Fody.Analyzer/SourceGenerator/PropertyChanged.g.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnPropertyChanged(PropertyChangedEventArgs eventArgs)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>eventArgs</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.propertychangedeventargs">PropertyChangedEventArgs</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode_OnPropertyChanged_" data-uid="Nebula.NetNode.OnPropertyChanged*"></a>
+
+  <h3 id="Nebula_NetNode_OnPropertyChanged_System_String_" data-uid="Nebula.NetNode.OnPropertyChanged(System.String)">
+  OnPropertyChanged(string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/PropertyChanged.Fody.Analyzer/SourceGenerator/PropertyChanged.g.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void OnPropertyChanged(string? propertyName = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>propertyName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode_SetupSerializers_" data-uid="Nebula.NetNode.SetupSerializers*"></a>
+
+  <h3 id="Nebula_NetNode_SetupSerializers" data-uid="Nebula.NetNode.SetupSerializers">
+  SetupSerializers()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetupSerializers()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode__NetworkProcess_" data-uid="Nebula.NetNode._NetworkProcess*"></a>
+
+  <h3 id="Nebula_NetNode__NetworkProcess_System_Int32_" data-uid="Nebula.NetNode._NetworkProcess(System.Int32)">
+  _NetworkProcess(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void _NetworkProcess(int _tick)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>_tick</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode__PhysicsProcess_" data-uid="Nebula.NetNode._PhysicsProcess*"></a>
+
+  <h3 id="Nebula_NetNode__PhysicsProcess_System_Double_" data-uid="Nebula.NetNode._PhysicsProcess(System.Double)">
+  _PhysicsProcess(double)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void _PhysicsProcess(double delta)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>delta</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode__WorldReady_" data-uid="Nebula.NetNode._WorldReady*"></a>
+
+  <h3 id="Nebula_NetNode__WorldReady" data-uid="Nebula.NetNode._WorldReady">
+  _WorldReady()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void _WorldReady()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="events">Events
+</h2>
+
+
+
+  <h3 id="Nebula_NetNode_PropertyChanged" data-uid="Nebula.NetNode.PropertyChanged">
+  PropertyChanged
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event PropertyChangedEventHandler? PropertyChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.propertychangedeventhandler">PropertyChangedEventHandler</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+  <h2 class="section" id="eii">Explicit Interface Implementations
+</h2>
+
+
+  <a id="Nebula_NetNode_BsonDeserialize_" data-uid="Nebula.NetNode.BsonDeserialize*"></a>
+
+  <h3 id="Nebula_NetNode_BsonDeserialize_Godot_Variant_System_Byte___Nebula_NetNode_" data-uid="Nebula.NetNode.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode)">
+  BsonDeserialize(Variant, byte[], NetNode)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static NetNode BsonDeserialize(Variant context, byte[] bson, NetNode obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>context</code> <span class="xref">Variant</span></dt>
+    <dd></dd>
+    <dt><code>bson</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+    <dt><code>obj</code> <a class="xref" href="Nebula.NetNode.html">NetNode</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetNode.html">NetNode</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode_GetDeserializeContext_" data-uid="Nebula.NetNode.GetDeserializeContext*"></a>
+
+  <h3 id="Nebula_NetNode_GetDeserializeContext_Nebula_NetNode_" data-uid="Nebula.NetNode.GetDeserializeContext(Nebula.NetNode)">
+  GetDeserializeContext(NetNode)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static Variant GetDeserializeContext(NetNode obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="Nebula.NetNode.html">NetNode</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Variant</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode_NetworkDeserialize_" data-uid="Nebula.NetNode.NetworkDeserialize*"></a>
+
+  <h3 id="Nebula_NetNode_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_" data-uid="Nebula.NetNode.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)">
+  NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static NetNode NetworkDeserialize(WorldRunner currentWorld, ENetPacketPeer peer, HLBuffer buffer, Variant ctx)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>currentWorld</code> <a class="xref" href="Nebula.WorldRunner.html">WorldRunner</a></dt>
+    <dd></dd>
+    <dt><code>peer</code> <span class="xref">ENetPacketPeer</span></dt>
+    <dd></dd>
+    <dt><code>buffer</code> <a class="xref" href="Nebula.Serialization.HLBuffer.html">HLBuffer</a></dt>
+    <dd></dd>
+    <dt><code>ctx</code> <span class="xref">Variant</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.NetNode.html">NetNode</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Nebula_NetNode_NetworkSerialize_" data-uid="Nebula.NetNode.NetworkSerialize*"></a>
+
+  <h3 id="Nebula_NetNode_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_NetNode_" data-uid="Nebula.NetNode.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode)">
+  NetworkSerialize(WorldRunner, ENetPacketPeer, NetNode)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode.cs"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static HLBuffer NetworkSerialize(WorldRunner currentWorld, ENetPacketPeer peer, NetNode obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>currentWorld</code> <a class="xref" href="Nebula.WorldRunner.html">WorldRunner</a></dt>
+    <dd></dd>
+    <dt><code>peer</code> <span class="xref">ENetPacketPeer</span></dt>
+    <dd></dd>
+    <dt><code>obj</code> <a class="xref" href="Nebula.NetNode.html">NetNode</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Nebula.Serialization.HLBuffer.html">HLBuffer</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,121 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.WorldRunner.PeerSyncStatus
+  commentId: T:Nebula.WorldRunner.PeerSyncStatus
+  id: WorldRunner.PeerSyncStatus
+  parent: Nebula
+  children:
+  - Nebula.WorldRunner.PeerSyncStatus.DISCONNECTED
+  - Nebula.WorldRunner.PeerSyncStatus.INITIAL
+  - Nebula.WorldRunner.PeerSyncStatus.IN_WORLD
+  langs:
+  - csharp
+  - vb
+  name: WorldRunner.PeerSyncStatus
+  nameWithType: WorldRunner.PeerSyncStatus
+  fullName: Nebula.WorldRunner.PeerSyncStatus
+  type: Enum
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public enum WorldRunner.PeerSyncStatus
+    content.vb: Public Enum WorldRunner.PeerSyncStatus
+- uid: Nebula.WorldRunner.PeerSyncStatus.INITIAL
+  commentId: F:Nebula.WorldRunner.PeerSyncStatus.INITIAL
+  id: INITIAL
+  parent: Nebula.WorldRunner.PeerSyncStatus
+  langs:
+  - csharp
+  - vb
+  name: INITIAL
+  nameWithType: WorldRunner.PeerSyncStatus.INITIAL
+  fullName: Nebula.WorldRunner.PeerSyncStatus.INITIAL
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: INITIAL = 0
+    return:
+      type: Nebula.WorldRunner.PeerSyncStatus
+- uid: Nebula.WorldRunner.PeerSyncStatus.IN_WORLD
+  commentId: F:Nebula.WorldRunner.PeerSyncStatus.IN_WORLD
+  id: IN_WORLD
+  parent: Nebula.WorldRunner.PeerSyncStatus
+  langs:
+  - csharp
+  - vb
+  name: IN_WORLD
+  nameWithType: WorldRunner.PeerSyncStatus.IN_WORLD
+  fullName: Nebula.WorldRunner.PeerSyncStatus.IN_WORLD
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: IN_WORLD = 1
+    return:
+      type: Nebula.WorldRunner.PeerSyncStatus
+- uid: Nebula.WorldRunner.PeerSyncStatus.DISCONNECTED
+  commentId: F:Nebula.WorldRunner.PeerSyncStatus.DISCONNECTED
+  id: DISCONNECTED
+  parent: Nebula.WorldRunner.PeerSyncStatus
+  langs:
+  - csharp
+  - vb
+  name: DISCONNECTED
+  nameWithType: WorldRunner.PeerSyncStatus.DISCONNECTED
+  fullName: Nebula.WorldRunner.PeerSyncStatus.DISCONNECTED
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: DISCONNECTED = 2
+    return:
+      type: Nebula.WorldRunner.PeerSyncStatus
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.WorldRunner.PeerSyncStatus
+  commentId: T:Nebula.WorldRunner.PeerSyncStatus
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner.PeerSyncStatus
+  nameWithType: WorldRunner.PeerSyncStatus
+  fullName: Nebula.WorldRunner.PeerSyncStatus
+  spec.csharp:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.PeerSyncStatus
+    name: PeerSyncStatus
+    isExternal: true
+    href: Nebula.WorldRunner.PeerSyncStatus.html
+  spec.vb:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.PeerSyncStatus
+    name: PeerSyncStatus
+    isExternal: true
+    href: Nebula.WorldRunner.PeerSyncStatus.html

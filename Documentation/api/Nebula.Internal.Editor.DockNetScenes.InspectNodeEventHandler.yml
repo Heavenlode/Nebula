@@ -1,0 +1,272 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  commentId: T:Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  id: DockNetScenes.InspectNodeEventHandler
+  parent: Nebula.Internal.Editor
+  children:
+  - Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.BeginInvoke(Godot.Node,System.AsyncCallback,System.Object)
+  - Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.Invoke(Godot.Node)
+  langs:
+  - csharp
+  - vb
+  name: DockNetScenes.InspectNodeEventHandler
+  nameWithType: DockNetScenes.InspectNodeEventHandler
+  fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void DockNetScenes.InspectNodeEventHandler(Node node)
+    parameters:
+    - id: node
+      type: Godot.Node
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub DockNetScenes.InspectNodeEventHandler(node As Node)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: InspectNodeEventHandler(object, nint)
+  nameWithType: DockNetScenes.InspectNodeEventHandler.InspectNodeEventHandler(object, nint)
+  fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.InspectNodeEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public InspectNodeEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.#ctor*
+  nameWithType.vb: DockNetScenes.InspectNodeEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.Invoke(Godot.Node)
+  commentId: M:Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.Invoke(Godot.Node)
+  id: Invoke(Godot.Node)
+  parent: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(Node)
+  nameWithType: DockNetScenes.InspectNodeEventHandler.Invoke(Node)
+  fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.Invoke(Godot.Node)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual void Invoke(Node node)
+    parameters:
+    - id: node
+      type: Godot.Node
+    content.vb: Public Overridable Sub Invoke(node As Node)
+  overload: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.Invoke*
+- uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.BeginInvoke(Godot.Node,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.BeginInvoke(Godot.Node,System.AsyncCallback,System.Object)
+  id: BeginInvoke(Godot.Node,System.AsyncCallback,System.Object)
+  parent: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(Node, AsyncCallback, object)
+  nameWithType: DockNetScenes.InspectNodeEventHandler.BeginInvoke(Node, AsyncCallback, object)
+  fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.BeginInvoke(Godot.Node, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(Node node, AsyncCallback callback, object @object)
+    parameters:
+    - id: node
+      type: Godot.Node
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(node As Node, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.BeginInvoke*
+  nameWithType.vb: DockNetScenes.InspectNodeEventHandler.BeginInvoke(Node, AsyncCallback, Object)
+  fullName.vb: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.BeginInvoke(Godot.Node, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(Node, AsyncCallback, Object)
+- uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: DockNetScenes.InspectNodeEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Internal.Editor
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.EndInvoke*
+references:
+- uid: Nebula.Internal.Editor
+  commentId: N:Nebula.Internal.Editor
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Internal.Editor
+  nameWithType: Nebula.Internal.Editor
+  fullName: Nebula.Internal.Editor
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Internal
+    name: Internal
+    isExternal: true
+    href: Nebula.Internal.html
+  - name: .
+  - uid: Nebula.Internal.Editor
+    name: Editor
+    isExternal: true
+    href: Nebula.Internal.Editor.html
+- uid: Godot.Node
+  commentId: T:Godot.Node
+  parent: Godot
+  isExternal: true
+  name: Node
+  nameWithType: Node
+  fullName: Godot.Node
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.#ctor*
+  commentId: Overload:Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.#ctor
+  isExternal: true
+  href: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.html#Nebula_Internal_Editor_DockNetScenes_InspectNodeEventHandler__ctor_System_Object_System_IntPtr_
+  name: InspectNodeEventHandler
+  nameWithType: DockNetScenes.InspectNodeEventHandler.InspectNodeEventHandler
+  fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.InspectNodeEventHandler
+  nameWithType.vb: DockNetScenes.InspectNodeEventHandler.New
+  fullName.vb: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.Invoke*
+  commentId: Overload:Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.Invoke
+  isExternal: true
+  href: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.html#Nebula_Internal_Editor_DockNetScenes_InspectNodeEventHandler_Invoke_Godot_Node_
+  name: Invoke
+  nameWithType: DockNetScenes.InspectNodeEventHandler.Invoke
+  fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.Invoke
+- uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.html#Nebula_Internal_Editor_DockNetScenes_InspectNodeEventHandler_BeginInvoke_Godot_Node_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: DockNetScenes.InspectNodeEventHandler.BeginInvoke
+  fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.EndInvoke*
+  commentId: Overload:Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.html#Nebula_Internal_Editor_DockNetScenes_InspectNodeEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: DockNetScenes.InspectNodeEventHandler.EndInvoke
+  fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.EndInvoke

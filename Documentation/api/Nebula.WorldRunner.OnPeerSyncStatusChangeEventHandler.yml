@@ -1,0 +1,260 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
+  commentId: T:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
+  id: WorldRunner.OnPeerSyncStatusChangeEventHandler
+  parent: Nebula
+  children:
+  - Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke(System.String,System.Int32,System.AsyncCallback,System.Object)
+  - Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke(System.String,System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: WorldRunner.OnPeerSyncStatusChangeEventHandler
+  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler
+  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void WorldRunner.OnPeerSyncStatusChangeEventHandler(string peerId, int status)
+    parameters:
+    - id: peerId
+      type: System.String
+    - id: status
+      type: System.Int32
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub WorldRunner.OnPeerSyncStatusChangeEventHandler(peerId As String, status As Integer)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: OnPeerSyncStatusChangeEventHandler(object, nint)
+  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler.OnPeerSyncStatusChangeEventHandler(object, nint)
+  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.OnPeerSyncStatusChangeEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public OnPeerSyncStatusChangeEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.#ctor*
+  nameWithType.vb: WorldRunner.OnPeerSyncStatusChangeEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke(System.String,System.Int32)
+  commentId: M:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke(System.String,System.Int32)
+  id: Invoke(System.String,System.Int32)
+  parent: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(string, int)
+  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke(string, int)
+  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke(string, int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void Invoke(string peerId, int status)
+    parameters:
+    - id: peerId
+      type: System.String
+    - id: status
+      type: System.Int32
+    content.vb: Public Overridable Sub Invoke(peerId As String, status As Integer)
+  overload: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke*
+  nameWithType.vb: WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke(String, Integer)
+  fullName.vb: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke(String, Integer)
+  name.vb: Invoke(String, Integer)
+- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke(System.String,System.Int32,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke(System.String,System.Int32,System.AsyncCallback,System.Object)
+  id: BeginInvoke(System.String,System.Int32,System.AsyncCallback,System.Object)
+  parent: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(string, int, AsyncCallback, object)
+  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke(string, int, AsyncCallback, object)
+  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke(string, int, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(string peerId, int status, AsyncCallback callback, object @object)
+    parameters:
+    - id: peerId
+      type: System.String
+    - id: status
+      type: System.Int32
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(peerId As String, status As Integer, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke*
+  nameWithType.vb: WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke(String, Integer, AsyncCallback, Object)
+  fullName.vb: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke(String, Integer, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(String, Integer, AsyncCallback, Object)
+- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.EndInvoke*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.#ctor*
+  commentId: Overload:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.#ctor
+  isExternal: true
+  href: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.html#Nebula_WorldRunner_OnPeerSyncStatusChangeEventHandler__ctor_System_Object_System_IntPtr_
+  name: OnPeerSyncStatusChangeEventHandler
+  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler.OnPeerSyncStatusChangeEventHandler
+  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.OnPeerSyncStatusChangeEventHandler
+  nameWithType.vb: WorldRunner.OnPeerSyncStatusChangeEventHandler.New
+  fullName.vb: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke*
+  commentId: Overload:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke
+  isExternal: true
+  href: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.html#Nebula_WorldRunner_OnPeerSyncStatusChangeEventHandler_Invoke_System_String_System_Int32_
+  name: Invoke
+  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke
+  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.Invoke
+- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.html#Nebula_WorldRunner_OnPeerSyncStatusChangeEventHandler_BeginInvoke_System_String_System_Int32_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke
+  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.EndInvoke*
+  commentId: Overload:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.html#Nebula_WorldRunner_OnPeerSyncStatusChangeEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler.EndInvoke
+  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.EndInvoke

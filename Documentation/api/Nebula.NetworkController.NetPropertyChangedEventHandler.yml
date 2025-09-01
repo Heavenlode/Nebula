@@ -1,0 +1,262 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetworkController.NetPropertyChangedEventHandler
+  commentId: T:Nebula.NetworkController.NetPropertyChangedEventHandler
+  id: NetworkController.NetPropertyChangedEventHandler
+  parent: Nebula
+  children:
+  - Nebula.NetworkController.NetPropertyChangedEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.NetworkController.NetPropertyChangedEventHandler.BeginInvoke(System.String,Godot.StringName,System.AsyncCallback,System.Object)
+  - Nebula.NetworkController.NetPropertyChangedEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.NetworkController.NetPropertyChangedEventHandler.Invoke(System.String,Godot.StringName)
+  langs:
+  - csharp
+  - vb
+  name: NetworkController.NetPropertyChangedEventHandler
+  nameWithType: NetworkController.NetPropertyChangedEventHandler
+  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void NetworkController.NetPropertyChangedEventHandler(string nodePath, StringName propertyName)
+    parameters:
+    - id: nodePath
+      type: System.String
+    - id: propertyName
+      type: Godot.StringName
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub NetworkController.NetPropertyChangedEventHandler(nodePath As String, propertyName As StringName)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.NetworkController.NetPropertyChangedEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.NetworkController.NetPropertyChangedEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.NetworkController.NetPropertyChangedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: NetPropertyChangedEventHandler(object, nint)
+  nameWithType: NetworkController.NetPropertyChangedEventHandler.NetPropertyChangedEventHandler(object, nint)
+  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler.NetPropertyChangedEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public NetPropertyChangedEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.NetworkController.NetPropertyChangedEventHandler.#ctor*
+  nameWithType.vb: NetworkController.NetPropertyChangedEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.NetworkController.NetPropertyChangedEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.NetworkController.NetPropertyChangedEventHandler.Invoke(System.String,Godot.StringName)
+  commentId: M:Nebula.NetworkController.NetPropertyChangedEventHandler.Invoke(System.String,Godot.StringName)
+  id: Invoke(System.String,Godot.StringName)
+  parent: Nebula.NetworkController.NetPropertyChangedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(string, StringName)
+  nameWithType: NetworkController.NetPropertyChangedEventHandler.Invoke(string, StringName)
+  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler.Invoke(string, Godot.StringName)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void Invoke(string nodePath, StringName propertyName)
+    parameters:
+    - id: nodePath
+      type: System.String
+    - id: propertyName
+      type: Godot.StringName
+    content.vb: Public Overridable Sub Invoke(nodePath As String, propertyName As StringName)
+  overload: Nebula.NetworkController.NetPropertyChangedEventHandler.Invoke*
+  nameWithType.vb: NetworkController.NetPropertyChangedEventHandler.Invoke(String, StringName)
+  fullName.vb: Nebula.NetworkController.NetPropertyChangedEventHandler.Invoke(String, Godot.StringName)
+  name.vb: Invoke(String, StringName)
+- uid: Nebula.NetworkController.NetPropertyChangedEventHandler.BeginInvoke(System.String,Godot.StringName,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.NetworkController.NetPropertyChangedEventHandler.BeginInvoke(System.String,Godot.StringName,System.AsyncCallback,System.Object)
+  id: BeginInvoke(System.String,Godot.StringName,System.AsyncCallback,System.Object)
+  parent: Nebula.NetworkController.NetPropertyChangedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(string, StringName, AsyncCallback, object)
+  nameWithType: NetworkController.NetPropertyChangedEventHandler.BeginInvoke(string, StringName, AsyncCallback, object)
+  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler.BeginInvoke(string, Godot.StringName, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(string nodePath, StringName propertyName, AsyncCallback callback, object @object)
+    parameters:
+    - id: nodePath
+      type: System.String
+    - id: propertyName
+      type: Godot.StringName
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(nodePath As String, propertyName As StringName, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.NetworkController.NetPropertyChangedEventHandler.BeginInvoke*
+  nameWithType.vb: NetworkController.NetPropertyChangedEventHandler.BeginInvoke(String, StringName, AsyncCallback, Object)
+  fullName.vb: Nebula.NetworkController.NetPropertyChangedEventHandler.BeginInvoke(String, Godot.StringName, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(String, StringName, AsyncCallback, Object)
+- uid: Nebula.NetworkController.NetPropertyChangedEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.NetworkController.NetPropertyChangedEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.NetworkController.NetPropertyChangedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: NetworkController.NetPropertyChangedEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.NetworkController.NetPropertyChangedEventHandler.EndInvoke*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Godot.StringName
+  commentId: T:Godot.StringName
+  parent: Godot
+  isExternal: true
+  name: StringName
+  nameWithType: StringName
+  fullName: Godot.StringName
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.NetworkController.NetPropertyChangedEventHandler.#ctor*
+  commentId: Overload:Nebula.NetworkController.NetPropertyChangedEventHandler.#ctor
+  isExternal: true
+  href: Nebula.NetworkController.NetPropertyChangedEventHandler.html#Nebula_NetworkController_NetPropertyChangedEventHandler__ctor_System_Object_System_IntPtr_
+  name: NetPropertyChangedEventHandler
+  nameWithType: NetworkController.NetPropertyChangedEventHandler.NetPropertyChangedEventHandler
+  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler.NetPropertyChangedEventHandler
+  nameWithType.vb: NetworkController.NetPropertyChangedEventHandler.New
+  fullName.vb: Nebula.NetworkController.NetPropertyChangedEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: Nebula.NetworkController.NetPropertyChangedEventHandler.Invoke*
+  commentId: Overload:Nebula.NetworkController.NetPropertyChangedEventHandler.Invoke
+  isExternal: true
+  href: Nebula.NetworkController.NetPropertyChangedEventHandler.html#Nebula_NetworkController_NetPropertyChangedEventHandler_Invoke_System_String_Godot_StringName_
+  name: Invoke
+  nameWithType: NetworkController.NetPropertyChangedEventHandler.Invoke
+  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler.Invoke
+- uid: Nebula.NetworkController.NetPropertyChangedEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.NetworkController.NetPropertyChangedEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.NetworkController.NetPropertyChangedEventHandler.html#Nebula_NetworkController_NetPropertyChangedEventHandler_BeginInvoke_System_String_Godot_StringName_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: NetworkController.NetPropertyChangedEventHandler.BeginInvoke
+  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.NetworkController.NetPropertyChangedEventHandler.EndInvoke*
+  commentId: Overload:Nebula.NetworkController.NetPropertyChangedEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.NetworkController.NetPropertyChangedEventHandler.html#Nebula_NetworkController_NetPropertyChangedEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: NetworkController.NetPropertyChangedEventHandler.EndInvoke
+  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler.EndInvoke

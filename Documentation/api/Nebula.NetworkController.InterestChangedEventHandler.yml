@@ -1,0 +1,257 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NetworkController.InterestChangedEventHandler
+  commentId: T:Nebula.NetworkController.InterestChangedEventHandler
+  id: NetworkController.InterestChangedEventHandler
+  parent: Nebula
+  children:
+  - Nebula.NetworkController.InterestChangedEventHandler.#ctor(System.Object,System.IntPtr)
+  - Nebula.NetworkController.InterestChangedEventHandler.BeginInvoke(Nebula.UUID,System.Int64,System.AsyncCallback,System.Object)
+  - Nebula.NetworkController.InterestChangedEventHandler.EndInvoke(System.IAsyncResult)
+  - Nebula.NetworkController.InterestChangedEventHandler.Invoke(Nebula.UUID,System.Int64)
+  langs:
+  - csharp
+  - vb
+  name: NetworkController.InterestChangedEventHandler
+  nameWithType: NetworkController.InterestChangedEventHandler
+  fullName: Nebula.NetworkController.InterestChangedEventHandler
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: >-
+      [Signal]
+
+      public delegate void NetworkController.InterestChangedEventHandler(UUID peerId, long interestLayers)
+    parameters:
+    - id: peerId
+      type: Nebula.UUID
+    - id: interestLayers
+      type: System.Int64
+    content.vb: >-
+      <Signal>
+
+      Public Delegate Sub NetworkController.InterestChangedEventHandler(peerId As UUID, interestLayers As Long)
+  attributes:
+  - type: Godot.SignalAttribute
+    ctor: Godot.SignalAttribute.#ctor
+    arguments: []
+- uid: Nebula.NetworkController.InterestChangedEventHandler.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.NetworkController.InterestChangedEventHandler.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.NetworkController.InterestChangedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: InterestChangedEventHandler(object, nint)
+  nameWithType: NetworkController.InterestChangedEventHandler.InterestChangedEventHandler(object, nint)
+  fullName: Nebula.NetworkController.InterestChangedEventHandler.InterestChangedEventHandler(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public InterestChangedEventHandler(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.NetworkController.InterestChangedEventHandler.#ctor*
+  nameWithType.vb: NetworkController.InterestChangedEventHandler.New(Object, IntPtr)
+  fullName.vb: Nebula.NetworkController.InterestChangedEventHandler.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.NetworkController.InterestChangedEventHandler.Invoke(Nebula.UUID,System.Int64)
+  commentId: M:Nebula.NetworkController.InterestChangedEventHandler.Invoke(Nebula.UUID,System.Int64)
+  id: Invoke(Nebula.UUID,System.Int64)
+  parent: Nebula.NetworkController.InterestChangedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: Invoke(UUID, long)
+  nameWithType: NetworkController.InterestChangedEventHandler.Invoke(UUID, long)
+  fullName: Nebula.NetworkController.InterestChangedEventHandler.Invoke(Nebula.UUID, long)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void Invoke(UUID peerId, long interestLayers)
+    parameters:
+    - id: peerId
+      type: Nebula.UUID
+    - id: interestLayers
+      type: System.Int64
+    content.vb: Public Overridable Sub Invoke(peerId As UUID, interestLayers As Long)
+  overload: Nebula.NetworkController.InterestChangedEventHandler.Invoke*
+  nameWithType.vb: NetworkController.InterestChangedEventHandler.Invoke(UUID, Long)
+  fullName.vb: Nebula.NetworkController.InterestChangedEventHandler.Invoke(Nebula.UUID, Long)
+  name.vb: Invoke(UUID, Long)
+- uid: Nebula.NetworkController.InterestChangedEventHandler.BeginInvoke(Nebula.UUID,System.Int64,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.NetworkController.InterestChangedEventHandler.BeginInvoke(Nebula.UUID,System.Int64,System.AsyncCallback,System.Object)
+  id: BeginInvoke(Nebula.UUID,System.Int64,System.AsyncCallback,System.Object)
+  parent: Nebula.NetworkController.InterestChangedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(UUID, long, AsyncCallback, object)
+  nameWithType: NetworkController.InterestChangedEventHandler.BeginInvoke(UUID, long, AsyncCallback, object)
+  fullName: Nebula.NetworkController.InterestChangedEventHandler.BeginInvoke(Nebula.UUID, long, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(UUID peerId, long interestLayers, AsyncCallback callback, object @object)
+    parameters:
+    - id: peerId
+      type: Nebula.UUID
+    - id: interestLayers
+      type: System.Int64
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(peerId As UUID, interestLayers As Long, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.NetworkController.InterestChangedEventHandler.BeginInvoke*
+  nameWithType.vb: NetworkController.InterestChangedEventHandler.BeginInvoke(UUID, Long, AsyncCallback, Object)
+  fullName.vb: Nebula.NetworkController.InterestChangedEventHandler.BeginInvoke(Nebula.UUID, Long, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(UUID, Long, AsyncCallback, Object)
+- uid: Nebula.NetworkController.InterestChangedEventHandler.EndInvoke(System.IAsyncResult)
+  commentId: M:Nebula.NetworkController.InterestChangedEventHandler.EndInvoke(System.IAsyncResult)
+  id: EndInvoke(System.IAsyncResult)
+  parent: Nebula.NetworkController.InterestChangedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(IAsyncResult)
+  nameWithType: NetworkController.InterestChangedEventHandler.EndInvoke(IAsyncResult)
+  fullName: Nebula.NetworkController.InterestChangedEventHandler.EndInvoke(System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public virtual void EndInvoke(IAsyncResult result)
+    parameters:
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(result As IAsyncResult)
+  overload: Nebula.NetworkController.InterestChangedEventHandler.EndInvoke*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.UUID
+  commentId: T:Nebula.UUID
+  parent: Nebula
+  isExternal: true
+  href: Nebula.UUID.html
+  name: UUID
+  nameWithType: UUID
+  fullName: Nebula.UUID
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.NetworkController.InterestChangedEventHandler.#ctor*
+  commentId: Overload:Nebula.NetworkController.InterestChangedEventHandler.#ctor
+  isExternal: true
+  href: Nebula.NetworkController.InterestChangedEventHandler.html#Nebula_NetworkController_InterestChangedEventHandler__ctor_System_Object_System_IntPtr_
+  name: InterestChangedEventHandler
+  nameWithType: NetworkController.InterestChangedEventHandler.InterestChangedEventHandler
+  fullName: Nebula.NetworkController.InterestChangedEventHandler.InterestChangedEventHandler
+  nameWithType.vb: NetworkController.InterestChangedEventHandler.New
+  fullName.vb: Nebula.NetworkController.InterestChangedEventHandler.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: Nebula.NetworkController.InterestChangedEventHandler.Invoke*
+  commentId: Overload:Nebula.NetworkController.InterestChangedEventHandler.Invoke
+  isExternal: true
+  href: Nebula.NetworkController.InterestChangedEventHandler.html#Nebula_NetworkController_InterestChangedEventHandler_Invoke_Nebula_UUID_System_Int64_
+  name: Invoke
+  nameWithType: NetworkController.InterestChangedEventHandler.Invoke
+  fullName: Nebula.NetworkController.InterestChangedEventHandler.Invoke
+- uid: Nebula.NetworkController.InterestChangedEventHandler.BeginInvoke*
+  commentId: Overload:Nebula.NetworkController.InterestChangedEventHandler.BeginInvoke
+  isExternal: true
+  href: Nebula.NetworkController.InterestChangedEventHandler.html#Nebula_NetworkController_InterestChangedEventHandler_BeginInvoke_Nebula_UUID_System_Int64_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: NetworkController.InterestChangedEventHandler.BeginInvoke
+  fullName: Nebula.NetworkController.InterestChangedEventHandler.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.NetworkController.InterestChangedEventHandler.EndInvoke*
+  commentId: Overload:Nebula.NetworkController.InterestChangedEventHandler.EndInvoke
+  isExternal: true
+  href: Nebula.NetworkController.InterestChangedEventHandler.html#Nebula_NetworkController_InterestChangedEventHandler_EndInvoke_System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: NetworkController.InterestChangedEventHandler.EndInvoke
+  fullName: Nebula.NetworkController.InterestChangedEventHandler.EndInvoke

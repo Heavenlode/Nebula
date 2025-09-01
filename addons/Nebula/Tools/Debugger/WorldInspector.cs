@@ -85,5 +85,20 @@ namespace Nebula.Internal.Editor
                 }
             }
         }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (currentNodeData != null)
+                {
+                    currentNodeData.Clear();
+                }
+                if (inspectorProperties != null)
+                {
+                    inspectorProperties.Clear();
+                }
+            }
+            base.Dispose(disposing);
+        }
     }
 }

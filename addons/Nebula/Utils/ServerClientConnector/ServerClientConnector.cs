@@ -24,9 +24,9 @@ namespace Nebula.Utility.Tools
 			if (Env.Instance.InitialWorldScene != null)
 			{
 				Debugger.Instance.Log("Loading initial world scene: " + Env.Instance.InitialWorldScene);
-				Debugger.Instance.Log("No existing zone data found. Create fresh zone instance.");
+				Debugger.Instance.Log("No existing World data found. Create fresh World instance.");
 				var InitialWorldScene = GD.Load<PackedScene>(Env.Instance.InitialWorldScene);
-				NetRunner.Instance.CreateWorldPacked(Env.Instance.InitialWorldId, InitialWorldScene);
+				NetRunner.Instance.CreateWorld(Env.Instance.InitialWorldId, InitialWorldScene);
 				Debugger.Instance.Log("Server ready");
 			}
 			else

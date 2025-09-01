@@ -5,6 +5,7 @@ using Godot;
 using Nebula.Serialization;
 using System;
 using Nebula.Utility.Tools;
+using Nebula.Authentication;
 
 namespace Nebula
 {
@@ -19,9 +20,18 @@ namespace Nebula
         [Export] public string ServerAddress = "127.0.0.1";
 
         /// <summary>
-        /// The port for the server to listen on, and the client to connect to. If BlastoffClient is installed, this will be overridden to 20406, the Blastoff port.
+        /// The port for the server to listen on, and the client to connect to.
         /// </summary>
-        [Export] public int Port = 8888;
+        [Export] public int Port { get; private set; } = 8888;
+
+        /// <summary>
+        /// Manually/dynamically override the port for the server to listen on, and the client to connect to.
+        /// </summary>
+        /// <param name="port"></param>
+        public void OverridePort(int port) {
+            Debugger.Instance.Log($"Overriding port to {port}", Debugger.DebugLevel.VERBOSE);
+            Port = port;
+        }
 
         /// <summary>
         /// The port for the debug server to listen on.
@@ -33,9 +43,6 @@ namespace Nebula
         /// </summary>
         [Export] public int MaxPeers = 100;
 
-        /// <summary>
-        /// The current World ID. This is mainly used for Blastoff.
-        /// </summary>
         public Dictionary<UUID, WorldRunner> Worlds { get; private set; } = [];
         internal ENetConnection ENet;
         internal ENetPacketPeer ENetHost;
@@ -95,11 +102,28 @@ namespace Nebula
             /// NetFunction call.
             /// </summary>
             Function = 3,
+        }
 
-            /// <summary>
-            /// Server communication with Blastoff. Data sent to this channel from a client will be ignored by Blastoff.
-            /// </summary>
-            BlastoffAdmin = 249,
+        /// <summary>
+        /// This is only used to prevent plugins from using reserved channels or reserving each other's channels.
+        /// </summary>
+        private Dictionary<int, Callable> ReservedChannels = [];
+        /// <summary>
+        /// Reserve a channel for custom use, e.g. within plugins. If the channel is already reserved, it will throw an exception. 
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <exception cref="Exception"></exception>
+        public void ReserveChannel(int channel, Callable handler)
+        {
+            if (Enum.IsDefined(typeof(ENetChannelId), channel))
+            {
+                throw new Exception($"Failure to register ENET channel {channel}: it is reserved by Nebula.");
+            }
+            if (ReservedChannels.ContainsKey(channel))
+            {
+                throw new Exception($"Failure to register ENET channel {channel}: it is already reserved.");
+            }
+            ReservedChannels[channel] = handler;
         }
 
         /// <summary>
@@ -123,8 +147,26 @@ namespace Nebula
 
         private ENetConnection debugEnet;
 
+        public IAuthenticator Authentication { get; private set; }
+        public void SetAuthentication(IAuthenticator authentication) {
+            if (Authentication != null) {
+                Debugger.Instance.Log("Setting authentication on NetRunner after it was already set. This is only a bug if it was unintentional.", Debugger.DebugLevel.WARN);
+            }
+            Connect("OnPeerConnected", Callable.From((NetPeer peer) => {
+                Authentication.ServerAuthenticateClient(peer);
+            }));
+            Connect("OnConnectedToServer", Callable.From(() => {
+                Authentication.ClientAuthenticateWithServer();
+            }));
+            Authentication = authentication;
+        }
+
         public void StartServer()
         {
+            if (Authentication == null) {
+                SetAuthentication(new DefaultAuthenticator());
+            }
+
             IsServer = true;
             Debugger.Instance.Log("Starting Server");
             GetTree().MultiplayerPoll = false;
@@ -155,7 +197,6 @@ namespace Nebula
         {
             ENet = new ENetConnection();
             ENet.CreateHost();
-            // ENetHost = ENet.ConnectToHost(ServerAddress, BlastoffClient != null ? 20406 : Port);
             ENetHost = ENet.ConnectToHost(ServerAddress, Port);
             ENet.Compress(ENetConnection.CompressionMode.RangeCoder);
             if (ENetHost == null)
@@ -213,6 +254,21 @@ namespace Nebula
             }
         }
 
+
+        // We could enable this if the ReservedChannels system is insufficient.
+        // [Signal]
+        // public delegate void OnMessageReceivedEventHandler(NetPeer peer, int channel, byte[] data);
+
+
+        [Signal]
+        public delegate void OnPeerConnectedEventHandler(NetPeer peer);
+
+        [Signal]
+        public delegate void OnPeerDisconnectedEventHandler(NetPeer peer);
+
+        [Signal]
+        public delegate void OnConnectedToServerEventHandler();
+
         /// <inheritdoc/>
         public override void _PhysicsProcess(double delta)
         {
@@ -233,21 +289,18 @@ namespace Nebula
                 switch (eventType)
                 {
                     case ENetConnection.EventType.Connect:
-                        if (packetPeer == ENetHost)
-                        {
-                            // _OnConnectedToServer();
-                        }
-                        else
-                        {
-                            _OnPeerConnected(packetPeer);
+                        if (IsServer) {
+                            EmitSignal("OnPeerConnected", packetPeer);
+                        } else {
+                            EmitSignal("OnConnectedToServer");
                         }
                         break;
                     case ENetConnection.EventType.Disconnect:
                         _OnPeerDisconnected(packetPeer);
                         break;
                     case ENetConnection.EventType.Receive:
-                        var data = new HLBuffer(packetPeer.GetPacket());
                         var channel = enetEvent[3].As<int>();
+                        var data = new HLBuffer(packetPeer.GetPacket());
                         switch ((ENetChannelId)channel)
                         {
                             case ENetChannelId.Tick:
@@ -285,43 +338,18 @@ namespace Nebula
                                     WorldRunner.CurrentWorld.ReceiveNetFunction(ENetHost, data);
                                 }
                                 break;
-                            // case ENetChannelId.BlastoffAdmin:
-                            //     if (IsServer)
-                            //     {
-                            //         if (BlastoffServer == null)
-                            //         {
-                            //             // This channel is only used for Blastoff which must be enabled.
-                            //             break;
-                            //         }
-                            //         if (BlastoffPendingValidation.Contains(packetPeer))
-                            //         {
-                            //             // We're in the process of validating a peer for Blastoff.
-                            //             var token = System.Text.Encoding.UTF8.GetString(data.bytes);
-                            //             if (BlastoffServer.BlastoffValidatePeer(token, out var worldId))
-                            //             {
-                            //                 _validatePeerConnected(packetPeer, worldId, token);
-                            //                 packetPeer.Send((int)ENetChannelId.BlastoffAdmin, [(byte)BlastoffCommands.ValidateClient], (int)ENetPacketPeer.FlagReliable);
-                            //             }
-                            //             else
-                            //             {
-                            //                 packetPeer.Send((int)ENetChannelId.BlastoffAdmin, [(byte)BlastoffCommands.InvalidClient], (int)ENetPacketPeer.FlagReliable);
-                            //             }
-                            //         }
-                            //     }
-                            //     else
-                            //     {
-                            //         // Clients should never receive messages on the Blastoff channel
-                            //         break;
-                            //     }
-                            //     break;
-
+                            default:
+                                if (ReservedChannels.ContainsKey(channel)) {
+                                    ReservedChannels[channel].Call(packetPeer, data.bytes);
+                                }
+                                break;
                         }
                         break;
                 }
             }
         }
 
-        internal void _validatePeerConnected(NetPeer peer, UUID worldId, string token = "")
+        public void PeerJoinWorld(NetPeer peer, UUID worldId, string token = "")
         {
             var peerId = new UUID();
             Peers[peerId] = peer;
@@ -334,26 +362,12 @@ namespace Nebula
                 wrapper.SetPeerInterest(peerId, Int64.MaxValue, true);
             }
             Worlds[worldId].JoinPeer(peer, token);
-            // BlastoffPendingValidation.Remove(peer);
-        }
-        private void _OnPeerConnected(NetPeer peer)
-        {
-            Debugger.Instance.Log($"Peer {peer} joined");
-            // if (BlastoffServer != null)
-            // {
-            //     BlastoffPendingValidation.Add(peer);
-            // }
-            // else
-            // {
-                // TODO: Don't use GUID Empty
-                _validatePeerConnected(peer, UUID.Empty);
-            // }
         }
 
         [Signal]
         public delegate void OnWorldCreatedEventHandler(WorldRunner world);
 
-        public WorldRunner CreateWorldPacked(UUID worldId, PackedScene scene)
+        public WorldRunner CreateWorld(UUID worldId, PackedScene scene)
         {
             if (!IsServer) return null;
             var node = new NetNodeWrapper(scene.Instantiate());
@@ -396,6 +410,7 @@ namespace Nebula
         public void _OnPeerDisconnected(ENetPacketPeer peer)
         {
             Debugger.Instance.Log($"Peer disconnected peerId: {peer}");
+            EmitSignal("OnPeerDisconnected", peer);
         }
     }
 }

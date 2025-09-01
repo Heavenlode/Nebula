@@ -13,6 +13,16 @@ namespace Nebula.Utility.Tools
 
         public Godot.Collections.Dictionary<string, string> StartArgs = [];
 
+        public enum DevelopmentModeType {
+            Local,
+            Unknown,
+        }
+
+        public DevelopmentModeType DevelopmentMode => GetValue("DEVELOPMENT_MODE") switch {
+            "local" => DevelopmentModeType.Local,
+            _ => DevelopmentModeType.Unknown
+        };
+
         public enum ProjectSettingId
         {
             WORLD_DEFAULT_SCENE
@@ -71,11 +81,11 @@ namespace Nebula.Utility.Tools
 
             if (HasServerFeatures)
             {
-                env = Parse("res://.env.server.txt");
+                env = Parse("res://.env.server");
             }
             else
             {
-                env = Parse("res://.env.client.txt");
+                env = Parse("res://.env.client");
             }
 
             if (env.ContainsKey(valuename))

@@ -41,12 +41,13 @@ namespace Nebula.Utility.Tools
             var messageString = $"({level}) Nebula.{platform}: {msg}";
             if (level == DebugLevel.ERROR)
             {
-                GD.PrintErr(messageString);
-                // Also print stack trace
-                GD.Print(new System.Exception().StackTrace);
+                GD.PushError(messageString, new System.Exception().StackTrace);
             }
-            else
+            else if (level == DebugLevel.WARN)
             {
+                GD.PushWarning(messageString);
+            }
+            else {
                 GD.Print(messageString);
             }
         }

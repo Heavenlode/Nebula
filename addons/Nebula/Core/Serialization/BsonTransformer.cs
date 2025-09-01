@@ -142,18 +142,18 @@ namespace Nebula.Serialization
             var network = netNode.Network;
             if (!network.IsNetScene())
             {
-                throw new System.Exception("Only network scenes can be converted to BSON: " + network.Owner.Node.GetPath());
+                throw new System.Exception("Only network scenes can be converted to BSON: " + netNode.Node.GetPath());
             }
             BsonDocument result = new BsonDocument();
             result["data"] = new BsonDocument();
             if (network.IsNetScene())
             {
-                result["scene"] = network.Owner.Node.SceneFilePath;
+                result["scene"] = netNode.Node.SceneFilePath;
             }
             // We retain this for debugging purposes.
-            result["nodeName"] = network.Owner.Node.Name.ToString();
+            result["nodeName"] = netNode.Node.Name.ToString();
 
-            foreach (var node in ProtocolRegistry.Instance.ListProperties(network.Owner.Node.SceneFilePath))
+            foreach (var node in ProtocolRegistry.Instance.ListProperties(netNode.Node.SceneFilePath))
             {
                 var nodePath = node["nodePath"].AsString();
                 var nodeProps = node["properties"].As<Godot.Collections.Array<ProtocolNetProperty>>();
@@ -170,9 +170,9 @@ namespace Nebula.Serialization
                     {
                         continue;
                     }
-                    var prop = network.Owner.Node.GetNode(nodePath).Get(property.Name);
+                    var prop = netNode.Node.GetNode(nodePath).Get(property.Name);
                     var val = SerializeVariant(context, prop, property.Metadata.TypeIdentifier);
-                    Debugger.Instance.Log($"Serializing: {nodePath}.{property.Name} with value: {val}", Debugger.DebugLevel.VERBOSE);
+                    // Debugger.Instance.Log($"Serializing: {nodePath}.{property.Name} with value: {val}", Debugger.DebugLevel.VERBOSE);
                     if (val == null) continue;
                     nodeData[property.Name] = val;
                     hasValues = true;
@@ -192,7 +192,7 @@ namespace Nebula.Serialization
                 {
                     if (child.Node is INetNode networkChild && (skipNodeTypes == null || !skipNodeTypes.Contains(networkChild.GetType())))
                     {
-                        string pathTo = network.Owner.Node.GetPathTo(networkChild.Network.Owner.Node);
+                        string pathTo = netNode.Node.GetPathTo(networkChild.Node);
                         result["children"][pathTo] = ToBSONDocument(networkChild, context, recurse, skipNodeTypes, propTypes, skipPropTypes);
                     }
                 }
@@ -347,6 +347,10 @@ namespace Nebula.Serialization
                 {
                     var nodePath = child.Name;
                     var children = child.Value as BsonArray;
+                    if (children == null)
+                    {
+                        continue;
+                    }
                     foreach (var childData in children)
                     {
                         var childNode = await FromBSON<T>(protocolRegistry, context, childData as BsonDocument);
@@ -427,6 +431,14 @@ namespace Nebula.Serialization
             else if (variant.VariantType == Variant.Type.PackedByteArray)
             {
                 return new BsonBinaryData(variant.AsByteArray(), BsonBinarySubType.Binary);
+            }
+            else if (variant.VariantType == Variant.Type.PackedInt32Array)
+            {
+                return new BsonArray(variant.AsInt32Array());
+            }
+            else if (variant.VariantType == Variant.Type.PackedInt64Array)
+            {
+                return new BsonArray(variant.AsInt64Array());
             }
             else if (variant.VariantType == Variant.Type.Dictionary)
             {

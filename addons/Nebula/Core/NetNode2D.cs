@@ -18,6 +18,7 @@ namespace Nebula
 	[SerialTypeIdentifier("NetNode"), Icon("res://addons/Nebula/Core/NetNode2D.png")]
 	public partial class NetNode2D : Node2D, INetNode, INotifyPropertyChanged, INetSerializable<NetNode2D>, IBsonSerializable<NetNode2D>
 	{
+		public Node Node => this;
 		public NetworkController Network { get; internal set; }
 		public NetNode2D()
 		{
@@ -70,7 +71,12 @@ namespace Nebula
 			HLBytes.Pack(buffer, staticChildId);
 			return buffer;
 		}
-		public static NetNode2D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, NetNode2D initialObject)
+
+		public static Variant GetDeserializeContext(NetNode2D obj)
+        {
+            return new Variant();
+        }
+		public static NetNode2D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, Variant ctx)
 		{
 			var networkID = HLBytes.UnpackByte(buffer);
 			if (networkID == 0)

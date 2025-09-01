@@ -89,7 +89,7 @@ namespace Nebula.Serialization
                     {
                         ScriptPath = GetScriptPath(type),
                         Properties = GetInheritanceChain(type)
-                            .SelectMany(t => t.GetProperties())
+                            .SelectMany(t => t.GetProperties(System.Reflection.BindingFlags.DeclaredOnly | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
                             .Where(p => p.GetCustomAttributes(false)
                                 .Any(a => a.GetType().Name == "NetProperty"))
                             .Select(p => new NetPropertyInfo
@@ -98,7 +98,7 @@ namespace Nebula.Serialization
                                 Attributes = p.GetCustomAttributes(false)
                             }),
                         Functions = GetInheritanceChain(type)
-                            .SelectMany(t => t.GetMethods())
+                            .SelectMany(t => t.GetMethods(System.Reflection.BindingFlags.DeclaredOnly | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
                             .Where(m => m.GetCustomAttributes(false)
                                 .Any(a => a.GetType().Name == "NetFunction"))
                             .Select(m => new NetworkMethodInfo
@@ -181,12 +181,11 @@ namespace Nebula.Serialization
                     resource.PROPERTIES_MAP[sceneResourcePath] = result.Properties;
                     resource.PROPERTIES_LOOKUP[sceneResourcePath] = new Dictionary<int, ProtocolNetProperty>();
 
-                    int propId = 0;
                     foreach (var node in result.Properties)
                     {
                         foreach (var prop in node.Value.Values)
                         {
-                            resource.PROPERTIES_LOOKUP[sceneResourcePath][propId++] = prop;
+                            resource.PROPERTIES_LOOKUP[sceneResourcePath][prop.Index] = prop;
                         }
                     }
                 }
@@ -196,12 +195,11 @@ namespace Nebula.Serialization
                     resource.FUNCTIONS_MAP[sceneResourcePath] = result.Functions;
                     resource.FUNCTIONS_LOOKUP[sceneResourcePath] = new Dictionary<int, ProtocolNetFunction>();
 
-                    int funcId = 0;
                     foreach (var node in result.Functions)
                     {
                         foreach (var func in node.Value.Values)
                         {
-                            resource.FUNCTIONS_LOOKUP[sceneResourcePath][funcId++] = func;
+                            resource.FUNCTIONS_LOOKUP[sceneResourcePath][func.Index] = func;
                         }
                     }
                 }
@@ -311,7 +309,6 @@ namespace Nebula.Serialization
                 {
                     continue;
                 }
-
                 // This is a nested scene within the scene
                 if (nodeIsNestedScene)
                 {
@@ -329,10 +326,16 @@ namespace Nebula.Serialization
                     }
                     foreach (var kvp in recurseData.Properties)
                     {
+                        foreach (var prop in kvp.Value) {
+                            prop.Value.Index = (byte)propertyCount++;
+                        }
                         result.Properties[nodePath + "/" + kvp.Key] = kvp.Value;
                     }
                     foreach (var kvp in recurseData.Functions)
                     {
+                        foreach (var func in kvp.Value) {
+                            func.Value.Index = (byte)functionCount++;
+                        }
                         result.Functions[nodePath + "/" + kvp.Key] = kvp.Value;
                     }
                     continue;

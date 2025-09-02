@@ -1,16 +1,30 @@
+using Nebula.Tools;
+
 using System;
 using Godot;
 using Godot.Collections;
 
-namespace Nebula.Internal.Editor {
+namespace Nebula.Internal.Editor
+{
 
+    /// <summary>
+    /// Addon Manager window for Nebula. Allows browsing, downloading,
+    /// and installing addons from the central Nebula.Addons repository.
+    /// Integrates with the Godot editor and updates .csproj if necessary.
+    /// </summary>
     [Tool]
     public partial class AddonManager : Window
     {
 
+        /// <summary>
+        /// UI element that lists available addons fetched from the repository.
+        /// </summary>
         [Export]
         public ItemList AddonList;
 
+        /// <summary>
+        /// UI element that displays details or README content for the selected addon.
+        /// </summary>
         [Export]
         public RichTextLabel AddonDescription;
 
@@ -21,9 +35,12 @@ namespace Nebula.Internal.Editor {
         private Dictionary<int, Dictionary> addonData = [];
 
         private Downloader downloader;
-        
+
         private const string REPO_LIST_URL = "https://raw.githubusercontent.com/Heavenlode/Nebula.Addons/refs/heads/main/repo-list.json";
 
+        /// <summary>
+        /// Initializes HTTP requests and downloader when the window is ready.
+        /// </summary>
         public override void _Ready()
         {
             // Create and configure HTTPRequest nodes
@@ -34,26 +51,38 @@ namespace Nebula.Internal.Editor {
 
             downloader = new Downloader();
             AddChild(downloader);
-            downloader.DownloadCompleted += OnDownloadCompleted;
-            downloader.DownloadFailed += OnDownloadFailed;
-            
-            httpRequest.RequestCompleted += OnRequestCompleted;
-            readmeRequest.RequestCompleted += OnReadmeRequestCompleted;
+            downloader.DownloadCompleted += _onDownloadCompleted;
+            downloader.DownloadFailed += _onDownloadFailed;
+
+            httpRequest.RequestCompleted += _onRequestCompleted;
+            readmeRequest.RequestCompleted += _onReadmeRequestCompleted;
         }
 
-        public void SetPluginRoot(Node pluginRoot) {
-            pluginRoot.Call("_register_menu_item", "Addons", new Callable(this, nameof(_OnAddonsMenuClicked)));
+        /// <summary>
+        /// Registers the Addons menu item in the Nebula tool submenu.
+        /// </summary>
+        public void SetPluginRoot(Main pluginRoot)
+        {
+            pluginRoot.RegisterMenuItem("Addons", _OnAddonsMenuClicked);
         }
 
+        /// <summary>
+        /// Opens the Addon Manager popup and loads addons if not already loaded.
+        /// </summary>
         private void _OnAddonsMenuClicked()
         {
             PopupCentered();
-            if (!loaded) {
-                LoadAddons();
+            if (!loaded)
+            {
+                _loadAddons();
             }
         }
 
-        private void _OnInstall()
+        /// <summary>
+        /// Installs the currently selected addon by downloading it to the addons directory.
+        /// Updates the project .csproj file if needed.
+        /// </summary>
+        private void _onInstall()
         {
             if (!AddonList.IsAnythingSelected())
             {
@@ -74,7 +103,7 @@ namespace Nebula.Internal.Editor {
 
             // Get the project root directory and construct addons path
             string addonsDir = ProjectSettings.GlobalizePath("res://addons");
-            
+
             // Ensure the addons directory exists
             if (!DirAccess.DirExistsAbsolute(addonsDir))
             {
@@ -83,22 +112,30 @@ namespace Nebula.Internal.Editor {
 
             // Show downloading status
             AddonDescription.Text = $"Installing {repoName}...";
-            
+
             downloader.DownloadAddon(repoUrl, "main", addonsDir, repoName);
         }
 
-        private void LoadAddons() {
+        /// <summary>
+        /// Starts fetching the addon repository list.
+        /// </summary>
+        private void _loadAddons()
+        {
             // Clear existing items
             AddonList.Clear();
-            
+
             // Start the download
             Error error = httpRequest.Request(REPO_LIST_URL);
-            if (error != Error.Ok) {
+            if (error != Error.Ok)
+            {
                 GD.PrintErr($"Failed to start addon list download: {error}");
             }
         }
 
-        private void _OnItemSelected(int index)
+        /// <summary>
+        /// Displays addon details when selected, fetching README if not cached.
+        /// </summary>
+        private void _onItemSelected(int index)
         {
             if (!addonData.ContainsKey(index))
             {
@@ -122,7 +159,7 @@ namespace Nebula.Internal.Editor {
 
             // Construct README URL (assuming main branch and README.md in root)
             string readmeUrl = $"https://raw.githubusercontent.com/Heavenlode/{repoName}/main/README.md";
-            
+
             Error error = readmeRequest.Request(readmeUrl);
             if (error != Error.Ok)
             {
@@ -131,7 +168,11 @@ namespace Nebula.Internal.Editor {
             }
         }
 
-        private void OnRequestCompleted(long result, long responseCode, string[] headers, byte[] body)
+        /// <summary>
+        /// Callback for addon list request completion.
+        /// Parses and populates the addon list UI.
+        /// </summary>
+        private void _onRequestCompleted(long result, long responseCode, string[] headers, byte[] body)
         {
             if (result != (long)HttpRequest.Result.Success)
             {
@@ -142,7 +183,7 @@ namespace Nebula.Internal.Editor {
             string jsonStr = System.Text.Encoding.UTF8.GetString(body);
             var json = new Json();
             Error parseResult = json.Parse(jsonStr);
-            
+
             if (parseResult != Error.Ok)
             {
                 GD.PrintErr($"Failed to parse addon list JSON: {json.GetErrorMessage()}");
@@ -155,7 +196,8 @@ namespace Nebula.Internal.Editor {
                 if (repoList[i].VariantType == Variant.Type.Dictionary)
                 {
                     var repo = repoList[i].AsGodotDictionary();
-                    if (repo.ContainsKey("url")) {
+                    if (repo.ContainsKey("url"))
+                    {
                         string url = repo["url"].AsString();
                         string repoName = url.Split('/')[^1];
                         AddonList.AddItem(repoName);
@@ -167,7 +209,11 @@ namespace Nebula.Internal.Editor {
             loaded = true;
         }
 
-        private void OnReadmeRequestCompleted(long result, long responseCode, string[] headers, byte[] body)
+        /// <summary>
+        /// Callback for README request completion.
+        /// Updates the addon description panel.
+        /// </summary>
+        private void _onReadmeRequestCompleted(long result, long responseCode, string[] headers, byte[] body)
         {
             if (result != (long)HttpRequest.Result.Success || responseCode != 200)
             {
@@ -176,14 +222,14 @@ namespace Nebula.Internal.Editor {
             }
 
             string readmeContent = System.Text.Encoding.UTF8.GetString(body);
-            
+
             // Get the currently selected item's repo name
             int selectedIdx = AddonList.GetSelectedItems()[0];
             string repoName = addonData[selectedIdx]["url"].AsString().Split('/')[^1];
-            
+
             // Cache the README
             readmeCache[repoName] = readmeContent;
-            
+
             // Only update the text if this is still the selected item
             if (AddonList.IsAnythingSelected() && AddonList.GetSelectedItems()[0] == selectedIdx)
             {
@@ -191,9 +237,12 @@ namespace Nebula.Internal.Editor {
             }
         }
 
-        private void OnDownloadCompleted(string targetPath)
+        /// <summary>
+        /// Handles post-download installation steps: updating project .csproj if props exist.
+        /// </summary>
+        private void _onDownloadCompleted(string targetPath)
         {
-            try 
+            try
             {
                 // Check if Addon.props exists in the installed addon
                 string propsPath = $"{targetPath}/Addon.props";
@@ -252,7 +301,7 @@ namespace Nebula.Internal.Editor {
                 GD.PrintErr($"Failed to update .csproj: {e.Message}");
                 AddonDescription.Text = "Addon installed but failed to update .csproj";
             }
-            
+
             // Refresh the project
             if (Engine.IsEditorHint())
             {
@@ -260,13 +309,20 @@ namespace Nebula.Internal.Editor {
             }
         }
 
-        private void OnDownloadFailed(string error)
+        /// <summary>
+        /// Handles failed addon downloads.
+        /// </summary>
+        private void _onDownloadFailed(string error)
         {
             GD.PrintErr($"Failed to install addon: {error}");
             AddonDescription.Text = $"Failed to install addon: {error}";
         }
 
-        public void _OnCloseRequested() {
+        /// <summary>
+        /// Closes the Addon Manager window.
+        /// </summary>
+        public void _OnCloseRequested()
+        {
             Hide();
         }
     }

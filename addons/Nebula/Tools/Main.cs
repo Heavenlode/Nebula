@@ -50,8 +50,8 @@ public partial class Main : EditorPlugin
     public override void _EnterTree()
     {
         // Instantiate and add submenu
-        toolMenuInstance = ToolMenu.Instantiate<PopupMenu>();
-        AddToolSubmenuItem("Nebula", toolMenuInstance);
+        // toolMenuInstance = ToolMenu.Instantiate<PopupMenu>();
+        // AddToolSubmenuItem("Nebula", toolMenuInstance);
 
         // Register autoload singletons
         AddAutoloadSingleton(AUTOLOAD_DEBUGGER, "res://addons/Nebula/Utils/Debugger/Debugger.cs");
@@ -80,7 +80,7 @@ public partial class Main : EditorPlugin
         // Debugger client window
         serverDebugClientInstance = ServerDebugClient.Instantiate<Window>();
         AddChild(serverDebugClientInstance);
-        RegisterMenuItem("Debugger", () => serverDebugClientInstance.Show());
+        // RegisterMenuItem("Debugger", () => serverDebugClientInstance.Show());
 
         // Inspector plugin
         netSceneInspectorInstance = new NetSceneInspector();

@@ -63,7 +63,7 @@ namespace Nebula.Internal.Editor
         /// </summary>
         public void SetPluginRoot(Main pluginRoot)
         {
-            pluginRoot.RegisterMenuItem("Addons", _OnAddonsMenuClicked);
+            // pluginRoot.RegisterMenuItem("Addons", _OnAddonsMenuClicked);
         }
 
         /// <summary>

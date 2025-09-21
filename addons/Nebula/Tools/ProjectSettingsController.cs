@@ -74,17 +74,17 @@ public partial class ProjectSettingsController : Node
         });
 
         // World Settings - Managed Entrypoint
-        ProjectSettings.SetSetting("Nebula/world/managed_entrypoint", ProjectSettings.GetSetting("Nebula/world/managed_entrypoint", false));
-        ProjectSettings.SetInitialValue("Nebula/world/managed_entrypoint", false);
-        ProjectSettings.SetAsBasic("Nebula/world/managed_entrypoint", true);
-        ProjectSettings.AddPropertyInfo(new(){
-            {"name", "Nebula/world/managed_entrypoint"},
-            {"type", (int)Variant.Type.Bool},
-        });
+        // ProjectSettings.SetSetting("Nebula/world/managed_entrypoint", ProjectSettings.GetSetting("Nebula/world/managed_entrypoint", false));
+        // ProjectSettings.SetInitialValue("Nebula/world/managed_entrypoint", false);
+        // ProjectSettings.SetAsBasic("Nebula/world/managed_entrypoint", true);
+        // ProjectSettings.AddPropertyInfo(new(){
+        //     {"name", "Nebula/world/managed_entrypoint"},
+        //     {"type", (int)Variant.Type.Bool},
+        // });
 
-        // Override main_scene if managed_entrypoint is enabled
-        if (ProjectSettings.GetSetting("Nebula/world/managed_entrypoint", true).AsBool())
-            ProjectSettings.SetSetting("application/run/main_scene", "res://addons/Nebula/Utils/ServerClientConnector/default_server_client_connector.tscn");
+        // // Override main_scene if managed_entrypoint is enabled
+        // if (ProjectSettings.GetSetting("Nebula/world/managed_entrypoint", true).AsBool())
+        //     ProjectSettings.SetSetting("application/run/main_scene", "res://addons/Nebula/Utils/ServerClientConnector/default_server_client_connector.tscn");
 
         // Save project settings after modification
         ProjectSettings.Save();
@@ -98,15 +98,15 @@ public partial class ProjectSettingsController : Node
     {
 
         // Restore main_scene to user-defined default
-        ProjectSettings.SetSetting("application/run/main_scene", ProjectSettings.GetSetting("Nebula/world/default_scene"));
+        // ProjectSettings.SetSetting("application/run/main_scene", ProjectSettings.GetSetting("Nebula/world/default_scene"));
 
         // Clear Nebula-specific settings from ProjectSettings
-        ProjectSettings.Clear("Nebula/config/log_level");
-        ProjectSettings.Clear("Nebula/network/IP");
-        ProjectSettings.Clear("Nebula/network/default_port");
-        ProjectSettings.Clear("Nebula/network/MTU");
-        ProjectSettings.Clear("Nebula/world/default_scene");
-        ProjectSettings.Clear("Nebula/world/managed_entrypoint");
+        // ProjectSettings.Clear("Nebula/config/log_level");
+        // ProjectSettings.Clear("Nebula/network/IP");
+        // ProjectSettings.Clear("Nebula/network/default_port");
+        // ProjectSettings.Clear("Nebula/network/MTU");
+        // ProjectSettings.Clear("Nebula/world/default_scene");
+        // ProjectSettings.Clear("Nebula/world/managed_entrypoint");
 
         // Save after cleanup
         ProjectSettings.Save();

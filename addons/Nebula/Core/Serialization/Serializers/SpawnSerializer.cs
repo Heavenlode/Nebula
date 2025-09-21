@@ -74,7 +74,7 @@ namespace Nebula.Serialization.Serializers
             }
 
             NetRunner.Instance.RemoveChild(nodeOut.Node);
-            var newNode = ProtocolRegistry.Instance.UnpackScene(data.classId).Instantiate<INetNode>();
+            var newNode = ProtocolRegistry.Instance.UnpackScene(data.classId).Instantiate<INetNodeBase>();
             newNode.Network.IsClientSpawn = true;
             newNode.Network.NetId = networkId;
             newNode.Network.CurrentWorld = currentWorld;
@@ -153,7 +153,7 @@ namespace Nebula.Serialization.Serializers
                 return buffer;
             }
 
-            if (wrapper.Node is INetNode netNode) {
+            if (wrapper.Node is INetNodeBase netNode) {
                 // TODO: Maybe this should exist in the node wrapper?
                 if (!netNode.Network.spawnReady.GetValueOrDefault(peer, false))
                 {

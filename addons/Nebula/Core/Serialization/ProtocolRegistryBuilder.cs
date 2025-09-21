@@ -51,10 +51,12 @@ namespace Nebula.Serialization
             var serializableTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes()
                     .Where(type => {
+                        if (type.IsInterface) return false;
+                        
                         var interfaces = type.GetInterfaces();
                         return interfaces.Any(i => 
-                            (i.IsGenericType && i.GetGenericTypeDefinition().Name == "IBsonSerializable`1" && type.GetInterfaceMap(i).TargetMethods.Any(m => m.DeclaringType == type)) ||
-                            (i.IsGenericType && i.GetGenericTypeDefinition().Name == "INetSerializable`1" && type.GetInterfaceMap(i).TargetMethods.Any(m => m.DeclaringType == type)));
+                            (i.IsGenericType && i.GetGenericTypeDefinition().Name == "IBsonSerializable`1") ||
+                            (i.IsGenericType && i.GetGenericTypeDefinition().Name == "INetSerializable`1"));
                     }));
 
             var staticMethodIndex = 0;
@@ -82,32 +84,47 @@ namespace Nebula.Serialization
             }
 
             // Get all types from loaded assemblies that implement INetNode
-            var nodeNetworkTypes = AppDomain.CurrentDomain.GetAssemblies()
+            var netNodeTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes()
-                    .Where(type => type.GetInterfaces().Any(i => i.Name == "INetNode"))
-                    .Select(type => new NetworkTypeInfo
-                    {
-                        ScriptPath = GetScriptPath(type),
-                        Properties = GetInheritanceChain(type)
-                            .SelectMany(t => t.GetProperties(System.Reflection.BindingFlags.DeclaredOnly | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
-                            .Where(p => p.GetCustomAttributes(false)
-                                .Any(a => a.GetType().Name == "NetProperty"))
-                            .Select(p => new NetPropertyInfo
-                            {
-                                Property = p,
-                                Attributes = p.GetCustomAttributes(false)
-                            }),
-                        Functions = GetInheritanceChain(type)
-                            .SelectMany(t => t.GetMethods(System.Reflection.BindingFlags.DeclaredOnly | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
-                            .Where(m => m.GetCustomAttributes(false)
-                                .Any(a => a.GetType().Name == "NetFunction"))
-                            .Select(m => new NetworkMethodInfo
-                            {
-                                Method = m,
-                                Attributes = m.GetCustomAttributes(false)
-                            })
-                    }))
-                .ToDictionary(x => x.ScriptPath, x => x);
+                    .Where(type => type.GetInterfaces().Any(i => 
+                        i.IsGenericType && i.GetGenericTypeDefinition().Name == "INetNode`1"))
+                    .Select(type => new { Type = type, ScriptPath = GetScriptPath(type) })
+                    .Select(x => new { x.Type, x.ScriptPath, NetworkTypeInfo = new NetworkTypeInfo
+                        {
+                            ScriptPath = x.ScriptPath,
+                            Properties = GetInheritanceChain(x.Type)
+                                .SelectMany(t => t.GetProperties(System.Reflection.BindingFlags.DeclaredOnly | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
+                                .Where(p => p.GetCustomAttributes(false)
+                                    .Any(a => a.GetType().Name == "NetProperty"))
+                                .Select(p => new NetPropertyInfo
+                                {
+                                    Property = p,
+                                    Attributes = p.GetCustomAttributes(false)
+                                }),
+                            Functions = GetInheritanceChain(x.Type)
+                                .SelectMany(t => t.GetMethods(System.Reflection.BindingFlags.DeclaredOnly | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
+                                .Where(m => m.GetCustomAttributes(false)
+                                    .Any(a => a.GetType().Name == "NetFunction"))
+                                .Select(m => new NetworkMethodInfo
+                                {
+                                    Method = m,
+                                    Attributes = m.GetCustomAttributes(false)
+                                })
+                        }
+                    })).ToList();
+
+            // Check for duplicate script paths and report the problem types
+            var duplicates = netNodeTypes.GroupBy(x => x.ScriptPath).Where(g => g.Count() > 1).ToList();
+            if (duplicates.Any())
+            {
+                foreach (var group in duplicates)
+                {
+                    var typeNames = string.Join(", ", group.Select(x => x.Type.FullName));
+                    GD.PrintErr($"DEBUG: DUPLICATE ScriptPath '{group.Key}' in types: {typeNames}");
+                }
+            }
+
+            var nodeNetworkTypes = netNodeTypes.Select(x => x.NetworkTypeInfo).ToDictionary(x => x.ScriptPath, x => x);
 
             var sceneFileList = new Array<string>();
             void SearchDirectory(string path, Array<string> files)
@@ -423,7 +440,8 @@ namespace Nebula.Serialization
         {
             for (var current = type; current != null; current = current.BaseType)
             {
-                if (current.GetInterfaces().Any(i => i.Name == "INetNode"))
+                if (current.GetInterfaces().Any(i => 
+                    i.IsGenericType && i.GetGenericTypeDefinition().Name == "INetNode`1"))
                 {
                     yield return current;
                 }
@@ -440,6 +458,12 @@ namespace Nebula.Serialization
             {
                 var path = GetAttributeValue(scriptPathAttr, "Path")?.ToString();
                 return path?.Replace("\\", "/") ?? "";
+            }
+            
+            // Only debug print the problem cases
+            if (type.Name.Contains("NetNode"))
+            {
+                GD.PrintErr($"{type.FullName} missing ScriptPathAttribute. This usually means your file name doesn't match the class name, which throws Godot's build system off. Be sure they match.");
             }
             return "";
         }

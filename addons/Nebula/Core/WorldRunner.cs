@@ -8,6 +8,7 @@ using Nebula.Internal.Editor.DTO;
 using Nebula.Serialization;
 using Nebula.Utility.Tools;
 using MongoDB.Bson;
+using Nebula.Utility;
 
 namespace Nebula
 {
@@ -53,7 +54,7 @@ namespace Nebula
             /// <summary>
             /// A list of nodes that the player owns (i.e. InputAuthority == peer
             /// </summary>
-            public HashSet<INetNode> OwnedNodes;
+            public HashSet<INetNodeBase> OwnedNodes;
         }
 
         internal struct QueuedFunction
@@ -352,7 +353,7 @@ namespace Nebula
                 {
                     args = new List<Variant>() { queuedFunction.Sender }.Concat(args).ToArray();
                 }
-                var functionNode = queuedFunction.Node.GetNode(queuedFunction.FunctionInfo.NodePath) as INetNode;
+                var functionNode = queuedFunction.Node.GetNode(queuedFunction.FunctionInfo.NodePath) as INetNodeBase;
                 functionNode.Network.IsInboundCall = true;
                 functionNode.Node.Call(queuedFunction.FunctionInfo.Name, args);
                 functionNode.Network.IsInboundCall = false;
@@ -388,8 +389,14 @@ namespace Nebula
                 }
             }
             tickLogBuffer.Clear();
-
-            var fullGameState = BsonTransformer.Instance.ToBSONDocument(RootScene.Node as INetNode, recurse: true);
+            var fullGameState = RootScene.Node switch
+            {
+                IBsonSerializableBase node => node.BsonSerialize(new NetNodeCommonBsonSerializeContext
+                {
+                    Recurse = true,
+                }),
+                _ => throw new Exception("RootScene.Node is not a IBsonSerializableBase")
+            };
             var exportBuffer = new HLBuffer();
             HLBytes.Pack(exportBuffer, (byte)DebugDataType.EXPORT);
             HLBytes.Pack(exportBuffer, fullGameState.ToBson());
@@ -626,13 +633,25 @@ namespace Nebula
             return 1;
         }
 
-        public T Spawn<T>(T node, NetNodeWrapper parent = null, NetPeer inputAuthority = null, string nodePath = ".") where T : Node, INetNode
+        public T Spawn<T>(T node, NetNodeWrapper parent = null, NetPeer inputAuthority = null, string nodePath = ".") where T : Node, INetNodeBase
         {
             if (NetRunner.Instance.IsClient) return null;
 
+            if (!node.Network.IsNetScene()) {
+                Debugger.Instance.Log($"Only Net Scenes can be spawned (i.e. a scene where the root node is an NetNode). Attempting to spawn node that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{nodePath}", Debugger.DebugLevel.ERROR);
+                return null;
+            }
+
+            if (parent != null && !parent.Network.IsNetScene()) {
+                Debugger.Instance.Log($"You can only spawn a Net Scene as a child of another Net Scene. Attempting to spawn node on a parent that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{nodePath}", Debugger.DebugLevel.ERROR);
+                return null;
+            }
+
             node.Network.IsClientSpawn = true;
             node.Network.CurrentWorld = this;
-            node.Network.SetInputAuthority(inputAuthority);
+            if (inputAuthority != null) {
+                node.Network.SetInputAuthority(inputAuthority);
+            }
             if (parent == null)
             {
                 node.Network.NetParent = RootScene;
@@ -851,7 +870,7 @@ namespace Nebula
                 {
                     args = new List<Variant>() { queuedFunction.Sender }.Concat(args).ToArray();
                 }
-                var functionNode = queuedFunction.Node.GetNode(queuedFunction.FunctionInfo.NodePath) as INetNode;
+                var functionNode = queuedFunction.Node.GetNode(queuedFunction.FunctionInfo.NodePath) as INetNodeBase;
                 functionNode.Network.IsInboundCall = true;
                 functionNode.Node.Call(queuedFunction.FunctionInfo.Name, args);
                 functionNode.Network.IsInboundCall = false;

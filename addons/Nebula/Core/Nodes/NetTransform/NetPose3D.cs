@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using FixedMathSharp;
 using Godot;
 using MongoDB.Bson;
@@ -57,6 +58,11 @@ namespace Nebula
         public int KeyframeFrequency = NetRunner.TPS;
         private int _keyframeOffset = 0;
 
+/// <summary>
+/// This is used to determine how to serialize the pose data.
+/// The owner of the keyframe (i.e. the local player) receives high resolution data.
+/// while other players receive delta data at lower resolution.
+/// </summary>
         public NetPeer Owner;
 
         public NetPose3D()
@@ -280,12 +286,32 @@ namespace Nebula
             return result;
         }
 
-        public static NetPose3D BsonDeserialize(Variant context, byte[] bson, NetPose3D initialObject)
+        public async Task OnBsonDeserialize(Variant context, BsonDocument doc)
+        {
+            // NetPose3D deserialization is handled entirely in the static method
+            await Task.CompletedTask;
+        }
+
+        public async Task<NetPose3D> BsonDeserialize(Variant context, byte[] bson)
+        {
+            return await BsonDeserialize(context, bson, this);
+        }
+
+        public static async Task<NetPose3D> BsonDeserialize(Variant context, byte[] bson, NetPose3D initialObject)
         {
             var bsonValue = BsonTransformer.Instance.DeserializeBsonValue<BsonDocument>(bson);
-            initialObject._position = new Vector3d(bsonValue["Position"].AsDouble, bsonValue["Position"].AsDouble, bsonValue["Position"].AsDouble);
-            initialObject._rotation = new Vector3d(bsonValue["Rotation"].AsDouble, bsonValue["Rotation"].AsDouble, bsonValue["Rotation"].AsDouble);
-            return initialObject;
+            var result = initialObject ?? new NetPose3D();
+            var position = bsonValue["Position"].AsBsonArray;
+            var rotation = bsonValue["Rotation"].AsBsonArray;
+            
+            // NetPose3D-specific deserialization logic
+            result._position = new Vector3d(position[0].AsDouble, position[1].AsDouble, position[2].AsDouble);
+            result._rotation = new Vector3d(rotation[0].AsDouble, rotation[1].AsDouble, rotation[2].AsDouble);
+            
+            // Call the virtual method for custom deserialization logic
+            await result.OnBsonDeserialize(context, bsonValue);
+
+            return result;
         }
 
         public BsonValue BsonSerialize(Variant context)

@@ -2,6 +2,7 @@ using Godot;
 using Nebula.Serialization;
 using Nebula.Utility.Tools;
 using MongoDB.Bson;
+using System.Threading.Tasks;
 
 namespace Nebula
 {
@@ -20,11 +21,29 @@ namespace Nebula
         {
             Value = value;
         }
-        public static NetId BsonDeserialize(Variant context, byte[] bson, NetId initialObject)
+        public async Task OnBsonDeserialize(Variant context, BsonDocument doc)
+        {
+            // NetId deserialization is handled entirely in the static method
+            await Task.CompletedTask;
+        }
+
+        public static async Task<NetId> BsonDeserialize(Variant context, byte[] bson, NetId initialObject)
         {
             var bsonValue = BsonTransformer.Instance.DeserializeBsonValue<BsonInt64>(bson);
-            return new NetId(bsonValue.Value);
+            var result = new NetId(bsonValue.Value);
+            
+            // Call the virtual method for custom deserialization logic
+            var doc = new BsonDocument { ["value"] = bsonValue };
+            await result.OnBsonDeserialize(context, doc);
+            
+            return result;
         }
+        
+        public async Task<NetId> BsonDeserialize(Variant context, byte[] bson)
+        {
+            return await BsonDeserialize(context, bson, this);
+        }
+
         public BsonValue BsonSerialize(Variant context)
         {
             return new BsonInt64(Value);

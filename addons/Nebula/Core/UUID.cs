@@ -4,6 +4,7 @@ using Nebula.Serialization;
 using Nebula.Utility.Tools;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using System.Threading.Tasks;
 
 namespace Nebula
 {
@@ -83,11 +84,28 @@ namespace Nebula
         {
             return new UUID(HLBytes.UnpackByteArray(buffer, 16));
         }
-        public static UUID BsonDeserialize(Variant context, byte[] bson, UUID initialObject)
+
+        public async Task OnBsonDeserialize(Variant context, BsonDocument doc)
+        {
+            // UUID deserialization is handled entirely in the static method
+            await Task.CompletedTask;
+        }
+
+        public async Task<UUID> BsonDeserialize(Variant context, byte[] bson)
+        {
+            return await BsonDeserialize(context, bson, this);
+        }
+        
+        public static async Task<UUID> BsonDeserialize(Variant context, byte[] bson, UUID initialObject)
         {
             var bsonValue = BsonTransformer.Instance.DeserializeBsonValue<BsonBinaryData>(bson);
             var guid = GuidConverter.FromBytes(bsonValue.Bytes, GuidRepresentation.Standard);
             var result = new UUID(guid.ToByteArray());
+            
+            // Call the virtual method for custom deserialization logic
+            var doc = new BsonDocument { ["value"] = bsonValue };
+            await result.OnBsonDeserialize(context, doc);
+            
             return result;
         }
         public BsonValue BsonSerialize(Variant context)

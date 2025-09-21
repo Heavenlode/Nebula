@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
 using Nebula.Utility.Tools;
@@ -417,16 +418,36 @@ namespace Nebula.Serialization
                         case StaticMethodType.NetworkDeserialize:
                             callable = Callable.From((WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, GodotObject initialObject) =>
                             {
-                                // Fucking C# 'as' operator doesn't work with value types. Gotta box this shit.
                                 object ctxObj = helperMethod.Invoke(null, [initialObject]);
                                 if (ctxObj is not Variant ctx)
                                     throw new InvalidCastException($"GetDeserializeContext in {staticMethod.ReflectionPath} didn't return a Variant.");
-                                var result = method.Invoke(null, new object[] { currentWorld, peer, buffer, ctx }) as GodotObject;
+                                var result = method.Invoke(null, [currentWorld, peer, buffer, ctx]) as GodotObject;
                                 return result;
                             });
                             break;
                         case StaticMethodType.BsonDeserialize:
-                            callable = Callable.From((Variant context, byte[] bson, GodotObject initialObject) => method.Invoke(null, [context, bson, initialObject]) as GodotObject);
+                            callable = Callable.From((Variant context, byte[] bson, GodotObject initialObject, Callable completed) =>
+                            {
+                                Task.Run(async () =>
+                                {
+                                    try
+                                    {
+                                        var taskObj = method.Invoke(null, [context, bson, initialObject]);
+                                        if (taskObj is not Task task)
+                                            throw new InvalidCastException($"Method {method.Name} in {staticMethod.ReflectionPath} didn't return a Task like it fucking should.");
+                                        
+                                        await task.ConfigureAwait(false);
+
+                                        dynamic dynamicTask = taskObj;
+                                        var result = dynamicTask.Result;
+                                        completed.Call(result as GodotObject);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        GD.PrintErr($"BsonDeserialize blew up: {ex.Message}\n{ex.StackTrace}");
+                                    }
+                                });
+                            });
                             break;
                         default:
                             throw new ArgumentException($"Unsupported serialization type: {serializationType}");

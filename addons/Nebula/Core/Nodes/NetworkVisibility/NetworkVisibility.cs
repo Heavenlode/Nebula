@@ -11,7 +11,7 @@ namespace Nebula.Utility.Nodes
         /// <inheritdoc/>
         public override void _EnterTree()
         {
-            var netParent = GetParentOrNull<INetNode>();
+            var netParent = GetParentOrNull<INetNodeBase>();
             if (netParent.Network.IsCurrentOwner && NetRunner.Instance.IsClient)
             {
                 return;

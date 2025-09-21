@@ -53,7 +53,7 @@ namespace Nebula
         }
 
         public Node Node { get; private set; } = null;
-        public NetworkController Network => (Node as INetNode).Network;
+        public NetworkController Network => (Node as INetNodeBase).Network;
         private Dictionary<string, StringName> properties = new Dictionary<string, StringName>();
         private Dictionary<string, StringName> methods = new Dictionary<string, StringName>();
         public NetNodeWrapper(Node node)
@@ -61,7 +61,7 @@ namespace Nebula
             if (node == null) return;
 
             // TODO: Better way to figure out if network node?
-            if (node is not INetNode)
+            if (node is not INetNodeBase)
             {
                 // The node will remain null if it is not a NetNode
                 return;

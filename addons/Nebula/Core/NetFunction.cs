@@ -26,7 +26,7 @@ namespace Nebula
         public bool WithPeer { get; set; } = false;
         public override void OnEntry(MethodExecutionArgs args)
         {
-            if (args.Instance is INetNode netNode)
+            if (args.Instance is INetNodeBase netNode)
             {
                 if (netNode.Network.IsInboundCall)
                 {

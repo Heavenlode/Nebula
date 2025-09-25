@@ -66,6 +66,11 @@ namespace Nebula.Serialization
                         return ConvertToType<T>(value);
                     }
 
+                    if (value.BsonType == BsonType.Null)
+                    {
+                        return null;
+                    }
+
                     throw new InvalidCastException(
                         $"Cannot convert BsonValue of type {value.BsonType} to {typeof(T).Name}: {value.ToJson()}");
                 }

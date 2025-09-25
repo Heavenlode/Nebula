@@ -75,14 +75,12 @@ namespace Nebula.Utility.Nodes
             base._NetworkProcess(tick);
             if (NetRunner.Instance.IsClient)
             {
-                // TargetNode.Position = NetPose.Position;
-                // TargetNode.Rotation = NetPose.Rotation;
-                // GD.Print("TICK: ",TargetNode.Position);
                 return;
             }
-            NetPose.NetworkProcess(Network.CurrentWorld);
             NetPose.ApplyDelta(SourceNode.Position, SourceNode.Rotation);
+            NetPose.NetworkProcess(Network.CurrentWorld);
         }
+
         public double NetworkLerpNetPose(Variant from, Variant to, double weight)
         {
             // Convert Euler angles to quaternions

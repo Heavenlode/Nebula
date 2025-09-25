@@ -72,6 +72,11 @@ namespace Nebula
         public static HLBuffer NetworkSerialize(WorldRunner currentWorld, NetPeer peer, UUID obj)
         {
             var buffer = new HLBuffer();
+            if (obj == null) {
+                HLBytes.Pack(buffer, (byte)0);
+                return buffer;
+            }
+            HLBytes.Pack(buffer, (byte)1);
             HLBytes.Pack(buffer, obj.ToByteArray());
             return buffer;
         }
@@ -82,6 +87,10 @@ namespace Nebula
 
         public static UUID NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, Variant ctx)
         {
+            var nullFlag = HLBytes.UnpackByte(buffer);
+            if (nullFlag == 0) {
+                return null;
+            }
             return new UUID(HLBytes.UnpackByteArray(buffer, 16));
         }
 
@@ -99,6 +108,10 @@ namespace Nebula
         public static async Task<UUID> BsonDeserialize(Variant context, byte[] bson, UUID initialObject)
         {
             var bsonValue = BsonTransformer.Instance.DeserializeBsonValue<BsonBinaryData>(bson);
+            if (bsonValue == null)
+            {
+                return initialObject;
+            }
             var guid = GuidConverter.FromBytes(bsonValue.Bytes, GuidRepresentation.Standard);
             var result = new UUID(guid.ToByteArray());
             

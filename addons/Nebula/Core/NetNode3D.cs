@@ -135,6 +135,11 @@ namespace Nebula
                 }
             }
 
+            if (doc == NetNodeCommon.NullBsonDocument)
+            {
+                return null;
+            }
+
             // Perform base BSON deserialization (NetNodeCommon handles natural instantiation)
             var newNode = await NetNodeCommon.FromBSON(ProtocolRegistry.Instance, context, doc, obj);
 

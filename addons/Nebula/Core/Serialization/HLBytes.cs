@@ -52,13 +52,21 @@ namespace Nebula.Serialization
             else if (varVal.VariantType == Variant.Type.PackedByteArray)
             {
                 Pack(buffer, (byte[])varVal, packLength, packType);
+            }
+            else if (varVal.VariantType == Variant.Type.PackedInt32Array)
+            {
+                Pack(buffer, (int[])varVal, packType);
+            }
+            else if (varVal.VariantType == Variant.Type.PackedInt64Array)
+            {
+                Pack(buffer, (long[])varVal, packType);
             } else if (varVal.VariantType == Variant.Type.String)
             {
                 Pack(buffer, (string)varVal, packType);
             }
             else
             {
-                Debugger.Instance.Log($"HLBytes.Pack: Unhandled type: {varVal.VariantType}\nStack Trace:\n{System.Environment.StackTrace}", Debugger.DebugLevel.ERROR);
+                throw new Exception($"HLBytes.Pack: Unhandled type: {varVal.VariantType}");
             }
         }
 
@@ -261,6 +269,21 @@ namespace Nebula.Serialization
             }
         }
 
+        public static void Pack(HLBuffer buffer, long[] varVal, bool packType = false)
+        {
+            if (packType)
+            {
+                Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
+                buffer.bytes[buffer.pointer] = (byte)Variant.Type.PackedInt64Array;
+                buffer.pointer += 1;
+            }
+            Pack(buffer, varVal.Length);
+            foreach (var val in varVal)
+            {
+                Pack(buffer, val);
+            }
+        }
+
 
         public static void Pack(HLBuffer buffer, byte[] varVal, bool packLength = false, bool packType = false)
         {
@@ -345,6 +368,14 @@ namespace Nebula.Serialization
             else if (type == Variant.Type.PackedByteArray)
             {
                 return UnpackByteArray(buffer, length);
+            }
+            else if (type == Variant.Type.PackedInt32Array)
+            {
+                return UnpackInt32Array(buffer);
+            }
+            else if (type == Variant.Type.PackedInt64Array)
+            {
+                return UnpackInt64Array(buffer);
             }
             else if (type == Variant.Type.String)
             {
@@ -521,6 +552,19 @@ namespace Nebula.Serialization
             {
                 result[i] = BitConverter.ToInt32(buffer.bytes, buffer.pointer);
                 buffer.pointer += 4;
+            }
+            return result;
+        }
+
+        public static long[] UnpackInt64Array(HLBuffer buffer)
+        {
+            var size = BitConverter.ToInt32(buffer.bytes, buffer.pointer);
+            buffer.pointer += 4;
+            var result = new long[size];
+            for (int i = 0; i < size; i++)
+            {
+                result[i] = BitConverter.ToInt64(buffer.bytes, buffer.pointer);
+                buffer.pointer += 8;
             }
             return result;
         }

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using FixedMathSharp;
 using Godot;
@@ -186,13 +188,15 @@ namespace Nebula
             }
         }
 
+        public Dictionary<NetPeer, Tick> LastKeyframeSent = [];
+
         public static HLBuffer NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetPose3D obj)
         {
             var result = new HLBuffer();
             byte header = 0;
 
             // Use the flag set by NetworkProcess
-            if (obj._shouldSendKeyframe || obj.Owner == peer)
+            if (obj._shouldSendKeyframe || obj.Owner == peer || !obj.LastKeyframeSent.ContainsKey(peer))
             {
                 header |= (byte)ChangeType.Keyframe;
                 HLBytes.Pack(result, header);
@@ -202,6 +206,7 @@ namespace Nebula
                     HLBytes.Pack(result, (int)(obj._rotation[i] * new Fixed64(100)));
 
                 }
+                obj.LastKeyframeSent[peer] = currentWorld.CurrentTick;
                 return result;
             }
 

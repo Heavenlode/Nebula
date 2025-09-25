@@ -103,18 +103,20 @@ namespace Nebula.Serialization.Serializers
                 propNode.Call("_on_network_change_" + friendlyPropName, tick, oldVal, value);
             }
 
+            var propId = $"{prop.NodePath}:{prop.Name}";
+
 #if DEBUG
             var netProps = GetMeta("NETWORK_PROPS", new Godot.Collections.Dictionary()).AsGodotDictionary();
-            netProps[prop.NodePath + ":" + prop.Name] = value;
+            netProps[propId] = value;
             SetMeta("NETWORK_PROPS", netProps);
 #endif
-            if (lerpableChangeQueue.TryGetValue(prop.NodePath + ":" + prop.Name, out var lerpableChange))
+            if (lerpableChangeQueue.TryGetValue(propId, out var lerpableChange))
             {
                 lerpableChange.To = value;
             }
             else
             {
-                lerpableChangeQueue[prop.NodePath + ":" + prop.Name] = new LerpableChangeQueue
+                lerpableChangeQueue[propId] = new LerpableChangeQueue
                 {
                     Prop = prop,
                     From = oldVal,
@@ -342,7 +344,7 @@ namespace Nebula.Serialization.Serializers
                     var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
                     var propNode = wrapper.Node.GetNode(prop.NodePath);
                     var varVal = propNode.Get(prop.Name);
-                    if (varVal.VariantType == Variant.Type.Object)
+                    if (prop.VariantType == Variant.Type.Object)
                     {
                         var callable = ProtocolRegistry.Instance.GetStaticMethodCallable(prop, StaticMethodType.NetworkSerialize);
                         if (callable == null)
@@ -354,7 +356,13 @@ namespace Nebula.Serialization.Serializers
                     }
                     else
                     {
-                        HLBytes.PackVariant(buffer, varVal, packLength: true);
+                        try {
+                            HLBytes.PackVariant(buffer, varVal, packLength: true);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debugger.Instance.Log($"Error packing variant {prop.NodePath}.{prop.Name}: {ex.Message}", Debugger.DebugLevel.ERROR);
+                        }
                     }
                     // GD.Print($"New packed value for ${prop.NodePath}.${prop.Name}: {BitConverter.ToString(buffer.bytes)}");
                 }

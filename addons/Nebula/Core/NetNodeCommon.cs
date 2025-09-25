@@ -14,6 +14,8 @@ namespace Nebula.Utility
     /// </summary>
     internal static class NetNodeCommon
     {
+        readonly public static BsonDocument NullBsonDocument = new BsonDocument("value", BsonNull.Value);
+
         internal static BsonDocument ToBSONDocument(
             INetNodeBase netNode,
             Variant context = new Variant()
@@ -80,7 +82,7 @@ namespace Nebula.Utility
                 {
                     if (child.Node is INetNodeBase networkChild)
                     {
-                        if (bsonContext.NodeFilter.Method != null && !bsonContext.NodeFilter.Call(networkChild.Node).AsBool())
+                        if (bsonContext.NodeFilter.Delegate != null && !bsonContext.NodeFilter.Call(networkChild.Node).AsBool())
                         {
                             continue;
                         }
@@ -115,14 +117,14 @@ namespace Nebula.Utility
                 }
                 else
                 {
-                    throw new System.Exception("No scene path found in BSON data");
+                    throw new System.Exception($"No scene path found in BSON data: {data.ToJson()}");
                 }
             }
 
             // Mark imported nodes accordingly
             if (!node.GetMeta("import_from_external", false).AsBool())
             {
-                var tcs = new TaskCompletionSource<bool>();                
+                var tcs = new TaskCompletionSource<bool>();
                 // Create the event handler as a separate method so we can disconnect it later
                 Action treeEnteredHandler = () =>
                 {
@@ -141,7 +143,7 @@ namespace Nebula.Utility
                     node.SetMeta("import_from_external", true);
                     tcs.SetResult(true);
                 };
-                
+
                 node.TreeEntered += treeEnteredHandler;
                 NetRunner.Instance.AddChild(node);
                 await tcs.Task;
@@ -150,7 +152,10 @@ namespace Nebula.Utility
                 node.TreeEntered -= treeEnteredHandler;
             }
 
-            node.Name = data["nodeName"].AsString;
+            if (data.Contains("nodeName"))
+            {
+                node.Name = data["nodeName"].AsString;
+            }
 
             foreach (var netNodePathAndProps in data["data"] as BsonDocument)
             {
@@ -237,7 +242,8 @@ namespace Nebula.Utility
                                 context,
                                 BsonTransformer.Instance.SerializeBsonValue(prop.Value),
                                 targetNode.Node.Get(prop.Name).AsGodotObject(),
-                                Callable.From((GodotObject value) => {
+                                Callable.From((GodotObject value) =>
+                                {
                                     tcs.SetResult(value);
                                 })
                             );

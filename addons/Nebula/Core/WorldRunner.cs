@@ -422,7 +422,7 @@ namespace Nebula
                     Log($"Data size {size} exceeds MTU {NetRunner.MTU}", Debugger.DebugLevel.WARN);
                 }
 
-                peer.Send(1, buffer.bytes, (int)ENetPacketPeer.FlagUnsequenced);
+                peer.Send((int)NetRunner.ENetChannelId.Tick, buffer.bytes, (int)ENetPacketPeer.FlagUnsequenced);
                 if (DebugEnet != null)
                 {
                     var debugBuffer = new HLBuffer();
@@ -880,7 +880,7 @@ namespace Nebula
             // Acknowledge tick
             HLBuffer buffer = new HLBuffer();
             HLBytes.Pack(buffer, incomingTick);
-            NetRunner.Instance.ENetHost.Send(1, buffer.bytes, (int)ENetPacketPeer.FlagUnsequenced);
+            NetRunner.Instance.ENetHost.Send((int)NetRunner.ENetChannelId.Tick, buffer.bytes, (int)ENetPacketPeer.FlagUnsequenced);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using Nebula.Serialization;
 using Nebula.Serialization.Serializers;
+
 namespace Nebula {
 
     /// <summary>

@@ -75,20 +75,20 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.Vector3;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.Vector3;
+                buffer.Pointer += 1;
             }
 
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 12);
             byte[] floatBytes = BitConverter.GetBytes(varVal.X);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 4);
-            buffer.pointer += 4;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 4);
+            buffer.Pointer += 4;
             floatBytes = BitConverter.GetBytes(varVal.Y);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 4);
-            buffer.pointer += 4;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 4);
+            buffer.Pointer += 4;
             floatBytes = BitConverter.GetBytes(varVal.Z);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 4);
-            buffer.pointer += 4;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 4);
+            buffer.Pointer += 4;
         }
 
         public static void Pack(HLBuffer buffer, Vector2 varVal, bool packType = false)
@@ -96,17 +96,17 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.Vector2;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.Vector2;
+                buffer.Pointer += 1;
             }
 
-            Array.Resize(ref buffer.bytes, buffer.bytes.Length + 8);
+            Array.Resize(ref buffer.bytes, buffer.bytes.Length + 4);
             byte[] floatBytes = BitConverter.GetBytes((Half)varVal.X);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 4);
-            buffer.pointer += 4;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 2);
+            buffer.Pointer += 2;
             floatBytes = BitConverter.GetBytes((Half)varVal.Y);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 4);
-            buffer.pointer += 4;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 2);
+            buffer.Pointer += 2;
         }
 
         public static void Pack(HLBuffer buffer, Quaternion varVal, bool packType = false)
@@ -114,23 +114,23 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.Quaternion;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.Quaternion;
+                buffer.Pointer += 1;
             }
 
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 8);
             byte[] floatBytes = BitConverter.GetBytes((Half)varVal.X);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 2);
-            buffer.pointer += 2;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 2);
+            buffer.Pointer += 2;
             floatBytes = BitConverter.GetBytes((Half)varVal.Y);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 2);
-            buffer.pointer += 2;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 2);
+            buffer.Pointer += 2;
             floatBytes = BitConverter.GetBytes((Half)varVal.Z);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 2);
-            buffer.pointer += 2;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 2);
+            buffer.Pointer += 2;
             floatBytes = BitConverter.GetBytes((Half)varVal.W);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 2);
-            buffer.pointer += 2;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 2);
+            buffer.Pointer += 2;
         }
 
         public static void Pack(HLBuffer buffer, float varVal, bool packType = false)
@@ -138,21 +138,21 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.Float;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.Float;
+                buffer.Pointer += 1;
             }
 
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 4);
             byte[] floatBytes = BitConverter.GetBytes(varVal);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 4);
-            buffer.pointer += 4;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 4);
+            buffer.Pointer += 4;
         }
 
         public static void Pack(HLBuffer buffer, byte varVal)
         {
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-            buffer.bytes[buffer.pointer] = varVal;
-            buffer.pointer += 1;
+            buffer.bytes[buffer.Pointer] = varVal;
+            buffer.Pointer += 1;
         }
 
         public static void Pack(HLBuffer buffer, short varVal, bool packType = false)
@@ -164,8 +164,8 @@ namespace Nebula.Serialization
 
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 2);
             byte[] intBytes = BitConverter.GetBytes(varVal);
-            Array.Copy(intBytes, 0, buffer.bytes, buffer.pointer, 2);
-            buffer.pointer += 2;
+            Array.Copy(intBytes, 0, buffer.bytes, buffer.Pointer, 2);
+            buffer.Pointer += 2;
         }
 
         public static void Pack(HLBuffer buffer, int varVal, bool packType = false)
@@ -177,8 +177,8 @@ namespace Nebula.Serialization
 
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 4);
             byte[] intBytes = BitConverter.GetBytes(varVal);
-            Array.Copy(intBytes, 0, buffer.bytes, buffer.pointer, 4);
-            buffer.pointer += 4;
+            Array.Copy(intBytes, 0, buffer.bytes, buffer.Pointer, 4);
+            buffer.Pointer += 4;
         }
 
         public static void Pack(HLBuffer buffer, long varVal, bool packType = false)
@@ -186,14 +186,14 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.Int;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.Int;
+                buffer.Pointer += 1;
             }
 
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 8);
             byte[] floatBytes = BitConverter.GetBytes(varVal);
-            Array.Copy(floatBytes, 0, buffer.bytes, buffer.pointer, 8);
-            buffer.pointer += 8;
+            Array.Copy(floatBytes, 0, buffer.bytes, buffer.Pointer, 8);
+            buffer.Pointer += 8;
         }
 
         public static void Pack(HLBuffer buffer, bool varVal, bool packType = false)
@@ -201,13 +201,13 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.Bool;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.Bool;
+                buffer.Pointer += 1;
             }
 
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-            buffer.bytes[buffer.pointer] = (byte)(varVal ? 1 : 0);
-            buffer.pointer += 1;
+            buffer.bytes[buffer.Pointer] = (byte)(varVal ? 1 : 0);
+            buffer.Pointer += 1;
         }
 
         public static void PackArray(HLBuffer buffer, Godot.Collections.Array varVal, bool packType = false)
@@ -215,16 +215,16 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.Array;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.Array;
+                buffer.Pointer += 1;
             }
 
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-            buffer.bytes[buffer.pointer] = (byte)varVal.Count;
-            buffer.pointer += 1;
+            buffer.bytes[buffer.Pointer] = (byte)varVal.Count;
+            buffer.Pointer += 1;
             foreach (var val in varVal)
             {
-                PackVariant(buffer, val, packType);
+                PackVariant(buffer, val, packType: true);
             }
         }
 
@@ -232,18 +232,18 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.Dictionary;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.Dictionary;
+                buffer.Pointer += 1;
             }
 
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-            buffer.bytes[buffer.pointer] = (byte)varVal.Count;
-            buffer.pointer += 1;
+            buffer.bytes[buffer.Pointer] = (byte)varVal.Count;
+            buffer.Pointer += 1;
             var packedType = false;
             foreach (var key in varVal.Keys)
             {
-                PackVariant(buffer, key, !packedType);
-                PackVariant(buffer, varVal[key], !packedType);
+                PackVariant(buffer, key, packType: !packedType);
+                PackVariant(buffer, varVal[key], packType: !packedType);
                 packedType = true;
             }
         }
@@ -253,19 +253,19 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.PackedInt32Array;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.PackedInt32Array;
+                buffer.Pointer += 1;
             }
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + 4);
             byte[] bytes = BitConverter.GetBytes(varVal.Length);
-            Array.Copy(bytes, 0, buffer.bytes, buffer.pointer, 4);
-            buffer.pointer += 4;
+            Array.Copy(bytes, 0, buffer.bytes, buffer.Pointer, 4);
+            buffer.Pointer += 4;
             foreach (var val in varVal)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 4);
                 bytes = BitConverter.GetBytes(val);
-                Array.Copy(bytes, 0, buffer.bytes, buffer.pointer, 4);
-                buffer.pointer += 4;
+                Array.Copy(bytes, 0, buffer.bytes, buffer.Pointer, 4);
+                buffer.Pointer += 4;
             }
         }
 
@@ -274,8 +274,8 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.PackedInt64Array;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.PackedInt64Array;
+                buffer.Pointer += 1;
             }
             Pack(buffer, varVal.Length);
             foreach (var val in varVal)
@@ -290,16 +290,16 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.PackedInt32Array;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.PackedInt32Array;
+                buffer.Pointer += 1;
             }
             if (packLength)
             {
                 Pack(buffer, varVal.Length);
             }
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + varVal.Length);
-            Array.Copy(varVal, 0, buffer.bytes, buffer.pointer, varVal.Length);
-            buffer.pointer += varVal.Length;
+            Array.Copy(varVal, 0, buffer.bytes, buffer.Pointer, varVal.Length);
+            buffer.Pointer += varVal.Length;
         }
 
         public static void Pack(HLBuffer buffer, HLBuffer varVal, bool packLength = false, bool packType = false)
@@ -312,13 +312,13 @@ namespace Nebula.Serialization
             if (packType)
             {
                 Array.Resize(ref buffer.bytes, buffer.bytes.Length + 1);
-                buffer.bytes[buffer.pointer] = (byte)Variant.Type.String;
-                buffer.pointer += 1;
+                buffer.bytes[buffer.Pointer] = (byte)Variant.Type.String;
+                buffer.Pointer += 1;
             }
             Pack(buffer, varVal.Length);
             Array.Resize(ref buffer.bytes, buffer.bytes.Length + varVal.Length);
-            Array.Copy(System.Text.Encoding.UTF8.GetBytes(varVal), 0, buffer.bytes, buffer.pointer, varVal.Length);
-            buffer.pointer += varVal.Length;
+            Array.Copy(System.Text.Encoding.UTF8.GetBytes(varVal), 0, buffer.bytes, buffer.Pointer, varVal.Length);
+            buffer.Pointer += varVal.Length;
         }
 
         public static Variant? UnpackVariant(HLBuffer buffer, int length = 0, Variant.Type? knownType = null)
@@ -330,8 +330,8 @@ namespace Nebula.Serialization
             }
             else
             {
-                type = (Variant.Type)buffer.bytes[buffer.pointer];
-                buffer.pointer += 1;
+                type = (Variant.Type)buffer.bytes[buffer.Pointer];
+                buffer.Pointer += 1;
             }
             if (type == Variant.Type.Vector3)
             {
@@ -391,12 +391,12 @@ namespace Nebula.Serialization
         public static Vector2 UnpackVector2(HLBuffer buffer)
         {
             var result = new Vector2();
-            var bytes = new byte[8];
-            Array.Copy(buffer.bytes, buffer.pointer, bytes, 0, 8);
+            var bytes = new byte[4];
+            Array.Copy(buffer.bytes, buffer.Pointer, bytes, 0, 4);
             result.X = (float)BitConverter.ToHalf(bytes, 0);
-            buffer.pointer += 4;
-            result.Y = (float)BitConverter.ToHalf(bytes, 4);
-            buffer.pointer += 4;
+            buffer.Pointer += 2;
+            result.Y = (float)BitConverter.ToHalf(bytes, 2);
+            buffer.Pointer += 2;
             return result;
         }
 
@@ -404,13 +404,13 @@ namespace Nebula.Serialization
         {
             var result = new Vector3();
             var bytes = new byte[12];
-            Array.Copy(buffer.bytes, buffer.pointer, bytes, 0, 12);
+            Array.Copy(buffer.bytes, buffer.Pointer, bytes, 0, 12);
             result.X = BitConverter.ToSingle(bytes, 0);
-            buffer.pointer += 4;
+            buffer.Pointer += 4;
             result.Y = BitConverter.ToSingle(bytes, 4);
-            buffer.pointer += 4;
+            buffer.Pointer += 4;
             result.Z = BitConverter.ToSingle(bytes, 8);
-            buffer.pointer += 4;
+            buffer.Pointer += 4;
             return result;
         }
 
@@ -418,23 +418,23 @@ namespace Nebula.Serialization
         {
             var result = new Quaternion();
             var bytes = new byte[8];
-            Array.Copy(buffer.bytes, buffer.pointer, bytes, 0, 8);
+            Array.Copy(buffer.bytes, buffer.Pointer, bytes, 0, 8);
             result.X = (float)BitConverter.ToHalf(bytes, 0);
-            buffer.pointer += 2;
+            buffer.Pointer += 2;
             result.Y = (float)BitConverter.ToHalf(bytes, 2);
-            buffer.pointer += 2;
+            buffer.Pointer += 2;
             result.Y = (float)BitConverter.ToHalf(bytes, 4);
-            buffer.pointer += 2;
+            buffer.Pointer += 2;
             result.Y = (float)BitConverter.ToHalf(bytes, 6);
-            buffer.pointer += 2;
+            buffer.Pointer += 2;
             return result;
         }
 
         public static float UnpackFloat(HLBuffer buffer)
         {
             var bytes = new byte[4];
-            Array.Copy(buffer.bytes, buffer.pointer, bytes, 0, 4);
-            buffer.pointer += 4;
+            Array.Copy(buffer.bytes, buffer.Pointer, bytes, 0, 4);
+            buffer.Pointer += 4;
             return BitConverter.ToSingle(bytes, 0);
         }
 
@@ -449,46 +449,46 @@ namespace Nebula.Serialization
         }
         public static byte UnpackInt8(HLBuffer buffer)
         {
-            byte int8 = buffer.bytes[buffer.pointer];
-            buffer.pointer += 1;
+            byte int8 = buffer.bytes[buffer.Pointer];
+            buffer.Pointer += 1;
             return int8;
         }
         public static int UnpackInt32(HLBuffer buffer)
         {
             var bytes = new byte[4];
-            Array.Copy(buffer.bytes, buffer.pointer, bytes, 0, 4);
-            buffer.pointer += 4;
+            Array.Copy(buffer.bytes, buffer.Pointer, bytes, 0, 4);
+            buffer.Pointer += 4;
             return BitConverter.ToInt32(bytes, 0);
         }
 
         public static short UnpackInt16(HLBuffer buffer)
         {
             var bytes = new byte[2];
-            Array.Copy(buffer.bytes, buffer.pointer, bytes, 0, 2);
-            buffer.pointer += 2;
+            Array.Copy(buffer.bytes, buffer.Pointer, bytes, 0, 2);
+            buffer.Pointer += 2;
             return BitConverter.ToInt16(bytes, 0);
         }
 
         public static long UnpackInt64(HLBuffer buffer)
         {
             var bytes = new byte[8];
-            Array.Copy(buffer.bytes, buffer.pointer, bytes, 0, 8);
-            buffer.pointer += 8;
+            Array.Copy(buffer.bytes, buffer.Pointer, bytes, 0, 8);
+            buffer.Pointer += 8;
             var result = BitConverter.ToInt64(bytes, 0);
             return result;
         }
 
         public static bool UnpackBool(HLBuffer buffer)
         {
-            var result = buffer.bytes[buffer.pointer] == 1;
-            buffer.pointer += 1;
+            var result = buffer.bytes[buffer.Pointer] == 1;
+            buffer.Pointer += 1;
             return result;
         }
 
         public static Godot.Collections.Array UnpackArray(HLBuffer buffer)
         {
-            var size = buffer.bytes[buffer.pointer];
-            buffer.pointer += 1;
+            var size = buffer.bytes[buffer.Pointer];
+            buffer.Pointer += 1;
             var result = new Godot.Collections.Array();
             if (size == 0)
             {
@@ -510,8 +510,8 @@ namespace Nebula.Serialization
         }
 
         public static Godot.Collections.Dictionary UnpackDictionary(HLBuffer buffer) {
-            var size = buffer.bytes[buffer.pointer];
-            buffer.pointer += 1;
+            var size = buffer.bytes[buffer.Pointer];
+            buffer.Pointer += 1;
             var result = new Godot.Collections.Dictionary();
             if (size == 0)
             {
@@ -545,26 +545,26 @@ namespace Nebula.Serialization
 
         public static int[] UnpackInt32Array(HLBuffer buffer)
         {
-            var size = BitConverter.ToInt32(buffer.bytes, buffer.pointer);
-            buffer.pointer += 4;
+            var size = BitConverter.ToInt32(buffer.bytes, buffer.Pointer);
+            buffer.Pointer += 4;
             var result = new int[size];
             for (int i = 0; i < size; i++)
             {
-                result[i] = BitConverter.ToInt32(buffer.bytes, buffer.pointer);
-                buffer.pointer += 4;
+                result[i] = BitConverter.ToInt32(buffer.bytes, buffer.Pointer);
+                buffer.Pointer += 4;
             }
             return result;
         }
 
         public static long[] UnpackInt64Array(HLBuffer buffer)
         {
-            var size = BitConverter.ToInt32(buffer.bytes, buffer.pointer);
-            buffer.pointer += 4;
+            var size = BitConverter.ToInt32(buffer.bytes, buffer.Pointer);
+            buffer.Pointer += 4;
             var result = new long[size];
             for (int i = 0; i < size; i++)
             {
-                result[i] = BitConverter.ToInt64(buffer.bytes, buffer.pointer);
-                buffer.pointer += 8;
+                result[i] = BitConverter.ToInt64(buffer.bytes, buffer.Pointer);
+                buffer.Pointer += 8;
             }
             return result;
         }
@@ -574,22 +574,22 @@ namespace Nebula.Serialization
             var size = length;
             if (untilEnd)
             {
-                size = buffer.bytes.Length - buffer.pointer;
+                size = buffer.bytes.Length - buffer.Pointer;
             } else if (size == 0)
             {
                 size = UnpackInt32(buffer);
             }
             var result = new byte[size];
-            Array.Copy(buffer.bytes, buffer.pointer, result, 0, size);
-            buffer.pointer += size;
+            Array.Copy(buffer.bytes, buffer.Pointer, result, 0, size);
+            buffer.Pointer += size;
             return result;
         }
 
         public static string UnpackString(HLBuffer buffer)
         {
             var size = UnpackInt32(buffer);
-            var result = System.Text.Encoding.UTF8.GetString(buffer.bytes, buffer.pointer, size);
-            buffer.pointer += size;
+            var result = System.Text.Encoding.UTF8.GetString(buffer.bytes, buffer.Pointer, size);
+            buffer.Pointer += size;
             return result;
         }
     }

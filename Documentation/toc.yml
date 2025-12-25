@@ -1,16 +1,8 @@
 - name: Home
   href: index.md
 - name: Getting Started
-  items:
-  - name: Introduction
-    href: getting-started/introduction.md
-  - name: Network Lifecycle
-    href: getting-started/network-lifecycle.md
+  href: getting-started/
 - name: Tutorials
-  items:
-  - name: Snake
-    items:
-    - name: Create a Snake
-      href: tutorials/snake/create-a-snake.md
+  href: tutorials/
 - name: API Reference
   href: api/

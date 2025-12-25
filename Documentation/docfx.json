@@ -53,6 +53,11 @@
       }
     ],
     "output": "_site",
+    "globalMetadata": {
+      "_appTitle": "Nebula",
+      "_appFooter": "MIT Licensed © 2024 <a href=\"https://heavenlode.com\">Heavenlode</a> | Made with ❤️ by Team Heavenlode",
+      "_enableSearch": true
+    },
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [

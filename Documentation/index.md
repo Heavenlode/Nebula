@@ -22,7 +22,3 @@ Get up and running with Nebula in minutes:
 ## License
 
 [MIT Licensed](https://raw.githubusercontent.com/Heavenlode/Nebula/main/LICENSE) © 2024 [Heavenlode](https://heavenlode.com)
-
----
-
-Made with ❤️ by [Team Heavenlode](https://www.heavenlode.com)

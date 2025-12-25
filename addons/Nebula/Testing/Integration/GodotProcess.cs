@@ -2,11 +2,22 @@
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.IO;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nebula.Testing.Integration;
+
+/// <summary>
+/// Represents a debug event received from the Godot process.
+/// </summary>
+public struct DebugEvent
+{
+    public string Category { get; set; }
+    public string Message { get; set; }
+}
 
 /// <summary>
 /// Wrapper around a Godot process for integration testing.
@@ -19,11 +30,24 @@ public sealed class GodotProcess : IDisposable
     private readonly StringBuilder _allOutput = new();
     private readonly object _outputLock = new();
     private bool _disposed;
+    
+    // Debug connection fields (TCP)
+    private TcpClient? _debugClient;
+    private NetworkStream? _debugStream;
+    private readonly ConcurrentQueue<DebugEvent> _debugEvents = new();
+    private CancellationTokenSource? _debugListenerCts;
+    private Task? _debugListenerTask;
+    private bool _debugConnected;
 
     /// <summary>
     /// Optional label to identify this process in logs (e.g., "server", "client1").
     /// </summary>
     public string? Label { get; set; }
+    
+    /// <summary>
+    /// The port used for debug TCP connection. Set by StartServer/StartClient.
+    /// </summary>
+    public int DebugPort { get; set; }
 
     public string AllOutput
     {
@@ -250,10 +274,211 @@ public sealed class GodotProcess : IDisposable
         }
     }
 
+    /// <summary>
+    /// Connects to the Godot process's debug TCP server.
+    /// </summary>
+    /// <param name="port">The debug port to connect to. If 0, uses DebugPort property.</param>
+    public async Task ConnectDebug(int port = 0)
+    {
+        if (port == 0) port = DebugPort;
+        if (port == 0) throw new InvalidOperationException("Debug port not set");
+
+        _debugClient = new TcpClient();
+        
+        // Retry connection for a few seconds (server might not be ready yet)
+        var connectionTimeout = TimeSpan.FromSeconds(5);
+        var connectionCts = new CancellationTokenSource(connectionTimeout);
+        
+        while (!_debugConnected && !connectionCts.Token.IsCancellationRequested)
+        {
+            try
+            {
+                await _debugClient.ConnectAsync("127.0.0.1", port);
+                _debugConnected = true;
+                _debugStream = _debugClient.GetStream();
+            }
+            catch (SocketException)
+            {
+                // Server not ready yet, retry
+                await Task.Delay(100);
+            }
+        }
+        
+        if (!_debugConnected)
+        {
+            throw new TimeoutException($"Failed to connect to debug server on port {port}");
+        }
+        
+        // Start listener task for incoming debug events
+        _debugListenerCts = new CancellationTokenSource();
+        _debugListenerTask = Task.Run(async () =>
+        {
+            var buffer = new byte[4096];
+            var messageBuffer = new MemoryStream();
+            
+            try
+            {
+                while (!_debugListenerCts!.Token.IsCancellationRequested && _debugConnected)
+                {
+                    if (_debugClient!.Available > 0)
+                    {
+                        var bytesRead = await _debugStream!.ReadAsync(buffer, 0, buffer.Length, _debugListenerCts.Token);
+                        if (bytesRead == 0)
+                        {
+                            _debugConnected = false;
+                            break;
+                        }
+                        
+                        // Process received data - may contain multiple messages
+                        messageBuffer.Write(buffer, 0, bytesRead);
+                        ProcessMessages(messageBuffer);
+                    }
+                    else
+                    {
+                        await Task.Delay(10, _debugListenerCts.Token);
+                    }
+                }
+            }
+            catch (OperationCanceledException) { }
+            catch (IOException) { _debugConnected = false; }
+            catch (Exception) { /* Silently handle connection issues */ }
+        }, _debugListenerCts.Token);
+    }
+
+    private void ProcessMessages(MemoryStream messageBuffer)
+    {
+        var data = messageBuffer.ToArray();
+        var offset = 0;
+        
+        while (offset < data.Length)
+        {
+            // Check if we have enough data for header (4 bytes length + 1 byte type)
+            if (offset + 5 > data.Length) break;
+            
+            // Read message length (first 4 bytes)
+            int msgLen = BitConverter.ToInt32(data, offset);
+            
+            // Check if we have the full message
+            if (offset + 4 + msgLen > data.Length) break;
+            
+            // Extract message data (skip length prefix)
+            var msgData = new byte[msgLen];
+            Array.Copy(data, offset + 4, msgData, 0, msgLen);
+            
+            // Parse debug event - Format: [byte type][string category][string message]
+            if (msgData.Length > 0 && msgData[0] == 6) // DEBUG_EVENT = 6
+            {
+                var evt = ParseDebugEvent(msgData);
+                if (evt.HasValue)
+                {
+                    _debugEvents.Enqueue(evt.Value);
+                }
+            }
+            
+            offset += 4 + msgLen;
+        }
+        
+        // Keep remaining incomplete data in buffer
+        if (offset < data.Length)
+        {
+            var remaining = new byte[data.Length - offset];
+            Array.Copy(data, offset, remaining, 0, remaining.Length);
+            messageBuffer.SetLength(0);
+            messageBuffer.Write(remaining, 0, remaining.Length);
+        }
+        else
+        {
+            messageBuffer.SetLength(0);
+        }
+    }
+
+    private DebugEvent? ParseDebugEvent(byte[] data)
+    {
+        try
+        {
+            // Skip the type byte
+            int offset = 1;
+            
+            // Read category string (length-prefixed with 4-byte int)
+            if (offset + 4 > data.Length) return null;
+            int categoryLen = BitConverter.ToInt32(data, offset);
+            offset += 4;
+            
+            if (offset + categoryLen > data.Length) return null;
+            string category = Encoding.UTF8.GetString(data, offset, categoryLen);
+            offset += categoryLen;
+            
+            // Read message string (length-prefixed with 4-byte int)
+            if (offset + 4 > data.Length) return null;
+            int messageLen = BitConverter.ToInt32(data, offset);
+            offset += 4;
+            
+            if (offset + messageLen > data.Length) return null;
+            string message = Encoding.UTF8.GetString(data, offset, messageLen);
+            
+            return new DebugEvent { Category = category, Message = message };
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Waits for a debug event matching the specified category and message pattern.
+    /// </summary>
+    /// <param name="category">Event category to match</param>
+    /// <param name="messagePattern">Message pattern to match (uses Contains)</param>
+    /// <param name="timeout">Maximum time to wait</param>
+    public async Task<DebugEvent> WaitForDebugEvent(string category, string messagePattern, TimeSpan? timeout = null)
+    {
+        timeout ??= TimeSpan.FromSeconds(5);
+        var cts = new CancellationTokenSource(timeout.Value);
+        
+        while (!cts.Token.IsCancellationRequested)
+        {
+            while (_debugEvents.TryDequeue(out var evt))
+            {
+                if (evt.Category == category && evt.Message.Contains(messagePattern))
+                {
+                    return evt;
+                }
+            }
+            
+            if (_process.HasExited)
+            {
+                throw new InvalidOperationException(
+                    $"Godot process exited while waiting for debug event '{category}:{messagePattern}'. " +
+                    $"Output:\n{AllOutput}");
+            }
+            
+            await Task.Delay(50, cts.Token).ConfigureAwait(false);
+        }
+        
+        throw new TimeoutException(
+            $"Timed out waiting for debug event '{category}:{messagePattern}' after {timeout.Value.TotalSeconds}s. " +
+            $"Output so far:\n{AllOutput}");
+    }
+
     public void Dispose()
     {
         if (_disposed) return;
         _disposed = true;
+
+        // Cleanup debug connection
+        try
+        {
+            _debugListenerCts?.Cancel();
+            _debugListenerTask?.Wait(1000);
+            
+            _debugStream?.Close();
+            _debugClient?.Close();
+            _debugClient?.Dispose();
+        }
+        catch
+        {
+            // Best effort cleanup
+        }
 
         try
         {

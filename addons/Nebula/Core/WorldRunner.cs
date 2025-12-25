@@ -94,7 +94,11 @@ namespace Nebula
         private Godot.Collections.Dictionary<NetPeer, Godot.Collections.Dictionary<byte, Godot.Collections.Dictionary<int, Variant>>> inputStore = [];
         public Godot.Collections.Dictionary<NetPeer, Godot.Collections.Dictionary<byte, Godot.Collections.Dictionary<int, Variant>>> InputStore => inputStore;
 
-        public ENetConnection DebugEnet { get; private set; }
+        // TCP debug server fields
+        private TcpListener DebugTcpListener { get; set; }
+        private List<TcpClient> DebugTcpClients { get; } = new();
+        private readonly object _debugClientsLock = new();
+
         public enum DebugDataType
         {
             TICK,
@@ -102,8 +106,87 @@ namespace Nebula
             EXPORT,
             LOGS,
             PEERS,
-            CALLS
+            CALLS,
+            DEBUG_EVENT
         }
+
+        /// <summary>
+        /// Sends debug events to connected debug clients (e.g., test runners).
+        /// </summary>
+        public class DebugMessenger
+        {
+            private readonly WorldRunner _world;
+
+            public DebugMessenger(WorldRunner world)
+            {
+                _world = world;
+            }
+
+            /// <summary>
+            /// Sends a debug event with a category and message to all connected debug peers.
+            /// </summary>
+            /// <param name="category">Event category (e.g., "Spawn", "Connect")</param>
+            /// <param name="message">Event message/details</param>
+            public void Send(string category, string message)
+            {
+                if (_world.DebugTcpListener == null) return;
+
+                var buffer = new HLBuffer();
+                HLBytes.Pack(buffer, (byte)DebugDataType.DEBUG_EVENT);
+                HLBytes.Pack(buffer, category);
+                HLBytes.Pack(buffer, message);
+
+                // Wrap with length prefix for TCP framing
+                var lengthPrefix = BitConverter.GetBytes(buffer.bytes.Length);
+                var framedData = new byte[4 + buffer.bytes.Length];
+                Array.Copy(lengthPrefix, 0, framedData, 0, 4);
+                Array.Copy(buffer.bytes, 0, framedData, 4, buffer.bytes.Length);
+
+                _world.SendToDebugClients(framedData);
+            }
+        }
+
+        private void SendToDebugClients(byte[] data)
+        {
+            lock (_debugClientsLock)
+            {
+                var clientsToRemove = new List<TcpClient>();
+                foreach (var client in DebugTcpClients)
+                {
+                    try
+                    {
+                        if (client.Connected)
+                        {
+                            var stream = client.GetStream();
+                            stream.Write(data, 0, data.Length);
+                        }
+                        else
+                        {
+                            clientsToRemove.Add(client);
+                        }
+                    }
+                    catch
+                    {
+                        clientsToRemove.Add(client);
+                    }
+                }
+                foreach (var client in clientsToRemove)
+                {
+                    DebugTcpClients.Remove(client);
+                    try { client.Close(); } catch { }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Debug messenger for sending test events via TCP.
+        /// </summary>
+        public DebugMessenger Debug { get; private set; }
+
+        /// <summary>
+        /// Port for the debug TCP connection. 0 means use a random available port.
+        /// </summary>
+        public int DebugPort { get; set; } = 0;
 
         private List<TickLog> tickLogBuffer = [];
         public void Log(string message, Debugger.DebugLevel level = Debugger.DebugLevel.INFO)
@@ -144,27 +227,58 @@ namespace Nebula
         {
             base._Ready();
             Name = "WorldRunner";
+            Debug = new DebugMessenger(this);
+
+            // Parse --debugPort from command line args
+            foreach (var argument in OS.GetCmdlineArgs())
+            {
+                if (argument.StartsWith("--debugPort="))
+                {
+                    var value = argument.Substring("--debugPort=".Length);
+                    if (int.TryParse(value, out int parsedPort))
+                    {
+                        DebugPort = parsedPort;
+                    }
+                    break;
+                }
+            }
+
+            // Initialize debug TCP server for both server and client
+            int port = DebugPort > 0 ? DebugPort : GetAvailablePort();
+            int attempts = 0;
+            const int MAX_ATTEMPTS = 1000;
+
+            while (attempts < MAX_ATTEMPTS)
+            {
+                try
+                {
+                    DebugTcpListener = new TcpListener(IPAddress.Loopback, port);
+                    DebugTcpListener.Start();
+                    Log($"World {WorldId} debug TCP server started on port {port}", Debugger.DebugLevel.VERBOSE);
+                    break;
+                }
+                catch (SocketException ex)
+                {
+                    if (DebugPort > 0)
+                    {
+                        // Fixed port requested but failed - don't retry with random ports
+                        Log($"Error starting debug TCP server on fixed port {DebugPort}: {ex.Message}", Debugger.DebugLevel.ERROR);
+                        DebugTcpListener = null;
+                        break;
+                    }
+                    port = GetAvailablePort();
+                    attempts++;
+                }
+            }
+
+            if (attempts >= MAX_ATTEMPTS)
+            {
+                Log($"Error starting debug TCP server after {attempts} attempts", Debugger.DebugLevel.ERROR);
+                DebugTcpListener = null;
+            }
 
             if (NetRunner.Instance.IsServer)
             {
-                DebugEnet = new ENetConnection();
-                Error err;
-                int port = GetAvailablePort();
-                int attempts = 0;
-                const int MAX_ATTEMPTS = 1000;
-                do
-                {
-                    err = DebugEnet.CreateHostBound(NetRunner.Instance.ServerAddress, port, NetRunner.Instance.MaxPeers);
-                    if (err == Error.Ok) break;
-                    port = GetAvailablePort();
-                    attempts++;
-                } while (attempts < MAX_ATTEMPTS);
-                if (err != Error.Ok)
-                {
-                    Log($"Error starting debug server after {attempts} attempts: {err}", Debugger.DebugLevel.ERROR);
-                    return;
-                }
-                DebugEnet.Compress(ENetConnection.CompressionMode.RangeCoder);
                 _OnPeerDisconnected = Callable.From((NetPeer peer) =>
                 {
                     if (AutoPlayerCleanup)
@@ -178,21 +292,29 @@ namespace Nebula
                     SetPeerState(peer, newPeerState);
                 });
                 NetRunner.Instance.Connect("OnPeerDisconnected", _OnPeerDisconnected);
-
-                Log($"World {WorldId} debug server started on port {DebugEnet.GetLocalPort()}", Debugger.DebugLevel.VERBOSE);
             }
         }
 
         public override void _ExitTree()
         {
             base._ExitTree();
+
+            // Cleanup debug TCP server for both server and client
+            if (DebugTcpListener != null)
+            {
+                lock (_debugClientsLock)
+                {
+                    foreach (var client in DebugTcpClients)
+                    {
+                        try { client.Close(); } catch { }
+                    }
+                    DebugTcpClients.Clear();
+                }
+                DebugTcpListener.Stop();
+            }
+
             if (NetRunner.Instance.IsServer)
             {
-                foreach (var peer in DebugEnet.GetPeers())
-                {
-                    peer.PeerDisconnect(0);
-                }
-                DebugEnet.Destroy();
                 NetRunner.Instance.Disconnect("OnPeerDisconnected", _OnPeerDisconnected);
             }
         }
@@ -332,17 +454,20 @@ namespace Nebula
                 netNode._NetworkProcess(CurrentTick);
             }
 
-            if (DebugEnet != null)
+            if (DebugTcpListener != null && DebugTcpClients.Count > 0)
             {
                 // Notify the Debugger of the incoming tick
                 var debugBuffer = new HLBuffer();
                 HLBytes.Pack(debugBuffer, (byte)DebugDataType.TICK);
                 HLBytes.Pack(debugBuffer, DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
                 HLBytes.Pack(debugBuffer, CurrentTick);
-                foreach (var debugPeer in DebugEnet.GetPeers())
-                {
-                    debugPeer.Send(0, debugBuffer.bytes, (int)ENetPacketPeer.FlagReliable);
-                }
+
+                // Wrap with length prefix for TCP framing
+                var lengthPrefix = BitConverter.GetBytes(debugBuffer.bytes.Length);
+                var framedData = new byte[4 + debugBuffer.bytes.Length];
+                Array.Copy(lengthPrefix, 0, framedData, 0, 4);
+                Array.Copy(debugBuffer.bytes, 0, framedData, 4, debugBuffer.bytes.Length);
+                SendToDebugClients(framedData);
             }
 
             foreach (var queuedFunction in queuedNetFunctions)
@@ -357,9 +482,9 @@ namespace Nebula
                 functionNode.Node.Call(queuedFunction.FunctionInfo.Name, args);
                 functionNode.Network.IsInboundCall = false;
 
-                if (DebugEnet != null)
+                if (DebugTcpListener != null && DebugTcpClients.Count > 0)
                 {
-                    // Notify the Debugger of the incoming tick
+                    // Notify the Debugger of the function call
                     var debugBuffer = new HLBuffer();
                     HLBytes.Pack(debugBuffer, (byte)DebugDataType.CALLS);
                     HLBytes.Pack(debugBuffer, queuedFunction.FunctionInfo.Name);
@@ -368,40 +493,55 @@ namespace Nebula
                     {
                         HLBytes.PackVariant(debugBuffer, arg, packType: true);
                     }
-                    foreach (var debugPeer in DebugEnet.GetPeers())
-                    {
-                        debugPeer.Send(0, debugBuffer.bytes, (int)ENetPacketPeer.FlagReliable);
-                    }
+
+                    // Wrap with length prefix for TCP framing
+                    var lengthPrefix = BitConverter.GetBytes(debugBuffer.bytes.Length);
+                    var framedData = new byte[4 + debugBuffer.bytes.Length];
+                    Array.Copy(lengthPrefix, 0, framedData, 0, 4);
+                    Array.Copy(debugBuffer.bytes, 0, framedData, 4, debugBuffer.bytes.Length);
+                    SendToDebugClients(framedData);
                 }
             }
             queuedNetFunctions.Clear();
 
-            foreach (var log in tickLogBuffer)
+            if (DebugTcpListener != null && DebugTcpClients.Count > 0)
             {
-                var logBuffer = new HLBuffer();
-                HLBytes.Pack(logBuffer, (byte)DebugDataType.LOGS);
-                HLBytes.Pack(logBuffer, (byte)log.Level);
-                HLBytes.Pack(logBuffer, log.Message);
-                foreach (var debugPeer in DebugEnet.GetPeers())
+                foreach (var log in tickLogBuffer)
                 {
-                    debugPeer.Send(0, logBuffer.bytes, (int)ENetPacketPeer.FlagReliable);
+                    var logBuffer = new HLBuffer();
+                    HLBytes.Pack(logBuffer, (byte)DebugDataType.LOGS);
+                    HLBytes.Pack(logBuffer, (byte)log.Level);
+                    HLBytes.Pack(logBuffer, log.Message);
+
+                    // Wrap with length prefix for TCP framing
+                    var lengthPrefix = BitConverter.GetBytes(logBuffer.bytes.Length);
+                    var framedData = new byte[4 + logBuffer.bytes.Length];
+                    Array.Copy(lengthPrefix, 0, framedData, 0, 4);
+                    Array.Copy(logBuffer.bytes, 0, framedData, 4, logBuffer.bytes.Length);
+                    SendToDebugClients(framedData);
                 }
             }
             tickLogBuffer.Clear();
-            var fullGameState = RootScene.Node switch
+            if (DebugTcpListener != null && DebugTcpClients.Count > 0)
             {
-                IBsonSerializableBase node => node.BsonSerialize(new NetNodeCommonBsonSerializeContext
+                var fullGameState = RootScene.Node switch
                 {
-                    Recurse = true,
-                }),
-                _ => throw new Exception("RootScene.Node is not a IBsonSerializableBase")
-            };
-            var exportBuffer = new HLBuffer();
-            HLBytes.Pack(exportBuffer, (byte)DebugDataType.EXPORT);
-            HLBytes.Pack(exportBuffer, fullGameState.ToBson());
-            foreach (var debugPeer in DebugEnet.GetPeers())
-            {
-                debugPeer.Send(0, exportBuffer.bytes, (int)ENetPacketPeer.FlagReliable);
+                    IBsonSerializableBase node => node.BsonSerialize(new NetNodeCommonBsonSerializeContext
+                    {
+                        Recurse = true,
+                    }),
+                    _ => throw new Exception("RootScene.Node is not a IBsonSerializableBase")
+                };
+                var exportBuffer = new HLBuffer();
+                HLBytes.Pack(exportBuffer, (byte)DebugDataType.EXPORT);
+                HLBytes.Pack(exportBuffer, fullGameState.ToBson());
+
+                // Wrap with length prefix for TCP framing
+                var lengthPrefix = BitConverter.GetBytes(exportBuffer.bytes.Length);
+                var framedData = new byte[4 + exportBuffer.bytes.Length];
+                Array.Copy(lengthPrefix, 0, framedData, 0, 4);
+                Array.Copy(exportBuffer.bytes, 0, framedData, 4, exportBuffer.bytes.Length);
+                SendToDebugClients(framedData);
             }
 
             var peers = PeerStates.Keys.ToList();
@@ -422,16 +562,19 @@ namespace Nebula
                 }
 
                 peer.Send((int)NetRunner.ENetChannelId.Tick, buffer.bytes, (int)ENetPacketPeer.FlagUnsequenced);
-                if (DebugEnet != null)
+                if (DebugTcpListener != null && DebugTcpClients.Count > 0)
                 {
                     var debugBuffer = new HLBuffer();
                     HLBytes.Pack(debugBuffer, (byte)DebugDataType.PAYLOADS);
                     HLBytes.Pack(debugBuffer, PeerStates[peer].Id.ToByteArray());
                     HLBytes.Pack(debugBuffer, exportedState[peer].bytes);
-                    foreach (var debugPeer in DebugEnet.GetPeers())
-                    {
-                        debugPeer.Send(0, debugBuffer.bytes, (int)ENetPacketPeer.FlagReliable);
-                    }
+
+                    // Wrap with length prefix for TCP framing
+                    var lengthPrefix = BitConverter.GetBytes(debugBuffer.bytes.Length);
+                    var framedData = new byte[4 + debugBuffer.bytes.Length];
+                    Array.Copy(lengthPrefix, 0, framedData, 0, 4);
+                    Array.Copy(debugBuffer.bytes, 0, framedData, 4, debugBuffer.bytes.Length);
+                    SendToDebugClients(framedData);
                 }
             }
         }
@@ -440,13 +583,26 @@ namespace Nebula
         {
             base._PhysicsProcess(delta);
 
+            // Accept pending TCP debug connections
+            if (DebugTcpListener != null && DebugTcpListener.Pending())
+            {
+                try
+                {
+                    var client = DebugTcpListener.AcceptTcpClient();
+                    lock (_debugClientsLock)
+                    {
+                        DebugTcpClients.Add(client);
+                    }
+                    Log($"Debug client connected", Debugger.DebugLevel.VERBOSE);
+                }
+                catch (Exception ex)
+                {
+                    Log($"Error accepting debug client: {ex.Message}", Debugger.DebugLevel.ERROR);
+                }
+            }
+
             if (NetRunner.Instance.IsServer)
             {
-                if (DebugEnet != null)
-                {
-                    DebugEnet.Service();
-                }
-
                 _frameCounter += 1;
                 if (_frameCounter < NetRunner.PhysicsTicksPerNetworkTick)
                     return;
@@ -636,19 +792,22 @@ namespace Nebula
         {
             if (NetRunner.Instance.IsClient) return null;
 
-            if (!node.Network.IsNetScene()) {
+            if (!node.Network.IsNetScene())
+            {
                 Debugger.Instance.Log($"Only Net Scenes can be spawned (i.e. a scene where the root node is an NetNode). Attempting to spawn node that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{nodePath}", Debugger.DebugLevel.ERROR);
                 return null;
             }
 
-            if (parent != null && !parent.Network.IsNetScene()) {
+            if (parent != null && !parent.Network.IsNetScene())
+            {
                 Debugger.Instance.Log($"You can only spawn a Net Scene as a child of another Net Scene. Attempting to spawn node on a parent that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{nodePath}", Debugger.DebugLevel.ERROR);
                 return null;
             }
 
             node.Network.IsClientSpawn = true;
             node.Network.CurrentWorld = this;
-            if (inputAuthority != null) {
+            if (inputAuthority != null)
+            {
                 node.Network.SetInputAuthority(inputAuthority);
             }
             if (parent == null)

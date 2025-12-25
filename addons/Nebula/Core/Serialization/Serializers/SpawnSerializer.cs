@@ -118,6 +118,8 @@ namespace Nebula.Serialization.Serializers
             if (data.parentId == 0)
             {
                 currentWorld.ChangeScene(nodeOut);
+                // Notify debug listeners that scene change completed
+                currentWorld.Debug?.Send("Spawn", $"Imported:{nodeOut.Node.SceneFilePath}");
                 return;
             }
 
@@ -134,6 +136,9 @@ namespace Nebula.Serialization.Serializers
 
             nodeOut._NetworkPrepare(currentWorld);
             nodeOut._WorldReady();
+
+            // Notify debug listeners that spawn import completed
+            currentWorld.Debug?.Send("Spawn", $"Imported:{nodeOut.Node.SceneFilePath}");
 
             return;
         }
@@ -210,6 +215,9 @@ namespace Nebula.Serialization.Serializers
             {
                 HLBytes.Pack(buffer, (byte)0);
             }
+
+            // Notify debug listeners that spawn export completed
+            currentWorld.Debug?.Send("Spawn", $"Exported:{wrapper.Node.SceneFilePath}");
 
             return buffer;
         }

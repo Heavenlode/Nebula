@@ -245,7 +245,7 @@ namespace Nebula
                             var world = Worlds[worldId];
                             var buffer = new HLBuffer();
                             HLBytes.Pack(buffer, worldId.ToByteArray());
-                            HLBytes.Pack(buffer, world.DebugEnet.GetLocalPort());
+                            HLBytes.Pack(buffer, world.DebugPort);
                             packetPeer.Send(0, buffer.bytes, (int)ENetPacketPeer.FlagReliable);
                         }
                         break;
@@ -402,7 +402,7 @@ namespace Nebula
             EmitSignal("OnWorldCreated", worldRunner);
             if (debugEnet != null) {
                 foreach (var peer in debugEnet.GetPeers()) {
-                    GD.Print(worldRunner.DebugEnet.GetLocalPort());
+                    GD.Print(worldRunner.DebugPort);
                     // peer.Send(0, , (int)ENetPacketPeer.FlagReliable);
                 }
             }

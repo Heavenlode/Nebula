@@ -15,6 +15,10 @@ public class ServerConfig
 {
     public string InitialWorldScene { get; set; }
     public string? WorldId { get; set; }
+    /// <summary>
+    /// Port for the debug ENet connection. 0 means use a random available port.
+    /// </summary>
+    public int DebugPort { get; set; } = 0;
     public Dictionary<string, string> ExtraArgs { get; set; } = new();
 }
 
@@ -23,6 +27,10 @@ public class ServerConfig
 /// </summary>
 public class ClientConfig
 {
+    /// <summary>
+    /// Port for the debug ENet connection. 0 means use a random available port.
+    /// </summary>
+    public int DebugPort { get; set; } = 0;
     public Dictionary<string, string> ExtraArgs { get; set; } = new();
 }
 
@@ -66,6 +74,11 @@ public abstract class IntegrationTestBase : IDisposable
             args.Add($"--worldId={config.WorldId}");
         }
 
+        if (config.DebugPort > 0)
+        {
+            args.Add($"--debugPort={config.DebugPort}");
+        }
+
         foreach (var kvp in config.ExtraArgs)
         {
             args.Add($"--{kvp.Key}={kvp.Value}");
@@ -73,6 +86,7 @@ public abstract class IntegrationTestBase : IDisposable
 
         var process = StartGodot(args.ToArray());
         process.Label = "server";
+        process.DebugPort = config.DebugPort;
         return process;
     }
 
@@ -90,6 +104,11 @@ public abstract class IntegrationTestBase : IDisposable
             "--headless"
         };
 
+        if (config.DebugPort > 0)
+        {
+            args.Add($"--debugPort={config.DebugPort}");
+        }
+
         foreach (var kvp in config.ExtraArgs)
         {
             args.Add($"--{kvp.Key}={kvp.Value}");
@@ -98,6 +117,7 @@ public abstract class IntegrationTestBase : IDisposable
         var process = StartGodot(args.ToArray());
         _clientCounter++;
         process.Label = _clientCounter == 1 ? "client" : $"client{_clientCounter}";
+        process.DebugPort = config.DebugPort;
         return process;
     }
 

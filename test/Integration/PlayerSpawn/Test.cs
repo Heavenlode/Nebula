@@ -9,20 +9,34 @@ using Xunit;
 /// </summary>
 public class BasicIntegrationFixture : IntegrationTestBase, IAsyncLifetime
 {
+    private const int ServerDebugPort = 17878;
+    private const int ClientDebugPort = 17879;
+
     public GodotProcess Server { get; private set; } = null!;
     public GodotProcess Client { get; private set; } = null!;
+    public ServerCommandBuilder Commands { get; private set; } = null!;
 
     public async Task InitializeAsync()
     {
         Server = StartServer(new ServerConfig
         {
-            InitialWorldScene = "res://Integration/PlayerSpawn/Scene.tscn"
+            InitialWorldScene = "res://Integration/PlayerSpawn/Scene.tscn",
+            DebugPort = ServerDebugPort
         });
-        Client = StartClient();
+        Client = StartClient(new ClientConfig
+        {
+            DebugPort = ClientDebugPort
+        });
 
         await Server.WaitForOutput("Server ready");
         await Client.WaitForOutput("Connected to server");
         await Client.WaitForOutput("Scene _WorldReady");
+
+        // Connect to debug ports
+        await Server.ConnectDebug(ServerDebugPort);
+        await Client.ConnectDebug(ClientDebugPort);
+
+        Commands = new ServerCommandBuilder(Server, Client);
     }
 
     public Task DisposeAsync()
@@ -71,12 +85,10 @@ public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
     {
         await _fixture.NebulaTest(async () =>
         {
-            // Send spawn command to server
-            _fixture.Server.SendCommand("spawn:res://Integration/PlayerSpawn/Player.tscn");
-
-            // Wait for the player to be spawned and ready
-            await _fixture.Server.WaitForOutput("Spawned: res://Integration/PlayerSpawn/Player.tscn");
-            await _fixture.Server.WaitForOutput("Player _WorldReady");
+            // Spawn player and verify on client using fluent API
+            await _fixture.Commands
+                .Spawn("res://Integration/PlayerSpawn/Player.tscn")
+                .VerifyClient();
         });
     }
 }

@@ -1,35 +1,20 @@
-namespace NebulaTests.Core.Serialization;
+namespace NebulaTests.Unit.Core.Serialization;
 
-using GdUnit4;
-using static GdUnit4.Assertions;
+using NebulaTests.Unit;
+using Xunit;
 using Nebula.Serialization;
-using Nebula.Utility.Tools;
 using Godot;
 using System;
 
-[TestSuite]
 public class HLBytesTests
 {
-    [Before]
-    public void Setup()
-    {
-        // Initialize the Debugger singleton by adding it to the scene tree
-        // This triggers _EnterTree() which sets Debugger.Instance
-        if (Debugger.Instance == null)
-        {
-            var debugger = AutoFree(new Debugger());
-            SceneTree tree = Engine.GetMainLoop() as SceneTree;
-            tree?.Root.AddChild(debugger);
-        }
-    }
-
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestSimple()
     {
-        AssertBool(true).IsTrue();
+        Assert.True(true);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackByte()
     {
         var buffer = new HLBuffer();
@@ -39,10 +24,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackByte(buffer);
-        AssertInt(result).IsEqual(value);
+        Assert.Equal(value, result);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackInt32()
     {
         var buffer = new HLBuffer();
@@ -52,10 +37,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackInt32(buffer);
-        AssertInt(result).IsEqual(value);
+        Assert.Equal(value, result);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackInt16()
     {
         var buffer = new HLBuffer();
@@ -65,10 +50,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackInt16(buffer);
-        AssertInt(result).IsEqual(value);
+        Assert.Equal(value, result);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackInt64()
     {
         var buffer = new HLBuffer();
@@ -78,10 +63,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackInt64(buffer);
-        AssertThat(result).IsEqual(value);
+        Assert.Equal(value, result);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackFloat()
     {
         var buffer = new HLBuffer();
@@ -91,10 +76,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackFloat(buffer);
-        AssertFloat(result).IsEqualApprox(value, 0.0001);
+        Assert.True(Math.Abs(result - value) < 0.0001);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackBool_True()
     {
         var buffer = new HLBuffer();
@@ -104,10 +89,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackBool(buffer);
-        AssertBool(result).IsTrue();
+        Assert.True(result);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackBool_False()
     {
         var buffer = new HLBuffer();
@@ -117,10 +102,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackBool(buffer);
-        AssertBool(result).IsFalse();
+        Assert.False(result);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackString()
     {
         var buffer = new HLBuffer();
@@ -130,10 +115,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackString(buffer);
-        AssertString(result).IsEqual(value);
+        Assert.Equal(value, result);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackVector2()
     {
         var buffer = new HLBuffer();
@@ -143,11 +128,11 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackVector2(buffer);
-        AssertFloat(result.X).IsEqualApprox(value.X, 0.01);
-        AssertFloat(result.Y).IsEqualApprox(value.Y, 0.01);
+        Assert.True(Math.Abs(result.X - value.X) < 0.01);
+        Assert.True(Math.Abs(result.Y - value.Y) < 0.01);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackVector3()
     {
         var buffer = new HLBuffer();
@@ -157,12 +142,12 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackVector3(buffer);
-        AssertFloat(result.X).IsEqualApprox(value.X, 0.0001);
-        AssertFloat(result.Y).IsEqualApprox(value.Y, 0.0001);
-        AssertFloat(result.Z).IsEqualApprox(value.Z, 0.0001);
+        Assert.True(Math.Abs(result.X - value.X) < 0.0001);
+        Assert.True(Math.Abs(result.Y - value.Y) < 0.0001);
+        Assert.True(Math.Abs(result.Z - value.Z) < 0.0001);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackQuaternion()
     {
         var buffer = new HLBuffer();
@@ -172,11 +157,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackQuaternion(buffer);
-        // Using larger tolerance due to Half precision
-        AssertFloat(result.X).IsEqualApprox(value.X, 0.01);
+        Assert.True(Math.Abs(result.X - value.X) < 0.01);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackByteArray()
     {
         var buffer = new HLBuffer();
@@ -186,14 +170,14 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackByteArray(buffer);
-        AssertInt(result.Length).IsEqual(value.Length);
+        Assert.Equal(value.Length, result.Length);
         for (int i = 0; i < value.Length; i++)
         {
-            AssertInt(result[i]).IsEqual(value[i]);
+            Assert.Equal(value[i], result[i]);
         }
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackInt32Array()
     {
         var buffer = new HLBuffer();
@@ -203,14 +187,14 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackInt32Array(buffer);
-        AssertInt(result.Length).IsEqual(value.Length);
+        Assert.Equal(value.Length, result.Length);
         for (int i = 0; i < value.Length; i++)
         {
-            AssertInt(result[i]).IsEqual(value[i]);
+            Assert.Equal(value[i], result[i]);
         }
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackInt64Array()
     {
         var buffer = new HLBuffer();
@@ -220,14 +204,14 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackInt64Array(buffer);
-        AssertInt(result.Length).IsEqual(value.Length);
+        Assert.Equal(value.Length, result.Length);
         for (int i = 0; i < value.Length; i++)
         {
-            AssertThat(result[i]).IsEqual(value[i]);
+            Assert.Equal(value[i], result[i]);
         }
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackVariant_Int()
     {
         var buffer = new HLBuffer();
@@ -237,11 +221,11 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackVariant(buffer);
-        AssertBool(result.HasValue).IsTrue();
-        AssertThat(result.Value.AsInt64()).IsEqual(42L);
+        Assert.True(result.HasValue);
+        Assert.Equal(42L, result.Value.AsInt64());
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackVariant_Float()
     {
         var buffer = new HLBuffer();
@@ -251,11 +235,11 @@ public class HLBytesTests
         var readBuffer = new HLBuffer(buffer.bytes);
         
         var result = HLBytes.UnpackVariant(readBuffer);
-        AssertBool(result.HasValue).IsTrue();
-        AssertFloat(result.Value.AsSingle()).IsEqualApprox(3.14f, 0.0001);
+        Assert.True(result.HasValue);
+        Assert.True(Math.Abs(result.Value.AsSingle() - 3.14f) < 0.0001);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackVariant_String()
     {
         var buffer = new HLBuffer();
@@ -265,11 +249,11 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackVariant(buffer);
-        AssertBool(result.HasValue).IsTrue();
-        AssertString(result.Value.AsString()).IsEqual("Test String");
+        Assert.True(result.HasValue);
+        Assert.Equal("Test String", result.Value.AsString());
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackVariant_Bool()
     {
         var buffer = new HLBuffer();
@@ -279,11 +263,11 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackVariant(buffer);
-        AssertBool(result.HasValue).IsTrue();
-        AssertBool(result.Value.AsBool()).IsTrue();
+        Assert.True(result.HasValue);
+        Assert.True(result.Value.AsBool());
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackVariant_Vector3()
     {
         var buffer = new HLBuffer();
@@ -293,14 +277,14 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackVariant(buffer);
-        AssertBool(result.HasValue).IsTrue();
+        Assert.True(result.HasValue);
         var vec = result.Value.As<Vector3>();
-        AssertFloat(vec.X).IsEqualApprox(1.0f, 0.0001);
-        AssertFloat(vec.Y).IsEqualApprox(2.0f, 0.0001);
-        AssertFloat(vec.Z).IsEqualApprox(3.0f, 0.0001);
+        Assert.True(Math.Abs(vec.X - 1.0f) < 0.0001);
+        Assert.True(Math.Abs(vec.Y - 2.0f) < 0.0001);
+        Assert.True(Math.Abs(vec.Z - 3.0f) < 0.0001);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackArray()
     {
         var buffer = new HLBuffer();
@@ -310,10 +294,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackArray(buffer);
-        AssertInt(result.Count).IsEqual(3);
+        Assert.Equal(3, result.Count);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestPackUnpackDictionary()
     {
         var buffer = new HLBuffer();
@@ -327,10 +311,10 @@ public class HLBytesTests
         buffer.ResetPointer();
         
         var result = HLBytes.UnpackDictionary(buffer);
-        AssertInt(result.Count).IsEqual(2);
+        Assert.Equal(2, result.Count);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestMultipleValues()
     {
         var buffer = new HLBuffer();
@@ -345,8 +329,8 @@ public class HLBytesTests
         var float_result = HLBytes.UnpackFloat(buffer);
         var string_result = HLBytes.UnpackString(buffer);
         
-        AssertInt(int_result).IsEqual(42);
-        AssertFloat(float_result).IsEqualApprox(3.14f, 0.0001);
-        AssertString(string_result).IsEqual("test");
+        Assert.Equal(42, int_result);
+        Assert.True(Math.Abs(float_result - 3.14f) < 0.0001);
+        Assert.Equal("test", string_result);
     }
 }

@@ -1,102 +1,99 @@
-namespace NebulaTests.Core.Serialization;
+namespace NebulaTests.Unit.Core.Serialization;
 
-using GdUnit4;
-using static GdUnit4.Assertions;
+using NebulaTests.Unit;
+using Xunit;
 using Nebula.Serialization;
 using System;
 
-[TestSuite]
 public class HLBufferTests
 {
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestSimple()
     {
-        AssertBool(true).IsTrue();
+        Assert.True(true);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestDefaultConstructor()
     {
         var buffer = new HLBuffer();
         
-        AssertObject(buffer).IsNotNull();
-        AssertObject(buffer.bytes).IsNotNull();
-        AssertInt(buffer.bytes.Length).IsEqual(0);
+        Assert.NotNull(buffer);
+        Assert.NotNull(buffer.bytes);
+        Assert.Empty(buffer.bytes);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestByteArrayConstructor()
     {
         var bytes = new byte[] { 1, 2, 3, 4, 5 };
         var buffer = new HLBuffer(bytes);
         
-        AssertObject(buffer).IsNotNull();
-        AssertObject(buffer.bytes).IsEqual(bytes);
-        AssertInt(buffer.bytes.Length).IsEqual(5);
+        Assert.NotNull(buffer);
+        Assert.Equal(bytes, buffer.bytes);
+        Assert.Equal(5, buffer.bytes.Length);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestIsPointerEnd_EmptyBuffer()
     {
         var buffer = new HLBuffer();
         
-        AssertBool(buffer.IsPointerEnd).IsTrue();
+        Assert.True(buffer.IsPointerEnd);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestIsPointerEnd_AtStart()
     {
         var buffer = new HLBuffer(new byte[] { 1, 2, 3 });
         
-        AssertBool(buffer.IsPointerEnd).IsFalse();
+        Assert.False(buffer.IsPointerEnd);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestLength()
     {
         var bytes = new byte[] { 1, 2, 3, 4, 5 };
         var buffer = new HLBuffer(bytes);
         
-        AssertInt(buffer.Length).IsEqual(5);
+        Assert.Equal(5, buffer.Length);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestRemainingBytes_AtStart()
     {
         var bytes = new byte[] { 1, 2, 3, 4, 5 };
         var buffer = new HLBuffer(bytes);
         
         var remaining = buffer.RemainingBytes;
-        AssertInt(remaining.Length).IsEqual(5);
-        AssertInt(remaining[0]).IsEqual(1);
+        Assert.Equal(5, remaining.Length);
+        Assert.Equal(1, remaining[0]);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestConsistencyBufferSizeLimit()
     {
-        AssertInt(HLBuffer.CONSISTENCY_BUFFER_SIZE_LIMIT).IsEqual(256);
+        Assert.Equal(256, HLBuffer.CONSISTENCY_BUFFER_SIZE_LIMIT);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestBufferReusePattern()
     {
         var buffer = new HLBuffer();
         
-        // Pack some data
         HLBytes.Pack(buffer, 42);
         HLBytes.Pack(buffer, 3.14f);
         
-        // Reset pointer to read the data
         buffer.ResetPointer();
         
         var intResult = HLBytes.UnpackInt32(buffer);
         var floatResult = HLBytes.UnpackFloat(buffer);
         
-        AssertInt(intResult).IsEqual(42);
-        AssertFloat(floatResult).IsEqualApprox(3.14f, 0.0001);
+        Assert.Equal(42, intResult);
+        Assert.True(Math.Abs(floatResult - 3.14f) < 0.0001);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestResetPointer()
     {
         var buffer = new HLBuffer();
@@ -105,18 +102,16 @@ public class HLBufferTests
         HLBytes.Pack(buffer, (byte)2);
         HLBytes.Pack(buffer, (byte)3);
         
-        // Read some data
         buffer.ResetPointer();
         var first = HLBytes.UnpackByte(buffer);
         var second = HLBytes.UnpackByte(buffer);
         
-        AssertInt(first).IsEqual(1);
-        AssertInt(second).IsEqual(2);
+        Assert.Equal(1, first);
+        Assert.Equal(2, second);
         
-        // Reset and read again from the beginning
         buffer.ResetPointer();
         var firstAgain = HLBytes.UnpackByte(buffer);
         
-        AssertInt(firstAgain).IsEqual(1);
+        Assert.Equal(1, firstAgain);
     }
 }

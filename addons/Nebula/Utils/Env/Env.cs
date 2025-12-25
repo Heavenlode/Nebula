@@ -107,6 +107,7 @@ namespace Nebula.Utility.Tools
             get
             {
                 if (OS.HasFeature("dedicated_server")) return true;
+                if (StartArgs.ContainsKey("server")) return true;
                 return false;
             }
         }

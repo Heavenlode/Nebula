@@ -8,14 +8,32 @@
 
 config_version=5
 
+[Nebula]
+
+config/log_level=8
+
 [application]
 
-config/name="NebuaTests"
+config/name="NebulaTests"
+run/main_scene="uid://c18ded3drxmoq"
 config/features=PackedStringArray("4.5", "C#", "Mobile")
+
+[autoload]
+
+Debugger="*res://addons/Nebula/Utils/Debugger/Debugger.cs"
+Env="*res://addons/Nebula/Utils/Env/Env.cs"
+BsonTransformer="*res://addons/Nebula/Core/Serialization/BsonTransformer.cs"
+ProtocolRegistry="*res://addons/Nebula/Core/Serialization/ProtocolRegistry.cs"
+NetRunner="*res://addons/Nebula/Core/NetRunner.cs"
+ProtocolRegistryBuilder="*res://addons/Nebula/Core/Serialization/ProtocolRegistryBuilder.cs"
 
 [dotnet]
 
-project/assembly_name="NebuaTests"
+project/assembly_name="NebulaTests"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/Nebula/plugin.cfg")
 
 [rendering]
 

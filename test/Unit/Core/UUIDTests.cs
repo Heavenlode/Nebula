@@ -1,236 +1,227 @@
-namespace NebulaTests.Core;
+namespace NebulaTests.Unit.Core;
 
-using GdUnit4;
-using static GdUnit4.Assertions;
+using NebulaTests.Unit;
+using Xunit;
 using Nebula;
 using System;
 
-[TestSuite]
 public class UUIDTests
 {
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestSimple()
     {
-        // Just test that the test suite loads
-        AssertBool(true).IsTrue();
+        Assert.True(true);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestDefaultConstructor()
     {
         var uuid = new UUID();
-        AssertObject(uuid).IsNotNull();
-        AssertObject(uuid.Guid).IsNotEqual(Guid.Empty);
+        Assert.NotNull(uuid);
+        Assert.NotEqual(Guid.Empty, uuid.Guid);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestStringConstructor()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
         var uuid = new UUID(guidString);
         
-        AssertString(uuid.ToString()).IsEqual(guidString);
+        Assert.Equal(guidString, uuid.ToString());
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestByteArrayConstructor()
     {
         var guid = Guid.NewGuid();
         var bytes = guid.ToByteArray();
         var uuid = new UUID(bytes);
         
-        AssertObject(uuid.Guid).IsEqual(guid);
+        Assert.Equal(guid, uuid.Guid);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestEmptyProperty()
     {
         var empty = UUID.Empty;
-        AssertObject(empty).IsNotNull();
-        AssertString(empty.ToString()).IsEqual("00000000-0000-0000-0000-000000000000");
+        Assert.NotNull(empty);
+        Assert.Equal("00000000-0000-0000-0000-000000000000", empty.ToString());
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestToString()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
         var uuid = new UUID(guidString);
         
-        AssertString(uuid.ToString()).IsEqual(guidString);
+        Assert.Equal(guidString, uuid.ToString());
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestEquals_SameUUID()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
         var uuid1 = new UUID(guidString);
         var uuid2 = new UUID(guidString);
         
-        AssertBool(uuid1.Equals(uuid2)).IsTrue();
+        Assert.True(uuid1.Equals(uuid2));
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestEquals_DifferentUUID()
     {
         var uuid1 = new UUID();
         var uuid2 = new UUID();
         
-        AssertBool(uuid1.Equals(uuid2)).IsFalse();
+        Assert.False(uuid1.Equals(uuid2));
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestEquals_NullObject()
     {
         var uuid = new UUID();
-        AssertBool(uuid.Equals(null)).IsFalse();
+        Assert.False(uuid.Equals(null));
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestEquals_NonUUIDObject()
     {
         var uuid = new UUID();
-        AssertBool(uuid.Equals("not a uuid")).IsFalse();
+        Assert.False(uuid.Equals("not a uuid"));
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestGetHashCode()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
         var uuid1 = new UUID(guidString);
         var uuid2 = new UUID(guidString);
         
-        AssertInt(uuid1.GetHashCode()).IsEqual(uuid2.GetHashCode());
+        Assert.Equal(uuid1.GetHashCode(), uuid2.GetHashCode());
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestEqualityOperator_SameUUID()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
         var uuid1 = new UUID(guidString);
         var uuid2 = new UUID(guidString);
         
-        AssertBool(uuid1 == uuid2).IsTrue();
+        Assert.True(uuid1 == uuid2);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestEqualityOperator_DifferentUUID()
     {
         var uuid1 = new UUID();
         var uuid2 = new UUID();
 
-        // This is because by default new UUIDs are random
-        AssertBool(uuid1 == uuid2).IsFalse();
+        Assert.False(uuid1 == uuid2);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestEqualityOperator_BothNull()
     {
         UUID uuid1 = null;
         UUID uuid2 = null;
         
-        AssertBool(uuid1 == uuid2).IsTrue();
+        Assert.True(uuid1 == uuid2);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestEqualityOperator_OneNull()
     {
         var uuid1 = new UUID();
         UUID uuid2 = null;
         
-        AssertBool(uuid1 == uuid2).IsFalse();
+        Assert.False(uuid1 == uuid2);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestInequalityOperator_SameUUID()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
         var uuid1 = new UUID(guidString);
         var uuid2 = new UUID(guidString);
         
-        AssertBool(uuid1 != uuid2).IsFalse();
+        Assert.False(uuid1 != uuid2);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestInequalityOperator_DifferentUUID()
     {
         var uuid1 = new UUID();
         var uuid2 = new UUID();
         
-        AssertBool(uuid1 != uuid2).IsTrue();
+        Assert.True(uuid1 != uuid2);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestToByteArray()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
         var uuid = new UUID(guidString);
         var bytes = uuid.ToByteArray();
         
-        AssertInt(bytes.Length).IsEqual(16);
-        AssertObject(new Guid(bytes)).IsEqual(Guid.Parse(guidString));
+        Assert.Equal(16, bytes.Length);
+        Assert.Equal(Guid.Parse(guidString), new Guid(bytes));
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestNetworkSerialize_NonNull()
     {
         var uuid = new UUID("12345678-1234-1234-1234-123456789abc");
         var buffer = UUID.NetworkSerialize(null, null, uuid);
         
-        AssertObject(buffer).IsNotNull();
-        // Buffer should contain: 1 byte flag (1) + 16 bytes for UUID
-        AssertInt(buffer.Pointer).IsGreater(0);
+        Assert.NotNull(buffer);
+        Assert.True(buffer.Pointer > 0);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestNetworkSerialize_Null()
     {
         var buffer = UUID.NetworkSerialize(null, null, null);
         
-        AssertObject(buffer).IsNotNull();
-        // Buffer should contain just the null flag (0)
-        AssertInt(buffer.Pointer).IsEqual(1);
+        Assert.NotNull(buffer);
+        Assert.Equal(1, buffer.Pointer);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestNetworkDeserialize_NonNull()
     {
         var original = new UUID("12345678-1234-1234-1234-123456789abc");
         var buffer = UUID.NetworkSerialize(null, null, original);
         
-        // Reset pointer to read from the beginning
         buffer.ResetPointer();
         
         var deserialized = UUID.NetworkDeserialize(null, null, buffer, new Godot.Variant());
         
-        AssertObject(deserialized).IsNotNull();
-        AssertString(deserialized.ToString()).IsEqual(original.ToString());
+        Assert.NotNull(deserialized);
+        Assert.Equal(original.ToString(), deserialized.ToString());
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestNetworkDeserialize_Null()
     {
         var buffer = UUID.NetworkSerialize(null, null, null);
         
-        // Reset pointer to read from the beginning
         buffer.ResetPointer();
         
         var deserialized = UUID.NetworkDeserialize(null, null, buffer, new Godot.Variant());
         
-        AssertObject(deserialized).IsNull();
+        Assert.Null(deserialized);
     }
 
-    [TestCase, RequireGodotRuntime]
+    [GodotFact]
     public void TestNetworkSerializeDeserialize_RoundTrip()
     {
         var original = new UUID();
         var buffer = UUID.NetworkSerialize(null, null, original);
         
-        // Reset pointer to read from the beginning
         buffer.ResetPointer();
         
         var deserialized = UUID.NetworkDeserialize(null, null, buffer, new Godot.Variant());
         
-        AssertString(deserialized.ToString()).IsEqual(original.ToString());
+        Assert.Equal(original.ToString(), deserialized.ToString());
     }
 }
-

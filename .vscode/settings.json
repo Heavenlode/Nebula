@@ -1,3 +1,4 @@
 {
-     "dotnet.unitTests.runSettingsPath": "./test/.runsettings"
+     "dotnet.unitTests.runSettingsPath": "./test/.runsettings",
+     "godotTools.editorPath.godot4": "/Applications/Godot.app"
 }

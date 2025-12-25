@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c16jbc2a13fyp"]
+
+[ext_resource type="Script" uid="uid://bvohmhqc52hwu" path="res://Integration/Tests/PlayerSpawn/Scene.cs" id="1_si5xx"]
+
+[node name="Scene" type="Node3D"]
+script = ExtResource("1_si5xx")

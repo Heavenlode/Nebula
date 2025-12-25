@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NebuaTests", "NebuaTests.csproj", "{3486058E-8DD7-4668-B703-9B2F901982D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NebulaTests", "NebulaTests.csproj", "{3486058E-8DD7-4668-B703-9B2F901982D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -290,8 +290,10 @@ namespace Nebula
                 {
                     case ENetConnection.EventType.Connect:
                         if (IsServer) {
+                            Debugger.Instance.Log("Peer connected");
                             EmitSignal("OnPeerConnected", packetPeer);
                         } else {
+                            Debugger.Instance.Log("Connected to server");
                             EmitSignal("OnConnectedToServer");
                         }
                         break;

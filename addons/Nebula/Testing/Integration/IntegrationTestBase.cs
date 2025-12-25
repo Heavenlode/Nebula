@@ -157,7 +157,7 @@ public abstract class IntegrationTestBase : IDisposable
     /// The scene tree dumps are included in the exception message for visibility in test output.
     /// </summary>
     /// <param name="testAction">The test action to execute</param>
-    protected async Task RunWithSceneTreeDumpOnFailure(Func<Task> testAction)
+    protected async Task NebulaTest(Func<Task> testAction)
     {
         try
         {

@@ -11,15 +11,26 @@ public class PlayerSpawnTests : IntegrationTestBase
     [Fact]
     public async Task PlayerSpawn_PositionSyncsToClient()
     {
-        using var server = StartServer(new ServerConfig
+        await RunWithSceneTreeDumpOnFailure(async () =>
         {
-            InitialWorldScene = "res://Integration/Tests/PlayerSpawn/Scene.tscn"
-        });
-        using var client = StartClient();
+            // Don't use 'using' here - IntegrationTestBase.Dispose() handles cleanup
+            // and we need the processes alive for scene tree dumps on failure
+            var server = StartServer(new ServerConfig
+            {
+                InitialWorldScene = "res://Integration/Tests/PlayerSpawn/Scene.tscn"
+            });
+            var client = StartClient();
 
-        await server.WaitForOutput("Server ready");
-        await client.WaitForOutput("Connected to server");
+            await server.WaitForOutput("Server ready");
+            await client.WaitForOutput("Connected to server");
+            await client.WaitForOutput("Scene _WorldReady");
+
+            // Send spawn command to server
+            server.SendCommand("spawn:res://Integration/Tests/PlayerSpawn/Player.tscn");
+
+            // Wait for the player to be spawned and ready
+            await server.WaitForOutput("Spawned: res://Integration/Tests/PlayerSpawn/Player.tscn");
+            await server.WaitForOutput("Player _WorldReady");
+        });
     }
 }
-
-

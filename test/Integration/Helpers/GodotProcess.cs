@@ -20,6 +20,11 @@ public sealed class GodotProcess : IDisposable
     private readonly object _outputLock = new();
     private bool _disposed;
 
+    /// <summary>
+    /// Optional label to identify this process in logs (e.g., "server", "client1").
+    /// </summary>
+    public string? Label { get; set; }
+
     public string AllOutput
     {
         get
@@ -109,7 +114,7 @@ public sealed class GodotProcess : IDisposable
     /// <returns>The line containing the pattern</returns>
     public async Task<string> WaitForOutput(string pattern, TimeSpan? timeout = null)
     {
-        timeout ??= TimeSpan.FromSeconds(30);
+        timeout ??= TimeSpan.FromSeconds(3);
         var cts = new CancellationTokenSource(timeout.Value);
 
         // First check existing output
@@ -168,6 +173,67 @@ public sealed class GodotProcess : IDisposable
     }
 
     /// <summary>
+    /// Requests a scene tree dump from the Godot process and returns it.
+    /// Requires the process to have a StdinCommandHandler that handles the dump_tree command.
+    /// </summary>
+    /// <param name="timeout">Maximum time to wait for the dump</param>
+    /// <returns>The scene tree dump as a string, or null if the process has exited</returns>
+    public async Task<string?> RequestSceneTreeDump(TimeSpan? timeout = null)
+    {
+        if (_disposed)
+        {
+            return "[Process already disposed]";
+        }
+
+        try
+        {
+            if (_process.HasExited)
+            {
+                return $"[Process has exited with code {_process.ExitCode}]\nFinal output:\n{AllOutput}";
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            return "[Process already disposed]";
+        }
+
+        timeout ??= TimeSpan.FromSeconds(5);
+
+        try
+        {
+            SendCommand("dump_tree");
+            
+            // Wait for the dump markers
+            await WaitForOutput("[SCENE_TREE_DUMP_START]", timeout);
+            await WaitForOutput("[SCENE_TREE_DUMP_END]", timeout);
+
+            // Extract the dump from all output
+            return ExtractSceneTreeDump();
+        }
+        catch (Exception ex)
+        {
+            return $"[Failed to get scene tree dump: {ex.Message}]\nOutput so far:\n{AllOutput}";
+        }
+    }
+
+    private string ExtractSceneTreeDump()
+    {
+        var output = AllOutput;
+        var startMarker = "[SCENE_TREE_DUMP_START]";
+        var endMarker = "[SCENE_TREE_DUMP_END]";
+
+        var startIdx = output.LastIndexOf(startMarker, StringComparison.Ordinal);
+        var endIdx = output.LastIndexOf(endMarker, StringComparison.Ordinal);
+
+        if (startIdx < 0 || endIdx < 0 || endIdx <= startIdx)
+        {
+            return "[Could not parse scene tree dump]";
+        }
+
+        return output.Substring(startIdx, endIdx - startIdx + endMarker.Length);
+    }
+
+    /// <summary>
     /// Waits for the process to exit.
     /// </summary>
     /// <param name="timeout">Maximum time to wait</param>
@@ -206,5 +272,3 @@ public sealed class GodotProcess : IDisposable
         }
     }
 }
-
-

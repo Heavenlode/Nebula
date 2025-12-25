@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace NebulaTests.Integration;
 
@@ -28,6 +30,9 @@ public class ClientConfig
 /// </summary>
 public abstract class IntegrationTestBase : IDisposable
 {
+    private readonly List<GodotProcess> _activeProcesses = new();
+    private int _clientCounter = 0;
+
     /// <summary>
     /// Default timeout for waiting on process output.
     /// </summary>
@@ -64,7 +69,9 @@ public abstract class IntegrationTestBase : IDisposable
             args.Add($"--{kvp.Key}={kvp.Value}");
         }
 
-        return StartGodot(args.ToArray());
+        var process = StartGodot(args.ToArray());
+        process.Label = "server";
+        return process;
     }
 
     /// <summary>
@@ -86,7 +93,10 @@ public abstract class IntegrationTestBase : IDisposable
             args.Add($"--{kvp.Key}={kvp.Value}");
         }
 
-        return StartGodot(args.ToArray());
+        var process = StartGodot(args.ToArray());
+        _clientCounter++;
+        process.Label = _clientCounter == 1 ? "client" : $"client{_clientCounter}";
+        return process;
     }
 
     /// <summary>
@@ -102,7 +112,9 @@ public abstract class IntegrationTestBase : IDisposable
         fullArgs[1] = TestProjectPath;
         Array.Copy(args, 0, fullArgs, 2, args.Length);
 
-        return GodotProcess.Start(fullArgs, TestProjectPath);
+        var process = GodotProcess.Start(fullArgs, TestProjectPath);
+        _activeProcesses.Add(process);
+        return process;
     }
 
     /// <summary>
@@ -114,6 +126,46 @@ public abstract class IntegrationTestBase : IDisposable
     protected GodotProcess StartHeadless(string scenePath)
     {
         return StartGodot("--headless", scenePath);
+    }
+
+    /// <summary>
+    /// Collects scene tree dumps from all active Godot processes and returns them as a string.
+    /// </summary>
+    /// <returns>A formatted string containing all scene tree dumps</returns>
+    protected async Task<string> CollectSceneTreeDumps()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("\n========== SCENE TREE DUMPS ==========");
+        
+        foreach (var process in _activeProcesses)
+        {
+            var label = process.Label ?? "unknown";
+            sb.AppendLine($"\n--- {label.ToUpperInvariant()} ---");
+            
+            var dump = await process.RequestSceneTreeDump(TimeSpan.FromSeconds(3));
+            sb.AppendLine(dump ?? "[No dump available]");
+        }
+        
+        sb.AppendLine("\n========== END SCENE TREE DUMPS ==========");
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Wraps an async test action with automatic scene tree dumping on failure.
+    /// The scene tree dumps are included in the exception message for visibility in test output.
+    /// </summary>
+    /// <param name="testAction">The test action to execute</param>
+    protected async Task RunWithSceneTreeDumpOnFailure(Func<Task> testAction)
+    {
+        try
+        {
+            await testAction();
+        }
+        catch (Exception ex)
+        {
+            var dumps = await CollectSceneTreeDumps();
+            throw new Exception($"{ex.Message}\n\n{dumps}", ex);
+        }
     }
 
     private static string GetTestProjectPath()
@@ -145,8 +197,10 @@ public abstract class IntegrationTestBase : IDisposable
 
     public virtual void Dispose()
     {
-        // Override in derived classes if cleanup is needed
+        foreach (var process in _activeProcesses)
+        {
+            process.Dispose();
+        }
+        _activeProcesses.Clear();
     }
 }
-
-

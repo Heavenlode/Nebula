@@ -1,5 +1,6 @@
 namespace NebulaTests.Integration.PlayerSpawn;
 
+using System;
 using System.Threading.Tasks;
 using Nebula.Testing.Integration;
 using Xunit;
@@ -16,12 +17,14 @@ public class BasicIntegrationFixture : IntegrationTestBase, IAsyncLifetime
     public GodotProcess Server { get; private set; } = null!;
     public GodotProcess Client { get; private set; } = null!;
     public ServerCommandBuilder Commands { get; private set; } = null!;
+    public string WorldId { get; private set; } = null!;
 
     public async Task InitializeAsync()
     {
+        WorldId = Guid.NewGuid().ToString();
         Server = StartServer(new ServerConfig
         {
-            WorldId = "00000000-0000-0000-0000-000000000000",
+            WorldId = WorldId,
             InitialWorldScene = "res://Integration/PlayerSpawn/Scene.tscn",
             DebugPort = ServerDebugPort
         });
@@ -73,7 +76,7 @@ public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
     {
         await _fixture.NebulaTest(async () =>
         {
-            await _fixture.Server.WaitForDebugEvent("WorldCreated", "00000000-0000-0000-0000-000000000000");
+            await _fixture.Server.WaitForDebugEvent("WorldCreated", _fixture.WorldId);
             await _fixture.Client.WaitForDebugEvent("WorldJoined", "res://Integration/PlayerSpawn/Scene.tscn");
         });
     }

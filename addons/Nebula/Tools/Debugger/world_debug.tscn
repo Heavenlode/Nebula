@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://bbxpfx0re8iv7" path="res://addons/Nebula/Tools/Debugger/nodes_view.gd" id="3_mwir2"]
 [ext_resource type="Script" uid="uid://b2d3tixt7ae8l" path="res://addons/Nebula/Tools/Debugger/world_state_tabs.gd" id="3_s1nig"]
 [ext_resource type="PackedScene" uid="uid://bq4fgpxhp5lg6" path="res://addons/Nebula/Tools/Inspector/inspector_field.tscn" id="4_aqlnc"]
-[ext_resource type="Script" uid="uid://d3ojmcfpbv08r" path="res://addons/Nebula/Tools/Debugger/window_all_frames.gd" id="4_jplgf"]
+[ext_resource type="Script" uid="uid://pi68r0t2nmhw" path="res://addons/Nebula/Tools/Debugger/window_all_frames.gd" id="4_jplgf"]
 [ext_resource type="PackedScene" uid="uid://ct713ndc1316x" path="res://addons/Nebula/Tools/Debugger/bar_chart.tscn" id="4_sxv4c"]
 [ext_resource type="Script" uid="uid://cuqfftjb4k31x" path="res://addons/Nebula/Tools/Debugger/calls_view.gd" id="5_3hwhb"]
 [ext_resource type="Script" uid="uid://chv6dbu2kiltn" path="res://addons/Nebula/Tools/Debugger/view_all_data_frames.gd" id="12_g7bst"]

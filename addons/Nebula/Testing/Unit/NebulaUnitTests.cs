@@ -68,7 +68,7 @@ public class NebulaUnitTests
     private static List<string> DiscoverTests()
     {
         var tests = new List<string>();
-        var godotBin = Environment.GetEnvironmentVariable("GODOT_BIN");
+        var godotBin = Environment.GetEnvironmentVariable("GODOT");
         
         if (string.IsNullOrEmpty(godotBin))
         {
@@ -119,11 +119,11 @@ public class NebulaUnitTests
     private static Dictionary<string, TestResult> RunAllTests()
     {
         var results = new Dictionary<string, TestResult>();
-        var godotBin = Environment.GetEnvironmentVariable("GODOT_BIN");
+        var godotBin = Environment.GetEnvironmentVariable("GODOT");
 
         if (string.IsNullOrEmpty(godotBin))
         {
-            throw new Exception("GODOT_BIN environment variable is not set");
+            throw new Exception("GODOT environment variable is not set");
         }
 
         var testProjectPath = FindTestProjectPath();

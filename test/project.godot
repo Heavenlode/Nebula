@@ -15,7 +15,7 @@ config/log_level=8
 [application]
 
 config/name="NebulaTests"
-run/main_scene="uid://c18ded3drxmoq"
+run/main_scene="res://addons/Nebula/Utils/ServerClientConnector/default_server_client_connector.tscn"
 config/features=PackedStringArray("4.5", "C#", "Mobile")
 
 [autoload]

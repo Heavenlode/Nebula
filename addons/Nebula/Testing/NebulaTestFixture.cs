@@ -37,11 +37,11 @@ public class NebulaTestFixture : IDisposable
 
     private void BuildProtocol()
     {
-        var godotBin = Environment.GetEnvironmentVariable("GODOT_BIN");
+        var godotBin = Environment.GetEnvironmentVariable("GODOT");
         if (string.IsNullOrEmpty(godotBin))
         {
             throw new InvalidOperationException(
-                "GODOT_BIN environment variable is not set. " +
+                "GODOT environment variable is not set. " +
                 "Set it to the path of your Godot executable.");
         }
 

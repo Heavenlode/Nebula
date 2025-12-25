@@ -5,7 +5,6 @@
 Documentation/Help/Working
 Documentation/Help/LastBuild.log
 Documentation/Help/LastBuild.log
-*.uid
 .obsidian
 *.DS_Store
 _site

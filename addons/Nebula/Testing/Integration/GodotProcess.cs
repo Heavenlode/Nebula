@@ -76,11 +76,11 @@ public sealed class GodotProcess : IDisposable
     /// <returns>A new GodotProcess instance</returns>
     public static GodotProcess Start(string[] args, string? workingDirectory = null)
     {
-        var godotBin = Environment.GetEnvironmentVariable("GODOT_BIN");
+        var godotBin = Environment.GetEnvironmentVariable("GODOT");
         if (string.IsNullOrEmpty(godotBin))
         {
             throw new InvalidOperationException(
-                "GODOT_BIN environment variable is not set. " +
+                "GODOT environment variable is not set. " +
                 "Set it to the path of your Godot executable.");
         }
 

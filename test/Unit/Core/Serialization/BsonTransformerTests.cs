@@ -22,12 +22,6 @@ public class BsonTransformerTests : IDisposable
     }
 
     [GodotFact]
-    public void TestSimple()
-    {
-        Assert.True(true);
-    }
-
-    [GodotFact]
     public void TestSerializeDeserialize_String()
     {
         var value = new BsonString("test string");

@@ -13,8 +13,6 @@ public class PlayerSpawnTests : IntegrationTestBase
     {
         await RunWithSceneTreeDumpOnFailure(async () =>
         {
-            // Don't use 'using' here - IntegrationTestBase.Dispose() handles cleanup
-            // and we need the processes alive for scene tree dumps on failure
             var server = StartServer(new ServerConfig
             {
                 InitialWorldScene = "res://Integration/Tests/PlayerSpawn/Scene.tscn"

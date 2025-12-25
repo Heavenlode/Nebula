@@ -8,12 +8,6 @@ using System;
 public class UUIDTests
 {
     [GodotFact]
-    public void TestSimple()
-    {
-        Assert.True(true);
-    }
-
-    [GodotFact]
     public void TestDefaultConstructor()
     {
         var uuid = new UUID();

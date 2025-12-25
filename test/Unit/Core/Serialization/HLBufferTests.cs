@@ -7,11 +7,6 @@ using System;
 
 public class HLBufferTests
 {
-    [GodotFact]
-    public void TestSimple()
-    {
-        Assert.True(true);
-    }
 
     [GodotFact]
     public void TestDefaultConstructor()

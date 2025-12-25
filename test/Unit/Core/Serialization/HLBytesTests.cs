@@ -9,12 +9,6 @@ using System;
 public class HLBytesTests
 {
     [GodotFact]
-    public void TestSimple()
-    {
-        Assert.True(true);
-    }
-
-    [GodotFact]
     public void TestPackUnpackByte()
     {
         var buffer = new HLBuffer();

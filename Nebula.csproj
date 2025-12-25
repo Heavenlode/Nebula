@@ -10,6 +10,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="17.13.40008" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="test\**" />
+    <Content Remove="test\**" />
+    <EmbeddedResource Remove="test\**" />
+    <None Remove="test\**" />
+  </ItemGroup>
   <Import Project="addons\Nebula\Nebula.props" />
 
 </Project>

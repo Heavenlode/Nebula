@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Nebula.Testing.Integration;
 
@@ -12,7 +13,7 @@ namespace Nebula.Testing.Integration;
 /// </summary>
 public class ServerConfig
 {
-    public string InitialWorldScene { get; set; } = "res://Integration/Helpers/empty_scene.tscn";
+    public string InitialWorldScene { get; set; }
     public string? WorldId { get; set; }
     public Dictionary<string, string> ExtraArgs { get; set; } = new();
 }
@@ -28,6 +29,7 @@ public class ClientConfig
 /// <summary>
 /// Base class for integration tests that spawn multiple Godot instances.
 /// </summary>
+[Collection("Nebula")]
 public abstract class IntegrationTestBase : IDisposable
 {
     private readonly List<GodotProcess> _activeProcesses = new();

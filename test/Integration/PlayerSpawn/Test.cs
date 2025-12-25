@@ -16,7 +16,7 @@ public class PlayerSpawnTests : IntegrationTestBase
         {
             var server = StartServer(new ServerConfig
             {
-                InitialWorldScene = "res://Integration/Tests/PlayerSpawn/Scene.tscn"
+                InitialWorldScene = "res://Integration/PlayerSpawn/Scene.tscn"
             });
             var client = StartClient();
 
@@ -25,10 +25,10 @@ public class PlayerSpawnTests : IntegrationTestBase
             await client.WaitForOutput("Scene _WorldReady");
 
             // Send spawn command to server
-            server.SendCommand("spawn:res://Integration/Tests/PlayerSpawn/Player.tscn");
+            server.SendCommand("spawn:res://Integration/PlayerSpawn/Player.tscn");
 
             // Wait for the player to be spawned and ready
-            await server.WaitForOutput("Spawned: res://Integration/Tests/PlayerSpawn/Player.tscn");
+            await server.WaitForOutput("Spawned: res://Integration/PlayerSpawn/Player.tscn");
             await server.WaitForOutput("Player _WorldReady");
         });
     }

@@ -208,7 +208,8 @@ public sealed class GodotProcess : IDisposable
             await WaitForOutput("[SCENE_TREE_DUMP_END]", timeout);
 
             // Extract the dump from all output
-            return ExtractSceneTreeDump();
+            var dump = ExtractSceneTreeDump();
+            return $"{dump}\n\nOutput so far:\n{AllOutput}";
         }
         catch (Exception ex)
         {

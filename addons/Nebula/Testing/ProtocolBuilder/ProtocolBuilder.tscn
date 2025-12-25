@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://d4cb4ucv2pg4d"]
+
+[ext_resource type="Script" path="res://addons/Nebula/Testing/ProtocolBuilder/ProtocolBuilder.cs" id="1_builder"]
+
+[node name="ProtocolBuilder" type="Node"]
+script = ExtResource("1_builder")
+

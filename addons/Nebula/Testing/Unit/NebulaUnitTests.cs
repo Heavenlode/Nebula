@@ -12,6 +12,7 @@ namespace Nebula.Testing.Unit;
 /// Runs all [NebulaUnitTest] unit tests inside Godot and reports each as an individual xUnit test.
 /// Uses [Theory] + caching so Godot only spawns once for all tests.
 /// </summary>
+[Collection("Nebula")]
 public class NebulaUnitTests
 {
     private static Dictionary<string, TestResult>? _cachedResults;

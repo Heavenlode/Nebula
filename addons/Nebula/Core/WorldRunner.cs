@@ -112,10 +112,14 @@ namespace Nebula
 
         /// <summary>
         /// Sends debug events to connected debug clients (e.g., test runners).
+        /// Buffers messages until a client connects, then flushes the buffer.
         /// </summary>
         public class DebugMessenger
         {
             private readonly WorldRunner _world;
+            private readonly List<byte[]> _pendingMessages = new();
+            private readonly object _bufferLock = new();
+            private bool _hasSentBufferedMessages = false;
 
             public DebugMessenger(WorldRunner world)
             {
@@ -124,6 +128,7 @@ namespace Nebula
 
             /// <summary>
             /// Sends a debug event with a category and message to all connected debug peers.
+            /// If no clients are connected, buffers the message until one connects.
             /// </summary>
             /// <param name="category">Event category (e.g., "Spawn", "Connect")</param>
             /// <param name="message">Event message/details</param>
@@ -142,7 +147,39 @@ namespace Nebula
                 Array.Copy(lengthPrefix, 0, framedData, 0, 4);
                 Array.Copy(buffer.bytes, 0, framedData, 4, buffer.bytes.Length);
 
+                lock (_bufferLock)
+                {
+                    if (_world.DebugTcpClients.Count == 0)
+                    {
+                        // No clients yet - buffer the message
+                        _pendingMessages.Add(framedData);
+                        return;
+                    }
+                }
+
+                Debugger.Instance.Log($"Sending debug event: {category} {message}", Debugger.DebugLevel.VERBOSE);
+
                 _world.SendToDebugClients(framedData);
+            }
+
+            /// <summary>
+            /// Flushes any buffered messages to connected clients.
+            /// Called when a new debug client connects.
+            /// </summary>
+            internal void FlushBuffer()
+            {
+                lock (_bufferLock)
+                {
+                    if (_pendingMessages.Count == 0 || _hasSentBufferedMessages) return;
+                    
+                    foreach (var framedData in _pendingMessages)
+                    {
+                        _world.SendToDebugClients(framedData);
+                    }
+                    
+                    _pendingMessages.Clear();
+                    _hasSentBufferedMessages = true;
+                }
             }
         }
 
@@ -594,6 +631,9 @@ namespace Nebula
                         DebugTcpClients.Add(client);
                     }
                     Log($"Debug client connected", Debugger.DebugLevel.VERBOSE);
+                    
+                    // Flush any buffered debug messages now that we have a client
+                    Debug?.FlushBuffer();
                 }
                 catch (Exception ex)
                 {
@@ -645,6 +685,7 @@ namespace Nebula
             RootScene = node;
             node._NetworkPrepare(this);
             node._WorldReady();
+            Debug?.Send("WorldJoined", node.Node.SceneFilePath);
         }
 
         public PeerState? GetPeerWorldState(UUID peerId)

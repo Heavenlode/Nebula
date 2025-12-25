@@ -399,6 +399,8 @@ namespace Nebula
             GetTree().CurrentScene.AddChild(godotPhysicsWorld);
             node._NetworkPrepare(worldRunner);
             node._WorldReady();
+            worldRunner.Debug?.Send("WorldCreated", worldId.ToString());
+            Debugger.Instance.Log($"Sent debug event: WorldCreated {worldId.ToString()}", Debugger.DebugLevel.VERBOSE);
             EmitSignal("OnWorldCreated", worldRunner);
             if (debugEnet != null) {
                 foreach (var peer in debugEnet.GetPeers()) {

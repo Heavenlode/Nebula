@@ -3,6 +3,7 @@ namespace NebulaTests.Integration.PlayerSpawn;
 using System.Threading.Tasks;
 using Nebula.Testing.Integration;
 using Xunit;
+using Xunit.Abstractions;
 
 /// <summary>
 /// Fixture that provides a shared server and client instance for all tests.
@@ -20,6 +21,7 @@ public class BasicIntegrationFixture : IntegrationTestBase, IAsyncLifetime
     {
         Server = StartServer(new ServerConfig
         {
+            WorldId = "00000000-0000-0000-0000-000000000000",
             InitialWorldScene = "res://Integration/PlayerSpawn/Scene.tscn",
             DebugPort = ServerDebugPort
         });
@@ -27,10 +29,6 @@ public class BasicIntegrationFixture : IntegrationTestBase, IAsyncLifetime
         {
             DebugPort = ClientDebugPort
         });
-
-        await Server.WaitForOutput("Server ready");
-        await Client.WaitForOutput("Connected to server");
-        await Client.WaitForOutput("Scene _WorldReady");
 
         // Connect to debug ports
         await Server.ConnectDebug(ServerDebugPort);
@@ -57,30 +55,30 @@ public class BasicIntegrationFixture : IntegrationTestBase, IAsyncLifetime
 /// <summary>
 /// Basic integration tests for client connection and player spawning.
 /// </summary>
+/// 
+[TestCaseOrderer("Nebula.Testing.Integration.PriorityOrderer", "NebulaTests")]
 public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
 {
     private readonly BasicIntegrationFixture _fixture;
+    private readonly ITestOutputHelper _output;
 
-    public BasicIntegrationTests(BasicIntegrationFixture fixture)
+    public BasicIntegrationTests(BasicIntegrationFixture fixture, ITestOutputHelper output)
     {
         _fixture = fixture;
+        _output = output;
     }
 
-    [Fact]
+    [Fact, Order(1)]
     public async Task ClientConnect()
     {
         await _fixture.NebulaTest(async () =>
         {
-            // Verify server is running
-            await _fixture.Server.WaitForOutput("Server ready");
-
-            // Verify client connected and world is ready
-            await _fixture.Client.WaitForOutput("Connected to server");
-            await _fixture.Client.WaitForOutput("Scene _WorldReady");
+            await _fixture.Server.WaitForDebugEvent("WorldCreated", "00000000-0000-0000-0000-000000000000");
+            await _fixture.Client.WaitForDebugEvent("WorldJoined", "res://Integration/PlayerSpawn/Scene.tscn");
         });
     }
 
-    [Fact]
+    [Fact, Order(2)]
     public async Task SpawnsPlayer()
     {
         await _fixture.NebulaTest(async () =>

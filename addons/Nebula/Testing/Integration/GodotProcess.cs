@@ -425,6 +425,30 @@ public sealed class GodotProcess : IDisposable
     }
 
     /// <summary>
+    /// Gets all currently queued debug events as a formatted string without removing them.
+    /// </summary>
+    /// <returns>A formatted string of all debug events</returns>
+    public string GetDebugBuffer()
+    {
+        var sb = new StringBuilder();
+        var events = _debugEvents.ToArray();
+        
+        if (events.Length == 0)
+        {
+            sb.AppendLine("[No debug events in buffer]");
+        }
+        else
+        {
+            foreach (var evt in events)
+            {
+                sb.AppendLine($"[{evt.Category}] {evt.Message}");
+            }
+        }
+        
+        return sb.ToString();
+    }
+
+    /// <summary>
     /// Waits for a debug event matching the specified category and message pattern.
     /// </summary>
     /// <param name="category">Event category to match</param>

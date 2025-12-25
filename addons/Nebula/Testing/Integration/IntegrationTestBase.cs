@@ -173,8 +173,28 @@ public abstract class IntegrationTestBase : IDisposable
     }
 
     /// <summary>
-    /// Wraps an async test action with automatic scene tree dumping on failure.
-    /// The scene tree dumps are included in the exception message for visibility in test output.
+    /// Collects debug buffers from all active Godot processes and returns them as a string.
+    /// </summary>
+    /// <returns>A formatted string containing all debug buffers</returns>
+    protected string CollectDebugBuffers()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("\n========== DEBUG BUFFERS ==========");
+        
+        foreach (var process in _activeProcesses)
+        {
+            var label = process.Label ?? "unknown";
+            sb.AppendLine($"\n--- {label.ToUpperInvariant()} ---");
+            sb.AppendLine(process.GetDebugBuffer());
+        }
+        
+        sb.AppendLine("\n========== END DEBUG BUFFERS ==========");
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Wraps an async test action with automatic scene tree and debug buffer dumping on failure.
+    /// The dumps are included in the exception message for visibility in test output.
     /// </summary>
     /// <param name="testAction">The test action to execute</param>
     protected async Task NebulaTest(Func<Task> testAction)
@@ -185,8 +205,9 @@ public abstract class IntegrationTestBase : IDisposable
         }
         catch (Exception ex)
         {
-            var dumps = await CollectSceneTreeDumps();
-            throw new Exception($"{ex.Message}\n\n{dumps}", ex);
+            var sceneDumps = await CollectSceneTreeDumps();
+            var debugBuffers = CollectDebugBuffers();
+            throw new Exception($"{ex.Message}\n\n{sceneDumps}\n{debugBuffers}", ex);
         }
     }
 

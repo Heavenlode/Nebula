@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NebulaTests.Integration;
+namespace Nebula.Testing.Integration;
 
 /// <summary>
 /// Wrapper around a Godot process for integration testing.

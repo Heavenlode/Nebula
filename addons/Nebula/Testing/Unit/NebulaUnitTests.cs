@@ -6,13 +6,13 @@ using System.IO;
 using System.Linq;
 using Xunit;
 
-namespace NebulaTests.Integration.Tests.GodotUnitTests;
+namespace Nebula.Testing.Unit;
 
 /// <summary>
-/// Runs all [GodotFact] unit tests inside Godot and reports each as an individual xUnit test.
+/// Runs all [NebulaUnitTest] unit tests inside Godot and reports each as an individual xUnit test.
 /// Uses [Theory] + caching so Godot only spawns once for all tests.
 /// </summary>
-public class GodotUnitTests
+public class NebulaUnitTests
 {
     private static Dictionary<string, TestResult>? _cachedResults;
     private static List<string>? _cachedTestNames;
@@ -84,7 +84,7 @@ public class GodotUnitTests
         var startInfo = new ProcessStartInfo
         {
             FileName = godotBin,
-            Arguments = $"--path \"{testProjectPath}\" --headless res://Unit/UnitTestRunner.tscn --discover",
+            Arguments = $"--path \"{testProjectPath}\" --headless res://addons/Nebula/Testing/Unit/TestRunnerNode.tscn --discover",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -134,7 +134,7 @@ public class GodotUnitTests
         var startInfo = new ProcessStartInfo
         {
             FileName = godotBin,
-            Arguments = $"--path \"{testProjectPath}\" --headless res://Unit/UnitTestRunner.tscn",
+            Arguments = $"--path \"{testProjectPath}\" --headless res://addons/Nebula/Testing/Unit/TestRunnerNode.tscn",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -205,4 +205,5 @@ public class GodotUnitTests
         public string? ErrorMessage { get; set; }
     }
 }
+
 

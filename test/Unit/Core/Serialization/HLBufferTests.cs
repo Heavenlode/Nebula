@@ -1,14 +1,15 @@
 namespace NebulaTests.Unit.Core.Serialization;
 
-using NebulaTests.Unit;
+using Nebula.Testing.Unit;
 using Xunit;
 using Nebula.Serialization;
 using System;
 
+[NebulaUnitTest]
 public class HLBufferTests
 {
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestDefaultConstructor()
     {
         var buffer = new HLBuffer();
@@ -18,7 +19,7 @@ public class HLBufferTests
         Assert.Empty(buffer.bytes);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestByteArrayConstructor()
     {
         var bytes = new byte[] { 1, 2, 3, 4, 5 };
@@ -29,7 +30,7 @@ public class HLBufferTests
         Assert.Equal(5, buffer.bytes.Length);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestIsPointerEnd_EmptyBuffer()
     {
         var buffer = new HLBuffer();
@@ -37,7 +38,7 @@ public class HLBufferTests
         Assert.True(buffer.IsPointerEnd);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestIsPointerEnd_AtStart()
     {
         var buffer = new HLBuffer(new byte[] { 1, 2, 3 });
@@ -45,7 +46,7 @@ public class HLBufferTests
         Assert.False(buffer.IsPointerEnd);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestLength()
     {
         var bytes = new byte[] { 1, 2, 3, 4, 5 };
@@ -54,7 +55,7 @@ public class HLBufferTests
         Assert.Equal(5, buffer.Length);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestRemainingBytes_AtStart()
     {
         var bytes = new byte[] { 1, 2, 3, 4, 5 };
@@ -65,13 +66,13 @@ public class HLBufferTests
         Assert.Equal(1, remaining[0]);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestConsistencyBufferSizeLimit()
     {
         Assert.Equal(256, HLBuffer.CONSISTENCY_BUFFER_SIZE_LIMIT);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestBufferReusePattern()
     {
         var buffer = new HLBuffer();
@@ -88,7 +89,7 @@ public class HLBufferTests
         Assert.True(Math.Abs(floatResult - 3.14f) < 0.0001);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestResetPointer()
     {
         var buffer = new HLBuffer();

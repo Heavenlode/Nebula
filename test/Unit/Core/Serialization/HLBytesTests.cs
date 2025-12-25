@@ -1,14 +1,15 @@
 namespace NebulaTests.Unit.Core.Serialization;
 
-using NebulaTests.Unit;
+using Nebula.Testing.Unit;
 using Xunit;
 using Nebula.Serialization;
 using Godot;
 using System;
 
+[NebulaUnitTest]
 public class HLBytesTests
 {
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackByte()
     {
         var buffer = new HLBuffer();
@@ -21,7 +22,7 @@ public class HLBytesTests
         Assert.Equal(value, result);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackInt32()
     {
         var buffer = new HLBuffer();
@@ -34,7 +35,7 @@ public class HLBytesTests
         Assert.Equal(value, result);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackInt16()
     {
         var buffer = new HLBuffer();
@@ -47,7 +48,7 @@ public class HLBytesTests
         Assert.Equal(value, result);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackInt64()
     {
         var buffer = new HLBuffer();
@@ -60,7 +61,7 @@ public class HLBytesTests
         Assert.Equal(value, result);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackFloat()
     {
         var buffer = new HLBuffer();
@@ -73,7 +74,7 @@ public class HLBytesTests
         Assert.True(Math.Abs(result - value) < 0.0001);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackBool_True()
     {
         var buffer = new HLBuffer();
@@ -86,7 +87,7 @@ public class HLBytesTests
         Assert.True(result);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackBool_False()
     {
         var buffer = new HLBuffer();
@@ -99,7 +100,7 @@ public class HLBytesTests
         Assert.False(result);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackString()
     {
         var buffer = new HLBuffer();
@@ -112,7 +113,7 @@ public class HLBytesTests
         Assert.Equal(value, result);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackVector2()
     {
         var buffer = new HLBuffer();
@@ -126,7 +127,7 @@ public class HLBytesTests
         Assert.True(Math.Abs(result.Y - value.Y) < 0.01);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackVector3()
     {
         var buffer = new HLBuffer();
@@ -141,7 +142,7 @@ public class HLBytesTests
         Assert.True(Math.Abs(result.Z - value.Z) < 0.0001);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackQuaternion()
     {
         var buffer = new HLBuffer();
@@ -154,7 +155,7 @@ public class HLBytesTests
         Assert.True(Math.Abs(result.X - value.X) < 0.01);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackByteArray()
     {
         var buffer = new HLBuffer();
@@ -171,7 +172,7 @@ public class HLBytesTests
         }
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackInt32Array()
     {
         var buffer = new HLBuffer();
@@ -188,7 +189,7 @@ public class HLBytesTests
         }
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackInt64Array()
     {
         var buffer = new HLBuffer();
@@ -205,7 +206,7 @@ public class HLBytesTests
         }
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackVariant_Int()
     {
         var buffer = new HLBuffer();
@@ -219,7 +220,7 @@ public class HLBytesTests
         Assert.Equal(42L, result.Value.AsInt64());
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackVariant_Float()
     {
         var buffer = new HLBuffer();
@@ -233,7 +234,7 @@ public class HLBytesTests
         Assert.True(Math.Abs(result.Value.AsSingle() - 3.14f) < 0.0001);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackVariant_String()
     {
         var buffer = new HLBuffer();
@@ -247,7 +248,7 @@ public class HLBytesTests
         Assert.Equal("Test String", result.Value.AsString());
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackVariant_Bool()
     {
         var buffer = new HLBuffer();
@@ -261,7 +262,7 @@ public class HLBytesTests
         Assert.True(result.Value.AsBool());
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackVariant_Vector3()
     {
         var buffer = new HLBuffer();
@@ -278,7 +279,7 @@ public class HLBytesTests
         Assert.True(Math.Abs(vec.Z - 3.0f) < 0.0001);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackArray()
     {
         var buffer = new HLBuffer();
@@ -291,7 +292,7 @@ public class HLBytesTests
         Assert.Equal(3, result.Count);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestPackUnpackDictionary()
     {
         var buffer = new HLBuffer();
@@ -308,7 +309,7 @@ public class HLBytesTests
         Assert.Equal(2, result.Count);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestMultipleValues()
     {
         var buffer = new HLBuffer();

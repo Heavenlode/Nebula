@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NebulaTests.Integration;
+namespace Nebula.Testing.Integration;
 
 /// <summary>
 /// Configuration for starting a Godot server instance.

@@ -1,7 +1,8 @@
-using System.Threading.Tasks;
-using Xunit;
+namespace NebulaTests.Integration.PlayerSpawn;
 
-namespace NebulaTests.Integration;
+using System.Threading.Tasks;
+using Nebula.Testing.Integration;
+using Xunit;
 
 /// <summary>
 /// Integration tests for player spawning and position synchronization.

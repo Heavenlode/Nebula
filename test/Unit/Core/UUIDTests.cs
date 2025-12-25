@@ -1,13 +1,14 @@
 namespace NebulaTests.Unit.Core;
 
-using NebulaTests.Unit;
+using Nebula.Testing.Unit;
 using Xunit;
 using Nebula;
 using System;
 
+[NebulaUnitTest]
 public class UUIDTests
 {
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestDefaultConstructor()
     {
         var uuid = new UUID();
@@ -15,7 +16,7 @@ public class UUIDTests
         Assert.NotEqual(Guid.Empty, uuid.Guid);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestStringConstructor()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
@@ -24,7 +25,7 @@ public class UUIDTests
         Assert.Equal(guidString, uuid.ToString());
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestByteArrayConstructor()
     {
         var guid = Guid.NewGuid();
@@ -34,7 +35,7 @@ public class UUIDTests
         Assert.Equal(guid, uuid.Guid);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestEmptyProperty()
     {
         var empty = UUID.Empty;
@@ -42,7 +43,7 @@ public class UUIDTests
         Assert.Equal("00000000-0000-0000-0000-000000000000", empty.ToString());
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestToString()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
@@ -51,7 +52,7 @@ public class UUIDTests
         Assert.Equal(guidString, uuid.ToString());
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestEquals_SameUUID()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
@@ -61,7 +62,7 @@ public class UUIDTests
         Assert.True(uuid1.Equals(uuid2));
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestEquals_DifferentUUID()
     {
         var uuid1 = new UUID();
@@ -70,21 +71,21 @@ public class UUIDTests
         Assert.False(uuid1.Equals(uuid2));
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestEquals_NullObject()
     {
         var uuid = new UUID();
         Assert.False(uuid.Equals(null));
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestEquals_NonUUIDObject()
     {
         var uuid = new UUID();
         Assert.False(uuid.Equals("not a uuid"));
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestGetHashCode()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
@@ -94,7 +95,7 @@ public class UUIDTests
         Assert.Equal(uuid1.GetHashCode(), uuid2.GetHashCode());
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestEqualityOperator_SameUUID()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
@@ -104,7 +105,7 @@ public class UUIDTests
         Assert.True(uuid1 == uuid2);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestEqualityOperator_DifferentUUID()
     {
         var uuid1 = new UUID();
@@ -113,7 +114,7 @@ public class UUIDTests
         Assert.False(uuid1 == uuid2);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestEqualityOperator_BothNull()
     {
         UUID uuid1 = null;
@@ -122,7 +123,7 @@ public class UUIDTests
         Assert.True(uuid1 == uuid2);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestEqualityOperator_OneNull()
     {
         var uuid1 = new UUID();
@@ -131,7 +132,7 @@ public class UUIDTests
         Assert.False(uuid1 == uuid2);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestInequalityOperator_SameUUID()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
@@ -141,7 +142,7 @@ public class UUIDTests
         Assert.False(uuid1 != uuid2);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestInequalityOperator_DifferentUUID()
     {
         var uuid1 = new UUID();
@@ -150,7 +151,7 @@ public class UUIDTests
         Assert.True(uuid1 != uuid2);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestToByteArray()
     {
         var guidString = "12345678-1234-1234-1234-123456789abc";
@@ -161,7 +162,7 @@ public class UUIDTests
         Assert.Equal(Guid.Parse(guidString), new Guid(bytes));
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestNetworkSerialize_NonNull()
     {
         var uuid = new UUID("12345678-1234-1234-1234-123456789abc");
@@ -171,7 +172,7 @@ public class UUIDTests
         Assert.True(buffer.Pointer > 0);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestNetworkSerialize_Null()
     {
         var buffer = UUID.NetworkSerialize(null, null, null);
@@ -180,7 +181,7 @@ public class UUIDTests
         Assert.Equal(1, buffer.Pointer);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestNetworkDeserialize_NonNull()
     {
         var original = new UUID("12345678-1234-1234-1234-123456789abc");
@@ -194,7 +195,7 @@ public class UUIDTests
         Assert.Equal(original.ToString(), deserialized.ToString());
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestNetworkDeserialize_Null()
     {
         var buffer = UUID.NetworkSerialize(null, null, null);
@@ -206,7 +207,7 @@ public class UUIDTests
         Assert.Null(deserialized);
     }
 
-    [GodotFact]
+    [NebulaUnitTest]
     public void TestNetworkSerializeDeserialize_RoundTrip()
     {
         var original = new UUID();

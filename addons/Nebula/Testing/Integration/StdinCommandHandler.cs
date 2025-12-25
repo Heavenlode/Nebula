@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using Godot;
 
-namespace NebulaTests.Integration.Helpers;
+namespace Nebula.Testing.Integration;
 
 /// <summary>
 /// A composable component for handling stdin commands in integration tests.

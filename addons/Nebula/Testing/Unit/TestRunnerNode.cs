@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NebulaTests.Unit;
+namespace Nebula.Testing.Unit;
 
 /// <summary>
-/// Godot scene that discovers and runs [GodotFact] tests in the Unit namespace.
+/// Godot scene that discovers and runs classes marked with [NebulaUnitTest] attribute.
 /// Supports --discover flag to list tests without running them.
 /// </summary>
-public partial class UnitTestRunner : Node
+public partial class TestRunnerNode : Node
 {
     private int _passed = 0;
     private int _failed = 0;
@@ -38,7 +38,7 @@ public partial class UnitTestRunner : Node
         {
             RunAllTests();
         }
-        
+
         // Exit with appropriate code
         GetTree().Quit(_failed > 0 ? 1 : 0);
     }
@@ -46,57 +46,53 @@ public partial class UnitTestRunner : Node
     private void DiscoverTests()
     {
         GD.Print("[DISCOVER_START]");
-        
+
         var assembly = Assembly.GetExecutingAssembly();
         var testClasses = assembly.GetTypes()
-            .Where(t => t.Namespace != null && 
-                       t.Namespace.StartsWith("NebulaTests.Unit") &&
-                       t.IsClass && 
+            .Where(t => t.IsClass &&
                        !t.IsAbstract &&
-                       t.Name != "UnitTestRunner");
+                       t.GetCustomAttribute<NebulaUnitTestAttribute>() != null);
 
         foreach (var testClass in testClasses)
         {
             var testMethods = testClass.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(m => m.GetCustomAttribute<GodotFactAttribute>() != null);
+                .Where(m => m.GetCustomAttribute<NebulaUnitTestAttribute>() != null);
 
             foreach (var method in testMethods)
             {
                 GD.Print($"[TEST] {testClass.Name}.{method.Name}");
             }
         }
-        
+
         GD.Print("[DISCOVER_END]");
     }
 
     private void RunAllTests()
     {
         GD.Print("[RUN_START]");
-        
+
         var assembly = Assembly.GetExecutingAssembly();
-        
-        // Find all test classes in the Unit namespace
+
+        // Find all test classes marked with [NebulaUnitTest] attribute
         var testClasses = assembly.GetTypes()
-            .Where(t => t.Namespace != null && 
-                       t.Namespace.StartsWith("NebulaTests.Unit") &&
-                       t.IsClass && 
+            .Where(t => t.IsClass &&
                        !t.IsAbstract &&
-                       t.Name != "UnitTestRunner");
+                       t.GetCustomAttribute<NebulaUnitTestAttribute>() != null);
 
         foreach (var testClass in testClasses)
         {
             RunTestClass(testClass);
         }
-        
+
         GD.Print("[RUN_END]");
         GD.Print($"[SUMMARY] Passed: {_passed}, Failed: {_failed}");
     }
 
     private void RunTestClass(Type testClass)
     {
-        // Find all methods with [GodotFact] attribute
+        // Find all methods with [NebulaUnitTest] attribute
         var testMethods = testClass.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-            .Where(m => m.GetCustomAttribute<GodotFactAttribute>() != null);
+            .Where(m => m.GetCustomAttribute<NebulaUnitTestAttribute>() != null);
 
         if (!testMethods.Any())
             return;
@@ -133,7 +129,7 @@ public partial class UnitTestRunner : Node
     private void RunTestMethod(Type testClass, object instance, MethodInfo method)
     {
         var testName = $"{testClass.Name}.{method.Name}";
-        
+
         try
         {
             method.Invoke(instance, null);

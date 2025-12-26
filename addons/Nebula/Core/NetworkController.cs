@@ -26,7 +26,7 @@ namespace Nebula
 
 		public bool IsNetScene()
 		{
-			return ProtocolRegistry.Instance.IsNetScene(AttachedNetNode.NetNode.Node.SceneFilePath);
+			return ProtocolRegistry.Instance.IsNetScene(AttachedNetNode.Node.SceneFilePath);
 		}
 
 		internal HashSet<NetNodeWrapper> NetSceneChildren = [];
@@ -156,9 +156,9 @@ namespace Nebula
 			if (CurrentWorld == null) throw new Exception("Can only set input authority after node is assigned to a world");
 			if (InputAuthority != null)
 			{
-				CurrentWorld.GetPeerWorldState(InputAuthority).Value.OwnedNodes.Remove(AttachedNetNode.NetNode as INetNodeBase);
+				CurrentWorld.GetPeerWorldState(InputAuthority).Value.OwnedNodes.Remove(AttachedNetNode.NetNode);
 			}
-			CurrentWorld.GetPeerWorldState(inputAuthority).Value.OwnedNodes.Add(AttachedNetNode.NetNode as INetNodeBase);
+			CurrentWorld.GetPeerWorldState(inputAuthority).Value.OwnedNodes.Add(AttachedNetNode.NetNode);
 			InputAuthority = inputAuthority;
 		}
 
@@ -181,7 +181,7 @@ namespace Nebula
 		public enum NetworkChildrenSearchToggle { INCLUDE_SCENES, EXCLUDE_SCENES, ONLY_SCENES }
 		public IEnumerable<NetNodeWrapper> GetNetworkChildren(NetworkChildrenSearchToggle searchToggle = NetworkChildrenSearchToggle.EXCLUDE_SCENES, bool includeNestedSceneChildren = true)
 		{
-			var children = AttachedNetNode.NetNode.Node.GetChildren();
+			var children = AttachedNetNode.Node.GetChildren();
 			while (children.Count > 0)
 			{
 				var child = children[0];
@@ -236,7 +236,7 @@ namespace Nebula
 				{
 					return;
 				}
-				foreach (var nodePropertyDetail in ProtocolRegistry.Instance.ListProperties(AttachedNetNode.NetNode.Node.SceneFilePath))
+				foreach (var nodePropertyDetail in ProtocolRegistry.Instance.ListProperties(AttachedNetNode.Node.SceneFilePath))
 				{
 					var nodePath = nodePropertyDetail["nodePath"].AsString();
 					var nodeProps = nodePropertyDetail["properties"].As<Godot.Collections.Array<ProtocolNetProperty>>();
@@ -246,7 +246,7 @@ namespace Nebula
 					{
 						if (property.Metadata.TypeIdentifier == "NetNode")
 						{
-							var node = AttachedNetNode.NetNode.Node.GetNode(nodePath);
+							var node = AttachedNetNode.Node.GetNode(nodePath);
 							var prop = node.Get(property.Name);
 							var tempNetNode = prop.As<RefCounted>();
 							if (tempNetNode == null)
@@ -255,7 +255,7 @@ namespace Nebula
 							}
 							if (tempNetNode is INetNodeBase netNode)
 							{
-								var referencedNodeInWorld = CurrentWorld.GetNodeFromNetId(netNode.Network._prepareNetId).NetNode as INetNodeBase;
+								var referencedNodeInWorld = CurrentWorld.GetNodeFromNetId(netNode.Network._prepareNetId).NetNode;
 								if (referencedNodeInWorld.Network.IsNetScene() && !string.IsNullOrEmpty(netNode.Network._prepareStaticChildPath))
 								{
 									referencedNodeInWorld = referencedNodeInWorld.Node.GetNodeOrNull(netNode.Network._prepareStaticChildPath) as INetNodeBase;
@@ -266,7 +266,7 @@ namespace Nebula
 					}
 
 					// Ensure all property changes are linked up to the signal
-					var networkChild = AttachedNetNode.NetNode.Node.GetNodeOrNull<INetNodeBase>(nodePath);
+					var networkChild = AttachedNetNode.Node.GetNodeOrNull<INetNodeBase>(nodePath);
 					if (networkChild == null)
 					{
 						continue;
@@ -275,7 +275,7 @@ namespace Nebula
 					{
 						propertyChangeNode.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
 						{
-							if (!ProtocolRegistry.Instance.LookupProperty(AttachedNetNode.NetNode.Node.SceneFilePath, nodePath, e.PropertyName, out _))
+							if (!ProtocolRegistry.Instance.LookupProperty(AttachedNetNode.Node.SceneFilePath, nodePath, e.PropertyName, out _))
 							{
 								return;
 							}
@@ -290,7 +290,7 @@ namespace Nebula
 
 				if (IsNetScene())
 				{
-					(AttachedNetNode.NetNode as INetNodeBase).SetupSerializers();
+					AttachedNetNode.NetNode.SetupSerializers();
 				}
 				foreach (var initialSetProp in InitialSetNetProperties)
 				{
@@ -321,13 +321,13 @@ namespace Nebula
 					child._WorldReady();
 				});
 			}
-			AttachedNetNode.NetNode.Node.Call("_WorldReady");
+			AttachedNetNode.Node.Call("_WorldReady");
 			IsWorldReady = true;
 		}
 
 		public virtual void _NetworkProcess(Tick tick)
 		{
-			AttachedNetNode.NetNode.Node.Call("_NetworkProcess", tick);
+			AttachedNetNode.Node.Call("_NetworkProcess", tick);
 		}
 
 		public Godot.Collections.Dictionary<int, Variant> GetInput()
@@ -362,10 +362,10 @@ namespace Nebula
 		{
 			if (IsNetScene())
 			{
-				return AttachedNetNode.NetNode.Node.GetPathTo(AttachedNetNode.NetNode.Node);
+				return AttachedNetNode.Node.GetPathTo(AttachedNetNode.Node);
 			}
 
-			return NetParent.NetNode.Node.GetPathTo(AttachedNetNode.NetNode.Node);
+			return NetParent.Node.GetPathTo(AttachedNetNode.Node);
 		}
 
 		public void Despawn()

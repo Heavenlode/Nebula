@@ -207,7 +207,10 @@ namespace Nebula
 				}
 			}
 		}
-
+		public void _OnPeerConnected(UUID peerId)
+		{
+			InterestLayers[peerId] = AttachedNetNode.NetNode.InitializeInterest(NetRunner.Instance.Peers[peerId]);
+		}
 		internal void _NetworkPrepare(WorldRunner world)
 		{
 			if (Engine.IsEditorHint())
@@ -224,6 +227,7 @@ namespace Nebula
 					{
 						InterestLayers[peer] = AttachedNetNode.NetNode.InitializeInterest(NetRunner.Instance.Peers[peer]);
 					}
+					CurrentWorld.OnPlayerJoined += _OnPeerConnected;
 				}
 				if (!world.CheckStaticInitialization(AttachedNetNode))
 				{

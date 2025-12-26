@@ -29,6 +29,12 @@ namespace Nebula
         // Cannot have more than 8 serializers
         public IStateSerializer[] Serializers { get; private set; } = [];
 
+        public virtual long InitializeInterest(NetPeer peer)
+        {
+            // By default, the peer has full interest in the node.
+            return long.MaxValue;
+        }
+
         public void SetupSerializers()
         {
             var spawnSerializer = new SpawnSerializer();

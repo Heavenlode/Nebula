@@ -60,7 +60,8 @@ public partial class Scene : NetNode3D
         if (command == "CanDespawnNodes")
         {
             verifyingDespawn = true;
-            if (NetRunner.Instance.IsClient) {
+            if (NetRunner.Instance.IsClient)
+            {
                 return;
             }
             var node = PlayerNode.GetNode<NetNode3D>("Level1/Level2/Level3/Item");
@@ -86,8 +87,8 @@ public partial class Scene : NetNode3D
             PlayerNode = Network.CurrentWorld.Spawn(
                 netNode3D,
                 parentWrapper,
-                inputAuthority: NetRunner.Instance.Peers.Values.First(),
-                interestLayers: new Godot.Collections.Dictionary<UUID, long> { { NetRunner.Instance.GetPeerId(NetRunner.Instance.Peers.Values.First()), long.MaxValue } }) as Player;
+                inputAuthority: NetRunner.Instance.Peers.Values.First()
+            ) as Player;
             Debugger.Instance.Log($"Spawned: {scenePath}");
         }
         else

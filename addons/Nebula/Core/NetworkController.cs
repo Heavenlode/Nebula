@@ -218,6 +218,13 @@ namespace Nebula
 			CurrentWorld = world;
 			if (IsNetScene())
 			{
+				if (NetRunner.Instance.IsServer)
+				{
+					foreach (var peer in NetRunner.Instance.Peers.Keys)
+					{
+						InterestLayers[peer] = AttachedNetNode.NetNode.InitializeInterest(NetRunner.Instance.Peers[peer]);
+					}
+				}
 				if (!world.CheckStaticInitialization(AttachedNetNode))
 				{
 					return;

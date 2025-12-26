@@ -869,8 +869,8 @@ namespace Nebula
             T node,
             NetNodeWrapper parent = null,
             NetPeer inputAuthority = null,
-            string netNodePath = ".",
-            Godot.Collections.Dictionary<UUID, long> interestLayers = null) where T : Node, INetNodeBase
+            string netNodePath = "."
+        ) where T : Node, INetNodeBase
         {
             if (NetRunner.Instance.IsClient) return null;
 
@@ -884,11 +884,6 @@ namespace Nebula
             {
                 Debugger.Instance.Log($"You can only spawn a Net Scene as a child of another Net Scene. Attempting to spawn node on a parent that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{netNodePath}", Debugger.DebugLevel.ERROR);
                 return null;
-            }
-
-            if (interestLayers != null)
-            {
-                node.Network.InterestLayers = interestLayers;
             }
 
             node.Network.IsClientSpawn = true;

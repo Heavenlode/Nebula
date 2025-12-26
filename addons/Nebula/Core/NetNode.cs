@@ -30,6 +30,12 @@ namespace Nebula
         // Cannot have more than 8 serializers
         public IStateSerializer[] Serializers { get; private set; } = [];
 
+        public virtual long InitializeInterest(NetPeer peer)
+        {
+            // By default, the peer has full interest in the node.
+            return long.MaxValue;
+        }
+
         public void SetupSerializers()
         {
             var spawnSerializer = new SpawnSerializer();
@@ -128,17 +134,17 @@ namespace Nebula
             if (data.IsBsonNull) return null;
             var doc = data.AsBsonDocument;
             var node = obj ?? new NetNode();
-            
+
             // NetNode-specific deserialization logic
             node.Network._prepareNetId = await NetId.BsonDeserialize(context, BsonTransformer.Instance.SerializeBsonValue(doc["NetId"]), node.Network.NetId);
             if (doc.Contains("StaticChildPath"))
             {
                 node.Network._prepareStaticChildPath = doc["StaticChildPath"].AsString;
             }
-            
+
             // Call the virtual method for custom deserialization logic
             await node.OnBsonDeserialize(context, doc);
-            
+
             return node;
         }
 

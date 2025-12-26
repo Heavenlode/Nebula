@@ -18,6 +18,12 @@ namespace Nebula {
         public NetworkController Network { get; }
         public IStateSerializer[] Serializers { get; }
         public void SetupSerializers();
+
+        /// <summary>
+        /// When the node is first spawned, and when players first connect to the world, this method is called to determine the initial interest layers for the node.
+        /// </summary>
+        /// <returns>The initial interest layers for the node.</returns>
+        public long InitializeInterest(NetPeer peer);
     }
     public interface INetNode<T> : INetNodeBase, INetSerializable<T>, IBsonSerializable<T> where T : Godot.Node { }
 }

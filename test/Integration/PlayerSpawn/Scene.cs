@@ -48,16 +48,16 @@ public partial class Scene : NetNode3D
             Network.CurrentWorld.Debug?.Send("GetScore", PlayerNode.Score.ToString());
         }
 
-        if (command == "VerifySpawnedNodes")
+        if (command == "VerifyNodeStructure")
         {
             var node = PlayerNode.GetNode("Level1/Level2/Level3/Item/Level4");
             if (node != null)
             {
-                Network.CurrentWorld.Debug?.Send("VerifySpawnedNodes", "true");
+                Network.CurrentWorld.Debug?.Send("VerifyNodeStructure", "true");
             }
         }
 
-        if (command == "VerifyDespawnedNodes")
+        if (command == "CanDespawnNodes")
         {
             verifyingDespawn = true;
             if (NetRunner.Instance.IsClient) {
@@ -105,8 +105,8 @@ public partial class Scene : NetNode3D
             var node = PlayerNode.GetNodeOrNull("Level1/Level2/Level3/Item");
             if (node == null)
             {
-                Network.CurrentWorld.Debug?.Send("VerifyDespawnedNodes", "true");
-                Debugger.Instance.Log("VerifyDespawnedNodes: true", Debugger.DebugLevel.INFO);
+                Network.CurrentWorld.Debug?.Send("CanDespawnNodes", "true");
+                Debugger.Instance.Log("CanDespawnNodes: true", Debugger.DebugLevel.INFO);
                 verifyingDespawn = false;
             }
         }

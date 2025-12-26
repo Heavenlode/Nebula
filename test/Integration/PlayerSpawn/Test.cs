@@ -167,16 +167,16 @@ public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
     }
 
     [Fact, Order(5)]
-    public async Task VerifySpawnedNodes()
+    public async Task VerifyNodeStructure()
     {
         await _fixture.NebulaTest(async () =>
         {
             await _fixture.Commands
-                .Custom("VerifySpawnedNodes")
+                .Custom("VerifyNodeStructure")
                 .SendBoth();
 
-            var serverResult = await _fixture.Server.WaitForDebugEvent("VerifySpawnedNodes");
-            var clientResult = await _fixture.Client.WaitForDebugEvent("VerifySpawnedNodes");
+            var serverResult = await _fixture.Server.WaitForDebugEvent("VerifyNodeStructure");
+            var clientResult = await _fixture.Client.WaitForDebugEvent("VerifyNodeStructure");
 
             Assert.Equal(serverResult.Message, clientResult.Message);
             Assert.Equal("true", serverResult.Message);
@@ -184,17 +184,17 @@ public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
     }
 
 
-    [Fact, Order(5)]
-    public async Task VerifyDespawnedNodes()
+    [Fact, Order(6)]
+    public async Task CanDespawnNodes()
     {
         await _fixture.NebulaTest(async () =>
         {
             await _fixture.Commands
-                .Custom("VerifyDespawnedNodes")
+                .Custom("CanDespawnNodes")
                 .SendBoth();
 
-            var serverResult = await _fixture.Server.WaitForDebugEvent("VerifyDespawnedNodes");
-            var clientResult = await _fixture.Client.WaitForDebugEvent("VerifyDespawnedNodes");
+            var serverResult = await _fixture.Server.WaitForDebugEvent("CanDespawnNodes");
+            var clientResult = await _fixture.Client.WaitForDebugEvent("CanDespawnNodes");
 
             Assert.Equal(serverResult.Message, clientResult.Message);
             Assert.Equal("true", serverResult.Message);

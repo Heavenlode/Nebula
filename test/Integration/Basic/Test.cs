@@ -1,4 +1,4 @@
-namespace NebulaTests.Integration.PlayerSpawn;
+namespace NebulaTests.Integration;
 
 using System;
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ public class BasicIntegrationFixture : IntegrationTestBase, IAsyncLifetime
         Server = StartServer(new ServerConfig
         {
             WorldId = WorldId,
-            InitialWorldScene = "res://Integration/PlayerSpawn/Scene.tscn",
+            InitialWorldScene = "res://Integration/Basic/Scene.tscn",
             DebugPort = ServerDebugPort
         });
         Client = StartClient(new ClientConfig
@@ -77,7 +77,7 @@ public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
         await _fixture.NebulaTest(async () =>
         {
             await _fixture.Server.WaitForDebugEvent("WorldCreated", _fixture.WorldId);
-            await _fixture.Client.WaitForDebugEvent("WorldJoined", "res://Integration/PlayerSpawn/Scene.tscn");
+            await _fixture.Client.WaitForDebugEvent("WorldJoined", "res://Integration/Basic/Scene.tscn");
         });
     }
 
@@ -88,7 +88,7 @@ public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
         {
             // Spawn player and verify on client using fluent API
             await _fixture.Commands
-                .Spawn("res://Integration/PlayerSpawn/Player.tscn")
+                .Spawn("res://Integration/Basic/Player.tscn")
                 .VerifyClient();
         });
     }

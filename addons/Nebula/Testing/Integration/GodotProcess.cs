@@ -30,7 +30,7 @@ public sealed class GodotProcess : IDisposable
     private readonly StringBuilder _allOutput = new();
     private readonly object _outputLock = new();
     private bool _disposed;
-    
+
     // Debug connection fields (TCP)
     private TcpClient? _debugClient;
     private NetworkStream? _debugStream;
@@ -43,7 +43,7 @@ public sealed class GodotProcess : IDisposable
     /// Optional label to identify this process in logs (e.g., "server", "client1").
     /// </summary>
     public string? Label { get; set; }
-    
+
     /// <summary>
     /// The port used for debug TCP connection. Set by StartServer/StartClient.
     /// </summary>
@@ -70,7 +70,7 @@ public sealed class GodotProcess : IDisposable
         _process.OutputDataReceived += (_, e) =>
         {
             if (e.Data == null) return;
-            
+
             lock (_outputLock)
             {
                 _allOutput.AppendLine(e.Data);
@@ -81,7 +81,7 @@ public sealed class GodotProcess : IDisposable
         _process.ErrorDataReceived += (_, e) =>
         {
             if (e.Data == null) return;
-            
+
             lock (_outputLock)
             {
                 _allOutput.AppendLine($"[STDERR] {e.Data}");
@@ -121,7 +121,7 @@ public sealed class GodotProcess : IDisposable
         };
 
         var process = new Process { StartInfo = startInfo };
-        
+
         if (!process.Start())
         {
             throw new InvalidOperationException($"Failed to start Godot process: {godotBin}");
@@ -226,7 +226,7 @@ public sealed class GodotProcess : IDisposable
         try
         {
             SendCommand("dump_tree");
-            
+
             // Wait for the dump markers
             await WaitForOutput("[SCENE_TREE_DUMP_START]", timeout);
             await WaitForOutput("[SCENE_TREE_DUMP_END]", timeout);
@@ -265,9 +265,9 @@ public sealed class GodotProcess : IDisposable
     public async Task WaitForExit(TimeSpan? timeout = null)
     {
         timeout ??= TimeSpan.FromSeconds(10);
-        
+
         var exited = await Task.Run(() => _process.WaitForExit((int)timeout.Value.TotalMilliseconds));
-        
+
         if (!exited)
         {
             throw new TimeoutException($"Process did not exit within {timeout.Value.TotalSeconds}s");
@@ -284,11 +284,11 @@ public sealed class GodotProcess : IDisposable
         if (port == 0) throw new InvalidOperationException("Debug port not set");
 
         _debugClient = new TcpClient();
-        
+
         // Retry connection for a few seconds (server might not be ready yet)
         var connectionTimeout = TimeSpan.FromSeconds(5);
         var connectionCts = new CancellationTokenSource(connectionTimeout);
-        
+
         while (!_debugConnected && !connectionCts.Token.IsCancellationRequested)
         {
             try
@@ -303,19 +303,19 @@ public sealed class GodotProcess : IDisposable
                 await Task.Delay(100);
             }
         }
-        
+
         if (!_debugConnected)
         {
             throw new TimeoutException($"Failed to connect to debug server on port {port}");
         }
-        
+
         // Start listener task for incoming debug events
         _debugListenerCts = new CancellationTokenSource();
         _debugListenerTask = Task.Run(async () =>
         {
             var buffer = new byte[4096];
             var messageBuffer = new MemoryStream();
-            
+
             try
             {
                 while (!_debugListenerCts!.Token.IsCancellationRequested && _debugConnected)
@@ -328,7 +328,7 @@ public sealed class GodotProcess : IDisposable
                             _debugConnected = false;
                             break;
                         }
-                        
+
                         // Process received data - may contain multiple messages
                         messageBuffer.Write(buffer, 0, bytesRead);
                         ProcessMessages(messageBuffer);
@@ -349,22 +349,22 @@ public sealed class GodotProcess : IDisposable
     {
         var data = messageBuffer.ToArray();
         var offset = 0;
-        
+
         while (offset < data.Length)
         {
             // Check if we have enough data for header (4 bytes length + 1 byte type)
             if (offset + 5 > data.Length) break;
-            
+
             // Read message length (first 4 bytes)
             int msgLen = BitConverter.ToInt32(data, offset);
-            
+
             // Check if we have the full message
             if (offset + 4 + msgLen > data.Length) break;
-            
+
             // Extract message data (skip length prefix)
             var msgData = new byte[msgLen];
             Array.Copy(data, offset + 4, msgData, 0, msgLen);
-            
+
             // Parse debug event - Format: [byte type][string category][string message]
             if (msgData.Length > 0 && msgData[0] == 6) // DEBUG_EVENT = 6
             {
@@ -374,10 +374,10 @@ public sealed class GodotProcess : IDisposable
                     _debugEvents.Enqueue(evt.Value);
                 }
             }
-            
+
             offset += 4 + msgLen;
         }
-        
+
         // Keep remaining incomplete data in buffer
         if (offset < data.Length)
         {
@@ -398,24 +398,24 @@ public sealed class GodotProcess : IDisposable
         {
             // Skip the type byte
             int offset = 1;
-            
+
             // Read category string (length-prefixed with 4-byte int)
             if (offset + 4 > data.Length) return null;
             int categoryLen = BitConverter.ToInt32(data, offset);
             offset += 4;
-            
+
             if (offset + categoryLen > data.Length) return null;
             string category = Encoding.UTF8.GetString(data, offset, categoryLen);
             offset += categoryLen;
-            
+
             // Read message string (length-prefixed with 4-byte int)
             if (offset + 4 > data.Length) return null;
             int messageLen = BitConverter.ToInt32(data, offset);
             offset += 4;
-            
+
             if (offset + messageLen > data.Length) return null;
             string message = Encoding.UTF8.GetString(data, offset, messageLen);
-            
+
             return new DebugEvent { Category = category, Message = message };
         }
         catch
@@ -432,7 +432,7 @@ public sealed class GodotProcess : IDisposable
     {
         var sb = new StringBuilder();
         var events = _debugEvents.ToArray();
-        
+
         if (events.Length == 0)
         {
             sb.AppendLine("[No debug events in buffer]");
@@ -444,7 +444,7 @@ public sealed class GodotProcess : IDisposable
                 sb.AppendLine($"[{evt.Category}] {evt.Message}");
             }
         }
-        
+
         return sb.ToString();
     }
 
@@ -454,34 +454,76 @@ public sealed class GodotProcess : IDisposable
     /// <param name="category">Event category to match</param>
     /// <param name="messagePattern">Message pattern to match (uses Contains)</param>
     /// <param name="timeout">Maximum time to wait</param>
-    public async Task<DebugEvent> WaitForDebugEvent(string category, string messagePattern, TimeSpan? timeout = null)
+    public async Task<DebugEvent> WaitForDebugEvent(string category, string messagePattern = "", TimeSpan? timeout = null)
     {
         timeout ??= TimeSpan.FromSeconds(5);
         var cts = new CancellationTokenSource(timeout.Value);
-        
+
         while (!cts.Token.IsCancellationRequested)
         {
             while (_debugEvents.TryDequeue(out var evt))
             {
-                if (evt.Category == category && evt.Message.Contains(messagePattern))
+                if (evt.Category == category && (messagePattern == "" || evt.Message == messagePattern))
                 {
                     return evt;
                 }
             }
-            
+
             if (_process.HasExited)
             {
                 throw new InvalidOperationException(
                     $"Godot process exited while waiting for debug event '{category}:{messagePattern}'. " +
                     $"Output:\n{AllOutput}");
             }
-            
+
             await Task.Delay(50, cts.Token).ConfigureAwait(false);
         }
-        
+
         throw new TimeoutException(
             $"Timed out waiting for debug event '{category}:{messagePattern}' after {timeout.Value.TotalSeconds}s. " +
             $"Output so far:\n{AllOutput}");
+    }
+
+    /// <summary>
+    /// Ensures no debug event matching the specified category and message pattern occurs within the timeout.
+    /// </summary>
+    /// <param name="category">Event category to match</param>
+    /// <param name="messagePattern">Message pattern to match (uses Contains)</param>
+    /// <param name="timeout">Time period during which the event must not occur</param>
+    /// <exception cref="InvalidOperationException">Thrown if the event occurs within the timeout</exception>
+    public async Task EnsureNoDebugEvent(string category, string messagePattern, TimeSpan? timeout = null)
+    {
+        timeout ??= TimeSpan.FromMilliseconds(100);
+        var cts = new CancellationTokenSource(timeout.Value);
+
+        try
+        {
+            while (!cts.Token.IsCancellationRequested)
+            {
+                while (_debugEvents.TryDequeue(out var evt))
+                {
+                    if (evt.Category == category && evt.Message.Contains(messagePattern))
+                    {
+                        throw new InvalidOperationException(
+                            $"Unexpected debug event '{category}:{messagePattern}' occurred. " +
+                            $"Event message: {evt.Message}\n" +
+                            $"Output:\n{AllOutput}");
+                    }
+                }
+
+                if (_process.HasExited)
+                {
+                    // Process exited without the event occurring - that's fine
+                    return;
+                }
+
+                await Task.Delay(50, cts.Token).ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Timeout reached without the event occurring - success
+        }
     }
 
     public void Dispose()
@@ -494,7 +536,7 @@ public sealed class GodotProcess : IDisposable
         {
             _debugListenerCts?.Cancel();
             _debugListenerTask?.Wait(1000);
-            
+
             _debugStream?.Close();
             _debugClient?.Close();
             _debugClient?.Dispose();

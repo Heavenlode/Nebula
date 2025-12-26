@@ -4,27 +4,19 @@ using Godot;
 using Nebula;
 using Nebula.Utility.Tools;
 using Nebula.Testing.Integration;
+using System.Linq;
+using System;
 
 public partial class Scene : NetNode3D
 {
     private StdinCommandHandler _commandHandler;
 
-    public override void _Ready()
-    {
-        base._Ready();
-
-        // Only set up command handling on the server
-        if (NetRunner.Instance.IsServer)
-        {
-            _commandHandler = new StdinCommandHandler();
-            AddChild(_commandHandler);
-            _commandHandler.CommandReceived += OnCommandReceived;
-        }
-    }
-
     public override void _WorldReady()
     {
         base._WorldReady();
+        _commandHandler = new StdinCommandHandler();
+        AddChild(_commandHandler);
+        _commandHandler.CommandReceived += OnCommandReceived;
         Debugger.Instance.Log("Scene _WorldReady");
     }
 
@@ -37,7 +29,27 @@ public partial class Scene : NetNode3D
             var scenePath = command.Substring("spawn:".Length).Trim();
             SpawnScene(scenePath);
         }
+
+        if (command.StartsWith("Input:"))
+        {
+            var inputParts = command.Substring("Input:".Length).Trim().Split(':');
+            if (inputParts.Length != 2)
+            {
+                Debugger.Instance.Log($"Invalid Input command: {command}", Debugger.DebugLevel.ERROR);
+                return;
+            }
+            var inputCommand = byte.Parse(inputParts[0]);
+            var inputValue = inputParts[1];
+            Debugger.Instance.Log($"Setting input {inputCommand} to {inputValue} for player");
+            PlayerNode.Network.SetNetworkInput(inputCommand, inputValue);
+        }
+
+        if (command == "GetScore") {
+            Network.CurrentWorld.Debug?.Send("GetScore", PlayerNode.Score.ToString());
+        }
     }
+
+    public Player PlayerNode;
 
     private void SpawnScene(string scenePath)
     {
@@ -54,19 +66,7 @@ public partial class Scene : NetNode3D
         if (instance is NetNode3D netNode3D)
         {
             var parentWrapper = new NetNodeWrapper(this);
-            Network.CurrentWorld.Spawn(netNode3D, parentWrapper);
-            Debugger.Instance.Log($"Spawned: {scenePath}");
-        }
-        else if (instance is NetNode2D netNode2D)
-        {
-            var parentWrapper = new NetNodeWrapper(this);
-            Network.CurrentWorld.Spawn(netNode2D, parentWrapper);
-            Debugger.Instance.Log($"Spawned: {scenePath}");
-        }
-        else if (instance is NetNode netNode)
-        {
-            var parentWrapper = new NetNodeWrapper(this);
-            Network.CurrentWorld.Spawn(netNode, parentWrapper);
+            PlayerNode = Network.CurrentWorld.Spawn(netNode3D, parentWrapper, inputAuthority: NetRunner.Instance.Peers.Values.First()) as Player;
             Debugger.Instance.Log($"Spawned: {scenePath}");
         }
         else

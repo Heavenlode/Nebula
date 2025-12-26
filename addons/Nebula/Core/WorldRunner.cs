@@ -1167,7 +1167,9 @@ namespace Nebula
                 var value = HLBytes.UnpackVariant(buffer);
                 if (value.HasValue)
                 {
-                    node.InputBuffer[key] = value.Value;
+                    node.SetNetworkInput(key, value.Value);
+                    Debugger.Instance.Log($"Received input for node {worldNetId} with key {key} and value {value.Value}", Debugger.DebugLevel.INFO);
+                    Debug.Send("Input", $"{key}:{value.Value}");
                 }
                 setInputs &= ~((long)1 << key);
             }

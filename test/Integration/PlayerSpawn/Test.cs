@@ -92,4 +92,74 @@ public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
                 .VerifyClient();
         });
     }
+
+    [Fact, Order(3)]
+    public async Task HandlesInput()
+    {
+        await _fixture.NebulaTest(async () =>
+        {
+            await _fixture.Commands
+                .Input(0, "foo")
+                .VerifyServer();
+
+            await _fixture.Commands
+                .Input(1, "bar")
+                .VerifyServer();
+        });
+    }
+
+
+    [Fact, Order(4)]
+    public async Task MutatesStateWithInput()
+    {
+        await _fixture.NebulaTest(async () =>
+        {
+            await _fixture.Commands
+                .Input(0, "add_score")
+                .VerifyServer();
+
+            // Input values remain buffered until explicitly released
+            await _fixture.Server.WaitForDebugEvent("ScoreInput", "2");
+            await _fixture.Server.WaitForDebugEvent("ScoreInput", "3");
+            await _fixture.Server.WaitForDebugEvent("ScoreInput", "10");
+
+            await _fixture.Commands
+                .Input(0, "subtract_score")
+                .VerifyServer();
+
+            await _fixture.Server.WaitForDebugEvent("ScoreInput", "7");
+
+            await _fixture.Commands
+                .Input(0, "clear_input")
+                .VerifyServer();
+
+            await _fixture.Commands
+                .Custom("GetScore")
+                .SendServer();
+
+            await _fixture.Commands
+                .Custom("GetScore")
+                .SendClient();
+
+            var serverScoreValue = await _fixture.Server.WaitForDebugEvent("GetScore");
+            var clientScoreValue = await _fixture.Client.WaitForDebugEvent("GetScore");
+
+            Assert.Equal(serverScoreValue.Message, clientScoreValue.Message);
+
+            await _fixture.Commands
+                .Custom("GetScore")
+                .SendServer();
+
+            await _fixture.Commands
+                .Custom("GetScore")
+                .SendClient();
+
+            var serverScoreValue2 = await _fixture.Server.WaitForDebugEvent("GetScore");
+            var clientScoreValue2 = await _fixture.Client.WaitForDebugEvent("GetScore");
+
+            Assert.Equal(serverScoreValue2.Message, clientScoreValue2.Message);
+            Assert.Equal(serverScoreValue.Message, serverScoreValue2.Message);
+            Assert.Equal(clientScoreValue.Message, clientScoreValue2.Message);
+        });
+    }
 }

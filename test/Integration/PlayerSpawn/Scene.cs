@@ -11,6 +11,8 @@ public partial class Scene : NetNode3D
 {
     private StdinCommandHandler _commandHandler;
 
+    bool verifyingDespawn = false;
+
     public override void _WorldReady()
     {
         base._WorldReady();
@@ -22,8 +24,6 @@ public partial class Scene : NetNode3D
 
     private void OnCommandReceived(string command)
     {
-        Debugger.Instance.Log($"Scene received command: {command}");
-
         if (command.StartsWith("spawn:"))
         {
             var scenePath = command.Substring("spawn:".Length).Trim();
@@ -40,12 +40,31 @@ public partial class Scene : NetNode3D
             }
             var inputCommand = byte.Parse(inputParts[0]);
             var inputValue = inputParts[1];
-            Debugger.Instance.Log($"Setting input {inputCommand} to {inputValue} for player");
             PlayerNode.Network.SetNetworkInput(inputCommand, inputValue);
         }
 
-        if (command == "GetScore") {
+        if (command == "GetScore")
+        {
             Network.CurrentWorld.Debug?.Send("GetScore", PlayerNode.Score.ToString());
+        }
+
+        if (command == "VerifySpawnedNodes")
+        {
+            var node = PlayerNode.GetNode("Level1/Level2/Level3/Item/Level4");
+            if (node != null)
+            {
+                Network.CurrentWorld.Debug?.Send("VerifySpawnedNodes", "true");
+            }
+        }
+
+        if (command == "VerifyDespawnedNodes")
+        {
+            verifyingDespawn = true;
+            if (NetRunner.Instance.IsClient) {
+                return;
+            }
+            var node = PlayerNode.GetNode<NetNode3D>("Level1/Level2/Level3/Item");
+            node.Network.Despawn();
         }
     }
 
@@ -53,8 +72,6 @@ public partial class Scene : NetNode3D
 
     private void SpawnScene(string scenePath)
     {
-        Debugger.Instance.Log($"Spawning scene: {scenePath}");
-
         var packedScene = GD.Load<PackedScene>(scenePath);
         if (packedScene == null)
         {
@@ -66,13 +83,32 @@ public partial class Scene : NetNode3D
         if (instance is NetNode3D netNode3D)
         {
             var parentWrapper = new NetNodeWrapper(this);
-            PlayerNode = Network.CurrentWorld.Spawn(netNode3D, parentWrapper, inputAuthority: NetRunner.Instance.Peers.Values.First()) as Player;
+            PlayerNode = Network.CurrentWorld.Spawn(
+                netNode3D,
+                parentWrapper,
+                inputAuthority: NetRunner.Instance.Peers.Values.First(),
+                interestLayers: new Godot.Collections.Dictionary<UUID, long> { { NetRunner.Instance.GetPeerId(NetRunner.Instance.Peers.Values.First()), long.MaxValue } }) as Player;
             Debugger.Instance.Log($"Spawned: {scenePath}");
         }
         else
         {
             Debugger.Instance.Log($"Scene root is not a NetNode: {scenePath}", Debugger.DebugLevel.ERROR);
             instance.QueueFree();
+        }
+    }
+
+    public override void _NetworkProcess(int _tick)
+    {
+        base._NetworkProcess(_tick);
+        if (verifyingDespawn)
+        {
+            var node = PlayerNode.GetNodeOrNull("Level1/Level2/Level3/Item");
+            if (node == null)
+            {
+                Network.CurrentWorld.Debug?.Send("VerifyDespawnedNodes", "true");
+                Debugger.Instance.Log("VerifyDespawnedNodes: true", Debugger.DebugLevel.INFO);
+                verifyingDespawn = false;
+            }
         }
     }
 }

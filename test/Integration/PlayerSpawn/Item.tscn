@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dm4bcjfdsplx8"]
+
+[ext_resource type="Script" uid="uid://qyh4r45mqnsp" path="res://Integration/PlayerSpawn/Item.cs" id="1_7xrw8"]
+
+[node name="Item" type="Node3D"]
+script = ExtResource("1_7xrw8")
+
+[node name="Level4" type="Node3D" parent="."]

@@ -3,6 +3,7 @@ using System.Linq;
 using Godot;
 using Nebula.Serialization;
 using MethodBoundaryAspect.Fody.Attributes;
+using Nebula.Utility.Tools;
 
 namespace Nebula
 {
@@ -26,6 +27,7 @@ namespace Nebula
         public bool WithPeer { get; set; } = false;
         public override void OnEntry(MethodExecutionArgs args)
         {
+            Debugger.Instance.Log($"NetFunction: {args.Method.Name} called on {args.Instance.GetType().Name}", Debugger.DebugLevel.VERBOSE);
             if (args.Instance is INetNodeBase netNode)
             {
                 if (netNode.Network.IsInboundCall)
@@ -37,14 +39,17 @@ namespace Nebula
                 {
                     args.FlowBehavior = FlowBehavior.Return;
                 }
+
                 if (NetRunner.Instance.IsServer && (Source & NetworkSources.Server) == 0)
                 {
                     return;
                 }
+
                 if (NetRunner.Instance.IsClient && (Source & NetworkSources.Client) == 0)
                 {
                     return;
                 }
+
                 var networkScene = "";
                 if (netNode.Network.IsNetScene())
                 {

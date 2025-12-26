@@ -52,7 +52,8 @@ namespace Nebula
         }
 
         public Node Node { get; private set; } = null;
-        public NetworkController Network => (Node as INetNodeBase).Network;
+        public INetNodeBase NetNode { get; private set; } = null;
+        public NetworkController Network => NetNode.Network;
         private Dictionary<string, StringName> properties = new Dictionary<string, StringName>();
         private Dictionary<string, StringName> methods = new Dictionary<string, StringName>();
         public NetNodeWrapper(Node node)
@@ -66,6 +67,7 @@ namespace Nebula
                 return;
             }
             Node = node;
+            NetNode = node as INetNodeBase;
             // TODO: Validate the node implements the interface correctly
             var requiredProperties = new HashSet<string> {
                 "InputAuthority",

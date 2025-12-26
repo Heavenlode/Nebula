@@ -1,7 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://bx7nmqp5kh2fa"]
+[gd_scene load_steps=4 format=3 uid="uid://bx7nmqp5kh2fa"]
 
 [ext_resource type="Script" uid="uid://dkp8m2n4xvq3r" path="res://Integration/PlayerSpawn/Player.cs" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://dm4bcjfdsplx8" path="res://Integration/PlayerSpawn/Item.tscn" id="2_r5ls2"]
+[ext_resource type="Script" uid="uid://mgdaqcoqevkb" path="res://Integration/PlayerSpawn/Level3.cs" id="2_shdwk"]
 
 [node name="Player" type="Node3D"]
 script = ExtResource("1_player")
 
+[node name="Level1" type="Node3D" parent="."]
+
+[node name="Level2" type="Node3D" parent="Level1"]
+
+[node name="Level3" type="Node3D" parent="Level1/Level2"]
+script = ExtResource("2_shdwk")
+
+[node name="Item" parent="Level1/Level2/Level3" instance=ExtResource("2_r5ls2")]

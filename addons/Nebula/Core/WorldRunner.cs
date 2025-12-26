@@ -157,8 +157,6 @@ namespace Nebula
                     }
                 }
 
-                Debugger.Instance.Log($"Sending debug event: {category} {message}", Debugger.DebugLevel.VERBOSE);
-
                 _world.SendToDebugClients(framedData);
             }
 
@@ -171,12 +169,12 @@ namespace Nebula
                 lock (_bufferLock)
                 {
                     if (_pendingMessages.Count == 0 || _hasSentBufferedMessages) return;
-                    
+
                     foreach (var framedData in _pendingMessages)
                     {
                         _world.SendToDebugClients(framedData);
                     }
-                    
+
                     _pendingMessages.Clear();
                     _hasSentBufferedMessages = true;
                 }
@@ -614,6 +612,27 @@ namespace Nebula
                     SendToDebugClients(framedData);
                 }
             }
+
+            foreach (var netNode in QueueDespawnedNodes)
+            {
+                foreach (var peer in PeerStates.Keys)
+                {
+                    if (HasSpawnedForClient(netNode.Network.NetId, peer))
+                    {
+                        SendDespawn(peer, netNode.Network.NetId);
+                        DeregisterPeerNode(netNode, peer);
+                    }
+                }
+                netNode.Network.NetParentId = null;
+                netNode.Node.QueueFree();
+            }
+            QueueDespawnedNodes.Clear();
+        }
+
+        internal HashSet<INetNodeBase> QueueDespawnedNodes = [];
+        internal void QueueDespawn(INetNodeBase node)
+        {
+            QueueDespawnedNodes.Add(node);
         }
 
         public override void _PhysicsProcess(double delta)
@@ -631,7 +650,7 @@ namespace Nebula
                         DebugTcpClients.Add(client);
                     }
                     Log($"Debug client connected", Debugger.DebugLevel.VERBOSE);
-                    
+
                     // Flush any buffered debug messages now that we have a client
                     Debug?.FlushBuffer();
                 }
@@ -727,6 +746,11 @@ namespace Nebula
             PeerStates[peer] = state;
         }
 
+        public byte GetPeerNodeId(NetPeer peer, INetNodeBase node)
+        {
+            return GetPeerNodeId(peer, node.Network.AttachedNetNode);
+        }
+
         public byte GetPeerNodeId(NetPeer peer, NetNodeWrapper node)
         {
             if (node == null) return 0;
@@ -758,6 +782,18 @@ namespace Nebula
                 return null;
             }
             return NetScenes[PeerStates[peer].PeerToWorldNodeMap[networkId]];
+        }
+
+        internal void DeregisterPeerNode(INetNodeBase node, NetPeer peer = null)
+        {
+            if (NetRunner.Instance.IsServer)
+            {
+                DeregisterPeerNode(node.Network.AttachedNetNode, peer);
+            }
+            else
+            {
+                NetScenes.Remove(node.Network.NetId);
+            }
         }
 
         internal void DeregisterPeerNode(NetNodeWrapper node, NetPeer peer = null)
@@ -829,20 +865,30 @@ namespace Nebula
             return 1;
         }
 
-        public T Spawn<T>(T node, NetNodeWrapper parent = null, NetPeer inputAuthority = null, string nodePath = ".") where T : Node, INetNodeBase
+        public T Spawn<T>(
+            T node,
+            NetNodeWrapper parent = null,
+            NetPeer inputAuthority = null,
+            string netNodePath = ".",
+            Godot.Collections.Dictionary<UUID, long> interestLayers = null) where T : Node, INetNodeBase
         {
             if (NetRunner.Instance.IsClient) return null;
 
             if (!node.Network.IsNetScene())
             {
-                Debugger.Instance.Log($"Only Net Scenes can be spawned (i.e. a scene where the root node is an NetNode). Attempting to spawn node that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{nodePath}", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log($"Only Net Scenes can be spawned (i.e. a scene where the root node is an NetNode). Attempting to spawn node that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{netNodePath}", Debugger.DebugLevel.ERROR);
                 return null;
             }
 
             if (parent != null && !parent.Network.IsNetScene())
             {
-                Debugger.Instance.Log($"You can only spawn a Net Scene as a child of another Net Scene. Attempting to spawn node on a parent that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{nodePath}", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log($"You can only spawn a Net Scene as a child of another Net Scene. Attempting to spawn node on a parent that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{netNodePath}", Debugger.DebugLevel.ERROR);
                 return null;
+            }
+
+            if (interestLayers != null)
+            {
+                node.Network.InterestLayers = interestLayers;
             }
 
             node.Network.IsClientSpawn = true;
@@ -854,12 +900,12 @@ namespace Nebula
             if (parent == null)
             {
                 node.Network.NetParent = RootScene;
-                node.Network.NetParent.Node.GetNode(nodePath).AddChild(node);
+                node.Network.NetParent.Node.GetNode(netNodePath).AddChild(node);
             }
             else
             {
                 node.Network.NetParent = parent;
-                parent.Node.GetNode(nodePath).AddChild(node);
+                parent.Node.GetNode(netNodePath).AddChild(node);
             }
             node.Network._NetworkPrepare(this);
             node.Network._WorldReady();
@@ -1029,7 +1075,7 @@ namespace Nebula
                 }
             }
         }
-        public void ClientHandleTick(int incomingTick, byte[] stateBytes)
+        public void ClientProcessTick(int incomingTick, byte[] stateBytes)
         {
             if (incomingTick <= CurrentTick)
             {
@@ -1075,6 +1121,13 @@ namespace Nebula
                 functionNode.Network.IsInboundCall = false;
             }
             queuedNetFunctions.Clear();
+
+            foreach (var node in QueueDespawnedNodes)
+            {
+                DeregisterPeerNode(node);
+                node.Node.QueueFree();
+            }
+            QueueDespawnedNodes.Clear();
 
             // Acknowledge tick
             HLBuffer buffer = new HLBuffer();
@@ -1168,7 +1221,6 @@ namespace Nebula
                 if (value.HasValue)
                 {
                     node.SetNetworkInput(key, value.Value);
-                    Debugger.Instance.Log($"Received input for node {worldNetId} with key {key} and value {value.Value}", Debugger.DebugLevel.INFO);
                     Debug.Send("Input", $"{key}:{value.Value}");
                 }
                 setInputs &= ~((long)1 << key);
@@ -1238,6 +1290,19 @@ namespace Nebula
                 Args = args.ToArray(),
                 Sender = peer
             });
+        }
+
+        internal void SendDespawn(NetPeer peer, NetId netId)
+        {
+            if (!NetRunner.Instance.IsServer) return;
+            var buffer = NetId.NetworkSerialize(this, peer, netId);
+            peer.Send((int)NetRunner.ENetChannelId.Despawn, buffer.bytes, (int)ENetPacketPeer.FlagReliable);
+        }
+
+        internal void ReceiveDespawn(NetPeer peer, HLBuffer buffer)
+        {
+            var netId = NetId.NetworkDeserialize(this, peer, buffer, new Variant());
+            GetNodeFromNetId(netId).Network.handleDespawn();
         }
     }
 }

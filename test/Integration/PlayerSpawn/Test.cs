@@ -133,6 +133,8 @@ public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
                 .Input(0, "clear_input")
                 .VerifyServer();
 
+            await Task.Delay(50);
+
             await _fixture.Commands
                 .Custom("GetScore")
                 .SendServer();

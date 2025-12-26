@@ -160,6 +160,7 @@ public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
             Assert.Equal(serverScoreValue2.Message, clientScoreValue2.Message);
             Assert.Equal(serverScoreValue.Message, serverScoreValue2.Message);
             Assert.Equal(clientScoreValue.Message, clientScoreValue2.Message);
+            Assert.NotEqual("0", serverScoreValue.Message);
         });
     }
 }

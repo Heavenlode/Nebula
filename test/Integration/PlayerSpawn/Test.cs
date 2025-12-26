@@ -165,4 +165,39 @@ public class BasicIntegrationTests : IClassFixture<BasicIntegrationFixture>
             Assert.NotEqual("0", serverScoreValue.Message);
         });
     }
+
+    [Fact, Order(5)]
+    public async Task VerifySpawnedNodes()
+    {
+        await _fixture.NebulaTest(async () =>
+        {
+            await _fixture.Commands
+                .Custom("VerifySpawnedNodes")
+                .SendBoth();
+
+            var serverResult = await _fixture.Server.WaitForDebugEvent("VerifySpawnedNodes");
+            var clientResult = await _fixture.Client.WaitForDebugEvent("VerifySpawnedNodes");
+
+            Assert.Equal(serverResult.Message, clientResult.Message);
+            Assert.Equal("true", serverResult.Message);
+        });
+    }
+
+
+    [Fact, Order(5)]
+    public async Task VerifyDespawnedNodes()
+    {
+        await _fixture.NebulaTest(async () =>
+        {
+            await _fixture.Commands
+                .Custom("VerifyDespawnedNodes")
+                .SendBoth();
+
+            var serverResult = await _fixture.Server.WaitForDebugEvent("VerifyDespawnedNodes");
+            var clientResult = await _fixture.Client.WaitForDebugEvent("VerifyDespawnedNodes");
+
+            Assert.Equal(serverResult.Message, clientResult.Message);
+            Assert.Equal("true", serverResult.Message);
+        });
+    }
 }

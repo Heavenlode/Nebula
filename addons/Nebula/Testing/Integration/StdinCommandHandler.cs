@@ -40,9 +40,7 @@ public partial class StdinCommandHandler : Node
     {
         // Process any queued commands on the main thread
         while (_commandQueue.TryDequeue(out var command))
-        {
-            GD.Print($"[StdinCommandHandler] Processing command: {command}");
-            
+        {   
             // Handle built-in commands
             if (HandleBuiltInCommand(command))
             {

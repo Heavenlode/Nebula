@@ -146,6 +146,18 @@ namespace Nebula.Serialization.Serializers
         public HLBuffer Export(WorldRunner currentWorld, NetPeer peer)
         {
             var buffer = new HLBuffer();
+
+            if (wrapper.Network.IsQueuedForDespawn) {
+                // The node is queued for despawn, so we don't notify clients that it has been spawned
+                return buffer;
+            }
+
+            if (!wrapper.Network.IsPeerInterested(peer))
+            {
+                // The target client is not interested in this node.
+                return buffer;
+            }
+
             if (currentWorld.HasSpawnedForClient(wrapper.NetId, peer))
             {
                 // The target client is already aware of this node.

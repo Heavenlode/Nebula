@@ -22,6 +22,8 @@ namespace Nebula
 		/// </summary>
 		public bool DespawnOnUnowned = false;
 
+		public bool IsQueuedForDespawn => CurrentWorld.QueueDespawnedNodes.Contains(AttachedNetNode.NetNode);
+
 		public bool IsNetScene()
 		{
 			return ProtocolRegistry.Instance.IsNetScene(AttachedNetNode.Node.SceneFilePath);
@@ -32,7 +34,7 @@ namespace Nebula
 		public WorldRunner CurrentWorld { get; internal set; }
 		internal Godot.Collections.Dictionary<byte, Variant> InputBuffer = [];
 		internal Godot.Collections.Dictionary<byte, Variant> PreviousInputBuffer = [];
-		public Godot.Collections.Dictionary<UUID, long> InterestLayers = [];
+		public Godot.Collections.Dictionary<UUID, long> InterestLayers { get; set; } = [];
 
 		[Signal]
 		public delegate void InterestChangedEventHandler(UUID peerId, long interestLayers);
@@ -49,12 +51,22 @@ namespace Nebula
 			}
 		}
 
+		public bool IsPeerInterested(UUID peerId)
+		{
+			return InterestLayers.GetValueOrDefault(peerId, 0) > 0 || CurrentWorld.RootScene.NetNode == AttachedNetNode.NetNode;
+		}
+
+		public bool IsPeerInterested(NetPeer peer)
+		{
+			return IsPeerInterested(NetRunner.Instance.GetPeerId(peer));
+		}
+
 		public override void _Notification(int what)
 		{
 			if (what == NotificationPredelete)
 			{
 				if (!IsWorldReady) return;
-				if (NetParent != null && NetParent.Node is INetNodeBase _netNodeParent)
+				if (NetParent != null && NetParent.NetNode is INetNodeBase _netNodeParent)
 				{
 					_netNodeParent.Network.NetSceneChildren.Remove(AttachedNetNode);
 				}
@@ -97,14 +109,14 @@ namespace Nebula
 			set
 			{
 				{
-					if (IsNetScene() && NetParent != null && NetParent.Node is INetNodeBase _netNodeParent)
+					if (IsNetScene() && NetParent != null && NetParent.NetNode is INetNodeBase _netNodeParent)
 					{
 						_netNodeParent.Network.NetSceneChildren.Remove(AttachedNetNode);
 					}
 				}
 				_networkParentId = value;
 				{
-					if (IsNetScene() && value != null && CurrentWorld.GetNodeFromNetId(value).Node is INetNodeBase _netNodeParent)
+					if (IsNetScene() && value != null && CurrentWorld.GetNodeFromNetId(value).NetNode is INetNodeBase _netNodeParent)
 					{
 						_netNodeParent.Network.NetSceneChildren.Add(AttachedNetNode);
 					}
@@ -144,9 +156,9 @@ namespace Nebula
 			if (CurrentWorld == null) throw new Exception("Can only set input authority after node is assigned to a world");
 			if (InputAuthority != null)
 			{
-				CurrentWorld.GetPeerWorldState(InputAuthority).Value.OwnedNodes.Remove(AttachedNetNode.Node as INetNodeBase);
+				CurrentWorld.GetPeerWorldState(InputAuthority).Value.OwnedNodes.Remove(AttachedNetNode.NetNode);
 			}
-			CurrentWorld.GetPeerWorldState(inputAuthority).Value.OwnedNodes.Add(AttachedNetNode.Node as INetNodeBase);
+			CurrentWorld.GetPeerWorldState(inputAuthority).Value.OwnedNodes.Add(AttachedNetNode.NetNode);
 			InputAuthority = inputAuthority;
 		}
 
@@ -167,23 +179,19 @@ namespace Nebula
 		}
 
 		public enum NetworkChildrenSearchToggle { INCLUDE_SCENES, EXCLUDE_SCENES, ONLY_SCENES }
-		public IEnumerable<NetNodeWrapper> GetNetworkChildren(NetworkChildrenSearchToggle searchToggle = NetworkChildrenSearchToggle.EXCLUDE_SCENES, bool nestedSceneChildren = true)
+		public IEnumerable<NetNodeWrapper> GetNetworkChildren(NetworkChildrenSearchToggle searchToggle = NetworkChildrenSearchToggle.EXCLUDE_SCENES, bool includeNestedSceneChildren = true)
 		{
 			var children = AttachedNetNode.Node.GetChildren();
 			while (children.Count > 0)
 			{
 				var child = children[0];
 				children.RemoveAt(0);
-				if (child is not INetNodeBase)
-				{
-					continue;
-				}
 				var isNetScene = ProtocolRegistry.Instance.IsNetScene(child.SceneFilePath);
 				if (isNetScene && searchToggle == NetworkChildrenSearchToggle.EXCLUDE_SCENES)
 				{
 					continue;
 				}
-				if (nestedSceneChildren || (!nestedSceneChildren && !isNetScene))
+				if (includeNestedSceneChildren || (!includeNestedSceneChildren && !isNetScene))
 				{
 					children.AddRange(child.GetChildren());
 				}
@@ -191,18 +199,13 @@ namespace Nebula
 				{
 					continue;
 				}
-				if (searchToggle == NetworkChildrenSearchToggle.INCLUDE_SCENES || isNetScene)
+				if (child is INetNodeBase &&
+					((isNetScene && searchToggle != NetworkChildrenSearchToggle.EXCLUDE_SCENES) ||
+					(!isNetScene && searchToggle != NetworkChildrenSearchToggle.ONLY_SCENES)))
 				{
 					yield return new NetNodeWrapper(child);
 				}
 			}
-		}
-
-		public void Despawn()
-		{
-			if (NetRunner.Instance.IsClient)
-				return;
-			// NetRunner.Instance.Despawn(this);
 		}
 
 		internal void _NetworkPrepare(WorldRunner world)
@@ -223,7 +226,8 @@ namespace Nebula
 				networkChildren.Reverse();
 				networkChildren.ForEach(child =>
 				{
-					// TODO: This is a little messed up.
+					child.InterestLayers = InterestLayers;
+					child.InputAuthority = InputAuthority;
 					child.CurrentWorld = world;
 					child.NetParentId = NetId;
 					child._NetworkPrepare(world);
@@ -251,7 +255,7 @@ namespace Nebula
 							}
 							if (tempNetNode is INetNodeBase netNode)
 							{
-								var referencedNodeInWorld = CurrentWorld.GetNodeFromNetId(netNode.Network._prepareNetId).Node as INetNodeBase;
+								var referencedNodeInWorld = CurrentWorld.GetNodeFromNetId(netNode.Network._prepareNetId).NetNode;
 								if (referencedNodeInWorld.Network.IsNetScene() && !string.IsNullOrEmpty(netNode.Network._prepareStaticChildPath))
 								{
 									referencedNodeInWorld = referencedNodeInWorld.Node.GetNodeOrNull(netNode.Network._prepareStaticChildPath) as INetNodeBase;
@@ -286,7 +290,7 @@ namespace Nebula
 
 				if (IsNetScene())
 				{
-					(AttachedNetNode.Node as INetNodeBase).SetupSerializers();
+					AttachedNetNode.NetNode.SetupSerializers();
 				}
 				foreach (var initialSetProp in InitialSetNetProperties)
 				{
@@ -362,6 +366,28 @@ namespace Nebula
 			}
 
 			return NetParent.Node.GetPathTo(AttachedNetNode.Node);
+		}
+
+		public void Despawn()
+		{
+			if (!NetRunner.Instance.IsServer)
+			{
+				Debugger.Instance.Log($"Cannot despawn {AttachedNetNode.Node.GetPath()}. Only the server can despawn nodes.", Debugger.DebugLevel.ERROR);
+				return;
+			}
+			if (!IsNetScene())
+			{
+				Debugger.Instance.Log($"Cannot despawn {AttachedNetNode.Node.GetPath()}. Only Net Scenes can be despawned.", Debugger.DebugLevel.ERROR);
+				return;
+			}
+
+			handleDespawn();
+		}
+
+		internal void handleDespawn()
+		{
+			Debugger.Instance.Log($"Despawning node {AttachedNetNode.Node.GetPath()}", Debugger.DebugLevel.VERBOSE);
+			CurrentWorld.QueueDespawn(AttachedNetNode.NetNode);
 		}
 	}
 }

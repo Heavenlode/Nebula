@@ -100,6 +100,11 @@ public class CustomCommand
     public async Task SendClient() {
         _client.SendCommand(_title);
     }
+
+    public async Task SendBoth() {
+        _server.SendCommand(_title);
+        _client.SendCommand(_title);
+    }
 }
 
 /// <summary>

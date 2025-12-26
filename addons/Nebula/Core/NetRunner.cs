@@ -102,6 +102,11 @@ namespace Nebula
             /// NetFunction call.
             /// </summary>
             Function = 3,
+
+            /// <summary>
+            /// Despawn request.
+            /// </summary>
+            Despawn = 4,
         }
 
         /// <summary>
@@ -319,7 +324,7 @@ namespace Nebula
                                     }
                                     var tick = HLBytes.UnpackInt32(data);
                                     var bytes = HLBytes.UnpackByteArray(data, untilEnd: true);
-                                    WorldRunner.CurrentWorld.ClientHandleTick(tick, bytes);
+                                    WorldRunner.CurrentWorld.ClientProcessTick(tick, bytes);
                                 }
                                 break;
                             case ENetChannelId.Input:
@@ -338,6 +343,14 @@ namespace Nebula
                                     PeerWorldMap[packetPeer].ReceiveNetFunction(packetPeer, data);
                                 } else {
                                     WorldRunner.CurrentWorld.ReceiveNetFunction(ENetHost, data);
+                                }
+                                break;
+                            case ENetChannelId.Despawn:
+                                if (IsServer) {
+                                    // Server should never receive despawn requests
+                                    break;
+                                } else {
+                                    WorldRunner.CurrentWorld.ReceiveDespawn(ENetHost, data);
                                 }
                                 break;
                             default:

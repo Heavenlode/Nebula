@@ -12,7 +12,7 @@ public partial class Player : NetNode3D
     {
         base._WorldReady();
         Debugger.Instance.Log("Player _WorldReady");
-        (Network.NetParent.Node as Scene).PlayerNode = this;
+        (Network.NetParent.NetNode as Scene).PlayerNode = this;
     }
 
     public override void _NetworkProcess(int tick)

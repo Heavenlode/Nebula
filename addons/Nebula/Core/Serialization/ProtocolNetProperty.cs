@@ -18,6 +18,10 @@ namespace Nebula.Serialization
         [Export]
         public long InterestMask;
         [Export]
+        public NetLerpMode LerpMode = NetLerpMode.None;
+        [Export]
+        public float LerpParam = 15f;
+        [Export]
         public int ClassIndex = -1;
     }
 }

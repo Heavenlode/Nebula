@@ -152,9 +152,13 @@ namespace Nebula.Serialization
         /// </summary>
         /// <param name="scene">The scene path.</param>
         /// <returns>An array of node paths.</returns>
-        public Array<string> ListStaticNodes(string scene)
+        public Array<string> ListStaticNodes(string scene, bool includeSelf = false)
         {
             var result = new Array<string>();
+            if (includeSelf)
+            {
+                result.Add(".");
+            }
             var nodes = resource.STATIC_NETWORK_NODE_PATHS_PACK[scene].Keys;
             var isFirst = true;
             foreach (var node in nodes)
@@ -383,9 +387,15 @@ namespace Nebula.Serialization
                     var methodName = STATIC_METHODS[serializationType];
 
 
-                    // Get the method
-                    MethodInfo method = type.GetMethod(methodName,
-                        BindingFlags.Public | BindingFlags.Static);
+                    // Get the method (walk inheritance chain for static methods)
+                    MethodInfo method = null;
+                    Type searchType = type;
+                    while (searchType != null && method == null)
+                    {
+                        method = searchType.GetMethod(methodName,
+                            BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+                        searchType = searchType.BaseType;
+                    }
 
                     if (method == null)
                         throw new ArgumentException($"Static method {methodName} not found in {staticMethod.ReflectionPath}");
@@ -395,7 +405,13 @@ namespace Nebula.Serialization
 
                     if (serializationType == StaticMethodType.NetworkDeserialize)
                     {
-                        helperMethod = type.GetMethod("GetDeserializeContext", BindingFlags.Public | BindingFlags.Static);
+                        searchType = type;
+                        while (searchType != null && helperMethod == null)
+                        {
+                            helperMethod = searchType.GetMethod("GetDeserializeContext",
+                                BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+                            searchType = searchType.BaseType;
+                        }
                         if (helperMethod == null)
                         {
                             throw new ArgumentException($"Helper method {methodName} not found in {staticMethod.ReflectionPath}");

@@ -5,6 +5,10 @@ namespace Nebula.Serialization.Serializers
     /// </summary>
     public interface IStateSerializer
     {
+        /// <summary>
+        /// Called when the serializer is first created (i.e. the parent scene is instantiated--before adding to scene tree) to perform any necessary setup.
+        /// </summary>
+        public void Setup();
         public void Begin();
         /// <summary>
         /// Client-side only. Receive and deserialize binary received from the server.

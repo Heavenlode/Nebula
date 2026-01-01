@@ -3,6 +3,7 @@ using Godot.Collections;
 using Nebula.Internal.Utility;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Nebula.Serialization
 {
@@ -50,11 +51,12 @@ namespace Nebula.Serialization
             // And we don't want to perform reflection every single time we want to serialize or deserialize
             var serializableTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes()
-                    .Where(type => {
+                    .Where(type =>
+                    {
                         if (type.IsInterface) return false;
-                        
+
                         var interfaces = type.GetInterfaces();
-                        return interfaces.Any(i => 
+                        return interfaces.Any(i =>
                             (i.IsGenericType && i.GetGenericTypeDefinition().Name == "IBsonSerializable`1") ||
                             (i.IsGenericType && i.GetGenericTypeDefinition().Name == "INetSerializable`1"));
                     }));
@@ -64,32 +66,58 @@ namespace Nebula.Serialization
             {
                 var staticMethod = new StaticMethodResource();
                 var interfaces = type.GetInterfaces();
-                
-                if (interfaces.Any(i => i.IsGenericType && 
-                    i.GetGenericTypeDefinition().Name == "IBsonSerializable`1" && 
-                    type.GetInterfaceMap(i).TargetMethods.Any(m => m.DeclaringType == type)))
+
+                // Check if type (or base types) implements IBsonSerializable<T>
+                if (interfaces.Any(i => i.IsGenericType &&
+                    i.GetGenericTypeDefinition().Name == "IBsonSerializable`1"))
                 {
-                    staticMethod.StaticMethodType |= StaticMethodType.BsonDeserialize;
+                    // Walk inheritance chain to find BsonDeserialize method
+                    Type searchType = type;
+                    while (searchType != null)
+                    {
+                        if (searchType.GetMethod("BsonDeserialize", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly) != null)
+                        {
+                            staticMethod.StaticMethodType |= StaticMethodType.BsonDeserialize;
+                            break;
+                        }
+                        searchType = searchType.BaseType;
+                    }
                 }
-                if (interfaces.Any(i => i.IsGenericType && 
-                    i.GetGenericTypeDefinition().Name == "INetSerializable`1" && 
-                    type.GetInterfaceMap(i).TargetMethods.Any(m => m.DeclaringType == type)))
+                // Check if type (or base types) implements INetSerializable<T>
+                if (interfaces.Any(i => i.IsGenericType &&
+                    i.GetGenericTypeDefinition().Name == "INetSerializable`1"))
                 {
-                    staticMethod.StaticMethodType |= StaticMethodType.NetworkSerialize | StaticMethodType.NetworkDeserialize;
+                    // Walk inheritance chain to find NetworkSerialize/NetworkDeserialize methods
+                    Type searchType = type;
+                    while (searchType != null)
+                    {
+                        if (searchType.GetMethod("NetworkSerialize", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly) != null &&
+                            searchType.GetMethod("NetworkDeserialize", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly) != null)
+                        {
+                            staticMethod.StaticMethodType |= StaticMethodType.NetworkSerialize | StaticMethodType.NetworkDeserialize;
+                            break;
+                        }
+                        searchType = searchType.BaseType;
+                    }
                 }
                 staticMethod.ReflectionPath = type.FullName;
                 serializableTypesMap[type.FullName] = staticMethodIndex;
                 resource.STATIC_METHODS[staticMethodIndex] = staticMethod;
+
                 staticMethodIndex++;
             }
 
             // Get all types from loaded assemblies that implement INetNode
             var netNodeTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes()
-                    .Where(type => type.GetInterfaces().Any(i => 
+                    .Where(type => type.GetInterfaces().Any(i =>
                         i.IsGenericType && i.GetGenericTypeDefinition().Name == "INetNode`1"))
                     .Select(type => new { Type = type, ScriptPath = GetScriptPath(type) })
-                    .Select(x => new { x.Type, x.ScriptPath, NetworkTypeInfo = new NetworkTypeInfo
+                    .Select(x => new
+                    {
+                        x.Type,
+                        x.ScriptPath,
+                        NetworkTypeInfo = new NetworkTypeInfo
                         {
                             ScriptPath = x.ScriptPath,
                             Properties = GetInheritanceChain(x.Type)
@@ -237,11 +265,18 @@ namespace Nebula.Serialization
             return nodeNetworkTypes.ContainsKey(scriptPath);
         }
 
-        private object GetAttributeValue(object attribute, string propertyName)
+        private object GetAttributeValue(object attribute, string memberName)
         {
-            return attribute.GetType().GetProperty(propertyName)?.GetValue(attribute);
-        }
+            var type = attribute.GetType();
 
+            // Try property first
+            var prop = type.GetProperty(memberName);
+            if (prop != null) return prop.GetValue(attribute);
+
+            // Fall back to field
+            var field = type.GetField(memberName);
+            return field?.GetValue(attribute);
+        }
         private ExtendedVariantType GetVariantType(Type type)
         {
             // Map C# types to Godot variant types
@@ -252,6 +287,7 @@ namespace Nebula.Serialization
             if (type == typeof(byte[])) return new ExtendedVariantType { Type = Variant.Type.PackedByteArray };
             if (type == typeof(long[])) return new ExtendedVariantType { Type = Variant.Type.PackedInt64Array };
             if (type == typeof(long)) return new ExtendedVariantType { Type = Variant.Type.Int };
+            if (type == typeof(ulong)) return new ExtendedVariantType { Type = Variant.Type.Int, Subtype = "ULong" };
             if (type == typeof(float)) return new ExtendedVariantType { Type = Variant.Type.Float };
             if (type == typeof(string)) return new ExtendedVariantType { Type = Variant.Type.String };
             if (type == typeof(Vector3)) return new ExtendedVariantType { Type = Variant.Type.Vector3 };
@@ -343,14 +379,16 @@ namespace Nebula.Serialization
                     }
                     foreach (var kvp in recurseData.Properties)
                     {
-                        foreach (var prop in kvp.Value) {
+                        foreach (var prop in kvp.Value)
+                        {
                             prop.Value.Index = (byte)propertyCount++;
                         }
                         result.Properties[nodePath + "/" + kvp.Key] = kvp.Value;
                     }
                     foreach (var kvp in recurseData.Functions)
                     {
-                        foreach (var func in kvp.Value) {
+                        foreach (var func in kvp.Value)
+                        {
                             func.Value.Index = (byte)functionCount++;
                         }
                         result.Functions[nodePath + "/" + kvp.Key] = kvp.Value;
@@ -373,7 +411,6 @@ namespace Nebula.Serialization
                     if (networkPropertyAttr == null) continue;
 
                     var propType = GetVariantType(propertyInfo.Property.PropertyType);
-
                     var networkProp = new ProtocolNetProperty
                     {
                         NodePath = nodePath,
@@ -384,6 +421,8 @@ namespace Nebula.Serialization
                             TypeIdentifier = string.IsNullOrEmpty(propType.Subtype) ? EmptySubtype : propType.Subtype,
                         },
                         InterestMask = GetAttributeValue(networkPropertyAttr, "InterestMask") as long? ?? 0,
+                        LerpMode = (GetAttributeValue(networkPropertyAttr, "LerpMode") as NetLerpMode? ?? NetLerpMode.None),
+                        LerpParam = GetAttributeValue(networkPropertyAttr, "LerpParam") as float? ?? 15f,
                         Index = (byte)propertyCount++,
                         ClassIndex = serializableTypesMap.TryGetValue(propertyInfo.Property.PropertyType.FullName, out var index) ? index : -1
                     };
@@ -440,7 +479,7 @@ namespace Nebula.Serialization
         {
             for (var current = type; current != null; current = current.BaseType)
             {
-                if (current.GetInterfaces().Any(i => 
+                if (current.GetInterfaces().Any(i =>
                     i.IsGenericType && i.GetGenericTypeDefinition().Name == "INetNode`1"))
                 {
                     yield return current;
@@ -459,7 +498,7 @@ namespace Nebula.Serialization
                 var path = GetAttributeValue(scriptPathAttr, "Path")?.ToString();
                 return path?.Replace("\\", "/") ?? "";
             }
-            
+
             // Only debug print the problem cases
             if (type.Name.Contains("NetNode"))
             {

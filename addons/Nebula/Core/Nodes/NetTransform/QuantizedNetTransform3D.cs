@@ -12,8 +12,17 @@ namespace Nebula.Utility.Nodes
         [Export]
         public Node3D TargetNode { get; set; }
 
-        [NetProperty]
+        [NetProperty(LerpMode = NetLerpMode.Buffered, LerpParam = 2)]
         public NetPose3D NetPose { get; set; } = new NetPose3D();
+
+        // Lerp state
+        private Quaternion _startQuat;
+        private Vector3 _startPos;
+        private Quaternion _endQuat;
+        private Vector3 _endPos;
+        private Quaternion _lastTargetQuat;
+        private Vector3 _lastTargetPos;
+        private bool _initialized = false;
 
         /// <inheritdoc/>
         public override void _WorldReady()
@@ -23,20 +32,17 @@ namespace Nebula.Utility.Nodes
             SourceNode ??= GetParent3D();
             NetPose.Owner = Network.NetParent.Network.InputAuthority;
 
-            // TODO: Is there a better way to do this automatically with INotifyPropertyChanged?
             NetPose.Connect("OnChange", Callable.From(() =>
             {
                 Network.NetParent.Network.EmitSignal("NetPropertyChanged", Network.NetParent.Node.GetPathTo(this), "NetPose");
             }));
 
-            // NetPose.Multiplier = new Fixed64(2f);
-
             if (GetMeta("import_from_external", false).AsBool())
             {
                 SourceNode.Position = NetPose.Position;
-                SourceNode.Rotation = NetPose.Rotation;
+                SourceNode.Quaternion = NetPose.RotationQuat;
                 TargetNode.Position = NetPose.Position;
-                TargetNode.Rotation = NetPose.Rotation;
+                TargetNode.Quaternion = NetPose.RotationQuat;
             }
         }
 
@@ -79,34 +85,43 @@ namespace Nebula.Utility.Nodes
             NetPose.NetworkProcess(Network.CurrentWorld);
         }
 
-        public double NetworkLerpNetPose(Variant from, Variant to, double weight)
+        // // Custom smooth handler for NetPose3D (complex object)
+        // public void NetworkSmoothNetPose(Variant target, float t)
+        // {
+        //     var targetPose = target.As<NetPose3D>();
+
+        //     var currentPos = TargetNode.Position;
+        //     var currentQuat = TargetNode.Quaternion;
+
+        //     var targetPos = targetPose.Position;
+        //     var targetQuat = targetPose.RotationQuat;
+
+        //     if (currentQuat.Dot(targetQuat) < 0)
+        //         targetQuat = -targetQuat;
+
+        //     TargetNode.Position = currentPos.Lerp(targetPos, t);
+        //     TargetNode.Quaternion = currentQuat.Slerp(targetQuat, t);
+        // }
+
+        public virtual void NetworkBufferedLerpNetPose(Variant before, Variant after, float t)
         {
-            // Convert Euler angles to quaternions
-            Quaternion startQuat = Quaternion.FromEuler(from.As<NetPose3D>().Rotation);
-            Quaternion endQuat = Quaternion.FromEuler(to.As<NetPose3D>().Rotation);
+            var beforePose = before.As<NetPose3D>();
+            var afterPose = after.As<NetPose3D>();
 
-            // Use spherical linear interpolation (SLERP) for rotation
-            TargetNode.Quaternion = startQuat.Slerp(endQuat, (float)weight);
+            var beforePos = beforePose.Position;
+            var afterPos = afterPose.Position;
 
-            // Position interpolation remains the same
-            Vector3 startPosition = from.As<NetPose3D>().Position;
-            Vector3 endPosition = to.As<NetPose3D>().Position;
-            TargetNode.Position = startPosition.Lerp(endPosition, (float)weight);
+            var beforeQuat = beforePose.RotationQuat;
+            var afterQuat = afterPose.RotationQuat;
 
-            return weight;
+            // Shortest path for quaternion
+            if (beforeQuat.Dot(afterQuat) < 0)
+                afterQuat = -afterQuat;
+
+            // Simple linear interpolation between two known states
+            // This produces constant velocity - no jitter
+            TargetNode.Position = beforePos.Lerp(afterPos, t);
+            TargetNode.Quaternion = beforeQuat.Slerp(afterQuat, t);
         }
-        // public double NetworkLerpNetRotation(Variant from, Variant to, double weight)
-        // {
-        // 	Vector3 start = from.AsVector3();
-        // 	Vector3 end = to.AsVector3();
-        // 	NetRotation = new Vector3((float)Mathf.LerpAngle(start.X, end.X, weight), (float)Mathf.LerpAngle(start.Y, end.Y, weight), (float)Mathf.LerpAngle(start.Z, end.Z, weight));
-        // 	return weight;
-        // }
-
-        // public void Teleport(Vector3 incoming_position)
-        // {
-        // 	TargetNode.Position = incoming_position;
-        // 	IsTeleporting = true;
-        // }
     }
 }

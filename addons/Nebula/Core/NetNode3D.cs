@@ -29,6 +29,14 @@ namespace Nebula
         // Cannot have more than 8 serializers
         public IStateSerializer[] Serializers { get; private set; } = [];
 
+        public override void _Notification(int what)
+        {
+            if (what == NotificationSceneInstantiated)
+            {
+                Network.Setup();
+            }
+        }
+
         public virtual long InitializeInterest(NetPeer peer)
         {
             // By default, the peer has full interest in the node.
@@ -39,8 +47,10 @@ namespace Nebula
         {
             var spawnSerializer = new SpawnSerializer();
             AddChild(spawnSerializer);
+            spawnSerializer.Setup();
             var propertySerializer = new NetPropertiesSerializer();
             AddChild(propertySerializer);
+            propertySerializer.Setup();
             Serializers = [spawnSerializer, propertySerializer];
         }
 
@@ -102,10 +112,6 @@ namespace Nebula
 
         public virtual BsonValue BsonSerialize(Variant context)
         {
-            if (!Network.IsNetScene())
-            {
-                GD.PrintErr("NetNode3D.BsonSerialize: Not a net scene");
-            }
             return NetNodeCommon.ToBSONDocument(this, context);
         }
 

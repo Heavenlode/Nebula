@@ -19,9 +19,8 @@ namespace Nebula.Serialization.Serializers
 
         private NetNodeWrapper wrapper;
 
-        public override void _EnterTree()
+        public void Setup()
         {
-            base._EnterTree();
             Name = "SpawnSerializer";
             wrapper = new NetNodeWrapper(GetParent());
         }

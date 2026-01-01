@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Heavenlode;
 using Nebula.Utility.Tools;
 
 namespace Nebula.Serialization.Serializers
@@ -16,30 +17,43 @@ namespace Nebula.Serialization.Serializers
         private NetNodeWrapper wrapper;
 
         private Dictionary<int, Variant> cachedPropertyChanges = new Dictionary<int, Variant>();
-        public struct LerpableChangeQueue
-        {
-            public ProtocolNetProperty Prop;
-            public Variant From;
-            public Variant To;
-            public double Weight;
-        }
 
-        private Dictionary<string, LerpableChangeQueue> lerpableChangeQueue = new Dictionary<string, LerpableChangeQueue>();
+        #region Interpolation State
+
+        /// <summary>
+        /// For Smooth mode: tracks current target per property
+        /// </summary>
+        private struct SmoothState
+        {
+            public Variant Target;
+        }
+        private Dictionary<string, SmoothState> smoothStates = new();
+
+        /// <summary>
+        /// For Buffered mode: stores timestamped state history
+        /// </summary>
+        private struct BufferedState
+        {
+            public Tick Tick;
+            public Variant Value;
+        }
+        private Dictionary<string, List<BufferedState>> bufferedStates = new();
+        private const int MaxBufferSize = 30;
+
+        #endregion
 
         private Dictionary<int, bool> propertyUpdated = new Dictionary<int, bool>();
         private Dictionary<int, bool> processingPropertiesUpdated = new Dictionary<int, bool>();
 
-        /// <summary>
-        /// This is used to keep track of properties which have changed before a client ever had interest in the node.
-        /// </summary>
+        private double TickInterval => 1.0 / NetRunner.TPS;
+
         private Dictionary<NetPeer, byte[]> peerInitialPropSync = new Dictionary<NetPeer, byte[]>();
-        public override void _EnterTree()
+
+        public void Setup()
         {
             wrapper = new NetNodeWrapper(GetParent());
             Name = "NetPropertiesSerializer";
 
-            // First, determine if the Node class has the NetScene attribute
-            // This is because only a network scene will serialize network node properties recursively
             if (!wrapper.IsNetScene())
             {
                 return;
@@ -71,61 +85,72 @@ namespace Nebula.Serialization.Serializers
             }
             else
             {
-                // As a client, apply all the cached changes
                 foreach (var propIndex in cachedPropertyChanges.Keys)
                 {
                     var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
                     ImportProperty(prop, wrapper.CurrentWorld.CurrentTick, cachedPropertyChanges[propIndex]);
                 }
             }
-
         }
 
         public void ImportProperty(ProtocolNetProperty prop, Tick tick, Variant value)
         {
             var propNode = wrapper.Node.GetNode(prop.NodePath);
-            Variant oldVal = propNode.Get(prop.Name);
-            if (oldVal.Equals(value))
-            {
-                return;
-            }
-            var friendlyPropName = prop.Name;
-            if (friendlyPropName.StartsWith("network_"))
-            {
-                friendlyPropName = friendlyPropName["network_".Length..];
-            }
-            if (propNode.HasMethod("OnNetworkChange" + prop.Name))
-            {
-                propNode.Call("OnNetworkChange" + prop.Name, tick, oldVal, value);
-            }
-            else if (propNode.HasMethod("_on_network_change_" + friendlyPropName))
-            {
-                propNode.Call("_on_network_change_" + friendlyPropName, tick, oldVal, value);
-            }
-
             var propId = $"{prop.NodePath}:{prop.Name}";
+
+            // Fire change callbacks
+            Variant oldVal = propNode.Get(prop.Name);
+            if (!oldVal.Equals(value))
+            {
+                var friendlyPropName = prop.Name;
+                if (friendlyPropName.StartsWith("network_"))
+                {
+                    friendlyPropName = friendlyPropName["network_".Length..];
+                }
+                if (propNode.HasMethod("OnNetworkChange" + prop.Name))
+                {
+                    propNode.Call("OnNetworkChange" + prop.Name, tick, oldVal, value);
+                }
+                else if (propNode.HasMethod("_on_network_change_" + friendlyPropName))
+                {
+                    propNode.Call("_on_network_change_" + friendlyPropName, tick, oldVal, value);
+                }
+            }
 
 #if DEBUG
             var netProps = GetMeta("NETWORK_PROPS", new Godot.Collections.Dictionary()).AsGodotDictionary();
             netProps[propId] = value;
             SetMeta("NETWORK_PROPS", netProps);
 #endif
-            if (lerpableChangeQueue.TryGetValue(propId, out var lerpableChange))
+
+            switch (prop.LerpMode)
             {
-                lerpableChange.To = value;
-            }
-            else
-            {
-                lerpableChangeQueue[propId] = new LerpableChangeQueue
-                {
-                    Prop = prop,
-                    From = oldVal,
-                    To = value,
-                    Weight = 0.0f
-                };
+                case NetLerpMode.None:
+                    // Snap immediately
+                    propNode.Set(prop.Name, value);
+                    break;
+
+                case NetLerpMode.Smooth:
+                    // Just update target - _Process will chase it
+                    smoothStates[propId] = new SmoothState { Target = value };
+                    break;
+
+                case NetLerpMode.Buffered:
+                    // Add to buffer with timestamp
+                    if (!bufferedStates.ContainsKey(propId))
+                    {
+                        bufferedStates[propId] = new List<BufferedState>();
+                    }
+                    bufferedStates[propId].Add(new BufferedState { Tick = tick, Value = value });
+
+                    // Prune old states
+                    while (bufferedStates[propId].Count > MaxBufferSize)
+                    {
+                        bufferedStates[propId].RemoveAt(0);
+                    }
+                    break;
             }
         }
-
 
         private Data Deserialize(HLBuffer buffer)
         {
@@ -138,7 +163,6 @@ namespace Nebula.Serialization.Serializers
             {
                 data.propertiesUpdated[i] = HLBytes.UnpackByte(buffer);
             }
-            // GD.Print($"FOR {wrapper.Node.GetPath()}: Receiving prop updates: {BitConverter.ToString(data.propertiesUpdated)}");
             for (byte propertyByteIndex = 0; propertyByteIndex < data.propertiesUpdated.Length; propertyByteIndex++)
             {
                 var propertyByte = data.propertiesUpdated[propertyByteIndex];
@@ -150,11 +174,10 @@ namespace Nebula.Serialization.Serializers
                     }
                     var propertyIndex = propertyByteIndex * BitConstants.BitsInByte + propertyBit;
                     var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propertyIndex);
-                    // GD.Print($"FOR {wrapper.Node.GetPath()}: Receiving prop update: {prop.Name}");
                     if (prop.VariantType == Variant.Type.Object)
                     {
                         var node = wrapper.Node.GetNode(prop.NodePath);
-                        var propNode = node.Get(prop.Name).As<RefCounted>();
+                        var propNode = node.Get(prop.Name).As<GodotObject>();
                         var callable = ProtocolRegistry.Instance.GetStaticMethodCallable(prop, StaticMethodType.NetworkDeserialize);
                         if (callable == null)
                         {
@@ -165,6 +188,10 @@ namespace Nebula.Serialization.Serializers
                     }
                     else
                     {
+                        if (prop.VariantType == Variant.Type.Nil)
+                        {
+                            Debugger.Instance.Log($"Property {prop.NodePath}.{prop.Name} has VariantType.Nil, cannot deserialize", Debugger.DebugLevel.ERROR);
+                        }
                         var varVal = HLBytes.UnpackVariant(buffer, knownType: prop.VariantType);
                         data.properties[propertyIndex] = varVal.Value;
                     }
@@ -176,7 +203,6 @@ namespace Nebula.Serialization.Serializers
         public void Begin()
         {
             processingPropertiesUpdated.Clear();
-            // Copy propertyUpdated to processingPropertiesUpdated
             foreach (var propIndex in propertyUpdated.Keys)
             {
                 processingPropertiesUpdated[propIndex] = propertyUpdated[propIndex];
@@ -223,7 +249,6 @@ namespace Nebula.Serialization.Serializers
         private HashSet<int> nonDefaultProperties = new HashSet<int>();
 
         private Dictionary<NetPeer, Dictionary<Tick, byte[]>> peerBufferCache = new Dictionary<NetPeer, Dictionary<Tick, byte[]>>();
-        // This should instead be a map of variable values that we can resend until acknowledgement
 
         private byte[] FilterPropsAgainstInterest(NetPeer peer, byte[] props)
         {
@@ -261,12 +286,9 @@ namespace Nebula.Serialization.Serializers
             }
             if (!currentWorld.HasSpawnedForClient(wrapper.NetId, peerId))
             {
-                // GD.Print("Client ", peerId, " has not spawned ", wrapper.Node.Name);
-                // The target client is not aware of this node yet. Don't send updates.
                 return buffer;
             }
 
-            // Prepare our default values
             if (!peerBufferCache.ContainsKey(peerId))
             {
                 peerBufferCache[peerId] = new Dictionary<Tick, byte[]>();
@@ -277,7 +299,6 @@ namespace Nebula.Serialization.Serializers
                 propertiesUpdated[i] = 0;
             }
 
-            // Determine which properties have changed since the last update
             foreach (var propIndex in processingPropertiesUpdated.Keys)
             {
                 propertiesUpdated[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
@@ -294,10 +315,8 @@ namespace Nebula.Serialization.Serializers
                 }
             }
 
-            // Store them in the cache to resend in the future until the client acknowledges having received the update
             peerBufferCache[peerId][currentWorld.CurrentTick] = propertiesUpdated;
 
-            // Now collect every pending property update
             var hasPendingUpdates = false;
             foreach (var tick in peerBufferCache[peerId].Keys.OrderBy(x => x))
             {
@@ -321,8 +340,6 @@ namespace Nebula.Serialization.Serializers
                 return buffer;
             }
 
-            // GD.Print($"FOR {wrapper.Node.GetPath()}: Sending prop updates: {BitConverter.ToString(propertiesUpdated)}");
-
             for (var i = 0; i < propertiesUpdated.Length; i++)
             {
                 var propSegment = propertiesUpdated[i];
@@ -331,7 +348,6 @@ namespace Nebula.Serialization.Serializers
             for (var i = 0; i < propertiesUpdated.Length; i++)
             {
                 var propSegment = propertiesUpdated[i];
-                // Finally, pack the variable values as byte segments
                 for (var j = 0; j < BitConstants.BitsInByte; j++)
                 {
                     if ((propSegment & (byte)(1 << j)) == 0)
@@ -356,7 +372,8 @@ namespace Nebula.Serialization.Serializers
                     }
                     else
                     {
-                        try {
+                        try
+                        {
                             HLBytes.PackVariant(buffer, varVal, packLength: true);
                         }
                         catch (Exception ex)
@@ -364,7 +381,6 @@ namespace Nebula.Serialization.Serializers
                             Debugger.Instance.Log($"Error packing variant {prop.NodePath}.{prop.Name}: {ex.Message}", Debugger.DebugLevel.ERROR);
                         }
                     }
-                    // GD.Print($"New packed value for ${prop.NodePath}.${prop.Name}: {BitConverter.ToString(buffer.bytes)}");
                 }
             }
 
@@ -385,14 +401,6 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        private static Vector3 Lerp(Vector3 First, Vector3 Second, float Amount)
-        {
-            float retX = Mathf.Lerp(First.X, Second.X, Amount);
-            float retY = Mathf.Lerp(First.Y, Second.Y, Amount);
-            float retZ = Mathf.Lerp(First.Z, Second.Z, Amount);
-            return new Vector3(retX, retY, retZ);
-        }
-
         public override void _Process(double delta)
         {
             if (NetRunner.Instance.IsServer)
@@ -400,50 +408,194 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
-            foreach (var queueKey in lerpableChangeQueue.Keys.ToList())
-            {
-                var toLerp = lerpableChangeQueue[queueKey];
-                var lerpNode = wrapper.Node.GetNode(toLerp.Prop.NodePath);
-                if (toLerp.Weight < 1.0)
-                {
-                    // TODO: If this is too fast, it creates a jitter effect
-                    // But if it's too slow it creates a lag / swimming effect
-                    toLerp.Weight = Math.Min(toLerp.Weight + delta * 10, 1.0);
-                    double result = -1;
-                    if (lerpNode.HasMethod("NetworkLerp" + toLerp.Prop.Name))
-                    {
-                        result = (double)lerpNode.Call("NetworkLerp" + toLerp.Prop.Name, toLerp.From, toLerp.To, toLerp.Weight);
-                        if (result >= 0)
-                        {
-                            toLerp.Weight = result;
-                        }
-                    }
-                    if (result == -1)
-                    {
-                        if (toLerp.Prop.VariantType == Variant.Type.Quaternion)
-                        {
-                            var next_value = ((Quaternion)toLerp.From).Normalized().Slerp(((Quaternion)toLerp.To).Normalized(), (float)toLerp.Weight);
-                            lerpNode.Set(toLerp.Prop.Name, next_value);
-                        }
-                        else if (toLerp.Prop.VariantType == Variant.Type.Vector3)
-                        {
-                            var next_value = Lerp((Vector3)toLerp.From, (Vector3)toLerp.To, (float)toLerp.Weight);
-                            lerpNode.Set(toLerp.Prop.Name, next_value);
-                        }
-                        else
-                        {
-                            toLerp.Weight = 1.0;
-                        }
-                    }
+            ProcessSmoothProperties(delta);
+            ProcessBufferedProperties(delta);
+        }
 
-                    if ((float)toLerp.Weight >= 1.0)
+        private void ProcessSmoothProperties(double delta)
+        {
+            foreach (var propId in smoothStates.Keys.ToList())
+            {
+                var state = smoothStates[propId];
+
+                // Parse propId to get node and property
+                var parts = propId.Split(':');
+                var nodePath = parts[0];
+                var propName = parts[1];
+
+                var propNode = wrapper.Node.GetNode(nodePath);
+                if (propNode == null) continue;
+
+                // Look up the property to get LerpParam
+                if (!ProtocolRegistry.Instance.LookupProperty(wrapper.Node.SceneFilePath, nodePath, propName, out var prop))
+                    continue;
+
+                float smoothSpeed = prop.LerpParam > 0 ? prop.LerpParam : 15f;
+                float t = 1f - Mathf.Exp(-smoothSpeed * (float)delta);
+
+                // Check for custom lerp method
+                if (propNode.HasMethod("NetworkSmooth" + propName))
+                {
+                    propNode.Call("NetworkSmooth" + propName, state.Target, t);
+                }
+                else
+                {
+                    // Default smoothing by type
+                    var current = propNode.Get(propName);
+                    var target = state.Target;
+
+                    if (prop.VariantType == Variant.Type.Vector3)
                     {
-                        lerpNode.Set(toLerp.Prop.Name, toLerp.To);
-                        lerpableChangeQueue.Remove(queueKey);
-                        continue;
+                        var result = ((Vector3)current).Lerp((Vector3)target, t);
+                        propNode.Set(propName, result);
+                    }
+                    else if (prop.VariantType == Variant.Type.Quaternion)
+                    {
+                        var currentQuat = ((Quaternion)current).Normalized();
+                        var targetQuat = ((Quaternion)target).Normalized();
+                        if (currentQuat.Dot(targetQuat) < 0)
+                            targetQuat = -targetQuat;
+                        var result = currentQuat.Slerp(targetQuat, t);
+                        propNode.Set(propName, result);
+                    }
+                    else if (prop.VariantType == Variant.Type.Float)
+                    {
+                        var result = Mathf.Lerp((float)current, (float)target, t);
+                        propNode.Set(propName, result);
+                    }
+                    else if (prop.VariantType == Variant.Type.Object)
+                    {
+                        // For complex objects, require custom handler
+                        Debugger.Instance.Log($"Smooth mode requires NetworkSmooth{propName} method for object type {propId}", Debugger.DebugLevel.WARN);
                     }
                 }
-                lerpableChangeQueue[queueKey] = toLerp;
+            }
+        }
+        private double _renderTick = -1;
+
+        private void ProcessBufferedProperties(double delta)
+        {
+            int currentTick = wrapper.CurrentWorld?.CurrentTick ?? 0;
+
+            // Get delay from first buffered property (or use default)
+            int delayTicks = 2;
+            foreach (var propId in bufferedStates.Keys)
+            {
+                var parts = propId.Split(':');
+                if (ProtocolRegistry.Instance.LookupProperty(wrapper.Node.SceneFilePath, parts[0], parts[1], out var prop))
+                {
+                    delayTicks = prop.LerpParam > 0 ? (int)prop.LerpParam : 2;
+                    break;
+                }
+            }
+
+            // Where we SHOULD be based on server time
+            double targetRenderTick = currentTick - delayTicks;
+
+            // Initialize on first frame
+            if (_renderTick < 0)
+            {
+                _renderTick = targetRenderTick;
+            }
+
+            // Nominal advance per frame at server tick rate
+            double nominalAdvance = delta * NetRunner.TPS;
+
+            // How far off are we? Positive = behind, Negative = ahead
+            double error = targetRenderTick - _renderTick;
+
+            // Adaptive correction: converge toward target over ~5 frames
+            // If behind, this adds to advance (speed up)
+            // If ahead, this subtracts from advance (slow down)
+            double correction = error * 0.2;
+
+            double advance = nominalAdvance + correction;
+
+            // CRITICAL: Never go backward. Never jump more than 2x speed.
+            advance = Math.Clamp(advance, 0.0, nominalAdvance * 2.0);
+
+            _renderTick += advance;
+
+            // Now process each buffered property using the smooth _renderTick
+            foreach (var propId in bufferedStates.Keys.ToList())
+            {
+                var buffer = bufferedStates[propId];
+                if (buffer.Count < 2) continue;
+
+                var parts = propId.Split(':');
+                var nodePath = parts[0];
+                var propName = parts[1];
+                var propNode = wrapper.Node.GetNode(nodePath);
+                if (propNode == null) continue;
+
+                if (!ProtocolRegistry.Instance.LookupProperty(wrapper.Node.SceneFilePath, nodePath, propName, out var prop))
+                    continue;
+
+                // Find two states to interpolate between
+                BufferedState? before = null;
+                BufferedState? after = null;
+
+                for (int i = 0; i < buffer.Count - 1; i++)
+                {
+                    if (buffer[i].Tick <= _renderTick && buffer[i + 1].Tick >= _renderTick)
+                    {
+                        before = buffer[i];
+                        after = buffer[i + 1];
+                        break;
+                    }
+                }
+
+                // Prune old states
+                while (buffer.Count > 3 && buffer[0].Tick < _renderTick - 2)
+                {
+                    buffer.RemoveAt(0);
+                }
+
+                if (before == null || after == null)
+                {
+                    if (buffer.Count > 0)
+                    {
+                        propNode.Set(propName, buffer[^1].Value);
+                    }
+                    continue;
+                }
+
+                double span = after.Value.Tick - before.Value.Tick;
+                float t = span > 0 ? (float)((_renderTick - before.Value.Tick) / span) : 0f;
+                t = Mathf.Clamp(t, 0f, 1f);
+
+                // Check for custom lerp method
+                if (propNode.HasMethod("NetworkBufferedLerp" + propName))
+                {
+                    propNode.Call("NetworkBufferedLerp" + propName, before.Value.Value, after.Value.Value, t);
+                }
+                else
+                {
+                    // Default interpolation by type
+                    if (prop.VariantType == Variant.Type.Vector3)
+                    {
+                        var result = ((Vector3)before.Value.Value).Lerp((Vector3)after.Value.Value, t);
+                        propNode.Set(propName, result);
+                    }
+                    else if (prop.VariantType == Variant.Type.Quaternion)
+                    {
+                        var fromQuat = ((Quaternion)before.Value.Value).Normalized();
+                        var toQuat = ((Quaternion)after.Value.Value).Normalized();
+                        if (fromQuat.Dot(toQuat) < 0)
+                            toQuat = -toQuat;
+                        var result = fromQuat.Slerp(toQuat, t);
+                        propNode.Set(propName, result);
+                    }
+                    else if (prop.VariantType == Variant.Type.Float)
+                    {
+                        var result = Mathf.Lerp((float)before.Value.Value, (float)after.Value.Value, t);
+                        propNode.Set(propName, result);
+                    }
+                    else if (prop.VariantType == Variant.Type.Object)
+                    {
+                        Debugger.Instance.Log($"Buffered mode requires NetworkBufferedLerp{propName} method for object type {propId}", Debugger.DebugLevel.WARN);
+                    }
+                }
             }
         }
     }

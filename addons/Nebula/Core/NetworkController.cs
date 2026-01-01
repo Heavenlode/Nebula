@@ -146,6 +146,41 @@ namespace Nebula
 			AttachedNetNode = new NetNodeWrapper(owner);
 		}
 
+		/// <summary>
+		/// Sets up the NetworkController, including setting up serializers and property change notifications.
+		/// Called when the parent scene has finished being instantiated (before adding to scene tree).
+		/// </summary>
+		internal void Setup()
+		{
+			foreach (var nodePath in ProtocolRegistry.Instance.ListStaticNodes(AttachedNetNode.Node.SceneFilePath, includeSelf: true))
+			{
+				var networkChild = AttachedNetNode.Node.GetNodeOrNull<INetNodeBase>(nodePath);
+				if (networkChild == null)
+				{
+					continue;
+				}
+				if (networkChild.Network.IsNetScene())
+				{
+					networkChild.SetupSerializers();
+				}
+				if (networkChild.Node is INotifyPropertyChanged propertyChangeNode)
+				{
+					propertyChangeNode.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
+					{
+						if (!ProtocolRegistry.Instance.LookupProperty(AttachedNetNode.Node.SceneFilePath, nodePath, e.PropertyName, out _))
+						{
+							return;
+						}
+						EmitSignal("NetPropertyChanged", nodePath, e.PropertyName);
+					};
+				}
+				else
+				{
+					Debugger.Instance.Log($"NetworkChild {nodePath} is not INotifyPropertyChanged. Ensure your custom NetNode implements INotifyPropertyChanged.", Debugger.DebugLevel.ERROR);
+				}
+			}
+		}
+
 		[Signal]
 		public delegate void NetPropertyChangedEventHandler(string nodePath, StringName propertyName);
 		public NetId NetId { get; internal set; }
@@ -207,10 +242,12 @@ namespace Nebula
 				}
 			}
 		}
+
 		public void _OnPeerConnected(UUID peerId)
 		{
 			InterestLayers[peerId] = AttachedNetNode.NetNode.InitializeInterest(NetRunner.Instance.Peers[peerId]);
 		}
+
 		internal void _NetworkPrepare(WorldRunner world)
 		{
 			if (Engine.IsEditorHint())
@@ -275,34 +312,8 @@ namespace Nebula
 							}
 						}
 					}
-
-					// Ensure all property changes are linked up to the signal
-					var networkChild = AttachedNetNode.Node.GetNodeOrNull<INetNodeBase>(nodePath);
-					if (networkChild == null)
-					{
-						continue;
-					}
-					if (networkChild.Node is INotifyPropertyChanged propertyChangeNode)
-					{
-						propertyChangeNode.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
-						{
-							if (!ProtocolRegistry.Instance.LookupProperty(AttachedNetNode.Node.SceneFilePath, nodePath, e.PropertyName, out _))
-							{
-								return;
-							}
-							EmitSignal("NetPropertyChanged", nodePath, e.PropertyName);
-						};
-					}
-					else
-					{
-						Debugger.Instance.Log($"NetworkChild {nodePath} is not INotifyPropertyChanged. Ensure your custom NetNode implements INotifyPropertyChanged.", Debugger.DebugLevel.ERROR);
-					}
 				}
 
-				if (IsNetScene())
-				{
-					AttachedNetNode.NetNode.SetupSerializers();
-				}
 				foreach (var initialSetProp in InitialSetNetProperties)
 				{
 					EmitSignal("NetPropertyChanged", initialSetProp.Item1, initialSetProp.Item2);

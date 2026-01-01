@@ -196,6 +196,11 @@ namespace Nebula.Serialization
             buffer.Pointer += 8;
         }
 
+        public static void Pack(HLBuffer buffer, ulong varVal, bool packType = false)
+        {
+            Pack(buffer, (long)varVal, packType);
+        }
+
         public static void Pack(HLBuffer buffer, bool varVal, bool packType = false)
         {
             if (packType)
@@ -476,6 +481,11 @@ namespace Nebula.Serialization
             buffer.Pointer += 8;
             var result = BitConverter.ToInt64(bytes, 0);
             return result;
+        }
+
+        public static ulong UnpackUInt64(HLBuffer buffer)
+        {
+            return (ulong)UnpackInt64(buffer);
         }
 
         public static bool UnpackBool(HLBuffer buffer)

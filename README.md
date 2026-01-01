@@ -15,7 +15,6 @@ Godot C# Netcode from another galaxy 🌌
   - [Examples](#examples)
   - [Documentation](#documentation)
   - [What is this?](#what-is-this)
-  - [Why?](#why)
   - [How to contribute](#how-to-contribute)
 
 ## Sample
@@ -26,12 +25,12 @@ using Nebula;
 
 namespace MyGame
 {
-	public partial class PlayableCharacter : NetworkNode3D
+	public partial class PlayableCharacter : NetNode3D
 	{
-		[NetworkProperty]
+		[NetProperty]
 		public int Money { get; set; }
 
-		public OnNetworkChangeMoney(int _tick, int oldVal, int newVal)
+		public OnNetworkChangeMoney(Tick tick, int oldVal, int newVal)
 		{
 			// This is only called on the client-side
 			GD.Print("I have " + newVal + " money now! Thanks, server.");
@@ -40,7 +39,7 @@ namespace MyGame
 		public override void _NetworkProcess(int _tick)
 		{
 			base._NetworkProcess(_tick);
-			if (NetworkRunner.Instance.IsServer)
+			if (NetRunner.Instance.IsServer)
 			{
 				// This is only called on the server-side
 				Money += 1;
@@ -73,9 +72,9 @@ namespace MyGame
 1. Add Nebula to your "addons"
 2. Import Nebula in your `.csproj`. For example:
 ```xml
-<Project Sdk="Godot.NET.Sdk/4.3.0-beta.1">
+<Project Sdk="Godot.NET.Sdk/4.5.1">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <Import Project="addons\Nebula\Nebula.props" />
@@ -87,8 +86,7 @@ namespace MyGame
 Better documentation and demo projects are coming soon. In the meantime, feel free to [open a ticket](https://github.com/Heavenlode/Nebula/issues/new) with any questions or concerns.
 
 ## Examples
-* [Bouncing Balls](https://github.com/Heavenlode/Nebula-Demo-BouncingBalls/tree/main)
-* [Movable Players](https://github.com/Heavenlode/Nebula-Demo-MovablePlayers)
+Coming soon!
 
 ## Documentation
 

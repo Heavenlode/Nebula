@@ -38,17 +38,24 @@ namespace Nebula
 
 		[Signal]
 		public delegate void InterestChangedEventHandler(UUID peerId, long interestLayers);
-		public void SetPeerInterest(UUID peerId, long interestLayers, bool recurse = true)
+		public void SetPeerInterest(UUID peerId, long newInterest, bool recurse = true)
 		{
-			InterestLayers[peerId] = interestLayers;
-			EmitSignal("InterestChanged", peerId, interestLayers);
+			var oldInterest = InterestLayers.TryGetValue(peerId, out var value) ? value : 0;
+			InterestLayers[peerId] = newInterest;
 			if (recurse)
 			{
 				foreach (var child in GetNetworkChildren(NetworkChildrenSearchToggle.INCLUDE_SCENES))
 				{
-					child.SetPeerInterest(peerId, interestLayers, recurse);
+					child.SetPeerInterest(peerId, newInterest, recurse);
 				}
 			}
+			EmitSignal("InterestChanged", peerId, oldInterest, newInterest);
+		}
+
+		public void AddPeerInterest(UUID peerId, long interestLayers, bool recurse = true)
+		{
+			var currentInterest = InterestLayers.GetValueOrDefault(peerId, 0);
+			SetPeerInterest(peerId, currentInterest | interestLayers, recurse);
 		}
 
 		public bool IsPeerInterested(UUID peerId)
@@ -245,7 +252,7 @@ namespace Nebula
 
 		public void _OnPeerConnected(UUID peerId)
 		{
-			InterestLayers[peerId] = AttachedNetNode.NetNode.InitializeInterest(NetRunner.Instance.Peers[peerId]);
+			SetPeerInterest(peerId, AttachedNetNode.NetNode.InitializeInterest(NetRunner.Instance.Peers[peerId]));
 		}
 
 		internal void _NetworkPrepare(WorldRunner world)
@@ -262,7 +269,7 @@ namespace Nebula
 				{
 					foreach (var peer in NetRunner.Instance.Peers.Keys)
 					{
-						InterestLayers[peer] = AttachedNetNode.NetNode.InitializeInterest(NetRunner.Instance.Peers[peer]);
+						SetPeerInterest(peer, AttachedNetNode.NetNode.InitializeInterest(NetRunner.Instance.Peers[peer]));
 					}
 					CurrentWorld.OnPlayerJoined += _OnPeerConnected;
 				}

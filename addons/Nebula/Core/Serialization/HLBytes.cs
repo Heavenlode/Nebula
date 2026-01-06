@@ -289,7 +289,7 @@ namespace Nebula.Serialization
             }
         }
 
-
+        // TODO: Optimize this to handle packing/unpacking diffs rather than full replacement
         public static void Pack(HLBuffer buffer, byte[] varVal, bool packLength = false, bool packType = false)
         {
             if (packType)

@@ -73,12 +73,33 @@ namespace Nebula.Serialization.Serializers
                     }
                 }));
 
-                wrapper.Network.Connect("InterestChanged", Callable.From((UUID peerId, long interest) =>
+                wrapper.Network.Connect("InterestChanged", Callable.From((UUID peerId, long oldInterest, long newInterest) =>
                 {
+                    // Debugger.Instance.Log($"Interest changed for peer {peerId} on node {wrapper.Node.Name}: {newInterest}");
+
                     var peer = NetRunner.Instance.GetPeer(peerId);
-                    if (peer != null && !peerInitialPropSync.ContainsKey(peer))
+                    if (peer == null || !peerInitialPropSync.ContainsKey(peer))
+                        return;
+
+                    foreach (var propIndex in nonDefaultProperties)
                     {
-                        peerInitialPropSync.Remove(peer);
+                        var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
+
+                        bool wasVisible = (prop.InterestMask & oldInterest) != 0;
+                        bool isNowVisible = (prop.InterestMask & newInterest) != 0;
+
+                        if (!wasVisible && isNowVisible)
+                        {
+                            ClearBit(peerInitialPropSync[peer], propIndex);
+
+                            if (peerBufferCache.TryGetValue(peer, out var tickCache))
+                            {
+                                foreach (var mask in tickCache.Values)
+                                {
+                                    ClearBit(mask, propIndex);
+                                }
+                            }
+                        }
                     }
                 }));
             }
@@ -106,7 +127,11 @@ namespace Nebula.Serialization.Serializers
                 {
                     friendlyPropName = friendlyPropName["network_".Length..];
                 }
-                if (propNode.HasMethod("OnNetworkChange" + prop.Name))
+                if (propNode.HasSignal("OnNetworkChange" + prop.Name))
+                {
+                    propNode.EmitSignal("OnNetworkChange" + prop.Name, tick, oldVal, value);
+                }
+                else if (propNode.HasMethod("OnNetworkChange" + prop.Name))
                 {
                     propNode.Call("OnNetworkChange" + prop.Name, tick, oldVal, value);
                 }
@@ -206,6 +231,12 @@ namespace Nebula.Serialization.Serializers
             {
                 processingPropertiesUpdated[propIndex] = propertyUpdated[propIndex];
             }
+            _dirtyMask = new byte[GetByteCountOfProperties()];
+            Array.Clear(_dirtyMask, 0, _dirtyMask.Length);
+            foreach (var propIndex in processingPropertiesUpdated.Keys)
+            {
+                _dirtyMask[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
+            }
             propertyUpdated.Clear();
         }
 
@@ -217,6 +248,7 @@ namespace Nebula.Serialization.Serializers
             foreach (var propIndex in data.properties.Keys)
             {
                 var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
+                // Debugger.Instance.Log($"Importing property {prop.NodePath}.{prop.Name} (Index {propIndex})", Debugger.DebugLevel.INFO);
                 if (wrapper.Node.IsNodeReady())
                 {
                     ImportProperty(prop, currentWorld.CurrentTick, data.properties[propIndex]);
@@ -249,58 +281,103 @@ namespace Nebula.Serialization.Serializers
 
         private Dictionary<NetPeer, Dictionary<Tick, byte[]>> peerBufferCache = new Dictionary<NetPeer, Dictionary<Tick, byte[]>>();
 
-        private byte[] FilterPropsAgainstInterest(NetPeer peer, byte[] props)
+        private byte[] FilterPropsAgainstInterest(NetPeer peer, byte[] dirtyPropsMask)
         {
-            var result = (byte[])props.Clone();
             var peerId = NetRunner.Instance.GetPeerId(peer);
-            if (!wrapper.InterestLayers.ContainsKey(peerId) || wrapper.InterestLayers[peerId] == 0)
+            wrapper.InterestLayers.TryGetValue(peerId, out var debugVal);
+            if (!TryGetInterestLayers(peerId, out var peerInterestLayers))
             {
                 return new byte[GetByteCountOfProperties()];
             }
-            for (var i = 0; i < props.Length; i++)
+
+            var filteredMask = (byte[])dirtyPropsMask.Clone();
+
+            foreach (var propIndex in EnumerateSetBits(dirtyPropsMask))
             {
-                for (var j = 0; j < BitConstants.BitsInByte; j++)
+                if (!PeerHasInterestInProperty(propIndex, peerInterestLayers))
                 {
-                    if ((props[i] & (byte)(1 << j)) == 0)
+                    ClearBit(filteredMask, propIndex);
+                }
+            }
+
+            return filteredMask;
+        }
+
+        private bool TryGetInterestLayers(UUID peerId, out long layers)
+        {
+            layers = 0;
+            if (!wrapper.InterestLayers.TryGetValue(peerId, out layers))
+                return false;
+            return layers != 0;
+        }
+
+        private bool PeerHasInterestInProperty(int propIndex, long peerInterestLayers)
+        {
+            var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
+            return (prop.InterestMask & peerInterestLayers) != 0;
+        }
+
+        private static IEnumerable<int> EnumerateSetBits(byte[] mask)
+        {
+            for (var byteIndex = 0; byteIndex < mask.Length; byteIndex++)
+            {
+                var b = mask[byteIndex];
+                for (var bitIndex = 0; bitIndex < 8; bitIndex++)
+                {
+                    if ((b & (1 << bitIndex)) != 0)
                     {
-                        continue;
-                    }
-                    var propIndex = i * BitConstants.BitsInByte + j;
-                    var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
-                    if ((prop.InterestMask & wrapper.InterestLayers[peerId]) == 0)
-                    {
-                        result[i] &= (byte)~(1 << j);
+                        yield return byteIndex * 8 + bitIndex;
                     }
                 }
             }
-            return result;
         }
+
+        private static void ClearBit(byte[] mask, int bitIndex)
+        {
+            var byteIndex = bitIndex / 8;
+            var bitOffset = bitIndex % 8;
+            mask[byteIndex] &= (byte)~(1 << bitOffset);
+        }
+
+        private HLBuffer _buffer = new HLBuffer();
+        private byte[] _dirtyMask;
+        private byte[] _propertiesUpdated;
+        private byte[] _filteredProps;
+        private List<Tick> _sortedTicks = new();
 
         public HLBuffer Export(WorldRunner currentWorld, NetPeer peerId)
         {
-            var buffer = new HLBuffer();
+            _buffer.Clear();
+
+            int byteCount = GetByteCountOfProperties();
+
+            // Lazy init or reuse
+            if (_propertiesUpdated == null || _propertiesUpdated.Length != byteCount)
+            {
+                _propertiesUpdated = new byte[byteCount];
+                _filteredProps = new byte[byteCount];
+            }
+
+            Array.Clear(_propertiesUpdated, 0, byteCount);
+
             if (!peerInitialPropSync.ContainsKey(peerId))
             {
-                peerInitialPropSync[peerId] = new byte[GetByteCountOfProperties()];
+                peerInitialPropSync[peerId] = new byte[byteCount];
             }
+
             if (!currentWorld.HasSpawnedForClient(wrapper.NetId, peerId))
             {
-                return buffer;
+                return _buffer;
             }
 
             if (!peerBufferCache.ContainsKey(peerId))
             {
                 peerBufferCache[peerId] = new Dictionary<Tick, byte[]>();
             }
-            byte[] propertiesUpdated = new byte[GetByteCountOfProperties()];
-            for (var i = 0; i < propertiesUpdated.Length; i++)
-            {
-                propertiesUpdated[i] = 0;
-            }
 
             foreach (var propIndex in processingPropertiesUpdated.Keys)
             {
-                propertiesUpdated[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
+                _dirtyMask[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
             }
 
             foreach (var propIndex in nonDefaultProperties)
@@ -309,44 +386,60 @@ namespace Nebula.Serialization.Serializers
                 var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
                 if ((peerInitialPropSync[peerId][byteIndex] & propSlot) == 0)
                 {
-                    propertiesUpdated[byteIndex] |= propSlot;
-                    peerInitialPropSync[peerId][byteIndex] |= propSlot;
+                    _dirtyMask[byteIndex] |= propSlot;
                 }
             }
 
-            peerBufferCache[peerId][currentWorld.CurrentTick] = propertiesUpdated;
+            peerBufferCache[peerId][currentWorld.CurrentTick] = _dirtyMask; // NOTE: see below
 
-            var hasPendingUpdates = false;
-            foreach (var tick in peerBufferCache[peerId].Keys.OrderBy(x => x))
+            // Replace LINQ with manual sort
+            _sortedTicks.Clear();
+            foreach (var tick in peerBufferCache[peerId].Keys)
             {
-                var filteredProps = FilterPropsAgainstInterest(peerId, peerBufferCache[peerId][tick]);
-                propertiesUpdated = OrByteList(propertiesUpdated, filteredProps);
-                if (!hasPendingUpdates)
+                _sortedTicks.Add(tick);
+            }
+            _sortedTicks.Sort();
+
+            foreach (var tick in _sortedTicks)
+            {
+                FilterPropsAgainstInterestNoAlloc(peerId, peerBufferCache[peerId][tick], _filteredProps);
+                OrByteListInPlace(_propertiesUpdated, _filteredProps);
+            }
+
+            // Check if there's anything to send
+            bool hasPendingUpdates = false;
+            for (var i = 0; i < _propertiesUpdated.Length; i++)
+            {
+                if (_propertiesUpdated[i] != 0)
                 {
-                    for (var i = 0; i < propertiesUpdated.Length; i++)
-                    {
-                        if (propertiesUpdated[i] != 0)
-                        {
-                            hasPendingUpdates = true;
-                            break;
-                        }
-                    }
+                    hasPendingUpdates = true;
+                    break;
                 }
             }
 
             if (!hasPendingUpdates)
             {
-                return buffer;
+                return _buffer;
             }
 
-            for (var i = 0; i < propertiesUpdated.Length; i++)
+            // Mark props as synced only now that they passed filtering
+            foreach (var propIndex in EnumerateSetBits(_propertiesUpdated))
             {
-                var propSegment = propertiesUpdated[i];
-                HLBytes.Pack(buffer, propSegment);
+                var byteIndex = propIndex / BitConstants.BitsInByte;
+                var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
+                peerInitialPropSync[peerId][byteIndex] |= propSlot;
             }
-            for (var i = 0; i < propertiesUpdated.Length; i++)
+
+            // Serialize the mask
+            for (var i = 0; i < _propertiesUpdated.Length; i++)
             {
-                var propSegment = propertiesUpdated[i];
+                HLBytes.Pack(_buffer, _propertiesUpdated[i]);
+            }
+
+            // Serialize property values
+            for (var i = 0; i < _propertiesUpdated.Length; i++)
+            {
+                var propSegment = _propertiesUpdated[i];
                 for (var j = 0; j < BitConstants.BitsInByte; j++)
                 {
                     if ((propSegment & (byte)(1 << j)) == 0)
@@ -355,25 +448,25 @@ namespace Nebula.Serialization.Serializers
                     }
 
                     var propIndex = i * BitConstants.BitsInByte + j;
-
                     var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
                     var propNode = wrapper.Node.GetNode(prop.NodePath);
                     var varVal = propNode.Get(prop.Name);
+
                     if (prop.VariantType == Variant.Type.Object)
                     {
                         var callable = ProtocolRegistry.Instance.GetStaticMethodCallable(prop, StaticMethodType.NetworkSerialize);
-                        if (callable == null)
+                        if (!callable.HasValue)
                         {
                             Debugger.Instance.Log($"No NetworkSerialize method found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
                             continue;
                         }
-                        HLBytes.Pack(buffer, callable.Value.Call(currentWorld, peerId, varVal).As<HLBuffer>().bytes);
+                        HLBytes.Pack(_buffer, callable.Value.Call(currentWorld, peerId, varVal).As<HLBuffer>().bytes);
                     }
                     else
                     {
                         try
                         {
-                            HLBytes.PackVariant(buffer, varVal, packLength: true);
+                            HLBytes.PackVariant(_buffer, varVal, packLength: true);
                         }
                         catch (Exception ex)
                         {
@@ -383,7 +476,35 @@ namespace Nebula.Serialization.Serializers
                 }
             }
 
-            return buffer;
+            return _buffer;
+        }
+
+        private void FilterPropsAgainstInterestNoAlloc(NetPeer peer, byte[] dirtyPropsMask, byte[] result)
+        {
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            if (!TryGetInterestLayers(peerId, out var peerInterestLayers))
+            {
+                Array.Clear(result, 0, result.Length);
+                return;
+            }
+
+            Array.Copy(dirtyPropsMask, result, dirtyPropsMask.Length);
+
+            foreach (var propIndex in EnumerateSetBits(dirtyPropsMask))
+            {
+                if (!PeerHasInterestInProperty(propIndex, peerInterestLayers))
+                {
+                    ClearBit(result, propIndex);
+                }
+            }
+        }
+
+        private void OrByteListInPlace(byte[] dest, byte[] src)
+        {
+            for (var i = 0; i < dest.Length; i++)
+            {
+                dest[i] |= src[i];
+            }
         }
 
         public void Cleanup() { }

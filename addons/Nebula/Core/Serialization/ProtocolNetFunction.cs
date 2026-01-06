@@ -14,8 +14,6 @@ namespace Nebula.Serialization
         [Export]
         public NetFunctionArgument[] Arguments;
         [Export]
-        public bool WithPeer;
-        [Export]
         public NetFunction.NetworkSources Sources;
     }
 

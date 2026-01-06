@@ -24,7 +24,6 @@ namespace Nebula
         // TODO: Ensure this is used in WorldRunner to correctly filter out invalid calls
         public NetworkSources Source { get; set; } = NetworkSources.All;
         public bool ExecuteOnCaller { get; set; } = true;
-        public bool WithPeer { get; set; } = false;
         public override void OnEntry(MethodExecutionArgs args)
         {
             Debugger.Instance.Log($"NetFunction: {args.Method.Name} called on {args.Instance.GetType().Name}", Debugger.DebugLevel.VERBOSE);
@@ -75,15 +74,8 @@ namespace Nebula
                 {
                     throw new Exception($"Function {args.Method.Name} not found in network scene {networkScene}");
                 }
-
-                var arguments = args.Arguments;
-                if (functionInfo.WithPeer)
-                {
-                    arguments = arguments.Skip(1).ToArray();
-                }
-
                 netNode.Network.CurrentWorld
-                    .SendNetFunction(netId, functionInfo.Index, arguments.ToList().Select((x, index) =>
+                    .SendNetFunction(netId, functionInfo.Index, args.Arguments.ToList().Select((x, index) =>
                     {
                         switch (functionInfo.Arguments[index].VariantType)
                         {

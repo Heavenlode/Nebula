@@ -18,40 +18,111 @@ namespace Nebula.Serialization.Serializers
         }
 
         private NetNodeWrapper wrapper;
+        private HLBuffer _exportBuffer = new();
+        private Dictionary<NetPeer, Tick> setupTicks = new();
 
         public void Setup()
         {
             Name = "SpawnSerializer";
             wrapper = new NetNodeWrapper(GetParent());
         }
-        private Dictionary<NetPeer, Tick> setupTicks = [];
 
-        private Data Deserialize(HLBuffer data)
+        public void Begin() { }
+
+        public void Cleanup() { }
+
+        public HLBuffer Export(WorldRunner currentWorld, NetPeer peer)
         {
-            var spawnData = new Data
+            _exportBuffer.Clear();
+
+            if (wrapper.Network.IsQueuedForDespawn)
             {
-                classId = HLBytes.UnpackByte(data),
-                parentId = HLBytes.UnpackByte(data),
-            };
-            if (spawnData.parentId == 0)
-            {
-                return spawnData;
+                return _exportBuffer;
             }
-            spawnData.nodePathId = HLBytes.UnpackByte(data);
-            spawnData.position = HLBytes.UnpackVector3(data);
-            spawnData.rotation = HLBytes.UnpackVector3(data);
-            spawnData.hasInputAuthority = HLBytes.UnpackByte(data);
-            return spawnData;
+
+            if (!wrapper.Network.IsPeerInterested(peer))
+            {
+                return _exportBuffer;
+            }
+
+            if (currentWorld.HasSpawnedForClient(wrapper.NetId, peer))
+            {
+                return _exportBuffer;
+            }
+
+            if (wrapper.NetParent != null && !currentWorld.HasSpawnedForClient(wrapper.NetParent.NetId, peer))
+            {
+                return _exportBuffer;
+            }
+
+            if (wrapper.Node is INetNodeBase netNode)
+            {
+                if (!netNode.Network.spawnReady.GetValueOrDefault(peer, false))
+                {
+                    netNode.Network.PrepareSpawn(peer);
+                    return _exportBuffer;
+                }
+            }
+
+            var id = currentWorld.TryRegisterPeerNode(wrapper, peer);
+            if (id == 0)
+            {
+                return _exportBuffer;
+            }
+
+            setupTicks[peer] = currentWorld.CurrentTick;
+            HLBytes.Pack(_exportBuffer, wrapper.NetSceneId);
+
+            if (wrapper.NetParent == null)
+            {
+                HLBytes.Pack(_exportBuffer, (byte)0);
+                return _exportBuffer;
+            }
+
+            var parentId = currentWorld.GetPeerNodeId(peer, wrapper.NetParent);
+            HLBytes.Pack(_exportBuffer, parentId);
+
+            if (ProtocolRegistry.Instance.PackNode(wrapper.NetParent.Node.SceneFilePath, wrapper.NetParent.Node.GetPathTo(wrapper.Node.GetParent()), out var nodePathId))
+            {
+                HLBytes.Pack(_exportBuffer, nodePathId);
+            }
+            else
+            {
+                throw new System.Exception($"FAILED TO PACK FOR SPAWN: Node path not found for {wrapper.Node.GetPath()}");
+            }
+
+            if (wrapper.Node is Node3D node)
+            {
+                HLBytes.Pack(_exportBuffer, node.Position);
+                HLBytes.Pack(_exportBuffer, node.Rotation);
+            }
+
+            HLBytes.Pack(_exportBuffer, wrapper.InputAuthority == peer ? (byte)1 : (byte)0);
+
+            currentWorld.Debug?.Send("Spawn", $"Exported:{wrapper.Node.SceneFilePath}");
+
+            return _exportBuffer;
         }
 
-        public void Begin() {}
+        public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick)
+        {
+            if (!setupTicks.TryGetValue(peer, out var setupTick) || setupTick == 0)
+            {
+                return;
+            }
 
+            if (tick >= setupTick)
+            {
+                currentWorld.SetSpawnedForClient(wrapper.NetId, peer);
+            }
+        }
+
+        // Import is client-only and infrequent, less critical to optimize
         public void Import(WorldRunner currentWorld, HLBuffer buffer, out NetNodeWrapper nodeOut)
         {
             nodeOut = wrapper;
             var data = Deserialize(buffer);
 
-            // If the node is already registered, then we don't need to spawn it again
             var result = currentWorld.TryRegisterPeerNode(nodeOut);
             if (result == 0)
             {
@@ -60,14 +131,12 @@ namespace Nebula.Serialization.Serializers
 
             var networkId = wrapper.NetId;
 
-            // Deregister and delete the node, because it is simply a "Placeholder" that doesn't really exist
             currentWorld.DeregisterPeerNode(nodeOut);
             wrapper.Node.QueueFree();
 
             var networkParent = currentWorld.GetNodeFromNetId(data.parentId);
             if (data.parentId != 0 && networkParent == null)
             {
-                // The parent node is not registered, so we can't spawn this node
                 Debugger.Instance.Log($"Parent node not found for: {ProtocolRegistry.Instance.UnpackScene(data.classId).ResourcePath} - Parent ID: {data.parentId}", Debugger.DebugLevel.ERROR);
                 return;
             }
@@ -80,44 +149,18 @@ namespace Nebula.Serialization.Serializers
             newNode.SetupSerializers();
             nodeOut = newNode.Network.AttachedNetNode;
             NetRunner.Instance.AddChild(nodeOut.Node);
+
             if (networkParent != null)
             {
                 nodeOut.NetParentId = networkParent.NetId;
             }
             currentWorld.TryRegisterPeerNode(nodeOut);
 
-            // Iterate through all child nodes of nodeOut
-            // If the child node is a NetNodeWrapper, then we set it to dynamic spawn
-            // We don't register it as a node in the NetRunner because only the parent needs registration
-            var children = nodeOut.Node.GetChildren().ToList();
-            List<NetNodeWrapper> networkChildren = new List<NetNodeWrapper>();
-            while (children.Count > 0)
-            {
-                var child = children[0];
-                var networkChild = new NetNodeWrapper(child);
-                children.RemoveAt(0);
-                if (networkChild != null && networkChild.IsNetScene())
-                {
-                    // Nested network scenes are spawned separately
-                    networkChild.Node.GetParent().RemoveChild(networkChild.Node);
-                    networkChild.Node.QueueFree();
-                    continue;
-                }
-                children.AddRange(child.GetChildren());
-                if (networkChild == null) {
-                    continue;
-                }
-                networkChild.IsClientSpawn = true;
-                networkChild.InputAuthority = nodeOut.InputAuthority;
-                networkChildren.Add(networkChild);
-            }
-            networkChildren.Reverse();
-            NetRunner.Instance.RemoveChild(nodeOut.Node);
+            ProcessChildNodes(nodeOut);
 
             if (data.parentId == 0)
             {
                 currentWorld.ChangeScene(nodeOut);
-                // Notify debug listeners that scene change completed
                 currentWorld.Debug?.Send("Spawn", $"Imported:{nodeOut.Node.SceneFilePath}");
                 return;
             }
@@ -128,127 +171,65 @@ namespace Nebula.Serialization.Serializers
             }
 
             networkParent.Node.GetNode(ProtocolRegistry.Instance.UnpackNode(networkParent.Node.SceneFilePath, data.nodePathId)).AddChild(nodeOut.Node);
-            if (nodeOut.Node is Node3D node) {
-                // node.Position = data.position;
-                // node.Rotation = data.rotation;
-            }
 
             nodeOut._NetworkPrepare(currentWorld);
             nodeOut._WorldReady();
 
-            // Notify debug listeners that spawn import completed
             currentWorld.Debug?.Send("Spawn", $"Imported:{nodeOut.Node.SceneFilePath}");
-
-            return;
         }
 
-        public HLBuffer Export(WorldRunner currentWorld, NetPeer peer)
+        private void ProcessChildNodes(NetNodeWrapper nodeOut)
         {
-            var buffer = new HLBuffer();
+            var children = nodeOut.Node.GetChildren().ToList();
+            var networkChildren = new List<NetNodeWrapper>();
 
-            if (wrapper.Network.IsQueuedForDespawn) {
-                // The node is queued for despawn, so we don't notify clients that it has been spawned
-                return buffer;
-            }
-
-            if (!wrapper.Network.IsPeerInterested(peer))
+            while (children.Count > 0)
             {
-                // The target client is not interested in this node.
-                return buffer;
-            }
+                var child = children[0];
+                children.RemoveAt(0);
 
-            if (currentWorld.HasSpawnedForClient(wrapper.NetId, peer))
-            {
-                // The target client is already aware of this node.
-                return buffer;
-            }
-
-            if (wrapper.NetParent != null && !currentWorld.HasSpawnedForClient(wrapper.NetParent.NetId, peer))
-            {
-                // The parent node is not registered with the client yet, so we can't spawn this node
-                return buffer;
-            }
-
-            if (wrapper.Node is INetNodeBase netNode) {
-                // TODO: Maybe this should exist in the node wrapper?
-                if (!netNode.Network.spawnReady.GetValueOrDefault(peer, false))
+                var networkChild = new NetNodeWrapper(child);
+                if (networkChild != null && networkChild.IsNetScene())
                 {
-                    netNode.Network.PrepareSpawn(peer);
-                    // The node is not ready to be spawned yet
-                    return buffer;
+                    networkChild.Node.GetParent().RemoveChild(networkChild.Node);
+                    networkChild.Node.QueueFree();
+                    continue;
                 }
+
+                children.AddRange(child.GetChildren());
+
+                if (networkChild == null)
+                {
+                    continue;
+                }
+
+                networkChild.IsClientSpawn = true;
+                networkChild.InputAuthority = nodeOut.InputAuthority;
+                networkChildren.Add(networkChild);
             }
 
-            var id = currentWorld.TryRegisterPeerNode(wrapper, peer);
-            if (id == 0)
-            {
-                // Unable to spawn this node. The client is already tracking the max amount.
-                return buffer;
-            }
-
-            setupTicks[peer] = currentWorld.CurrentTick;
-            HLBytes.Pack(buffer, wrapper.NetSceneId);
-
-            // Pack the node path
-            if (wrapper.NetParent == null)
-            {
-                // If this scene has no parent, then it is the root scene
-                // In other words, this indicates a scene change
-                HLBytes.Pack(buffer, (byte)0);
-
-                // We exit early because no other property is valid on a root scene
-                return buffer;
-            }
-
-
-            // Pack the parent network ID and the node path
-            var parentId = currentWorld.GetPeerNodeId(peer, wrapper.NetParent);
-            HLBytes.Pack(buffer, parentId);
-            if (ProtocolRegistry.Instance.PackNode(wrapper.NetParent.Node.SceneFilePath, wrapper.NetParent.Node.GetPathTo(wrapper.Node.GetParent()), out var nodePathId))
-            {
-                HLBytes.Pack(buffer, nodePathId);
-            } else {
-                throw new System.Exception($"FAILED TO PACK FOR SPAWN: Node path not found for {wrapper.Node.GetPath()} - Parent Path: { wrapper.NetParent.Node.GetPath()} - Parent Scene: {wrapper.NetParent.Node.SceneFilePath} - Parent Path To Parent: {wrapper.NetParent.Node.GetPathTo(wrapper.Node.GetParent())}");
-            }
-
-            if (wrapper.Node is Node3D node)
-            {
-                // TODO: Support Node2D
-                HLBytes.Pack(buffer, node.Position);
-                HLBytes.Pack(buffer, node.Rotation);
-            }
-
-            if (wrapper.InputAuthority == peer)
-            {
-                HLBytes.Pack(buffer, (byte)1);
-            }
-            else
-            {
-                HLBytes.Pack(buffer, (byte)0);
-            }
-
-            // Notify debug listeners that spawn export completed
-            currentWorld.Debug?.Send("Spawn", $"Exported:{wrapper.Node.SceneFilePath}");
-
-            return buffer;
+            networkChildren.Reverse();
+            NetRunner.Instance.RemoveChild(nodeOut.Node);
         }
 
-        public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick)
+        private Data Deserialize(HLBuffer data)
         {
-            var peerTick = setupTicks.TryGetValue(peer, out var setupTick) ? setupTick : 0;
-            if (setupTick == 0)
+            var spawnData = new Data
             {
-                return;
+                classId = HLBytes.UnpackByte(data),
+                parentId = HLBytes.UnpackByte(data),
+            };
+
+            if (spawnData.parentId == 0)
+            {
+                return spawnData;
             }
 
-            if (tick >= peerTick)
-            {
-                currentWorld.SetSpawnedForClient(wrapper.NetId, peer);
-            }
+            spawnData.nodePathId = HLBytes.UnpackByte(data);
+            spawnData.position = HLBytes.UnpackVector3(data);
+            spawnData.rotation = HLBytes.UnpackVector3(data);
+            spawnData.hasInputAuthority = HLBytes.UnpackByte(data);
+            return spawnData;
         }
-
-        public void PhysicsProcess(double delta) { }
-
-        public void Cleanup() { }
     }
 }

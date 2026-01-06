@@ -23,6 +23,15 @@ namespace Nebula
     */
     public partial class WorldRunner : Node
     {
+        public struct NetFunctionCtx
+        {
+            public NetPeer Caller;
+        }
+        /// <summary>
+        /// Provides context about the current network function call.
+        /// </summary>
+        public NetFunctionCtx NetFunctionContext { get; private set; }
+
         public enum PeerSyncStatus
         {
             INITIAL,
@@ -456,9 +465,10 @@ namespace Nebula
         /// <summary>
         /// This method is executed every tick on the Server side, and kicks off all logic which processes and sends data to every client.
         /// </summary>
-        public async void ServerProcessTick()
+        public void ServerProcessTick()
         {
-
+            // Debugger.Instance.Log("Start tick");
+            // var sw = System.Diagnostics.Stopwatch.StartNew();
             foreach (var net_id in NetScenes.Keys)
             {
                 var netNode = NetScenes[net_id];
@@ -484,10 +494,19 @@ namespace Nebula
                     {
                         continue;
                     }
+                    // var childSw = System.Diagnostics.Stopwatch.StartNew();
                     networkChild._NetworkProcess(CurrentTick);
+                    // childSw.Stop();
+                    // // Log($"- CHILD Current elapsed: {networkChild.Node.Name} {childSw.Elapsed.Microseconds}micro {sw.ElapsedMilliseconds}ms");
                 }
+                // var netNodeSw = System.Diagnostics.Stopwatch.StartNew();
                 netNode._NetworkProcess(CurrentTick);
+                // netNodeSw.Stop();
+                // Log($"Current elapsed: {netNode.Node.Name} ({netNode.Node.SceneFilePath}) {netNodeSw.Elapsed.Microseconds}micro {sw.ElapsedMilliseconds}ms");
             }
+            // var beginTime = sw.ElapsedMilliseconds;
+            // sw.Restart();
+            // Debugger.Instance.Log($"Processing time: {beginTime}ms");
 
             if (DebugTcpListener != null && DebugTcpClients.Count > 0)
             {
@@ -505,17 +524,21 @@ namespace Nebula
                 SendToDebugClients(framedData);
             }
 
+            // var exportTime = sw.ElapsedMilliseconds;
+            // sw.Restart();
+            // Debugger.Instance.Log($"Debugger info time: {exportTime}ms");
+
             foreach (var queuedFunction in queuedNetFunctions)
             {
-                var args = queuedFunction.Args;
-                if (queuedFunction.FunctionInfo.WithPeer)
-                {
-                    args = new List<Variant>() { queuedFunction.Sender }.Concat(args).ToArray();
-                }
                 var functionNode = queuedFunction.Node.GetNode(queuedFunction.FunctionInfo.NodePath) as INetNodeBase;
+                NetFunctionContext = new NetFunctionCtx
+                {
+                    Caller = queuedFunction.Sender,
+                };
                 functionNode.Network.IsInboundCall = true;
-                functionNode.Node.Call(queuedFunction.FunctionInfo.Name, args);
+                functionNode.Node.Call(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
                 functionNode.Network.IsInboundCall = false;
+                NetFunctionContext = new NetFunctionCtx { };
 
                 if (DebugTcpListener != null && DebugTcpClients.Count > 0)
                 {
@@ -523,8 +546,8 @@ namespace Nebula
                     var debugBuffer = new HLBuffer();
                     HLBytes.Pack(debugBuffer, (byte)DebugDataType.CALLS);
                     HLBytes.Pack(debugBuffer, queuedFunction.FunctionInfo.Name);
-                    HLBytes.Pack(debugBuffer, (byte)args.Length);
-                    foreach (var arg in args)
+                    HLBytes.Pack(debugBuffer, (byte)queuedFunction.Args.Length);
+                    foreach (var arg in queuedFunction.Args)
                     {
                         HLBytes.PackVariant(debugBuffer, arg, packType: true);
                     }
@@ -538,6 +561,10 @@ namespace Nebula
                 }
             }
             queuedNetFunctions.Clear();
+
+            // var functionTime = sw.ElapsedMilliseconds;
+            // sw.Restart();
+            // Debugger.Instance.Log($"Function calls time: {functionTime}ms");
 
             if (DebugTcpListener != null && DebugTcpClients.Count > 0)
             {
@@ -578,6 +605,9 @@ namespace Nebula
                 Array.Copy(exportBuffer.bytes, 0, framedData, 4, exportBuffer.bytes.Length);
                 SendToDebugClients(framedData);
             }
+            // var exportTime2 = sw.ElapsedMilliseconds;
+            // sw.Restart();
+            // Debugger.Instance.Log($"Debugger time: {exportTime2}ms");
 
             var peers = PeerStates.Keys.ToList();
             var exportedState = ExportState(peers);
@@ -612,6 +642,9 @@ namespace Nebula
                     SendToDebugClients(framedData);
                 }
             }
+            // var sendTime = sw.ElapsedMilliseconds;
+            // sw.Restart();
+            // Debugger.Instance.Log($"Sending time: {sendTime}ms");
 
             foreach (var netNode in QueueDespawnedNodes)
             {
@@ -667,7 +700,18 @@ namespace Nebula
                     return;
                 _frameCounter = 0;
                 CurrentTick += 1;
+#if DEBUG
+                // Simple benchmark: measure ServerProcessTick execution time
+                // var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+#endif
                 ServerProcessTick();
+#if DEBUG
+                // stopwatch.Stop();
+                // if (_frameCounter == 0) // Only log once per network tick
+                // {
+                //     Log($"ServerProcessTick took {stopwatch.Elapsed.TotalMilliseconds:F2} ms", Debugger.DebugLevel.VERBOSE);
+                // }
+#endif
                 EmitSignal("OnAfterNetworkTick", CurrentTick);
             }
         }
@@ -930,8 +974,16 @@ namespace Nebula
             PeerStates.Remove(peer);
         }
 
+        // Declare these as fields, not locals - reuse across ticks
+        private Dictionary<long, HLBuffer> _peerNodesBuffers = new();
+        private Dictionary<long, byte> _peerNodesSerializersList = new();
+        private List<long> _orderedNodeKeys = new();
+        private HLBuffer _serializersBuffer = new();
+        private Dictionary<long, HLBuffer> _nodeBufferPool = new();
+
         internal Dictionary<ENetPacketPeer, HLBuffer> ExportState(List<ENetPacketPeer> peers)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             Dictionary<NetPeer, HLBuffer> peerBuffers = [];
             foreach (var node in NetScenes.Values)
             {
@@ -941,55 +993,92 @@ namespace Nebula
                     serializer.Begin();
                 }
             }
+            // var beginTime = sw.ElapsedMilliseconds;
+            // sw.Restart();
 
+            // In ExportState:
+            var gcBefore = GC.CollectionCount(0);
             foreach (ENetPacketPeer peer in peers)
             {
                 long updatedNodes = 0;
-                peerBuffers[peer] = new HLBuffer();
-                var peerNodesBuffers = new Dictionary<long, HLBuffer>();
-                var peerNodesSerializersList = new Dictionary<long, byte>();
+                peerBuffers[peer] = new HLBuffer(); // This one is fine - need separate buffer per peer for output
+
+                _peerNodesBuffers.Clear();
+                _peerNodesSerializersList.Clear();
+
                 foreach (var node in NetScenes.Values)
                 {
-                    var serializersBuffer = new HLBuffer();
+                    _serializersBuffer.Clear(); // Reuse instead of new
                     byte serializersRun = 0;
+
                     for (var serializerIdx = 0; serializerIdx < node.Serializers.Length; serializerIdx++)
                     {
                         var serializer = node.Serializers[serializerIdx];
+                        // var before = GC.GetAllocatedBytesForCurrentThread();
                         var serializerResult = serializer.Export(this, peer);
+                        // var after = GC.GetAllocatedBytesForCurrentThread();
+
+                        // if (after - before > 100)
+                        // {
+                        //     Log($"{node.Node.Name}.{serializer.GetType().Name} allocated {after - before} bytes");
+                        // }
                         if (serializerResult.bytes.Length == 0)
                         {
                             continue;
                         }
                         serializersRun |= (byte)(1 << serializerIdx);
-                        HLBytes.Pack(serializersBuffer, serializerResult.bytes);
+                        HLBytes.Pack(_serializersBuffer, serializerResult.bytes);
                     }
+
                     if (serializersRun == 0)
                     {
                         continue;
                     }
+
                     byte localNodeId = PeerStates[peer].WorldToPeerNodeMap[node.NetId];
                     updatedNodes |= (long)1 << localNodeId;
-                    peerNodesSerializersList[localNodeId] = serializersRun;
-                    peerNodesBuffers[localNodeId] = new HLBuffer();
-                    HLBytes.Pack(peerNodesBuffers[localNodeId], serializersBuffer.bytes);
+                    _peerNodesSerializersList[localNodeId] = serializersRun;
+
+                    // Pool node buffers
+                    if (!_nodeBufferPool.TryGetValue(localNodeId, out var nodeBuffer))
+                    {
+                        nodeBuffer = new HLBuffer();
+                        _nodeBufferPool[localNodeId] = nodeBuffer;
+                    }
+                    nodeBuffer.Clear();
+                    HLBytes.Pack(nodeBuffer, _serializersBuffer.bytes);
+                    _peerNodesBuffers[localNodeId] = nodeBuffer;
                 }
 
-                // 1. Pack a bit list of all nodes which have serialized data
                 HLBytes.Pack(peerBuffers[peer], updatedNodes);
 
-                // 2. Pack what serializers are run for every node 
-                var orderedNodeKeys = peerNodesBuffers.OrderBy(x => x.Key).Select(x => x.Key).ToList();
-                foreach (var nodeKey in orderedNodeKeys)
+                // Replace LINQ with manual sort
+                _orderedNodeKeys.Clear();
+                foreach (var key in _peerNodesBuffers.Keys)
                 {
-                    HLBytes.Pack(peerBuffers[peer], peerNodesSerializersList[nodeKey]);
+                    _orderedNodeKeys.Add(key);
                 }
+                _orderedNodeKeys.Sort();
 
-                // 3. Pack the serialized data for every node
-                foreach (var nodeKey in orderedNodeKeys)
+                foreach (var nodeKey in _orderedNodeKeys)
                 {
-                    HLBytes.Pack(peerBuffers[peer], peerNodesBuffers[nodeKey].bytes);
+                    HLBytes.Pack(peerBuffers[peer], _peerNodesSerializersList[nodeKey]);
+                }
+                foreach (var nodeKey in _orderedNodeKeys)
+                {
+                    HLBytes.Pack(peerBuffers[peer], _peerNodesBuffers[nodeKey].bytes);
                 }
             }
+            // var exportTime = sw.ElapsedMilliseconds;
+            // sw.Restart();
+
+            // var gcAfter = GC.CollectionCount(0);
+            // if (gcAfter > gcBefore)
+            // {
+            //     Log($"GC occurred during export! Gen0 collections: {gcAfter - gcBefore}");
+            // }
+
+            // Debugger.Instance.Log($"Export: {exportTime}ms");
 
             foreach (var node in NetScenes.Values)
             {
@@ -1105,15 +1194,15 @@ namespace Nebula
 
             foreach (var queuedFunction in queuedNetFunctions)
             {
-                var args = queuedFunction.Args;
-                if (queuedFunction.FunctionInfo.WithPeer)
-                {
-                    args = new List<Variant>() { queuedFunction.Sender }.Concat(args).ToArray();
-                }
                 var functionNode = queuedFunction.Node.GetNode(queuedFunction.FunctionInfo.NodePath) as INetNodeBase;
+                NetFunctionContext = new NetFunctionCtx
+                {
+                    Caller = queuedFunction.Sender,
+                };
                 functionNode.Network.IsInboundCall = true;
-                functionNode.Node.Call(queuedFunction.FunctionInfo.Name, args);
+                functionNode.Node.Call(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
                 functionNode.Network.IsInboundCall = false;
+                NetFunctionContext = new NetFunctionCtx { };
             }
             queuedNetFunctions.Clear();
 

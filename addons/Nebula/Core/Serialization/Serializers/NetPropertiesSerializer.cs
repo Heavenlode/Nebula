@@ -75,7 +75,7 @@ namespace Nebula.Serialization.Serializers
 
                 wrapper.Network.Connect("InterestChanged", Callable.From((UUID peerId, long oldInterest, long newInterest) =>
                 {
-                    Debugger.Instance.Log($"Interest changed for peer {peerId} on node {wrapper.Node.Name}: {newInterest}");
+                    // Debugger.Instance.Log($"Interest changed for peer {peerId} on node {wrapper.Node.Name}: {newInterest}");
 
                     var peer = NetRunner.Instance.GetPeer(peerId);
                     if (peer == null || !peerInitialPropSync.ContainsKey(peer))

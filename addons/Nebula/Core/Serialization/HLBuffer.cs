@@ -33,5 +33,11 @@ namespace Nebula.Serialization
         {
             Pointer = 0;
         }
+
+        public void Clear()
+        {
+            bytes = [];
+            Pointer = 0;
+        }
     }
 }

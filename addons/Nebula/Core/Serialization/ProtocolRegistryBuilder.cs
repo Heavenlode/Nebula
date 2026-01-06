@@ -94,6 +94,7 @@ namespace Nebula.Serialization
                         if (searchType.GetMethod("NetworkSerialize", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly) != null &&
                             searchType.GetMethod("NetworkDeserialize", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly) != null)
                         {
+                            // GD.Print($"Found NetworkSerialize/NetworkDeserialize for type {type.FullName} in {searchType.FullName}");
                             staticMethod.StaticMethodType |= StaticMethodType.NetworkSerialize | StaticMethodType.NetworkDeserialize;
                             break;
                         }
@@ -103,7 +104,7 @@ namespace Nebula.Serialization
                 staticMethod.ReflectionPath = type.FullName;
                 serializableTypesMap[type.FullName] = staticMethodIndex;
                 resource.STATIC_METHODS[staticMethodIndex] = staticMethod;
-
+                // GD.Print($"Registered static method for type {type.FullName} at index {staticMethodIndex} with methods: {staticMethod.StaticMethodType}");
                 staticMethodIndex++;
             }
 
@@ -218,6 +219,7 @@ namespace Nebula.Serialization
                         string path = pair["path"].AsString();
                         resource.STATIC_NETWORK_NODE_PATHS_MAP[sceneResourcePath][nodeId] = path;
                         resource.STATIC_NETWORK_NODE_PATHS_PACK[sceneResourcePath][path] = nodeId;
+                        // GD.Print($"Registered static network node for scene {sceneResourcePath}: ID={nodeId}, Path={path}");
                     }
                 }
 
@@ -262,7 +264,7 @@ namespace Nebula.Serialization
 
         private bool IsNetNode(string scriptPath, System.Collections.Generic.Dictionary<string, NetworkTypeInfo> nodeNetworkTypes)
         {
-            return nodeNetworkTypes.ContainsKey(scriptPath);
+            return nodeNetworkTypes.ContainsKey(scriptPath?.Replace("\\", "/") ?? "");
         }
 
         private object GetAttributeValue(object attribute, string memberName)
@@ -377,21 +379,43 @@ namespace Nebula.Serialization
                         newEntry["path"] = nodePath + "/" + entry["path"].AsString();
                         result.StaticNetNodes.Add(newEntry);
                     }
+
                     foreach (var kvp in recurseData.Properties)
                     {
+                        var clonedProps = new Dictionary<string, ProtocolNetProperty>();
                         foreach (var prop in kvp.Value)
                         {
-                            prop.Value.Index = (byte)propertyCount++;
+                            clonedProps[prop.Key] = new ProtocolNetProperty
+                            {
+                                NodePath = nodePath + "/" + prop.Value.NodePath,
+                                Name = prop.Value.Name,
+                                VariantType = prop.Value.VariantType,
+                                Metadata = prop.Value.Metadata,
+                                InterestMask = prop.Value.InterestMask,
+                                LerpMode = prop.Value.LerpMode,
+                                LerpParam = prop.Value.LerpParam,
+                                Index = (byte)propertyCount++,
+                                ClassIndex = prop.Value.ClassIndex
+                            };
                         }
-                        result.Properties[nodePath + "/" + kvp.Key] = kvp.Value;
+                        result.Properties[nodePath + "/" + kvp.Key] = clonedProps;
                     }
+
                     foreach (var kvp in recurseData.Functions)
                     {
+                        var clonedFuncs = new Dictionary<string, ProtocolNetFunction>();
                         foreach (var func in kvp.Value)
                         {
-                            func.Value.Index = (byte)functionCount++;
+                            clonedFuncs[func.Key] = new ProtocolNetFunction
+                            {
+                                NodePath = nodePath + "/" + func.Value.NodePath,
+                                Name = func.Value.Name,
+                                Arguments = func.Value.Arguments,
+                                Sources = func.Value.Sources,
+                                Index = (byte)functionCount++
+                            };
                         }
-                        result.Functions[nodePath + "/" + kvp.Key] = kvp.Value;
+                        result.Functions[nodePath + "/" + kvp.Key] = clonedFuncs;
                     }
                     continue;
                 }
@@ -456,7 +480,6 @@ namespace Nebula.Serialization
                             .Select(x =>
                                 new NetFunctionArgument { VariantType = x.Type, Metadata = new SerialMetadata { TypeIdentifier = x.Subtype } }
                             ).ToArray(),
-                        WithPeer = GetAttributeValue(networkFunctionAttr, "WithPeer") as bool? ?? false,
                         Sources = GetAttributeValue(networkFunctionAttr, "Source") as NetFunction.NetworkSources? ?? NetFunction.NetworkSources.All,
                         Index = (byte)functionCount++
                     };

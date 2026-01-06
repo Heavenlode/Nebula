@@ -30,7 +30,3 @@ public partial class ProtocolBuilder : Node
         GetTree().Quit(success ? 0 : 1);
     }
 }
-
-
-
-

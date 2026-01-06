@@ -81,7 +81,7 @@ namespace Nebula
                 }
                 else
                 {
-                    throw new Exception($"Failed to pack node: {obj.GetPath()}");
+                    throw new Exception($"Failed to pack node: {obj.Network.NetParent.Node.SceneFilePath} cannot find static child {obj.Network.NetParent.Node.GetPathTo(obj)}: {obj.GetPath()}");
                 }
             }
             var peerNodeId = currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[targetNetId];

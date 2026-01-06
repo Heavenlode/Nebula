@@ -329,11 +329,17 @@ namespace Nebula
             return Call("GetNetworkInput", input, defaultValue);
         }
 
+        private Godot.Collections.Array<NetNodeWrapper> _memoStaticNetworkChildren = null;
+
         public Godot.Collections.Array<NetNodeWrapper> StaticNetworkChildren
         {
             get
             {
-                return ProtocolRegistry.Instance.ListNetworkChildren(Node);
+                if (_memoStaticNetworkChildren == null)
+                {
+                    _memoStaticNetworkChildren = ProtocolRegistry.Instance.ListNetworkChildren(Node);
+                }
+                return _memoStaticNetworkChildren;
             }
         }
 

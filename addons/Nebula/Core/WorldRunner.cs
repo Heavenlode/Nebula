@@ -7,7 +7,6 @@ using Godot;
 using Nebula.Internal.Editor.DTO;
 using Nebula.Serialization;
 using Nebula.Utility.Tools;
-using MongoDB.Bson;
 
 namespace Nebula
 {
@@ -62,7 +61,7 @@ namespace Nebula
             /// <summary>
             /// A list of nodes that the player owns (i.e. InputAuthority == peer
             /// </summary>
-            public HashSet<INetNodeBase> OwnedNodes;
+            public HashSet<NetworkController> OwnedNodes;
         }
 
         internal struct QueuedFunction
@@ -95,11 +94,11 @@ namespace Nebula
         /// <summary>
         /// Only used by the client to determine the current root scene.
         /// </summary>
-        public NetNodeWrapper RootScene;
+        public NetworkController RootScene;
 
         internal long networkIdCounter = 0;
         private Dictionary<long, NetId> networkIds = [];
-        internal Dictionary<NetId, NetNodeWrapper> NetScenes = [];
+        internal Dictionary<NetId, NetworkController> NetScenes = [];
         private Godot.Collections.Dictionary<NetPeer, Godot.Collections.Dictionary<byte, Godot.Collections.Dictionary<int, Variant>>> inputStore = [];
         public Godot.Collections.Dictionary<NetPeer, Godot.Collections.Dictionary<byte, Godot.Collections.Dictionary<int, Variant>>> InputStore => inputStore;
 
@@ -368,21 +367,21 @@ namespace Nebula
         /// </summary>
         public int CurrentTick { get; internal set; } = 0;
 
-        public NetNodeWrapper GetNodeFromNetId(NetId networkId)
+        public NetworkController GetNodeFromNetId(NetId networkId)
         {
             if (networkId == null)
-                return new NetNodeWrapper(null);
+                return new NetworkController(null);
             if (!NetScenes.ContainsKey(networkId))
-                return new NetNodeWrapper(null);
+                return new NetworkController(null);
             return NetScenes[networkId];
         }
 
-        public NetNodeWrapper GetNodeFromNetId(long networkId)
+        public NetworkController GetNodeFromNetId(long networkId)
         {
             if (networkId == NetId.NONE)
-                return new NetNodeWrapper(null);
+                return new NetworkController(null);
             if (!networkIds.ContainsKey(networkId))
-                return new NetNodeWrapper(null);
+                return new NetworkController(null);
             return NetScenes[networkIds[networkId]];
         }
 
@@ -443,15 +442,15 @@ namespace Nebula
             }
 
             var peerState = PeerStates[peer];
-            foreach (var node in peerState.OwnedNodes)
+            foreach (var netController in peerState.OwnedNodes)
             {
-                if (node.Network.DespawnOnUnowned)
+                if (netController.DespawnOnUnowned)
                 {
-                    node.Node.QueueFree();
+                    netController.RawNode.QueueFree();
                 }
                 else
                 {
-                    node.Network.SetInputAuthority(null);
+                    netController.SetInputAuthority(null);
                 }
             }
             PeerStates.Remove(peer);
@@ -471,38 +470,38 @@ namespace Nebula
             // var sw = System.Diagnostics.Stopwatch.StartNew();
             foreach (var net_id in NetScenes.Keys)
             {
-                var netNode = NetScenes[net_id];
-                if (netNode == null)
+                var netController = NetScenes[net_id];
+                if (netController == null)
                     continue;
 
-                if (!IsInstanceValid(netNode.Node) || netNode.Node.IsQueuedForDeletion())
+                if (!IsInstanceValid(netController.RawNode) || netController.RawNode.IsQueuedForDeletion())
                 {
                     NetScenes.Remove(net_id);
                     continue;
                 }
-                if (netNode.Node.ProcessMode == ProcessModeEnum.Disabled)
+                if (netController.RawNode.ProcessMode == ProcessModeEnum.Disabled)
                 {
                     continue;
                 }
-                foreach (var networkChild in netNode.StaticNetworkChildren)
+                foreach (var networkChild in netController.StaticNetworkChildren)
                 {
-                    if (networkChild.Node == null)
+                    if (networkChild.RawNode == null)
                     {
-                        Log($"Network child node is unexpectedly null: {netNode.Node.SceneFilePath}", Debugger.DebugLevel.ERROR);
+                        Log($"Network child node is unexpectedly null: {netController.RawNode.SceneFilePath}", Debugger.DebugLevel.ERROR);
                     }
-                    if (networkChild.Node.ProcessMode == ProcessModeEnum.Disabled)
+                    if (networkChild.RawNode.ProcessMode == ProcessModeEnum.Disabled)
                     {
                         continue;
                     }
                     // var childSw = System.Diagnostics.Stopwatch.StartNew();
                     networkChild._NetworkProcess(CurrentTick);
                     // childSw.Stop();
-                    // // Log($"- CHILD Current elapsed: {networkChild.Node.Name} {childSw.Elapsed.Microseconds}micro {sw.ElapsedMilliseconds}ms");
+                    // // Log($"- CHILD Current elapsed: {networkChild.RawNode.Name} {childSw.Elapsed.Microseconds}micro {sw.ElapsedMilliseconds}ms");
                 }
                 // var netNodeSw = System.Diagnostics.Stopwatch.StartNew();
-                netNode._NetworkProcess(CurrentTick);
+                netController._NetworkProcess(CurrentTick);
                 // netNodeSw.Stop();
-                // Log($"Current elapsed: {netNode.Node.Name} ({netNode.Node.SceneFilePath}) {netNodeSw.Elapsed.Microseconds}micro {sw.ElapsedMilliseconds}ms");
+                // Log($"Current elapsed: {netController.NetNode.Name} ({netController.NetNode.SceneFilePath}) {netNodeSw.Elapsed.Microseconds}micro {sw.ElapsedMilliseconds}ms");
             }
             // var beginTime = sw.ElapsedMilliseconds;
             // sw.Restart();
@@ -536,7 +535,7 @@ namespace Nebula
                     Caller = queuedFunction.Sender,
                 };
                 functionNode.Network.IsInboundCall = true;
-                functionNode.Node.Call(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
+                functionNode.Network.RawNode.Call(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
                 functionNode.Network.IsInboundCall = false;
                 NetFunctionContext = new NetFunctionCtx { };
 
@@ -584,27 +583,27 @@ namespace Nebula
                 }
             }
             tickLogBuffer.Clear();
-            if (DebugTcpListener != null && DebugTcpClients.Count > 0)
-            {
-                var fullGameState = RootScene.Node switch
-                {
-                    IBsonSerializableBase node => node.BsonSerialize(new NetNodeCommonBsonSerializeContext
-                    {
-                        Recurse = true,
-                    }),
-                    _ => throw new Exception("RootScene.Node is not a IBsonSerializableBase")
-                };
-                var exportBuffer = new HLBuffer();
-                HLBytes.Pack(exportBuffer, (byte)DebugDataType.EXPORT);
-                HLBytes.Pack(exportBuffer, fullGameState.ToBson());
+            // if (DebugTcpListener != null && DebugTcpClients.Count > 0)
+            // {
+            //     var fullGameState = RootScene.Node switch
+            //     {
+            //         IBsonSerializableBase node => node.BsonSerialize(new NetNodeCommonBsonSerializeContext
+            //         {
+            //             Recurse = true,
+            //         }),
+            //         _ => throw new Exception("RootScene.Node is not a IBsonSerializableBase")
+            //     };
+            //     var exportBuffer = new HLBuffer();
+            //     HLBytes.Pack(exportBuffer, (byte)DebugDataType.EXPORT);
+            //     HLBytes.Pack(exportBuffer, fullGameState.ToBson());
 
-                // Wrap with length prefix for TCP framing
-                var lengthPrefix = BitConverter.GetBytes(exportBuffer.bytes.Length);
-                var framedData = new byte[4 + exportBuffer.bytes.Length];
-                Array.Copy(lengthPrefix, 0, framedData, 0, 4);
-                Array.Copy(exportBuffer.bytes, 0, framedData, 4, exportBuffer.bytes.Length);
-                SendToDebugClients(framedData);
-            }
+            //     // Wrap with length prefix for TCP framing
+            //     var lengthPrefix = BitConverter.GetBytes(exportBuffer.bytes.Length);
+            //     var framedData = new byte[4 + exportBuffer.bytes.Length];
+            //     Array.Copy(lengthPrefix, 0, framedData, 0, 4);
+            //     Array.Copy(exportBuffer.bytes, 0, framedData, 4, exportBuffer.bytes.Length);
+            //     SendToDebugClients(framedData);
+            // }
             // var exportTime2 = sw.ElapsedMilliseconds;
             // sw.Restart();
             // Debugger.Instance.Log($"Debugger time: {exportTime2}ms");
@@ -646,24 +645,24 @@ namespace Nebula
             // sw.Restart();
             // Debugger.Instance.Log($"Sending time: {sendTime}ms");
 
-            foreach (var netNode in QueueDespawnedNodes)
+            foreach (var netController in QueueDespawnedNodes)
             {
                 foreach (var peer in PeerStates.Keys)
                 {
-                    if (HasSpawnedForClient(netNode.Network.NetId, peer))
+                    if (HasSpawnedForClient(netController.NetId, peer))
                     {
-                        SendDespawn(peer, netNode.Network.NetId);
-                        DeregisterPeerNode(netNode, peer);
+                        SendDespawn(peer, netController.NetId);
+                        DeregisterPeerNode(netController, peer);
                     }
                 }
-                netNode.Network.NetParentId = null;
-                netNode.Node.QueueFree();
+                netController.NetParentId = null;
+                netController.RawNode.QueueFree();
             }
             QueueDespawnedNodes.Clear();
         }
 
-        internal HashSet<INetNodeBase> QueueDespawnedNodes = [];
-        internal void QueueDespawn(INetNodeBase node)
+        internal HashSet<NetworkController> QueueDespawnedNodes = [];
+        internal void QueueDespawn(NetworkController node)
         {
             QueueDespawnedNodes.Add(node);
         }
@@ -704,7 +703,10 @@ namespace Nebula
                 // Simple benchmark: measure ServerProcessTick execution time
                 // var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 #endif
+                var sw = System.Diagnostics.Stopwatch.StartNew();
                 ServerProcessTick();
+                sw.Stop();
+                Log($"ServerProcessTick took {sw.Elapsed.TotalMilliseconds:F2} ms", Debugger.DebugLevel.VERBOSE);
 #if DEBUG
                 // stopwatch.Stop();
                 // if (_frameCounter == 0) // Only log once per network tick
@@ -734,21 +736,21 @@ namespace Nebula
             PeerStates[peer].SpawnAware[networkId] = true;
         }
 
-        public void ChangeScene(NetNodeWrapper node)
+        public void ChangeScene(NetworkController netController)
         {
             if (NetRunner.Instance.IsServer) return;
 
             if (RootScene != null)
             {
-                RootScene.Node.QueueFree();
+                RootScene.RawNode.QueueFree();
             }
-            Log("Changing scene to " + node.Node.Name);
+            Log("Changing scene to " + netController.RawNode.Name);
             // TODO: Support this more generally
-            GetTree().CurrentScene.AddChild(node.Node);
-            RootScene = node;
-            node._NetworkPrepare(this);
-            node._WorldReady();
-            Debug?.Send("WorldJoined", node.Node.SceneFilePath);
+            GetTree().CurrentScene.AddChild(netController.RawNode);
+            RootScene = netController;
+            netController._NetworkPrepare(this);
+            netController._WorldReady();
+            Debug?.Send("WorldJoined", netController.RawNode.SceneFilePath);
         }
 
         public PeerState? GetPeerWorldState(UUID peerId)
@@ -790,12 +792,7 @@ namespace Nebula
             PeerStates[peer] = state;
         }
 
-        public byte GetPeerNodeId(NetPeer peer, INetNodeBase node)
-        {
-            return GetPeerNodeId(peer, node.Network.AttachedNetNode);
-        }
-
-        public byte GetPeerNodeId(NetPeer peer, NetNodeWrapper node)
+        public byte GetPeerNodeId(NetPeer peer, NetworkController node)
         {
             if (node == null) return 0;
             if (!PeerStates.ContainsKey(peer))
@@ -815,7 +812,7 @@ namespace Nebula
         /// <param name="peer"></param>
         /// <param name="networkId"></param>
         /// <returns></returns>
-        public NetNodeWrapper GetPeerNode(NetPeer peer, byte networkId)
+        public NetworkController GetPeerNode(NetPeer peer, byte networkId)
         {
             if (!PeerStates.ContainsKey(peer))
             {
@@ -828,19 +825,7 @@ namespace Nebula
             return NetScenes[PeerStates[peer].PeerToWorldNodeMap[networkId]];
         }
 
-        internal void DeregisterPeerNode(INetNodeBase node, NetPeer peer = null)
-        {
-            if (NetRunner.Instance.IsServer)
-            {
-                DeregisterPeerNode(node.Network.AttachedNetNode, peer);
-            }
-            else
-            {
-                NetScenes.Remove(node.Network.NetId);
-            }
-        }
-
-        internal void DeregisterPeerNode(NetNodeWrapper node, NetPeer peer = null)
+        internal void DeregisterPeerNode(NetworkController node, NetPeer peer = null)
         {
             if (NetRunner.Instance.IsServer)
             {
@@ -869,7 +854,7 @@ namespace Nebula
         // Up to 64 nodes can be networked per peer at a time.
         // TODO: Consider supporting more
         // TODO: Handle de-registration of nodes (e.g. despawn, and object interest)
-        internal byte TryRegisterPeerNode(NetNodeWrapper node, NetPeer peer = null)
+        internal byte TryRegisterPeerNode(NetworkController node, NetPeer peer = null)
         {
             if (NetRunner.Instance.IsServer)
             {
@@ -911,22 +896,22 @@ namespace Nebula
 
         public T Spawn<T>(
             T node,
-            NetNodeWrapper parent = null,
+            NetworkController parent = null,
             NetPeer inputAuthority = null,
-            string netNodePath = "."
+            NodePath netNodePath = default
         ) where T : Node, INetNodeBase
         {
             if (NetRunner.Instance.IsClient) return null;
 
             if (!node.Network.IsNetScene())
             {
-                Debugger.Instance.Log($"Only Net Scenes can be spawned (i.e. a scene where the root node is an NetNode). Attempting to spawn node that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{netNodePath}", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log($"Only Net Scenes can be spawned (i.e. a scene where the root node is an NetNode). Attempting to spawn node that isn't a Net Scene: {node.Network.RawNode.Name} on {parent.RawNode.Name}/{netNodePath}", Debugger.DebugLevel.ERROR);
                 return null;
             }
 
-            if (parent != null && !parent.Network.IsNetScene())
+            if (parent != null && !parent.IsNetScene())
             {
-                Debugger.Instance.Log($"You can only spawn a Net Scene as a child of another Net Scene. Attempting to spawn node on a parent that isn't a Net Scene: {node.Node.Name} on {parent.Node.Name}/{netNodePath}", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log($"You can only spawn a Net Scene as a child of another Net Scene. Attempting to spawn node on a parent that isn't a Net Scene: {node.Network.RawNode.Name} on {parent.RawNode.Name}/{netNodePath}", Debugger.DebugLevel.ERROR);
                 return null;
             }
 
@@ -939,12 +924,12 @@ namespace Nebula
             if (parent == null)
             {
                 node.Network.NetParent = RootScene;
-                node.Network.NetParent.Node.GetNode(netNodePath).AddChild(node);
+                node.Network.NetParent.RawNode.GetNode(netNodePath).AddChild(node);
             }
             else
             {
                 node.Network.NetParent = parent;
-                parent.Node.GetNode(netNodePath).AddChild(node);
+                parent.RawNode.GetNode(netNodePath).AddChild(node);
             }
             node.Network._NetworkPrepare(this);
             node.Network._WorldReady();
@@ -985,10 +970,10 @@ namespace Nebula
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
             Dictionary<NetPeer, HLBuffer> peerBuffers = [];
-            foreach (var node in NetScenes.Values)
+            foreach (var netController in NetScenes.Values)
             {
                 // Initialize serializers
-                foreach (var serializer in node.Serializers)
+                foreach (var serializer in netController.NetNode.Serializers)
                 {
                     serializer.Begin();
                 }
@@ -997,7 +982,7 @@ namespace Nebula
             // sw.Restart();
 
             // In ExportState:
-            var gcBefore = GC.CollectionCount(0);
+            // var gcBefore = GC.CollectionCount(0);
             foreach (ENetPacketPeer peer in peers)
             {
                 long updatedNodes = 0;
@@ -1006,14 +991,14 @@ namespace Nebula
                 _peerNodesBuffers.Clear();
                 _peerNodesSerializersList.Clear();
 
-                foreach (var node in NetScenes.Values)
+                foreach (var netController in NetScenes.Values)
                 {
                     _serializersBuffer.Clear(); // Reuse instead of new
                     byte serializersRun = 0;
 
-                    for (var serializerIdx = 0; serializerIdx < node.Serializers.Length; serializerIdx++)
+                    for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                     {
-                        var serializer = node.Serializers[serializerIdx];
+                        var serializer = netController.NetNode.Serializers[serializerIdx];
                         // var before = GC.GetAllocatedBytesForCurrentThread();
                         var serializerResult = serializer.Export(this, peer);
                         // var after = GC.GetAllocatedBytesForCurrentThread();
@@ -1035,7 +1020,7 @@ namespace Nebula
                         continue;
                     }
 
-                    byte localNodeId = PeerStates[peer].WorldToPeerNodeMap[node.NetId];
+                    byte localNodeId = PeerStates[peer].WorldToPeerNodeMap[netController.NetId];
                     updatedNodes |= (long)1 << localNodeId;
                     _peerNodesSerializersList[localNodeId] = serializersRun;
 
@@ -1069,21 +1054,21 @@ namespace Nebula
                     HLBytes.Pack(peerBuffers[peer], _peerNodesBuffers[nodeKey].bytes);
                 }
             }
-            // var exportTime = sw.ElapsedMilliseconds;
-            // sw.Restart();
-
             // var gcAfter = GC.CollectionCount(0);
             // if (gcAfter > gcBefore)
             // {
             //     Log($"GC occurred during export! Gen0 collections: {gcAfter - gcBefore}");
             // }
 
-            // Debugger.Instance.Log($"Export: {exportTime}ms");
+            var exportTime = sw.ElapsedMilliseconds;
+            sw.Restart();
 
-            foreach (var node in NetScenes.Values)
+            Debugger.Instance.Log($"Export: {exportTime}ms");
+
+            foreach (var netController in NetScenes.Values)
             {
                 // Finally, cleanup serializers
-                foreach (var serializer in node.Serializers)
+                foreach (var serializer in netController.NetNode.Serializers)
                 {
                     serializer.Cleanup();
                 }
@@ -1109,26 +1094,26 @@ namespace Nebula
             foreach (var nodeIdSerializerList in nodeIdToSerializerList)
             {
                 var localNodeId = nodeIdSerializerList.Key;
-                var node = GetNodeFromNetId(localNodeId);
-                if (node == null)
+                var netController = GetNodeFromNetId(localNodeId);
+                if (netController == null)
                 {
                     var blankScene = new NetNode3D();
                     blankScene.Network.NetId = AllocateNetId(localNodeId);
                     blankScene.SetupSerializers();
                     NetRunner.Instance.AddChild(blankScene);
-                    node = new NetNodeWrapper(blankScene);
+                    netController = new NetworkController(blankScene);
                 }
-                for (var serializerIdx = 0; serializerIdx < node.Serializers.Length; serializerIdx++)
+                for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                 {
                     if ((nodeIdSerializerList.Value & ((long)1 << serializerIdx)) == 0)
                     {
                         continue;
                     }
-                    var serializerInstance = node.Serializers[serializerIdx];
-                    serializerInstance.Import(this, stateBytes, out NetNodeWrapper nodeOut);
-                    if (node != nodeOut)
+                    var serializerInstance = netController.NetNode.Serializers[serializerIdx];
+                    serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
+                    if (netController != nodeOut)
                     {
-                        node = nodeOut;
+                        netController = nodeOut;
                         serializerIdx = 0;
                     }
                 }
@@ -1150,11 +1135,11 @@ namespace Nebula
                 SetPeerState(peer, newPeerState);
             }
 
-            foreach (var node in NetScenes.Values)
+            foreach (var netController in NetScenes.Values)
             {
-                for (var serializerIdx = 0; serializerIdx < node.Serializers.Length; serializerIdx++)
+                for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                 {
-                    var serializer = node.Serializers[serializerIdx];
+                    var serializer = netController.NetNode.Serializers[serializerIdx];
                     serializer.Acknowledge(this, peer, tick);
                 }
             }
@@ -1170,20 +1155,20 @@ namespace Nebula
             ImportState(new HLBuffer(stateBytes));
             foreach (var net_id in NetScenes.Keys)
             {
-                var node = NetScenes[net_id];
-                if (node == null)
+                var netController = NetScenes[net_id];
+                if (netController == null)
                     continue;
-                if (node.Node.IsQueuedForDeletion())
+                if (netController.RawNode.IsQueuedForDeletion())
                 {
                     NetScenes.Remove(net_id);
                     continue;
                 }
-                node._NetworkProcess(CurrentTick);
-                SendInput(node);
+                netController._NetworkProcess(CurrentTick);
+                SendInput(netController);
 
-                foreach (var staticChild in node.StaticNetworkChildren)
+                foreach (var staticChild in netController.StaticNetworkChildren)
                 {
-                    if (staticChild == null || staticChild.Node.IsQueuedForDeletion())
+                    if (staticChild == null || staticChild.RawNode.IsQueuedForDeletion())
                     {
                         continue;
                     }
@@ -1200,16 +1185,16 @@ namespace Nebula
                     Caller = queuedFunction.Sender,
                 };
                 functionNode.Network.IsInboundCall = true;
-                functionNode.Node.Call(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
+                functionNode.Network.RawNode.Call(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
                 functionNode.Network.IsInboundCall = false;
                 NetFunctionContext = new NetFunctionCtx { };
             }
             queuedNetFunctions.Clear();
 
-            foreach (var node in QueueDespawnedNodes)
+            foreach (var netController in QueueDespawnedNodes)
             {
-                DeregisterPeerNode(node);
-                node.Node.QueueFree();
+                DeregisterPeerNode(netController);
+                netController.RawNode.QueueFree();
             }
             QueueDespawnedNodes.Clear();
 
@@ -1226,18 +1211,18 @@ namespace Nebula
         /// </summary>
         /// <param name="wrapper"></param>
         /// <returns></returns>
-        public bool CheckStaticInitialization(NetNodeWrapper wrapper)
+        public bool CheckStaticInitialization(NetworkController network)
         {
             if (NetRunner.Instance.IsServer)
             {
-                wrapper.NetId = AllocateNetId();
-                NetScenes[wrapper.NetId] = wrapper;
+                network.NetId = AllocateNetId();
+                NetScenes[network.NetId] = network;
             }
             else
             {
-                if (!wrapper.IsClientSpawn)
+                if (!network.IsClientSpawn)
                 {
-                    wrapper.Node.QueueFree();
+                    network.RawNode.QueueFree();
                     return false;
                 }
             }
@@ -1245,7 +1230,7 @@ namespace Nebula
             return true;
         }
 
-        internal void SendInput(NetNodeWrapper netNode)
+        internal void SendInput(NetworkController netNode)
         {
             if (NetRunner.Instance.IsServer) return;
             var setInputs = netNode.InputBuffer.Keys.Aggregate((long)0, (acc, key) =>
@@ -1346,9 +1331,9 @@ namespace Nebula
         {
             var netId = HLBytes.UnpackByte(buffer);
             var functionId = HLBytes.UnpackByte(buffer);
-            var node = NetRunner.Instance.IsServer ? GetPeerNode(peer, netId) : GetNodeFromNetId(netId);
+            var netController = NetRunner.Instance.IsServer ? GetPeerNode(peer, netId) : GetNodeFromNetId(netId);
             List<Variant> args = [];
-            var functionInfo = ProtocolRegistry.Instance.UnpackFunction(node.Node.SceneFilePath, functionId);
+            var functionInfo = Protocol.UnpackFunction(netController.RawNode.SceneFilePath, functionId);
             foreach (var arg in functionInfo.Arguments)
             {
                 var result = HLBytes.UnpackVariant(buffer, knownType: arg.VariantType);
@@ -1369,7 +1354,7 @@ namespace Nebula
             }
             queuedNetFunctions.Add(new QueuedFunction
             {
-                Node = node.Node,
+                Node = netController.RawNode,
                 FunctionInfo = functionInfo,
                 Args = args.ToArray(),
                 Sender = peer
@@ -1386,7 +1371,7 @@ namespace Nebula
         internal void ReceiveDespawn(NetPeer peer, HLBuffer buffer)
         {
             var netId = NetId.NetworkDeserialize(this, peer, buffer, new Variant());
-            GetNodeFromNetId(netId).Network.handleDespawn();
+            GetNodeFromNetId(netId).handleDespawn();
         }
     }
 }

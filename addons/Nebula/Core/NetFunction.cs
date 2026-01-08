@@ -70,7 +70,7 @@ namespace Nebula
                 }
 
                 ProtocolNetFunction functionInfo;
-                if (!ProtocolRegistry.Instance.LookupFunction(networkScene, netNode.Network.NodePathFromNetScene(), args.Method.Name, out functionInfo))
+                if (!Protocol.LookupFunction(networkScene, netNode.Network.NodePathFromNetScene(), args.Method.Name, out functionInfo))
                 {
                     throw new Exception($"Function {args.Method.Name} not found in network scene {networkScene}");
                 }

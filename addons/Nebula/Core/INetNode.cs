@@ -10,11 +10,6 @@ namespace Nebula {
     /// NetNode2D cannot inherit from NetNode because it needs Node2D functionality and C# does not support multiple inheritance.
     /// </summary>
     public interface INetNodeBase {
-
-        /// <summary>
-        /// This allows us to access the Node without having to manually cast it every time we want to access it.
-        /// </summary>
-        public Godot.Node Node { get; }
         public NetworkController Network { get; }
         public IStateSerializer[] Serializers { get; }
         public void SetupSerializers();

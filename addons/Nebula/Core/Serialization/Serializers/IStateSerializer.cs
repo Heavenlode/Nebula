@@ -5,10 +5,6 @@ namespace Nebula.Serialization.Serializers
     /// </summary>
     public interface IStateSerializer
     {
-        /// <summary>
-        /// Called when the serializer is first created (i.e. the parent scene is instantiated--before adding to scene tree) to perform any necessary setup.
-        /// </summary>
-        public void Setup();
         public void Begin();
         /// <summary>
         /// Client-side only. Receive and deserialize binary received from the server.
@@ -16,7 +12,7 @@ namespace Nebula.Serialization.Serializers
         /// <param name="networkState"></param>
         /// <param name="data"></param>
         /// <param name="nodeOut"></param>
-        public void Import(WorldRunner currentWorld, HLBuffer data, out NetNodeWrapper nodeOut);
+        public void Import(WorldRunner currentWorld, HLBuffer data, out NetworkController nodeOut);
 
         /// <summary>
         /// Server-side only. Serialize and send data to the client.

@@ -30,11 +30,11 @@ namespace Nebula.Utility.Nodes
             base._WorldReady();
             TargetNode ??= GetParent3D();
             SourceNode ??= GetParent3D();
-            NetPose.Owner = Network.NetParent.Network.InputAuthority;
+            NetPose.Owner = Network.NetParent.InputAuthority;
 
             NetPose.Connect("OnChange", Callable.From(() =>
             {
-                Network.NetParent.Network.EmitSignal("NetPropertyChanged", Network.NetParent.Node.GetPathTo(this), "NetPose");
+                Network.NetParent.EmitSignal("NetPropertyChanged", Network.NetParent.RawNode.GetPathTo(this), "NetPose");
             }));
 
             if (GetMeta("import_from_external", false).AsBool())

@@ -5,7 +5,7 @@ using Nebula.Utility.Tools;
 
 namespace Nebula.Serialization.Serializers
 {
-    public partial class SpawnSerializer : Node, IStateSerializer
+    public partial class SpawnSerializer : RefCounted, IStateSerializer
     {
         private struct Data
         {
@@ -17,14 +17,13 @@ namespace Nebula.Serialization.Serializers
             public byte hasInputAuthority;
         }
 
-        private NetNodeWrapper wrapper;
+        private NetworkController netController;
         private HLBuffer _exportBuffer = new();
         private Dictionary<NetPeer, Tick> setupTicks = new();
 
-        public void Setup()
+        public SpawnSerializer(NetworkController controller)
         {
-            Name = "SpawnSerializer";
-            wrapper = new NetNodeWrapper(GetParent());
+            netController = controller;
         }
 
         public void Begin() { }
@@ -35,27 +34,27 @@ namespace Nebula.Serialization.Serializers
         {
             _exportBuffer.Clear();
 
-            if (wrapper.Network.IsQueuedForDespawn)
+            if (netController.IsQueuedForDespawn)
             {
                 return _exportBuffer;
             }
 
-            if (!wrapper.Network.IsPeerInterested(peer))
+            if (!netController.IsPeerInterested(peer))
             {
                 return _exportBuffer;
             }
 
-            if (currentWorld.HasSpawnedForClient(wrapper.NetId, peer))
+            if (currentWorld.HasSpawnedForClient(netController.NetId, peer))
             {
                 return _exportBuffer;
             }
 
-            if (wrapper.NetParent != null && !currentWorld.HasSpawnedForClient(wrapper.NetParent.NetId, peer))
+            if (netController.NetParent != null && !currentWorld.HasSpawnedForClient(netController.NetParent.NetId, peer))
             {
                 return _exportBuffer;
             }
 
-            if (wrapper.Node is INetNodeBase netNode)
+            if (netController.RawNode is INetNodeBase netNode)
             {
                 if (!netNode.Network.spawnReady.GetValueOrDefault(peer, false))
                 {
@@ -64,42 +63,42 @@ namespace Nebula.Serialization.Serializers
                 }
             }
 
-            var id = currentWorld.TryRegisterPeerNode(wrapper, peer);
+            var id = currentWorld.TryRegisterPeerNode(netController, peer);
             if (id == 0)
             {
                 return _exportBuffer;
             }
 
             setupTicks[peer] = currentWorld.CurrentTick;
-            HLBytes.Pack(_exportBuffer, wrapper.NetSceneId);
+            HLBytes.Pack(_exportBuffer, Protocol.PackScene(netController.NetSceneFilePath));
 
-            if (wrapper.NetParent == null)
+            if (netController.NetParent == null)
             {
                 HLBytes.Pack(_exportBuffer, (byte)0);
                 return _exportBuffer;
             }
 
-            var parentId = currentWorld.GetPeerNodeId(peer, wrapper.NetParent);
+            var parentId = currentWorld.GetPeerNodeId(peer, netController.NetParent);
             HLBytes.Pack(_exportBuffer, parentId);
 
-            if (ProtocolRegistry.Instance.PackNode(wrapper.NetParent.Node.SceneFilePath, wrapper.NetParent.Node.GetPathTo(wrapper.Node.GetParent()), out var nodePathId))
+            if (Protocol.PackNode(netController.NetParent.RawNode.SceneFilePath, netController.NetParent.RawNode.GetPathTo(netController.RawNode.GetParent()), out var nodePathId))
             {
                 HLBytes.Pack(_exportBuffer, nodePathId);
             }
             else
             {
-                throw new System.Exception($"FAILED TO PACK FOR SPAWN: Node path not found for {wrapper.Node.GetPath()}");
+                throw new System.Exception($"FAILED TO PACK FOR SPAWN: Node path not found for {netController.RawNode.GetPath()}");
             }
 
-            if (wrapper.Node is Node3D node)
+            if (netController.RawNode is Node3D node)
             {
                 HLBytes.Pack(_exportBuffer, node.Position);
                 HLBytes.Pack(_exportBuffer, node.Rotation);
             }
 
-            HLBytes.Pack(_exportBuffer, wrapper.InputAuthority == peer ? (byte)1 : (byte)0);
+            HLBytes.Pack(_exportBuffer, netController.InputAuthority == peer ? (byte)1 : (byte)0);
 
-            currentWorld.Debug?.Send("Spawn", $"Exported:{wrapper.Node.SceneFilePath}");
+            currentWorld.Debug?.Send("Spawn", $"Exported:{netController.RawNode.SceneFilePath}");
 
             return _exportBuffer;
         }
@@ -113,86 +112,86 @@ namespace Nebula.Serialization.Serializers
 
             if (tick >= setupTick)
             {
-                currentWorld.SetSpawnedForClient(wrapper.NetId, peer);
+                currentWorld.SetSpawnedForClient(netController.NetId, peer);
             }
         }
 
         // Import is client-only and infrequent, less critical to optimize
-        public void Import(WorldRunner currentWorld, HLBuffer buffer, out NetNodeWrapper nodeOut)
+        public void Import(WorldRunner currentWorld, HLBuffer buffer, out NetworkController controllerOut)
         {
-            nodeOut = wrapper;
+            controllerOut = netController;
             var data = Deserialize(buffer);
 
-            var result = currentWorld.TryRegisterPeerNode(nodeOut);
+            var result = currentWorld.TryRegisterPeerNode(controllerOut);
             if (result == 0)
             {
                 return;
             }
 
-            var networkId = wrapper.NetId;
+            var networkId = netController.NetId;
 
-            currentWorld.DeregisterPeerNode(nodeOut);
-            wrapper.Node.QueueFree();
+            currentWorld.DeregisterPeerNode(controllerOut);
+            netController.RawNode.QueueFree();
 
             var networkParent = currentWorld.GetNodeFromNetId(data.parentId);
             if (data.parentId != 0 && networkParent == null)
             {
-                Debugger.Instance.Log($"Parent node not found for: {ProtocolRegistry.Instance.UnpackScene(data.classId).ResourcePath} - Parent ID: {data.parentId}", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log($"Parent node not found for: {Protocol.UnpackScene(data.classId).ResourcePath} - Parent ID: {data.parentId}", Debugger.DebugLevel.ERROR);
                 return;
             }
 
-            NetRunner.Instance.RemoveChild(nodeOut.Node);
-            var newNode = ProtocolRegistry.Instance.UnpackScene(data.classId).Instantiate<INetNodeBase>();
+            NetRunner.Instance.RemoveChild(controllerOut.RawNode);
+            var newNode = Protocol.UnpackScene(data.classId).Instantiate<INetNodeBase>();
             newNode.Network.IsClientSpawn = true;
             newNode.Network.NetId = networkId;
             newNode.Network.CurrentWorld = currentWorld;
             newNode.SetupSerializers();
-            nodeOut = newNode.Network.AttachedNetNode;
-            NetRunner.Instance.AddChild(nodeOut.Node);
+            controllerOut = newNode.Network;
+            NetRunner.Instance.AddChild(controllerOut.RawNode);
 
             if (networkParent != null)
             {
-                nodeOut.NetParentId = networkParent.NetId;
+                controllerOut.NetParentId = networkParent.NetId;
             }
-            currentWorld.TryRegisterPeerNode(nodeOut);
+            currentWorld.TryRegisterPeerNode(controllerOut);
 
-            ProcessChildNodes(nodeOut);
+            ProcessChildNodes(controllerOut);
 
             if (data.parentId == 0)
             {
-                currentWorld.ChangeScene(nodeOut);
-                currentWorld.Debug?.Send("Spawn", $"Imported:{nodeOut.Node.SceneFilePath}");
+                currentWorld.ChangeScene(controllerOut);
+                currentWorld.Debug?.Send("Spawn", $"Imported:{controllerOut.NetSceneFilePath}");
                 return;
             }
 
             if (data.hasInputAuthority == 1)
             {
-                nodeOut.InputAuthority = NetRunner.Instance.ENetHost;
+                controllerOut.SetInputAuthority(NetRunner.Instance.ENetHost);
             }
 
-            networkParent.Node.GetNode(ProtocolRegistry.Instance.UnpackNode(networkParent.Node.SceneFilePath, data.nodePathId)).AddChild(nodeOut.Node);
+            networkParent.RawNode.GetNode(Protocol.UnpackNode(networkParent.RawNode.SceneFilePath, data.nodePathId)).AddChild(controllerOut.RawNode);
 
-            nodeOut._NetworkPrepare(currentWorld);
-            nodeOut._WorldReady();
+            controllerOut._NetworkPrepare(currentWorld);
+            controllerOut._WorldReady();
 
-            currentWorld.Debug?.Send("Spawn", $"Imported:{nodeOut.Node.SceneFilePath}");
+            currentWorld.Debug?.Send("Spawn", $"Imported:{controllerOut.RawNode.SceneFilePath}");
         }
 
-        private void ProcessChildNodes(NetNodeWrapper nodeOut)
+        private void ProcessChildNodes(NetworkController nodeOut)
         {
-            var children = nodeOut.Node.GetChildren().ToList();
-            var networkChildren = new List<NetNodeWrapper>();
+            var children = nodeOut.RawNode.GetChildren().ToList();
+            var networkChildren = new List<NetworkController>();
 
             while (children.Count > 0)
             {
                 var child = children[0];
                 children.RemoveAt(0);
 
-                var networkChild = new NetNodeWrapper(child);
+                var networkChild = new NetworkController(child);
                 if (networkChild != null && networkChild.IsNetScene())
                 {
-                    networkChild.Node.GetParent().RemoveChild(networkChild.Node);
-                    networkChild.Node.QueueFree();
+                    networkChild.RawNode.GetParent().RemoveChild(networkChild.RawNode);
+                    networkChild.RawNode.QueueFree();
                     continue;
                 }
 
@@ -204,12 +203,12 @@ namespace Nebula.Serialization.Serializers
                 }
 
                 networkChild.IsClientSpawn = true;
-                networkChild.InputAuthority = nodeOut.InputAuthority;
+                networkChild.SetInputAuthority(nodeOut.InputAuthority);
                 networkChildren.Add(networkChild);
             }
 
             networkChildren.Reverse();
-            NetRunner.Instance.RemoveChild(nodeOut.Node);
+            NetRunner.Instance.RemoveChild(nodeOut.RawNode);
         }
 
         private Data Deserialize(HLBuffer data)

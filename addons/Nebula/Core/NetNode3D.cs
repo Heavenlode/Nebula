@@ -17,10 +17,9 @@ namespace Nebula
 		See <see cref="NetNode"/> for more information.
 		</summary>
 	*/
-    [SerialTypeIdentifier("NetNode"), Icon("res://addons/Nebula/Core/NetNode3D.png")]
+    [Icon("res://addons/Nebula/Core/NetNode3D.png")]
     public partial class NetNode3D : Node3D, INetNode<NetNode3D>, INotifyPropertyChanged
     {
-        public Node Node => this;
         public NetworkController Network { get; internal set; }
         public NetNode3D()
         {
@@ -45,12 +44,8 @@ namespace Nebula
 
         public void SetupSerializers()
         {
-            var spawnSerializer = new SpawnSerializer();
-            AddChild(spawnSerializer);
-            spawnSerializer.Setup();
-            var propertySerializer = new NetPropertiesSerializer();
-            AddChild(propertySerializer);
-            propertySerializer.Setup();
+            var spawnSerializer = new SpawnSerializer(Network);
+            var propertySerializer = new NetPropertiesSerializer(Network);
             Serializers = [spawnSerializer, propertySerializer];
         }
 
@@ -75,18 +70,18 @@ namespace Nebula
             }
             else
             {
-                if (ProtocolRegistry.Instance.PackNode(obj.Network.NetParent.Node.SceneFilePath, obj.Network.NetParent.Node.GetPathTo(obj), out staticChildId))
-                {
-                    targetNetId = obj.Network.NetParent.NetId;
-                }
-                else
-                {
-                    throw new Exception($"Failed to pack node: {obj.Network.NetParent.Node.SceneFilePath} cannot find static child {obj.Network.NetParent.Node.GetPathTo(obj)}: {obj.GetPath()}");
-                }
+                // if (Protocol.PackNode(obj.Network.NetSceneFilePath, obj.Network.NetParent.RawNode.GetPathTo(obj), out staticChildId))
+                // {
+                //     targetNetId = obj.Network.NetParent.NetId;
+                // }
+                // else
+                // {
+                //     throw new Exception($"Failed to pack node: {obj.Network.NetParent.NetSceneFilePath} cannot find static child {obj.Network.NetParent.RawNode.GetPathTo(obj)}: {obj.GetPath()}");
+                // }
             }
-            var peerNodeId = currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[targetNetId];
-            HLBytes.Pack(buffer, peerNodeId);
-            HLBytes.Pack(buffer, staticChildId);
+            // var peerNodeId = currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[targetNetId];
+            // HLBytes.Pack(buffer, peerNodeId);
+            // HLBytes.Pack(buffer, staticChildId);
             return buffer;
         }
 
@@ -102,10 +97,10 @@ namespace Nebula
                 return null;
             }
             var staticChildId = HLBytes.UnpackByte(buffer);
-            var node = currentWorld.GetNodeFromNetId(networkID).Node as NetNode3D;
+            var node = currentWorld.GetNodeFromNetId(networkID).RawNode as NetNode3D;
             if (staticChildId > 0)
             {
-                node = node.GetNodeOrNull(ProtocolRegistry.Instance.UnpackNode(node.SceneFilePath, staticChildId)) as NetNode3D;
+                // node = node.GetNodeOrNull(Protocol.UnpackNode(node.SceneFilePath, staticChildId)) as NetNode3D;
             }
             return node;
         }
@@ -152,12 +147,12 @@ namespace Nebula
             }
 
             // Perform base BSON deserialization (NetNodeCommon handles natural instantiation)
-            var newNode = await NetNodeCommon.FromBSON(ProtocolRegistry.Instance, context, doc, obj);
+            // var newNode = await NetNodeCommon.FromBSON(ProtocolRegistry, context, doc, obj);
 
             // Call the virtual method for custom deserialization logic
-            await newNode.OnBsonDeserialize(context, doc);
+            // await newNode.OnBsonDeserialize(context, doc);
 
-            return newNode;
+            return new NetNode3D(); // newNode;
         }
 
         public string NodePathFromNetScene()
@@ -167,7 +162,7 @@ namespace Nebula
                 return GetPathTo(this);
             }
 
-            return Network.NetParent.Node.GetPathTo(this);
+            return Network.NetParent.RawNode.GetPathTo(this);
         }
 
         // public static Task<NetNode3D> BsonDeserialize(Variant context, byte[] bson, NetNode3D initialObject)

@@ -1,10 +1,11 @@
 <Project>
   <ItemGroup>
-    <AdditionalFiles Include="**\*.tscn" />
     <PackageReference Include="LiteDB" Version="5.0.21" />
     <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
     <PackageReference Include="FixedMathSharp" Version="1.2.2" />
     <PackageReference Include="xunit" Version="2.9.0" />
+
+    <!-- Fody Weavers -->
     <PackageReference Include="Fody" Version="6.8.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,8 +18,25 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>compile; runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+
+    <!-- Source Generator -->
+    <Compile Remove="$(MSBuildThisFileDirectory)Generator\**" />
+    <None Remove="$(MSBuildThisFileDirectory)Generator\**" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)Generator\Generator.csproj"
+      OutputItemType="Analyzer"
+      ReferenceOutputAssembly="false" />
+    <AdditionalFiles Include="**/*.tscn" />
+    <AdditionalFiles Include="project.godot" />
+
+    <!-- Shared types -->
+    <Compile Include="$(MSBuildThisFileDirectory)Generator\Shared\ProtocolTypes.cs" Link="Nebula\ProtocolTypes.cs" />
   </ItemGroup>
+
   <PropertyGroup>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
   </PropertyGroup>
 </Project>

@@ -74,7 +74,7 @@ namespace Nebula.Internal.Editor
             ScenesTree.Clear();
             var ScenesRoot = ScenesTree.CreateItem();
             ScenesRoot.SetText(0, "Scenes");
-            foreach (var scene in ProtocolRegistry.EditorInstance.ListScenes())
+            foreach (var scene in Protocol.EditorInstance.ListScenes())
             {
                 var sceneName = scene.Key;
                 var nodePaths = scene.Value;

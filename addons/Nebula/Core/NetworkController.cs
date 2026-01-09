@@ -69,8 +69,6 @@ namespace Nebula
 
 	internal List<Tuple<string, string>> InitialSetNetProperties = [];
 	public WorldRunner CurrentWorld { get; internal set; }
-	internal Dictionary<byte, object> InputBuffer = [];
-	internal Dictionary<byte, object> PreviousInputBuffer = [];
 	public Dictionary<UUID, long> InterestLayers { get; set; } = [];
 		public NetworkController[] StaticNetworkChildren = [];
 		public long[] DirtyProps = new long[64];
@@ -122,79 +120,6 @@ namespace Nebula
 				}
 			}
 		}
-
-	public void SetNetworkInput(byte input, Variant value)
-	{
-		if (IsNetScene())
-		{
-			InputBuffer[input] = VariantToObject(value);
-		}
-		else
-		{
-			NetParent.SetNetworkInput(input, value);
-		}
-	}
-
-	public Variant GetNetworkInput(byte input, Variant defaultValue)
-	{
-		if (IsNetScene())
-		{
-			if (InputBuffer.TryGetValue(input, out var value))
-			{
-				return ObjectToVariant(value);
-			}
-			return defaultValue;
-		}
-		else
-		{
-			return NetParent.GetNetworkInput(input, defaultValue);
-		}
-	}
-
-	/// <summary>
-	/// Converts a Godot Variant to a C# object for internal storage.
-	/// </summary>
-	private static object VariantToObject(Variant value)
-	{
-		return value.VariantType switch
-		{
-			Variant.Type.Bool => (bool)value,
-			Variant.Type.Int => (long)value,
-			Variant.Type.Float => (float)value,
-			Variant.Type.String => (string)value,
-			Variant.Type.Vector2 => (Vector2)value,
-			Variant.Type.Vector3 => (Vector3)value,
-			Variant.Type.Quaternion => (Quaternion)value,
-			Variant.Type.PackedByteArray => (byte[])value,
-			Variant.Type.PackedInt32Array => (int[])value,
-			Variant.Type.PackedInt64Array => (long[])value,
-			_ => value.Obj
-		};
-	}
-
-	/// <summary>
-	/// Converts a C# object back to a Godot Variant at Godot boundaries.
-	/// </summary>
-	private static Variant ObjectToVariant(object value)
-	{
-		return value switch
-		{
-			bool b => b,
-			long l => l,
-			int i => i,
-			float f => f,
-			double d => (float)d,
-			string s => s,
-			Vector2 v2 => v2,
-			Vector3 v3 => v3,
-			Quaternion q => q,
-			byte[] ba => ba,
-			int[] ia => ia,
-			long[] la => la,
-			GodotObject go => Variant.From(go),
-			_ => Variant.From(value)
-		};
-	}
 
 		public bool IsWorldReady { get; internal set; } = false;
 
@@ -405,29 +330,6 @@ namespace Nebula
 			RawNode.Call("_NetworkProcess", tick);
 		}
 
-	public Dictionary<int, object> GetInput()
-	{
-		if (!IsCurrentOwner) return null;
-		if (!CurrentWorld.InputStore.ContainsKey(InputAuthority))
-			return null;
-
-		byte netId;
-		if (NetRunner.Instance.IsServer)
-		{
-			netId = CurrentWorld.GetPeerNodeId(InputAuthority, this);
-		}
-		else
-		{
-			netId = (byte)NetId.Value;
-		}
-
-		if (!CurrentWorld.InputStore[InputAuthority].ContainsKey(netId))
-			return null;
-
-		var inputs = CurrentWorld.InputStore[InputAuthority][netId];
-		CurrentWorld.InputStore[InputAuthority].Remove(netId);
-		return inputs;
-	}
 
 		/// <summary>
 		/// Used by NetFunction to determine whether the call should be send over the network, or if it is coming from the network.

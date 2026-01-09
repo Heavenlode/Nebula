@@ -1,3 +1,4 @@
+using System;
 using Nebula.Serialization;
 using Nebula.Serialization.Serializers;
 
@@ -20,5 +21,38 @@ namespace Nebula {
         /// <returns>The initial interest layers for the node.</returns>
         public long InitializeInterest(NetPeer peer);
     }
+
+    /// <summary>
+    /// Interface for nodes that support typed network input.
+    /// Provides zero-allocation input handling using unmanaged structs.
+    /// </summary>
+    public interface INetInputNode
+    {
+        /// <summary>
+        /// Returns true if the input has changed since the last network tick.
+        /// </summary>
+        bool HasInputChanged { get; }
+
+        /// <summary>
+        /// The size in bytes of the input struct.
+        /// </summary>
+        int InputSize { get; }
+
+        /// <summary>
+        /// Gets the current input as a byte span for serialization.
+        /// </summary>
+        ReadOnlySpan<byte> GetInputBytes();
+
+        /// <summary>
+        /// Sets the current input from a byte span received from the network.
+        /// </summary>
+        void SetInputBytes(ReadOnlySpan<byte> bytes);
+
+        /// <summary>
+        /// Clears the input changed flag after the input has been sent.
+        /// </summary>
+        void ClearInputChanged();
+    }
+
     public interface INetNode<T> : INetNodeBase, INetSerializable<T>, IBsonSerializable<T> where T : Godot.Node { }
 }

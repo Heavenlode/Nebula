@@ -101,8 +101,6 @@ namespace Nebula
         internal long networkIdCounter = 0;
         private Dictionary<long, NetId> networkIds = [];
         internal Dictionary<NetId, NetworkController> NetScenes = [];
-        private Dictionary<NetPeer, Dictionary<byte, Dictionary<int, object>>> inputStore = [];
-        public Dictionary<NetPeer, Dictionary<byte, Dictionary<int, object>>> InputStore => inputStore;
 
         // TCP debug server fields
         private TcpListener DebugTcpListener { get; set; }
@@ -1228,38 +1226,28 @@ namespace Nebula
         internal void SendInput(NetworkController netNode)
         {
             if (NetRunner.Instance.IsServer) return;
-            var setInputs = netNode.InputBuffer.Keys.Aggregate((long)0, (acc, key) =>
+            
+            // Check if the node supports typed input via INetInputNode
+            if (netNode.RawNode is not INetInputNode inputNode)
             {
-                if (netNode.PreviousInputBuffer.ContainsKey(key) && Equals(netNode.PreviousInputBuffer[key], netNode.InputBuffer[key]))
-                {
-                    return acc;
-                }
-                acc |= (long)1 << key;
-                return acc;
-            });
-            if (setInputs == 0)
+                return;
+            }
+
+            if (!inputNode.HasInputChanged)
             {
                 return;
             }
 
             using var inputBuffer = new NetBuffer();
             NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netNode.NetId, inputBuffer);
-            NetWriter.WriteInt64(inputBuffer, setInputs);
-            foreach (var key in netNode.InputBuffer.Keys)
-            {
-                if ((setInputs & ((long)1 << key)) == 0)
-                {
-                    continue;
-                }
-                netNode.PreviousInputBuffer[key] = netNode.InputBuffer[key];
-                NetWriter.WriteByte(inputBuffer, key);
-                // Write input with type tag for polymorphic support - InputBuffer now stores object
-                var serialType = GetSerialTypeFromObject(netNode.InputBuffer[key]);
-                NetWriter.WriteWithType(inputBuffer, serialType, netNode.InputBuffer[key]);
-            }
+            
+            // Write the input size followed by the raw bytes
+            var inputBytes = inputNode.GetInputBytes();
+            NetWriter.WriteInt32(inputBuffer, inputBytes.Length);
+            NetWriter.WriteBytes(inputBuffer, inputBytes);
 
             NetRunner.SendReliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Input, inputBuffer.ToArray());
-            netNode.InputBuffer = [];
+            inputNode.ClearInputChanged();
         }
 
         internal void ReceiveInput(NetPeer peer, NetBuffer buffer)
@@ -1280,21 +1268,19 @@ namespace Nebula
                 return;
             }
 
-            var setInputs = NetReader.ReadInt64(buffer);
-            while (setInputs > 0)
+            // Check if the node supports typed input via INetInputNode
+            if (node.RawNode is not INetInputNode inputNode)
             {
-                var key = NetReader.ReadByte(buffer);
-                var value = NetReader.ReadWithType(buffer, out var serialType);
-                if (value != null)
-                {
-                    // Convert to Variant at the Godot boundary
-                    var godotType = Protocol.ToGodotVariantType(serialType);
-                    var variant = Variant.From(value);
-                    node.SetNetworkInput(key, variant);
-                    Debug.Send("Input", $"{key}:{variant}");
-                }
-                setInputs &= ~((long)1 << key);
+                Log($"Received input for node {worldNetId} that doesn't support INetInputNode", Debugger.DebugLevel.ERROR);
+                return;
             }
+
+            // Read the input size and bytes
+            var inputSize = NetReader.ReadInt32(buffer);
+            var inputBytes = NetReader.ReadBytes(buffer, inputSize);
+            inputNode.SetInputBytes(inputBytes);
+            
+            Debug.Send("Input", $"Received {inputSize} bytes for node {worldNetId}");
         }
 
         // WARNING: These are not exactly tick-aligned for state reconcilliation. Could cause state issues because the assumed tick is when it is received?

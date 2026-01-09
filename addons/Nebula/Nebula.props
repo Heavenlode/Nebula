@@ -4,6 +4,7 @@
     <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
     <PackageReference Include="FixedMathSharp" Version="1.2.2" />
     <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="ENet-CSharp" Version="2.4.8" />
 
     <!-- Fody Weavers -->
     <PackageReference Include="Fody" Version="6.8.0">

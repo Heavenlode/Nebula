@@ -116,9 +116,9 @@ namespace Nebula.Internal.Editor
 
                     case ENetConnection.EventType.Receive:
                         var data = packetPeer.GetPacket();
-                        var packet = new HLBuffer(data);
-                        var worldId = new UUID(HLBytes.UnpackByteArray(packet, 16));
-                        var port = HLBytes.UnpackInt32(packet);
+                        var packet = new NetBuffer(data);
+                        var worldId = new UUID(NetReader.ReadBytes(packet, 16));
+                        var port = NetReader.ReadInt32(packet);
                         var debugPanel = debugPanelScene.Instantiate<WorldDebug>();
                         GetNode("Container/TabContainer").AddChild(debugPanel);
                         debugPanel.Setup(worldId, port, db);

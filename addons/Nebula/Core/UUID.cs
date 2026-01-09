@@ -67,29 +67,23 @@ namespace Nebula
             return _bytes;
         }
 
-        public static HLBuffer NetworkSerialize(WorldRunner currentWorld, NetPeer peer, UUID obj)
+        public static void NetworkSerialize(WorldRunner currentWorld, NetPeer peer, UUID obj, NetBuffer buffer)
         {
-            var buffer = new HLBuffer();
             if (obj == null) {
-                HLBytes.Pack(buffer, (byte)0);
-                return buffer;
+                NetWriter.WriteByte(buffer, 0);
+                return;
             }
-            HLBytes.Pack(buffer, (byte)1);
-            HLBytes.Pack(buffer, obj.ToByteArray());
-            return buffer;
-        }
-        public static Variant GetDeserializeContext(UUID obj)
-        {
-            return new Variant();
+            NetWriter.WriteByte(buffer, 1);
+            NetWriter.WriteBytes(buffer, obj.ToByteArray());
         }
 
-        public static UUID NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, Variant ctx)
+        public static UUID NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
-            var nullFlag = HLBytes.UnpackByte(buffer);
+            var nullFlag = NetReader.ReadByte(buffer);
             if (nullFlag == 0) {
                 return null;
             }
-            return new UUID(HLBytes.UnpackByteArray(buffer, 16));
+            return new UUID(NetReader.ReadBytes(buffer, 16));
         }
 
         public async Task OnBsonDeserialize(Variant context, BsonDocument doc)

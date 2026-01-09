@@ -52,8 +52,8 @@ namespace Nebula.Serialization
     public enum NetLerpMode
     {
         None = 0,
-        Linear = 1,
-        Exponential = 2,
+        Smooth = 1,
+        Buffered = 2,
     }
 
     [System.Flags]

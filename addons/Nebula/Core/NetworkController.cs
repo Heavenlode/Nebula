@@ -199,16 +199,16 @@ namespace Nebula
 		
 
 		public NetId NetId { get; internal set; }
-		public NetPeer InputAuthority { get; private set; } = null;
+		public NetPeer InputAuthority { get; private set; }
 		public void SetInputAuthority(NetPeer inputAuthority)
 		{
 			if (!NetRunner.Instance.IsServer) throw new Exception("InputAuthority can only be set on the server");
 			if (CurrentWorld == null) throw new Exception("Can only set input authority after node is assigned to a world");
-			if (InputAuthority == null)
+			if (InputAuthority.IsSet)
 			{
 				CurrentWorld.GetPeerWorldState(InputAuthority).Value.OwnedNodes.Remove(this);
 			}
-			else
+			if (inputAuthority.IsSet)
 			{
 				CurrentWorld.GetPeerWorldState(inputAuthority).Value.OwnedNodes.Add(this);
 			}
@@ -217,7 +217,7 @@ namespace Nebula
 
 		public bool IsCurrentOwner
 		{
-			get { return NetRunner.Instance.IsServer || (NetRunner.Instance.IsClient && InputAuthority == NetRunner.Instance.ENetHost); }
+			get { return NetRunner.Instance.IsServer || (NetRunner.Instance.IsClient && InputAuthority.Equals(NetRunner.Instance.ServerPeer)); }
 		}
 
 		public static INetNodeBase FindFromChild(Node node)
@@ -318,8 +318,8 @@ namespace Nebula
 			}
 		}
 
-		internal Godot.Collections.Dictionary<NetPeer, bool> spawnReady = new Godot.Collections.Dictionary<NetPeer, bool>();
-		internal Godot.Collections.Dictionary<NetPeer, bool> preparingSpawn = new Godot.Collections.Dictionary<NetPeer, bool>();
+		internal Dictionary<NetPeer, bool> spawnReady = [];
+		internal Dictionary<NetPeer, bool> preparingSpawn = [];
 
 		public void PrepareSpawn(NetPeer peer)
 		{

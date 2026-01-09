@@ -262,7 +262,7 @@ namespace Nebula.Utility
                     }
                     foreach (var childData in children)
                     {
-                        var childNode = await FromBSON<T>(protocolRegistry, context, childData as BsonDocument);
+                        var childNode = await FromBSON<T>(context, childData as BsonDocument);
                         var parent = node.GetNodeOrNull(nodePath);
                         if (parent == null)
                         {

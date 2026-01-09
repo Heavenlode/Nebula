@@ -45,28 +45,23 @@ namespace Nebula
         {
             return new BsonInt64(Value);
         }
-        public static HLBuffer NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetId obj)
+
+        public static void NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetId obj, NetBuffer buffer)
         {
-            var buffer = new HLBuffer();
             if (NetRunner.Instance.IsServer) {
-                HLBytes.Pack(buffer, currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[obj]);
+                NetWriter.WriteByte(buffer, currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[obj]);
             } else {
-                HLBytes.Pack(buffer, (byte)obj.Value);
+                NetWriter.WriteByte(buffer, (byte)obj.Value);
             }
-            return buffer;
         }
 
-        public static Variant GetDeserializeContext(NetId obj)
-        {
-            return new Variant();
-        }
-        public static NetId NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, Variant ctx)
+        public static NetId NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
             if (NetRunner.Instance.IsServer) {
-                var id = HLBytes.UnpackInt8(buffer);
+                var id = NetReader.ReadByte(buffer);
                 return currentWorld.GetNetIdFromPeerId(peer, id);
             } else {
-                var id = HLBytes.UnpackByte(buffer);
+                var id = NetReader.ReadByte(buffer);
                 return currentWorld.GetNetId(id);
             }
         }

@@ -1,4 +1,4 @@
-global using NetPeer = Godot.ENetPacketPeer;
+global using NetPeer = ENet.Peer;
 global using Tick = System.Int32;
 using System.Collections.Generic;
 using Godot;
@@ -6,6 +6,7 @@ using Nebula.Serialization;
 using System;
 using Nebula.Utility.Tools;
 using Nebula.Authentication;
+using ENet;
 
 namespace Nebula
 {
@@ -27,7 +28,6 @@ namespace Nebula
         /// <summary>
         /// Manually/dynamically override the port for the server to listen on, and the client to connect to.
         /// </summary>
-        /// <param name="port"></param>
         public void OverridePort(int port)
         {
             Debugger.Instance.Log($"Overriding port to {port}", Debugger.DebugLevel.VERBOSE);
@@ -44,29 +44,35 @@ namespace Nebula
         /// </summary>
         [Export] public int MaxPeers = 100;
 
+        /// <summary>
+        /// Maximum number of channels per connection.
+        /// </summary>
+        private const int MaxChannels = 16;
+
         public Dictionary<UUID, WorldRunner> Worlds { get; private set; } = [];
-        internal ENetConnection ENet;
-        internal ENetPacketPeer ENetHost;
+        internal Host ENetHost;
+        internal Peer ServerPeer;
 
         internal Dictionary<UUID, NetPeer> Peers = [];
         internal Dictionary<NetPeer, UUID> PeerIds = [];
+        internal Dictionary<uint, NetPeer> PeersByNativeId = [];
         internal Dictionary<UUID, List<NetPeer>> WorldPeerMap = [];
         internal Dictionary<NetPeer, WorldRunner> PeerWorldMap = [];
 
         public NetPeer GetPeer(UUID id)
         {
-            if (Peers.ContainsKey(id))
+            if (Peers.TryGetValue(id, out var peer))
             {
-                return Peers[id];
+                return peer;
             }
-            return null;
+            return default;
         }
 
         public UUID GetPeerId(NetPeer peer)
         {
-            if (PeerIds.ContainsKey(peer))
+            if (PeerIds.TryGetValue(peer, out var id))
             {
-                return PeerIds[peer];
+                return id;
             }
             return null;
         }
@@ -88,7 +94,6 @@ namespace Nebula
         /// </summary>
         public enum ENetChannelId
         {
-
             /// <summary>
             /// Tick data sent by the server to the client, and from the client indicating the most recent tick it has received.
             /// </summary>
@@ -114,11 +119,11 @@ namespace Nebula
         /// This is only used to prevent plugins from using reserved channels or reserving each other's channels.
         /// </summary>
         private Dictionary<int, Callable> ReservedChannels = [];
+
         /// <summary>
-        /// Reserve a channel for custom use, e.g. within plugins. If the channel is already reserved, it will throw an exception. 
+        /// Reserve a channel for custom use, e.g. within plugins. If the channel is already reserved, it will throw an exception.
+        /// The handler Callable receives (uint peerId, byte[] packetData). Use GetPeerByNativeId() to get the peer.
         /// </summary>
-        /// <param name="channel"></param>
-        /// <exception cref="Exception"></exception>
         public void ReserveChannel(int channel, Callable handler)
         {
             if (Enum.IsDefined(typeof(ENetChannelId), channel))
@@ -137,33 +142,65 @@ namespace Nebula
         /// </summary>
         public static NetRunner Instance { get; internal set; }
 
+        private static bool _libraryInitialized = false;
+
         /// <inheritdoc/>
         public override void _EnterTree()
         {
             if (Instance != null)
             {
                 QueueFree();
+                return;
             }
             Instance = this;
+
+            if (!_libraryInitialized)
+            {
+                if (!Library.Initialize())
+                {
+                    Debugger.Instance.Log("Failed to initialize ENet library", Debugger.DebugLevel.ERROR);
+                    return;
+                }
+                _libraryInitialized = true;
+            }
         }
 
         public override void _Ready()
         {
-            Protocol.Load();
+            // Protocol is fully static - no initialization needed
         }
 
-        private ENetConnection debugEnet;
+        public override void _ExitTree()
+        {
+            ENetHost?.Flush();
+            ENetHost?.Dispose();
+            debugEnet?.Flush();
+            debugEnet?.Dispose();
+
+            if (_libraryInitialized && Instance == this)
+            {
+                Library.Deinitialize();
+                _libraryInitialized = false;
+            }
+        }
+
+        private Host debugEnet;
 
         public IAuthenticator Authentication { get; private set; }
+
         public void SetAuthentication(IAuthenticator authentication)
         {
             if (Authentication != null)
             {
                 Debugger.Instance.Log("Setting authentication on NetRunner after it was already set. This is only a bug if it was unintentional.", Debugger.DebugLevel.WARN);
             }
-            Connect("OnPeerConnected", Callable.From((NetPeer peer) =>
+            Connect("OnPeerConnected", Callable.From((uint peerId) =>
             {
-                Authentication.ServerAuthenticateClient(peer);
+                var peer = GetPeerByNativeId(peerId);
+                if (peer.IsSet)
+                {
+                    Authentication.ServerAuthenticateClient(peer);
+                }
             }));
             Connect("OnConnectedToServer", Callable.From(() =>
             {
@@ -185,41 +222,63 @@ namespace Nebula
             Debugger.Instance.Log("Starting Server");
             GetTree().MultiplayerPoll = false;
 
-            ENet = new ENetConnection();
-            var err = ENet.CreateHostBound(ServerAddress, Port, MaxPeers);
-            if (err != Error.Ok)
+            ENetHost = new Host();
+            var address = new Address();
+            address.SetHost(ServerAddress);
+            address.Port = (ushort)Port;
+
+            try
             {
-                Debugger.Instance.Log($"Error starting: {err}", Debugger.DebugLevel.ERROR);
+                ENetHost.Create(address, MaxPeers, MaxChannels);
+                // Note: ENet-CSharp doesn't have built-in compression like Godot's ENET wrapper
+            }
+            catch (Exception ex)
+            {
+                Debugger.Instance.Log($"Error starting: {ex.Message}", Debugger.DebugLevel.ERROR);
                 return;
             }
-            ENet.Compress(ENetConnection.CompressionMode.RangeCoder);
+
             NetStarted = true;
             Debugger.Instance.Log($"Started on {ServerAddress}:{Port}");
 
-            debugEnet = new ENetConnection();
-            err = debugEnet.CreateHostBound(ServerAddress, DebugPort, MaxPeers);
-            if (err != Error.Ok)
+            // Debug server
+            debugEnet = new Host();
+            var debugAddress = new Address();
+            debugAddress.SetHost(ServerAddress);
+            debugAddress.Port = (ushort)DebugPort;
+
+            try
             {
-                Debugger.Instance.Log($"Error starting debug server: {err}", Debugger.DebugLevel.ERROR);
-                return;
+                debugEnet.Create(debugAddress, MaxPeers, MaxChannels);
+                Debugger.Instance.Log($"Started debug server on {ServerAddress}:{DebugPort}", Debugger.DebugLevel.VERBOSE);
             }
-            debugEnet.Compress(ENetConnection.CompressionMode.RangeCoder);
-            Debugger.Instance.Log($"Started debug server on {ServerAddress}:{DebugPort}", Debugger.DebugLevel.VERBOSE);
+            catch (Exception ex)
+            {
+                Debugger.Instance.Log($"Error starting debug server: {ex.Message}", Debugger.DebugLevel.ERROR);
+                debugEnet.Dispose();
+                debugEnet = null;
+            }
         }
 
         public void StartClient()
         {
             System.Runtime.GCSettings.LatencyMode = System.Runtime.GCLatencyMode.Interactive;
 
-            ENet = new ENetConnection();
-            ENet.CreateHost();
-            ENetHost = ENet.ConnectToHost(ServerAddress, Port);
-            ENet.Compress(ENetConnection.CompressionMode.RangeCoder);
-            if (ENetHost == null)
+            ENetHost = new Host();
+            ENetHost.Create();
+
+            var address = new Address();
+            address.SetHost(ServerAddress);
+            address.Port = (ushort)Port;
+
+            ServerPeer = ENetHost.Connect(address, MaxChannels);
+
+            if (!ServerPeer.IsSet)
             {
                 Debugger.Instance.Log($"Error connecting.");
                 return;
             }
+
             NetStarted = true;
             var worldRunner = new WorldRunner();
             WorldRunner.CurrentWorld = worldRunner;
@@ -246,46 +305,53 @@ namespace Nebula
         private void _debugService()
         {
             if (debugEnet == null) return;
-            while (true)
+
+            Event netEvent;
+            while (debugEnet.CheckEvents(out netEvent) > 0 || debugEnet.Service(0, out netEvent) > 0)
             {
-                var enetEvent = debugEnet.Service();
-                var eventType = enetEvent[0].As<ENetConnection.EventType>();
-                if (eventType == ENetConnection.EventType.None)
+                switch (netEvent.Type)
                 {
-                    break;
-                }
-                var packetPeer = enetEvent[1].As<ENetPacketPeer>();
-                switch (eventType)
-                {
-                    case ENetConnection.EventType.Connect:
+                    case EventType.None:
+                        return;
+
+                    case EventType.Connect:
                         foreach (var worldId in Worlds.Keys)
                         {
                             var world = Worlds[worldId];
-                            var buffer = new HLBuffer();
-                            HLBytes.Pack(buffer, worldId.ToByteArray());
-                            HLBytes.Pack(buffer, world.DebugPort);
-                            packetPeer.Send(0, buffer.bytes, (int)ENetPacketPeer.FlagReliable);
+                            using var buffer = new NetBuffer();
+                            NetWriter.WriteBytes(buffer, worldId.ToByteArray());
+                            NetWriter.WriteInt32(buffer, world.DebugPort);
+                            SendPacket(netEvent.Peer, 0, buffer.ToArray(), PacketFlags.Reliable);
                         }
                         break;
-                }
 
+                    case EventType.Receive:
+                        netEvent.Packet.Dispose();
+                        break;
+                }
             }
         }
 
-
-        // We could enable this if the ReservedChannels system is insufficient.
-        // [Signal]
-        // public delegate void OnMessageReceivedEventHandler(NetPeer peer, int channel, byte[] data);
-
+        [Signal]
+        public delegate void OnPeerConnectedEventHandler(uint peerId);
 
         [Signal]
-        public delegate void OnPeerConnectedEventHandler(NetPeer peer);
-
-        [Signal]
-        public delegate void OnPeerDisconnectedEventHandler(NetPeer peer);
+        public delegate void OnPeerDisconnectedEventHandler(uint peerId);
 
         [Signal]
         public delegate void OnConnectedToServerEventHandler();
+
+        /// <summary>
+        /// Get a peer by its native ENet ID (used for signal handling).
+        /// </summary>
+        public NetPeer GetPeerByNativeId(uint nativeId)
+        {
+            if (PeersByNativeId.TryGetValue(nativeId, out var peer))
+            {
+                return peer;
+            }
+            return default;
+        }
 
         /// <inheritdoc/>
         public override void _PhysicsProcess(double delta)
@@ -295,22 +361,20 @@ namespace Nebula
 
             _debugService();
 
-            while (true)
+            Event netEvent;
+            while (ENetHost.CheckEvents(out netEvent) > 0 || ENetHost.Service(0, out netEvent) > 0)
             {
-                var enetEvent = ENet.Service();
-                var eventType = enetEvent[0].As<ENetConnection.EventType>();
-                if (eventType == ENetConnection.EventType.None)
+                switch (netEvent.Type)
                 {
-                    break;
-                }
-                var packetPeer = enetEvent[1].As<ENetPacketPeer>();
-                switch (eventType)
-                {
-                    case ENetConnection.EventType.Connect:
+                    case EventType.None:
+                        return;
+
+                    case EventType.Connect:
                         if (IsServer)
                         {
                             Debugger.Instance.Log("Peer connected");
-                            EmitSignal("OnPeerConnected", packetPeer);
+                            PeersByNativeId[netEvent.Peer.ID] = netEvent.Peer;
+                            EmitSignal("OnPeerConnected", netEvent.Peer.ID);
                         }
                         else
                         {
@@ -318,73 +382,111 @@ namespace Nebula
                             EmitSignal("OnConnectedToServer");
                         }
                         break;
-                    case ENetConnection.EventType.Disconnect:
-                        _OnPeerDisconnected(packetPeer);
+
+                    case EventType.Disconnect:
+                    case EventType.Timeout:
+                        _OnPeerDisconnected(netEvent.Peer);
                         break;
-                    case ENetConnection.EventType.Receive:
-                        var channel = enetEvent[3].As<int>();
-                        var data = new HLBuffer(packetPeer.GetPacket());
+
+                    case EventType.Receive:
+                        var channel = netEvent.ChannelID;
+                        var packetData = new byte[netEvent.Packet.Length];
+                        netEvent.Packet.CopyTo(packetData);
+                        netEvent.Packet.Dispose();
+
+                        var data = new NetBuffer(packetData);
+
                         switch ((ENetChannelId)channel)
                         {
                             case ENetChannelId.Tick:
                                 if (IsServer)
                                 {
-                                    var tick = HLBytes.UnpackInt32(data);
-                                    PeerWorldMap[packetPeer].PeerAcknowledge(packetPeer, tick);
+                                    var tick = NetReader.ReadInt32(data);
+                                    PeerWorldMap[netEvent.Peer].PeerAcknowledge(netEvent.Peer, tick);
                                 }
                                 else
                                 {
-                                    if (data.bytes.Length == 0)
+                                    if (packetData.Length == 0)
                                     {
                                         break;
                                     }
-                                    var tick = HLBytes.UnpackInt32(data);
-                                    var bytes = HLBytes.UnpackByteArray(data, untilEnd: true);
+                                    var tick = NetReader.ReadInt32(data);
+                                    var bytes = NetReader.ReadRemainingBytes(data);
                                     WorldRunner.CurrentWorld.ClientProcessTick(tick, bytes);
                                 }
                                 break;
+
                             case ENetChannelId.Input:
                                 if (IsServer)
                                 {
-                                    PeerWorldMap[packetPeer].ReceiveInput(packetPeer, data);
+                                    PeerWorldMap[netEvent.Peer].ReceiveInput(netEvent.Peer, data);
                                 }
-                                else
-                                {
-                                    // Clients should never receive messages on the Input channel
-                                    break;
-                                }
+                                // Clients should never receive messages on the Input channel
                                 break;
+
                             case ENetChannelId.Function:
                                 if (IsServer)
                                 {
-                                    PeerWorldMap[packetPeer].ReceiveNetFunction(packetPeer, data);
+                                    PeerWorldMap[netEvent.Peer].ReceiveNetFunction(netEvent.Peer, data);
                                 }
                                 else
                                 {
-                                    WorldRunner.CurrentWorld.ReceiveNetFunction(ENetHost, data);
+                                    WorldRunner.CurrentWorld.ReceiveNetFunction(ServerPeer, data);
                                 }
                                 break;
+
                             case ENetChannelId.Despawn:
-                                if (IsServer)
+                                if (!IsServer)
                                 {
-                                    // Server should never receive despawn requests
-                                    break;
+                                    WorldRunner.CurrentWorld.ReceiveDespawn(ServerPeer, data);
                                 }
-                                else
-                                {
-                                    WorldRunner.CurrentWorld.ReceiveDespawn(ENetHost, data);
-                                }
+                                // Server should never receive despawn requests
                                 break;
+
                             default:
-                                if (ReservedChannels.ContainsKey(channel))
+                                if (ReservedChannels.TryGetValue(channel, out var handler))
                                 {
-                                    ReservedChannels[channel].Call(packetPeer, data.bytes);
+                                    handler.Call(netEvent.Peer.ID, packetData);
                                 }
                                 break;
                         }
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Helper method to send a packet to a peer.
+        /// </summary>
+        public static void SendPacket(Peer peer, byte channelId, byte[] data, PacketFlags flags)
+        {
+            var packet = default(Packet);
+            packet.Create(data, flags);
+            peer.Send(channelId, ref packet);
+        }
+
+        /// <summary>
+        /// Helper method to send a reliable packet.
+        /// </summary>
+        public static void SendReliable(Peer peer, byte channelId, byte[] data)
+        {
+            SendPacket(peer, channelId, data, PacketFlags.Reliable);
+        }
+
+        /// <summary>
+        /// Helper method to send an unreliable packet.
+        /// </summary>
+        public static void SendUnreliable(Peer peer, byte channelId, byte[] data)
+        {
+            SendPacket(peer, channelId, data, PacketFlags.None);
+        }
+
+        /// <summary>
+        /// Helper method to send an unreliable sequenced packet (newer packets discard older ones).
+        /// </summary>
+        public static void SendUnreliableSequenced(Peer peer, byte channelId, byte[] data)
+        {
+            SendPacket(peer, channelId, data, PacketFlags.Unsequenced);
         }
 
         public void PeerJoinWorld(NetPeer peer, UUID worldId, string token = "")
@@ -415,7 +517,6 @@ namespace Nebula
             if (!IsServer) return null;
             var godotPhysicsWorld = new SubViewport
             {
-
                 OwnWorld3D = true,
                 World3D = new World3D(),
                 Name = worldId.ToString()
@@ -427,7 +528,6 @@ namespace Nebula
             };
             Worlds[worldId] = worldRunner;
             WorldPeerMap[worldId] = [];
-            // godotPhysicsWorld.ProcessThreadGroup = ProcessThreadGroupEnum.SubThread;
             godotPhysicsWorld.AddChild(worldRunner);
             godotPhysicsWorld.AddChild(node.RawNode);
             GetTree().CurrentScene.AddChild(godotPhysicsWorld);
@@ -436,21 +536,16 @@ namespace Nebula
             worldRunner.Debug?.Send("WorldCreated", worldId.ToString());
             Debugger.Instance.Log($"Sent debug event: WorldCreated {worldId.ToString()}", Debugger.DebugLevel.VERBOSE);
             EmitSignal("OnWorldCreated", worldRunner);
-            if (debugEnet != null)
-            {
-                foreach (var peer in debugEnet.GetPeers())
-                {
-                    GD.Print(worldRunner.DebugPort);
-                    // peer.Send(0, , (int)ENetPacketPeer.FlagReliable);
-                }
-            }
+            // Note: Debug peer iteration removed - ENet-CSharp doesn't have GetPeers()
+            // Debug port information is sent via TCP debug server instead
             return worldRunner;
         }
 
-        public void _OnPeerDisconnected(ENetPacketPeer peer)
+        public void _OnPeerDisconnected(Peer peer)
         {
-            Debugger.Instance.Log($"Peer disconnected peerId: {peer}");
-            EmitSignal("OnPeerDisconnected", peer);
+            Debugger.Instance.Log($"Peer disconnected peerId: {peer.ID}");
+            EmitSignal("OnPeerDisconnected", peer.ID);
+            PeersByNativeId.Remove(peer.ID);
         }
     }
 }

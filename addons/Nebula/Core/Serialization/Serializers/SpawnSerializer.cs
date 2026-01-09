@@ -18,21 +18,22 @@ namespace Nebula.Serialization.Serializers
         }
 
         private NetworkController netController;
-        private HLBuffer _exportBuffer = new();
+        private NetBuffer _exportBuffer;
         private Dictionary<NetPeer, Tick> setupTicks = new();
 
         public SpawnSerializer(NetworkController controller)
         {
             netController = controller;
+            _exportBuffer = new NetBuffer();
         }
 
         public void Begin() { }
 
         public void Cleanup() { }
 
-        public HLBuffer Export(WorldRunner currentWorld, NetPeer peer)
+        public NetBuffer Export(WorldRunner currentWorld, NetPeer peer)
         {
-            _exportBuffer.Clear();
+            _exportBuffer.Reset();
 
             if (netController.IsQueuedForDespawn)
             {
@@ -70,20 +71,20 @@ namespace Nebula.Serialization.Serializers
             }
 
             setupTicks[peer] = currentWorld.CurrentTick;
-            HLBytes.Pack(_exportBuffer, Protocol.PackScene(netController.NetSceneFilePath));
+            NetWriter.WriteByte(_exportBuffer, Protocol.PackScene(netController.NetSceneFilePath));
 
             if (netController.NetParent == null)
             {
-                HLBytes.Pack(_exportBuffer, (byte)0);
+                NetWriter.WriteByte(_exportBuffer, 0);
                 return _exportBuffer;
             }
 
             var parentId = currentWorld.GetPeerNodeId(peer, netController.NetParent);
-            HLBytes.Pack(_exportBuffer, parentId);
+            NetWriter.WriteByte(_exportBuffer, parentId);
 
             if (Protocol.PackNode(netController.NetParent.RawNode.SceneFilePath, netController.NetParent.RawNode.GetPathTo(netController.RawNode.GetParent()), out var nodePathId))
             {
-                HLBytes.Pack(_exportBuffer, nodePathId);
+                NetWriter.WriteByte(_exportBuffer, nodePathId);
             }
             else
             {
@@ -92,11 +93,11 @@ namespace Nebula.Serialization.Serializers
 
             if (netController.RawNode is Node3D node)
             {
-                HLBytes.Pack(_exportBuffer, node.Position);
-                HLBytes.Pack(_exportBuffer, node.Rotation);
+                NetWriter.WriteVector3(_exportBuffer, node.Position);
+                NetWriter.WriteVector3(_exportBuffer, node.Rotation);
             }
 
-            HLBytes.Pack(_exportBuffer, netController.InputAuthority == peer ? (byte)1 : (byte)0);
+            NetWriter.WriteByte(_exportBuffer, netController.InputAuthority == peer ? (byte)1 : (byte)0);
 
             currentWorld.Debug?.Send("Spawn", $"Exported:{netController.RawNode.SceneFilePath}");
 
@@ -117,7 +118,7 @@ namespace Nebula.Serialization.Serializers
         }
 
         // Import is client-only and infrequent, less critical to optimize
-        public void Import(WorldRunner currentWorld, HLBuffer buffer, out NetworkController controllerOut)
+        public void Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController controllerOut)
         {
             controllerOut = netController;
             var data = Deserialize(buffer);
@@ -166,7 +167,7 @@ namespace Nebula.Serialization.Serializers
 
             if (data.hasInputAuthority == 1)
             {
-                controllerOut.SetInputAuthority(NetRunner.Instance.ENetHost);
+                controllerOut.SetInputAuthority(NetRunner.Instance.ServerPeer);
             }
 
             networkParent.RawNode.GetNode(Protocol.UnpackNode(networkParent.RawNode.SceneFilePath, data.nodePathId)).AddChild(controllerOut.RawNode);
@@ -211,12 +212,12 @@ namespace Nebula.Serialization.Serializers
             NetRunner.Instance.RemoveChild(nodeOut.RawNode);
         }
 
-        private Data Deserialize(HLBuffer data)
+        private Data Deserialize(NetBuffer data)
         {
             var spawnData = new Data
             {
-                classId = HLBytes.UnpackByte(data),
-                parentId = HLBytes.UnpackByte(data),
+                classId = NetReader.ReadByte(data),
+                parentId = NetReader.ReadByte(data),
             };
 
             if (spawnData.parentId == 0)
@@ -224,10 +225,10 @@ namespace Nebula.Serialization.Serializers
                 return spawnData;
             }
 
-            spawnData.nodePathId = HLBytes.UnpackByte(data);
-            spawnData.position = HLBytes.UnpackVector3(data);
-            spawnData.rotation = HLBytes.UnpackVector3(data);
-            spawnData.hasInputAuthority = HLBytes.UnpackByte(data);
+            spawnData.nodePathId = NetReader.ReadByte(data);
+            spawnData.position = NetReader.ReadVector3(data);
+            spawnData.rotation = NetReader.ReadVector3(data);
+            spawnData.hasInputAuthority = NetReader.ReadByte(data);
             return spawnData;
         }
     }

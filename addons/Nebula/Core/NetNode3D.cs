@@ -54,13 +54,13 @@ namespace Nebula
 
         /// <inheritdoc/>
         public override void _PhysicsProcess(double delta) { }
-        public static HLBuffer NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetNode3D obj)
+
+        public static void NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetNode3D obj, NetBuffer buffer)
         {
-            var buffer = new HLBuffer();
             if (obj == null)
             {
-                HLBytes.Pack(buffer, (byte)0);
-                return buffer;
+                NetWriter.WriteByte(buffer, 0);
+                return;
             }
             NetId targetNetId;
             byte staticChildId = 0;
@@ -80,23 +80,18 @@ namespace Nebula
                 // }
             }
             // var peerNodeId = currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[targetNetId];
-            // HLBytes.Pack(buffer, peerNodeId);
-            // HLBytes.Pack(buffer, staticChildId);
-            return buffer;
+            // NetWriter.WriteByte(buffer, peerNodeId);
+            // NetWriter.WriteByte(buffer, staticChildId);
         }
 
-        public static Variant GetDeserializeContext(NetNode3D obj)
+        public static NetNode3D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
-            return new Variant();
-        }
-        public static NetNode3D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, Variant ctx)
-        {
-            var networkID = HLBytes.UnpackByte(buffer);
+            var networkID = NetReader.ReadByte(buffer);
             if (networkID == 0)
             {
                 return null;
             }
-            var staticChildId = HLBytes.UnpackByte(buffer);
+            var staticChildId = NetReader.ReadByte(buffer);
             var node = currentWorld.GetNodeFromNetId(networkID).RawNode as NetNode3D;
             if (staticChildId > 0)
             {
@@ -164,15 +159,5 @@ namespace Nebula
 
             return Network.NetParent.RawNode.GetPathTo(this);
         }
-
-        // public static Task<NetNode3D> BsonDeserialize(Variant context, byte[] bson, NetNode3D initialObject)
-        // {
-        //     throw new NotImplementedException();
-        // }
-
-        // public Task<R> BsonDeserialize<R>(Variant context, byte[] bson) where R : NetNode3D
-        // {
-        //     throw new NotImplementedException();
-        // }
     }
 }

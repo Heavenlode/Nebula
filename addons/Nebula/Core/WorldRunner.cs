@@ -13,7 +13,7 @@ namespace Nebula
     /**
     <summary>
     Manages the network state of all <see cref="NetNode"/>s in the scene.
-    Inside the <see cref="NetRunner"/> are one or more “Worlds”. Each World represents some part of the game that is isolated from other parts. For example, different maps, dungeon instances, etc. Worlds are dynamically created by calling <see cref="NetRunner.CreateWorld"/>.
+    Inside the <see cref="NetRunner"/> are one or more "Worlds". Each World represents some part of the game that is isolated from other parts. For example, different maps, dungeon instances, etc. Worlds are dynamically created by calling <see cref="NetRunner.CreateWorld"/>.
 
     Worlds cannot directly interact with each other and do not share state.
 
@@ -99,8 +99,8 @@ namespace Nebula
         internal long networkIdCounter = 0;
         private Dictionary<long, NetId> networkIds = [];
         internal Dictionary<NetId, NetworkController> NetScenes = [];
-        private Godot.Collections.Dictionary<NetPeer, Godot.Collections.Dictionary<byte, Godot.Collections.Dictionary<int, Variant>>> inputStore = [];
-        public Godot.Collections.Dictionary<NetPeer, Godot.Collections.Dictionary<byte, Godot.Collections.Dictionary<int, Variant>>> InputStore => inputStore;
+        private Dictionary<NetPeer, Dictionary<byte, Dictionary<int, Variant>>> inputStore = [];
+        public Dictionary<NetPeer, Dictionary<byte, Dictionary<int, Variant>>> InputStore => inputStore;
 
         // TCP debug server fields
         private TcpListener DebugTcpListener { get; set; }
@@ -144,16 +144,13 @@ namespace Nebula
             {
                 if (_world.DebugTcpListener == null) return;
 
-                var buffer = new HLBuffer();
-                HLBytes.Pack(buffer, (byte)DebugDataType.DEBUG_EVENT);
-                HLBytes.Pack(buffer, category);
-                HLBytes.Pack(buffer, message);
+                using var buffer = new NetBuffer();
+                NetWriter.WriteByte(buffer, (byte)DebugDataType.DEBUG_EVENT);
+                NetWriter.WriteString(buffer, category);
+                NetWriter.WriteString(buffer, message);
 
                 // Wrap with length prefix for TCP framing
-                var lengthPrefix = BitConverter.GetBytes(buffer.bytes.Length);
-                var framedData = new byte[4 + buffer.bytes.Length];
-                Array.Copy(lengthPrefix, 0, framedData, 0, 4);
-                Array.Copy(buffer.bytes, 0, framedData, 4, buffer.bytes.Length);
+                var framedData = CreateFramedPacket(buffer);
 
                 lock (_bufferLock)
                 {
@@ -187,6 +184,18 @@ namespace Nebula
                     _hasSentBufferedMessages = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates a TCP framed packet with a 4-byte length prefix.
+        /// </summary>
+        private static byte[] CreateFramedPacket(NetBuffer buffer)
+        {
+            var lengthPrefix = BitConverter.GetBytes(buffer.Length);
+            var framedData = new byte[4 + buffer.Length];
+            Array.Copy(lengthPrefix, 0, framedData, 0, 4);
+            buffer.WrittenSpan.CopyTo(framedData.AsSpan(4));
+            return framedData;
         }
 
         private void SendToDebugClients(byte[] data)
@@ -322,8 +331,10 @@ namespace Nebula
 
             if (NetRunner.Instance.IsServer)
             {
-                _OnPeerDisconnected = Callable.From((NetPeer peer) =>
+                _OnPeerDisconnected = Callable.From((uint peerId) =>
                 {
+                    var peer = NetRunner.Instance.GetPeerByNativeId(peerId);
+                    if (!peer.IsSet) return;
                     if (AutoPlayerCleanup)
                     {
                         CleanupPlayer(peer);
@@ -436,9 +447,9 @@ namespace Nebula
         {
             if (!NetRunner.Instance.IsServer) return;
 
-            if (peer.IsActive())
+            if (peer.State == ENet.PeerState.Connected)
             {
-                peer.PeerDisconnect(0);
+                peer.Disconnect(0);
             }
 
             var peerState = PeerStates[peer];
@@ -450,7 +461,7 @@ namespace Nebula
                 }
                 else
                 {
-                    netController.SetInputAuthority(null);
+                    netController.SetInputAuthority(default);
                 }
             }
             PeerStates.Remove(peer);
@@ -466,8 +477,6 @@ namespace Nebula
         /// </summary>
         public void ServerProcessTick()
         {
-            // Debugger.Instance.Log("Start tick");
-            // var sw = System.Diagnostics.Stopwatch.StartNew();
             foreach (var net_id in NetScenes.Keys)
             {
                 var netController = NetScenes[net_id];
@@ -493,39 +502,20 @@ namespace Nebula
                     {
                         continue;
                     }
-                    // var childSw = System.Diagnostics.Stopwatch.StartNew();
                     networkChild._NetworkProcess(CurrentTick);
-                    // childSw.Stop();
-                    // // Log($"- CHILD Current elapsed: {networkChild.RawNode.Name} {childSw.Elapsed.Microseconds}micro {sw.ElapsedMilliseconds}ms");
                 }
-                // var netNodeSw = System.Diagnostics.Stopwatch.StartNew();
                 netController._NetworkProcess(CurrentTick);
-                // netNodeSw.Stop();
-                // Log($"Current elapsed: {netController.NetNode.Name} ({netController.NetNode.SceneFilePath}) {netNodeSw.Elapsed.Microseconds}micro {sw.ElapsedMilliseconds}ms");
             }
-            // var beginTime = sw.ElapsedMilliseconds;
-            // sw.Restart();
-            // Debugger.Instance.Log($"Processing time: {beginTime}ms");
 
             if (DebugTcpListener != null && DebugTcpClients.Count > 0)
             {
                 // Notify the Debugger of the incoming tick
-                var debugBuffer = new HLBuffer();
-                HLBytes.Pack(debugBuffer, (byte)DebugDataType.TICK);
-                HLBytes.Pack(debugBuffer, DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
-                HLBytes.Pack(debugBuffer, CurrentTick);
-
-                // Wrap with length prefix for TCP framing
-                var lengthPrefix = BitConverter.GetBytes(debugBuffer.bytes.Length);
-                var framedData = new byte[4 + debugBuffer.bytes.Length];
-                Array.Copy(lengthPrefix, 0, framedData, 0, 4);
-                Array.Copy(debugBuffer.bytes, 0, framedData, 4, debugBuffer.bytes.Length);
-                SendToDebugClients(framedData);
+                using var debugBuffer = new NetBuffer();
+                NetWriter.WriteByte(debugBuffer, (byte)DebugDataType.TICK);
+                NetWriter.WriteInt64(debugBuffer, DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
+                NetWriter.WriteInt32(debugBuffer, CurrentTick);
+                SendToDebugClients(CreateFramedPacket(debugBuffer));
             }
-
-            // var exportTime = sw.ElapsedMilliseconds;
-            // sw.Restart();
-            // Debugger.Instance.Log($"Debugger info time: {exportTime}ms");
 
             foreach (var queuedFunction in queuedNetFunctions)
             {
@@ -542,71 +532,33 @@ namespace Nebula
                 if (DebugTcpListener != null && DebugTcpClients.Count > 0)
                 {
                     // Notify the Debugger of the function call
-                    var debugBuffer = new HLBuffer();
-                    HLBytes.Pack(debugBuffer, (byte)DebugDataType.CALLS);
-                    HLBytes.Pack(debugBuffer, queuedFunction.FunctionInfo.Name);
-                    HLBytes.Pack(debugBuffer, (byte)queuedFunction.Args.Length);
+                    using var debugBuffer = new NetBuffer();
+                    NetWriter.WriteByte(debugBuffer, (byte)DebugDataType.CALLS);
+                    NetWriter.WriteString(debugBuffer, queuedFunction.FunctionInfo.Name);
+                    NetWriter.WriteByte(debugBuffer, (byte)queuedFunction.Args.Length);
                     foreach (var arg in queuedFunction.Args)
                     {
-                        HLBytes.PackVariant(debugBuffer, arg, packType: true);
+                        // For debug purposes, write type-tagged args
+                        var serialType = Protocol.FromGodotVariantType(arg.VariantType);
+                        NetWriter.WriteWithType(debugBuffer, serialType, VariantToObject(arg));
                     }
-
-                    // Wrap with length prefix for TCP framing
-                    var lengthPrefix = BitConverter.GetBytes(debugBuffer.bytes.Length);
-                    var framedData = new byte[4 + debugBuffer.bytes.Length];
-                    Array.Copy(lengthPrefix, 0, framedData, 0, 4);
-                    Array.Copy(debugBuffer.bytes, 0, framedData, 4, debugBuffer.bytes.Length);
-                    SendToDebugClients(framedData);
+                    SendToDebugClients(CreateFramedPacket(debugBuffer));
                 }
             }
             queuedNetFunctions.Clear();
-
-            // var functionTime = sw.ElapsedMilliseconds;
-            // sw.Restart();
-            // Debugger.Instance.Log($"Function calls time: {functionTime}ms");
 
             if (DebugTcpListener != null && DebugTcpClients.Count > 0)
             {
                 foreach (var log in tickLogBuffer)
                 {
-                    var logBuffer = new HLBuffer();
-                    HLBytes.Pack(logBuffer, (byte)DebugDataType.LOGS);
-                    HLBytes.Pack(logBuffer, (byte)log.Level);
-                    HLBytes.Pack(logBuffer, log.Message);
-
-                    // Wrap with length prefix for TCP framing
-                    var lengthPrefix = BitConverter.GetBytes(logBuffer.bytes.Length);
-                    var framedData = new byte[4 + logBuffer.bytes.Length];
-                    Array.Copy(lengthPrefix, 0, framedData, 0, 4);
-                    Array.Copy(logBuffer.bytes, 0, framedData, 4, logBuffer.bytes.Length);
-                    SendToDebugClients(framedData);
+                    using var logBuffer = new NetBuffer();
+                    NetWriter.WriteByte(logBuffer, (byte)DebugDataType.LOGS);
+                    NetWriter.WriteByte(logBuffer, (byte)log.Level);
+                    NetWriter.WriteString(logBuffer, log.Message);
+                    SendToDebugClients(CreateFramedPacket(logBuffer));
                 }
             }
             tickLogBuffer.Clear();
-            // if (DebugTcpListener != null && DebugTcpClients.Count > 0)
-            // {
-            //     var fullGameState = RootScene.Node switch
-            //     {
-            //         IBsonSerializableBase node => node.BsonSerialize(new NetNodeCommonBsonSerializeContext
-            //         {
-            //             Recurse = true,
-            //         }),
-            //         _ => throw new Exception("RootScene.Node is not a IBsonSerializableBase")
-            //     };
-            //     var exportBuffer = new HLBuffer();
-            //     HLBytes.Pack(exportBuffer, (byte)DebugDataType.EXPORT);
-            //     HLBytes.Pack(exportBuffer, fullGameState.ToBson());
-
-            //     // Wrap with length prefix for TCP framing
-            //     var lengthPrefix = BitConverter.GetBytes(exportBuffer.bytes.Length);
-            //     var framedData = new byte[4 + exportBuffer.bytes.Length];
-            //     Array.Copy(lengthPrefix, 0, framedData, 0, 4);
-            //     Array.Copy(exportBuffer.bytes, 0, framedData, 4, exportBuffer.bytes.Length);
-            //     SendToDebugClients(framedData);
-            // }
-            // var exportTime2 = sw.ElapsedMilliseconds;
-            // sw.Restart();
-            // Debugger.Instance.Log($"Debugger time: {exportTime2}ms");
 
             var peers = PeerStates.Keys.ToList();
             var exportedState = ExportState(peers);
@@ -616,34 +568,25 @@ namespace Nebula
                 {
                     continue;
                 }
-                var buffer = new HLBuffer();
-                HLBytes.Pack(buffer, CurrentTick);
-                HLBytes.Pack(buffer, exportedState[peer].bytes);
-                var size = buffer.bytes.Length;
+                using var buffer = new NetBuffer();
+                NetWriter.WriteInt32(buffer, CurrentTick);
+                NetWriter.WriteBytes(buffer, exportedState[peer].WrittenSpan);
+                var size = buffer.Length;
                 if (size > NetRunner.MTU)
                 {
                     Log($"Data size {size} exceeds MTU {NetRunner.MTU}", Debugger.DebugLevel.WARN);
                 }
 
-                peer.Send((int)NetRunner.ENetChannelId.Tick, buffer.bytes, (int)ENetPacketPeer.FlagUnsequenced);
+                NetRunner.SendUnreliableSequenced(peer, (byte)NetRunner.ENetChannelId.Tick, buffer.ToArray());
                 if (DebugTcpListener != null && DebugTcpClients.Count > 0)
                 {
-                    var debugBuffer = new HLBuffer();
-                    HLBytes.Pack(debugBuffer, (byte)DebugDataType.PAYLOADS);
-                    HLBytes.Pack(debugBuffer, PeerStates[peer].Id.ToByteArray());
-                    HLBytes.Pack(debugBuffer, exportedState[peer].bytes);
-
-                    // Wrap with length prefix for TCP framing
-                    var lengthPrefix = BitConverter.GetBytes(debugBuffer.bytes.Length);
-                    var framedData = new byte[4 + debugBuffer.bytes.Length];
-                    Array.Copy(lengthPrefix, 0, framedData, 0, 4);
-                    Array.Copy(debugBuffer.bytes, 0, framedData, 4, debugBuffer.bytes.Length);
-                    SendToDebugClients(framedData);
+                    using var debugBuffer = new NetBuffer();
+                    NetWriter.WriteByte(debugBuffer, (byte)DebugDataType.PAYLOADS);
+                    NetWriter.WriteBytes(debugBuffer, PeerStates[peer].Id.ToByteArray());
+                    NetWriter.WriteBytes(debugBuffer, exportedState[peer].WrittenSpan);
+                    SendToDebugClients(CreateFramedPacket(debugBuffer));
                 }
             }
-            // var sendTime = sw.ElapsedMilliseconds;
-            // sw.Restart();
-            // Debugger.Instance.Log($"Sending time: {sendTime}ms");
 
             foreach (var netController in QueueDespawnedNodes)
             {
@@ -659,6 +602,27 @@ namespace Nebula
                 netController.RawNode.QueueFree();
             }
             QueueDespawnedNodes.Clear();
+        }
+
+        /// <summary>
+        /// Converts a Godot Variant to a C# object for serialization.
+        /// </summary>
+        private static object VariantToObject(Variant value)
+        {
+            return value.VariantType switch
+            {
+                Variant.Type.Bool => (bool)value,
+                Variant.Type.Int => (long)value,
+                Variant.Type.Float => (float)value,
+                Variant.Type.String => (string)value,
+                Variant.Type.Vector2 => (Vector2)value,
+                Variant.Type.Vector3 => (Vector3)value,
+                Variant.Type.Quaternion => (Quaternion)value,
+                Variant.Type.PackedByteArray => (byte[])value,
+                Variant.Type.PackedInt32Array => (int[])value,
+                Variant.Type.PackedInt64Array => (long[])value,
+                _ => value.Obj
+            };
         }
 
         internal HashSet<NetworkController> QueueDespawnedNodes = [];
@@ -756,7 +720,7 @@ namespace Nebula
         public PeerState? GetPeerWorldState(UUID peerId)
         {
             var peer = NetRunner.Instance.GetPeer(peerId);
-            if (peer == null || !PeerStates.ContainsKey(peer))
+            if (!peer.IsSet || !PeerStates.ContainsKey(peer))
             {
                 return null;
             }
@@ -825,11 +789,11 @@ namespace Nebula
             return NetScenes[PeerStates[peer].PeerToWorldNodeMap[networkId]];
         }
 
-        internal void DeregisterPeerNode(NetworkController node, NetPeer peer = null)
+        internal void DeregisterPeerNode(NetworkController node, NetPeer peer = default)
         {
             if (NetRunner.Instance.IsServer)
             {
-                if (peer == null)
+                if (!peer.IsSet)
                 {
                     Log("Server must specify a peer when deregistering a node.", Debugger.DebugLevel.ERROR);
                     return;
@@ -854,11 +818,11 @@ namespace Nebula
         // Up to 64 nodes can be networked per peer at a time.
         // TODO: Consider supporting more
         // TODO: Handle de-registration of nodes (e.g. despawn, and object interest)
-        internal byte TryRegisterPeerNode(NetworkController node, NetPeer peer = null)
+        internal byte TryRegisterPeerNode(NetworkController node, NetPeer peer = default)
         {
             if (NetRunner.Instance.IsServer)
             {
-                if (peer == null)
+                if (!peer.IsSet)
                 {
                     Log("Server must specify a peer when registering a node.", Debugger.DebugLevel.ERROR);
                     return 0;
@@ -897,7 +861,7 @@ namespace Nebula
         public T Spawn<T>(
             T node,
             NetworkController parent = null,
-            NetPeer inputAuthority = null,
+            NetPeer inputAuthority = default,
             NodePath netNodePath = default
         ) where T : Node, INetNodeBase
         {
@@ -917,7 +881,7 @@ namespace Nebula
 
             node.Network.IsClientSpawn = true;
             node.Network.CurrentWorld = this;
-            if (inputAuthority != null)
+            if (inputAuthority.IsSet)
             {
                 node.Network.SetInputAuthority(inputAuthority);
             }
@@ -960,16 +924,20 @@ namespace Nebula
         }
 
         // Declare these as fields, not locals - reuse across ticks
-        private Dictionary<long, HLBuffer> _peerNodesBuffers = new();
+        private Dictionary<long, NetBuffer> _peerNodesBuffers = new();
         private Dictionary<long, byte> _peerNodesSerializersList = new();
         private List<long> _orderedNodeKeys = new();
-        private HLBuffer _serializersBuffer = new();
-        private Dictionary<long, HLBuffer> _nodeBufferPool = new();
+        private NetBuffer _serializersBuffer;
+        private Dictionary<long, NetBuffer> _nodeBufferPool = new();
 
-        internal Dictionary<ENetPacketPeer, HLBuffer> ExportState(List<ENetPacketPeer> peers)
+        internal Dictionary<NetPeer, NetBuffer> ExportState(List<NetPeer> peers)
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            Dictionary<NetPeer, HLBuffer> peerBuffers = [];
+            Dictionary<NetPeer, NetBuffer> peerBuffers = [];
+
+            // Lazy init the serializers buffer
+            _serializersBuffer ??= new NetBuffer();
+
             foreach (var netController in NetScenes.Values)
             {
                 // Initialize serializers
@@ -978,41 +946,30 @@ namespace Nebula
                     serializer.Begin();
                 }
             }
-            // var beginTime = sw.ElapsedMilliseconds;
-            // sw.Restart();
 
-            // In ExportState:
-            // var gcBefore = GC.CollectionCount(0);
-            foreach (ENetPacketPeer peer in peers)
+            foreach (NetPeer peer in peers)
             {
                 long updatedNodes = 0;
-                peerBuffers[peer] = new HLBuffer(); // This one is fine - need separate buffer per peer for output
+                peerBuffers[peer] = new NetBuffer(); // Need separate buffer per peer for output
 
                 _peerNodesBuffers.Clear();
                 _peerNodesSerializersList.Clear();
 
                 foreach (var netController in NetScenes.Values)
                 {
-                    _serializersBuffer.Clear(); // Reuse instead of new
+                    _serializersBuffer.Reset(); // Reuse instead of new
                     byte serializersRun = 0;
 
                     for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                     {
                         var serializer = netController.NetNode.Serializers[serializerIdx];
-                        // var before = GC.GetAllocatedBytesForCurrentThread();
                         var serializerResult = serializer.Export(this, peer);
-                        // var after = GC.GetAllocatedBytesForCurrentThread();
-
-                        // if (after - before > 100)
-                        // {
-                        //     Log($"{node.Node.Name}.{serializer.GetType().Name} allocated {after - before} bytes");
-                        // }
-                        if (serializerResult.bytes.Length == 0)
+                        if (serializerResult.Length == 0)
                         {
                             continue;
                         }
                         serializersRun |= (byte)(1 << serializerIdx);
-                        HLBytes.Pack(_serializersBuffer, serializerResult.bytes);
+                        NetWriter.WriteBytes(_serializersBuffer, serializerResult.WrittenSpan);
                     }
 
                     if (serializersRun == 0)
@@ -1027,15 +984,15 @@ namespace Nebula
                     // Pool node buffers
                     if (!_nodeBufferPool.TryGetValue(localNodeId, out var nodeBuffer))
                     {
-                        nodeBuffer = new HLBuffer();
+                        nodeBuffer = new NetBuffer();
                         _nodeBufferPool[localNodeId] = nodeBuffer;
                     }
-                    nodeBuffer.Clear();
-                    HLBytes.Pack(nodeBuffer, _serializersBuffer.bytes);
+                    nodeBuffer.Reset();
+                    NetWriter.WriteBytes(nodeBuffer, _serializersBuffer.WrittenSpan);
                     _peerNodesBuffers[localNodeId] = nodeBuffer;
                 }
 
-                HLBytes.Pack(peerBuffers[peer], updatedNodes);
+                NetWriter.WriteInt64(peerBuffers[peer], updatedNodes);
 
                 // Replace LINQ with manual sort
                 _orderedNodeKeys.Clear();
@@ -1047,18 +1004,13 @@ namespace Nebula
 
                 foreach (var nodeKey in _orderedNodeKeys)
                 {
-                    HLBytes.Pack(peerBuffers[peer], _peerNodesSerializersList[nodeKey]);
+                    NetWriter.WriteByte(peerBuffers[peer], _peerNodesSerializersList[nodeKey]);
                 }
                 foreach (var nodeKey in _orderedNodeKeys)
                 {
-                    HLBytes.Pack(peerBuffers[peer], _peerNodesBuffers[nodeKey].bytes);
+                    NetWriter.WriteBytes(peerBuffers[peer], _peerNodesBuffers[nodeKey].WrittenSpan);
                 }
             }
-            // var gcAfter = GC.CollectionCount(0);
-            // if (gcAfter > gcBefore)
-            // {
-            //     Log($"GC occurred during export! Gen0 collections: {gcAfter - gcBefore}");
-            // }
 
             var exportTime = sw.ElapsedMilliseconds;
             sw.Restart();
@@ -1077,9 +1029,9 @@ namespace Nebula
             return peerBuffers;
         }
 
-        internal void ImportState(HLBuffer stateBytes)
+        internal void ImportState(NetBuffer stateBytes)
         {
-            var affectedNodes = HLBytes.UnpackInt64(stateBytes);
+            var affectedNodes = NetReader.ReadInt64(stateBytes);
             var nodeIdToSerializerList = new Dictionary<byte, byte>();
             for (byte i = 0; i < MAX_NETWORK_NODES; i++)
             {
@@ -1087,7 +1039,7 @@ namespace Nebula
                 {
                     continue;
                 }
-                var serializersRun = HLBytes.UnpackInt8(stateBytes);
+                var serializersRun = NetReader.ReadByte(stateBytes);
                 nodeIdToSerializerList[i] = serializersRun;
             }
 
@@ -1144,15 +1096,15 @@ namespace Nebula
                 }
             }
         }
+
         public void ClientProcessTick(int incomingTick, byte[] stateBytes)
         {
             if (incomingTick <= CurrentTick)
             {
                 return;
             }
-            // GD.Print("INCOMING DATA: " + BitConverter.ToString(stateBytes));
             CurrentTick = incomingTick;
-            ImportState(new HLBuffer(stateBytes));
+            ImportState(new NetBuffer(stateBytes));
             foreach (var net_id in NetScenes.Keys)
             {
                 var netController = NetScenes[net_id];
@@ -1199,9 +1151,9 @@ namespace Nebula
             QueueDespawnedNodes.Clear();
 
             // Acknowledge tick
-            HLBuffer buffer = new HLBuffer();
-            HLBytes.Pack(buffer, incomingTick);
-            NetRunner.Instance.ENetHost.Send((int)NetRunner.ENetChannelId.Tick, buffer.bytes, (int)ENetPacketPeer.FlagUnsequenced);
+            using var buffer = new NetBuffer();
+            NetWriter.WriteInt32(buffer, incomingTick);
+            NetRunner.SendUnreliableSequenced(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Tick, buffer.ToArray());
         }
 
         /// <summary>
@@ -1247,8 +1199,9 @@ namespace Nebula
                 return;
             }
 
-            var inputBuffer = NetId.NetworkSerialize(this, NetRunner.Instance.ENetHost, netNode.NetId);
-            HLBytes.Pack(inputBuffer, setInputs);
+            using var inputBuffer = new NetBuffer();
+            NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netNode.NetId, inputBuffer);
+            NetWriter.WriteInt64(inputBuffer, setInputs);
             foreach (var key in netNode.InputBuffer.Keys)
             {
                 if ((setInputs & ((long)1 << key)) == 0)
@@ -1256,18 +1209,20 @@ namespace Nebula
                     continue;
                 }
                 netNode.PreviousInputBuffer[key] = netNode.InputBuffer[key];
-                HLBytes.Pack(inputBuffer, key);
-                HLBytes.PackVariant(inputBuffer, netNode.InputBuffer[key], true, true);
+                NetWriter.WriteByte(inputBuffer, key);
+                // Write input with type tag for polymorphic support
+                var serialType = Protocol.FromGodotVariantType(netNode.InputBuffer[key].VariantType);
+                NetWriter.WriteWithType(inputBuffer, serialType, VariantToObject(netNode.InputBuffer[key]));
             }
 
-            NetRunner.Instance.ENetHost.Send((int)NetRunner.ENetChannelId.Input, inputBuffer.bytes, (int)ENetPacketPeer.FlagReliable);
+            NetRunner.SendReliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Input, inputBuffer.ToArray());
             netNode.InputBuffer = [];
         }
 
-        internal void ReceiveInput(NetPeer peer, HLBuffer buffer)
+        internal void ReceiveInput(NetPeer peer, NetBuffer buffer)
         {
             if (NetRunner.Instance.IsClient) return;
-            var networkId = HLBytes.UnpackByte(buffer);
+            var networkId = NetReader.ReadByte(buffer);
             var worldNetId = GetNetIdFromPeerId(peer, networkId);
             var node = GetNodeFromNetId(worldNetId);
             if (node == null)
@@ -1276,21 +1231,24 @@ namespace Nebula
                 return;
             }
 
-            if (node.InputAuthority != peer)
+            if (!node.InputAuthority.Equals(peer))
             {
                 Log($"Received input for node {worldNetId} from unauthorized peer {peer}", Debugger.DebugLevel.ERROR);
                 return;
             }
 
-            var setInputs = HLBytes.UnpackInt64(buffer);
+            var setInputs = NetReader.ReadInt64(buffer);
             while (setInputs > 0)
             {
-                var key = HLBytes.UnpackInt8(buffer);
-                var value = HLBytes.UnpackVariant(buffer);
-                if (value.HasValue)
+                var key = NetReader.ReadByte(buffer);
+                var value = NetReader.ReadWithType(buffer, out var serialType);
+                if (value != null)
                 {
-                    node.SetNetworkInput(key, value.Value);
-                    Debug.Send("Input", $"{key}:{value.Value}");
+                    // Convert to Variant at the Godot boundary
+                    var godotType = Protocol.ToGodotVariantType(serialType);
+                    var variant = Variant.From(value);
+                    node.SetNetworkInput(key, variant);
+                    Debug.Send("Input", $"{key}:{variant}");
                 }
                 setInputs &= ~((long)1 << key);
             }
@@ -1305,50 +1263,49 @@ namespace Nebula
                 // TODO: Apply interest layers for network function, like network property
                 foreach (var peer in node.InterestLayers.Keys)
                 {
-                    var buffer = NetId.NetworkSerialize(this, NetRunner.Instance.Peers[peer], netId);
-                    HLBytes.Pack(buffer, GetPeerNodeId(NetRunner.Instance.Peers[peer], node));
-                    HLBytes.Pack(buffer, functionId);
+                    using var buffer = new NetBuffer();
+                    NetId.NetworkSerialize(this, NetRunner.Instance.Peers[peer], netId, buffer);
+                    NetWriter.WriteByte(buffer, GetPeerNodeId(NetRunner.Instance.Peers[peer], node));
+                    NetWriter.WriteByte(buffer, functionId);
                     foreach (var arg in args)
                     {
-                        HLBytes.PackVariant(buffer, arg);
+                        var serialType = Protocol.FromGodotVariantType(arg.VariantType);
+                        NetWriter.WriteByType(buffer, serialType, VariantToObject(arg));
                     }
-                    NetRunner.Instance.Peers[peer].Send((int)NetRunner.ENetChannelId.Function, buffer.bytes, (int)ENetPacketPeer.FlagReliable);
+                    NetRunner.SendReliable(NetRunner.Instance.Peers[peer], (byte)NetRunner.ENetChannelId.Function, buffer.ToArray());
                 }
             }
             else
             {
-                var buffer = NetId.NetworkSerialize(this, NetRunner.Instance.ENetHost, netId);
-                HLBytes.Pack(buffer, functionId);
+                using var buffer = new NetBuffer();
+                NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netId, buffer);
+                NetWriter.WriteByte(buffer, functionId);
                 foreach (var arg in args)
                 {
-                    HLBytes.PackVariant(buffer, arg);
+                    var serialType = Protocol.FromGodotVariantType(arg.VariantType);
+                    NetWriter.WriteByType(buffer, serialType, VariantToObject(arg));
                 }
-                NetRunner.Instance.ENetHost.Send((int)NetRunner.ENetChannelId.Function, buffer.bytes, (int)ENetPacketPeer.FlagReliable);
+                NetRunner.SendReliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Function, buffer.ToArray());
             }
         }
 
-        internal void ReceiveNetFunction(NetPeer peer, HLBuffer buffer)
+        internal void ReceiveNetFunction(NetPeer peer, NetBuffer buffer)
         {
-            var netId = HLBytes.UnpackByte(buffer);
-            var functionId = HLBytes.UnpackByte(buffer);
+            var netId = NetReader.ReadByte(buffer);
+            var functionId = NetReader.ReadByte(buffer);
             var netController = NetRunner.Instance.IsServer ? GetPeerNode(peer, netId) : GetNodeFromNetId(netId);
             List<Variant> args = [];
             var functionInfo = Protocol.UnpackFunction(netController.RawNode.SceneFilePath, functionId);
             foreach (var arg in functionInfo.Arguments)
             {
-                var result = HLBytes.UnpackVariant(buffer, knownType: arg.VariantType);
-                if (!result.HasValue)
-                {
-                    Log($"Failed to unpack argument of type {arg} for function {functionInfo.Name}", Debugger.DebugLevel.ERROR);
-                    return;
-                }
-                args.Add(result.Value);
+                var value = NetReader.ReadByType(buffer, arg.VariantType);
+                args.Add(Variant.From(value));
             }
-            if (NetRunner.Instance.IsServer && (functionInfo.Sources & NetFunction.NetworkSources.Client) == 0)
+            if (NetRunner.Instance.IsServer && (functionInfo.Sources & NetworkSources.Client) == 0)
             {
                 return;
             }
-            if (NetRunner.Instance.IsClient && (functionInfo.Sources & NetFunction.NetworkSources.Server) == 0)
+            if (NetRunner.Instance.IsClient && (functionInfo.Sources & NetworkSources.Server) == 0)
             {
                 return;
             }
@@ -1364,13 +1321,14 @@ namespace Nebula
         internal void SendDespawn(NetPeer peer, NetId netId)
         {
             if (!NetRunner.Instance.IsServer) return;
-            var buffer = NetId.NetworkSerialize(this, peer, netId);
-            peer.Send((int)NetRunner.ENetChannelId.Despawn, buffer.bytes, (int)ENetPacketPeer.FlagReliable);
+            using var buffer = new NetBuffer();
+            NetId.NetworkSerialize(this, peer, netId, buffer);
+            NetRunner.SendReliable(peer, (byte)NetRunner.ENetChannelId.Despawn, buffer.ToArray());
         }
 
-        internal void ReceiveDespawn(NetPeer peer, HLBuffer buffer)
+        internal void ReceiveDespawn(NetPeer peer, NetBuffer buffer)
         {
-            var netId = NetId.NetworkDeserialize(this, peer, buffer, new Variant());
+            var netId = NetId.NetworkDeserialize(this, peer, buffer);
             GetNodeFromNetId(netId).handleDespawn();
         }
     }

@@ -100,8 +100,8 @@ namespace Nebula.Internal.Editor
                 switch (eventType)
                 {
                     case ENetConnection.EventType.Receive:
-                        var data = new HLBuffer(packetPeer.GetPacket());
-                        var debugDataType = (WorldRunner.DebugDataType)HLBytes.UnpackByte(data);
+                        var data = new NetBuffer(packetPeer.GetPacket());
+                        var debugDataType = (WorldRunner.DebugDataType)NetReader.ReadByte(data);
                         switch (debugDataType)
                         {
                             case WorldRunner.DebugDataType.TICK:
@@ -111,8 +111,8 @@ namespace Nebula.Internal.Editor
                                         incomingTickFrame = null;
                                     }
                                     greatestStateSize = 0;
-                                    var milliseconds = HLBytes.UnpackInt64(data);
-                                    var tickId = HLBytes.UnpackInt32(data);
+                                    var milliseconds = NetReader.ReadInt64(data);
+                                    var tickId = NetReader.ReadInt32(data);
                                     var datetime = new DateTime(milliseconds * TimeSpan.TicksPerMillisecond);
                                     incomingTickFrame = new TickFrame { Id = tickId, Timestamp = datetime, WorldId = worldId, Logs = [], NetFunctionCalls = [] };
                                     db.GetCollection<TickFrame>("tick_frames").Insert(incomingTickFrame);
@@ -121,15 +121,15 @@ namespace Nebula.Internal.Editor
                                 break;
                             case WorldRunner.DebugDataType.CALLS:
                                 {
-                                    var functionName = HLBytes.UnpackString(data);
+                                    var functionName = NetReader.ReadString(data);
                                     var args = new BsonArray();
-                                    var argsLength = HLBytes.UnpackByte(data);
+                                    var argsLength = NetReader.ReadByte(data);
                                     for (int i = 0; i < argsLength; i++)
                                     {
-                                        var val = HLBytes.UnpackVariant(data);
-                                        if (val.HasValue)
+                                        var val = NetReader.ReadWithType(data, out var serialType);
+                                        if (val != null)
                                         {
-                                            args.Add(new BsonValue(val.Value.Obj));
+                                            args.Add(new BsonValue(val));
                                         }
                                     }
                                     incomingTickFrame.NetFunctionCalls.Add(new BsonDocument
@@ -147,8 +147,8 @@ namespace Nebula.Internal.Editor
                                     {
                                         break;
                                     }
-                                    var peerId = HLBytes.UnpackVariant(data);
-                                    var payload = HLBytes.UnpackByteArray(data, untilEnd: true);
+                                    var peerId = new UUID(NetReader.ReadBytes(data, 16));
+                                    var payload = NetReader.ReadRemainingBytes(data);
                                     greatestStateSize = Math.Max(greatestStateSize, payload.Length);
                                     incomingTickFrame.PeerPayloads[peerId.ToString()] = payload;
                                     incomingTickFrame.GreatestSize = greatestStateSize;
@@ -158,8 +158,8 @@ namespace Nebula.Internal.Editor
                                 break;
                             case WorldRunner.DebugDataType.LOGS:
                                 {
-                                    var level = (Debugger.DebugLevel)HLBytes.UnpackByte(data);
-                                    var message = HLBytes.UnpackString(data);
+                                    var level = (Debugger.DebugLevel)NetReader.ReadByte(data);
+                                    var message = NetReader.ReadString(data);
                                     incomingTickFrame.Logs.Add(new BsonDocument
                                     {
                                         ["level"] = (int)level,
@@ -172,7 +172,7 @@ namespace Nebula.Internal.Editor
                                 break;
                             case WorldRunner.DebugDataType.EXPORT:
                                 {
-                                    var fullGameState = HLBytes.UnpackByteArray(data, untilEnd: true);
+                                    var fullGameState = NetReader.ReadRemainingBytes(data);
                                     incomingTickFrame.WorldState = BsonSerializer.Deserialize(fullGameState);
                                     db.GetCollection<TickFrame>("tick_frames").Update(incomingTickFrame);
                                     EmitSignal(SignalName.TickFrameUpdated, incomingTickFrame.Id);
@@ -283,4 +283,3 @@ namespace Nebula.Internal.Editor
         }
     }
 }
-

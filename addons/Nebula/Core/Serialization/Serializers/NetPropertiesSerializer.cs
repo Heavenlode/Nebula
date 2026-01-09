@@ -11,24 +11,26 @@ namespace Nebula.Serialization.Serializers
         private struct Data
         {
             public byte[] propertiesUpdated;
-            public Dictionary<int, Variant> properties;
+            public Dictionary<int, object> properties;
         }
 
         private NetworkController network;
-        private Dictionary<int, Variant> cachedPropertyChanges = new();
+        private Dictionary<int, object> cachedPropertyChanges = new();
 
         #region Interpolation State
 
         private struct SmoothState
         {
-            public Variant Target;
+            public object Target;
+            public SerialVariantType Type;
         }
         private Dictionary<string, SmoothState> smoothStates = new();
 
         private struct BufferedState
         {
             public Tick Tick;
-            public Variant Value;
+            public object Value;
+            public SerialVariantType Type;
         }
         private Dictionary<string, List<BufferedState>> bufferedStates = new();
         private const int MaxBufferSize = 30;
@@ -76,7 +78,7 @@ namespace Nebula.Serialization.Serializers
                 network.RawNode.Connect("InterestChanged", Callable.From((UUID peerId, long oldInterest, long newInterest) =>
                 {
                     var peer = NetRunner.Instance.GetPeer(peerId);
-                    if (peer == null || !peerInitialPropSync.ContainsKey(peer))
+                    if (!peer.IsSet || !peerInitialPropSync.ContainsKey(peer))
                         return;
 
                     foreach (var propIndex in nonDefaultProperties)
@@ -111,14 +113,17 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        public void ImportProperty(ProtocolNetProperty prop, Tick tick, Variant value)
+        public void ImportProperty(ProtocolNetProperty prop, Tick tick, object value)
         {
             var propNode = network.RawNode.GetNode(prop.NodePath);
             var propId = $"{prop.NodePath}:{prop.Name}";
 
+            // Convert value to Variant for Godot property access
+            Variant variantValue = ObjectToVariant(value, prop.VariantType);
+
             // Fire change callbacks
             Variant oldVal = propNode.Get(prop.Name);
-            if (!oldVal.Equals(value))
+            if (!oldVal.Equals(variantValue))
             {
                 var friendlyPropName = prop.Name;
                 if (friendlyPropName.StartsWith("network_"))
@@ -127,32 +132,32 @@ namespace Nebula.Serialization.Serializers
                 }
                 if (propNode.HasSignal("OnNetworkChange" + prop.Name))
                 {
-                    propNode.EmitSignal("OnNetworkChange" + prop.Name, tick, oldVal, value);
+                    propNode.EmitSignal("OnNetworkChange" + prop.Name, tick, oldVal, variantValue);
                 }
                 else if (propNode.HasMethod("OnNetworkChange" + prop.Name))
                 {
-                    propNode.Call("OnNetworkChange" + prop.Name, tick, oldVal, value);
+                    propNode.Call("OnNetworkChange" + prop.Name, tick, oldVal, variantValue);
                 }
                 else if (propNode.HasMethod("_on_network_change_" + friendlyPropName))
                 {
-                    propNode.Call("_on_network_change_" + friendlyPropName, tick, oldVal, value);
+                    propNode.Call("_on_network_change_" + friendlyPropName, tick, oldVal, variantValue);
                 }
             }
 
 #if DEBUG
             var netProps = GetMeta("NETWORK_PROPS", new Godot.Collections.Dictionary()).AsGodotDictionary();
-            netProps[propId] = value;
+            netProps[propId] = variantValue;
             SetMeta("NETWORK_PROPS", netProps);
 #endif
 
             switch (prop.LerpMode)
             {
                 case NetLerpMode.None:
-                    propNode.Set(prop.Name, value);
+                    propNode.Set(prop.Name, variantValue);
                     break;
 
                 case NetLerpMode.Smooth:
-                    smoothStates[propId] = new SmoothState { Target = value };
+                    smoothStates[propId] = new SmoothState { Target = value, Type = prop.VariantType };
                     break;
 
                 case NetLerpMode.Buffered:
@@ -160,7 +165,7 @@ namespace Nebula.Serialization.Serializers
                     {
                         bufferedStates[propId] = new List<BufferedState>();
                     }
-                    bufferedStates[propId].Add(new BufferedState { Tick = tick, Value = value });
+                    bufferedStates[propId].Add(new BufferedState { Tick = tick, Value = value, Type = prop.VariantType });
 
                     while (bufferedStates[propId].Count > MaxBufferSize)
                     {
@@ -170,7 +175,29 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        private Data Deserialize(HLBuffer buffer)
+        /// <summary>
+        /// Converts a C# object to a Godot Variant based on type information.
+        /// This is ONLY used at the Godot boundary for property setting.
+        /// </summary>
+        private static Variant ObjectToVariant(object value, SerialVariantType type)
+        {
+            return type switch
+            {
+                SerialVariantType.Bool => (bool)value,
+                SerialVariantType.Int => Convert.ToInt64(value),
+                SerialVariantType.Float => Convert.ToSingle(value),
+                SerialVariantType.String => (string)value,
+                SerialVariantType.Vector2 => (Vector2)value,
+                SerialVariantType.Vector3 => (Vector3)value,
+                SerialVariantType.Quaternion => (Quaternion)value,
+                SerialVariantType.PackedByteArray => (byte[])value,
+                SerialVariantType.PackedInt32Array => (int[])value,
+                SerialVariantType.PackedInt64Array => (long[])value,
+                _ => Variant.From(value)
+            };
+        }
+
+        private Data Deserialize(NetBuffer buffer)
         {
             var data = new Data
             {
@@ -180,7 +207,7 @@ namespace Nebula.Serialization.Serializers
 
             for (byte i = 0; i < data.propertiesUpdated.Length; i++)
             {
-                data.propertiesUpdated[i] = HLBytes.UnpackByte(buffer);
+                data.propertiesUpdated[i] = NetReader.ReadByte(buffer);
             }
 
             for (byte propertyByteIndex = 0; propertyByteIndex < data.propertiesUpdated.Length; propertyByteIndex++)
@@ -206,8 +233,8 @@ namespace Nebula.Serialization.Serializers
                             Debugger.Instance.Log($"No NetworkDeserialize method found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
                             continue;
                         }
-                        var result = method.Invoke(null, new object[] { network.CurrentWorld, new Variant(), buffer, propNode });
-                        data.properties[propertyIndex] = Variant.From(result);
+                        var result = method.Invoke(null, new object[] { network.CurrentWorld, null, buffer });
+                        data.properties[propertyIndex] = result;
                     }
                     else
                     {
@@ -215,13 +242,74 @@ namespace Nebula.Serialization.Serializers
                         {
                             Debugger.Instance.Log($"Property {prop.NodePath}.{prop.Name} has VariantType.Nil, cannot deserialize", Debugger.DebugLevel.ERROR);
                         }
-                        var godotType = Protocol.ToGodotVariantType(prop.VariantType);
-                        var varVal = HLBytes.UnpackVariant(buffer, knownType: godotType);
-                        data.properties[propertyIndex] = varVal.Value;
+                        data.properties[propertyIndex] = ReadPropertyValue(buffer, prop.VariantType);
                     }
                 }
             }
             return data;
+        }
+
+        /// <summary>
+        /// Reads a property value based on its SerialVariantType. Strongly-typed, no Variant boxing.
+        /// </summary>
+        private static object ReadPropertyValue(NetBuffer buffer, SerialVariantType type)
+        {
+            return type switch
+            {
+                SerialVariantType.Bool => NetReader.ReadBool(buffer),
+                SerialVariantType.Int => NetReader.ReadInt64(buffer),
+                SerialVariantType.Float => NetReader.ReadFloat(buffer),
+                SerialVariantType.String => NetReader.ReadString(buffer),
+                SerialVariantType.Vector2 => NetReader.ReadVector2(buffer),
+                SerialVariantType.Vector3 => NetReader.ReadVector3(buffer),
+                SerialVariantType.Quaternion => NetReader.ReadQuaternion(buffer),
+                SerialVariantType.PackedByteArray => NetReader.ReadBytesWithLength(buffer),
+                SerialVariantType.PackedInt32Array => NetReader.ReadInt32Array(buffer),
+                SerialVariantType.PackedInt64Array => NetReader.ReadInt64Array(buffer),
+                _ => throw new NotSupportedException($"Unsupported property type: {type}")
+            };
+        }
+
+        /// <summary>
+        /// Writes a property value based on its SerialVariantType. Strongly-typed, no Variant boxing.
+        /// </summary>
+        private static void WritePropertyValue(NetBuffer buffer, SerialVariantType type, Variant value)
+        {
+            switch (type)
+            {
+                case SerialVariantType.Bool:
+                    NetWriter.WriteBool(buffer, (bool)value);
+                    break;
+                case SerialVariantType.Int:
+                    NetWriter.WriteInt64(buffer, (long)value);
+                    break;
+                case SerialVariantType.Float:
+                    NetWriter.WriteFloat(buffer, (float)value);
+                    break;
+                case SerialVariantType.String:
+                    NetWriter.WriteString(buffer, (string)value);
+                    break;
+                case SerialVariantType.Vector2:
+                    NetWriter.WriteVector2(buffer, (Vector2)value);
+                    break;
+                case SerialVariantType.Vector3:
+                    NetWriter.WriteVector3(buffer, (Vector3)value);
+                    break;
+                case SerialVariantType.Quaternion:
+                    NetWriter.WriteQuaternion(buffer, (Quaternion)value);
+                    break;
+                case SerialVariantType.PackedByteArray:
+                    NetWriter.WriteBytesWithLength(buffer, (byte[])value);
+                    break;
+                case SerialVariantType.PackedInt32Array:
+                    NetWriter.WriteInt32Array(buffer, (int[])value);
+                    break;
+                case SerialVariantType.PackedInt64Array:
+                    NetWriter.WriteInt64Array(buffer, (long[])value);
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported property type: {type}");
+            }
         }
 
         public void Begin()
@@ -234,7 +322,7 @@ namespace Nebula.Serialization.Serializers
             propertyUpdated.Clear();
         }
 
-        public void Import(WorldRunner currentWorld, HLBuffer buffer, out NetworkController nodeOut)
+        public void Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController nodeOut)
         {
             nodeOut = network;
 
@@ -297,14 +385,18 @@ namespace Nebula.Serialization.Serializers
             mask[byteIndex] &= (byte)~(1 << bitOffset);
         }
 
-        private HLBuffer _buffer = new();
+        private NetBuffer _buffer;
         private byte[] _propertiesUpdated;
         private byte[] _filteredProps;
         private List<Tick> _sortedTicks = new();
 
-        public HLBuffer Export(WorldRunner currentWorld, NetPeer peerId)
+        public NetBuffer Export(WorldRunner currentWorld, NetPeer peerId)
         {
-            _buffer.Clear();
+            if (_buffer == null)
+            {
+                _buffer = new NetBuffer();
+            }
+            _buffer.Reset();
 
             int byteCount = GetByteCountOfProperties();
 
@@ -387,7 +479,7 @@ namespace Nebula.Serialization.Serializers
             // Serialize the mask
             for (var i = 0; i < _propertiesUpdated.Length; i++)
             {
-                HLBytes.Pack(_buffer, _propertiesUpdated[i]);
+                NetWriter.WriteByte(_buffer, _propertiesUpdated[i]);
             }
 
             // Serialize property values
@@ -414,18 +506,20 @@ namespace Nebula.Serialization.Serializers
                             Debugger.Instance.Log($"No NetworkSerialize method found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
                             continue;
                         }
-                        var result = method.Invoke(null, new object[] { currentWorld, peerId, varVal });
-                        HLBytes.Pack(_buffer, ((HLBuffer)result).bytes);
+                        // Create a temp buffer for the custom serializer
+                        using var tempBuffer = new NetBuffer();
+                        method.Invoke(null, new object[] { currentWorld, peerId, varVal.AsGodotObject(), tempBuffer });
+                        NetWriter.WriteBytes(_buffer, tempBuffer.WrittenSpan);
                     }
                     else
                     {
                         try
                         {
-                            HLBytes.PackVariant(_buffer, varVal, packLength: true);
+                            WritePropertyValue(_buffer, prop.VariantType, varVal);
                         }
                         catch (Exception ex)
                         {
-                            Debugger.Instance.Log($"Error packing variant {prop.NodePath}.{prop.Name}: {ex.Message}", Debugger.DebugLevel.ERROR);
+                            Debugger.Instance.Log($"Error packing property {prop.NodePath}.{prop.Name}: {ex.Message}", Debugger.DebugLevel.ERROR);
                         }
                     }
                 }
@@ -508,22 +602,21 @@ namespace Nebula.Serialization.Serializers
 
                 if (propNode.HasMethod("NetworkSmooth" + propName))
                 {
-                    propNode.Call("NetworkSmooth" + propName, state.Target, t);
+                    propNode.Call("NetworkSmooth" + propName, ObjectToVariant(state.Target, state.Type), t);
                 }
                 else
                 {
                     var current = propNode.Get(propName);
-                    var target = state.Target;
 
                     if (prop.VariantType == SerialVariantType.Vector3)
                     {
-                        var result = ((Vector3)current).Lerp((Vector3)target, t);
+                        var result = ((Vector3)current).Lerp((Vector3)state.Target, t);
                         propNode.Set(propName, result);
                     }
                     else if (prop.VariantType == SerialVariantType.Quaternion)
                     {
                         var currentQuat = ((Quaternion)current).Normalized();
-                        var targetQuat = ((Quaternion)target).Normalized();
+                        var targetQuat = ((Quaternion)state.Target).Normalized();
                         if (currentQuat.Dot(targetQuat) < 0)
                             targetQuat = -targetQuat;
                         var result = currentQuat.Slerp(targetQuat, t);
@@ -531,7 +624,7 @@ namespace Nebula.Serialization.Serializers
                     }
                     else if (prop.VariantType == SerialVariantType.Float)
                     {
-                        var result = Mathf.Lerp((float)current, (float)target, t);
+                        var result = Mathf.Lerp((float)current, (float)state.Target, t);
                         propNode.Set(propName, result);
                     }
                     else if (prop.VariantType == SerialVariantType.Object)
@@ -610,7 +703,7 @@ namespace Nebula.Serialization.Serializers
                 {
                     if (buffer.Count > 0)
                     {
-                        propNode.Set(propName, buffer[^1].Value);
+                        propNode.Set(propName, ObjectToVariant(buffer[^1].Value, buffer[^1].Type));
                     }
                     continue;
                 }
@@ -621,7 +714,10 @@ namespace Nebula.Serialization.Serializers
 
                 if (propNode.HasMethod("NetworkBufferedLerp" + propName))
                 {
-                    propNode.Call("NetworkBufferedLerp" + propName, before.Value.Value, after.Value.Value, t);
+                    propNode.Call("NetworkBufferedLerp" + propName, 
+                        ObjectToVariant(before.Value.Value, before.Value.Type), 
+                        ObjectToVariant(after.Value.Value, after.Value.Type), 
+                        t);
                 }
                 else
                 {

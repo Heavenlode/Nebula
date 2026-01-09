@@ -79,24 +79,24 @@ namespace Nebula
                     {
                         switch (functionInfo.Arguments[index].VariantType)
                         {
-                            case Variant.Type.Int:
+                            case SerialVariantType.Int:
                                 if (functionInfo.Arguments[index].Metadata.TypeIdentifier == "Int")
                                     return Variant.From((int)x);
                                 else if (functionInfo.Arguments[index].Metadata.TypeIdentifier == "Byte")
                                     return Variant.From((byte)x);
                                 else
                                     return Variant.From((long)x);
-                            case Variant.Type.Float:
+                            case SerialVariantType.Float:
                                 return Variant.From((float)x);
-                            case Variant.Type.String:
+                            case SerialVariantType.String:
                                 return Variant.From((string)x);
-                            case Variant.Type.Vector2:
+                            case SerialVariantType.Vector2:
                                 return Variant.From((Vector2)x);
-                            case Variant.Type.Vector3:
+                            case SerialVariantType.Vector3:
                                 return Variant.From((Vector3)x);
-                            case Variant.Type.Quaternion:
+                            case SerialVariantType.Quaternion:
                                 return Variant.From((Quaternion)x);
-                            case Variant.Type.Color:
+                            case SerialVariantType.Color:
                                 return Variant.From((Color)x);
                             default:
                                 throw new Exception($"Unsupported argument type {functionInfo.Arguments[index].VariantType}");

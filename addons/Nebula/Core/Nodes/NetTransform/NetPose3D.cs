@@ -422,17 +422,17 @@ namespace Nebula
             return result;
         }
 
-        public async Task OnBsonDeserialize(Variant context, BsonDocument doc)
+        public async Task OnBsonDeserialize(NetBsonContext context, BsonDocument doc)
         {
             await Task.CompletedTask;
         }
 
-        public async Task<NetPose3D> BsonDeserialize(Variant context, byte[] bson)
+        public async Task<NetPose3D> BsonDeserialize(NetBsonContext context, byte[] bson)
         {
             return await BsonDeserialize(context, bson, this);
         }
 
-        public static async Task<NetPose3D> BsonDeserialize(Variant context, byte[] bson, NetPose3D initialObject)
+        public static async Task<NetPose3D> BsonDeserialize(NetBsonContext context, byte[] bson, NetPose3D initialObject)
         {
             var bsonValue = BsonTransformer.Instance.DeserializeBsonValue<BsonDocument>(bson);
             var result = initialObject ?? new NetPose3D();
@@ -464,7 +464,7 @@ namespace Nebula
             return result;
         }
 
-        public BsonValue BsonSerialize(Variant context)
+        public BsonValue BsonSerialize(NetBsonContext context)
         {
             var doc = new BsonDocument();
             doc["Position"] = new BsonArray { _position.x.ToFormattedFloat(), _position.y.ToFormattedFloat(), _position.z.ToFormattedFloat() };

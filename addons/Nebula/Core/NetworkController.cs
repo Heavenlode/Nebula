@@ -67,17 +67,20 @@ namespace Nebula
 			return Protocol.IsNetScene(RawNode.SceneFilePath);
 		}
 
-		internal List<Tuple<string, string>> InitialSetNetProperties = [];
-		public WorldRunner CurrentWorld { get; internal set; }
-		internal Godot.Collections.Dictionary<byte, Variant> InputBuffer = [];
-		internal Godot.Collections.Dictionary<byte, Variant> PreviousInputBuffer = [];
-		public Godot.Collections.Dictionary<UUID, long> InterestLayers { get; set; } = [];
+	internal List<Tuple<string, string>> InitialSetNetProperties = [];
+	public WorldRunner CurrentWorld { get; internal set; }
+	internal Dictionary<byte, object> InputBuffer = [];
+	internal Dictionary<byte, object> PreviousInputBuffer = [];
+	public Dictionary<UUID, long> InterestLayers { get; set; } = [];
 		public NetworkController[] StaticNetworkChildren = [];
 		public long[] DirtyProps = new long[64];
 		public HashSet<NetworkController> DynamicNetworkChildren = [];
 		
-		[Signal]
-		public delegate void InterestChangedEventHandler(UUID peerId, long interestLayers);
+		/// <summary>
+		/// Invoked when a peer's interest layers change. Parameters: (peerId, oldInterest, newInterest)
+		/// </summary>
+		public event Action<UUID, long, long> InterestChanged;
+		
 		public void SetPeerInterest(UUID peerId, long newInterest, bool recurse = true)
 		{
 			var oldInterest = InterestLayers.TryGetValue(peerId, out var value) ? value : 0;
@@ -89,7 +92,7 @@ namespace Nebula
 			// 		child.SetPeerInterest(peerId, newInterest, recurse);
 			// 	}
 			// }
-			EmitSignal("InterestChanged", peerId, oldInterest, newInterest);
+			InterestChanged?.Invoke(peerId, oldInterest, newInterest);
 		}
 
 		public void AddPeerInterest(UUID peerId, long interestLayers, bool recurse = true)
@@ -120,29 +123,78 @@ namespace Nebula
 			}
 		}
 
-		public void SetNetworkInput(byte input, Variant value)
+	public void SetNetworkInput(byte input, Variant value)
+	{
+		if (IsNetScene())
 		{
-			if (IsNetScene())
-			{
-				InputBuffer[input] = value;
-			}
-			else
-			{
-				NetParent.SetNetworkInput(input, value);
-			}
+			InputBuffer[input] = VariantToObject(value);
 		}
+		else
+		{
+			NetParent.SetNetworkInput(input, value);
+		}
+	}
 
-		public Variant GetNetworkInput(byte input, Variant defaultValue)
+	public Variant GetNetworkInput(byte input, Variant defaultValue)
+	{
+		if (IsNetScene())
 		{
-			if (IsNetScene())
+			if (InputBuffer.TryGetValue(input, out var value))
 			{
-				return InputBuffer.GetValueOrDefault(input, defaultValue);
+				return ObjectToVariant(value);
 			}
-			else
-			{
-				return NetParent.GetNetworkInput(input, defaultValue);
-			}
+			return defaultValue;
 		}
+		else
+		{
+			return NetParent.GetNetworkInput(input, defaultValue);
+		}
+	}
+
+	/// <summary>
+	/// Converts a Godot Variant to a C# object for internal storage.
+	/// </summary>
+	private static object VariantToObject(Variant value)
+	{
+		return value.VariantType switch
+		{
+			Variant.Type.Bool => (bool)value,
+			Variant.Type.Int => (long)value,
+			Variant.Type.Float => (float)value,
+			Variant.Type.String => (string)value,
+			Variant.Type.Vector2 => (Vector2)value,
+			Variant.Type.Vector3 => (Vector3)value,
+			Variant.Type.Quaternion => (Quaternion)value,
+			Variant.Type.PackedByteArray => (byte[])value,
+			Variant.Type.PackedInt32Array => (int[])value,
+			Variant.Type.PackedInt64Array => (long[])value,
+			_ => value.Obj
+		};
+	}
+
+	/// <summary>
+	/// Converts a C# object back to a Godot Variant at Godot boundaries.
+	/// </summary>
+	private static Variant ObjectToVariant(object value)
+	{
+		return value switch
+		{
+			bool b => b,
+			long l => l,
+			int i => i,
+			float f => f,
+			double d => (float)d,
+			string s => s,
+			Vector2 v2 => v2,
+			Vector3 v3 => v3,
+			Quaternion q => q,
+			byte[] ba => ba,
+			int[] ia => ia,
+			long[] la => la,
+			GodotObject go => Variant.From(go),
+			_ => Variant.From(value)
+		};
+	}
 
 		public bool IsWorldReady { get; internal set; } = false;
 
@@ -162,12 +214,12 @@ namespace Nebula
 					}
 				}
 				_networkParentId = value;
+			{
+				if (IsNetScene() && value.IsValid && CurrentWorld.GetNodeFromNetId(value).RawNode is INetNodeBase _netNodeParent)
 				{
-					if (IsNetScene() && value != null && CurrentWorld.GetNodeFromNetId(value).RawNode is INetNodeBase _netNodeParent)
-					{
-						_netNodeParent.Network.DynamicNetworkChildren.Add(this);
-					}
+					_netNodeParent.Network.DynamicNetworkChildren.Add(this);
 				}
+			}
 			}
 		}
 		public NetworkController NetParent
@@ -179,7 +231,7 @@ namespace Nebula
 			}
 			internal set
 			{
-				NetParentId = value?.NetId;
+				NetParentId = value?.NetId ?? NetId.None;
 			}
 		}
 		public bool IsClientSpawn { get; internal set; } = false;
@@ -276,21 +328,22 @@ namespace Nebula
 					networkChild.NetParentId = NetId;
 					networkChild._NetworkPrepare(world);
 				}
-				if (NetRunner.Instance.IsClient)
+			if (NetRunner.Instance.IsClient)
+			{
+				return;
+			}
+			
+			// Ensure every networked "INetNode" property is correctly linked to the WorldRunner.
+			if (GeneratedProtocol.PropertiesMap.TryGetValue(RawNode.SceneFilePath, out var nodeMap))
+			{
+				foreach (var nodeEntry in nodeMap)
 				{
-					return;
-				}
-				foreach (var nodePropertyDetail in Protocol.ListProperties(RawNode.SceneFilePath))
-				{
-					var nodePath = nodePropertyDetail["nodePath"].AsString();
-					var nodeProps = nodePropertyDetail["properties"].As<Godot.Collections.Array<ProtocolNetProperty>>();
-
-					// Ensure every networked "INetNode" property is correctly linked to the WorldRunner.
-					foreach (var property in nodeProps)
+					var nodePath = nodeEntry.Key;
+					foreach (var propEntry in nodeEntry.Value)
 					{
+						var property = propEntry.Value;
 						if (property.Metadata.TypeIdentifier == "NetNode")
 						{
-							// TODO Remove this boxing if possible
 							var node = RawNode.GetNode(nodePath);
 							var prop = node.Get(property.Name);
 							var tempNetNode = prop.As<GodotObject>();
@@ -310,6 +363,7 @@ namespace Nebula
 						}
 					}
 				}
+			}
 
 				foreach (var initialSetProp in InitialSetNetProperties)
 				{
@@ -351,29 +405,29 @@ namespace Nebula
 			RawNode.Call("_NetworkProcess", tick);
 		}
 
-		public Godot.Collections.Dictionary<int, Variant> GetInput()
+	public Dictionary<int, object> GetInput()
+	{
+		if (!IsCurrentOwner) return null;
+		if (!CurrentWorld.InputStore.ContainsKey(InputAuthority))
+			return null;
+
+		byte netId;
+		if (NetRunner.Instance.IsServer)
 		{
-			if (!IsCurrentOwner) return null;
-			if (!CurrentWorld.InputStore.ContainsKey(InputAuthority))
-				return null;
-
-			byte netId;
-			if (NetRunner.Instance.IsServer)
-			{
-				netId = CurrentWorld.GetPeerNodeId(InputAuthority, this);
-			}
-			else
-			{
-				netId = (byte)NetId.Value;
-			}
-
-			if (!CurrentWorld.InputStore[InputAuthority].ContainsKey(netId))
-				return null;
-
-			var inputs = CurrentWorld.InputStore[InputAuthority][netId];
-			CurrentWorld.InputStore[InputAuthority].Remove(netId);
-			return inputs;
+			netId = CurrentWorld.GetPeerNodeId(InputAuthority, this);
 		}
+		else
+		{
+			netId = (byte)NetId.Value;
+		}
+
+		if (!CurrentWorld.InputStore[InputAuthority].ContainsKey(netId))
+			return null;
+
+		var inputs = CurrentWorld.InputStore[InputAuthority][netId];
+		CurrentWorld.InputStore[InputAuthority].Remove(netId);
+		return inputs;
+	}
 
 		/// <summary>
 		/// Used by NetFunction to determine whether the call should be send over the network, or if it is coming from the network.

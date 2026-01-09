@@ -149,6 +149,34 @@ namespace Nebula.Serialization
             return GeneratedProtocol.ScenesPack.TryGetValue(scenePath, out sceneId);
         }
 
+        /// <summary>
+        /// Check if a scene path is registered as a network scene.
+        /// </summary>
+        public static bool IsNetScene(string scenePath)
+        {
+            return GeneratedProtocol.ScenesPack.ContainsKey(scenePath);
+        }
+
+        /// <summary>
+        /// Pack a scene path to its byte ID.
+        /// </summary>
+        public static byte PackScene(string scenePath)
+        {
+            if (GeneratedProtocol.ScenesPack.TryGetValue(scenePath, out var id))
+                return id;
+            throw new KeyNotFoundException($"Scene not found in protocol: {scenePath}");
+        }
+
+        /// <summary>
+        /// Unpack a scene ID to its PackedScene.
+        /// </summary>
+        public static PackedScene UnpackScene(byte sceneId)
+        {
+            if (GeneratedProtocol.ScenesMap.TryGetValue(sceneId, out var path))
+                return GD.Load<PackedScene>(path);
+            throw new KeyNotFoundException($"Scene ID not found in protocol: {sceneId}");
+        }
+
         #endregion
 
         #region Static Node Paths
@@ -178,6 +206,22 @@ namespace Nebula.Serialization
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Pack a node path to its byte ID within a scene.
+        /// </summary>
+        public static bool PackNode(string scenePath, string nodePath, out byte nodeId)
+        {
+            return TryGetStaticNodeId(scenePath, nodePath, out nodeId);
+        }
+
+        /// <summary>
+        /// Unpack a node ID to its path within a scene.
+        /// </summary>
+        public static string UnpackNode(string scenePath, byte nodeId)
+        {
+            return GetStaticNodePath(scenePath, nodeId);
         }
 
         #endregion

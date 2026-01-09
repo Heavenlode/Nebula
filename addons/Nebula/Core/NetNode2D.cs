@@ -97,34 +97,36 @@ namespace Nebula
             return node;
         }
 
-        public BsonValue BsonSerialize(Variant context)
+        public BsonValue BsonSerialize(NetBsonContext context)
         {
             var doc = new BsonDocument();
             if (Network.IsNetScene())
             {
-                doc["NetId"] = Network.NetId.BsonSerialize(context);
+                var netId = Network.NetId;
+                doc["NetId"] = NetId.BsonSerialize(in netId);
             }
             else
             {
-                doc["NetId"] = Network.NetParent.NetId.BsonSerialize(context);
+                var parentNetId = Network.NetParent.NetId;
+                doc["NetId"] = NetId.BsonSerialize(in parentNetId);
                 doc["StaticChildPath"] = Network.NetParent.RawNode.GetPathTo(this).ToString();
             }
             return doc;
         }
 
-        public virtual async Task OnBsonDeserialize(Variant context, BsonDocument doc)
+        public virtual async Task OnBsonDeserialize(NetBsonContext context, BsonDocument doc)
         {
             // Base implementation - no custom logic needed for NetNode2D
             // Derived classes should override this method
             await Task.CompletedTask;
         }
 
-        public async Task<NetNode2D> BsonDeserialize(Variant context, byte[] bson)
+        public async Task<NetNode2D> BsonDeserialize(NetBsonContext context, byte[] bson)
         {
             return await BsonDeserialize(context, bson, this);
         }
 
-        public static async Task<NetNode2D> BsonDeserialize(Variant context, byte[] bson, NetNode2D obj)
+        public static async Task<NetNode2D> BsonDeserialize(NetBsonContext context, byte[] bson, NetNode2D obj)
         {
             var data = BsonTransformer.Instance.DeserializeBsonValue<BsonDocument>(bson);
             if (data.IsBsonNull) return null;
@@ -132,7 +134,7 @@ namespace Nebula
             var node = obj ?? new NetNode2D();
 
             // NetNode2D-specific deserialization logic
-            node.Network._prepareNetId = await NetId.BsonDeserialize(context, BsonTransformer.Instance.SerializeBsonValue(doc["NetId"]), node.Network.NetId);
+            node.Network._prepareNetId = NetId.BsonDeserialize(doc["NetId"]);
             if (doc.Contains("StaticChildPath"))
             {
                 node.Network._prepareStaticChildPath = doc["StaticChildPath"].AsString;

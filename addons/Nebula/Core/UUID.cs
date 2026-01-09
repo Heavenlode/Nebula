@@ -1,121 +1,134 @@
 using System;
-using Godot;
 using Nebula.Serialization;
 using MongoDB.Bson;
-using System.Threading.Tasks;
 
 namespace Nebula
 {
-
-    /**
-    <summary>
-    A UUID implementation for Nebula. Serializes into 16 bytes.
-    </summary>
-    */
-    public partial class UUID : RefCounted, INetSerializable<UUID>, IBsonSerializable<UUID>
+    /// <summary>
+    /// A UUID implementation for Nebula. Serializes into 16 bytes.
+    /// This is a value type (struct) to avoid allocations.
+    /// </summary>
+    public readonly struct UUID : INetValue<UUID>, IBsonValue<UUID>, IEquatable<UUID>
     {
-        public Guid Guid => new(_bytes);
-        public static UUID Empty { get; } = new UUID("00000000-0000-0000-0000-000000000000");
-        private byte[] _bytes = Guid.Empty.ToByteArray();
+        /// <summary>
+        /// The underlying GUID value.
+        /// </summary>
+        public readonly Guid Guid;
 
+        /// <summary>
+        /// Returns true if this UUID is empty (all zeros).
+        /// Use this instead of null checks since UUID is a struct.
+        /// </summary>
+        public bool IsEmpty => Guid == Guid.Empty;
+
+        /// <summary>
+        /// Creates a new random UUID.
+        /// </summary>
         public UUID()
         {
-            _bytes = Guid.NewGuid().ToByteArray();
+            Guid = Guid.NewGuid();
         }
 
+        /// <summary>
+        /// Creates a UUID from a string representation.
+        /// </summary>
         public UUID(string value)
         {
-            _bytes = Guid.Parse(value).ToByteArray();
+            Guid = Guid.Parse(value);
         }
 
+        /// <summary>
+        /// Creates a UUID from a byte array (must be 16 bytes).
+        /// </summary>
         public UUID(byte[] value)
         {
-            _bytes = value;
+            Guid = new Guid(value);
         }
 
-        public override string ToString()
+        /// <summary>
+        /// Creates a UUID from an existing Guid.
+        /// </summary>
+        public UUID(Guid guid)
         {
-            return Guid.ToString();
+            Guid = guid;
         }
 
-        public override bool Equals(object obj)
+        /// <summary>
+        /// Creates a new random UUID. Equivalent to new UUID().
+        /// </summary>
+        public static UUID NewUUID() => new UUID();
+
+        /// <summary>
+        /// Returns an empty UUID (all zeros).
+        /// </summary>
+        public static UUID Empty => default;
+
+        public override string ToString() => Guid.ToString();
+
+        public override bool Equals(object obj) => obj is UUID other && Equals(other);
+
+        public bool Equals(UUID other) => Guid.Equals(other.Guid);
+
+        public override int GetHashCode() => Guid.GetHashCode();
+
+        public static bool operator ==(UUID left, UUID right) => left.Equals(right);
+
+        public static bool operator !=(UUID left, UUID right) => !left.Equals(right);
+
+        /// <summary>
+        /// Returns the UUID as a 16-byte array. Note: This allocates a new array.
+        /// Prefer using Guid directly when possible.
+        /// </summary>
+        public byte[] ToByteArray() => Guid.ToByteArray();
+
+        #region Network Serialization
+
+        public static void NetworkSerialize(WorldRunner currentWorld, NetPeer peer, in UUID value, NetBuffer buffer)
         {
-            if (obj is UUID other)
+            if (value.IsEmpty)
             {
-                return Guid.Equals(other.Guid);
-            }
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return Guid.GetHashCode();
-        }
-
-        public static bool operator ==(UUID left, UUID right)
-        {
-            return left?.Equals(right) ?? right is null;
-        }
-
-        public static bool operator !=(UUID left, UUID right)
-        {
-            return !(left == right);
-        }
-
-        public byte[] ToByteArray()
-        {
-            return _bytes;
-        }
-
-        public static void NetworkSerialize(WorldRunner currentWorld, NetPeer peer, UUID obj, NetBuffer buffer)
-        {
-            if (obj == null) {
                 NetWriter.WriteByte(buffer, 0);
                 return;
             }
             NetWriter.WriteByte(buffer, 1);
-            NetWriter.WriteBytes(buffer, obj.ToByteArray());
+            NetWriter.WriteBytes(buffer, value.Guid.ToByteArray());
         }
 
         public static UUID NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
             var nullFlag = NetReader.ReadByte(buffer);
-            if (nullFlag == 0) {
-                return null;
+            if (nullFlag == 0)
+            {
+                return default;
             }
             return new UUID(NetReader.ReadBytes(buffer, 16));
         }
 
-        public async Task OnBsonDeserialize(Variant context, BsonDocument doc)
+        #endregion
+
+        #region BSON Serialization
+
+        public static BsonValue BsonSerialize(in UUID value)
         {
-            // UUID deserialization is handled entirely in the static method
-            await Task.CompletedTask;
+            if (value.IsEmpty)
+            {
+                return BsonNull.Value;
+            }
+            return new BsonBinaryData(value.Guid, GuidRepresentation.Standard);
         }
 
-        public async Task<UUID> BsonDeserialize(Variant context, byte[] bson)
+        public static UUID BsonDeserialize(BsonValue bson)
         {
-            return await BsonDeserialize(context, bson, this);
-        }
-        
-        public static async Task<UUID> BsonDeserialize(Variant context, byte[] bson, UUID initialObject)
-        {
-            var bsonValue = BsonTransformer.Instance.DeserializeBsonValue<BsonBinaryData>(bson);
-            if (bsonValue == null)
+            if (bson == null || bson.IsBsonNull)
             {
-                return initialObject;
+                return default;
             }
-            var guid = GuidConverter.FromBytes(bsonValue.Bytes, GuidRepresentation.Standard);
-            var result = new UUID(guid.ToByteArray());
             
-            // Call the virtual method for custom deserialization logic
-            var doc = new BsonDocument { ["value"] = bsonValue };
-            await result.OnBsonDeserialize(context, doc);
-            
-            return result;
+            var binaryData = bson.AsBsonBinaryData;
+            var guid = GuidConverter.FromBytes(binaryData.Bytes, GuidRepresentation.Standard);
+            return new UUID(guid);
         }
-        public BsonValue BsonSerialize(Variant context)
-        {
-            return new BsonBinaryData(Guid, GuidRepresentation.Standard);
-        }
+
+        #endregion
     }
 }

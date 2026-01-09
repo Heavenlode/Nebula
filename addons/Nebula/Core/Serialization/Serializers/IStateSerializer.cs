@@ -17,12 +17,13 @@ namespace Nebula.Serialization.Serializers
         public void Import(WorldRunner currentWorld, NetBuffer data, out NetworkController nodeOut);
 
         /// <summary>
-        /// Server-side only. Serialize and send data to the client.
+        /// Server-side only. Serialize and write data to the provided buffer.
+        /// Writes nothing if there's no data to export.
         /// </summary>
         /// <param name="currentWorld">The current world runner</param>
         /// <param name="peer">The target peer</param>
-        /// <returns>Buffer containing serialized data</returns>
-        public NetBuffer Export(WorldRunner currentWorld, NetPeer peer);
+        /// <param name="buffer">Buffer to write serialized data into</param>
+        public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer);
 
         public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick);
 

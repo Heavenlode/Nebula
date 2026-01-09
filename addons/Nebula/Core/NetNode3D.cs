@@ -100,7 +100,7 @@ namespace Nebula
             return node;
         }
 
-        public virtual BsonValue BsonSerialize(Variant context)
+        public virtual BsonValue BsonSerialize(NetBsonContext context)
         {
             return NetNodeCommon.ToBSONDocument(this, context);
         }
@@ -109,32 +109,21 @@ namespace Nebula
         /// Virtual method called during BSON deserialization. Override in derived classes
         /// to add custom deserialization logic. Always call base.OnBsonDeserialize() first.
         /// </summary>
-        public virtual async Task OnBsonDeserialize(Variant context, BsonDocument doc)
+        public virtual async Task OnBsonDeserialize(NetBsonContext context, BsonDocument doc)
         {
             // Base implementation - no custom logic needed for NetNode3D
             // Derived classes should override this method
             await Task.CompletedTask;
         }
 
-        public async Task<NetNode3D> BsonDeserialize(Variant context, byte[] bson)
+        public async Task<NetNode3D> BsonDeserialize(NetBsonContext context, byte[] bson)
         {
             return await BsonDeserialize(context, bson, this);
         }
 
-        public static async Task<NetNode3D> BsonDeserialize(Variant context, byte[] bson, NetNode3D obj)
+        public static async Task<NetNode3D> BsonDeserialize(NetBsonContext context, byte[] bson, NetNode3D obj)
         {
             var doc = BsonSerializer.Deserialize<BsonDocument>(bson);
-            if (context.VariantType != Variant.Type.Nil)
-            {
-                try
-                {
-                    context.As<NetNodeCommonBsonDeserializeContext>().bsonDocument = doc;
-                }
-                catch (InvalidCastException)
-                {
-                    Debugger.Instance.Log("Context is not a NetNodeCommonBsonDeserializeContext", Debugger.DebugLevel.ERROR);
-                }
-            }
 
             if (doc == NetNodeCommon.NullBsonDocument)
             {

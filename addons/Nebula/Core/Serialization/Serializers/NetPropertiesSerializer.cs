@@ -75,7 +75,7 @@ namespace Nebula.Serialization.Serializers
                     }
                 }));
 
-                network.RawNode.Connect("InterestChanged", Callable.From((UUID peerId, long oldInterest, long newInterest) =>
+                network.InterestChanged += (UUID peerId, long oldInterest, long newInterest) =>
                 {
                     var peer = NetRunner.Instance.GetPeer(peerId);
                     if (!peer.IsSet || !peerInitialPropSync.ContainsKey(peer))
@@ -101,7 +101,7 @@ namespace Nebula.Serialization.Serializers
                             }
                         }
                     }
-                }));
+                };
             }
             else
             {
@@ -385,19 +385,12 @@ namespace Nebula.Serialization.Serializers
             mask[byteIndex] &= (byte)~(1 << bitOffset);
         }
 
-        private NetBuffer _buffer;
         private byte[] _propertiesUpdated;
         private byte[] _filteredProps;
         private List<Tick> _sortedTicks = new();
 
-        public NetBuffer Export(WorldRunner currentWorld, NetPeer peerId)
+        public void Export(WorldRunner currentWorld, NetPeer peerId, NetBuffer buffer)
         {
-            if (_buffer == null)
-            {
-                _buffer = new NetBuffer();
-            }
-            _buffer.Reset();
-
             int byteCount = GetByteCountOfProperties();
 
             Array.Clear(_propertiesUpdated, 0, byteCount);
@@ -410,7 +403,7 @@ namespace Nebula.Serialization.Serializers
 
             if (!currentWorld.HasSpawnedForClient(network.NetId, peerId))
             {
-                return _buffer;
+                return;
             }
 
             if (!peerBufferCache.ContainsKey(peerId))
@@ -465,7 +458,7 @@ namespace Nebula.Serialization.Serializers
 
             if (!hasPendingUpdates)
             {
-                return _buffer;
+                return;
             }
 
             // Mark props as synced
@@ -479,7 +472,7 @@ namespace Nebula.Serialization.Serializers
             // Serialize the mask
             for (var i = 0; i < _propertiesUpdated.Length; i++)
             {
-                NetWriter.WriteByte(_buffer, _propertiesUpdated[i]);
+                NetWriter.WriteByte(buffer, _propertiesUpdated[i]);
             }
 
             // Serialize property values
@@ -509,13 +502,13 @@ namespace Nebula.Serialization.Serializers
                         // Create a temp buffer for the custom serializer
                         using var tempBuffer = new NetBuffer();
                         method.Invoke(null, new object[] { currentWorld, peerId, varVal.AsGodotObject(), tempBuffer });
-                        NetWriter.WriteBytes(_buffer, tempBuffer.WrittenSpan);
+                        NetWriter.WriteBytes(buffer, tempBuffer.WrittenSpan);
                     }
                     else
                     {
                         try
                         {
-                            WritePropertyValue(_buffer, prop.VariantType, varVal);
+                            WritePropertyValue(buffer, prop.VariantType, varVal);
                         }
                         catch (Exception ex)
                         {
@@ -524,8 +517,6 @@ namespace Nebula.Serialization.Serializers
                     }
                 }
             }
-
-            return _buffer;
         }
 
         private void FilterPropsAgainstInterestNoAlloc(NetPeer peer, byte[] dirtyPropsMask, byte[] result)

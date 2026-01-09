@@ -68,7 +68,7 @@ namespace Nebula
         {
             public Node Node;
             public ProtocolNetFunction FunctionInfo;
-            public Variant[] Args;
+            public object[] Args;
             public NetPeer Sender;
         }
 
@@ -80,8 +80,10 @@ namespace Nebula
         readonly static byte MAX_NETWORK_NODES = 64;
         private Dictionary<NetPeer, PeerState> PeerStates = [];
 
-        [Signal]
-        public delegate void OnPeerSyncStatusChangeEventHandler(string peerId, int status);
+        /// <summary>
+        /// Invoked when a peer's sync status changes. Parameters: (peerId, newStatus)
+        /// </summary>
+        public event Action<UUID, PeerSyncStatus> OnPeerSyncStatusChange;
 
         private List<QueuedFunction> queuedNetFunctions = [];
 
@@ -99,8 +101,8 @@ namespace Nebula
         internal long networkIdCounter = 0;
         private Dictionary<long, NetId> networkIds = [];
         internal Dictionary<NetId, NetworkController> NetScenes = [];
-        private Dictionary<NetPeer, Dictionary<byte, Dictionary<int, Variant>>> inputStore = [];
-        public Dictionary<NetPeer, Dictionary<byte, Dictionary<int, Variant>>> InputStore => inputStore;
+        private Dictionary<NetPeer, Dictionary<byte, Dictionary<int, object>>> inputStore = [];
+        public Dictionary<NetPeer, Dictionary<byte, Dictionary<int, object>>> InputStore => inputStore;
 
         // TCP debug server fields
         private TcpListener DebugTcpListener { get; set; }
@@ -380,7 +382,7 @@ namespace Nebula
 
         public NetworkController GetNodeFromNetId(NetId networkId)
         {
-            if (networkId == null)
+            if (networkId.IsNone || !networkId.IsValid)
                 return new NetworkController(null);
             if (!NetScenes.ContainsKey(networkId))
                 return new NetworkController(null);
@@ -414,22 +416,26 @@ namespace Nebula
         public NetId GetNetId(long id)
         {
             if (!networkIds.ContainsKey(id))
-                return null;
+                return NetId.None;
             return networkIds[id];
         }
 
         public NetId GetNetIdFromPeerId(NetPeer peer, byte id)
         {
             if (!PeerStates[peer].PeerToWorldNodeMap.ContainsKey(id))
-                return null;
+                return NetId.None;
             return PeerStates[peer].PeerToWorldNodeMap[id];
         }
 
-        [Signal]
-        public delegate void OnAfterNetworkTickEventHandler(Tick tick);
+        /// <summary>
+        /// Invoked after each network tick completes.
+        /// </summary>
+        public event Action<Tick> OnAfterNetworkTick;
 
-        [Signal]
-        public delegate void OnPlayerJoinedEventHandler(UUID peerId);
+        /// <summary>
+        /// Invoked when a player joins the world (sync status becomes IN_WORLD).
+        /// </summary>
+        public event Action<UUID> OnPlayerJoined;
 
 
         /// <summary>
@@ -525,7 +531,13 @@ namespace Nebula
                     Caller = queuedFunction.Sender,
                 };
                 functionNode.Network.IsInboundCall = true;
-                functionNode.Network.RawNode.Call(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
+                // Convert object[] back to Variant[] at Godot boundary
+                var variantArgs = new Variant[queuedFunction.Args.Length];
+                for (int i = 0; i < queuedFunction.Args.Length; i++)
+                {
+                    variantArgs[i] = Variant.From(queuedFunction.Args[i]);
+                }
+                functionNode.Network.RawNode.Call(queuedFunction.FunctionInfo.Name, variantArgs);
                 functionNode.Network.IsInboundCall = false;
                 NetFunctionContext = new NetFunctionCtx { };
 
@@ -538,9 +550,9 @@ namespace Nebula
                     NetWriter.WriteByte(debugBuffer, (byte)queuedFunction.Args.Length);
                     foreach (var arg in queuedFunction.Args)
                     {
-                        // For debug purposes, write type-tagged args
-                        var serialType = Protocol.FromGodotVariantType(arg.VariantType);
-                        NetWriter.WriteWithType(debugBuffer, serialType, VariantToObject(arg));
+                        // Args are already C# objects, determine type and write
+                        var serialType = GetSerialTypeFromObject(arg);
+                        NetWriter.WriteWithType(debugBuffer, serialType, arg);
                     }
                     SendToDebugClients(CreateFramedPacket(debugBuffer));
                 }
@@ -598,7 +610,7 @@ namespace Nebula
                         DeregisterPeerNode(netController, peer);
                     }
                 }
-                netController.NetParentId = null;
+                netController.NetParentId = NetId.None;
                 netController.RawNode.QueueFree();
             }
             QueueDespawnedNodes.Clear();
@@ -622,6 +634,27 @@ namespace Nebula
                 Variant.Type.PackedInt32Array => (int[])value,
                 Variant.Type.PackedInt64Array => (long[])value,
                 _ => value.Obj
+            };
+        }
+
+        /// <summary>
+        /// Gets the SerialVariantType from a C# object's runtime type.
+        /// </summary>
+        private static SerialVariantType GetSerialTypeFromObject(object value)
+        {
+            return value switch
+            {
+                bool => SerialVariantType.Bool,
+                long or int or short or byte => SerialVariantType.Int,
+                float or double => SerialVariantType.Float,
+                string => SerialVariantType.String,
+                Vector2 => SerialVariantType.Vector2,
+                Vector3 => SerialVariantType.Vector3,
+                Quaternion => SerialVariantType.Quaternion,
+                byte[] => SerialVariantType.PackedByteArray,
+                int[] => SerialVariantType.PackedInt32Array,
+                long[] => SerialVariantType.PackedInt64Array,
+                _ => SerialVariantType.Object
             };
         }
 
@@ -678,7 +711,7 @@ namespace Nebula
                 //     Log($"ServerProcessTick took {stopwatch.Elapsed.TotalMilliseconds:F2} ms", Debugger.DebugLevel.VERBOSE);
                 // }
 #endif
-                EmitSignal("OnAfterNetworkTick", CurrentTick);
+                OnAfterNetworkTick?.Invoke(CurrentTick);
             }
         }
 
@@ -746,11 +779,11 @@ namespace Nebula
         {
             if (PeerStates[peer].Status != state.Status)
             {
-                // TODO: Should this have side-effects?
-                EmitSignal("OnPeerSyncStatusChange", NetRunner.Instance.GetPeerId(peer), (int)state.Status);
+                var peerId = NetRunner.Instance.GetPeerId(peer);
+                OnPeerSyncStatusChange?.Invoke(peerId, state.Status);
                 if (state.Status == PeerSyncStatus.IN_WORLD)
                 {
-                    EmitSignal("OnPlayerJoined", NetRunner.Instance.GetPeerId(peer));
+                    OnPlayerJoined?.Invoke(peerId);
                 }
             }
             PeerStates[peer] = state;
@@ -928,6 +961,7 @@ namespace Nebula
         private Dictionary<long, byte> _peerNodesSerializersList = new();
         private List<long> _orderedNodeKeys = new();
         private NetBuffer _serializersBuffer;
+        private NetBuffer _tempSerializerBuffer;
         private Dictionary<long, NetBuffer> _nodeBufferPool = new();
 
         internal Dictionary<NetPeer, NetBuffer> ExportState(List<NetPeer> peers)
@@ -935,8 +969,9 @@ namespace Nebula
             var sw = System.Diagnostics.Stopwatch.StartNew();
             Dictionary<NetPeer, NetBuffer> peerBuffers = [];
 
-            // Lazy init the serializers buffer
+            // Lazy init the serializers buffers
             _serializersBuffer ??= new NetBuffer();
+            _tempSerializerBuffer ??= new NetBuffer();
 
             foreach (var netController in NetScenes.Values)
             {
@@ -963,13 +998,15 @@ namespace Nebula
                     for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                     {
                         var serializer = netController.NetNode.Serializers[serializerIdx];
-                        var serializerResult = serializer.Export(this, peer);
-                        if (serializerResult.Length == 0)
+                        _tempSerializerBuffer.Reset();
+                        int beforePos = _tempSerializerBuffer.WritePosition;
+                        serializer.Export(this, peer, _tempSerializerBuffer);
+                        if (_tempSerializerBuffer.WritePosition == beforePos)
                         {
-                            continue;
+                            continue; // Nothing written
                         }
                         serializersRun |= (byte)(1 << serializerIdx);
-                        NetWriter.WriteBytes(_serializersBuffer, serializerResult.WrittenSpan);
+                        NetWriter.WriteBytes(_serializersBuffer, _tempSerializerBuffer.WrittenSpan);
                     }
 
                     if (serializersRun == 0)
@@ -1137,7 +1174,13 @@ namespace Nebula
                     Caller = queuedFunction.Sender,
                 };
                 functionNode.Network.IsInboundCall = true;
-                functionNode.Network.RawNode.Call(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
+                // Convert object[] back to Variant[] at Godot boundary
+                var variantArgs = new Variant[queuedFunction.Args.Length];
+                for (int i = 0; i < queuedFunction.Args.Length; i++)
+                {
+                    variantArgs[i] = Variant.From(queuedFunction.Args[i]);
+                }
+                functionNode.Network.RawNode.Call(queuedFunction.FunctionInfo.Name, variantArgs);
                 functionNode.Network.IsInboundCall = false;
                 NetFunctionContext = new NetFunctionCtx { };
             }
@@ -1187,7 +1230,7 @@ namespace Nebula
             if (NetRunner.Instance.IsServer) return;
             var setInputs = netNode.InputBuffer.Keys.Aggregate((long)0, (acc, key) =>
             {
-                if (netNode.PreviousInputBuffer.ContainsKey(key) && netNode.PreviousInputBuffer[key].Equals(netNode.InputBuffer[key]))
+                if (netNode.PreviousInputBuffer.ContainsKey(key) && Equals(netNode.PreviousInputBuffer[key], netNode.InputBuffer[key]))
                 {
                     return acc;
                 }
@@ -1210,9 +1253,9 @@ namespace Nebula
                 }
                 netNode.PreviousInputBuffer[key] = netNode.InputBuffer[key];
                 NetWriter.WriteByte(inputBuffer, key);
-                // Write input with type tag for polymorphic support
-                var serialType = Protocol.FromGodotVariantType(netNode.InputBuffer[key].VariantType);
-                NetWriter.WriteWithType(inputBuffer, serialType, VariantToObject(netNode.InputBuffer[key]));
+                // Write input with type tag for polymorphic support - InputBuffer now stores object
+                var serialType = GetSerialTypeFromObject(netNode.InputBuffer[key]);
+                NetWriter.WriteWithType(inputBuffer, serialType, netNode.InputBuffer[key]);
             }
 
             NetRunner.SendReliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Input, inputBuffer.ToArray());
@@ -1294,12 +1337,12 @@ namespace Nebula
             var netId = NetReader.ReadByte(buffer);
             var functionId = NetReader.ReadByte(buffer);
             var netController = NetRunner.Instance.IsServer ? GetPeerNode(peer, netId) : GetNodeFromNetId(netId);
-            List<Variant> args = [];
+            List<object> args = [];
             var functionInfo = Protocol.UnpackFunction(netController.RawNode.SceneFilePath, functionId);
             foreach (var arg in functionInfo.Arguments)
             {
                 var value = NetReader.ReadByType(buffer, arg.VariantType);
-                args.Add(Variant.From(value));
+                args.Add(value);
             }
             if (NetRunner.Instance.IsServer && (functionInfo.Sources & NetworkSources.Client) == 0)
             {

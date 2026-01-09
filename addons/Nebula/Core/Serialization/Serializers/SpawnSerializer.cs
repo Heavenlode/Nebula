@@ -18,41 +18,37 @@ namespace Nebula.Serialization.Serializers
         }
 
         private NetworkController netController;
-        private NetBuffer _exportBuffer;
         private Dictionary<NetPeer, Tick> setupTicks = new();
 
         public SpawnSerializer(NetworkController controller)
         {
             netController = controller;
-            _exportBuffer = new NetBuffer();
         }
 
         public void Begin() { }
 
         public void Cleanup() { }
 
-        public NetBuffer Export(WorldRunner currentWorld, NetPeer peer)
+        public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
-            _exportBuffer.Reset();
-
             if (netController.IsQueuedForDespawn)
             {
-                return _exportBuffer;
+                return;
             }
 
             if (!netController.IsPeerInterested(peer))
             {
-                return _exportBuffer;
+                return;
             }
 
             if (currentWorld.HasSpawnedForClient(netController.NetId, peer))
             {
-                return _exportBuffer;
+                return;
             }
 
             if (netController.NetParent != null && !currentWorld.HasSpawnedForClient(netController.NetParent.NetId, peer))
             {
-                return _exportBuffer;
+                return;
             }
 
             if (netController.RawNode is INetNodeBase netNode)
@@ -60,31 +56,31 @@ namespace Nebula.Serialization.Serializers
                 if (!netNode.Network.spawnReady.GetValueOrDefault(peer, false))
                 {
                     netNode.Network.PrepareSpawn(peer);
-                    return _exportBuffer;
+                    return;
                 }
             }
 
             var id = currentWorld.TryRegisterPeerNode(netController, peer);
             if (id == 0)
             {
-                return _exportBuffer;
+                return;
             }
 
             setupTicks[peer] = currentWorld.CurrentTick;
-            NetWriter.WriteByte(_exportBuffer, Protocol.PackScene(netController.NetSceneFilePath));
+            NetWriter.WriteByte(buffer, Protocol.PackScene(netController.NetSceneFilePath));
 
             if (netController.NetParent == null)
             {
-                NetWriter.WriteByte(_exportBuffer, 0);
-                return _exportBuffer;
+                NetWriter.WriteByte(buffer, 0);
+                return;
             }
 
             var parentId = currentWorld.GetPeerNodeId(peer, netController.NetParent);
-            NetWriter.WriteByte(_exportBuffer, parentId);
+            NetWriter.WriteByte(buffer, parentId);
 
             if (Protocol.PackNode(netController.NetParent.RawNode.SceneFilePath, netController.NetParent.RawNode.GetPathTo(netController.RawNode.GetParent()), out var nodePathId))
             {
-                NetWriter.WriteByte(_exportBuffer, nodePathId);
+                NetWriter.WriteByte(buffer, nodePathId);
             }
             else
             {
@@ -93,15 +89,13 @@ namespace Nebula.Serialization.Serializers
 
             if (netController.RawNode is Node3D node)
             {
-                NetWriter.WriteVector3(_exportBuffer, node.Position);
-                NetWriter.WriteVector3(_exportBuffer, node.Rotation);
+                NetWriter.WriteVector3(buffer, node.Position);
+                NetWriter.WriteVector3(buffer, node.Rotation);
             }
 
-            NetWriter.WriteByte(_exportBuffer, netController.InputAuthority == peer ? (byte)1 : (byte)0);
+            NetWriter.WriteByte(buffer, netController.InputAuthority == peer ? (byte)1 : (byte)0);
 
             currentWorld.Debug?.Send("Spawn", $"Exported:{netController.RawNode.SceneFilePath}");
-
-            return _exportBuffer;
         }
 
         public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick)

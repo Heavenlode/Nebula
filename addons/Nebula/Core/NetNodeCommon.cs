@@ -18,21 +18,9 @@ namespace Nebula.Utility
 
         internal static BsonDocument ToBSONDocument(
             INetNodeBase netNode,
-            Variant context = new Variant()
+            NetBsonContext context = default
         )
         {
-            NetNodeCommonBsonSerializeContext bsonContext = new();
-            if (context.VariantType != Variant.Type.Nil)
-            {
-                try
-                {
-                    bsonContext = context.As<NetNodeCommonBsonSerializeContext>();
-                }
-                catch (InvalidCastException)
-                {
-                    Debugger.Instance.Log("Context is not a NetNodeCommonBsonContext", Debugger.DebugLevel.ERROR);
-                }
-            }
             var network = netNode.Network;
             if (!network.IsNetScene())
             {
@@ -53,16 +41,8 @@ namespace Nebula.Utility
             //     var hasValues = false;
             //     foreach (var property in nodeProps)
             //     {
-            //         if (bsonContext.PropTypes.Count > 0 && !bsonContext.PropTypes.Contains(new Tuple<Variant.Type, string>(property.VariantType, property.Metadata.TypeIdentifier)))
-            //         {
-            //             continue;
-            //         }
-            //         if (bsonContext.SkipPropTypes.Contains(new Tuple<Variant.Type, string>(property.VariantType, property.Metadata.TypeIdentifier)))
-            //         {
-            //             continue;
-            //         }
             //         var prop = network.RawNode.GetNode(nodePath).Get(property.Name);
-            //         var val = BsonTransformer.Instance.SerializeVariant(bsonContext.PropContext, prop, property.Metadata.TypeIdentifier);
+            //         var val = BsonTransformer.Instance.SerializeVariant(prop, property.Metadata.TypeIdentifier);
             //         if (val == null) continue;
             //         nodeData[property.Name] = val;
             //         hasValues = true;
@@ -75,12 +55,12 @@ namespace Nebula.Utility
             //     }
             // }
 
-            if (bsonContext.Recurse)
+            if (context.Recurse)
             {
                 result["children"] = new BsonDocument();
                 foreach (var child in network.DynamicNetworkChildren)
                 {
-                    if (bsonContext.NodeFilter.Delegate != null && !bsonContext.NodeFilter.Call(child.RawNode).AsBool())
+                    if (context.NodeFilter != null && !context.NodeFilter(child.RawNode))
                     {
                         continue;
                     }
@@ -96,7 +76,7 @@ namespace Nebula.Utility
             return result;
         }
 
-        internal static async Task<T> FromBSON<T>(Variant context, BsonDocument data, T fillNode = null) where T : Node, INetNodeBase
+        internal static async Task<T> FromBSON<T>(NetBsonContext context, BsonDocument data, T fillNode = null) where T : Node, INetNodeBase
         {
             T node = fillNode;
             if (fillNode == null)
@@ -172,15 +152,15 @@ namespace Nebula.Utility
                     var variantType = propData.VariantType;
                     try
                     {
-                        if ((int)variantType == (int)Variant.Type.String)
+                        if (variantType == SerialVariantType.String)
                         {
                             targetNode.Network.RawNode.Set(prop.Name, prop.Value.ToString());
                         }
-                        else if ((int)variantType == (int)Variant.Type.Float)
+                        else if (variantType == SerialVariantType.Float)
                         {
                             targetNode.Network.RawNode.Set(prop.Name, prop.Value.AsDouble);
                         }
-                        else if ((int)variantType == (int)Variant.Type.Int)
+                        else if (variantType == SerialVariantType.Int)
                         {
                             if (propData.Metadata.TypeIdentifier == "Int")
                             {
@@ -200,48 +180,33 @@ namespace Nebula.Utility
                                 targetNode.Network.RawNode.Set(prop.Name, prop.Value.AsInt64);
                             }
                         }
-                        else if ((int)variantType == (int)Variant.Type.Bool)
+                        else if (variantType == SerialVariantType.Bool)
                         {
                             targetNode.Network.RawNode.Set(prop.Name, (bool)prop.Value);
                         }
-                        else if ((int)variantType == (int)Variant.Type.Vector2)
+                        else if (variantType == SerialVariantType.Vector2)
                         {
                             var vec = prop.Value as BsonArray;
                             targetNode.Network.RawNode.Set(prop.Name, new Vector2((float)vec[0].AsDouble, (float)vec[1].AsDouble));
                         }
-                        else if ((int)variantType == (int)Variant.Type.PackedByteArray)
+                        else if (variantType == SerialVariantType.PackedByteArray)
                         {
                             targetNode.Network.RawNode.Set(prop.Name, prop.Value.AsByteArray);
                         }
-                        else if ((int)variantType == (int)Variant.Type.PackedInt64Array)
+                        else if (variantType == SerialVariantType.PackedInt64Array)
                         {
                             targetNode.Network.RawNode.Set(prop.Name, prop.Value.AsBsonArray.Select(x => x.AsInt64).ToArray());
                         }
-                        else if ((int)variantType == (int)Variant.Type.Vector3)
+                        else if (variantType == SerialVariantType.Vector3)
                         {
                             var vec = prop.Value as BsonArray;
                             targetNode.Network.RawNode.Set(prop.Name, new Vector3((float)vec[0].AsDouble, (float)vec[1].AsDouble, (float)vec[2].AsDouble));
                         }
-                        else if ((int)variantType == (int)Variant.Type.Object)
+                        else if (variantType == SerialVariantType.Object)
                         {
-                            var callable = Protocol.GetStaticMethodCallable(propData, StaticMethodType.BsonDeserialize);
-                            if (callable == null)
-                            {
-                                Debugger.Instance.Log($"No BsonDeserialize method found for {nodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
-                                continue;
-                            }
-                            var tcs = new TaskCompletionSource<GodotObject>();
-                            callable.Value.Call(
-                                context,
-                                BsonTransformer.Instance.SerializeBsonValue(prop.Value),
-                                targetNode.Network.RawNode.Get(prop.Name).AsGodotObject(),
-                                Callable.From((GodotObject value) =>
-                                {
-                                    tcs.SetResult(value);
-                                })
-                            );
-                            var value = await tcs.Task;
-                            targetNode.Network.RawNode.Set(prop.Name, value);
+                            // For complex object types, we need to handle them specially
+                            // This path requires the Protocol to have registered a BSON deserializer
+                            Debugger.Instance.Log($"Object type deserialization not yet implemented for new context: {nodePath}.{prop.Name}", Debugger.DebugLevel.WARN);
                         }
                     }
                     catch (InvalidCastException e)

@@ -1,8 +1,9 @@
 using Nebula.Tools;
 
 using System;
+using System.Collections.Generic;
 using Godot;
-using Godot.Collections;
+using GodotDict = Godot.Collections.Dictionary;
 
 namespace Nebula.Internal.Editor
 {
@@ -32,7 +33,7 @@ namespace Nebula.Internal.Editor
         private HttpRequest httpRequest;
         private HttpRequest readmeRequest;
         private Dictionary<string, string> readmeCache = [];
-        private Dictionary<int, Dictionary> addonData = [];
+        private Dictionary<int, GodotDict> addonData = [];
 
         private Downloader downloader;
 

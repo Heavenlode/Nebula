@@ -74,7 +74,7 @@ namespace Nebula
             {
                 return id;
             }
-            return null;
+            return default;
         }
 
         /// <summary>

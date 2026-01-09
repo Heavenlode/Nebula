@@ -71,31 +71,31 @@ namespace Nebula.Internal.Editor
                 return;
             }
 
-            ScenesTree.Clear();
-            var ScenesRoot = ScenesTree.CreateItem();
-            ScenesRoot.SetText(0, "Scenes");
-            foreach (var scene in Protocol.EditorInstance.ListScenes())
-            {
-                var sceneName = scene.Key;
-                var nodePaths = scene.Value;
+            // ScenesTree.Clear();
+            // var ScenesRoot = ScenesTree.CreateItem();
+            // ScenesRoot.SetText(0, "Scenes");
+            // foreach (var scene in Protocol.EditorInstance.ListScenes())
+            // {
+            //     var sceneName = scene.Key;
+            //     var nodePaths = scene.Value;
 
-                var sceneItem = ScenesRoot.CreateChild();
-                sceneItem.SetText(0, sceneName);
-                sceneItem.SetMeta("nodeType", (int)ItemType.Scene);
-                sceneItem.SetMeta("sceneName", sceneName);
-                sceneItem.SetMeta("nodePath", ".");
+            //     var sceneItem = ScenesRoot.CreateChild();
+            //     sceneItem.SetText(0, sceneName);
+            //     sceneItem.SetMeta("nodeType", (int)ItemType.Scene);
+            //     sceneItem.SetMeta("sceneName", sceneName);
+            //     sceneItem.SetMeta("nodePath", ".");
 
-                foreach (var nodePath in nodePaths)
-                {
-                    if (nodePath == ".") continue;
+            //     foreach (var nodePath in nodePaths)
+            //     {
+            //         if (nodePath == ".") continue;
 
-                    var nodeItem = sceneItem.CreateChild();
-                    nodeItem.SetText(0, nodePath);
-                    nodeItem.SetMeta("sceneName", sceneName);
-                    nodeItem.SetMeta("nodePath", nodePath);
-                    nodeItem.SetMeta("nodeType", (int)ItemType.Node);
-                }
-            }
+            //         var nodeItem = sceneItem.CreateChild();
+            //         nodeItem.SetText(0, nodePath);
+            //         nodeItem.SetMeta("sceneName", sceneName);
+            //         nodeItem.SetMeta("nodePath", nodePath);
+            //         nodeItem.SetMeta("nodeType", (int)ItemType.Node);
+            //     }
+            // }
         }
 
         [Signal]

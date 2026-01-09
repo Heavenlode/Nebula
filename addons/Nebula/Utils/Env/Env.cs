@@ -9,9 +9,9 @@ namespace Nebula.Utility.Tools
     {
         public static Env Instance { get; private set; }
         private bool initialized = false;
-        private Godot.Collections.Dictionary<string, string> env = new Godot.Collections.Dictionary<string, string>();
+        private Dictionary<string, string> env = new Dictionary<string, string>();
 
-        public Godot.Collections.Dictionary<string, string> StartArgs = [];
+        public Dictionary<string, string> StartArgs = [];
 
         public enum DevelopmentModeType {
             Local,
@@ -77,20 +77,20 @@ namespace Nebula.Utility.Tools
                 return OS.GetEnvironment(valuename);
             }
 
-            Godot.Collections.Dictionary<string, string> env;
+            Dictionary<string, string> parsedEnv;
 
             if (HasServerFeatures)
             {
-                env = Parse("res://.env.server");
+                parsedEnv = Parse("res://.env.server");
             }
             else
             {
-                env = Parse("res://.env.client");
+                parsedEnv = Parse("res://.env.client");
             }
 
-            if (env.ContainsKey(valuename))
+            if (parsedEnv.ContainsKey(valuename))
             {
-                return env[valuename];
+                return parsedEnv[valuename];
             }
 
             return "";
@@ -112,13 +112,13 @@ namespace Nebula.Utility.Tools
             }
         }
 
-        private Godot.Collections.Dictionary<string, string> Parse(string filename)
+        private Dictionary<string, string> Parse(string filename)
         {
             if (initialized) return env;
 
             if (!FileAccess.FileExists(filename))
             {
-                return new Godot.Collections.Dictionary<string, string>();
+                return new Dictionary<string, string>();
             }
 
             var file = FileAccess.Open(filename, FileAccess.ModeFlags.Read);

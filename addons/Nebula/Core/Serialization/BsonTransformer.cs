@@ -131,7 +131,11 @@ namespace Nebula.Serialization
                 $"Conversion from {value.BsonType} to {typeof(T).Name} is not implemented");
         }
 
-        public BsonValue SerializeVariant(Variant context, Variant variant, string subtype = "None")
+        /// <summary>
+        /// Serializes a Godot Variant to BSON. This is a bridge method for Godot interop.
+        /// For new code, prefer using IBsonValue/IBsonSerializable directly.
+        /// </summary>
+        public BsonValue SerializeVariant(Variant variant, string subtype = "None")
         {
             if (variant.VariantType == Variant.Type.String)
             {
@@ -185,7 +189,7 @@ namespace Nebula.Serialization
                 {
                     if (obj is IBsonSerializableBase bsonSerializable)
                     {
-                        return bsonSerializable.BsonSerialize(context);
+                        return bsonSerializable.BsonSerialize(NetBsonContext.Default);
                     }
 
                     Debugger.Instance.Log($"Attempting to serialize an object that does not implement IBsonSerializable<T>: {obj}", Debugger.DebugLevel.ERROR);
@@ -210,7 +214,7 @@ namespace Nebula.Serialization
                 var bsonDict = new BsonDocument();
                 foreach (var key in dict.Keys)
                 {
-                    bsonDict[key.ToString()] = SerializeVariant(context, dict[key]);
+                    bsonDict[key.ToString()] = SerializeVariant(dict[key]);
                 }
                 return bsonDict;
             }

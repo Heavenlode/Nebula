@@ -151,14 +151,23 @@ namespace Nebula.Generators
                 {
                     data.PropertiesMap[sceneResPath] = new Dictionary<string, Dictionary<string, PropertyData>>();
                     data.PropertiesLookup[sceneResPath] = new Dictionary<int, PropertyData>();
+                    data.PropertiesByStaticChildId[sceneResPath] = new Dictionary<byte, Dictionary<string, PropertyData>>();
 
                     foreach (var nodeKvp in bytecode.Properties)
                     {
-                        data.PropertiesMap[sceneResPath][nodeKvp.Key] = nodeKvp.Value;
+                        var nodePath = nodeKvp.Key;
+                        data.PropertiesMap[sceneResPath][nodePath] = nodeKvp.Value;
 
                         foreach (var prop in nodeKvp.Value.Values)
                         {
                             data.PropertiesLookup[sceneResPath][prop.Index] = prop;
+                        }
+                        
+                        // Also populate PropertiesByStaticChildId for direct lookup
+                        if (data.StaticNetworkNodePathsPack.TryGetValue(sceneResPath, out var nodePathsPack) &&
+                            nodePathsPack.TryGetValue(nodePath, out var staticChildId))
+                        {
+                            data.PropertiesByStaticChildId[sceneResPath][staticChildId] = nodeKvp.Value;
                         }
                     }
                 }
@@ -262,18 +271,21 @@ namespace Nebula.Generators
 
                         foreach (var prop in propKvp.Value)
                         {
-                            result.Properties[newNodePath][prop.Key] = new PropertyData
-                            {
-                                NodePath = $"{nodePath}/{prop.Value.NodePath}",
-                                Name = prop.Value.Name,
-                                TypeFullName = prop.Value.TypeFullName,
-                                SubtypeIdentifier = prop.Value.SubtypeIdentifier,
-                                Index = (byte)propertyCount++,
-                                InterestMask = prop.Value.InterestMask,
-                                LerpMode = prop.Value.LerpMode,
-                                LerpParam = prop.Value.LerpParam,
-                                ClassIndex = prop.Value.ClassIndex
-                            };
+                        result.Properties[newNodePath][prop.Key] = new PropertyData
+                        {
+                            NodePath = $"{nodePath}/{prop.Value.NodePath}",
+                            Name = prop.Value.Name,
+                            TypeFullName = prop.Value.TypeFullName,
+                            SubtypeIdentifier = prop.Value.SubtypeIdentifier,
+                            Index = (byte)propertyCount++,
+                            InterestMask = prop.Value.InterestMask,
+                            LerpMode = prop.Value.LerpMode,
+                            LerpParam = prop.Value.LerpParam,
+                            ClassIndex = prop.Value.ClassIndex,
+                            NotifyOnChange = prop.Value.NotifyOnChange,
+                            Interpolate = prop.Value.Interpolate,
+                            InterpolateSpeed = prop.Value.InterpolateSpeed
+                        };
                         }
                     }
 
@@ -300,12 +312,15 @@ namespace Nebula.Generators
                     continue;
                 }
 
-                // Node with INetNode script
-                result.StaticNetNodes.Add(new StaticNetNode
+                // Node with INetNode script (skip root - it's not its own child)
+                if (nodePath != ".")
                 {
-                    Id = nodePathId++,
-                    Path = nodePath
-                });
+                    result.StaticNetNodes.Add(new StaticNetNode
+                    {
+                        Id = nodePathId++,
+                        Path = nodePath
+                    });
+                }
 
                 if (!analysisResult.NetNodesByScriptPath.TryGetValue(scriptPath!, out var typeInfo))
                     continue;
@@ -329,7 +344,10 @@ namespace Nebula.Generators
                             InterestMask = prop.InterestMask,
                             LerpMode = prop.LerpMode,
                             LerpParam = prop.LerpParam,
-                            ClassIndex = classIndex
+                            ClassIndex = classIndex,
+                            NotifyOnChange = prop.NotifyOnChange,
+                            Interpolate = prop.Interpolate,
+                            InterpolateSpeed = prop.InterpolateSpeed
                         };
                     }
                 }

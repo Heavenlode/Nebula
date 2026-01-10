@@ -147,8 +147,10 @@ namespace Nebula
         /// <inheritdoc/>
         public override void _EnterTree()
         {
+            GD.Print("[AUTOLOAD] NetRunner._EnterTree START");
             if (Instance != null)
             {
+                GD.Print("[AUTOLOAD] NetRunner._EnterTree - Instance already exists, freeing");
                 QueueFree();
                 return;
             }
@@ -156,17 +158,30 @@ namespace Nebula
 
             if (!_libraryInitialized)
             {
-                if (!Library.Initialize())
+                GD.Print("[AUTOLOAD] NetRunner._EnterTree - Initializing ENet library...");
+                try
                 {
-                    Debugger.Instance.Log("Failed to initialize ENet library", Debugger.DebugLevel.ERROR);
+                    if (!Library.Initialize())
+                    {
+                        GD.PrintErr("[AUTOLOAD] NetRunner._EnterTree - FAILED to initialize ENet library!");
+                        return;
+                    }
+                    GD.Print("[AUTOLOAD] NetRunner._EnterTree - ENet library initialized successfully");
+                    _libraryInitialized = true;
+                }
+                catch (Exception e)
+                {
+                    GD.PrintErr($"[AUTOLOAD] NetRunner._EnterTree - ENet initialization threw exception: {e.GetType().Name}: {e.Message}");
+                    GD.PrintErr($"[AUTOLOAD] Stack trace: {e.StackTrace}");
                     return;
                 }
-                _libraryInitialized = true;
             }
+            GD.Print("[AUTOLOAD] NetRunner._EnterTree END");
         }
 
         public override void _Ready()
         {
+            GD.Print("[AUTOLOAD] NetRunner._Ready");
             // Protocol is fully static - no initialization needed
         }
 
@@ -194,18 +209,18 @@ namespace Nebula
             {
                 Debugger.Instance.Log("Setting authentication on NetRunner after it was already set. This is only a bug if it was unintentional.", Debugger.DebugLevel.WARN);
             }
-            Connect("OnPeerConnected", Callable.From((uint peerId) =>
+            OnPeerConnected += (uint peerId) =>
             {
                 var peer = GetPeerByNativeId(peerId);
                 if (peer.IsSet)
                 {
                     Authentication.ServerAuthenticateClient(peer);
                 }
-            }));
-            Connect("OnConnectedToServer", Callable.From(() =>
+            };
+            OnConnectedToServer += () =>
             {
                 Authentication.ClientAuthenticateWithServer();
-            }));
+            };
             Authentication = authentication;
         }
 
@@ -294,7 +309,15 @@ namespace Nebula
         /// <summary>
         /// Ticks Per Second. The number of Ticks which are expected to elapse every second.
         /// </summary>
-        public static int TPS = Engine.PhysicsTicksPerSecond / PhysicsTicksPerNetworkTick;
+        private static int? _tps;
+        public static int TPS
+        {
+            get
+            {
+                _tps ??= Engine.PhysicsTicksPerSecond / PhysicsTicksPerNetworkTick;
+                return _tps.Value;
+            }
+        }
 
         /// <summary>
         /// Maximum Transferrable Unit. The maximum number of bytes that should be sent in a single ENet UDP Packet (i.e. a single tick)
@@ -332,14 +355,11 @@ namespace Nebula
             }
         }
 
-        [Signal]
-        public delegate void OnPeerConnectedEventHandler(uint peerId);
+        public event Action<uint> OnPeerConnected;
 
-        [Signal]
-        public delegate void OnPeerDisconnectedEventHandler(uint peerId);
+        public event Action<uint> OnPeerDisconnected;
 
-        [Signal]
-        public delegate void OnConnectedToServerEventHandler();
+        public event Action OnConnectedToServer;
 
         /// <summary>
         /// Get a peer by its native ENet ID (used for signal handling).
@@ -374,12 +394,12 @@ namespace Nebula
                         {
                             Debugger.Instance.Log("Peer connected");
                             PeersByNativeId[netEvent.Peer.ID] = netEvent.Peer;
-                            EmitSignal("OnPeerConnected", netEvent.Peer.ID);
+                            OnPeerConnected?.Invoke(netEvent.Peer.ID);
                         }
                         else
                         {
                             Debugger.Instance.Log("Connected to server");
-                            EmitSignal("OnConnectedToServer");
+                            OnConnectedToServer?.Invoke();
                         }
                         break;
 
@@ -497,8 +517,7 @@ namespace Nebula
             Worlds[worldId].JoinPeer(peer, token);
         }
 
-        [Signal]
-        public delegate void OnWorldCreatedEventHandler(WorldRunner world);
+        public event Action<WorldRunner> OnWorldCreated;
 
         public WorldRunner CreateWorld(UUID worldId, PackedScene scene)
         {
@@ -526,6 +545,7 @@ namespace Nebula
                 WorldId = worldId,
                 RootScene = node,
             };
+            Debugger.Instance.Log($"SetupWorldInstance: Created WorldRunner {worldId}, RootScene={worldRunner.RootScene?.RawNode?.Name ?? "NULL"}", Debugger.DebugLevel.VERBOSE);
             Worlds[worldId] = worldRunner;
             WorldPeerMap[worldId] = [];
             godotPhysicsWorld.AddChild(worldRunner);
@@ -535,7 +555,7 @@ namespace Nebula
             node._WorldReady();
             worldRunner.Debug?.Send("WorldCreated", worldId.ToString());
             Debugger.Instance.Log($"Sent debug event: WorldCreated {worldId.ToString()}", Debugger.DebugLevel.VERBOSE);
-            EmitSignal("OnWorldCreated", worldRunner);
+            OnWorldCreated?.Invoke(worldRunner);
             // Note: Debug peer iteration removed - ENet-CSharp doesn't have GetPeers()
             // Debug port information is sent via TCP debug server instead
             return worldRunner;
@@ -544,7 +564,7 @@ namespace Nebula
         public void _OnPeerDisconnected(Peer peer)
         {
             Debugger.Instance.Log($"Peer disconnected peerId: {peer.ID}");
-            EmitSignal("OnPeerDisconnected", peer.ID);
+            OnPeerDisconnected?.Invoke(peer.ID);
             PeersByNativeId.Remove(peer.ID);
         }
     }

@@ -8,6 +8,7 @@ namespace Nebula
     /// A UUID implementation for Nebula. Serializes into 16 bytes.
     /// This is a value type (struct) to avoid allocations.
     /// </summary>
+    [NetValueLayout(16)] // sizeof(Guid)
     public readonly struct UUID : INetValue<UUID>, IBsonValue<UUID>, IEquatable<UUID>
     {
         /// <summary>

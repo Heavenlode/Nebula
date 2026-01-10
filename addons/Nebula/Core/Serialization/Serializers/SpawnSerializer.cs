@@ -93,7 +93,7 @@ namespace Nebula.Serialization.Serializers
                 NetWriter.WriteVector3(buffer, node.Rotation);
             }
 
-            NetWriter.WriteByte(buffer, netController.InputAuthority == peer ? (byte)1 : (byte)0);
+            NetWriter.WriteByte(buffer, netController.InputAuthority.Equals(peer) ? (byte)1 : (byte)0);
 
             currentWorld.Debug?.Send("Spawn", $"Exported:{netController.RawNode.SceneFilePath}");
         }

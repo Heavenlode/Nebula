@@ -93,7 +93,11 @@ namespace Nebula
                 return null;
             }
             var staticChildId = NetReader.ReadByte(buffer);
-            var node = currentWorld.GetNodeFromNetId(networkID).RawNode as NetNode;
+            var node = currentWorld.GetNodeFromNetId(networkID)?.RawNode as NetNode;
+            if (node == null)
+            {
+                return null;
+            }
             if (staticChildId > 0)
             {
                 // node = node.GetNodeOrNull(Protocol.UnpackNode(node.SceneFilePath, staticChildId)) as NetNode;

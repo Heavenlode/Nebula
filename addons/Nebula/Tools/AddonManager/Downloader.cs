@@ -6,11 +6,9 @@ namespace Nebula.Internal.Editor
     [Tool]
     public partial class Downloader : Node
     {
-        [Signal]
-        public delegate void DownloadCompletedEventHandler(string targetPath);
+        public event Action<string> DownloadCompleted;
 
-        [Signal]
-        public delegate void DownloadFailedEventHandler(string error);
+        public event Action<string> DownloadFailed;
 
         private HttpRequest httpRequest;
         private string currentTargetDir;
@@ -32,7 +30,7 @@ namespace Nebula.Internal.Editor
             Error error = httpRequest.Request(zipUrl);
             if (error != Error.Ok)
             {
-                EmitSignal(SignalName.DownloadFailed, $"Failed to start download: {error}");
+                DownloadFailed?.Invoke($"Failed to start download: {error}");
             }
         }
 
@@ -40,7 +38,7 @@ namespace Nebula.Internal.Editor
         {
             if (result != (long)HttpRequest.Result.Success)
             {
-                EmitSignal(SignalName.DownloadFailed, $"Failed to download: {result}");
+                DownloadFailed?.Invoke($"Failed to download: {result}");
                 return;
             }
 
@@ -126,11 +124,11 @@ namespace Nebula.Internal.Editor
                 DirAccess.RemoveAbsolute(tempPath);
 
                 string finalPath = $"{currentTargetDir}/{baseFolder.Replace("-main", "")}";
-                EmitSignal(SignalName.DownloadCompleted, finalPath);
+                DownloadCompleted?.Invoke(finalPath);
             }
             catch (Exception e)
             {
-                EmitSignal(SignalName.DownloadFailed, e.Message);
+                DownloadFailed?.Invoke(e.Message);
             }
         }
     }

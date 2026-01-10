@@ -16,11 +16,10 @@ namespace Nebula.Testing.Integration;
 public partial class StdinCommandHandler : Node
 {
     /// <summary>
-    /// Emitted when a command is received from stdin (excluding built-in commands).
+    /// Invoked when a command is received from stdin (excluding built-in commands).
     /// The command string is the raw line received.
     /// </summary>
-    [Signal]
-    public delegate void CommandReceivedEventHandler(string command);
+    public event Action<string> CommandReceived;
 
     private readonly ConcurrentQueue<string> _commandQueue = new();
     private Thread _readerThread;
@@ -47,7 +46,7 @@ public partial class StdinCommandHandler : Node
                 continue;
             }
             
-            EmitSignal(SignalName.CommandReceived, command);
+            CommandReceived?.Invoke(command);
         }
     }
 

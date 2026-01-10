@@ -118,6 +118,9 @@ namespace Nebula.Serialization
         public readonly NetLerpMode LerpMode;
         public readonly float LerpParam;
         public readonly int ClassIndex;
+        public readonly bool NotifyOnChange;
+        public readonly bool Interpolate;
+        public readonly float InterpolateSpeed;
 
         public ProtocolNetProperty(
             string nodePath,
@@ -128,7 +131,10 @@ namespace Nebula.Serialization
             long interestMask,
             NetLerpMode lerpMode,
             float lerpParam,
-            int classIndex)
+            int classIndex,
+            bool notifyOnChange = false,
+            bool interpolate = false,
+            float interpolateSpeed = 15f)
         {
             NodePath = nodePath;
             Name = name;
@@ -139,6 +145,9 @@ namespace Nebula.Serialization
             LerpMode = lerpMode;
             LerpParam = lerpParam;
             ClassIndex = classIndex;
+            NotifyOnChange = notifyOnChange;
+            Interpolate = interpolate;
+            InterpolateSpeed = interpolateSpeed;
         }
     }
 

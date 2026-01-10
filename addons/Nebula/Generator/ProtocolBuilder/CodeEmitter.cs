@@ -43,6 +43,7 @@ namespace Nebula.Generators
             // Properties
             EmitPropertiesMap(sb, data);
             EmitPropertiesLookup(sb, data);
+            EmitPropertiesByStaticChildId(sb, data);
             
             // Functions
             EmitFunctionsMap(sb, data);
@@ -198,6 +199,37 @@ namespace Nebula.Generators
             sb.AppendLine();
         }
 
+        private static void EmitPropertiesByStaticChildId(StringBuilder sb, ProtocolData data)
+        {
+            sb.AppendLine("        public static readonly FrozenDictionary<string, FrozenDictionary<byte, FrozenDictionary<string, ProtocolNetProperty>>> PropertiesByStaticChildId =");
+            sb.AppendLine("            new Dictionary<string, FrozenDictionary<byte, FrozenDictionary<string, ProtocolNetProperty>>>");
+            sb.AppendLine("            {");
+            
+            foreach (var scene in data.PropertiesByStaticChildId)
+            {
+                sb.AppendLine($"                [\"{Escape(scene.Key)}\"] = new Dictionary<byte, FrozenDictionary<string, ProtocolNetProperty>>");
+                sb.AppendLine("                {");
+                
+                foreach (var node in scene.Value)
+                {
+                    sb.AppendLine($"                    [{node.Key}] = new Dictionary<string, ProtocolNetProperty>");
+                    sb.AppendLine("                    {");
+                    
+                    foreach (var prop in node.Value)
+                    {
+                        EmitProperty(sb, prop.Key, prop.Value, "                        ");
+                    }
+                    
+                    sb.AppendLine("                    }.ToFrozenDictionary(),");
+                }
+                
+                sb.AppendLine("                }.ToFrozenDictionary(),");
+            }
+            
+            sb.AppendLine("            }.ToFrozenDictionary();");
+            sb.AppendLine();
+        }
+
         private static void EmitProperty(StringBuilder sb, string key, PropertyData prop, string indent)
         {
             var variantType = MapTypeToVariant(prop.TypeFullName, out var subtype);
@@ -212,7 +244,10 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    {prop.InterestMask}L,");
             sb.AppendLine($"{indent}    (NetLerpMode){prop.LerpMode},");
             sb.AppendLine($"{indent}    {prop.LerpParam.ToString(CultureInfo.InvariantCulture)}f,");
-            sb.AppendLine($"{indent}    {prop.ClassIndex}),");
+            sb.AppendLine($"{indent}    {prop.ClassIndex},");
+            sb.AppendLine($"{indent}    {prop.NotifyOnChange.ToString().ToLowerInvariant()},");
+            sb.AppendLine($"{indent}    {prop.Interpolate.ToString().ToLowerInvariant()},");
+            sb.AppendLine($"{indent}    {prop.InterpolateSpeed.ToString(CultureInfo.InvariantCulture)}f),");
         }
 
         private static void EmitPropertyWithIntKey(StringBuilder sb, int key, PropertyData prop, string indent)
@@ -229,7 +264,10 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    {prop.InterestMask}L,");
             sb.AppendLine($"{indent}    (NetLerpMode){prop.LerpMode},");
             sb.AppendLine($"{indent}    {prop.LerpParam.ToString(CultureInfo.InvariantCulture)}f,");
-            sb.AppendLine($"{indent}    {prop.ClassIndex}),");
+            sb.AppendLine($"{indent}    {prop.ClassIndex},");
+            sb.AppendLine($"{indent}    {prop.NotifyOnChange.ToString().ToLowerInvariant()},");
+            sb.AppendLine($"{indent}    {prop.Interpolate.ToString().ToLowerInvariant()},");
+            sb.AppendLine($"{indent}    {prop.InterpolateSpeed.ToString(CultureInfo.InvariantCulture)}f),");
         }
 
         private static void EmitFunctionsMap(StringBuilder sb, ProtocolData data)

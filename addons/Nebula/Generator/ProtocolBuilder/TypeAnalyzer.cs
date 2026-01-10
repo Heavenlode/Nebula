@@ -17,6 +17,9 @@ namespace Nebula.Generators
             public long InterestMask { get; init; }
             public int LerpMode { get; init; }
             public float LerpParam { get; init; } = 15f;
+            public bool NotifyOnChange { get; init; } = false;
+            public bool Interpolate { get; init; } = false;
+            public float InterpolateSpeed { get; init; } = 15f;
         }
 
         public sealed class NetFunctionInfo
@@ -237,6 +240,9 @@ namespace Nebula.Generators
                         InterestMask = GetNamedArgument<long>(netPropAttr, "InterestMask"),
                         LerpMode = GetNamedArgument<int>(netPropAttr, "LerpMode"),
                         LerpParam = GetNamedArgument(netPropAttr, "LerpParam", 15f),
+                        NotifyOnChange = GetNamedArgument(netPropAttr, "NotifyOnChange", false),
+                        Interpolate = GetNamedArgument(netPropAttr, "Interpolate", false),
+                        InterpolateSpeed = GetNamedArgument(netPropAttr, "InterpolateSpeed", 15f),
                     };
                 }
 

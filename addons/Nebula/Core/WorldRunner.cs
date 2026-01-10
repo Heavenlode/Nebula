@@ -94,7 +94,8 @@ namespace Nebula
         public static WorldRunner CurrentWorld { get; internal set; }
 
         /// <summary>
-        /// Only used by the client to determine the current root scene.
+        /// The root NetworkController for this world. Set during world creation.
+        /// Used as the default parent when spawning nodes without an explicit parent.
         /// </summary>
         public NetworkController RootScene;
 
@@ -273,7 +274,7 @@ namespace Nebula
             }
         }
 
-        Callable _OnPeerDisconnected;
+        Action<uint> _onPeerDisconnectedHandler;
 
         public override void _Ready()
         {
@@ -331,7 +332,7 @@ namespace Nebula
 
             if (NetRunner.Instance.IsServer)
             {
-                _OnPeerDisconnected = Callable.From((uint peerId) =>
+                _onPeerDisconnectedHandler = (uint peerId) =>
                 {
                     var peer = NetRunner.Instance.GetPeerByNativeId(peerId);
                     if (!peer.IsSet) return;
@@ -344,8 +345,8 @@ namespace Nebula
                     newPeerState.Tick = CurrentTick;
                     newPeerState.Status = PeerSyncStatus.DISCONNECTED;
                     SetPeerState(peer, newPeerState);
-                });
-                NetRunner.Instance.Connect("OnPeerDisconnected", _OnPeerDisconnected);
+                };
+                NetRunner.Instance.OnPeerDisconnected += _onPeerDisconnectedHandler;
             }
         }
 
@@ -369,7 +370,7 @@ namespace Nebula
 
             if (NetRunner.Instance.IsServer)
             {
-                NetRunner.Instance.Disconnect("OnPeerDisconnected", _OnPeerDisconnected);
+                NetRunner.Instance.OnPeerDisconnected -= _onPeerDisconnectedHandler;
             }
         }
 
@@ -381,18 +382,18 @@ namespace Nebula
         public NetworkController GetNodeFromNetId(NetId networkId)
         {
             if (networkId.IsNone || !networkId.IsValid)
-                return new NetworkController(null);
+                return null;
             if (!NetScenes.ContainsKey(networkId))
-                return new NetworkController(null);
+                return null;
             return NetScenes[networkId];
         }
 
         public NetworkController GetNodeFromNetId(long networkId)
         {
             if (networkId == NetId.NONE)
-                return new NetworkController(null);
+                return null;
             if (!networkIds.ContainsKey(networkId))
-                return new NetworkController(null);
+                return null;
             return NetScenes[networkIds[networkId]];
         }
 
@@ -918,7 +919,14 @@ namespace Nebula
             }
             if (parent == null)
             {
+                if (RootScene == null)
+                {
+                    Debugger.Instance.Log($"Cannot spawn {node.Network.RawNode.Name}: RootScene is null on WorldRunner {WorldId}. Was the world created via SetupWorldInstance?", Debugger.DebugLevel.ERROR);
+                    return null;
+                }
                 node.Network.NetParent = RootScene;
+                GD.Print($"RootScene: ", node.Network.NetParent);
+                node.Network.NetParent.RawNode.PrintTreePretty();
                 node.Network.NetParent.RawNode.GetNode(netNodePath).AddChild(node);
             }
             else
@@ -1227,13 +1235,13 @@ namespace Nebula
         {
             if (NetRunner.Instance.IsServer) return;
             
-            // Check if the node supports typed input via INetInputNode
-            if (netNode.RawNode is not INetInputNode inputNode)
+            // Check if the node supports input
+            if (!netNode.HasInputSupport)
             {
                 return;
             }
 
-            if (!inputNode.HasInputChanged)
+            if (!netNode.HasInputChanged)
             {
                 return;
             }
@@ -1242,12 +1250,12 @@ namespace Nebula
             NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netNode.NetId, inputBuffer);
             
             // Write the input size followed by the raw bytes
-            var inputBytes = inputNode.GetInputBytes();
+            var inputBytes = netNode.GetInputBytes();
             NetWriter.WriteInt32(inputBuffer, inputBytes.Length);
             NetWriter.WriteBytes(inputBuffer, inputBytes);
 
             NetRunner.SendReliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Input, inputBuffer.ToArray());
-            inputNode.ClearInputChanged();
+            netNode.ClearInputChanged();
         }
 
         internal void ReceiveInput(NetPeer peer, NetBuffer buffer)
@@ -1268,17 +1276,17 @@ namespace Nebula
                 return;
             }
 
-            // Check if the node supports typed input via INetInputNode
-            if (node.RawNode is not INetInputNode inputNode)
+            // Check if the node supports input
+            if (!node.HasInputSupport)
             {
-                Log($"Received input for node {worldNetId} that doesn't support INetInputNode", Debugger.DebugLevel.ERROR);
+                Log($"Received input for node {worldNetId} that doesn't support input", Debugger.DebugLevel.ERROR);
                 return;
             }
 
             // Read the input size and bytes
             var inputSize = NetReader.ReadInt32(buffer);
             var inputBytes = NetReader.ReadBytes(buffer, inputSize);
-            inputNode.SetInputBytes(inputBytes);
+            node.SetInputBytes(inputBytes);
             
             Debug.Send("Input", $"Received {inputSize} bytes for node {worldNetId}");
         }
@@ -1323,6 +1331,11 @@ namespace Nebula
             var netId = NetReader.ReadByte(buffer);
             var functionId = NetReader.ReadByte(buffer);
             var netController = NetRunner.Instance.IsServer ? GetPeerNode(peer, netId) : GetNodeFromNetId(netId);
+            if (netController == null)
+            {
+                Log($"Received net function for unknown node {netId}", Debugger.DebugLevel.ERROR);
+                return;
+            }
             List<object> args = [];
             var functionInfo = Protocol.UnpackFunction(netController.RawNode.SceneFilePath, functionId);
             foreach (var arg in functionInfo.Arguments)
@@ -1358,7 +1371,7 @@ namespace Nebula
         internal void ReceiveDespawn(NetPeer peer, NetBuffer buffer)
         {
             var netId = NetId.NetworkDeserialize(this, peer, buffer);
-            GetNodeFromNetId(netId).handleDespawn();
+            GetNodeFromNetId(netId)?.handleDespawn();
         }
     }
 }

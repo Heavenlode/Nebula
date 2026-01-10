@@ -34,5 +34,25 @@ namespace Nebula
         /// For Buffered mode: number of ticks to render behind (2-3 typical)
         /// </summary>
         public float LerpParam = 15f;
+
+        /// <summary>
+        /// When true, the source generator will emit a virtual OnNetworkChange{PropertyName} method
+        /// that you can override to handle property changes. This provides compile-time type safety
+        /// and zero-allocation change notifications.
+        /// </summary>
+        public bool NotifyOnChange = false;
+
+        /// <summary>
+        /// When true, the source generator will emit a virtual Interpolate{PropertyName} method
+        /// that smoothly interpolates this property toward network values each frame.
+        /// The property value is not set immediately on network receive; instead it lerps toward the target.
+        /// </summary>
+        public bool Interpolate = false;
+
+        /// <summary>
+        /// Speed of interpolation when Interpolate = true. Higher = faster catch-up.
+        /// Typical values: 10-20 for responsive feel, 5-10 for smooth feel.
+        /// </summary>
+        public float InterpolateSpeed = 15f;
     }
 }

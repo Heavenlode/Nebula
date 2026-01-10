@@ -78,6 +78,26 @@ namespace Nebula.Serialization
             return 0;
         }
 
+        /// <summary>
+        /// Look up a property by scene path, static child ID, and property name.
+        /// This is the preferred method for runtime lookups as it avoids string-based node path computation.
+        /// </summary>
+        public static bool LookupPropertyByStaticChildId(string scenePath, byte staticChildId, string propertyName, out ProtocolNetProperty property)
+        {
+            property = default;
+
+            if (!GeneratedProtocol.PropertiesByStaticChildId.TryGetValue(scenePath, out var nodeMap))
+                return false;
+
+            if (!nodeMap.TryGetValue(staticChildId, out var propMap))
+                return false;
+
+            if (!propMap.TryGetValue(propertyName, out property))
+                return false;
+
+            return true;
+        }
+
         #endregion
 
         #region Function Lookups

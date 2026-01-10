@@ -49,15 +49,15 @@ namespace Nebula
                     return;
                 }
 
-                var networkScene = "";
-                if (netNode.Network.IsNetScene())
-                {
-                    networkScene = netNode.Node.SceneFilePath;
-                }
-                else
-                {
-                    networkScene = netNode.Network.NetParent.Node.SceneFilePath;
-                }
+            var networkScene = "";
+            if (netNode.Network.IsNetScene())
+            {
+                networkScene = netNode.Network.RawNode.SceneFilePath;
+            }
+            else
+            {
+                networkScene = netNode.Network.NetParent.RawNode.SceneFilePath;
+            }
 
                 NetId netId;
                 if (netNode.Network.IsNetScene())

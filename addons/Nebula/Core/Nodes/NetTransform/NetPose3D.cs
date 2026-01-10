@@ -41,8 +41,7 @@ namespace Nebula
         public Vector3 Rotation => _rotation.GetEuler();
         public Quaternion RotationQuat => _rotation;
 
-        [Signal]
-        public delegate void OnChangeEventHandler();
+        public event Action OnChange;
 
         public enum ChangeType
         {
@@ -95,7 +94,7 @@ namespace Nebula
             bool hasChange = _positionDelta != Vector3d.Zero || !IsQuaternionIdentity(_rotationDelta);
             if (hasChange)
             {
-                EmitSignal("OnChange");
+                OnChange?.Invoke();
             }
         }
 
@@ -104,7 +103,7 @@ namespace Nebula
             _position = new Vector3d(position.X, position.Y, position.Z);
             _rotation = Quaternion.FromEuler(rotation).Normalized();
             _shouldSendKeyframe = true;
-            EmitSignal("OnChange");
+            OnChange?.Invoke();
         }
 
         public void ApplyKeyframe(Vector3 position, Quaternion rotation)
@@ -112,7 +111,7 @@ namespace Nebula
             _position = new Vector3d(position.X, position.Y, position.Z);
             _rotation = rotation.Normalized();
             _shouldSendKeyframe = true;
-            EmitSignal("OnChange");
+            OnChange?.Invoke();
         }
 
         Vector3d _cumulativePositionDelta;
@@ -136,7 +135,7 @@ namespace Nebula
             if (currentWorld.CurrentTick % KeyframeFrequency == _keyframeOffset)
             {
                 _shouldSendKeyframe = true;
-                EmitSignal("OnChange");
+                OnChange?.Invoke();
             }
 
             if (!_shouldSendKeyframe)
@@ -147,7 +146,7 @@ namespace Nebula
                     {
                         Debugger.Instance.Log($"Cumulative position delta is too high. Sending keyframe. {_cumulativePositionDelta[i]}", Debugger.DebugLevel.VERBOSE);
                         _shouldSendKeyframe = true;
-                        EmitSignal("OnChange");
+                        OnChange?.Invoke();
                         break;
                     }
                 }
@@ -156,7 +155,7 @@ namespace Nebula
                 {
                     Debugger.Instance.Log($"Cumulative rotation delta is too high. Sending keyframe.", Debugger.DebugLevel.VERBOSE);
                     _shouldSendKeyframe = true;
-                    EmitSignal("OnChange");
+                    OnChange?.Invoke();
                 }
             }
 
@@ -335,7 +334,7 @@ namespace Nebula
         public static void NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetPose3D obj, NetBuffer buffer)
         {
             byte header = 0;
-            bool isOwner = obj.Owner == peer;
+            bool isOwner = obj.Owner.ID == peer.ID;
 
             if (obj._shouldSendKeyframe || isOwner || !obj.LastKeyframeSent.ContainsKey(peer))
             {

@@ -40,4 +40,14 @@
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
   </PropertyGroup>
+
+  <!-- Override ENet native library with arm64 version on Apple Silicon -->
+  <Target Name="CopyArm64ENet" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <PropertyGroup>
+      <ENetSourcePath>$(MSBuildThisFileDirectory)native/osx-arm64/libenet.dylib</ENetSourcePath>
+      <ENetTargetPath>$(OutputPath)runtimes/osx/native/libenet.dylib</ENetTargetPath>
+    </PropertyGroup>
+    <Copy SourceFiles="$(ENetSourcePath)" DestinationFiles="$(ENetTargetPath)" Condition="Exists('$(ENetSourcePath)')" />
+    <Message Importance="high" Text="Copied arm64 libenet.dylib to $(ENetTargetPath)" Condition="Exists('$(ENetSourcePath)')" />
+  </Target>
 </Project>

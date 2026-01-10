@@ -11,6 +11,7 @@ namespace Nebula
     /// corresponding value on each client for serialization.
     /// This is a value type (struct) to avoid allocations.
     /// </summary>
+    [NetValueLayout(8)] // sizeof(long)
     public readonly struct NetId : INetValue<NetId>, IBsonValue<NetId>, IEquatable<NetId>
     {
         /// <summary>

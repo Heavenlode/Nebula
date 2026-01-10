@@ -30,6 +30,9 @@ namespace Nebula.Generators
         public int LerpMode { get; set; }
         public float LerpParam { get; set; } = 15f;
         public int ClassIndex { get; set; } = -1;
+        public bool NotifyOnChange { get; set; } = false;
+        public bool Interpolate { get; set; } = false;
+        public float InterpolateSpeed { get; set; } = 15f;
     }
 
     internal sealed class FunctionData
@@ -62,6 +65,11 @@ namespace Nebula.Generators
         public Dictionary<string, Dictionary<int, PropertyData>> PropertiesLookup { get; } = new();
         public Dictionary<string, Dictionary<int, FunctionData>> FunctionsLookup { get; } = new();
         public Dictionary<string, int> SerialTypePack { get; } = new();
+        /// <summary>
+        /// Direct lookup: scenePath -> staticChildId -> propertyName -> property
+        /// Avoids intermediate nodePath string lookup at runtime.
+        /// </summary>
+        public Dictionary<string, Dictionary<byte, Dictionary<string, PropertyData>>> PropertiesByStaticChildId { get; } = new();
     }
 
     internal sealed class SerializableMethodData

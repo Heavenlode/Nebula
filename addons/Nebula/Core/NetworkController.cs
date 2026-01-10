@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Godot;
 using Nebula.Serialization;
 using Nebula.Utility.Tools;
@@ -42,8 +44,8 @@ namespace Nebula
 		}
 
 
-		private StringName _attachedNetNodeSceneFilePath;
-		public StringName NetSceneFilePath
+		private string _attachedNetNodeSceneFilePath;
+		public string NetSceneFilePath
 		{
 			get
 			{
@@ -67,18 +69,35 @@ namespace Nebula
 			return Protocol.IsNetScene(RawNode.SceneFilePath);
 		}
 
-	internal List<Tuple<string, string>> InitialSetNetProperties = [];
-	public WorldRunner CurrentWorld { get; internal set; }
-	public Dictionary<UUID, long> InterestLayers { get; set; } = [];
+		internal List<Tuple<string, string>> InitialSetNetProperties = [];
+		public WorldRunner CurrentWorld { get; internal set; }
+		public Dictionary<UUID, long> InterestLayers { get; set; } = [];
 		public NetworkController[] StaticNetworkChildren = [];
-		public long[] DirtyProps = new long[64];
+
+		/// <summary>
+		/// The static child ID for this node within its parent NetScene.
+		/// Assigned during Setup() from Protocol.StaticNetworkNodePathsMap.
+		/// Root NetScene nodes use their own ID (typically 0 for ".").
+		/// </summary>
+		public byte StaticChildId { get; internal set; } = 0;
+
+		/// <summary>
+		/// Bitmask of dirty properties. Bit N is set if property index N has changed since last export.
+		/// </summary>
+		public long DirtyMask = 0;
+
+		/// <summary>
+		/// Cached property values. Populated by MarkDirty, read by serializer during Export.
+		/// </summary>
+		internal PropertyCache[] CachedProperties = new PropertyCache[64];
+
 		public HashSet<NetworkController> DynamicNetworkChildren = [];
-		
+
 		/// <summary>
 		/// Invoked when a peer's interest layers change. Parameters: (peerId, oldInterest, newInterest)
 		/// </summary>
 		public event Action<UUID, long, long> InterestChanged;
-		
+
 		public void SetPeerInterest(UUID peerId, long newInterest, bool recurse = true)
 		{
 			var oldInterest = InterestLayers.TryGetValue(peerId, out var value) ? value : 0;
@@ -139,12 +158,13 @@ namespace Nebula
 					}
 				}
 				_networkParentId = value;
-			{
-				if (IsNetScene() && value.IsValid && CurrentWorld.GetNodeFromNetId(value).RawNode is INetNodeBase _netNodeParent)
 				{
-					_netNodeParent.Network.DynamicNetworkChildren.Add(this);
+					var parentController = IsNetScene() && value.IsValid ? CurrentWorld.GetNodeFromNetId(value) : null;
+					if (parentController?.RawNode is INetNodeBase _netNodeParent)
+					{
+						_netNodeParent.Network.DynamicNetworkChildren.Add(this);
+					}
 				}
-			}
 			}
 		}
 		public NetworkController NetParent
@@ -170,10 +190,250 @@ namespace Nebula
 			if (IsNetScene())
 			{
 				NetNode.SetupSerializers();
+				InitializeStaticChildren();
 			}
 		}
 
-		
+		/// <summary>
+		/// Initializes StaticNetworkChildren array and assigns StaticChildId to each child.
+		/// Uses Protocol data to map node paths to IDs (init-time Godot calls are acceptable).
+		/// </summary>
+		private void InitializeStaticChildren()
+		{
+			var scenePath = RawNode.SceneFilePath;
+
+			if (!GeneratedProtocol.StaticNetworkNodePathsMap.TryGetValue(scenePath, out var nodeMap))
+			{
+				return;
+			}
+
+			// Find max ID to size the array correctly
+			byte maxId = 0;
+			foreach (var nodeId in nodeMap.Keys)
+			{
+				if (nodeId > maxId) maxId = nodeId;
+			}
+
+			StaticNetworkChildren = new NetworkController[maxId + 1];
+
+			foreach (var (nodeId, nodePath) in nodeMap)
+			{
+				var childNode = RawNode.GetNodeOrNull(nodePath);
+				if (childNode is INetNodeBase netChild)
+				{
+					netChild.Network.StaticChildId = nodeId;
+					StaticNetworkChildren[nodeId] = netChild.Network;
+				}
+			}
+		}
+
+		#region Property Dirty Tracking
+
+		/// <summary>
+		/// Marks a value-type property as dirty and caches its value.
+		/// Called by generated On{Prop}Changed methods. No boxing occurs.
+		/// </summary>
+		public void MarkDirty<T>(INetNodeBase sourceNode, string propertyName, T value) where T : struct
+		{
+			// Static children propagate to parent net scene (which owns the serializer)
+			if (!IsNetScene())
+			{
+				NetParent?.MarkDirty(sourceNode, propertyName, value);
+				return;
+			}
+
+			// Look up property using static child ID (no Godot calls)
+			var staticChildId = sourceNode.Network.StaticChildId;
+			if (!Protocol.LookupPropertyByStaticChildId(NetSceneFilePath, staticChildId, propertyName, out var prop))
+			{
+				Debugger.Instance.Log($"MarkDirty: Property not found: staticChildId={staticChildId}, prop={propertyName}", Debugger.DebugLevel.ERROR);
+				return;
+			}
+
+			DirtyMask |= (1L << prop.Index);
+			SetCachedValue(prop.Index, prop.VariantType, value);
+		}
+
+		/// <summary>
+		/// Marks a reference-type property as dirty and caches its value.
+		/// Called by generated On{Prop}Changed methods.
+		/// </summary>
+		public void MarkDirtyRef<T>(INetNodeBase sourceNode, string propertyName, T value) where T : class
+		{
+			// Static children propagate to parent net scene
+			if (!IsNetScene())
+			{
+				NetParent?.MarkDirtyRef(sourceNode, propertyName, value);
+				return;
+			}
+
+			// Look up property using static child ID (no Godot calls)
+			var staticChildId = sourceNode.Network.StaticChildId;
+			if (!Protocol.LookupPropertyByStaticChildId(NetSceneFilePath, staticChildId, propertyName, out var prop))
+			{
+				Debugger.Instance.Log($"MarkDirtyRef: Property not found: staticChildId={staticChildId}, prop={propertyName}", Debugger.DebugLevel.ERROR);
+				return;
+			}
+
+			DirtyMask |= (1L << prop.Index);
+
+			// Reference types go in the RefValue slot (or StringValue for strings)
+			if (value is string s)
+			{
+				CachedProperties[prop.Index].Type = SerialVariantType.String;
+				CachedProperties[prop.Index].StringValue = s;
+			}
+			else
+			{
+				CachedProperties[prop.Index].Type = SerialVariantType.Object;
+				CachedProperties[prop.Index].RefValue = value;
+			}
+		}
+
+		/// <summary>
+		/// Sets a cached property value based on its type. Uses pattern matching to avoid boxing.
+		/// </summary>
+		private void SetCachedValue<T>(int index, SerialVariantType variantType, T value) where T : struct
+		{
+			ref var cache = ref CachedProperties[index];
+			cache.Type = variantType;
+
+			// Use pattern matching to set the correct union field without boxing
+			switch (value)
+			{
+				case bool b:
+					cache.BoolValue = b;
+					break;
+				case byte by:
+					cache.ByteValue = by;
+					break;
+				case int i:
+					cache.IntValue = i;
+					break;
+				case long l:
+					cache.LongValue = l;
+					break;
+				case float f:
+					cache.FloatValue = f;
+					break;
+				case double d:
+					cache.DoubleValue = d;
+					break;
+				case Vector2 v2:
+					cache.Vec2Value = v2;
+					break;
+				case Vector3 v3:
+					cache.Vec3Value = v3;
+					break;
+				case Quaternion q:
+					cache.QuatValue = q;
+					break;
+				case NetId netId:
+					cache.NetIdValue = netId;
+					break;
+				case UUID uuid:
+					cache.UUIDValue = uuid;
+					break;
+				default:
+					// For unknown value types, we have to box (rare case)
+					cache.Type = SerialVariantType.Object;
+					cache.RefValue = value;
+					Debugger.Instance.Log($"SetCachedValue: Unknown value type {typeof(T).Name}, boxing", Debugger.DebugLevel.WARN);
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Clears the dirty mask after export. Called by the serializer.
+		/// </summary>
+		internal void ClearDirtyMask()
+		{
+			DirtyMask = 0;
+		}
+
+		#endregion
+
+		#region Input Handling
+
+		private byte[] _inputData;
+		private byte[] _previousInputData;
+		private bool _inputChanged;
+
+		/// <summary>
+		/// Returns true if this node supports network input (InitializeInput was called).
+		/// </summary>
+		public bool HasInputSupport => _inputData != null;
+
+		/// <summary>
+		/// Returns true if the input has changed since the last network tick.
+		/// </summary>
+		public bool HasInputChanged => _inputChanged;
+
+		/// <summary>
+		/// Gets the current input as a byte span for network serialization.
+		/// </summary>
+		public ReadOnlySpan<byte> GetInputBytes() => _inputData;
+
+		/// <summary>
+		/// Sets the current input from bytes received from the network.
+		/// </summary>
+		public void SetInputBytes(ReadOnlySpan<byte> bytes)
+		{
+			if (_inputData == null || bytes.Length != _inputData.Length) return;
+			bytes.CopyTo(_inputData);
+		}
+
+		/// <summary>
+		/// Clears the input changed flag after the input has been sent.
+		/// </summary>
+		public void ClearInputChanged() => _inputChanged = false;
+
+		/// <summary>
+		/// Initializes input support for this node with the specified input struct type.
+		/// Call this in your node's constructor.
+		/// </summary>
+		/// <typeparam name="TInput">The unmanaged struct type for network input.</typeparam>
+		public void InitializeInput<TInput>() where TInput : unmanaged
+		{
+			var size = Unsafe.SizeOf<TInput>();
+			_inputData = new byte[size];
+			_previousInputData = new byte[size];
+		}
+
+		/// <summary>
+		/// Sets the current input for this network tick. Only call on the client that owns this node.
+		/// </summary>
+		/// <typeparam name="TInput">The unmanaged struct type for network input.</typeparam>
+		/// <param name="input">The input struct to send to the server.</param>
+		public void SetInput<TInput>(in TInput input) where TInput : unmanaged
+		{
+			if (_inputData == null)
+			{
+				Debugger.Instance.Log("SetInput called but input not initialized. Call InitializeInput<T>() first.", Debugger.DebugLevel.ERROR);
+				return;
+			}
+
+			// Copy current to previous
+			_inputData.CopyTo(_previousInputData, 0);
+
+			// Write new input to current
+			MemoryMarshal.Write(_inputData, in input);
+
+			// Check if changed
+			_inputChanged = !_inputData.AsSpan().SequenceEqual(_previousInputData);
+		}
+
+		/// <summary>
+		/// Gets the current input. Use this on the server to read client input.
+		/// </summary>
+		/// <typeparam name="TInput">The unmanaged struct type for network input.</typeparam>
+		/// <returns>A readonly reference to the current input.</returns>
+		public ref readonly TInput GetInput<TInput>() where TInput : unmanaged
+		{
+			return ref MemoryMarshal.AsRef<TInput>(_inputData);
+		}
+
+		#endregion
 
 		public NetId NetId { get; internal set; }
 		public NetPeer InputAuthority { get; private set; }
@@ -220,9 +480,10 @@ namespace Nebula
 				return;
 			}
 
-			CurrentWorld = world;
-			if (IsNetScene())
-			{
+		CurrentWorld = world;
+		Debugger.Instance.Log($"_NetworkPrepare: {RawNode.Name} IsNetScene={IsNetScene()} ScenePath={RawNode.SceneFilePath}", Debugger.DebugLevel.VERBOSE);
+		if (IsNetScene())
+		{
 				if (NetRunner.Instance.IsServer)
 				{
 					foreach (var peer in NetRunner.Instance.Peers.Keys)
@@ -253,47 +514,52 @@ namespace Nebula
 					networkChild.NetParentId = NetId;
 					networkChild._NetworkPrepare(world);
 				}
-			if (NetRunner.Instance.IsClient)
-			{
-				return;
-			}
-			
-			// Ensure every networked "INetNode" property is correctly linked to the WorldRunner.
-			if (GeneratedProtocol.PropertiesMap.TryGetValue(RawNode.SceneFilePath, out var nodeMap))
-			{
-				foreach (var nodeEntry in nodeMap)
+				if (NetRunner.Instance.IsClient)
 				{
-					var nodePath = nodeEntry.Key;
-					foreach (var propEntry in nodeEntry.Value)
+					return;
+				}
+
+				// Ensure every networked "INetNode" property is correctly linked to the WorldRunner.
+				if (GeneratedProtocol.PropertiesMap.TryGetValue(RawNode.SceneFilePath, out var nodeMap))
+				{
+					foreach (var nodeEntry in nodeMap)
 					{
-						var property = propEntry.Value;
-						if (property.Metadata.TypeIdentifier == "NetNode")
+						var nodePath = nodeEntry.Key;
+						foreach (var propEntry in nodeEntry.Value)
 						{
-							var node = RawNode.GetNode(nodePath);
-							var prop = node.Get(property.Name);
-							var tempNetNode = prop.As<GodotObject>();
-							if (tempNetNode == null)
+							var property = propEntry.Value;
+							if (property.Metadata.TypeIdentifier == "NetNode")
 							{
-								continue;
-							}
-							if (tempNetNode is INetNodeBase netNode)
-							{
-								var referencedNodeInWorld = CurrentWorld.GetNodeFromNetId(netNode.Network._prepareNetId);
-								if (referencedNodeInWorld.IsNetScene() && !string.IsNullOrEmpty(netNode.Network._prepareStaticChildPath))
+								var node = RawNode.GetNode(nodePath);
+								var prop = node.Get(property.Name);
+								var tempNetNode = prop.As<GodotObject>();
+								if (tempNetNode == null)
 								{
-									referencedNodeInWorld = (referencedNodeInWorld.RawNode.GetNodeOrNull(netNode.Network._prepareStaticChildPath) as INetNodeBase).Network;
+									continue;
 								}
-								node.Set(property.Name, referencedNodeInWorld.RawNode);
+								if (tempNetNode is INetNodeBase netNode)
+								{
+									var referencedNodeInWorld = CurrentWorld.GetNodeFromNetId(netNode.Network._prepareNetId);
+									if (referencedNodeInWorld == null)
+									{
+										continue;
+									}
+									if (referencedNodeInWorld.IsNetScene() && !string.IsNullOrEmpty(netNode.Network._prepareStaticChildPath))
+									{
+										referencedNodeInWorld = (referencedNodeInWorld.RawNode.GetNodeOrNull(netNode.Network._prepareStaticChildPath) as INetNodeBase)?.Network;
+									}
+									if (referencedNodeInWorld != null)
+									{
+										node.Set(property.Name, referencedNodeInWorld.RawNode);
+									}
+								}
 							}
 						}
 					}
 				}
-			}
 
-				foreach (var initialSetProp in InitialSetNetProperties)
-				{
-					EmitSignal("NetPropertyChanged", initialSetProp.Item1, initialSetProp.Item2);
-				}
+				// Initial property values are now cached via MarkDirty calls during initialization
+				// The old EmitSignal("NetPropertyChanged") pattern has been removed
 			}
 		}
 

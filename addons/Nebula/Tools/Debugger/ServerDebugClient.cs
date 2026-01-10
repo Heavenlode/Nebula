@@ -26,10 +26,15 @@ namespace Nebula.Internal.Editor
 
         public override void _ExitTree()
         {
-            debugConnection.Destroy();
+            if (debugConnection != null)
+            {
+                debugConnection.Destroy();
+                debugConnection = null;
+            }
             if (db != null)
             {
                 db.Dispose();
+                db = null;
             }
         }
 

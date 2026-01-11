@@ -111,6 +111,7 @@ namespace Nebula.Utility
                     }
                     foreach (var staticChild in node.Network.StaticNetworkChildren)
                     {
+                        if (staticChild == null) continue;
                         staticChild.RawNode.SetMeta("import_from_external", true);
                     }
                     node.SetMeta("import_from_external", true);
@@ -204,9 +205,30 @@ namespace Nebula.Utility
                         }
                         else if (variantType == SerialVariantType.Object)
                         {
-                            // For complex object types, we need to handle them specially
-                            // This path requires the Protocol to have registered a BSON deserializer
-                            Debugger.Instance.Log($"Object type deserialization not yet implemented for new context: {nodePath}.{prop.Name}", Debugger.DebugLevel.WARN);
+                            // For complex object types, use the registered BsonDeserialize method
+                            var method = Protocol.GetStaticMethod(propData, StaticMethodType.BsonDeserialize);
+                            if (method == null)
+                            {
+                                Debugger.Instance.Log($"No BsonDeserialize method found for {nodePath}.{prop.Name}", Debugger.DebugLevel.WARN);
+                                continue;
+                            }
+                            var result = method.Invoke(null, new object[] { prop.Value });
+                            
+                            // Use generated SetBsonPropertyByName to bypass Godot's property system
+                            var rawNode = targetNode.Network.RawNode;
+                            var setterMethod = rawNode.GetType().GetMethod("SetBsonPropertyByName");
+                            if (setterMethod != null)
+                            {
+                                var wasSet = (bool)setterMethod.Invoke(rawNode, new object[] { prop.Name, result });
+                                if (!wasSet)
+                                {
+                                    Debugger.Instance.Log($"SetBsonPropertyByName returned false for {nodePath}.{prop.Name}", Debugger.DebugLevel.WARN);
+                                }
+                            }
+                            else
+                            {
+                                Debugger.Instance.Log($"No SetBsonPropertyByName method found on {rawNode.GetType().Name} for {nodePath}.{prop.Name}", Debugger.DebugLevel.WARN);
+                            }
                         }
                     }
                     catch (InvalidCastException e)

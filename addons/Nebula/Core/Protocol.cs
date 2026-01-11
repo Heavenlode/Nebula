@@ -314,6 +314,28 @@ namespace Nebula.Serialization
             return GetCachedMethod(methodInfo.TypeFullName, methodType.ToString());
         }
 
+        /// <summary>
+        /// Get a generated deserializer delegate for a property's type.
+        /// This is the preferred method for deserialization - no reflection or boxing.
+        /// </summary>
+        /// <param name="classIndex">The class index from ProtocolNetProperty.ClassIndex</param>
+        /// <returns>The deserializer delegate, or null if not found</returns>
+        public static GeneratedProtocol.NetworkDeserializeFunc GetDeserializer(int classIndex)
+        {
+            return GeneratedProtocol.Deserializers.TryGetValue(classIndex, out var deserializer) ? deserializer : null;
+        }
+
+        /// <summary>
+        /// Get a generated serializer delegate for a property's type.
+        /// This is the preferred method for serialization - no reflection or boxing.
+        /// </summary>
+        /// <param name="classIndex">The class index from ProtocolNetProperty.ClassIndex</param>
+        /// <returns>The serializer delegate, or null if not found</returns>
+        public static GeneratedProtocol.NetworkSerializeFunc GetSerializer(int classIndex)
+        {
+            return GeneratedProtocol.Serializers.TryGetValue(classIndex, out var serializer) ? serializer : null;
+        }
+
         private static MethodInfo GetCachedMethod(string typeName, string methodName)
         {
             var key = (typeName, methodName);
@@ -324,7 +346,8 @@ namespace Nebula.Serialization
             if (type == null)
                 return null;
 
-            var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
+            // FlattenHierarchy is required to find static methods from base classes
+            var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             _methodCache[key] = method;
             return method;
         }

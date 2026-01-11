@@ -49,13 +49,6 @@ namespace Nebula.Serialization
         PackedVector4Array = 38,
     }
 
-    public enum NetLerpMode
-    {
-        None = 0,
-        Smooth = 1,
-        Buffered = 2,
-    }
-
     [System.Flags]
     public enum NetworkSources
     {
@@ -115,8 +108,6 @@ namespace Nebula.Serialization
         public readonly SerialMetadata Metadata;
         public readonly byte Index;
         public readonly long InterestMask;
-        public readonly NetLerpMode LerpMode;
-        public readonly float LerpParam;
         public readonly int ClassIndex;
         public readonly bool NotifyOnChange;
         public readonly bool Interpolate;
@@ -129,8 +120,6 @@ namespace Nebula.Serialization
             SerialMetadata metadata,
             byte index,
             long interestMask,
-            NetLerpMode lerpMode,
-            float lerpParam,
             int classIndex,
             bool notifyOnChange = false,
             bool interpolate = false,
@@ -142,8 +131,6 @@ namespace Nebula.Serialization
             Metadata = metadata;
             Index = index;
             InterestMask = interestMask;
-            LerpMode = lerpMode;
-            LerpParam = lerpParam;
             ClassIndex = classIndex;
             NotifyOnChange = notifyOnChange;
             Interpolate = interpolate;

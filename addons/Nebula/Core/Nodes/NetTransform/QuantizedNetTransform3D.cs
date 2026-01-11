@@ -12,17 +12,8 @@ namespace Nebula.Utility.Nodes
         [Export]
         public Node3D TargetNode { get; set; }
 
-        [NetProperty(LerpMode = NetLerpMode.Buffered, LerpParam = 2)]
+        [NetProperty(Interpolate = true, InterpolateSpeed = 15f)]
         public NetPose3D NetPose { get; set; } = new NetPose3D();
-
-        // Lerp state
-        private Quaternion _startQuat;
-        private Vector3 _startPos;
-        private Quaternion _endQuat;
-        private Vector3 _endPos;
-        private Quaternion _lastTargetQuat;
-        private Vector3 _lastTargetPos;
-        private bool _initialized = false;
 
         /// <inheritdoc/>
         public override void _WorldReady()
@@ -72,7 +63,30 @@ namespace Nebula.Utility.Nodes
             parent.LookAt(direction, Vector3.Up, true);
         }
 
-        bool teleportExported = false;
+        /// <summary>
+        /// Updates TargetNode position/rotation from NetPose each frame on the client.
+        /// The network serializer calls ProcessInterpolation which lerps NetPose toward the target.
+        /// </summary>
+        public override void _Process(double delta)
+        {
+            base._Process(delta);
+            
+            if (!Network.IsWorldReady || !NetRunner.Instance.IsClient || TargetNode == null)
+                return;
+
+            var targetPos = NetPose.Position;
+            var targetQuat = NetPose.RotationQuat;
+            
+            var currentQuat = TargetNode.Quaternion;
+            // Shortest path for quaternion
+            if (currentQuat.Dot(targetQuat) < 0)
+                targetQuat = -targetQuat;
+            
+            float t = 1f - Mathf.Exp(-15f * (float)delta);
+            
+            TargetNode.Position = TargetNode.Position.Lerp(targetPos, t);
+            TargetNode.Quaternion = currentQuat.Slerp(targetQuat, t);
+        }
 
         /// <inheritdoc/>
         public override void _NetworkProcess(int tick)
@@ -84,45 +98,6 @@ namespace Nebula.Utility.Nodes
             }
             NetPose.ApplyDelta(SourceNode.Position, SourceNode.Rotation);
             NetPose.NetworkProcess(Network.CurrentWorld);
-        }
-
-        // // Custom smooth handler for NetPose3D (complex object)
-        // public void NetworkSmoothNetPose(Variant target, float t)
-        // {
-        //     var targetPose = target.As<NetPose3D>();
-
-        //     var currentPos = TargetNode.Position;
-        //     var currentQuat = TargetNode.Quaternion;
-
-        //     var targetPos = targetPose.Position;
-        //     var targetQuat = targetPose.RotationQuat;
-
-        //     if (currentQuat.Dot(targetQuat) < 0)
-        //         targetQuat = -targetQuat;
-
-        //     TargetNode.Position = currentPos.Lerp(targetPos, t);
-        //     TargetNode.Quaternion = currentQuat.Slerp(targetQuat, t);
-        // }
-
-        public virtual void NetworkBufferedLerpNetPose(Variant before, Variant after, float t)
-        {
-            var beforePose = before.As<NetPose3D>();
-            var afterPose = after.As<NetPose3D>();
-
-            var beforePos = beforePose.Position;
-            var afterPos = afterPose.Position;
-
-            var beforeQuat = beforePose.RotationQuat;
-            var afterQuat = afterPose.RotationQuat;
-
-            // Shortest path for quaternion
-            if (beforeQuat.Dot(afterQuat) < 0)
-                afterQuat = -afterQuat;
-
-            // Simple linear interpolation between two known states
-            // This produces constant velocity - no jitter
-            TargetNode.Position = beforePos.Lerp(afterPos, t);
-            TargetNode.Quaternion = beforeQuat.Slerp(afterQuat, t);
         }
     }
 }

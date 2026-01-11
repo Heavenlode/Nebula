@@ -27,8 +27,6 @@ namespace Nebula.Generators
         public string? SubtypeIdentifier { get; set; }
         public byte Index { get; set; }
         public long InterestMask { get; set; }
-        public int LerpMode { get; set; }
-        public float LerpParam { get; set; } = 15f;
         public int ClassIndex { get; set; } = -1;
         public bool NotifyOnChange { get; set; } = false;
         public bool Interpolate { get; set; } = false;
@@ -76,5 +74,10 @@ namespace Nebula.Generators
     {
         public int MethodType { get; set; }
         public string TypeFullName { get; set; } = "";
+        /// <summary>
+        /// True if this type implements INetValue (value type), false if INetSerializable (reference type).
+        /// Used by CodeEmitter to generate correct PropertyCache field access.
+        /// </summary>
+        public bool IsValueType { get; set; }
     }
 }

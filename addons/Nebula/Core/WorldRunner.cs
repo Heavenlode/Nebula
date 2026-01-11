@@ -22,6 +22,16 @@ namespace Nebula
     */
     public partial class WorldRunner : Node
     {
+        /// <summary>
+        /// Maximum time in seconds a peer can go without acknowledging a tick before being force disconnected.
+        /// </summary>
+        public const float PEER_ACK_TIMEOUT_SECONDS = 5.0f;
+        
+        /// <summary>
+        /// Client identifier for debugging. Set via --clientId=X command line argument.
+        /// </summary>
+        public static int ClientId { get; private set; } = -1;
+        private static bool _clientIdParsed = false;
         public struct NetFunctionCtx
         {
             public NetPeer Caller;
@@ -99,7 +109,7 @@ namespace Nebula
         /// </summary>
         public NetworkController RootScene;
 
-        internal long networkIdCounter = 0;
+        internal long networkIdCounter = 1; // Start at 1 because NetId=0 is considered invalid
         private Dictionary<long, NetId> networkIds = [];
         internal Dictionary<NetId, NetworkController> NetScenes = [];
 
@@ -282,7 +292,7 @@ namespace Nebula
             Name = "WorldRunner";
             Debug = new DebugMessenger(this);
 
-            // Parse --debugPort from command line args
+            // Parse command line args
             foreach (var argument in OS.GetCmdlineArgs())
             {
                 if (argument.StartsWith("--debugPort="))
@@ -292,7 +302,15 @@ namespace Nebula
                     {
                         DebugPort = parsedPort;
                     }
-                    break;
+                }
+                else if (argument.StartsWith("--clientId=") && !_clientIdParsed)
+                {
+                    var value = argument.Substring("--clientId=".Length);
+                    if (int.TryParse(value, out int parsedId))
+                    {
+                        ClientId = parsedId;
+                        _clientIdParsed = true;
+                    }
                 }
             }
 
@@ -336,6 +354,8 @@ namespace Nebula
                 {
                     var peer = NetRunner.Instance.GetPeerByNativeId(peerId);
                     if (!peer.IsSet) return;
+                    if (!PeerStates.ContainsKey(peer)) return; // Already cleaned up
+                    
                     if (AutoPlayerCleanup)
                     {
                         CleanupPlayer(peer);
@@ -435,6 +455,7 @@ namespace Nebula
         /// Invoked when a player joins the world (sync status becomes IN_WORLD).
         /// </summary>
         public event Action<UUID> OnPlayerJoined;
+        public event Action<UUID> OnPlayerCleanup;
 
 
         /// <summary>
@@ -446,11 +467,15 @@ namespace Nebula
 
         /// <summary>
         /// Immediately disconnects the player from the world and frees all of their data from the server, including freeing their owned nodes (when <see cref="NetworkController.DespawnOnUnowned"/> is true).
+        /// Safe to call multiple times - will return early if peer was already cleaned up.
         /// </summary>
         /// <param name="peer"></param>
         public void CleanupPlayer(NetPeer peer)
         {
             if (!NetRunner.Instance.IsServer) return;
+            
+            // Already cleaned up (e.g. by ack timeout, then ENet disconnect event fires)
+            if (!PeerStates.ContainsKey(peer)) return;
 
             if (peer.State == ENet.PeerState.Connected)
             {
@@ -469,11 +494,33 @@ namespace Nebula
                     netController.SetInputAuthority(default);
                 }
             }
+            
+            // Clean up per-peer cached data from all network controllers and serializers to prevent memory leaks
+            foreach (var netController in NetScenes.Values)
+            {
+                if (netController == null) continue;
+                
+                // Clean up NetworkController's per-peer state
+                netController.CleanupPeerState(peer);
+                
+                // Clean up serializers' per-peer state
+                if (netController.NetNode?.Serializers != null)
+                {
+                    foreach (var serializer in netController.NetNode.Serializers)
+                    {
+                        serializer.CleanupPeer(peer);
+                    }
+                }
+            }
+            
+            var peerId = NetRunner.Instance.GetPeerId(peer);
             PeerStates.Remove(peer);
-            NetRunner.Instance.Peers.Remove(NetRunner.Instance.GetPeerId(peer));
-            NetRunner.Instance.WorldPeerMap.Remove(NetRunner.Instance.GetPeerId(peer));
+            _peerLastAckTick.Remove(peer);
+            NetRunner.Instance.Peers.Remove(peerId);
+            NetRunner.Instance.WorldPeerMap.Remove(peerId);
             NetRunner.Instance.PeerWorldMap.Remove(peer);
             NetRunner.Instance.PeerIds.Remove(peer);
+            OnPlayerCleanup?.Invoke(peerId);
         }
 
         private int _frameCounter = 0;
@@ -482,6 +529,35 @@ namespace Nebula
         /// </summary>
         public void ServerProcessTick()
         {
+            // Check for peers that have timed out (no acks for too long)
+            int ackTimeoutTicks = (int)(PEER_ACK_TIMEOUT_SECONDS * NetRunner.TPS);
+            _peersToDisconnect.Clear();
+            
+            foreach (var peer in PeerStates.Keys)
+            {
+                if (PeerStates[peer].Status == PeerSyncStatus.DISCONNECTED)
+                    continue;
+                    
+                // Initialize tracking for new peers
+                if (!_peerLastAckTick.ContainsKey(peer))
+                {
+                    _peerLastAckTick[peer] = CurrentTick;
+                    continue;
+                }
+                
+                var ticksSinceLastAck = CurrentTick - _peerLastAckTick[peer];
+                if (ticksSinceLastAck > ackTimeoutTicks)
+                {
+                    Log($"[ACK TIMEOUT] Peer {peer.ID} has not acknowledged for {ticksSinceLastAck} ticks ({ticksSinceLastAck / (float)NetRunner.TPS:F1}s). Force disconnecting.", Debugger.DebugLevel.WARN);
+                    _peersToDisconnect.Add(peer);
+                }
+            }
+            
+            foreach (var peer in _peersToDisconnect)
+            {
+                CleanupPlayer(peer);
+            }
+            
             foreach (var net_id in NetScenes.Keys)
             {
                 var netController = NetScenes[net_id];
@@ -499,6 +575,7 @@ namespace Nebula
                 }
                 foreach (var networkChild in netController.StaticNetworkChildren)
                 {
+                    if (networkChild == null) continue;
                     if (networkChild.RawNode == null)
                     {
                         Log($"Network child node is unexpectedly null: {netController.RawNode.SceneFilePath}", Debugger.DebugLevel.ERROR);
@@ -585,7 +662,7 @@ namespace Nebula
                 var size = buffer.Length;
                 if (size > NetRunner.MTU)
                 {
-                    Log($"Data size {size} exceeds MTU {NetRunner.MTU}", Debugger.DebugLevel.WARN);
+                    Log($"[MTU EXCEEDED] Peer {peer.ID} tick {CurrentTick}: Data size {size} exceeds MTU {NetRunner.MTU} - PACKET MAY BE CORRUPTED!", Debugger.DebugLevel.ERROR);
                 }
 
                 NetRunner.SendUnreliableSequenced(peer, (byte)NetRunner.ENetChannelId.Tick, buffer.ToArray());
@@ -769,6 +846,16 @@ namespace Nebula
         }
 
         readonly private Dictionary<NetPeer, PeerState> pendingSyncStates = [];
+        
+        /// <summary>
+        /// Tracks the last tick each peer acknowledged. Used for timeout detection.
+        /// </summary>
+        private Dictionary<NetPeer, Tick> _peerLastAckTick = new();
+        
+        /// <summary>
+        /// Reusable list for peers to disconnect (avoids allocation each tick).
+        /// </summary>
+        private List<NetPeer> _peersToDisconnect = new(16);
         public void SetPeerState(UUID peerId, PeerState state)
         {
             var peer = NetRunner.Instance.GetPeer(peerId);
@@ -886,6 +973,8 @@ namespace Nebula
                 return 0;
             }
 
+            // On client, also register in networkIds so GetNodeFromNetId(long) works
+            networkIds[node.NetId.Value] = node.NetId;
             NetScenes[node.NetId] = node;
             return 1;
         }
@@ -925,14 +1014,14 @@ namespace Nebula
                     return null;
                 }
                 node.Network.NetParent = RootScene;
-                GD.Print($"RootScene: ", node.Network.NetParent);
-                node.Network.NetParent.RawNode.PrintTreePretty();
-                node.Network.NetParent.RawNode.GetNode(netNodePath).AddChild(node);
+                var targetNode = netNodePath == default || netNodePath.IsEmpty ? RootScene.RawNode : RootScene.RawNode.GetNode(netNodePath);
+                targetNode.AddChild(node);
             }
             else
             {
                 node.Network.NetParent = parent;
-                parent.RawNode.GetNode(netNodePath).AddChild(node);
+                var targetNode = netNodePath == default || netNodePath.IsEmpty ? parent.RawNode : parent.RawNode.GetNode(netNodePath);
+                targetNode.AddChild(node);
             }
             node.Network._NetworkPrepare(this);
             node.Network._WorldReady();
@@ -1058,7 +1147,7 @@ namespace Nebula
             var exportTime = sw.ElapsedMilliseconds;
             sw.Restart();
 
-            Debugger.Instance.Log($"Export: {exportTime}ms");
+            // Debugger.Instance.Log($"Export: {exportTime}ms");
 
             foreach (var netController in NetScenes.Values)
             {
@@ -1089,27 +1178,44 @@ namespace Nebula
             foreach (var nodeIdSerializerList in nodeIdToSerializerList)
             {
                 var localNodeId = nodeIdSerializerList.Key;
+                var serializerMask = nodeIdSerializerList.Value;
                 var netController = GetNodeFromNetId(localNodeId);
+                bool isNewNode = netController == null;
+                
                 if (netController == null)
                 {
                     var blankScene = new NetNode3D();
                     blankScene.Network.NetId = AllocateNetId(localNodeId);
                     blankScene.SetupSerializers();
                     NetRunner.Instance.AddChild(blankScene);
-                    netController = new NetworkController(blankScene);
+                    TryRegisterPeerNode(blankScene.Network);
+                    netController = blankScene.Network;
                 }
+                
                 for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                 {
-                    if ((nodeIdSerializerList.Value & ((long)1 << serializerIdx)) == 0)
+                    if ((serializerMask & ((long)1 << serializerIdx)) == 0)
                     {
                         continue;
                     }
                     var serializerInstance = netController.NetNode.Serializers[serializerIdx];
-                    serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
-                    if (netController != nodeOut)
+                    var serializerType = serializerInstance.GetType().Name;
+                    
+                    try
                     {
-                        netController = nodeOut;
-                        serializerIdx = 0;
+                        serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
+                        if (netController != nodeOut)
+                        {
+                            netController = nodeOut;
+                            serializerIdx = 0;
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        // Log error with context and ABORT processing this tick entirely
+                        // to prevent cascading errors from corrupted buffer position
+                        Debugger.Instance.Log($"[ImportState ERROR] Failed to import node {localNodeId} serializer {serializerIdx} ({serializerType}): {ex.Message}. Buffer pos={stateBytes.ReadPosition}/{stateBytes.Length}. Aborting tick import.", Debugger.DebugLevel.ERROR);
+                        return; // Don't continue processing - buffer position is corrupted
                     }
                 }
             }
@@ -1119,9 +1225,15 @@ namespace Nebula
         {
             if (PeerStates[peer].Tick >= tick)
             {
+                // Duplicate or old ack - skip
                 return;
             }
-            if (PeerStates[peer].Status == PeerSyncStatus.INITIAL)
+            
+            // Update last ack tick for timeout tracking
+            _peerLastAckTick[peer] = tick;
+            
+            var isFirstAck = PeerStates[peer].Status == PeerSyncStatus.INITIAL;
+            if (isFirstAck)
             {
                 var newPeerState = PeerStates[peer];
                 newPeerState.Tick = tick;
@@ -1146,8 +1258,19 @@ namespace Nebula
             {
                 return;
             }
+            
             CurrentTick = incomingTick;
-            ImportState(new NetBuffer(stateBytes));
+            
+            try
+            {
+                ImportState(new NetBuffer(stateBytes));
+            }
+            catch (Exception ex)
+            {
+                Log($"[ImportState FAILED] tick {incomingTick}: {ex.Message}", Debugger.DebugLevel.ERROR);
+                // Still send ack so server doesn't think we're dead - we just couldn't process this tick
+            }
+            
             foreach (var net_id in NetScenes.Keys)
             {
                 var netController = NetScenes[net_id];
@@ -1247,7 +1370,19 @@ namespace Nebula
             }
 
             using var inputBuffer = new NetBuffer();
-            NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netNode.NetId, inputBuffer);
+            
+            // Static children don't have their own NetId - use parent's NetId + StaticChildId
+            bool isStaticChild = netNode.StaticChildId > 0 && netNode.NetParent != null;
+            if (isStaticChild)
+            {
+                NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netNode.NetParent.NetId, inputBuffer);
+                NetWriter.WriteByte(inputBuffer, netNode.StaticChildId);
+            }
+            else
+            {
+                NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netNode.NetId, inputBuffer);
+                NetWriter.WriteByte(inputBuffer, 0); // StaticChildId = 0 means not a static child
+            }
             
             // Write the input size followed by the raw bytes
             var inputBytes = netNode.GetInputBytes();
@@ -1262,6 +1397,7 @@ namespace Nebula
         {
             if (NetRunner.Instance.IsClient) return;
             var networkId = NetReader.ReadByte(buffer);
+            var staticChildId = NetReader.ReadByte(buffer);
             var worldNetId = GetNetIdFromPeerId(peer, networkId);
             var node = GetNodeFromNetId(worldNetId);
             if (node == null)
@@ -1270,16 +1406,32 @@ namespace Nebula
                 return;
             }
 
+            // If this is input for a static child, look it up
+            if (staticChildId > 0)
+            {
+                if (staticChildId >= node.StaticNetworkChildren.Length)
+                {
+                    Log($"Received input for invalid static child {staticChildId} on node {worldNetId}", Debugger.DebugLevel.ERROR);
+                    return;
+                }
+                node = node.StaticNetworkChildren[staticChildId];
+                if (node == null)
+                {
+                    Log($"Static child {staticChildId} is null on node {worldNetId}", Debugger.DebugLevel.ERROR);
+                    return;
+                }
+            }
+
             if (!node.InputAuthority.Equals(peer))
             {
-                Log($"Received input for node {worldNetId} from unauthorized peer {peer}", Debugger.DebugLevel.ERROR);
+                Log($"Received input for node {worldNetId} (staticChild={staticChildId}) from unauthorized peer {peer}", Debugger.DebugLevel.ERROR);
                 return;
             }
 
             // Check if the node supports input
             if (!node.HasInputSupport)
             {
-                Log($"Received input for node {worldNetId} that doesn't support input", Debugger.DebugLevel.ERROR);
+                Log($"Received input for node {worldNetId} (staticChild={staticChildId}) that doesn't support input", Debugger.DebugLevel.ERROR);
                 return;
             }
 
@@ -1288,7 +1440,7 @@ namespace Nebula
             var inputBytes = NetReader.ReadBytes(buffer, inputSize);
             node.SetInputBytes(inputBytes);
             
-            Debug.Send("Input", $"Received {inputSize} bytes for node {worldNetId}");
+            Debug.Send("Input", $"Received {inputSize} bytes for node {worldNetId} (staticChild={staticChildId})");
         }
 
         // WARNING: These are not exactly tick-aligned for state reconcilliation. Could cause state issues because the assumed tick is when it is received?

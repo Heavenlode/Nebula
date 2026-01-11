@@ -47,6 +47,7 @@ namespace Nebula
         {
             Delta = 1 << 0,
             Keyframe = 1 << 1,
+            HighResolution = 1 << 6,  // Flag for high-res quaternion encoding
         }
 
         public ChangeType ClientState { get; private set; } = ChangeType.Delta;
@@ -96,6 +97,16 @@ namespace Nebula
             {
                 OnChange?.Invoke();
             }
+        }
+
+        /// <summary>
+        /// Applies a network delta received from the server to this pose.
+        /// Used on the client to accumulate deltas into the cached pose.
+        /// </summary>
+        public void ApplyNetworkDelta(NetPose3D delta)
+        {
+            _position += delta._position;
+            _rotation = (delta._rotation * _rotation).Normalized();
         }
 
         public void ApplyKeyframe(Vector3 position, Vector3 rotation)
@@ -339,6 +350,10 @@ namespace Nebula
             if (obj._shouldSendKeyframe || isOwner || !obj.LastKeyframeSent.ContainsKey(peer))
             {
                 header |= (byte)ChangeType.Keyframe;
+                if (isOwner)
+                {
+                    header |= (byte)ChangeType.HighResolution;
+                }
                 NetWriter.WriteByte(buffer, header);
 
                 for (byte i = 0; i < AXIS_COUNT; i++)
@@ -376,15 +391,14 @@ namespace Nebula
             NetWriter.WriteBytes(buffer, changeBuff.WrittenSpan);
         }
 
-        public static NetPose3D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
+        public static NetPose3D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, NetPose3D existing = null)
         {
-            // Note: This simplified version doesn't have context. 
-            // For delta encoding, caller should handle context separately.
             var header = NetReader.ReadByte(buffer);
-            var result = new NetPose3D();
 
             if ((header & (byte)ChangeType.Keyframe) != 0)
             {
+                // Keyframe: use existing instance or create new
+                var result = existing ?? new NetPose3D();
                 result.ClientState = ChangeType.Keyframe;
 
                 for (byte i = 0; i < AXIS_COUNT; i++)
@@ -392,13 +406,13 @@ namespace Nebula
                     result._position[i] = new Fixed64(NetReader.ReadInt32(buffer)) / new Fixed64(100);
                 }
 
-                // Assume standard resolution since we don't have owner context
-                result._rotation = UnpackQuaternion(buffer, false);
+                // Read high resolution quaternion if the flag is set
+                bool highRes = (header & (byte)ChangeType.HighResolution) != 0;
+                result._rotation = UnpackQuaternion(buffer, highRes);
                 return result;
             }
 
-            // Delta - always standard resolution
-            result.ClientState = ChangeType.Delta;
+            // Delta encoding
             var positionDelta = new Vector3d();
             var positionScale = STANDARD_POSITION_SCALE;
 
@@ -411,14 +425,29 @@ namespace Nebula
                 }
             }
 
+            Quaternion rotationDelta = Quaternion.Identity;
             if ((header & (1 << (CHANGE_HEADER_LENGTH + AXIS_COUNT))) != 0)
             {
-                var rotationDelta = UnpackQuaternion(buffer, false);
-                result._rotation = (rotationDelta * result._rotation).Normalized();
+                rotationDelta = UnpackQuaternion(buffer, false);
             }
 
-            result._position += positionDelta;
-            return result;
+            if (existing != null)
+            {
+                // Apply delta to existing instance
+                existing._position += positionDelta;
+                existing._rotation = (rotationDelta * existing._rotation).Normalized();
+                existing.ClientState = ChangeType.Delta;
+                return existing;
+            }
+            else
+            {
+                // No existing instance - create new with delta values
+                var result = new NetPose3D();
+                result.ClientState = ChangeType.Delta;
+                result._position = positionDelta;
+                result._rotation = rotationDelta;
+                return result;
+            }
         }
 
         public async Task OnBsonDeserialize(NetBsonContext context, BsonDocument doc)

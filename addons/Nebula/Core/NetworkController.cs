@@ -51,7 +51,10 @@ namespace Nebula
 			{
 				if (_attachedNetNodeSceneFilePath == null)
 				{
-					_attachedNetNodeSceneFilePath = RawNode.SceneFilePath ?? NetParent.RawNode.SceneFilePath;
+					var rawPath = RawNode.SceneFilePath;
+					_attachedNetNodeSceneFilePath = string.IsNullOrEmpty(rawPath) 
+						? NetParent?.RawNode?.SceneFilePath ?? "" 
+						: rawPath;
 				}
 				return _attachedNetNodeSceneFilePath;
 			}
@@ -138,6 +141,17 @@ namespace Nebula
 					_netNodeParent.Network.DynamicNetworkChildren.Remove(this);
 				}
 			}
+		}
+		
+		/// <summary>
+		/// Cleans up per-peer cached state when a peer disconnects.
+		/// Called by WorldRunner.CleanupPlayer to prevent memory leaks.
+		/// </summary>
+		internal void CleanupPeerState(NetPeer peer)
+		{
+			spawnReady.Remove(peer);
+			preparingSpawn.Remove(peer);
+			InterestLayers.Remove(NetRunner.Instance.GetPeerId(peer));
 		}
 
 		public bool IsWorldReady { get; internal set; } = false;
@@ -313,6 +327,9 @@ namespace Nebula
 				case long l:
 					cache.LongValue = l;
 					break;
+				case ulong ul:
+					cache.LongValue = (long)ul;
+					break;
 				case float f:
 					cache.FloatValue = f;
 					break;
@@ -436,7 +453,7 @@ namespace Nebula
 		#endregion
 
 		public NetId NetId { get; internal set; }
-		public NetPeer InputAuthority { get; private set; }
+		public NetPeer InputAuthority { get; internal set; }
 		public void SetInputAuthority(NetPeer inputAuthority)
 		{
 			if (!NetRunner.Instance.IsServer) throw new Exception("InputAuthority can only be set on the server");
@@ -481,7 +498,6 @@ namespace Nebula
 			}
 
 		CurrentWorld = world;
-		Debugger.Instance.Log($"_NetworkPrepare: {RawNode.Name} IsNetScene={IsNetScene()} ScenePath={RawNode.SceneFilePath}", Debugger.DebugLevel.VERBOSE);
 		if (IsNetScene())
 		{
 				if (NetRunner.Instance.IsServer)
@@ -496,7 +512,7 @@ namespace Nebula
 				{
 					return;
 				}
-				for (var i = DynamicNetworkChildren.Count - 1; i >= 0; i--)
+				for (var i = DynamicNetworkChildren.Count - 1; i >= 1; i--)
 				{
 					var networkChild = DynamicNetworkChildren.ElementAt(i);
 					networkChild.InterestLayers = InterestLayers;
@@ -505,7 +521,7 @@ namespace Nebula
 					networkChild.NetParentId = NetId;
 					networkChild._NetworkPrepare(world);
 				}
-				for (var i = StaticNetworkChildren.Length - 1; i >= 0; i--)
+				for (var i = StaticNetworkChildren.Length - 1; i >= 1; i--)
 				{
 					var networkChild = StaticNetworkChildren[i];
 					networkChild.InterestLayers = InterestLayers;
@@ -578,11 +594,11 @@ namespace Nebula
 		{
 			if (IsNetScene())
 			{
-				for (var i = DynamicNetworkChildren.Count - 1; i >= 0; i--)
+				for (var i = DynamicNetworkChildren.Count - 1; i >= 1; i--)
 				{
 					DynamicNetworkChildren.ElementAt(i)._WorldReady();
 				}
-				for (var i = StaticNetworkChildren.Length - 1; i >= 0; i--)
+				for (var i = StaticNetworkChildren.Length - 1; i >= 1; i--)
 				{
 					StaticNetworkChildren[i]._WorldReady();
 				}

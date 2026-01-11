@@ -59,10 +59,10 @@ public class NetPropertyGenerator : IIncrementalGenerator
         bool notifyOnChange = false;
         bool interpolate = false;
         float interpolateSpeed = 15f;
-        
+
         foreach (var attr in propertySymbol.GetAttributes())
         {
-            if (attr.AttributeClass?.Name == "NetProperty" || 
+            if (attr.AttributeClass?.Name == "NetProperty" ||
                 attr.AttributeClass?.Name == "NetPropertyAttribute")
             {
                 foreach (var namedArg in attr.NamedArguments)
@@ -84,9 +84,25 @@ public class NetPropertyGenerator : IIncrementalGenerator
             }
         }
 
+        // Check if the property type implements IBsonValue<T> or IBsonSerializable<T>
+        bool isBsonSerializable = false;
+        if (propertySymbol.Type is INamedTypeSymbol namedType)
+        {
+            isBsonSerializable = namedType.AllInterfaces.Any(i =>
+                i.IsGenericType && (i.OriginalDefinition.Name == "IBsonValue" ||
+                                    i.OriginalDefinition.Name == "IBsonSerializable"));
+        }
+
+        // Simple name for internal lookups (PropertyCache field mapping)
+        var simpleTypeName = propertySymbol.Type.ToDisplayString();
+
+        // Fully qualified name for method signatures (Fody matching)
+        var fullyQualifiedTypeName = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
         return new PropertyInfo(
             propertySymbol.Name,
-            propertySymbol.Type.ToDisplayString(),
+            simpleTypeName,
+            fullyQualifiedTypeName,  // Add this new field
             propertySymbol.Type.IsValueType,
             propertySymbol.Type.TypeKind == TypeKind.Enum,
             containingType.Name,
@@ -95,7 +111,8 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 : containingType.ContainingNamespace.ToDisplayString(),
             notifyOnChange,
             interpolate,
-            interpolateSpeed);
+            interpolateSpeed,
+            isBsonSerializable);
     }
 
     private static string GetPropertyCacheFieldName(string propertyType)
@@ -113,7 +130,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
         {
             simpleName = simpleName.TrimEnd('?');
         }
-        
+
         // Reference types use RefValue
         return $"{simpleName}Value";
     }
@@ -125,7 +142,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
     private static string GetCacheReadExpression(PropertyInfo prop, string cacheVar)
     {
         var cacheField = GetPropertyCacheFieldName(prop.PropertyType);
-        
+
         if (prop.IsEnum)
         {
             // Enums are stored as IntValue, need to cast
@@ -158,7 +175,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
         {
             return "IntValue";
         }
-        
+
         var cacheField = GetPropertyCacheFieldName(prop.PropertyType);
         if (!prop.IsValueType && cacheField != "StringValue")
         {
@@ -173,21 +190,24 @@ public class NetPropertyGenerator : IIncrementalGenerator
     private static string GetDefaultInterpolationImpl(string propertyType, float speed)
     {
         var speedStr = speed.ToString(System.Globalization.CultureInfo.InvariantCulture) + "f";
-        
+
         // Normalize type name for comparison
         var normalizedType = propertyType.Replace("Godot.", "");
-        
+
         return normalizedType switch
         {
             "Vector3" => $"float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta); return current.Lerp(target, t);",
             "Vector2" => $"float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta); return current.Lerp(target, t);",
-            "Quaternion" => $@"float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta);
+            "Quaternion" => $@"// Guard against uninitialized (zero) quaternions
+        if (target.LengthSquared() < 0.0001f) return current.LengthSquared() < 0.0001f ? Godot.Quaternion.Identity : current;
+        if (current.LengthSquared() < 0.0001f) current = Godot.Quaternion.Identity;
+        float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta);
         var normalizedTarget = target.Normalized();
         if (current.Dot(normalizedTarget) < 0) normalizedTarget = -normalizedTarget;
         return current.Slerp(normalizedTarget, t);",
             "float" or "System.Single" => $"float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta); return Godot.Mathf.Lerp(current, target, t);",
             "double" or "System.Double" => $"float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta); return Godot.Mathf.Lerp((float)current, (float)target, t);",
-            _ => "return target; // No interpolation for this type - snap to target"
+            _ => "return target ?? current; // No interpolation for this type - snap to target, but preserve current if target is null"
         };
     }
 
@@ -211,7 +231,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
             if (ns is not null)
                 sb.AppendLine($"namespace {ns};");
 
-            sb.AppendLine();
+            sb.AppendLine("using Godot;");
             sb.AppendLine($"partial class {className}");
             sb.AppendLine("{");
 
@@ -220,7 +240,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
             {
                 var markDirtyMethod = prop!.IsValueType ? "MarkDirty" : "MarkDirtyRef";
 
-                sb.AppendLine($"    public void On{prop.PropertyName}Changed({prop.PropertyType} newVal)");
+                sb.AppendLine($"    public void On{prop.PropertyName}Changed({prop.FullyQualifiedPropertyType} oldVal, {prop.FullyQualifiedPropertyType} newVal)");
                 sb.AppendLine("    {");
                 sb.AppendLine($"        Network.{markDirtyMethod}(this, \"{prop.PropertyName}\", newVal);");
                 sb.AppendLine("    }");
@@ -255,7 +275,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
             // This creates a mapping from property name to index for efficient lookup
             sb.AppendLine("    #region Property Change Dispatcher");
             sb.AppendLine();
-            
+
             // Generate static property name to index mapping
             sb.AppendLine("    private static readonly System.Collections.Generic.Dictionary<string, int> _propertyNameToIndex = new()");
             sb.AppendLine("    {");
@@ -284,12 +304,12 @@ public class NetPropertyGenerator : IIncrementalGenerator
             sb.AppendLine("    /// </summary>");
             sb.AppendLine("    public void InvokePropertyChangeHandler(int propIndex, int tick, ref Nebula.PropertyCache oldVal, ref Nebula.PropertyCache newVal)");
             sb.AppendLine("    {");
-            
+
             if (notifyProps.Count > 0)
             {
                 sb.AppendLine("        switch (propIndex)");
                 sb.AppendLine("        {");
-                
+
                 for (int i = 0; i < propList.Count; i++)
                 {
                     var prop = propList[i]!;
@@ -300,10 +320,10 @@ public class NetPropertyGenerator : IIncrementalGenerator
                         sb.AppendLine($"            case {i}: OnNetworkChange{prop.PropertyName}(tick, {oldExpr}, {newExpr}); break;");
                     }
                 }
-                
+
                 sb.AppendLine("        }");
             }
-            
+
             sb.AppendLine("    }");
             sb.AppendLine();
 
@@ -313,7 +333,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
             sb.AppendLine("    /// </summary>");
             sb.AppendLine("    public static bool HasPropertyChangeHandler(int propIndex)");
             sb.AppendLine("    {");
-            
+
             if (notifyProps.Count > 0)
             {
                 var notifyIndices = new List<int>();
@@ -324,7 +344,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
                         notifyIndices.Add(i);
                     }
                 }
-                
+
                 if (notifyIndices.Count == 1)
                 {
                     sb.AppendLine($"        return propIndex == {notifyIndices[0]};");
@@ -339,7 +359,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
             {
                 sb.AppendLine("        return false;");
             }
-            
+
             sb.AppendLine("    }");
             sb.AppendLine();
 
@@ -352,17 +372,51 @@ public class NetPropertyGenerator : IIncrementalGenerator
             sb.AppendLine("    {");
             sb.AppendLine("        switch (propIndex)");
             sb.AppendLine("        {");
-            
+
             for (int i = 0; i < propList.Count; i++)
             {
                 var prop = propList[i]!;
                 var valueExpr = GetCacheReadExpression(prop, "value");
                 sb.AppendLine($"            case {i}: {prop.PropertyName} = {valueExpr}; break;");
             }
-            
+
             sb.AppendLine("        }");
             sb.AppendLine("    }");
             sb.AppendLine();
+
+            // Generate SetBsonPropertyByName - sets BSON-serializable properties by name
+            var bsonProps = propList.Where(p => p!.IsBsonSerializable).ToList();
+            if (bsonProps.Count > 0)
+            {
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Sets a BSON-serializable property by name from a deserialized object.");
+                sb.AppendLine("    /// Used during BSON deserialization to bypass Godot's property system.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    /// <returns>True if the property was found and set, false otherwise.</returns>");
+                sb.AppendLine("    public bool SetBsonPropertyByName(string propName, object value)");
+                sb.AppendLine("    {");
+                sb.AppendLine("        switch (propName)");
+                sb.AppendLine("        {");
+
+                foreach (var prop in bsonProps)
+                {
+                    sb.AppendLine($"            case \"{prop!.PropertyName}\": {prop.PropertyName} = ({prop.PropertyType})value; return true;");
+                }
+
+                sb.AppendLine("            default: return false;");
+                sb.AppendLine("        }");
+                sb.AppendLine("    }");
+                sb.AppendLine();
+            }
+            else
+            {
+                // Generate a stub method that always returns false
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Sets a BSON-serializable property by name. This class has no BSON-serializable properties.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    public bool SetBsonPropertyByName(string propName, object value) => false;");
+                sb.AppendLine();
+            }
 
             sb.AppendLine("    #endregion");
             sb.AppendLine();
@@ -374,11 +428,18 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine("    #region Interpolation");
                 sb.AppendLine();
 
+                // Generate cached global index fields for each interpolated property
+                foreach (var prop in interpolatedProps)
+                {
+                    sb.AppendLine($"    private int _interpolate_{prop!.PropertyName}_GlobalIndex = -1;");
+                }
+                sb.AppendLine();
+
                 // Generate Interpolate{PropertyName} virtual methods with default implementations
                 foreach (var prop in interpolatedProps)
                 {
                     var defaultImpl = GetDefaultInterpolationImpl(prop!.PropertyType, prop.InterpolateSpeed);
-                    
+
                     sb.AppendLine($"    /// <summary>");
                     sb.AppendLine($"    /// Interpolates {prop.PropertyName} toward the network target value.");
                     sb.AppendLine($"    /// Override to customize interpolation behavior.");
@@ -396,42 +457,45 @@ public class NetPropertyGenerator : IIncrementalGenerator
 
                 // Generate ProcessInterpolation method
                 sb.AppendLine("    /// <summary>");
-                sb.AppendLine("    /// Processes all interpolated properties. Called each frame by the serializer.");
+                sb.AppendLine("    /// Processes all interpolated properties. Called each frame.");
                 sb.AppendLine("    /// </summary>");
-                sb.AppendLine("    public void ProcessInterpolation(float delta)");
+                sb.AppendLine("    internal override void ProcessInterpolation(float delta)");
                 sb.AppendLine("    {");
-                
+                sb.AppendLine("        var parentNetwork = Network.IsNetScene() ? Network : Network.NetParent;");
+                sb.AppendLine("        var scenePath = parentNetwork.NetSceneFilePath;");
+                sb.AppendLine("        var staticChildId = Network.StaticChildId;");
+                sb.AppendLine();
+
                 for (int i = 0; i < propList.Count; i++)
                 {
                     var prop = propList[i]!;
                     if (!prop.Interpolate) continue;
-                    
-                    var targetExpr = GetCacheReadExpression(prop, $"Network.CachedProperties[{i}]");
-                    
+
+                    var targetExpr = GetCacheReadExpression(prop, $"parentNetwork.CachedProperties[_interpolate_{prop.PropertyName}_GlobalIndex]");
+
+                    sb.AppendLine($"        if (_interpolate_{prop.PropertyName}_GlobalIndex < 0)");
+                    sb.AppendLine("        {");
+                    sb.AppendLine($"            if (Nebula.Serialization.Protocol.LookupPropertyByStaticChildId(scenePath, staticChildId, \"{prop.PropertyName}\", out var prop_{prop.PropertyName}))");
+                    sb.AppendLine("            {");
+                    sb.AppendLine($"                _interpolate_{prop.PropertyName}_GlobalIndex = prop_{prop.PropertyName}.Index;");
+                    sb.AppendLine("            }");
+                    sb.AppendLine("        }");
                     sb.AppendLine("        {");
                     sb.AppendLine($"            var current = {prop.PropertyName};");
                     sb.AppendLine($"            var target = {targetExpr};");
                     sb.AppendLine($"            {prop.PropertyName} = Interpolate{prop.PropertyName}(delta, current, target);");
                     sb.AppendLine("        }");
                 }
-                
-                sb.AppendLine("    }");
-                sb.AppendLine();
 
-                // Generate HasInterpolatedProperties property
-                sb.AppendLine("    /// <summary>");
-                sb.AppendLine("    /// Returns true if this class has any interpolated properties.");
-                sb.AppendLine("    /// </summary>");
-                sb.AppendLine("    public bool HasInterpolatedProperties => true;");
+                sb.AppendLine("    }");
                 sb.AppendLine();
 
                 sb.AppendLine("    #endregion");
             }
             else
             {
-                // No interpolated properties - still generate the interface members with defaults
-                sb.AppendLine("    public void ProcessInterpolation(float delta) { }");
-                sb.AppendLine("    public bool HasInterpolatedProperties => false;");
+                // No interpolated properties - still generate override with empty body
+                sb.AppendLine("    internal override void ProcessInterpolation(float delta) { }");
             }
 
             sb.AppendLine("}");
@@ -443,11 +507,13 @@ public class NetPropertyGenerator : IIncrementalGenerator
     private record PropertyInfo(
         string PropertyName,
         string PropertyType,
+        string FullyQualifiedPropertyType,
         bool IsValueType,
         bool IsEnum,
         string ClassName,
         string? Namespace,
         bool NotifyOnChange,
         bool Interpolate,
-        float InterpolateSpeed);
+        float InterpolateSpeed,
+        bool IsBsonSerializable);
 }

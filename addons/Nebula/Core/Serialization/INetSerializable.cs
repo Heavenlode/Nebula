@@ -40,7 +40,8 @@ namespace Nebula.Serialization
         /// <param name="currentWorld">The current world runner</param>
         /// <param name="peer">The source peer</param>
         /// <param name="buffer">The buffer to read from</param>
-        /// <returns>The deserialized object</returns>
-        public static abstract T NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer);
+        /// <param name="existing">Optional existing instance to update (for delta encoding support)</param>
+        /// <returns>The deserialized object (may be the updated existing instance or a new one)</returns>
+        public static abstract T NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, T existing = null);
     }
 }

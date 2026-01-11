@@ -19,6 +19,7 @@ namespace Nebula.Generators
             sb.AppendLine("using System.Collections.Frozen;");
             sb.AppendLine("using System.Collections.Generic;");
             sb.AppendLine("using Nebula.Serialization;");
+            sb.AppendLine("using Nebula;");  // For WorldRunner, NetBuffer, and NetPeer (global using)
             sb.AppendLine();
             sb.AppendLine("namespace Nebula.Serialization");
             sb.AppendLine("{");
@@ -51,6 +52,11 @@ namespace Nebula.Generators
             
             // Serial type pack
             EmitSerialTypePack(sb, data);
+            
+            // Network serialization delegates (generated lambdas for reflection-free serialization)
+            EmitDelegateTypes(sb);
+            EmitDeserializersDictionary(sb, data);
+            EmitSerializersDictionary(sb, data);
 
             sb.AppendLine("    }");
             sb.AppendLine("}");
@@ -242,8 +248,6 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    new SerialMetadata(\"{Escape(actualSubtype)}\"),");
             sb.AppendLine($"{indent}    {prop.Index},");
             sb.AppendLine($"{indent}    {prop.InterestMask}L,");
-            sb.AppendLine($"{indent}    (NetLerpMode){prop.LerpMode},");
-            sb.AppendLine($"{indent}    {prop.LerpParam.ToString(CultureInfo.InvariantCulture)}f,");
             sb.AppendLine($"{indent}    {prop.ClassIndex},");
             sb.AppendLine($"{indent}    {prop.NotifyOnChange.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.Interpolate.ToString().ToLowerInvariant()},");
@@ -262,8 +266,6 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    new SerialMetadata(\"{Escape(actualSubtype)}\"),");
             sb.AppendLine($"{indent}    {prop.Index},");
             sb.AppendLine($"{indent}    {prop.InterestMask}L,");
-            sb.AppendLine($"{indent}    (NetLerpMode){prop.LerpMode},");
-            sb.AppendLine($"{indent}    {prop.LerpParam.ToString(CultureInfo.InvariantCulture)}f,");
             sb.AppendLine($"{indent}    {prop.ClassIndex},");
             sb.AppendLine($"{indent}    {prop.NotifyOnChange.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.Interpolate.ToString().ToLowerInvariant()},");
@@ -420,6 +422,173 @@ namespace Nebula.Generators
         private static string Escape(string s)
         {
             return s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+        }
+
+        /// <summary>
+        /// Emits delegate type definitions for serialization/deserialization.
+        /// </summary>
+        private static void EmitDelegateTypes(StringBuilder sb)
+        {
+            sb.AppendLine();
+            sb.AppendLine("        #region Delegate Types");
+            sb.AppendLine();
+            sb.AppendLine("        /// <summary>Delegate for reflection-free network deserialization.</summary>");
+            sb.AppendLine("        public delegate object NetworkDeserializeFunc(WorldRunner world, NetPeer? peer, NetBuffer buffer, object? existing);");
+            sb.AppendLine();
+            sb.AppendLine("        /// <summary>Delegate for reflection-free network serialization. Works directly with PropertyCache.</summary>");
+            sb.AppendLine("        public delegate void NetworkSerializeFunc(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer);");
+            sb.AppendLine();
+            sb.AppendLine("        #endregion");
+            sb.AppendLine();
+        }
+
+        /// <summary>
+        /// Generates the dictionary mapping class index to deserializer lambdas.
+        /// </summary>
+        private static void EmitDeserializersDictionary(StringBuilder sb, ProtocolData data)
+        {
+            sb.AppendLine("        public static readonly FrozenDictionary<int, NetworkDeserializeFunc> Deserializers =");
+            sb.AppendLine("            new Dictionary<int, NetworkDeserializeFunc>");
+            sb.AppendLine("            {");
+            
+            foreach (var kvp in data.StaticMethods)
+            {
+                // Only include types that have NetworkDeserialize (bit 1)
+                if ((kvp.Value.MethodType & 2) == 0)
+                    continue;
+                
+                var typeName = kvp.Value.TypeFullName;
+                
+                // Skip open generic types (they contain '<' and '>' with type parameters like T)
+                if (IsOpenGenericType(typeName))
+                    continue;
+                
+                if (kvp.Value.IsValueType)
+                {
+                    // Value types (INetValue<T>) don't take an existing parameter
+                    sb.AppendLine($"                [{kvp.Key}] = (world, peer, buffer, existing) => {typeName}.NetworkDeserialize(world, peer ?? default, buffer),");
+                }
+                else
+                {
+                    // Reference types (INetSerializable<T>) take an existing parameter
+                    sb.AppendLine($"                [{kvp.Key}] = (world, peer, buffer, existing) => {typeName}.NetworkDeserialize(world, peer ?? default, buffer, existing as {typeName}),");
+                }
+            }
+            
+            sb.AppendLine("            }.ToFrozenDictionary();");
+            sb.AppendLine();
+        }
+
+        /// <summary>
+        /// Generates static serializer methods and the dictionary mapping class index to them.
+        /// Uses static methods instead of lambdas to avoid C# version issues with ref parameters in lambdas.
+        /// </summary>
+        private static void EmitSerializersDictionary(StringBuilder sb, ProtocolData data)
+        {
+            // First, emit all the static serializer methods
+            sb.AppendLine("        #region Serializer Methods");
+            sb.AppendLine();
+            
+            foreach (var kvp in data.StaticMethods)
+            {
+                // Only include types that have NetworkSerialize (bit 0)
+                if ((kvp.Value.MethodType & 1) == 0)
+                    continue;
+                
+                var typeName = kvp.Value.TypeFullName;
+                
+                // Skip open generic types
+                if (IsOpenGenericType(typeName))
+                    continue;
+                
+                var shortName = GetShortTypeName(typeName);
+                var methodName = $"Serializer_{kvp.Key}";
+                
+                if (kvp.Value.IsValueType)
+                {
+                    // Value types use their specific PropertyCache field
+                    sb.AppendLine($"        private static void {methodName}(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer)");
+                    sb.AppendLine($"            => {typeName}.NetworkSerialize(world, peer, in cache.{shortName}Value, buffer);");
+                }
+                else
+                {
+                    // Reference types use cache.RefValue cast to the type
+                    sb.AppendLine($"        private static void {methodName}(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer)");
+                    sb.AppendLine($"            => {typeName}.NetworkSerialize(world, peer, ({typeName})cache.RefValue, buffer);");
+                }
+                sb.AppendLine();
+            }
+            
+            sb.AppendLine("        #endregion");
+            sb.AppendLine();
+            
+            // Now emit the dictionary using method group references
+            sb.AppendLine("        public static readonly FrozenDictionary<int, NetworkSerializeFunc> Serializers =");
+            sb.AppendLine("            new Dictionary<int, NetworkSerializeFunc>");
+            sb.AppendLine("            {");
+            
+            foreach (var kvp in data.StaticMethods)
+            {
+                // Only include types that have NetworkSerialize (bit 0)
+                if ((kvp.Value.MethodType & 1) == 0)
+                    continue;
+                
+                var typeName = kvp.Value.TypeFullName;
+                
+                // Skip open generic types
+                if (IsOpenGenericType(typeName))
+                    continue;
+                
+                sb.AppendLine($"                [{kvp.Key}] = Serializer_{kvp.Key},");
+            }
+            
+            sb.AppendLine("            }.ToFrozenDictionary();");
+            sb.AppendLine();
+        }
+
+        /// <summary>
+        /// Gets the short type name (without namespace) for PropertyCache field names.
+        /// e.g., "Nebula.NetId" -> "NetId"
+        /// </summary>
+        private static string GetShortTypeName(string fullTypeName)
+        {
+            var lastDot = fullTypeName.LastIndexOf('.');
+            return lastDot >= 0 ? fullTypeName.Substring(lastDot + 1) : fullTypeName;
+        }
+
+        /// <summary>
+        /// Checks if a type name represents an open generic type (e.g., "LazyPeerState&lt;T&gt;").
+        /// Open generic types cannot be used directly in generated code.
+        /// </summary>
+        private static bool IsOpenGenericType(string typeName)
+        {
+            // Check if the type has generic parameters
+            var genericStart = typeName.IndexOf('<');
+            if (genericStart < 0)
+                return false;
+            
+            var genericEnd = typeName.LastIndexOf('>');
+            if (genericEnd < 0)
+                return false;
+            
+            // Extract the generic arguments
+            var genericArgs = typeName.Substring(genericStart + 1, genericEnd - genericStart - 1);
+            
+            // If the generic arguments are single letters (T, U, V, etc.) or contain commas with single letters,
+            // it's likely an open generic type
+            var args = genericArgs.Split(',');
+            foreach (var arg in args)
+            {
+                var trimmed = arg.Trim();
+                // Single letter type parameters like T, U, V, TValue, TKey, etc.
+                if (trimmed.Length == 1 && char.IsUpper(trimmed[0]))
+                    return true;
+                // Common generic parameter naming patterns
+                if (trimmed.StartsWith("T") && (trimmed.Length == 1 || char.IsUpper(trimmed[1])))
+                    return true;
+            }
+            
+            return false;
         }
     }
 }

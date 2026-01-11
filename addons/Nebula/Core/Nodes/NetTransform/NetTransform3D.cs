@@ -15,10 +15,10 @@ namespace Nebula.Utility.Nodes
         [NetProperty]
         public bool IsTeleporting { get; set; }
 
-        [NetProperty(LerpMode = NetLerpMode.Smooth, LerpParam = 15f)]
+        [NetProperty(Interpolate = true, InterpolateSpeed = 15f)]
         public Vector3 NetPosition { get; set; }
 
-        [NetProperty(LerpMode = NetLerpMode.Smooth, LerpParam = 15f)]
+        [NetProperty(Interpolate = true, InterpolateSpeed = 15f)]
         public Quaternion NetRotation { get; set; } = Quaternion.Identity;
 
         private bool _isTeleporting = false;
@@ -97,114 +97,6 @@ namespace Nebula.Utility.Nodes
                     teleportExported = true;
                 }
             }
-        }
-
-        #region Smooth Mode (exponential chase)
-
-        /// <summary>
-        /// Called by NetPropertiesSerializer for Smooth lerp mode.
-        /// Exponentially chases target position each frame.
-        /// </summary>
-        public void NetworkSmoothNetPosition(Variant target, float t)
-        {
-            var targetPos = target.AsVector3();
-
-            if (!_smoothInitialized || _isTeleporting)
-            {
-                // First update or teleport - snap to position
-                TargetNode.Position = targetPos;
-                NetPosition = targetPos;
-                _isTeleporting = false;
-                _smoothInitialized = true;
-                return;
-            }
-
-            TargetNode.Position = TargetNode.Position.Lerp(targetPos, t);
-            NetPosition = TargetNode.Position;
-        }
-
-        /// <summary>
-        /// Called by NetPropertiesSerializer for Smooth lerp mode.
-        /// Exponentially chases target rotation each frame.
-        /// </summary>
-        public void NetworkSmoothNetRotation(Variant target, float t)
-        {
-            var targetQuat = target.AsQuaternion().Normalized();
-
-            if (!_smoothInitialized || _isTeleporting)
-            {
-                // First update or teleport - snap to rotation
-                TargetNode.Quaternion = targetQuat;
-                NetRotation = targetQuat;
-                return;
-            }
-
-            var currentQuat = TargetNode.Quaternion.Normalized();
-
-            // Shortest path
-            if (currentQuat.Dot(targetQuat) < 0)
-            {
-                targetQuat = new Quaternion(-targetQuat.X, -targetQuat.Y, -targetQuat.Z, -targetQuat.W);
-            }
-
-            TargetNode.Quaternion = currentQuat.Slerp(targetQuat, t);
-            NetRotation = TargetNode.Quaternion;
-        }
-
-        #endregion
-
-        #region Buffered Mode (interpolate between past states)
-
-        /// <summary>
-        /// Called by NetPropertiesSerializer for Buffered lerp mode.
-        /// Interpolates between two known past positions.
-        /// </summary>
-        public void NetworkBufferedLerpNetPosition(Variant before, Variant after, float t)
-        {
-            if (_isTeleporting)
-            {
-                TargetNode.Position = after.AsVector3();
-                NetPosition = TargetNode.Position;
-                _isTeleporting = false;
-                return;
-            }
-
-            TargetNode.Position = before.AsVector3().Lerp(after.AsVector3(), t);
-            NetPosition = TargetNode.Position;
-        }
-
-        /// <summary>
-        /// Called by NetPropertiesSerializer for Buffered lerp mode.
-        /// Interpolates between two known past rotations.
-        /// </summary>
-        public void NetworkBufferedLerpNetRotation(Variant before, Variant after, float t)
-        {
-            var fromQuat = before.AsQuaternion().Normalized();
-            var toQuat = after.AsQuaternion().Normalized();
-
-            // Shortest path
-            if (fromQuat.Dot(toQuat) < 0)
-            {
-                toQuat = new Quaternion(-toQuat.X, -toQuat.Y, -toQuat.Z, -toQuat.W);
-            }
-
-            TargetNode.Quaternion = fromQuat.Slerp(toQuat, t);
-            NetRotation = TargetNode.Quaternion;
-        }
-
-        #endregion
-
-        /// <inheritdoc/>
-        public override void _PhysicsProcess(double delta)
-        {
-            if (Engine.IsEditorHint())
-            {
-                return;
-            }
-            base._PhysicsProcess(delta);
-
-            // Smoothing/buffering is now handled by NetPropertiesSerializer._Process
-            // No need to apply here anymore for clients
         }
 
         public void Teleport(Vector3 incoming_position)

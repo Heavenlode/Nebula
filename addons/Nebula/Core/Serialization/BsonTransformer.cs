@@ -19,14 +19,11 @@ namespace Nebula.Serialization
         /// <inheritdoc/>
         public override void _EnterTree()
         {
-            GD.Print("[AUTOLOAD] BsonTransformer._EnterTree START");
             if (Instance != null)
             {
-                GD.Print("[AUTOLOAD] BsonTransformer._EnterTree - Instance already exists, freeing");
                 QueueFree();
             }
             Instance = this;
-            GD.Print("[AUTOLOAD] BsonTransformer._EnterTree END");
         }
 
         public byte[] SerializeBsonValue(BsonValue value)

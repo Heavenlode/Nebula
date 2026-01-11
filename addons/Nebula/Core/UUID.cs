@@ -1,6 +1,7 @@
 using System;
 using Nebula.Serialization;
 using MongoDB.Bson;
+using Godot;
 
 namespace Nebula
 {
@@ -124,12 +125,11 @@ namespace Nebula
             {
                 return default;
             }
-            
             var binaryData = bson.AsBsonBinaryData;
             var guid = GuidConverter.FromBytes(binaryData.Bytes, GuidRepresentation.Standard);
             return new UUID(guid);
         }
 
         #endregion
-    }
+    }   
 }

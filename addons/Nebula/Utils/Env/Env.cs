@@ -34,7 +34,6 @@ namespace Nebula.Utility.Tools
 
         public override void _Ready()
         {
-            GD.Print("[AUTOLOAD] Env._Ready START");
             foreach (var argument in OS.GetCmdlineArgs())
             {
                 if (argument.Contains('='))
@@ -60,18 +59,15 @@ namespace Nebula.Utility.Tools
             {
                 InitialWorldId = UUID.Empty;
             }
-            GD.Print("[AUTOLOAD] Env._Ready END");
         }
 
         public override void _EnterTree()
         {
-            GD.Print("[AUTOLOAD] Env._EnterTree START");
             if (Instance != null)
             {
                 QueueFree();
             }
             Instance = this;
-            GD.Print("[AUTOLOAD] Env._EnterTree END");
         }
 
         public string GetValue(string valuename)

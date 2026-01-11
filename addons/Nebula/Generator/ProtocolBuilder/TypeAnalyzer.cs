@@ -15,8 +15,6 @@ namespace Nebula.Generators
             public string Name { get; init; } = "";
             public string TypeFullName { get; init; } = "";
             public long InterestMask { get; init; }
-            public int LerpMode { get; init; }
-            public float LerpParam { get; init; } = 15f;
             public bool NotifyOnChange { get; init; } = false;
             public bool Interpolate { get; init; } = false;
             public float InterpolateSpeed { get; init; } = 15f;
@@ -48,6 +46,10 @@ namespace Nebula.Generators
             public bool HasNetworkSerialize { get; init; }
             public bool HasNetworkDeserialize { get; init; }
             public bool HasBsonDeserialize { get; init; }
+            /// <summary>
+            /// True if this type implements INetValue (value type), false if INetSerializable (reference type).
+            /// </summary>
+            public bool IsValueType { get; init; }
         }
 
         public sealed class AnalysisResult
@@ -71,19 +73,24 @@ namespace Nebula.Generators
                 if (type.IsAbstract || type.TypeKind == TypeKind.Interface) continue;
 
                 var interfaces = type.AllInterfaces;
+                var hasNetValue = interfaces.Any(i => 
+                    i.IsGenericType && i.OriginalDefinition.Name == "INetValue");
                 var hasNetSerializable = interfaces.Any(i => 
                     i.IsGenericType && i.OriginalDefinition.Name == "INetSerializable");
+                var hasAnyNetSerializable = hasNetValue || hasNetSerializable;
                 var hasBsonSerializable = interfaces.Any(i => 
-                    i.IsGenericType && i.OriginalDefinition.Name == "IBsonSerializable");
+                    i.IsGenericType && (i.OriginalDefinition.Name == "IBsonSerializable" || 
+                                        i.OriginalDefinition.Name == "IBsonValue"));
 
-                if (!hasNetSerializable && !hasBsonSerializable) continue;
+                if (!hasAnyNetSerializable && !hasBsonSerializable) continue;
 
                 var info = new SerializableTypeInfo
                 {
                     TypeFullName = GetFullTypeName(type),
-                    HasNetworkSerialize = hasNetSerializable && HasStaticMethod(type, "NetworkSerialize"),
-                    HasNetworkDeserialize = hasNetSerializable && HasStaticMethod(type, "NetworkDeserialize"),
+                    HasNetworkSerialize = hasAnyNetSerializable && HasStaticMethod(type, "NetworkSerialize"),
+                    HasNetworkDeserialize = hasAnyNetSerializable && HasStaticMethod(type, "NetworkDeserialize"),
                     HasBsonDeserialize = hasBsonSerializable && HasStaticMethod(type, "BsonDeserialize"),
+                    IsValueType = hasNetValue,
                 };
 
                 result.SerializableTypes.Add(info);
@@ -237,9 +244,7 @@ namespace Nebula.Generators
                     {
                         Name = prop.Name,
                         TypeFullName = GetFullTypeName(prop.Type),
-                        InterestMask = GetNamedArgument<long>(netPropAttr, "InterestMask"),
-                        LerpMode = GetNamedArgument<int>(netPropAttr, "LerpMode"),
-                        LerpParam = GetNamedArgument(netPropAttr, "LerpParam", 15f),
+                        InterestMask = GetNamedArgument(netPropAttr, "InterestMask", long.MaxValue),
                         NotifyOnChange = GetNamedArgument(netPropAttr, "NotifyOnChange", false),
                         Interpolate = GetNamedArgument(netPropAttr, "Interpolate", false),
                         InterpolateSpeed = GetNamedArgument(netPropAttr, "InterpolateSpeed", 15f),

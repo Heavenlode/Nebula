@@ -147,10 +147,8 @@ namespace Nebula
         /// <inheritdoc/>
         public override void _EnterTree()
         {
-            GD.Print("[AUTOLOAD] NetRunner._EnterTree START");
             if (Instance != null)
             {
-                GD.Print("[AUTOLOAD] NetRunner._EnterTree - Instance already exists, freeing");
                 QueueFree();
                 return;
             }
@@ -158,30 +156,23 @@ namespace Nebula
 
             if (!_libraryInitialized)
             {
-                GD.Print("[AUTOLOAD] NetRunner._EnterTree - Initializing ENet library...");
                 try
                 {
                     if (!Library.Initialize())
                     {
-                        GD.PrintErr("[AUTOLOAD] NetRunner._EnterTree - FAILED to initialize ENet library!");
                         return;
                     }
-                    GD.Print("[AUTOLOAD] NetRunner._EnterTree - ENet library initialized successfully");
                     _libraryInitialized = true;
                 }
                 catch (Exception e)
                 {
-                    GD.PrintErr($"[AUTOLOAD] NetRunner._EnterTree - ENet initialization threw exception: {e.GetType().Name}: {e.Message}");
-                    GD.PrintErr($"[AUTOLOAD] Stack trace: {e.StackTrace}");
                     return;
                 }
             }
-            GD.Print("[AUTOLOAD] NetRunner._EnterTree END");
         }
 
         public override void _Ready()
         {
-            GD.Print("[AUTOLOAD] NetRunner._Ready");
             // Protocol is fully static - no initialization needed
         }
 
@@ -239,7 +230,7 @@ namespace Nebula
 
             ENetHost = new Host();
             var address = new Address();
-            address.SetHost(ServerAddress);
+            // Note: For server, only set Port. Do NOT call SetHost - this binds to all interfaces (0.0.0.0)
             address.Port = (ushort)Port;
 
             try
@@ -254,12 +245,12 @@ namespace Nebula
             }
 
             NetStarted = true;
-            Debugger.Instance.Log($"Started on {ServerAddress}:{Port}");
+            Debugger.Instance.Log($"Started on port {Port}");
 
             // Debug server
             debugEnet = new Host();
             var debugAddress = new Address();
-            debugAddress.SetHost(ServerAddress);
+            // Note: For server, only set Port. Do NOT call SetHost - this binds to all interfaces
             debugAddress.Port = (ushort)DebugPort;
 
             try
@@ -278,6 +269,11 @@ namespace Nebula
         public void StartClient()
         {
             System.Runtime.GCSettings.LatencyMode = System.Runtime.GCLatencyMode.Interactive;
+
+            if (Authentication == null)
+            {
+                SetAuthentication(new DefaultAuthenticator());
+            }
 
             ENetHost = new Host();
             ENetHost.Create();
@@ -382,7 +378,15 @@ namespace Nebula
             _debugService();
 
             Event netEvent;
-            while (ENetHost.CheckEvents(out netEvent) > 0 || ENetHost.Service(0, out netEvent) > 0)
+            int checkResult = ENetHost.CheckEvents(out netEvent);
+            int serviceResult = 0;
+            
+            if (checkResult <= 0)
+            {
+                serviceResult = ENetHost.Service(0, out netEvent);
+            }
+            
+            while (checkResult > 0 || serviceResult > 0)
             {
                 switch (netEvent.Type)
                 {
@@ -472,6 +476,13 @@ namespace Nebula
                         }
                         break;
                 }
+                
+                // Check for more events
+                checkResult = ENetHost.CheckEvents(out netEvent);
+                if (checkResult <= 0)
+                {
+                    serviceResult = ENetHost.Service(0, out netEvent);
+                }
             }
         }
 
@@ -545,7 +556,6 @@ namespace Nebula
                 WorldId = worldId,
                 RootScene = node,
             };
-            Debugger.Instance.Log($"SetupWorldInstance: Created WorldRunner {worldId}, RootScene={worldRunner.RootScene?.RawNode?.Name ?? "NULL"}", Debugger.DebugLevel.VERBOSE);
             Worlds[worldId] = worldRunner;
             WorldPeerMap[worldId] = [];
             godotPhysicsWorld.AddChild(worldRunner);
@@ -554,10 +564,7 @@ namespace Nebula
             node._NetworkPrepare(worldRunner);
             node._WorldReady();
             worldRunner.Debug?.Send("WorldCreated", worldId.ToString());
-            Debugger.Instance.Log($"Sent debug event: WorldCreated {worldId.ToString()}", Debugger.DebugLevel.VERBOSE);
             OnWorldCreated?.Invoke(worldRunner);
-            // Note: Debug peer iteration removed - ENet-CSharp doesn't have GetPeers()
-            // Debug port information is sent via TCP debug server instead
             return worldRunner;
         }
 

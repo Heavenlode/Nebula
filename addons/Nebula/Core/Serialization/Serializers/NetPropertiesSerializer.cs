@@ -123,8 +123,10 @@ namespace Nebula.Serialization.Serializers
             // Get old value from cache (no Godot boundary crossing)
             ref var oldValue = ref network.CachedProperties[prop.Index];
 
+            bool valueChanged = !PropertyCacheEquals(ref oldValue, ref newValue);
+
             // Fire change callbacks if value changed
-            if (!PropertyCacheEquals(ref oldValue, ref newValue))
+            if (valueChanged)
             {
                 if (prop.NotifyOnChange)
                 {
@@ -173,14 +175,18 @@ namespace Nebula.Serialization.Serializers
 
                     if (prop.VariantType == SerialVariantType.Object)
                     {
-                        // Custom types with NetworkDeserialize - still needs reflection for now
-                        var method = Protocol.GetStaticMethod(prop, StaticMethodType.NetworkDeserialize);
-                        if (method == null)
+                        // Custom types with NetworkDeserialize - use generated deserializer delegate (no reflection)
+                        var deserializer = Protocol.GetDeserializer(prop.ClassIndex);
+                        if (deserializer == null)
                         {
-                            Debugger.Instance.Log($"No NetworkDeserialize method found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
+                            Debugger.Instance.Log($"No deserializer found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
                             continue;
                         }
-                        var result = method.Invoke(null, new object[] { network.CurrentWorld, null, buffer });
+                        // Pass existing cached value for delta encoding support
+                        var existingValue = propertyIndex < network.CachedProperties.Length
+                            ? network.CachedProperties[propertyIndex].RefValue
+                            : null;
+                        var result = deserializer(network.CurrentWorld, null, buffer, existingValue);
                         cache.Type = SerialVariantType.Object;
                         cache.RefValue = result;
                     }
@@ -293,36 +299,20 @@ namespace Nebula.Serialization.Serializers
         }
         
         /// <summary>
-        /// Writes a custom type from the cache using its NetworkSerialize method.
+        /// Writes a custom type from the cache using a generated serializer delegate.
+        /// The delegate knows which PropertyCache field to access (no type-specific code needed here).
         /// </summary>
         private void WriteCustomTypeFromCache(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, ProtocolNetProperty prop, ref PropertyCache cache)
         {
-            var method = Protocol.GetStaticMethod(prop, StaticMethodType.NetworkSerialize);
-            if (method == null)
+            var serializer = Protocol.GetSerializer(prop.ClassIndex);
+            if (serializer == null)
             {
-                Debugger.Instance.Log($"No NetworkSerialize method found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log($"No serializer found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
                 return;
             }
             
-            // Determine the actual value based on known custom types
-            object value;
-            switch (prop.Metadata.TypeIdentifier)
-            {
-                case "NetId":
-                    // NetId is a value type stored directly in the union
-                    value = cache.NetIdValue;
-                    break;
-                case "UUID":
-                    value = cache.UUIDValue;
-                    break;
-                default:
-                    // Reference type or unknown - use RefValue
-                    value = cache.RefValue;
-                    break;
-            }
-            
             using var tempBuffer = new NetBuffer();
-            method.Invoke(null, new object[] { currentWorld, peer, value, tempBuffer });
+            serializer(currentWorld, peer, ref cache, tempBuffer);
             NetWriter.WriteBytes(buffer, tempBuffer.WrittenSpan);
         }
 
@@ -347,6 +337,7 @@ namespace Nebula.Serialization.Serializers
             nodeOut = network;
 
             var data = Deserialize(buffer);
+
             foreach (var propIndex in data.properties.Keys)
             {
                 var prop = Protocol.UnpackProperty(network.RawNode.SceneFilePath, propIndex);
@@ -370,6 +361,13 @@ namespace Nebula.Serialization.Serializers
 
         private HashSet<int> nonDefaultProperties = new();
         private Dictionary<NetPeer, Dictionary<Tick, byte[]>> peerBufferCache = new();
+        
+        /// <summary>
+        /// Maximum number of ticks to cache per peer before forced pruning.
+        /// This prevents unbounded memory growth if acknowledgments are delayed.
+        /// TPS/2 = ~500ms which is plenty of time for acks on a healthy connection.
+        /// </summary>
+        private static int MaxCachedTicksPerPeer = NetRunner.TPS / 2;
 
         private bool TryGetInterestLayers(UUID peerId, out long layers)
         {
@@ -411,6 +409,10 @@ namespace Nebula.Serialization.Serializers
         private byte[] _filteredProps;
         private List<Tick> _sortedTicks = new();
 
+        // Diagnostic counters for memory leak detection
+        private static int _diagnosticCounter = 0;
+        private static int _diagnosticLogInterval = 100; // Log every N ticks
+        
         public void Export(WorldRunner currentWorld, NetPeer peerId, NetBuffer buffer)
         {
             int byteCount = GetByteCountOfProperties();
@@ -437,6 +439,46 @@ namespace Nebula.Serialization.Serializers
             {
                 cachedMask = new byte[byteCount];
                 peerBufferCache[peerId][currentWorld.CurrentTick] = cachedMask;
+            }
+            
+            // DIAGNOSTIC: Log cache sizes periodically to detect memory leaks
+            // _diagnosticCounter++;
+            // if (_diagnosticCounter % _diagnosticLogInterval == 0)
+            // {
+            //     int totalTicksAcrossPeers = 0;
+            //     int diagPeerCount = peerBufferCache.Count;
+            //     var perPeerInfo = new System.Text.StringBuilder();
+            //     foreach (var kvp in peerBufferCache)
+            //     {
+            //         totalTicksAcrossPeers += kvp.Value.Count;
+            //         perPeerInfo.Append($"[Peer {kvp.Key.ID}: {kvp.Value.Count} ticks] ");
+            //     }
+            //     Debugger.Instance.Log($"[NetPropertiesSerializer DIAG] Node={network.RawNode.Name} tick={currentWorld.CurrentTick} peerBufferCache: {diagPeerCount} peers, {totalTicksAcrossPeers} total cached ticks | {perPeerInfo}", Debugger.DebugLevel.VERBOSE);
+                
+            //     // Warn if cache is growing too large
+            //     if (totalTicksAcrossPeers > 500)
+            //     {
+            //         Debugger.Instance.Log($"[NetPropertiesSerializer WARN] Large tick cache detected! {totalTicksAcrossPeers} cached ticks - possible ack issue or memory leak", Debugger.DebugLevel.WARN);
+            //     }
+            // }
+            
+            // SAFEGUARD: Prune oldest ticks if cache exceeds limit to prevent unbounded growth
+            var currentPeerCache = peerBufferCache[peerId];
+            if (currentPeerCache.Count > MaxCachedTicksPerPeer)
+            {
+                // Find and remove oldest ticks
+                _sortedTicks.Clear();
+                foreach (var tick in currentPeerCache.Keys)
+                {
+                    _sortedTicks.Add(tick);
+                }
+                _sortedTicks.Sort();
+                
+                int ticksToRemove = currentPeerCache.Count - MaxCachedTicksPerPeer;
+                for (int i = 0; i < ticksToRemove; i++)
+                {
+                    currentPeerCache.Remove(_sortedTicks[i]);
+                }
             }
 
             // Convert dirty mask to byte array format for existing logic
@@ -521,7 +563,9 @@ namespace Nebula.Serialization.Serializers
                     }
                     catch (Exception ex)
                     {
-                        Debugger.Instance.Log($"Error serializing property {prop.NodePath}.{prop.Name} from cache: {ex.Message}", Debugger.DebugLevel.ERROR);
+                        var innerMsg = ex.InnerException?.Message ?? ex.Message;
+                        var innerStack = ex.InnerException?.StackTrace ?? ex.StackTrace;
+                        Debugger.Instance.Log($"Error serializing property {prop.NodePath}.{prop.Name} from cache: {innerMsg}\n{innerStack}", Debugger.DebugLevel.ERROR);
                     }
                 }
             }
@@ -555,41 +599,58 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        public void Cleanup() { }
+        public void Cleanup() 
+        {
+            // NOTE: This is called every tick after ExportState(), NOT when the object is destroyed.
+            // Do not clear per-peer caches here - that would break state synchronization!
+            // Use CleanupPeer() for per-peer cleanup on disconnect instead.
+        }
+        
+        /// <summary>
+        /// Removes all cached data for a specific peer. Call this when a peer disconnects.
+        /// </summary>
+        public void CleanupPeer(NetPeer peer)
+        {
+            // if (peerBufferCache.Remove(peer, out var tickCache))
+            // {
+            //     Debugger.Instance.Log($"[NetPropertiesSerializer] Cleaned up {tickCache.Count} cached ticks for disconnected peer", Debugger.DebugLevel.VERBOSE);
+            // }
+            peerInitialPropSync.Remove(peer);
+        }
 
+        // Reusable list to avoid LINQ allocation in Acknowledge
+        private List<Tick> _ticksToRemove = new();
+        
         public void Acknowledge(WorldRunner currentWorld, NetPeer peerId, Tick latestAck)
         {
-            if (!peerBufferCache.ContainsKey(peerId))
+            if (!peerBufferCache.TryGetValue(peerId, out var tickCache))
             {
                 return;
             }
-            foreach (var tick in peerBufferCache[peerId].Keys.Where(x => x <= latestAck).ToList())
+            
+            int beforeCount = tickCache.Count;
+            
+            // Avoid LINQ .ToList() allocation - reuse list
+            _ticksToRemove.Clear();
+            foreach (var tick in tickCache.Keys)
             {
-                peerBufferCache[peerId].Remove(tick);
-            }
-        }
-
-        public void _Process(double delta)
-        {
-            // Server doesn't interpolate - it has authoritative values
-            if (NetRunner.Instance.IsServer)
-            {
-                return;
-            }
-
-            // Call ProcessInterpolation on all static network children that have interpolated properties
-            if (network.NetNode.HasInterpolatedProperties)
-            {
-                network.NetNode.ProcessInterpolation((float)delta);
-            }
-
-            foreach (var child in network.StaticNetworkChildren)
-            {
-                if (child?.NetNode?.HasInterpolatedProperties == true)
+                if (tick <= latestAck)
                 {
-                    child.NetNode.ProcessInterpolation((float)delta);
+                    _ticksToRemove.Add(tick);
                 }
             }
+            
+            foreach (var tick in _ticksToRemove)
+            {
+                tickCache.Remove(tick);
+            }
+            
+            // DIAGNOSTIC: Log when acknowledgments are cleaning up ticks
+            // if (_ticksToRemove.Count > 0)
+            // {
+            //     Debugger.Instance.Log($"[NetPropertiesSerializer ACK] Peer {peerId.ID} acked tick {latestAck}, removed {_ticksToRemove.Count} ticks, {tickCache.Count} remaining for node {network.RawNode.Name}", Debugger.DebugLevel.VERBOSE);
+            // }
         }
+
     }
 }

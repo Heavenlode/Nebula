@@ -10,7 +10,6 @@ namespace Nebula.Utility.Tools
 
         public override void _EnterTree()
         {
-            GD.Print("[AUTOLOAD] Debugger._EnterTree START");
             if (Engine.IsEditorHint())
             {
                 Engine.RegisterSingleton("Debugger", this);
@@ -22,7 +21,6 @@ namespace Nebula.Utility.Tools
                 return;
             }
             Instance = this;
-            GD.Print("[AUTOLOAD] Debugger._EnterTree END");
         }
 
         public enum DebugLevel

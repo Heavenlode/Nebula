@@ -106,7 +106,8 @@ namespace Nebula.Generators
                 data.StaticMethods[methodIndex] = new SerializableMethodData
                 {
                     MethodType = methodType,
-                    TypeFullName = serType.TypeFullName
+                    TypeFullName = serType.TypeFullName,
+                    IsValueType = serType.IsValueType
                 };
                 data.SerialTypePack[serType.TypeFullName] = methodIndex;
                 methodIndex++;
@@ -164,7 +165,12 @@ namespace Nebula.Generators
                         }
                         
                         // Also populate PropertiesByStaticChildId for direct lookup
-                        if (data.StaticNetworkNodePathsPack.TryGetValue(sceneResPath, out var nodePathsPack) &&
+                        // Root node (".") always uses staticChildId 0
+                        if (nodePath == ".")
+                        {
+                            data.PropertiesByStaticChildId[sceneResPath][0] = nodeKvp.Value;
+                        }
+                        else if (data.StaticNetworkNodePathsPack.TryGetValue(sceneResPath, out var nodePathsPack) &&
                             nodePathsPack.TryGetValue(nodePath, out var staticChildId))
                         {
                             data.PropertiesByStaticChildId[sceneResPath][staticChildId] = nodeKvp.Value;
@@ -221,7 +227,8 @@ namespace Nebula.Generators
 
             result.IsNetScene = IsNetNode(rootScript, analysisResult);
 
-            var nodePathId = 0;
+            // Start at 1 because staticChildId 0 is reserved for the root node (".")
+            var nodePathId = 1;
             var propertyCount = 0;
             var functionCount = 0;
 
@@ -279,8 +286,6 @@ namespace Nebula.Generators
                             SubtypeIdentifier = prop.Value.SubtypeIdentifier,
                             Index = (byte)propertyCount++,
                             InterestMask = prop.Value.InterestMask,
-                            LerpMode = prop.Value.LerpMode,
-                            LerpParam = prop.Value.LerpParam,
                             ClassIndex = prop.Value.ClassIndex,
                             NotifyOnChange = prop.Value.NotifyOnChange,
                             Interpolate = prop.Value.Interpolate,
@@ -342,8 +347,6 @@ namespace Nebula.Generators
                             TypeFullName = prop.TypeFullName,
                             Index = (byte)propertyCount++,
                             InterestMask = prop.InterestMask,
-                            LerpMode = prop.LerpMode,
-                            LerpParam = prop.LerpParam,
                             ClassIndex = classIndex,
                             NotifyOnChange = prop.NotifyOnChange,
                             Interpolate = prop.Interpolate,

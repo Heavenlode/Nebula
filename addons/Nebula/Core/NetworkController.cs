@@ -43,7 +43,6 @@ namespace Nebula
 			NetNode = owner as INetNodeBase;
 		}
 
-
 		private string _attachedNetNodeSceneFilePath;
 		public string NetSceneFilePath
 		{
@@ -52,8 +51,8 @@ namespace Nebula
 				if (_attachedNetNodeSceneFilePath == null)
 				{
 					var rawPath = RawNode.SceneFilePath;
-					_attachedNetNodeSceneFilePath = string.IsNullOrEmpty(rawPath) 
-						? NetParent?.RawNode?.SceneFilePath ?? "" 
+					_attachedNetNodeSceneFilePath = string.IsNullOrEmpty(rawPath)
+						? NetParent?.RawNode?.SceneFilePath ?? ""
 						: rawPath;
 				}
 				return _attachedNetNodeSceneFilePath;
@@ -105,13 +104,17 @@ namespace Nebula
 		{
 			var oldInterest = InterestLayers.TryGetValue(peerId, out var value) ? value : 0;
 			InterestLayers[peerId] = newInterest;
-			// if (recurse)
-			// {
-			// 	foreach (var child in GetNetworkChildren(NetworkChildrenSearchToggle.INCLUDE_SCENES))
-			// 	{
-			// 		child.SetPeerInterest(peerId, newInterest, recurse);
-			// 	}
-			// }
+			if (recurse && IsNetScene())
+			{
+				foreach (var child in StaticNetworkChildren)
+				{
+					child?.SetPeerInterest(peerId, newInterest, recurse);
+				}
+				foreach (var child in DynamicNetworkChildren)
+				{
+					child.SetPeerInterest(peerId, newInterest, recurse);
+				}
+			}
 			InterestChanged?.Invoke(peerId, oldInterest, newInterest);
 		}
 
@@ -142,7 +145,7 @@ namespace Nebula
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Cleans up per-peer cached state when a peer disconnects.
 		/// Called by WorldRunner.CleanupPlayer to prevent memory leaks.
@@ -252,7 +255,11 @@ namespace Nebula
 			// Static children propagate to parent net scene (which owns the serializer)
 			if (!IsNetScene())
 			{
-				NetParent?.MarkDirty(sourceNode, propertyName, value);
+				if (NetParent == null)
+				{
+					return;
+				}
+				NetParent.MarkDirty(sourceNode, propertyName, value);
 				return;
 			}
 
@@ -260,7 +267,6 @@ namespace Nebula
 			var staticChildId = sourceNode.Network.StaticChildId;
 			if (!Protocol.LookupPropertyByStaticChildId(NetSceneFilePath, staticChildId, propertyName, out var prop))
 			{
-				Debugger.Instance.Log($"MarkDirty: Property not found: staticChildId={staticChildId}, prop={propertyName}", Debugger.DebugLevel.ERROR);
 				return;
 			}
 
@@ -277,7 +283,11 @@ namespace Nebula
 			// Static children propagate to parent net scene
 			if (!IsNetScene())
 			{
-				NetParent?.MarkDirtyRef(sourceNode, propertyName, value);
+				if (NetParent == null)
+				{
+					return;
+				}
+				NetParent.MarkDirtyRef(sourceNode, propertyName, value);
 				return;
 			}
 
@@ -402,8 +412,14 @@ namespace Nebula
 
 		/// <summary>
 		/// Clears the input changed flag after the input has been sent.
+		/// Also saves the sent input for comparison on next SetInput call.
 		/// </summary>
-		public void ClearInputChanged() => _inputChanged = false;
+		public void ClearInputChanged()
+		{
+			_inputChanged = false;
+			// Save what we sent so we detect changes from the sent state, not from the previous frame
+			_inputData.CopyTo(_previousInputData, 0);
+		}
 
 		/// <summary>
 		/// Initializes input support for this node with the specified input struct type.
@@ -430,14 +446,12 @@ namespace Nebula
 				return;
 			}
 
-			// Copy current to previous
-			_inputData.CopyTo(_previousInputData, 0);
-
 			// Write new input to current
 			MemoryMarshal.Write(_inputData, in input);
 
-			// Check if changed
-			_inputChanged = !_inputData.AsSpan().SequenceEqual(_previousInputData);
+			// Check if changed from last SENT input (previousInputData is only updated on send)
+			// Use OR to preserve the flag - it's cleared when SendInput actually sends
+			_inputChanged = _inputChanged || !_inputData.AsSpan().SequenceEqual(_previousInputData);
 		}
 
 		/// <summary>
@@ -497,9 +511,9 @@ namespace Nebula
 				return;
 			}
 
-		CurrentWorld = world;
-		if (IsNetScene())
-		{
+			CurrentWorld = world;
+			if (IsNetScene())
+			{
 				if (NetRunner.Instance.IsServer)
 				{
 					foreach (var peer in NetRunner.Instance.Peers.Keys)

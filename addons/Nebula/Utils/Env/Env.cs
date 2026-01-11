@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 namespace Nebula.Utility.Tools
@@ -51,9 +52,11 @@ namespace Nebula.Utility.Tools
 
             InitialWorldScene = StartArgs.GetValueOrDefault("initialWorldScene", ProjectSettings.GetSetting(ProjectSettingKeys[ProjectSettingId.WORLD_DEFAULT_SCENE]).AsString());
 
-            if (StartArgs.ContainsKey("worldId"))
+            // Check for worldId with case-insensitive key lookup
+            var worldIdKey = StartArgs.Keys.FirstOrDefault(k => k.Equals("worldId", StringComparison.OrdinalIgnoreCase));
+            if (worldIdKey != null)
             {
-                InitialWorldId = new UUID(StartArgs["worldId"]);
+                InitialWorldId = new UUID(StartArgs[worldIdKey]);
             }
             else
             {

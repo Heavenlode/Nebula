@@ -238,7 +238,17 @@ namespace Nebula.Generators
 
         private static void EmitProperty(StringBuilder sb, string key, PropertyData prop, string indent)
         {
-            var variantType = MapTypeToVariant(prop.TypeFullName, out var subtype);
+            string variantType;
+            string? subtype = null;
+            if (prop.IsEnum)
+            {
+                variantType = "Int";
+                subtype = "Enum";
+            }
+            else
+            {
+                variantType = MapTypeToVariant(prop.TypeFullName, out subtype);
+            }
             var actualSubtype = prop.SubtypeIdentifier ?? subtype ?? "None";
             
             sb.AppendLine($"{indent}[\"{Escape(key)}\"] = new ProtocolNetProperty(");
@@ -247,6 +257,7 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    SerialVariantType.{variantType},");
             sb.AppendLine($"{indent}    new SerialMetadata(\"{Escape(actualSubtype)}\"),");
             sb.AppendLine($"{indent}    {prop.Index},");
+            sb.AppendLine($"{indent}    {prop.LocalIndex},");
             sb.AppendLine($"{indent}    {prop.InterestMask}L,");
             sb.AppendLine($"{indent}    {prop.ClassIndex},");
             sb.AppendLine($"{indent}    {prop.NotifyOnChange.ToString().ToLowerInvariant()},");
@@ -256,7 +267,17 @@ namespace Nebula.Generators
 
         private static void EmitPropertyWithIntKey(StringBuilder sb, int key, PropertyData prop, string indent)
         {
-            var variantType = MapTypeToVariant(prop.TypeFullName, out var subtype);
+            string variantType;
+            string? subtype = null;
+            if (prop.IsEnum)
+            {
+                variantType = "Int";
+                subtype = "Enum";
+            }
+            else
+            {
+                variantType = MapTypeToVariant(prop.TypeFullName, out subtype);
+            }
             var actualSubtype = prop.SubtypeIdentifier ?? subtype ?? "None";
             
             sb.AppendLine($"{indent}[{key}] = new ProtocolNetProperty(");
@@ -265,6 +286,7 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    SerialVariantType.{variantType},");
             sb.AppendLine($"{indent}    new SerialMetadata(\"{Escape(actualSubtype)}\"),");
             sb.AppendLine($"{indent}    {prop.Index},");
+            sb.AppendLine($"{indent}    {prop.LocalIndex},");
             sb.AppendLine($"{indent}    {prop.InterestMask}L,");
             sb.AppendLine($"{indent}    {prop.ClassIndex},");
             sb.AppendLine($"{indent}    {prop.NotifyOnChange.ToString().ToLowerInvariant()},");

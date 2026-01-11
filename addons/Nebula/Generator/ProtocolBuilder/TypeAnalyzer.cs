@@ -18,6 +18,11 @@ namespace Nebula.Generators
             public bool NotifyOnChange { get; init; } = false;
             public bool Interpolate { get; init; } = false;
             public float InterpolateSpeed { get; init; } = 15f;
+            public bool IsEnum { get; init; } = false;
+            /// <summary>
+            /// Index of this property within its declaring class (used for SetNetPropertyByIndex).
+            /// </summary>
+            public byte ClassLocalIndex { get; init; }
         }
 
         public sealed class NetFunctionInfo
@@ -219,6 +224,54 @@ namespace Nebula.Generators
             var visited = new HashSet<string>();
             var current = type;
 
+            // First pass: collect all classes in the inheritance chain and count their properties
+            // We need CUMULATIVE indices that match what NetPropertyGenerator creates:
+            // Each class's indices start AFTER all base class property counts
+            var classPropertyCounts = new Dictionary<INamedTypeSymbol, byte>(SymbolEqualityComparer.Default);
+            var classBaseOffsets = new Dictionary<INamedTypeSymbol, int>(SymbolEqualityComparer.Default);
+            
+            // Build list of classes from derived to base
+            var classChain = new List<INamedTypeSymbol>();
+            var temp = type;
+            while (temp != null)
+            {
+                var implementsNetNode = temp.AllInterfaces.Any(i => 
+                    i.IsGenericType && i.OriginalDefinition.Name == "INetNode");
+                if (!implementsNetNode) break;
+                classChain.Add(temp);
+                classPropertyCounts[temp] = 0;
+                temp = temp.BaseType;
+            }
+
+            // Count properties in each class (needed to calculate offsets)
+            foreach (var cls in classChain)
+            {
+                foreach (var member in cls.GetMembers())
+                {
+                    if (member is not IPropertySymbol prop) continue;
+                    var hasNetProp = prop.GetAttributes()
+                        .Any(a => a.AttributeClass?.Name == "NetProperty" || 
+                                  a.AttributeClass?.Name == "NetPropertyAttribute");
+                    if (hasNetProp)
+                        classPropertyCounts[cls]++;
+                }
+            }
+
+            // Calculate cumulative base offsets (sum of all base class properties)
+            // Process from base to derived
+            int cumulativeOffset = 0;
+            for (int i = classChain.Count - 1; i >= 0; i--)
+            {
+                classBaseOffsets[classChain[i]] = cumulativeOffset;
+                cumulativeOffset += classPropertyCounts[classChain[i]];
+            }
+
+            // Reset counts for per-class indexing during iteration
+            foreach (var cls in classChain)
+            {
+                classPropertyCounts[cls] = 0;
+            }
+
             while (current != null)
             {
                 // Check if this type in chain implements INetNode
@@ -240,6 +293,10 @@ namespace Nebula.Generators
 
                     visited.Add(prop.Name);
 
+                    // Calculate cumulative index: baseOffset + classLocalIndex
+                    var classLocalIndex = classPropertyCounts[current]++;
+                    var cumulativeIndex = classBaseOffsets[current] + classLocalIndex;
+
                     yield return new NetPropertyInfo
                     {
                         Name = prop.Name,
@@ -248,6 +305,8 @@ namespace Nebula.Generators
                         NotifyOnChange = GetNamedArgument(netPropAttr, "NotifyOnChange", false),
                         Interpolate = GetNamedArgument(netPropAttr, "Interpolate", false),
                         InterpolateSpeed = GetNamedArgument(netPropAttr, "InterpolateSpeed", 15f),
+                        IsEnum = prop.Type.TypeKind == TypeKind.Enum,
+                        ClassLocalIndex = (byte)cumulativeIndex,
                     };
                 }
 

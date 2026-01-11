@@ -163,7 +163,7 @@ namespace Nebula.Utility
                         }
                         else if (variantType == SerialVariantType.Int)
                         {
-                            if (propData.Metadata.TypeIdentifier == "Int")
+                            if (propData.Metadata.TypeIdentifier == "Int" || propData.Metadata.TypeIdentifier == "Enum")
                             {
                                 targetNode.Network.RawNode.Set(prop.Name, prop.Value.AsInt32);
                             }

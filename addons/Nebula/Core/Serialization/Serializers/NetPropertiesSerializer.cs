@@ -46,6 +46,7 @@ namespace Nebula.Serialization.Serializers
                 network.InterestChanged += (UUID peerId, long oldInterest, long newInterest) =>
                 {
                     var peer = NetRunner.Instance.GetPeer(peerId);
+                    
                     if (!peer.IsSet || !peerInitialPropSync.ContainsKey(peer))
                         return;
 
@@ -58,15 +59,8 @@ namespace Nebula.Serialization.Serializers
 
                         if (!wasVisible && isNowVisible)
                         {
+                            // Mark property as not-yet-synced so Export() will include it
                             ClearBit(peerInitialPropSync[peer], propIndex);
-
-                            if (peerBufferCache.TryGetValue(peer, out var tickCache))
-                            {
-                                foreach (var mask in tickCache.Values)
-                                {
-                                    ClearBit(mask, propIndex);
-                                }
-                            }
                         }
                     }
                 };
@@ -130,7 +124,20 @@ namespace Nebula.Serialization.Serializers
             {
                 if (prop.NotifyOnChange)
                 {
-                    netNode.InvokePropertyChangeHandler(prop.Index, tick, ref oldValue, ref newValue);
+                    // Use LocalIndex (cumulative class index) not Index (scene-global) - matches generated switch cases
+                    // Call via base class type to use virtual dispatch (not interface dispatch)
+                    if (propNode is NetNode3D nn3d)
+                    {
+                        nn3d.InvokePropertyChangeHandler(prop.LocalIndex, tick, ref oldValue, ref newValue);
+                    }
+                    else if (propNode is NetNode2D nn2d)
+                    {
+                        nn2d.InvokePropertyChangeHandler(prop.LocalIndex, tick, ref oldValue, ref newValue);
+                    }
+                    else if (propNode is NetNode nn)
+                    {
+                        nn.InvokePropertyChangeHandler(prop.LocalIndex, tick, ref oldValue, ref newValue);
+                    }
                 }
             }
 
@@ -141,7 +148,21 @@ namespace Nebula.Serialization.Serializers
             // For non-interpolated properties, set via generated setter (no Godot boundary)
             if (!prop.Interpolate)
             {
-                netNode.SetNetPropertyByIndex(prop.Index, ref newValue);
+                // Use LocalIndex (class-local) not Index (scene-global) for SetNetPropertyByIndex
+                // Call via base class type (NetNode3D/NetNode2D/NetNode) to use virtual dispatch
+                // instead of interface dispatch (which would call the empty default implementation)
+                if (propNode is NetNode3D netNode3D)
+                {
+                    netNode3D.SetNetPropertyByIndex(prop.LocalIndex, ref newValue);
+                }
+                else if (propNode is NetNode2D netNode2D)
+                {
+                    netNode2D.SetNetPropertyByIndex(prop.LocalIndex, ref newValue);
+                }
+                else if (propNode is NetNode netNodeBase)
+                {
+                    netNodeBase.SetNetPropertyByIndex(prop.LocalIndex, ref newValue);
+                }
             }
         }
 
@@ -187,8 +208,10 @@ namespace Nebula.Serialization.Serializers
                             ? network.CachedProperties[propertyIndex].RefValue
                             : null;
                         var result = deserializer(network.CurrentWorld, null, buffer, existingValue);
-                        cache.Type = SerialVariantType.Object;
-                        cache.RefValue = result;
+                        
+                        // Store custom value types in their proper PropertyCache field
+                        // This matches how NetworkController.SetCachedValue stores them on the server
+                        SetDeserializedValueToCache(result, ref cache);
                     }
                     else if (prop.VariantType == SerialVariantType.Nil)
                     {
@@ -204,6 +227,30 @@ namespace Nebula.Serialization.Serializers
                 }
             }
             return data;
+        }
+
+        /// <summary>
+        /// Stores a deserialized custom type value in the correct PropertyCache field.
+        /// Mirrors the logic in NetworkController.SetCachedValue to ensure server and client use the same fields.
+        /// </summary>
+        private static void SetDeserializedValueToCache(object result, ref PropertyCache cache)
+        {
+            cache.Type = SerialVariantType.Object;
+            
+            // Store custom value types in their proper field (matching NetworkController.SetCachedValue)
+            switch (result)
+            {
+                case NetId netId:
+                    cache.NetIdValue = netId;
+                    break;
+                case UUID uuid:
+                    cache.UUIDValue = uuid;
+                    break;
+                default:
+                    // Reference types and unknown value types go in RefValue
+                    cache.RefValue = result;
+                    break;
+            }
         }
 
         /// <summary>
@@ -337,7 +384,7 @@ namespace Nebula.Serialization.Serializers
             nodeOut = network;
 
             var data = Deserialize(buffer);
-
+            
             foreach (var propIndex in data.properties.Keys)
             {
                 var prop = Protocol.UnpackProperty(network.RawNode.SceneFilePath, propIndex);

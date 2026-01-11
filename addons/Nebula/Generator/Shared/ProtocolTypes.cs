@@ -106,7 +106,15 @@ namespace Nebula.Serialization
         public readonly string Name;
         public readonly SerialVariantType VariantType;
         public readonly SerialMetadata Metadata;
+        /// <summary>
+        /// Scene-global index used for dirty mask and network serialization.
+        /// </summary>
         public readonly byte Index;
+        /// <summary>
+        /// Class-local index used for SetNetPropertyByIndex on the owning node.
+        /// This matches the switch case index generated in the owning class.
+        /// </summary>
+        public readonly byte LocalIndex;
         public readonly long InterestMask;
         public readonly int ClassIndex;
         public readonly bool NotifyOnChange;
@@ -119,6 +127,7 @@ namespace Nebula.Serialization
             SerialVariantType variantType,
             SerialMetadata metadata,
             byte index,
+            byte localIndex,
             long interestMask,
             int classIndex,
             bool notifyOnChange = false,
@@ -130,6 +139,7 @@ namespace Nebula.Serialization
             VariantType = variantType;
             Metadata = metadata;
             Index = index;
+            LocalIndex = localIndex;
             InterestMask = interestMask;
             ClassIndex = classIndex;
             NotifyOnChange = notifyOnChange;

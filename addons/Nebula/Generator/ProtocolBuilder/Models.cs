@@ -25,12 +25,20 @@ namespace Nebula.Generators
         public string Name { get; set; } = "";
         public string TypeFullName { get; set; } = "";
         public string? SubtypeIdentifier { get; set; }
+        /// <summary>
+        /// Scene-global index used for dirty mask and network serialization.
+        /// </summary>
         public byte Index { get; set; }
+        /// <summary>
+        /// Class-local index used for SetNetPropertyByIndex on the owning node.
+        /// </summary>
+        public byte LocalIndex { get; set; }
         public long InterestMask { get; set; }
         public int ClassIndex { get; set; } = -1;
         public bool NotifyOnChange { get; set; } = false;
         public bool Interpolate { get; set; } = false;
         public float InterpolateSpeed { get; set; } = 15f;
+        public bool IsEnum { get; set; } = false;
     }
 
     internal sealed class FunctionData

@@ -285,11 +285,13 @@ namespace Nebula.Generators
                             TypeFullName = prop.Value.TypeFullName,
                             SubtypeIdentifier = prop.Value.SubtypeIdentifier,
                             Index = (byte)propertyCount++,
+                            LocalIndex = prop.Value.LocalIndex, // Preserve class-local index from nested scene
                             InterestMask = prop.Value.InterestMask,
                             ClassIndex = prop.Value.ClassIndex,
                             NotifyOnChange = prop.Value.NotifyOnChange,
                             Interpolate = prop.Value.Interpolate,
-                            InterpolateSpeed = prop.Value.InterpolateSpeed
+                            InterpolateSpeed = prop.Value.InterpolateSpeed,
+                            IsEnum = prop.Value.IsEnum
                         };
                         }
                     }
@@ -346,11 +348,13 @@ namespace Nebula.Generators
                             Name = prop.Name,
                             TypeFullName = prop.TypeFullName,
                             Index = (byte)propertyCount++,
+                            LocalIndex = prop.ClassLocalIndex, // Use class-local index from analyzer
                             InterestMask = prop.InterestMask,
                             ClassIndex = classIndex,
                             NotifyOnChange = prop.NotifyOnChange,
                             Interpolate = prop.Interpolate,
-                            InterpolateSpeed = prop.InterpolateSpeed
+                            InterpolateSpeed = prop.InterpolateSpeed,
+                            IsEnum = prop.IsEnum
                         };
                     }
                 }

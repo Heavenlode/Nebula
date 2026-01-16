@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 namespace Nebula.Utility.Tools
@@ -38,7 +39,9 @@ namespace Nebula.Utility.Tools
                 return;
             }
             var platform = Env.Instance == null ? "Editor" : (Env.Instance.HasServerFeatures ? "Server" : "Client");
-            var messageString = $"({level}) Nebula.{platform}: {msg}";
+            var clientId = Env.Instance?.StartArgs.GetValueOrDefault("clientId", null);
+            var clientPrefix = clientId != null ? $" [{clientId}]" : "";
+            var messageString = $"({level}) Nebula.{platform}{clientPrefix}: {msg}";
             if (level == DebugLevel.ERROR)
             {
                 GD.PushError(messageString);

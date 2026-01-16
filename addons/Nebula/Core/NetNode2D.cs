@@ -92,7 +92,7 @@ namespace Nebula
         {
             if (obj == null)
             {
-                NetWriter.WriteByte(buffer, 0);
+                NetWriter.WriteUInt16(buffer, 0);
                 return;
             }
             NetId targetNetId;
@@ -113,14 +113,14 @@ namespace Nebula
                 // }
             }
             // var peerNodeId = currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[targetNetId];
-            // NetWriter.WriteByte(buffer, peerNodeId);
+            // NetWriter.WriteUInt16(buffer, peerNodeId);
             // NetWriter.WriteByte(buffer, staticChildId);
         }
 
         public static NetNode2D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, NetNode2D existing = null)
         {
             // Note: existing parameter ignored - NetNode2D deserialization is a lookup, not a create/update
-            var networkID = NetReader.ReadByte(buffer);
+            var networkID = NetReader.ReadUInt16(buffer);
             if (networkID == 0)
             {
                 return null;

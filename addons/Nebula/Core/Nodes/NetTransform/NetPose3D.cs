@@ -191,6 +191,7 @@ namespace Nebula
         }
 
         public Dictionary<NetPeer, Tick> LastKeyframeSent = [];
+        public Dictionary<NetPeer, Vector3d> LastPositionSent = [];
 
         #region Quaternion Smallest-Three Encoding
 
@@ -358,12 +359,13 @@ namespace Nebula
 
                 for (byte i = 0; i < AXIS_COUNT; i++)
                 {
-                    NetWriter.WriteInt32(buffer, (int)(obj._position[i] * new Fixed64(100)));
+                    NetWriter.WriteInt32(buffer, (obj._position[i] * new Fixed64(100)).FloorToInt());
                 }
 
                 PackQuaternion(buffer, obj._rotation, isOwner);
 
                 obj.LastKeyframeSent[peer] = currentWorld.CurrentTick;
+                obj.LastPositionSent[peer] = obj._position;
                 return;
             }
 
@@ -371,15 +373,27 @@ namespace Nebula
             using var changeBuff = new NetBuffer();
             var positionScale = STANDARD_POSITION_SCALE;
 
+            // Get last sent position for this peer, or current position if never sent
+            if (!obj.LastPositionSent.TryGetValue(peer, out var lastSentPos))
+            {
+                lastSentPos = obj._position;
+            }
+
+            // Compute the actual delta since last send
+            var deltaToSend = obj._position - lastSentPos;
+
             for (byte i = 0; i < AXIS_COUNT; i++)
             {
-                if (obj._positionDelta[i] != Fixed64.Zero)
+                if (deltaToSend[i] != Fixed64.Zero)
                 {
                     header |= (byte)(1 << (i + CHANGE_HEADER_LENGTH));
-                    var packedPos = (short)(obj._positionDelta[i] * positionScale).FloorToInt();
+                    var packedPos = (short)(deltaToSend[i] * positionScale).FloorToInt();
                     NetWriter.WriteInt16(changeBuff, packedPos);
                 }
             }
+
+            // Update last sent position for this peer
+            obj.LastPositionSent[peer] = obj._position;
 
             if (!IsQuaternionIdentity(obj._rotationDelta))
             {

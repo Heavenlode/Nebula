@@ -6,7 +6,7 @@ namespace Nebula
 {
     /// <summary>
     /// A unique identifier for a networked object. The NetId for a node is different between 
-    /// the server and client. On the client side, a NetId is only a byte, whereas on the server 
+    /// the server and client. On the client side, a NetId is a ushort (0-511), whereas on the server 
     /// side it is an int64. The server's WorldRunner keeps a map of all NetIds to their 
     /// corresponding value on each client for serialization.
     /// This is a value type (struct) to avoid allocations.
@@ -76,11 +76,11 @@ namespace Nebula
         {
             if (NetRunner.Instance.IsServer)
             {
-                NetWriter.WriteByte(buffer, currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[value]);
+                NetWriter.WriteUInt16(buffer, currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[value]);
             }
             else
             {
-                NetWriter.WriteByte(buffer, (byte)value.Value);
+                NetWriter.WriteUInt16(buffer, (ushort)value.Value);
             }
         }
 
@@ -88,12 +88,12 @@ namespace Nebula
         {
             if (NetRunner.Instance.IsServer)
             {
-                var id = NetReader.ReadByte(buffer);
+                var id = NetReader.ReadUInt16(buffer);
                 return currentWorld.GetNetIdFromPeerId(peer, id);
             }
             else
             {
-                var id = NetReader.ReadByte(buffer);
+                var id = NetReader.ReadUInt16(buffer);
                 return currentWorld.GetNetId(id);
             }
         }

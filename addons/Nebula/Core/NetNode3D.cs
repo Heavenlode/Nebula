@@ -23,13 +23,18 @@ namespace Nebula
         public NetworkController Network { get; internal set; }
         public NetNode3D()
         {
-            Network = new NetworkController(this);
+            // Skip network initialization in editor to avoid errors during C# recompilation
+            if (!Engine.IsEditorHint())
+            {
+                Network = new NetworkController(this);
+            }
         }
         // Cannot have more than 8 serializers
         public IStateSerializer[] Serializers { get; private set; } = [];
 
         public override void _Notification(int what)
         {
+            if (Engine.IsEditorHint()) return;
             if (what == NotificationSceneInstantiated)
             {
                 Network.Setup();
@@ -76,6 +81,7 @@ namespace Nebula
         /// <inheritdoc/>
         public override void _Process(double delta)
         {
+            if (Engine.IsEditorHint()) return;
             base._Process(delta);
             // Process interpolation on clients only
             if (!NetRunner.Instance.IsServer)
@@ -95,7 +101,7 @@ namespace Nebula
         {
             if (obj == null)
             {
-                NetWriter.WriteByte(buffer, 0);
+                NetWriter.WriteUInt16(buffer, 0);
                 return;
             }
             NetId targetNetId;
@@ -116,14 +122,14 @@ namespace Nebula
                 }
             }
             var peerNodeId = currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[targetNetId];
-            NetWriter.WriteByte(buffer, peerNodeId);
+            NetWriter.WriteUInt16(buffer, peerNodeId);
             NetWriter.WriteByte(buffer, staticChildId);
         }
 
         public static NetNode3D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, NetNode3D existing = null)
         {
             // Note: existing parameter ignored - NetNode3D deserialization is a lookup, not a create/update
-            var networkID = NetReader.ReadByte(buffer);
+            var networkID = NetReader.ReadUInt16(buffer);
             if (networkID == 0)
             {
                 return null;

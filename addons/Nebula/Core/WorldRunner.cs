@@ -55,8 +55,8 @@ namespace Nebula
             public PeerSyncStatus Status;
             public UUID Id;
             public string Token;
-            public Dictionary<NetId, byte> WorldToPeerNodeMap;
-            public Dictionary<byte, NetId> PeerToWorldNodeMap;
+            public Dictionary<NetId, ushort> WorldToPeerNodeMap;
+            public Dictionary<ushort, NetId> PeerToWorldNodeMap;
 
             /// <summary>
             /// A list of nodes that the player is aware of in the world (i.e. has spawned locally)
@@ -64,9 +64,10 @@ namespace Nebula
             public Dictionary<NetId, bool> SpawnAware;
 
             /// <summary>
-            /// A bit list of nodeIds that are available to the peer.
+            /// A hierarchical bitmask of nodeIds that are in use by the peer.
+            /// 8 groups of 64 nodes each (512 total).
             /// </summary>
-            public long AvailableNodes;
+            public long[] AvailableNodes;
 
             /// <summary>
             /// A list of nodes that the player owns (i.e. InputAuthority == peer
@@ -84,10 +85,9 @@ namespace Nebula
 
         public UUID WorldId { get; internal set; }
 
-        // A bit list of all nodes in use by each peer
-        // For example, 0 0 0 0 (... etc ...) 0 1 0 1 would mean that the first and third nodes are in use
-        public long ClientAvailableNodes = 0;
-        readonly static byte MAX_NETWORK_NODES = 64;
+        // A hierarchical bitmask of all nodes in use on the client side.
+        // 8 groups of 64 nodes each (512 total).
+        public long[] ClientAvailableNodes = NodeIdUtils.CreateMasks();
         private Dictionary<NetPeer, PeerState> PeerStates = [];
 
         /// <summary>
@@ -425,7 +425,7 @@ namespace Nebula
             return networkId;
         }
 
-        public NetId AllocateNetId(byte id)
+        public NetId AllocateNetId(ushort id)
         {
             var networkId = new NetId(id);
             networkIds[id] = networkId;
@@ -439,7 +439,7 @@ namespace Nebula
             return networkIds[id];
         }
 
-        public NetId GetNetIdFromPeerId(NetPeer peer, byte id)
+        public NetId GetNetIdFromPeerId(NetPeer peer, ushort id)
         {
             if (!PeerStates[peer].PeerToWorldNodeMap.ContainsKey(id))
                 return NetId.None;
@@ -875,7 +875,7 @@ namespace Nebula
             PeerStates[peer] = state;
         }
 
-        public byte GetPeerNodeId(NetPeer peer, NetworkController node)
+        public ushort GetPeerNodeId(NetPeer peer, NetworkController node)
         {
             if (node == null) return 0;
             if (!PeerStates.ContainsKey(peer))
@@ -895,7 +895,7 @@ namespace Nebula
         /// <param name="peer"></param>
         /// <param name="networkId"></param>
         /// <returns></returns>
-        public NetworkController GetPeerNode(NetPeer peer, byte networkId)
+        public NetworkController GetPeerNode(NetPeer peer, ushort networkId)
         {
             if (!PeerStates.ContainsKey(peer))
             {
@@ -917,12 +917,11 @@ namespace Nebula
                     Log("Server must specify a peer when deregistering a node.", Debugger.DebugLevel.ERROR);
                     return;
                 }
-                if (PeerStates[peer].WorldToPeerNodeMap.ContainsKey(node.NetId))
+                if (PeerStates[peer].WorldToPeerNodeMap.TryGetValue(node.NetId, out var nodeId))
                 {
-                    var peerState = PeerStates[peer];
-                    peerState.AvailableNodes &= ~(1 << PeerStates[peer].WorldToPeerNodeMap[node.NetId]);
-                    PeerStates[peer] = peerState;
+                    NodeIdUtils.ClearBit(PeerStates[peer].AvailableNodes, nodeId);
                     PeerStates[peer].WorldToPeerNodeMap.Remove(node.NetId);
+                    PeerStates[peer].PeerToWorldNodeMap.Remove(nodeId);
                 }
             }
             else
@@ -934,10 +933,8 @@ namespace Nebula
         // A local peer node ID is assigned to each node that a peer owns
         // This allows us to sync nodes across the network without sending long integers
         // 0 indicates that the node is not registered. Node ID starts at 1
-        // Up to 64 nodes can be networked per peer at a time.
-        // TODO: Consider supporting more
-        // TODO: Handle de-registration of nodes (e.g. despawn, and object interest)
-        internal byte TryRegisterPeerNode(NetworkController node, NetPeer peer = default)
+        // Up to 512 nodes can be networked per peer at a time (8 groups × 64 nodes).
+        internal ushort TryRegisterPeerNode(NetworkController node, NetPeer peer = default)
         {
             if (NetRunner.Instance.IsServer)
             {
@@ -946,26 +943,23 @@ namespace Nebula
                     Log("Server must specify a peer when registering a node.", Debugger.DebugLevel.ERROR);
                     return 0;
                 }
-                if (PeerStates[peer].WorldToPeerNodeMap.ContainsKey(node.NetId))
+                if (PeerStates[peer].WorldToPeerNodeMap.TryGetValue(node.NetId, out var existingId))
                 {
-                    return PeerStates[peer].WorldToPeerNodeMap[node.NetId];
+                    return existingId;
                 }
-                for (byte i = 0; i < MAX_NETWORK_NODES; i++)
+                
+                // Find first available node ID using hierarchical bitmask
+                var localNodeId = NodeIdUtils.FindFirstAvailable(PeerStates[peer].AvailableNodes);
+                if (localNodeId == 0)
                 {
-                    byte localNodeId = (byte)(i + 1);
-                    if ((PeerStates[peer].AvailableNodes & ((long)1 << localNodeId)) == 0)
-                    {
-                        PeerStates[peer].WorldToPeerNodeMap[node.NetId] = localNodeId;
-                        PeerStates[peer].PeerToWorldNodeMap[localNodeId] = node.NetId;
-                        var peerState = PeerStates[peer];
-                        peerState.AvailableNodes |= (long)1 << localNodeId;
-                        PeerStates[peer] = peerState;
-                        return localNodeId;
-                    }
+                    Log($"Peer {peer} has reached the maximum amount of nodes ({NodeIdUtils.MAX_NETWORK_NODES}).", Debugger.DebugLevel.ERROR);
+                    return 0;
                 }
-
-                Log($"Peer {peer} has reached the maximum amount of nodes.", Debugger.DebugLevel.ERROR);
-                return 0;
+                
+                PeerStates[peer].WorldToPeerNodeMap[node.NetId] = localNodeId;
+                PeerStates[peer].PeerToWorldNodeMap[localNodeId] = node.NetId;
+                NodeIdUtils.SetBit(PeerStates[peer].AvailableNodes, localNodeId);
+                return localNodeId;
             }
 
             if (NetScenes.ContainsKey(node.NetId))
@@ -1041,6 +1035,7 @@ namespace Nebula
                 WorldToPeerNodeMap = [],
                 PeerToWorldNodeMap = [],
                 SpawnAware = [],
+                AvailableNodes = NodeIdUtils.CreateMasks(),
                 OwnedNodes = []
             };
         }
@@ -1052,12 +1047,14 @@ namespace Nebula
         }
 
         // Declare these as fields, not locals - reuse across ticks
-        private Dictionary<long, NetBuffer> _peerNodesBuffers = new();
-        private Dictionary<long, byte> _peerNodesSerializersList = new();
-        private List<long> _orderedNodeKeys = new();
+        private Dictionary<ushort, NetBuffer> _peerNodesBuffers = new();
+        private Dictionary<ushort, byte> _peerNodesSerializersList = new();
+        private List<ushort> _orderedNodeKeys = new();
         private NetBuffer _serializersBuffer;
         private NetBuffer _tempSerializerBuffer;
-        private Dictionary<long, NetBuffer> _nodeBufferPool = new();
+        private Dictionary<ushort, NetBuffer> _nodeBufferPool = new();
+        // Hierarchical bitmask for tracking updated nodes per peer
+        private long[] _updatedNodesMask = NodeIdUtils.CreateMasks();
 
         internal Dictionary<NetPeer, NetBuffer> ExportState(List<NetPeer> peers)
         {
@@ -1079,7 +1076,8 @@ namespace Nebula
 
             foreach (NetPeer peer in peers)
             {
-                long updatedNodes = 0;
+                // Reset hierarchical bitmask for this peer
+                Array.Clear(_updatedNodesMask, 0, NodeIdUtils.NODE_GROUPS);
                 peerBuffers[peer] = new NetBuffer(); // Need separate buffer per peer for output
 
                 _peerNodesBuffers.Clear();
@@ -1109,8 +1107,8 @@ namespace Nebula
                         continue;
                     }
 
-                    byte localNodeId = PeerStates[peer].WorldToPeerNodeMap[netController.NetId];
-                    updatedNodes |= (long)1 << localNodeId;
+                    ushort localNodeId = PeerStates[peer].WorldToPeerNodeMap[netController.NetId];
+                    NodeIdUtils.SetBit(_updatedNodesMask, localNodeId);
                     _peerNodesSerializersList[localNodeId] = serializersRun;
 
                     // Pool node buffers
@@ -1124,7 +1122,16 @@ namespace Nebula
                     _peerNodesBuffers[localNodeId] = nodeBuffer;
                 }
 
-                NetWriter.WriteInt64(peerBuffers[peer], updatedNodes);
+                // Write hierarchical bitmask: groupMask (1 byte) + nodeMasks for active groups
+                byte groupMask = NodeIdUtils.ComputeGroupMask(_updatedNodesMask);
+                NetWriter.WriteByte(peerBuffers[peer], groupMask);
+                for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
+                {
+                    if ((groupMask & (1 << g)) != 0)
+                    {
+                        NetWriter.WriteInt64(peerBuffers[peer], _updatedNodesMask[g]);
+                    }
+                }
 
                 // Replace LINQ with manual sort
                 _orderedNodeKeys.Clear();
@@ -1163,16 +1170,31 @@ namespace Nebula
 
         internal void ImportState(NetBuffer stateBytes)
         {
-            var affectedNodes = NetReader.ReadInt64(stateBytes);
-            var nodeIdToSerializerList = new Dictionary<byte, byte>();
-            for (byte i = 0; i < MAX_NETWORK_NODES; i++)
+            // Read hierarchical bitmask: groupMask (1 byte) + nodeMasks for active groups
+            var groupMask = NetReader.ReadByte(stateBytes);
+            var nodeMasks = new long[NodeIdUtils.NODE_GROUPS];
+            for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
             {
-                if ((affectedNodes & ((long)1 << i)) == 0)
+                if ((groupMask & (1 << g)) != 0)
                 {
-                    continue;
+                    nodeMasks[g] = NetReader.ReadInt64(stateBytes);
                 }
-                var serializersRun = NetReader.ReadByte(stateBytes);
-                nodeIdToSerializerList[i] = serializersRun;
+            }
+            
+            // Build list of affected node IDs with their serializer masks
+            var nodeIdToSerializerList = new Dictionary<ushort, byte>();
+            for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
+            {
+                if ((groupMask & (1 << g)) == 0) continue;
+                
+                for (int local = 0; local < NodeIdUtils.NODES_PER_GROUP; local++)
+                {
+                    if ((nodeMasks[g] & (1L << local)) == 0) continue;
+                    
+                    ushort nodeId = NodeIdUtils.Combine(g, local);
+                    var serializersRun = NetReader.ReadByte(stateBytes);
+                    nodeIdToSerializerList[nodeId] = serializersRun;
+                }
             }
 
             foreach (var nodeIdSerializerList in nodeIdToSerializerList)
@@ -1396,7 +1418,7 @@ namespace Nebula
         internal void ReceiveInput(NetPeer peer, NetBuffer buffer)
         {
             if (NetRunner.Instance.IsClient) return;
-            var networkId = NetReader.ReadByte(buffer);
+            var networkId = NetReader.ReadUInt16(buffer);
             var staticChildId = NetReader.ReadByte(buffer);
             var worldNetId = GetNetIdFromPeerId(peer, networkId);
             var node = GetNodeFromNetId(worldNetId);
@@ -1454,7 +1476,7 @@ namespace Nebula
                 {
                     using var buffer = new NetBuffer();
                     NetId.NetworkSerialize(this, NetRunner.Instance.Peers[peer], netId, buffer);
-                    NetWriter.WriteByte(buffer, GetPeerNodeId(NetRunner.Instance.Peers[peer], node));
+                    NetWriter.WriteUInt16(buffer, GetPeerNodeId(NetRunner.Instance.Peers[peer], node));
                     NetWriter.WriteByte(buffer, functionId);
                     foreach (var arg in args)
                     {
@@ -1480,7 +1502,7 @@ namespace Nebula
 
         internal void ReceiveNetFunction(NetPeer peer, NetBuffer buffer)
         {
-            var netId = NetReader.ReadByte(buffer);
+            var netId = NetReader.ReadUInt16(buffer);
             var functionId = NetReader.ReadByte(buffer);
             var netController = NetRunner.Instance.IsServer ? GetPeerNode(peer, netId) : GetNodeFromNetId(netId);
             if (netController == null)

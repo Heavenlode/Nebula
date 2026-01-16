@@ -10,7 +10,7 @@ namespace Nebula.Serialization.Serializers
         private struct Data
         {
             public byte classId;
-            public byte parentId;
+            public ushort parentId;
             public byte nodePathId;
             public Vector3 position;
             public Vector3 rotation;
@@ -84,12 +84,12 @@ namespace Nebula.Serialization.Serializers
 
             if (netController.NetParent == null)
             {
-                NetWriter.WriteByte(buffer, 0);
+                NetWriter.WriteUInt16(buffer, 0);
                 return;
             }
 
             var parentId = currentWorld.GetPeerNodeId(peer, netController.NetParent);
-            NetWriter.WriteByte(buffer, parentId);
+            NetWriter.WriteUInt16(buffer, parentId);
 
             // Get the path from parent's root to the spawned node's parent
             byte nodePathId = 0;
@@ -266,7 +266,7 @@ namespace Nebula.Serialization.Serializers
             var spawnData = new Data
             {
                 classId = NetReader.ReadByte(data),
-                parentId = NetReader.ReadByte(data),
+                parentId = NetReader.ReadUInt16(data),
             };
 
             if (spawnData.parentId == 0)

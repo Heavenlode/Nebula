@@ -121,8 +121,8 @@ public partial class ProjectSettingsController : Node
         // Override the port for the networking runner
         NetRunner.Instance.OverridePort(ProjectSettings.GetSetting("Nebula/network/default_port").AsInt32());
 
-        // Apply the server IP address
-        NetRunner.Instance.ServerAddress = ProjectSettings.GetSetting("Nebula/network/IP").AsString();
+        // Apply the server IP address (sets the default, can be overridden by SERVER_ADDRESS env var)
+        NetRunner.Instance.DefaultServerAddress = ProjectSettings.GetSetting("Nebula/network/IP").AsString();
 
         return true;
     }

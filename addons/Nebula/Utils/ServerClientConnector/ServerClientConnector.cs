@@ -7,7 +7,7 @@ namespace Nebula.Utility.Tools
 	{
 		public override void _Ready()
 		{
-			Debugger.Instance.Log("ServerClientConnector _Ready");
+			GD.Print("ServerClientConnector _Ready");
 			if (Env.Instance.HasServerFeatures)
 			{
 				prepareServer();

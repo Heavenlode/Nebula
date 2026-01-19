@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Nebula.Internal.Editor.DTO;
@@ -128,7 +129,7 @@ namespace Nebula.Internal.Editor
         protected Control selectedTickFrame;
         protected Control previousTickFrame;
         protected ScrollContainer scrollContainer;
-        protected Godot.Collections.Dictionary<int, Control> tickFrames = [];
+        protected Dictionary<int, Control> tickFrames = [];
         public override void _Ready()
         {
             scrollContainer = GetNode<ScrollContainer>("%ScrollContainer");

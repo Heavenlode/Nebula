@@ -49,7 +49,7 @@ namespace Nebula.Utility.Nodes
             {
                 return (Node2D)parent;
             }
-            Debugger.Instance.Log("NetTransform parent is not a Node2D", Debugger.DebugLevel.ERROR);
+            Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"NetTransform parent is not a Node2D");
             return null;
         }
 

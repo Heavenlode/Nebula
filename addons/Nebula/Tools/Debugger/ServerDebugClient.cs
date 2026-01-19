@@ -26,10 +26,15 @@ namespace Nebula.Internal.Editor
 
         public override void _ExitTree()
         {
-            debugConnection.Destroy();
+            if (debugConnection != null)
+            {
+                debugConnection.Destroy();
+                debugConnection = null;
+            }
             if (db != null)
             {
                 db.Dispose();
+                db = null;
             }
         }
 
@@ -37,7 +42,7 @@ namespace Nebula.Internal.Editor
         {
             Title = "Server Debug Client (Online)";
             db?.Dispose();
-            Debugger.EditorInstance.Log("Connected to debug server", Debugger.DebugLevel.VERBOSE);
+            Debugger.EditorInstance.Log(Debugger.DebugLevel.VERBOSE, $"Connected to debug server");
             foreach (var child in GetNode("Container/TabContainer").GetChildren())
             {
                 child.QueueFree();
@@ -86,7 +91,7 @@ namespace Nebula.Internal.Editor
                     }
                     catch (Exception err)
                     {
-                        Debugger.EditorInstance.Log($"Error creating debug connection: {err}", Debugger.DebugLevel.VERBOSE);
+                        Debugger.EditorInstance.Log(Debugger.DebugLevel.VERBOSE, $"Error creating debug connection: {err}");
                         return;
                     }
                     return;
@@ -115,14 +120,16 @@ namespace Nebula.Internal.Editor
                         return;
 
                     case ENetConnection.EventType.Receive:
+                    {
                         var data = packetPeer.GetPacket();
-                        var packet = new HLBuffer(data);
-                        var worldId = new UUID(HLBytes.UnpackByteArray(packet, 16));
-                        var port = HLBytes.UnpackInt32(packet);
+                        using var packet = new NetBuffer(data);
+                        var worldId = new UUID(NetReader.ReadBytes(packet, 16));
+                        var port = NetReader.ReadInt32(packet);
                         var debugPanel = debugPanelScene.Instantiate<WorldDebug>();
                         GetNode("Container/TabContainer").AddChild(debugPanel);
                         debugPanel.Setup(worldId, port, db);
                         break;
+                    }
                 }
             }
         }

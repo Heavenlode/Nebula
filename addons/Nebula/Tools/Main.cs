@@ -16,8 +16,6 @@ using Nebula.Serialization;
 public partial class Main : EditorPlugin
 {
     private const string AUTOLOAD_RUNNER = "NetRunner";
-    private const string AUTOLOAD_PROTOCOL_REGISTRY = "ProtocolRegistry";
-    private const string AUTOLOAD_PROTOCOL_REGISTRY_BUILDER = "ProtocolRegistryBuilder";
     private const string AUTOLOAD_ENV = "Env";
     private const string AUTOLOAD_DEBUGGER = "Debugger";
     private const string AUTOLOAD_DATA_TRANSFORMER = "BsonTransformer";
@@ -56,17 +54,7 @@ public partial class Main : EditorPlugin
         // Register autoload singletons
         AddAutoloadSingleton(AUTOLOAD_DEBUGGER, "res://addons/Nebula/Utils/Debugger/Debugger.cs");
         AddAutoloadSingleton(AUTOLOAD_ENV, "res://addons/Nebula/Utils/Env/Env.cs");
-        AddAutoloadSingleton(AUTOLOAD_DATA_TRANSFORMER, "res://addons/Nebula/Core/Serialization/BsonTransformer.cs");
-        AddAutoloadSingleton(AUTOLOAD_PROTOCOL_REGISTRY, "res://addons/Nebula/Core/Serialization/ProtocolRegistry.cs");
         AddAutoloadSingleton(AUTOLOAD_RUNNER, "res://addons/Nebula/Core/NetRunner.cs");
-        AddAutoloadSingleton(AUTOLOAD_PROTOCOL_REGISTRY_BUILDER, "res://addons/Nebula/Core/Serialization/ProtocolRegistryBuilder.cs");
-
-        // Build protocols and load registry
-        var buildResult = GetNode<ProtocolRegistryBuilder>("/root/" + AUTOLOAD_PROTOCOL_REGISTRY_BUILDER).Build();
-        if (buildResult)
-            GetNode<ProtocolRegistry>("/root/" + AUTOLOAD_PROTOCOL_REGISTRY).Load();
-        else
-            GD.PrintErr("Failed to build Nebula protocol");
 
         // Project settings controller
         projectSettingsController = new ProjectSettingsController();
@@ -115,31 +103,11 @@ public partial class Main : EditorPlugin
             projectSettingsController.QueueFree();
 
         // Remove autoloads
-        RemoveAutoloadSingleton(AUTOLOAD_PROTOCOL_REGISTRY_BUILDER);
         RemoveAutoloadSingleton(AUTOLOAD_RUNNER);
-        RemoveAutoloadSingleton(AUTOLOAD_PROTOCOL_REGISTRY);
-        RemoveAutoloadSingleton(AUTOLOAD_DATA_TRANSFORMER);
         RemoveAutoloadSingleton(AUTOLOAD_ENV);
         RemoveAutoloadSingleton(AUTOLOAD_DEBUGGER);
 
         RemoveToolMenuItem("Nebula");
-    }
-
-    /// <summary>
-    /// Builds the protocol registry via builder singleton.
-    /// </summary>
-    /// <returns>True if build succeeded, false otherwise.</returns>
-    public bool Build()
-    {
-        var builderResult = GetNode<ProtocolRegistryBuilder>("/root/" + AUTOLOAD_PROTOCOL_REGISTRY_BUILDER).Build();
-
-        if (!builderResult)
-        {
-            GD.PrintErr("Failed to build Nebula protocol");
-            return false;
-        }
-        GetNode<ProtocolRegistry>("/root/" + AUTOLOAD_PROTOCOL_REGISTRY).Load();
-        return true;
     }
 
     /// <summary>

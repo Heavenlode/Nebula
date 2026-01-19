@@ -6,187 +6,203 @@ using Nebula.Utility.Tools;
 
 namespace Nebula.Serialization.Serializers
 {
-    public partial class NetPropertiesSerializer : Node, IStateSerializer
+    public partial class NetPropertiesSerializer : RefCounted, IStateSerializer
     {
         private struct Data
         {
             public byte[] propertiesUpdated;
-            public Dictionary<int, Variant> properties;
+            public Dictionary<int, PropertyCache> properties;
         }
-        private NetNodeWrapper wrapper;
 
-        private Dictionary<int, Variant> cachedPropertyChanges = new Dictionary<int, Variant>();
+        private NetworkController network;
+        private Dictionary<int, PropertyCache> cachedPropertyChanges = new();
 
-        #region Interpolation State
+        // Dirty mask snapshot at Begin()
+        private long processingDirtyMask = 0;
 
-        /// <summary>
-        /// For Smooth mode: tracks current target per property
-        /// </summary>
-        private struct SmoothState
+        private Dictionary<UUID, byte[]> peerInitialPropSync = new();
+        
+        // Cached to avoid Godot StringName allocations every access
+        private string _cachedSceneFilePath;
+        
+        // Cached node lookups to avoid GetNode() allocations
+        private Dictionary<StringName, Node> _nodePathCache = new();
+
+        public NetPropertiesSerializer(NetworkController _network)
         {
-            public Variant Target;
-        }
-        private Dictionary<string, SmoothState> smoothStates = new();
+            network = _network;
+            
+            // Cache SceneFilePath once to avoid Godot StringName allocations on every access
+            _cachedSceneFilePath = network.RawNode.SceneFilePath;
 
-        /// <summary>
-        /// For Buffered mode: stores timestamped state history
-        /// </summary>
-        private struct BufferedState
-        {
-            public Tick Tick;
-            public Variant Value;
-        }
-        private Dictionary<string, List<BufferedState>> bufferedStates = new();
-        private const int MaxBufferSize = 30;
-
-        #endregion
-
-        private Dictionary<int, bool> propertyUpdated = new Dictionary<int, bool>();
-        private Dictionary<int, bool> processingPropertiesUpdated = new Dictionary<int, bool>();
-
-        private double TickInterval => 1.0 / NetRunner.TPS;
-
-        private Dictionary<NetPeer, byte[]> peerInitialPropSync = new Dictionary<NetPeer, byte[]>();
-
-        public void Setup()
-        {
-            wrapper = new NetNodeWrapper(GetParent());
-            Name = "NetPropertiesSerializer";
-
-            if (!wrapper.IsNetScene())
+            if (!network.IsNetScene())
             {
                 return;
             }
 
+            int byteCount = GetByteCountOfProperties();
+            if (_propertiesUpdated == null || _propertiesUpdated.Length != byteCount)
+            {
+                _propertiesUpdated = new byte[byteCount];
+                _filteredProps = new byte[byteCount];
+            }
+
             if (NetRunner.Instance.IsServer)
             {
-                wrapper.Network.Connect("NetPropertyChanged", Callable.From((string nodePath, string propertyName) =>
-                {
-                    if (ProtocolRegistry.Instance.LookupProperty(wrapper.Node.SceneFilePath, nodePath, propertyName, out var prop))
-                    {
-                        propertyUpdated[prop.Index] = true;
-                        nonDefaultProperties.Add(prop.Index);
-                    }
-                    else
-                    {
-                        Debugger.Instance.Log($"Property not found: {nodePath}:{propertyName}", Debugger.DebugLevel.ERROR);
-                    }
-                }));
+                // Dirty tracking is now handled by NetworkController.MarkDirty() which sets DirtyMask
+                // and populates CachedProperties. No more Godot signal subscription needed.
 
-                wrapper.Network.Connect("InterestChanged", Callable.From((UUID peerId, long oldInterest, long newInterest) =>
+                network.InterestChanged += (UUID peerId, long oldInterest, long newInterest) =>
                 {
-                    // Debugger.Instance.Log($"Interest changed for peer {peerId} on node {wrapper.Node.Name}: {newInterest}");
-
-                    var peer = NetRunner.Instance.GetPeer(peerId);
-                    if (peer == null || !peerInitialPropSync.ContainsKey(peer))
+                    // Fix #7: Use TryGetValue instead of ContainsKey + indexer
+                    if (!peerInitialPropSync.TryGetValue(peerId, out var syncMask))
                         return;
 
                     foreach (var propIndex in nonDefaultProperties)
                     {
-                        var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
+                        var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
 
-                        bool wasVisible = (prop.InterestMask & oldInterest) != 0;
-                        bool isNowVisible = (prop.InterestMask & newInterest) != 0;
+                        bool wasVisible = (prop.InterestMask & oldInterest) != 0 
+                            && (prop.InterestRequired & oldInterest) == prop.InterestRequired;
+                        bool isNowVisible = (prop.InterestMask & newInterest) != 0
+                            && (prop.InterestRequired & newInterest) == prop.InterestRequired;
 
                         if (!wasVisible && isNowVisible)
                         {
-                            ClearBit(peerInitialPropSync[peer], propIndex);
-
-                            if (peerBufferCache.TryGetValue(peer, out var tickCache))
-                            {
-                                foreach (var mask in tickCache.Values)
-                                {
-                                    ClearBit(mask, propIndex);
-                                }
-                            }
+                            // Mark property as not-yet-synced so Export() will include it
+                            ClearBit(syncMask, propIndex);
                         }
                     }
-                }));
+                };
             }
             else
             {
                 foreach (var propIndex in cachedPropertyChanges.Keys)
                 {
-                    var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
-                    ImportProperty(prop, wrapper.CurrentWorld.CurrentTick, cachedPropertyChanges[propIndex]);
+                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                    ref var cachedValue = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(cachedPropertyChanges, propIndex);
+                    ImportProperty(prop, network.CurrentWorld.CurrentTick, ref cachedValue);
                 }
             }
         }
 
-        public void ImportProperty(ProtocolNetProperty prop, Tick tick, Variant value)
+        /// <summary>
+        /// Compares two PropertyCache values for equality based on their type.
+        /// </summary>
+        private static bool PropertyCacheEquals(ref PropertyCache a, ref PropertyCache b)
         {
-            var propNode = wrapper.Node.GetNode(prop.NodePath);
-            var propId = $"{prop.NodePath}:{prop.Name}";
+            if (a.Type != b.Type) return false;
 
-            // Fire change callbacks
-            Variant oldVal = propNode.Get(prop.Name);
-            if (!oldVal.Equals(value))
+            return a.Type switch
             {
-                var friendlyPropName = prop.Name;
-                if (friendlyPropName.StartsWith("network_"))
+                SerialVariantType.Bool => a.BoolValue == b.BoolValue,
+                SerialVariantType.Int => a.LongValue == b.LongValue,
+                SerialVariantType.Float => a.FloatValue == b.FloatValue,
+                SerialVariantType.String => a.StringValue == b.StringValue,
+                SerialVariantType.Vector2 => a.Vec2Value == b.Vec2Value,
+                SerialVariantType.Vector3 => a.Vec3Value == b.Vec3Value,
+                SerialVariantType.Quaternion => a.QuatValue == b.QuatValue,
+                SerialVariantType.PackedByteArray => ReferenceEquals(a.RefValue, b.RefValue) || (a.RefValue is byte[] ba && b.RefValue is byte[] bb && ba.AsSpan().SequenceEqual(bb)),
+                SerialVariantType.PackedInt32Array => ReferenceEquals(a.RefValue, b.RefValue) || (a.RefValue is int[] ia && b.RefValue is int[] ib && ia.AsSpan().SequenceEqual(ib)),
+                SerialVariantType.PackedInt64Array => ReferenceEquals(a.RefValue, b.RefValue) || (a.RefValue is long[] la && b.RefValue is long[] lb && la.AsSpan().SequenceEqual(lb)),
+                SerialVariantType.Object => ReferenceEquals(a.RefValue, b.RefValue) || object.Equals(a.RefValue, b.RefValue),
+                _ => false
+            };
+        }
+
+        /// <summary>
+        /// Gets a node by path with caching to avoid GetNode() allocations.
+        /// </summary>
+        private Node GetCachedNode(StringName nodePath)
+        {
+            if (!_nodePathCache.TryGetValue(nodePath, out var node))
+            {
+                // Convert StringName to NodePath for GetNode - this allocates once per unique path
+                node = network.RawNode.GetNode(new NodePath(nodePath.ToString()));
+                _nodePathCache[nodePath] = node;
+            }
+            return node;
+        }
+        
+        /// <summary>
+        /// Imports a property value from the network. Uses cached old values and generated setters
+        /// to avoid crossing the Godot boundary.
+        /// </summary>
+        public void ImportProperty(ProtocolNetProperty prop, Tick tick, ref PropertyCache newValue)
+        {
+            // Get the node that owns this property (cached to avoid GetNode allocations)
+            var propNode = GetCachedNode(prop.NodePath);
+            if (propNode is not INetNodeBase netNode)
+            {
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Property node {prop.NodePath} is not INetNodeBase, cannot import");
+                return;
+            }
+
+            // Get old value from cache (no Godot boundary crossing)
+            ref var oldValue = ref network.CachedProperties[prop.Index];
+
+            bool valueChanged = !PropertyCacheEquals(ref oldValue, ref newValue);
+
+            // Fire change callbacks if value changed
+            if (valueChanged)
+            {
+                if (prop.NotifyOnChange)
                 {
-                    friendlyPropName = friendlyPropName["network_".Length..];
-                }
-                if (propNode.HasSignal("OnNetworkChange" + prop.Name))
-                {
-                    propNode.EmitSignal("OnNetworkChange" + prop.Name, tick, oldVal, value);
-                }
-                else if (propNode.HasMethod("OnNetworkChange" + prop.Name))
-                {
-                    propNode.Call("OnNetworkChange" + prop.Name, tick, oldVal, value);
-                }
-                else if (propNode.HasMethod("_on_network_change_" + friendlyPropName))
-                {
-                    propNode.Call("_on_network_change_" + friendlyPropName, tick, oldVal, value);
+                    // Use LocalIndex (cumulative class index) not Index (scene-global) - matches generated switch cases
+                    // Call via base class type to use virtual dispatch (not interface dispatch)
+                    if (propNode is NetNode3D nn3d)
+                    {
+                        nn3d.InvokePropertyChangeHandler(prop.LocalIndex, tick, ref oldValue, ref newValue);
+                    }
+                    else if (propNode is NetNode2D nn2d)
+                    {
+                        nn2d.InvokePropertyChangeHandler(prop.LocalIndex, tick, ref oldValue, ref newValue);
+                    }
+                    else if (propNode is NetNode nn)
+                    {
+                        nn.InvokePropertyChangeHandler(prop.LocalIndex, tick, ref oldValue, ref newValue);
+                    }
                 }
             }
 
-#if DEBUG
-            var netProps = GetMeta("NETWORK_PROPS", new Godot.Collections.Dictionary()).AsGodotDictionary();
-            netProps[propId] = value;
-            SetMeta("NETWORK_PROPS", netProps);
-#endif
+            // Update cache (this is the target for interpolated properties)
+            network.CachedProperties[prop.Index] = newValue;
 
-            switch (prop.LerpMode)
+            // For interpolated properties, don't set immediately - ProcessInterpolation will handle it
+            // For non-interpolated properties, set via generated setter (no Godot boundary)
+            if (!prop.Interpolate)
             {
-                case NetLerpMode.None:
-                    // Snap immediately
-                    propNode.Set(prop.Name, value);
-                    break;
-
-                case NetLerpMode.Smooth:
-                    // Just update target - _Process will chase it
-                    smoothStates[propId] = new SmoothState { Target = value };
-                    break;
-
-                case NetLerpMode.Buffered:
-                    // Add to buffer with timestamp
-                    if (!bufferedStates.ContainsKey(propId))
-                    {
-                        bufferedStates[propId] = new List<BufferedState>();
-                    }
-                    bufferedStates[propId].Add(new BufferedState { Tick = tick, Value = value });
-
-                    // Prune old states
-                    while (bufferedStates[propId].Count > MaxBufferSize)
-                    {
-                        bufferedStates[propId].RemoveAt(0);
-                    }
-                    break;
+                // Use LocalIndex (class-local) not Index (scene-global) for SetNetPropertyByIndex
+                // Call via base class type (NetNode3D/NetNode2D/NetNode) to use virtual dispatch
+                // instead of interface dispatch (which would call the empty default implementation)
+                if (propNode is NetNode3D netNode3D)
+                {
+                    netNode3D.SetNetPropertyByIndex(prop.LocalIndex, ref newValue);
+                }
+                else if (propNode is NetNode2D netNode2D)
+                {
+                    netNode2D.SetNetPropertyByIndex(prop.LocalIndex, ref newValue);
+                }
+                else if (propNode is NetNode netNodeBase)
+                {
+                    netNodeBase.SetNetPropertyByIndex(prop.LocalIndex, ref newValue);
+                }
             }
         }
 
-        private Data Deserialize(HLBuffer buffer)
+        private Data Deserialize(NetBuffer buffer)
         {
             var data = new Data
             {
                 propertiesUpdated = new byte[GetByteCountOfProperties()],
-                properties = new Dictionary<int, Variant>()
+                properties = new()
             };
+
             for (byte i = 0; i < data.propertiesUpdated.Length; i++)
             {
-                data.propertiesUpdated[i] = HLBytes.UnpackByte(buffer);
+                data.propertiesUpdated[i] = NetReader.ReadByte(buffer);
             }
+
             for (byte propertyByteIndex = 0; propertyByteIndex < data.propertiesUpdated.Length; propertyByteIndex++)
             {
                 var propertyByte = data.propertiesUpdated[propertyByteIndex];
@@ -196,141 +212,263 @@ namespace Nebula.Serialization.Serializers
                     {
                         continue;
                     }
+
                     var propertyIndex = propertyByteIndex * BitConstants.BitsInByte + propertyBit;
-                    var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propertyIndex);
-                    if (prop.VariantType == Variant.Type.Object)
+                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propertyIndex);
+
+                    var cache = new PropertyCache();
+
+                    if (prop.VariantType == SerialVariantType.Object)
                     {
-                        var node = wrapper.Node.GetNode(prop.NodePath);
-                        var propNode = node.Get(prop.Name).As<GodotObject>();
-                        var callable = ProtocolRegistry.Instance.GetStaticMethodCallable(prop, StaticMethodType.NetworkDeserialize);
-                        if (callable == null)
+                        // Custom types with NetworkDeserialize - use generated deserializer delegate (no reflection)
+                        var deserializer = Protocol.GetDeserializer(prop.ClassIndex);
+                        if (deserializer == null)
                         {
-                            Debugger.Instance.Log($"No NetworkDeserialize method found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
+                            Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"No deserializer found for {prop.NodePath}.{prop.Name}");
                             continue;
                         }
-                        data.properties[propertyIndex] = callable.Value.Call(wrapper.CurrentWorld, new Variant(), buffer, propNode);
+                        // Pass existing cached value for delta encoding support
+                        var existingValue = propertyIndex < network.CachedProperties.Length
+                            ? network.CachedProperties[propertyIndex].RefValue
+                            : null;
+                        var result = deserializer(network.CurrentWorld, null, buffer, existingValue);
+                        
+                        // Store custom value types in their proper PropertyCache field
+                        // This matches how NetworkController.SetCachedValue stores them on the server
+                        SetDeserializedValueToCache(result, ref cache);
+                    }
+                    else if (prop.VariantType == SerialVariantType.Nil)
+                    {
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Property {prop.NodePath}.{prop.Name} has VariantType.Nil, cannot deserialize");
+                        continue;
                     }
                     else
                     {
-                        if (prop.VariantType == Variant.Type.Nil)
-                        {
-                            Debugger.Instance.Log($"Property {prop.NodePath}.{prop.Name} has VariantType.Nil, cannot deserialize", Debugger.DebugLevel.ERROR);
-                        }
-                        var varVal = HLBytes.UnpackVariant(buffer, knownType: prop.VariantType);
-                        data.properties[propertyIndex] = varVal.Value;
+                        ReadPropertyToCache(buffer, prop.VariantType, ref cache);
                     }
+
+                    data.properties[propertyIndex] = cache;
                 }
             }
             return data;
         }
 
-        public void Begin()
+        /// <summary>
+        /// Stores a deserialized custom type value in the correct PropertyCache field.
+        /// Mirrors the logic in NetworkController.SetCachedValue to ensure server and client use the same fields.
+        /// </summary>
+        private static void SetDeserializedValueToCache(object result, ref PropertyCache cache)
         {
-            processingPropertiesUpdated.Clear();
-            foreach (var propIndex in propertyUpdated.Keys)
+            cache.Type = SerialVariantType.Object;
+            
+            // Store custom value types in their proper field (matching NetworkController.SetCachedValue)
+            switch (result)
             {
-                processingPropertiesUpdated[propIndex] = propertyUpdated[propIndex];
+                case NetId netId:
+                    cache.NetIdValue = netId;
+                    break;
+                case UUID uuid:
+                    cache.UUIDValue = uuid;
+                    break;
+                default:
+                    // Reference types and unknown value types go in RefValue
+                    cache.RefValue = result;
+                    break;
             }
-            _dirtyMask = new byte[GetByteCountOfProperties()];
-            Array.Clear(_dirtyMask, 0, _dirtyMask.Length);
-            foreach (var propIndex in processingPropertiesUpdated.Keys)
-            {
-                _dirtyMask[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
-            }
-            propertyUpdated.Clear();
         }
 
-        public void Import(WorldRunner currentWorld, HLBuffer buffer, out NetNodeWrapper nodeOut)
+        /// <summary>
+        /// Reads a property value directly into a PropertyCache. Zero boxing for primitive types.
+        /// </summary>
+        private static void ReadPropertyToCache(NetBuffer buffer, SerialVariantType type, ref PropertyCache cache)
         {
-            nodeOut = wrapper;
+            cache.Type = type;
+            switch (type)
+            {
+                case SerialVariantType.Bool:
+                    cache.BoolValue = NetReader.ReadBool(buffer);
+                    break;
+                case SerialVariantType.Int:
+                    cache.LongValue = NetReader.ReadInt64(buffer);
+                    break;
+                case SerialVariantType.Float:
+                    cache.FloatValue = NetReader.ReadFloat(buffer);
+                    break;
+                case SerialVariantType.String:
+                    cache.StringValue = NetReader.ReadString(buffer);
+                    break;
+                case SerialVariantType.Vector2:
+                    cache.Vec2Value = NetReader.ReadVector2(buffer);
+                    break;
+                case SerialVariantType.Vector3:
+                    cache.Vec3Value = NetReader.ReadVector3(buffer);
+                    break;
+                case SerialVariantType.Quaternion:
+                    cache.QuatValue = NetReader.ReadQuaternion(buffer);
+                    break;
+                case SerialVariantType.PackedByteArray:
+                    cache.RefValue = NetReader.ReadBytesWithLength(buffer);
+                    break;
+                case SerialVariantType.PackedInt32Array:
+                    cache.RefValue = NetReader.ReadInt32Array(buffer);
+                    break;
+                case SerialVariantType.PackedInt64Array:
+                    cache.RefValue = NetReader.ReadInt64Array(buffer);
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported property type: {type}");
+            }
+        }
+
+        /// <summary>
+        /// Writes a property value from the cache. No Godot calls, no boxing.
+        /// </summary>
+        private void WriteFromCache(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, ProtocolNetProperty prop, int propIndex)
+        {
+            ref var cache = ref network.CachedProperties[propIndex];
+            
+            switch (cache.Type)
+            {
+                case SerialVariantType.Bool:
+                    NetWriter.WriteBool(buffer, cache.BoolValue);
+                    break;
+                case SerialVariantType.Int:
+                    NetWriter.WriteInt64(buffer, cache.LongValue);
+                    break;
+                case SerialVariantType.Float:
+                    NetWriter.WriteFloat(buffer, cache.FloatValue);
+                    break;
+                case SerialVariantType.String:
+                    NetWriter.WriteString(buffer, cache.StringValue ?? "");
+                    break;
+                case SerialVariantType.Vector2:
+                    NetWriter.WriteVector2(buffer, cache.Vec2Value);
+                    break;
+                case SerialVariantType.Vector3:
+                    NetWriter.WriteVector3(buffer, cache.Vec3Value);
+                    break;
+                case SerialVariantType.Quaternion:
+                    NetWriter.WriteQuaternion(buffer, cache.QuatValue);
+                    break;
+                case SerialVariantType.PackedByteArray:
+                    NetWriter.WriteBytesWithLength(buffer, cache.RefValue as byte[] ?? Array.Empty<byte>());
+                    break;
+                case SerialVariantType.PackedInt32Array:
+                    NetWriter.WriteInt32Array(buffer, cache.RefValue as int[] ?? Array.Empty<int>());
+                    break;
+                case SerialVariantType.PackedInt64Array:
+                    NetWriter.WriteInt64Array(buffer, cache.RefValue as long[] ?? Array.Empty<long>());
+                    break;
+                case SerialVariantType.Object:
+                    // Custom types with peer-dependent serialization
+                    WriteCustomTypeFromCache(currentWorld, peer, buffer, prop, ref cache);
+                    break;
+                default:
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Unsupported cache type: {cache.Type}");
+                    break;
+            }
+        }
+        
+        /// <summary>
+        /// Writes a custom type from the cache using a generated serializer delegate.
+        /// The delegate knows which PropertyCache field to access (no type-specific code needed here).
+        /// </summary>
+        private void WriteCustomTypeFromCache(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, ProtocolNetProperty prop, ref PropertyCache cache)
+        {
+            var serializer = Protocol.GetSerializer(prop.ClassIndex);
+            if (serializer == null)
+            {
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"No serializer found for {prop.NodePath}.{prop.Name}");
+                return;
+            }
+            
+            // Reuse pooled buffer instead of allocating new one each time (Fix #3)
+            _customTypeBuffer ??= new NetBuffer();
+            _customTypeBuffer.Reset();
+            serializer(currentWorld, peer, ref cache, _customTypeBuffer);
+            NetWriter.WriteBytes(buffer, _customTypeBuffer.WrittenSpan);
+        }
+
+        public void Begin()
+        {
+            // Snapshot the dirty mask and clear the original
+            processingDirtyMask = network.DirtyMask;
+            network.ClearDirtyMask();
+            
+            // Track which properties have ever been set (for initial sync to new peers)
+            for (int i = 0; i < 64; i++)
+            {
+                if ((processingDirtyMask & (1L << i)) != 0)
+                {
+                    nonDefaultProperties.Add(i);
+                }
+            }
+        }
+
+        public void Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController nodeOut)
+        {
+            nodeOut = network;
 
             var data = Deserialize(buffer);
+            
+            // Cache IsNodeReady() once before the loop to avoid repeated Godot calls
+            bool isReady = network.RawNode.IsNodeReady();
+            
             foreach (var propIndex in data.properties.Keys)
             {
-                var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
-                // Debugger.Instance.Log($"Importing property {prop.NodePath}.{prop.Name} (Index {propIndex})", Debugger.DebugLevel.INFO);
-                if (wrapper.Node.IsNodeReady())
+                var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                // Get a ref to the value in the dictionary for zero-copy
+                ref var propValue = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(data.properties, propIndex);
+                if (isReady)
                 {
-                    ImportProperty(prop, currentWorld.CurrentTick, data.properties[propIndex]);
+                    ImportProperty(prop, currentWorld.CurrentTick, ref propValue);
                 }
                 else
                 {
-                    cachedPropertyChanges[propIndex] = data.properties[propIndex];
+                    cachedPropertyChanges[propIndex] = propValue;
                 }
             }
-
-            return;
         }
 
         private int GetByteCountOfProperties()
         {
-            return (ProtocolRegistry.Instance.GetPropertyCount(wrapper.Node.SceneFilePath) / BitConstants.BitsInByte) + 1;
+            return (Protocol.GetPropertyCount(_cachedSceneFilePath) / BitConstants.BitsInByte) + 1;
         }
 
-        private byte[] OrByteList(byte[] a, byte[] b)
-        {
-            var result = new byte[a.Length];
-            for (var i = 0; i < a.Length; i++)
-            {
-                result[i] = (byte)(a[i] | b[i]);
-            }
-            return result;
-        }
-
-        private HashSet<int> nonDefaultProperties = new HashSet<int>();
-
-        private Dictionary<NetPeer, Dictionary<Tick, byte[]>> peerBufferCache = new Dictionary<NetPeer, Dictionary<Tick, byte[]>>();
-
-        private byte[] FilterPropsAgainstInterest(NetPeer peer, byte[] dirtyPropsMask)
-        {
-            var peerId = NetRunner.Instance.GetPeerId(peer);
-            wrapper.InterestLayers.TryGetValue(peerId, out var debugVal);
-            if (!TryGetInterestLayers(peerId, out var peerInterestLayers))
-            {
-                return new byte[GetByteCountOfProperties()];
-            }
-
-            var filteredMask = (byte[])dirtyPropsMask.Clone();
-
-            foreach (var propIndex in EnumerateSetBits(dirtyPropsMask))
-            {
-                if (!PeerHasInterestInProperty(propIndex, peerInterestLayers))
-                {
-                    ClearBit(filteredMask, propIndex);
-                }
-            }
-
-            return filteredMask;
-        }
+        private HashSet<int> nonDefaultProperties = new();
+        private Dictionary<UUID, Dictionary<Tick, byte[]>> peerBufferCache = new();
+        
+        /// <summary>
+        /// Maximum number of ticks to cache per peer before forced pruning.
+        /// This prevents unbounded memory growth if acknowledgments are delayed.
+        /// TPS/2 = ~500ms which is plenty of time for acks on a healthy connection.
+        /// </summary>
+        private static int MaxCachedTicksPerPeer = NetRunner.TPS / 2;
+        
+        // Pooled byte arrays for dirty masks to avoid per-tick allocations
+        private Dictionary<UUID, byte[]> _peerDirtyMaskPool = new();
+        
+        // Pooled buffer for custom type serialization (Fix #3)
+        private NetBuffer _customTypeBuffer;
 
         private bool TryGetInterestLayers(UUID peerId, out long layers)
         {
             layers = 0;
-            if (!wrapper.InterestLayers.TryGetValue(peerId, out layers))
+            if (!network.InterestLayers.TryGetValue(peerId, out layers))
                 return false;
             return layers != 0;
         }
 
         private bool PeerHasInterestInProperty(int propIndex, long peerInterestLayers)
         {
-            var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
-            return (prop.InterestMask & peerInterestLayers) != 0;
+            var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+            bool hasAnyInterest = (prop.InterestMask & peerInterestLayers) != 0;
+            bool hasAllRequired = (prop.InterestRequired & peerInterestLayers) == prop.InterestRequired;
+            return hasAnyInterest && hasAllRequired;
         }
 
-        private static IEnumerable<int> EnumerateSetBits(byte[] mask)
-        {
-            for (var byteIndex = 0; byteIndex < mask.Length; byteIndex++)
-            {
-                var b = mask[byteIndex];
-                for (var bitIndex = 0; bitIndex < 8; bitIndex++)
-                {
-                    if ((b & (1 << bitIndex)) != 0)
-                    {
-                        yield return byteIndex * 8 + bitIndex;
-                    }
-                }
-            }
-        }
+        // Removed EnumerateSetBits - it used yield return which allocates an enumerator.
+        // Iteration is now inlined at each call site to avoid allocation.
 
         private static void ClearBit(byte[] mask, int bitIndex)
         {
@@ -339,70 +477,100 @@ namespace Nebula.Serialization.Serializers
             mask[byteIndex] &= (byte)~(1 << bitOffset);
         }
 
-        private HLBuffer _buffer = new HLBuffer();
-        private byte[] _dirtyMask;
         private byte[] _propertiesUpdated;
         private byte[] _filteredProps;
         private List<Tick> _sortedTicks = new();
 
-        public HLBuffer Export(WorldRunner currentWorld, NetPeer peerId)
+        // Diagnostic counters for memory leak detection
+        private static int _diagnosticCounter = 0;
+        private static int _diagnosticLogInterval = 100; // Log every N ticks
+        
+        public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
-            _buffer.Clear();
-
+            var peerId = NetRunner.Instance.GetPeerId(peer);
             int byteCount = GetByteCountOfProperties();
 
-            // Lazy init or reuse
-            if (_propertiesUpdated == null || _propertiesUpdated.Length != byteCount)
-            {
-                _propertiesUpdated = new byte[byteCount];
-                _filteredProps = new byte[byteCount];
-            }
-
             Array.Clear(_propertiesUpdated, 0, byteCount);
+            Array.Clear(_filteredProps, 0, byteCount);
 
-            if (!peerInitialPropSync.ContainsKey(peerId))
+            // Fix #7: Use TryGetValue instead of ContainsKey + indexer
+            if (!peerInitialPropSync.TryGetValue(peerId, out var initialSync))
             {
-                peerInitialPropSync[peerId] = new byte[byteCount];
+                initialSync = new byte[byteCount];
+                peerInitialPropSync[peerId] = initialSync;
             }
 
-            if (!currentWorld.HasSpawnedForClient(wrapper.NetId, peerId))
+            if (!currentWorld.HasSpawnedForClient(network.NetId, peer))
             {
-                return _buffer;
+                return;
             }
 
-            if (!peerBufferCache.ContainsKey(peerId))
+            // Fix #7: Use TryGetValue instead of ContainsKey + indexer
+            if (!peerBufferCache.TryGetValue(peerId, out var currentPeerCache))
             {
-                peerBufferCache[peerId] = new Dictionary<Tick, byte[]>();
+                currentPeerCache = new Dictionary<Tick, byte[]>();
+                peerBufferCache[peerId] = currentPeerCache;
             }
 
-            foreach (var propIndex in processingPropertiesUpdated.Keys)
+            // Fix #4: Pool the dirty mask byte arrays
+            if (!currentPeerCache.TryGetValue(currentWorld.CurrentTick, out var cachedMask))
             {
-                _dirtyMask[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
+                // Try to get from pool, otherwise allocate
+                if (!_peerDirtyMaskPool.TryGetValue(peerId, out cachedMask) || cachedMask.Length != byteCount)
+                {
+                    cachedMask = new byte[byteCount];
+                    _peerDirtyMaskPool[peerId] = cachedMask;
+                }
+                else
+                {
+                    Array.Clear(cachedMask, 0, byteCount);
+                }
+                currentPeerCache[currentWorld.CurrentTick] = cachedMask;
+            }
+            
+            // Fix #6: Build sorted ticks list ONCE for both pruning and iteration
+            _sortedTicks.Clear();
+            foreach (var tick in currentPeerCache.Keys)
+            {
+                _sortedTicks.Add(tick);
+            }
+            _sortedTicks.Sort();
+            
+            // SAFEGUARD: Prune oldest ticks if cache exceeds limit to prevent unbounded growth
+            if (_sortedTicks.Count > MaxCachedTicksPerPeer)
+            {
+                int ticksToRemove = _sortedTicks.Count - MaxCachedTicksPerPeer;
+                for (int i = 0; i < ticksToRemove; i++)
+                {
+                    currentPeerCache.Remove(_sortedTicks[i]);
+                }
+                // Remove pruned ticks from our sorted list so we don't iterate them below
+                _sortedTicks.RemoveRange(0, ticksToRemove);
+            }
+
+            // Convert dirty mask to byte array format for existing logic
+            for (int propIndex = 0; propIndex < 64; propIndex++)
+            {
+                if ((processingDirtyMask & (1L << propIndex)) != 0)
+                {
+                    cachedMask[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
+                }
             }
 
             foreach (var propIndex in nonDefaultProperties)
             {
                 var byteIndex = propIndex / BitConstants.BitsInByte;
                 var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
-                if ((peerInitialPropSync[peerId][byteIndex] & propSlot) == 0)
+                if ((initialSync[byteIndex] & propSlot) == 0)
                 {
-                    _dirtyMask[byteIndex] |= propSlot;
+                    cachedMask[byteIndex] |= propSlot;
                 }
             }
 
-            peerBufferCache[peerId][currentWorld.CurrentTick] = _dirtyMask; // NOTE: see below
-
-            // Replace LINQ with manual sort
-            _sortedTicks.Clear();
-            foreach (var tick in peerBufferCache[peerId].Keys)
-            {
-                _sortedTicks.Add(tick);
-            }
-            _sortedTicks.Sort();
-
+            // Use already-sorted _sortedTicks list (Fix #6 - no duplicate sorting)
             foreach (var tick in _sortedTicks)
             {
-                FilterPropsAgainstInterestNoAlloc(peerId, peerBufferCache[peerId][tick], _filteredProps);
+                FilterPropsAgainstInterestNoAlloc(peer, currentPeerCache[tick], _filteredProps);
                 OrByteListInPlace(_propertiesUpdated, _filteredProps);
             }
 
@@ -419,27 +587,35 @@ namespace Nebula.Serialization.Serializers
 
             if (!hasPendingUpdates)
             {
-                return _buffer;
+                return;
             }
 
-            // Mark props as synced only now that they passed filtering
-            foreach (var propIndex in EnumerateSetBits(_propertiesUpdated))
+            // Fix #2: Mark props as synced - inline iteration instead of EnumerateSetBits
+            for (var byteIdx = 0; byteIdx < _propertiesUpdated.Length; byteIdx++)
             {
-                var byteIndex = propIndex / BitConstants.BitsInByte;
-                var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
-                peerInitialPropSync[peerId][byteIndex] |= propSlot;
+                var b = _propertiesUpdated[byteIdx];
+                if (b == 0) continue; // Fast skip
+                for (var bitIdx = 0; bitIdx < 8; bitIdx++)
+                {
+                    if ((b & (1 << bitIdx)) != 0)
+                    {
+                        initialSync[byteIdx] |= (byte)(1 << bitIdx);
+                    }
+                }
             }
 
             // Serialize the mask
             for (var i = 0; i < _propertiesUpdated.Length; i++)
             {
-                HLBytes.Pack(_buffer, _propertiesUpdated[i]);
+                NetWriter.WriteByte(buffer, _propertiesUpdated[i]);
             }
 
-            // Serialize property values
+            // Serialize property values from cache (no Godot calls)
             for (var i = 0; i < _propertiesUpdated.Length; i++)
             {
                 var propSegment = _propertiesUpdated[i];
+                if (propSegment == 0) continue; // Fast skip for empty segments
+                
                 for (var j = 0; j < BitConstants.BitsInByte; j++)
                 {
                     if ((propSegment & (byte)(1 << j)) == 0)
@@ -448,35 +624,20 @@ namespace Nebula.Serialization.Serializers
                     }
 
                     var propIndex = i * BitConstants.BitsInByte + j;
-                    var prop = ProtocolRegistry.Instance.UnpackProperty(wrapper.Node.SceneFilePath, propIndex);
-                    var propNode = wrapper.Node.GetNode(prop.NodePath);
-                    var varVal = propNode.Get(prop.Name);
-
-                    if (prop.VariantType == Variant.Type.Object)
+                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                    
+                    try
                     {
-                        var callable = ProtocolRegistry.Instance.GetStaticMethodCallable(prop, StaticMethodType.NetworkSerialize);
-                        if (!callable.HasValue)
-                        {
-                            Debugger.Instance.Log($"No NetworkSerialize method found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
-                            continue;
-                        }
-                        HLBytes.Pack(_buffer, callable.Value.Call(currentWorld, peerId, varVal).As<HLBuffer>().bytes);
+                        WriteFromCache(currentWorld, peer, buffer, prop, propIndex);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        try
-                        {
-                            HLBytes.PackVariant(_buffer, varVal, packLength: true);
-                        }
-                        catch (Exception ex)
-                        {
-                            Debugger.Instance.Log($"Error packing variant {prop.NodePath}.{prop.Name}: {ex.Message}", Debugger.DebugLevel.ERROR);
-                        }
+                        var innerMsg = ex.InnerException?.Message ?? ex.Message;
+                        var innerStack = ex.InnerException?.StackTrace ?? ex.StackTrace;
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Error serializing property {prop.NodePath}.{prop.Name} from cache: {innerMsg}\n{innerStack}");
                     }
                 }
             }
-
-            return _buffer;
         }
 
         private void FilterPropsAgainstInterestNoAlloc(NetPeer peer, byte[] dirtyPropsMask, byte[] result)
@@ -490,11 +651,21 @@ namespace Nebula.Serialization.Serializers
 
             Array.Copy(dirtyPropsMask, result, dirtyPropsMask.Length);
 
-            foreach (var propIndex in EnumerateSetBits(dirtyPropsMask))
+            // Fix #2: Inline iteration instead of EnumerateSetBits (avoids enumerator allocation)
+            for (var byteIndex = 0; byteIndex < dirtyPropsMask.Length; byteIndex++)
             {
-                if (!PeerHasInterestInProperty(propIndex, peerInterestLayers))
+                var b = dirtyPropsMask[byteIndex];
+                if (b == 0) continue; // Fast skip for empty bytes
+                for (var bitIndex = 0; bitIndex < 8; bitIndex++)
                 {
-                    ClearBit(result, propIndex);
+                    if ((b & (1 << bitIndex)) != 0)
+                    {
+                        var propIndex = byteIndex * 8 + bitIndex;
+                        if (!PeerHasInterestInProperty(propIndex, peerInterestLayers))
+                        {
+                            ClearBit(result, propIndex);
+                        }
+                    }
                 }
             }
         }
@@ -507,216 +678,57 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        public void Cleanup() { }
-
-        public void Acknowledge(WorldRunner currentWorld, NetPeer peerId, Tick latestAck)
+        public void Cleanup() 
         {
-            if (!peerBufferCache.ContainsKey(peerId))
+            // NOTE: This is called every tick after ExportState(), NOT when the object is destroyed.
+            // Do not clear per-peer caches here - that would break state synchronization!
+            // Use CleanupPeer() for per-peer cleanup on disconnect instead.
+        }
+        
+        /// <summary>
+        /// Removes all cached data for a specific peer. Call this when a peer disconnects.
+        /// </summary>
+        public void CleanupPeer(UUID peerId)
+        {
+            peerBufferCache.Remove(peerId);
+            peerInitialPropSync.Remove(peerId);
+            _peerDirtyMaskPool.Remove(peerId);
+        }
+
+        // Reusable list to avoid LINQ allocation in Acknowledge
+        private List<Tick> _ticksToRemove = new();
+        
+        public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick latestAck)
+        {
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            if (!peerBufferCache.TryGetValue(peerId, out var tickCache))
             {
                 return;
             }
-            foreach (var tick in peerBufferCache[peerId].Keys.Where(x => x <= latestAck).ToList())
+            
+            int beforeCount = tickCache.Count;
+            
+            // Avoid LINQ .ToList() allocation - reuse list
+            _ticksToRemove.Clear();
+            foreach (var tick in tickCache.Keys)
             {
-                peerBufferCache[peerId].Remove(tick);
+                if (tick <= latestAck)
+                {
+                    _ticksToRemove.Add(tick);
+                }
             }
+            
+            foreach (var tick in _ticksToRemove)
+            {
+                tickCache.Remove(tick);
+            }
+            
+            // DIAGNOSTIC: Log when acknowledgments are cleaning up ticks
+            // if (_ticksToRemove.Count > 0)
+            // {
+            //     Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[NetPropertiesSerializer ACK] Peer {peerId.ID} acked tick {latestAck}, removed {_ticksToRemove.Count} ticks, {tickCache.Count} remaining for node {network.RawNode.Name}");
+            // }
         }
 
-        public override void _Process(double delta)
-        {
-            if (NetRunner.Instance.IsServer)
-            {
-                return;
-            }
-
-            ProcessSmoothProperties(delta);
-            ProcessBufferedProperties(delta);
-        }
-
-        private void ProcessSmoothProperties(double delta)
-        {
-            foreach (var propId in smoothStates.Keys.ToList())
-            {
-                var state = smoothStates[propId];
-
-                // Parse propId to get node and property
-                var parts = propId.Split(':');
-                var nodePath = parts[0];
-                var propName = parts[1];
-
-                var propNode = wrapper.Node.GetNode(nodePath);
-                if (propNode == null) continue;
-
-                // Look up the property to get LerpParam
-                if (!ProtocolRegistry.Instance.LookupProperty(wrapper.Node.SceneFilePath, nodePath, propName, out var prop))
-                    continue;
-
-                float smoothSpeed = prop.LerpParam > 0 ? prop.LerpParam : 15f;
-                float t = 1f - Mathf.Exp(-smoothSpeed * (float)delta);
-
-                // Check for custom lerp method
-                if (propNode.HasMethod("NetworkSmooth" + propName))
-                {
-                    propNode.Call("NetworkSmooth" + propName, state.Target, t);
-                }
-                else
-                {
-                    // Default smoothing by type
-                    var current = propNode.Get(propName);
-                    var target = state.Target;
-
-                    if (prop.VariantType == Variant.Type.Vector3)
-                    {
-                        var result = ((Vector3)current).Lerp((Vector3)target, t);
-                        propNode.Set(propName, result);
-                    }
-                    else if (prop.VariantType == Variant.Type.Quaternion)
-                    {
-                        var currentQuat = ((Quaternion)current).Normalized();
-                        var targetQuat = ((Quaternion)target).Normalized();
-                        if (currentQuat.Dot(targetQuat) < 0)
-                            targetQuat = -targetQuat;
-                        var result = currentQuat.Slerp(targetQuat, t);
-                        propNode.Set(propName, result);
-                    }
-                    else if (prop.VariantType == Variant.Type.Float)
-                    {
-                        var result = Mathf.Lerp((float)current, (float)target, t);
-                        propNode.Set(propName, result);
-                    }
-                    else if (prop.VariantType == Variant.Type.Object)
-                    {
-                        // For complex objects, require custom handler
-                        Debugger.Instance.Log($"Smooth mode requires NetworkSmooth{propName} method for object type {propId}", Debugger.DebugLevel.WARN);
-                    }
-                }
-            }
-        }
-        private double _renderTick = -1;
-
-        private void ProcessBufferedProperties(double delta)
-        {
-            int currentTick = wrapper.CurrentWorld?.CurrentTick ?? 0;
-
-            // Get delay from first buffered property (or use default)
-            int delayTicks = 2;
-            foreach (var propId in bufferedStates.Keys)
-            {
-                var parts = propId.Split(':');
-                if (ProtocolRegistry.Instance.LookupProperty(wrapper.Node.SceneFilePath, parts[0], parts[1], out var prop))
-                {
-                    delayTicks = prop.LerpParam > 0 ? (int)prop.LerpParam : 2;
-                    break;
-                }
-            }
-
-            // Where we SHOULD be based on server time
-            double targetRenderTick = currentTick - delayTicks;
-
-            // Initialize on first frame
-            if (_renderTick < 0)
-            {
-                _renderTick = targetRenderTick;
-            }
-
-            // Nominal advance per frame at server tick rate
-            double nominalAdvance = delta * NetRunner.TPS;
-
-            // How far off are we? Positive = behind, Negative = ahead
-            double error = targetRenderTick - _renderTick;
-
-            // Adaptive correction: converge toward target over ~5 frames
-            // If behind, this adds to advance (speed up)
-            // If ahead, this subtracts from advance (slow down)
-            double correction = error * 0.2;
-
-            double advance = nominalAdvance + correction;
-
-            // CRITICAL: Never go backward. Never jump more than 2x speed.
-            advance = Math.Clamp(advance, 0.0, nominalAdvance * 2.0);
-
-            _renderTick += advance;
-
-            // Now process each buffered property using the smooth _renderTick
-            foreach (var propId in bufferedStates.Keys.ToList())
-            {
-                var buffer = bufferedStates[propId];
-                if (buffer.Count < 2) continue;
-
-                var parts = propId.Split(':');
-                var nodePath = parts[0];
-                var propName = parts[1];
-                var propNode = wrapper.Node.GetNode(nodePath);
-                if (propNode == null) continue;
-
-                if (!ProtocolRegistry.Instance.LookupProperty(wrapper.Node.SceneFilePath, nodePath, propName, out var prop))
-                    continue;
-
-                // Find two states to interpolate between
-                BufferedState? before = null;
-                BufferedState? after = null;
-
-                for (int i = 0; i < buffer.Count - 1; i++)
-                {
-                    if (buffer[i].Tick <= _renderTick && buffer[i + 1].Tick >= _renderTick)
-                    {
-                        before = buffer[i];
-                        after = buffer[i + 1];
-                        break;
-                    }
-                }
-
-                // Prune old states
-                while (buffer.Count > 3 && buffer[0].Tick < _renderTick - 2)
-                {
-                    buffer.RemoveAt(0);
-                }
-
-                if (before == null || after == null)
-                {
-                    if (buffer.Count > 0)
-                    {
-                        propNode.Set(propName, buffer[^1].Value);
-                    }
-                    continue;
-                }
-
-                double span = after.Value.Tick - before.Value.Tick;
-                float t = span > 0 ? (float)((_renderTick - before.Value.Tick) / span) : 0f;
-                t = Mathf.Clamp(t, 0f, 1f);
-
-                // Check for custom lerp method
-                if (propNode.HasMethod("NetworkBufferedLerp" + propName))
-                {
-                    propNode.Call("NetworkBufferedLerp" + propName, before.Value.Value, after.Value.Value, t);
-                }
-                else
-                {
-                    // Default interpolation by type
-                    if (prop.VariantType == Variant.Type.Vector3)
-                    {
-                        var result = ((Vector3)before.Value.Value).Lerp((Vector3)after.Value.Value, t);
-                        propNode.Set(propName, result);
-                    }
-                    else if (prop.VariantType == Variant.Type.Quaternion)
-                    {
-                        var fromQuat = ((Quaternion)before.Value.Value).Normalized();
-                        var toQuat = ((Quaternion)after.Value.Value).Normalized();
-                        if (fromQuat.Dot(toQuat) < 0)
-                            toQuat = -toQuat;
-                        var result = fromQuat.Slerp(toQuat, t);
-                        propNode.Set(propName, result);
-                    }
-                    else if (prop.VariantType == Variant.Type.Float)
-                    {
-                        var result = Mathf.Lerp((float)before.Value.Value, (float)after.Value.Value, t);
-                        propNode.Set(propName, result);
-                    }
-                    else if (prop.VariantType == Variant.Type.Object)
-                    {
-                        Debugger.Instance.Log($"Buffered mode requires NetworkBufferedLerp{propName} method for object type {propId}", Debugger.DebugLevel.WARN);
-                    }
-                }
-            }
-        }
     }
 }

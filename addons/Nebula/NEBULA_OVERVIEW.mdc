@@ -1,0 +1,509 @@
+# Nebula Networking Framework Overview
+
+Nebula is a custom tick-based, server-authoritative networking library for Godot (C#). It enables synchronized multiplayer gameplay where the server is the source of truth and clients receive state updates at a fixed tick rate.
+
+## Architecture Summary
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                              NetRunner                                  │
+│  (Singleton - manages ENet connections, routing, server/client startup) │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │ contains 1+ worlds
+                     ┌───────────────▼───────────────┐
+                     │          WorldRunner          │
+                     │  (Isolated game world/map)    │
+                     │  - Owns NetScenes (NetId→NC)  │
+                     │  - Manages peer states        │
+                     │  - Tick processing            │
+                     └───────────────┬───────────────┘
+                                     │ contains NetworkControllers
+        ┌────────────────────────────┼────────────────────────────┐
+        ▼                            ▼                            ▼
+┌───────────────┐          ┌───────────────┐          ┌───────────────┐
+│  NetNode3D    │          │   NetNode2D   │          │    NetNode    │
+│ (Node3D+Net)  │          │ (Node2D+Net)  │          │  (Node+Net)   │
+└───────┬───────┘          └───────┬───────┘          └───────┬───────┘
+        │                          │                          │
+        └──────────────────────────┼──────────────────────────┘
+                                   ▼
+                         NetworkController (RefCounted)
+                         - NetId assignment
+                         - Interest layers
+                         - Input authority
+                         - Property dirty tracking
+                         - Serializers array
+```
+
+## Core Concepts
+
+### 1. Server-Authoritative Model
+- **Server** is the source of truth for all networked state
+- **Clients** cannot directly modify `[NetProperty]` values; they send inputs to the server
+- Server processes inputs and mutates state in `_NetworkProcess(tick)`
+- State changes propagate to clients via serializers
+
+### 2. Tick-Based Synchronization
+- Network runs at `TPS = PhysicsTicksPerSecond / PhysicsTicksPerNetworkTick` (default: 30hz)
+- Every tick, server exports state to all interested peers
+- Clients acknowledge received ticks for reliability tracking
+- Unreliable UDP with manual acknowledgment for state, reliable for spawns/despawns/RPCs
+
+### 3. Network Scenes (NetScenes)
+- A scene whose root node inherits from `NetNode`, `NetNode2D`, or `NetNode3D`
+- Has a unique `NetId` per world (server-side long, client-side byte per peer)
+- Can be spawned dynamically via `WorldRunner.Spawn<T>()`
+- Static children (nested NetNodes in the scene tree) share parent's serializers
+
+### 4. Interest System
+- Each peer has interest layers (bitmask) per node
+- **Scene-level interest**: `[NetInterest]` attribute on classes controls spawn visibility
+- **Property-level interest**: `[NetProperty]` can have `InterestMask` and `InterestRequired`
+- `InitializeInterest(NetPeer peer)` returns initial interest for new peers
+- Interest changes trigger re-sync of relevant properties
+
+**Interest Filtering Logic:**
+- `InterestMask` (or `Any`): Peer must have ANY of these layers (OR logic)
+- `InterestRequired` (or `Required`): Peer must have ALL of these layers (AND logic)
+- Both conditions must be satisfied for visibility
+
+### 5. Node Limits
+- Maximum **512 nodes per peer** (8 groups × 64 nodes)
+- Uses hierarchical bitmask: 1-byte group mask + variable node masks
+- Node IDs are `ushort` (0-511) on the wire, `NetId` (int64) on server internally
+- Wire format: `[groupMask: byte] [nodeMask0: long?] [nodeMask1: long?] ...`
+
+---
+
+## Directory Structure
+
+```
+addons/Nebula/
+├── Core/
+│   ├── Authentication/       # IAuthenticator interface for custom auth
+│   ├── Nodes/               # Utility net nodes (NetTransform, TickTimer, etc.)
+│   ├── Serialization/       # Binary serialization (NetBuffer, NetReader, NetWriter)
+│   │   └── Serializers/     # IStateSerializer implementations
+│   ├── NetNode.cs           # Base networked Node
+│   ├── NetNode2D.cs         # Base networked Node2D
+│   ├── NetNode3D.cs         # Base networked Node3D
+│   ├── NetworkController.cs # Per-node networking logic
+│   ├── NetRunner.cs         # Singleton network manager
+│   ├── WorldRunner.cs       # Per-world state manager
+│   ├── NetProperty.cs       # [NetProperty] attribute
+│   ├── NetInterest.cs       # [NetInterest] class-level attribute
+│   ├── NetFunction.cs       # [NetFunction] attribute (RPC-like)
+│   ├── NetId.cs             # Network object identifier
+│   ├── UUID.cs              # 16-byte UUID type
+│   └── Protocol.cs          # Runtime protocol lookup helpers
+│
+├── Generator/               # Roslyn source generators
+│   ├── NetPropertyGenerator.cs      # Generates property setters/change handlers
+│   ├── PropertyCacheGenerator.cs    # Generates PropertyCache struct
+│   └── ProtocolBuilder/             # Generates Protocol.g.cs from .tscn files
+│       ├── ProtocolGenerator.cs     # Main generator
+│       ├── TscnParser.cs            # Parses Godot scene files
+│       ├── TypeAnalyzer.cs          # Analyzes C# types for net attributes
+│       └── CodeEmitter.cs           # Emits generated code
+│
+├── Testing/                 # xUnit test infrastructure
+│   ├── NebulaTestFixture.cs # Fixture that builds protocol before tests
+│   ├── Integration/         # Integration tests
+│   └── Unit/                # Unit tests
+│
+├── Tools/                   # Editor tooling
+│   ├── Debugger/            # Real-time network state inspector
+│   ├── Dock/                # NetScenes dock panel
+│   └── Inspector/           # Custom inspectors
+│
+└── Utils/                   # Utility classes
+    ├── Debugger/            # Logging utilities
+    ├── Env/                 # Environment variable helpers
+    └── ServerClientConnector/ # Quick server/client startup utility
+```
+
+---
+
+## Key Classes
+
+### `NetRunner` (Singleton)
+The main network manager. Handles:
+- Starting server (`StartServer()`) or client (`StartClient()`)
+- ENet host management and packet routing
+- Peer connection/disconnection events
+- World creation (`CreateWorld(worldId, packedScene)`)
+- Channel routing (Tick, Input, Function, Despawn)
+
+```csharp
+// Key properties
+NetRunner.Instance.IsServer      // True if running as server
+NetRunner.Instance.IsClient      // True if running as client
+NetRunner.Instance.NetStarted    // True after Start* called
+NetRunner.TPS                    // Ticks per second
+```
+
+### `WorldRunner`
+Manages an isolated game world. Each world has:
+- Its own set of networked nodes (`NetScenes` dictionary)
+- Peer states (connected players, sync status, owned nodes)
+- Tick processing (`ServerProcessTick()`, `ClientProcessTick()`)
+- Spawn/despawn logic
+
+```csharp
+// Server-side spawning
+worldRunner.Spawn<PlayerNode>(playerInstance, parent: null, inputAuthority: peer);
+
+// Events
+worldRunner.OnPlayerJoined += (UUID peerId) => { };
+worldRunner.OnPlayerCleanup += (UUID peerId) => { };
+```
+
+### `NetworkController`
+Per-node networking state. Attached to every `INetNodeBase` node:
+- `NetId` - unique identifier in the world
+- `InputAuthority` - peer that can send inputs for this node
+- `InterestLayers` - per-peer visibility bitmask
+- `DirtyMask` - tracks which properties changed this tick
+- `CachedProperties` - stores property values for serialization
+
+### `NetNode` / `NetNode2D` / `NetNode3D`
+Base classes for networked nodes. Implement `INetNodeBase`:
+```csharp
+public partial class MyNetworkNode : NetNode3D
+{
+    [NetProperty]
+    public int Health { get; set; } = 100;
+    
+    [NetProperty(NotifyOnChange = true)]
+    public Vector3 Position { get; set; }
+    
+    // Called when Position changes on the client
+    protected virtual void OnNetworkChangePosition(int tick, ref PropertyCache oldVal, ref PropertyCache newVal)
+    {
+        GD.Print($"Position changed to {newVal.Vec3Value}");
+    }
+    
+    public override void _NetworkProcess(int tick)
+    {
+        if (NetRunner.Instance.IsServer)
+        {
+            // Server: process inputs, update state
+            ref readonly var input = ref Network.GetInput<PlayerInput>();
+            // ... handle input ...
+        }
+    }
+}
+```
+
+---
+
+## Attributes
+
+### `[NetInterest]`
+Class-level attribute that controls whether a network scene spawns for a peer based on their interest layers.
+
+```csharp
+// Scene only spawns for peers with interest layer 0x04
+[NetInterest(Required = 0x04)]
+public partial class SecretArea : NetNode3D { }
+
+// Scene spawns for peers with layer 1 OR 2, AND must have layer 4
+[NetInterest(Any = 0x03, Required = 0x04)]
+public partial class SpecialItem : NetNode3D { }
+
+// No scene-level filtering (default behavior)
+public partial class PublicNode : NetNode3D { }
+```
+
+**Properties:**
+- `Any` (long, default 0): Peer must have ANY of these layers. 0 = no check.
+- `Required` (long, default 0): Peer must have ALL of these layers. 0 = no check.
+
+### `[NetProperty]`
+Marks a property for network synchronization. Only modified on the server.
+
+```csharp
+[NetProperty]                                    // Basic sync
+[NetProperty(InterestMask = 0x01)]              // Only sync to peers with ANY of these layers
+[NetProperty(InterestRequired = 0x02)]          // Only sync to peers with ALL of these layers
+[NetProperty(InterestMask = 0x03, InterestRequired = 0x04)]  // Combined: ANY of 0x03 AND ALL of 0x04
+[NetProperty(NotifyOnChange = true)]            // Generate OnNetworkChange{Prop}() callback
+[NetProperty(Interpolate = true)]               // Smooth interpolation on clients
+[NetProperty(Interpolate = true, InterpolateSpeed = 20f)]  // Custom lerp speed
+```
+
+**Supported Types:**
+- Primitives: `bool`, `byte`, `int`, `long`, `float`, `double`
+- Vectors: `Vector2`, `Vector3`, `Quaternion`
+- Arrays: `byte[]`, `int[]`, `long[]`
+- Custom types implementing `INetValue<T>` (e.g., `NetId`, `UUID`)
+- Any type with static `NetworkSerialize`/`NetworkDeserialize` methods
+
+### `[NetFunction]`
+Marks a method as a network function (similar to RPC):
+
+```csharp
+[NetFunction(Source = NetworkSources.Client)]  // Only clients can call
+public void RequestAbility(int abilityId)
+{
+    // Server receives this call
+    var caller = Network.CurrentWorld.NetFunctionContext.Caller;
+}
+
+[NetFunction(Source = NetworkSources.Server)]  // Only server can call
+public void PlayEffect(Vector3 position) { }
+
+[NetFunction(ExecuteOnCaller = false)]  // Don't run locally, only send
+public void RemoteOnly() { }
+```
+
+---
+
+## Input System
+
+Clients send inputs to the server for nodes they have `InputAuthority` over:
+
+```csharp
+// Define an input struct (must be unmanaged)
+public struct PlayerInput
+{
+    public Vector2 Movement;
+    public bool Jump;
+    public bool Fire;
+}
+
+public partial class Player : NetNode3D
+{
+    public override void _Ready()
+    {
+        base._Ready();
+        Network.InitializeInput<PlayerInput>();
+    }
+    
+    public override void _Process(double delta)
+    {
+        if (Network.InputAuthority.Equals(NetRunner.Instance.ServerPeer))
+        {
+            // Client: gather and send input
+            var input = new PlayerInput
+            {
+                Movement = Input.GetVector("left", "right", "up", "down"),
+                Jump = Input.IsActionJustPressed("jump")
+            };
+            Network.SetInput(in input);
+        }
+    }
+    
+    public override void _NetworkProcess(int tick)
+    {
+        if (NetRunner.Instance.IsServer)
+        {
+            // Server: read and process input
+            ref readonly var input = ref Network.GetInput<PlayerInput>();
+            Velocity = new Vector3(input.Movement.X, 0, input.Movement.Y) * Speed;
+        }
+    }
+}
+```
+
+---
+
+## Serialization System
+
+### Serializers
+Each `NetNode` has serializers that handle state export/import:
+
+1. **SpawnSerializer** - Handles initial node creation on clients
+2. **NetPropertiesSerializer** - Syncs `[NetProperty]` values
+
+### Custom Types
+Implement `INetValue<T>` for custom network-serializable types:
+
+```csharp
+public readonly struct MyCustomType : INetValue<MyCustomType>
+{
+    public readonly int Value;
+    
+    public static void NetworkSerialize(WorldRunner world, NetPeer peer, in MyCustomType value, NetBuffer buffer)
+    {
+        NetWriter.WriteInt32(buffer, value.Value);
+    }
+    
+    public static MyCustomType NetworkDeserialize(WorldRunner world, NetPeer peer, NetBuffer buffer, MyCustomType existing = default)
+    {
+        return new MyCustomType(NetReader.ReadInt32(buffer));
+    }
+}
+```
+
+### PropertyCache
+A discriminated union struct used internally to avoid boxing:
+
+```csharp
+public struct PropertyCache
+{
+    public SerialVariantType Type;
+    // Union fields for different types:
+    public bool BoolValue;
+    public int IntValue;
+    public long LongValue;
+    public float FloatValue;
+    public Vector3 Vec3Value;
+    public object RefValue;  // For reference types
+    // ... etc
+}
+```
+
+---
+
+## Protocol Generation
+
+The `ProtocolGenerator` (Roslyn source generator) analyzes:
+1. All `.tscn` files to find network scenes
+2. All C# types with `[NetProperty]` and `[NetFunction]` attributes
+3. Serializable types with `NetworkSerialize`/`NetworkDeserialize` methods
+
+Generates `Protocol.g.cs` containing:
+- Scene ID mappings (`ScenesMap`, `ScenesPack`)
+- Property metadata (`PropertiesMap`, `PropertiesLookup`)
+- Function metadata (`FunctionsMap`, `FunctionsLookup`)
+- Serializer/deserializer delegates for custom types
+
+---
+
+## Lifecycle
+
+### Server Startup
+```csharp
+NetRunner.Instance.StartServer();
+var world = NetRunner.Instance.CreateWorld(worldId, packedScene);
+// world is now ticking and accepting connections
+```
+
+### Client Startup
+```csharp
+NetRunner.Instance.StartClient();
+// WorldRunner.CurrentWorld is created, waits for server data
+```
+
+### Node Lifecycle
+1. `_Notification(SceneInstantiated)` → `NetworkController.Setup()`
+2. `_NetworkPrepare(world)` → Node added to world, IDs assigned
+3. `_WorldReady()` → Node fully initialized, safe to use
+4. `_NetworkProcess(tick)` → Called every network tick
+5. `Despawn()` / `QueueFree()` → Cleanup and notify clients
+
+---
+
+## Common Patterns
+
+### Spawning a Player
+```csharp
+// On server, when a peer joins:
+worldRunner.OnPlayerJoined += (UUID peerId) =>
+{
+    var peer = NetRunner.Instance.GetPeer(peerId);
+    var player = playerScene.Instantiate<Player>();
+    worldRunner.Spawn(player, inputAuthority: peer);
+};
+```
+
+### Interest-Based Visibility
+
+**Scene-Level Interest (spawn control):**
+```csharp
+// Only spawn this scene for peers who are the "owner" or have "visible" interest
+[NetInterest(Any = (long)InterestLayers.Owner | (long)InterestLayers.Visible)]
+public partial class Player : NetNode3D { }
+
+// Only spawn for admins (must have Admin layer)
+[NetInterest(Required = (long)InterestLayers.Admin)]
+public partial class AdminPanel : NetNode3D { }
+```
+
+**Property-Level Interest (data filtering):**
+```csharp
+// Hide secret data from most players
+[NetProperty(InterestMask = 0x02)]  // Only layer 2 sees this
+public string SecretInfo { get; set; }
+
+// Only owner can see their private inventory
+[NetProperty(InterestRequired = (long)InterestLayers.Owner)]
+public int[] PrivateInventory { get; set; }
+```
+
+**Granting Interest:**
+```csharp
+// Grant interest to specific peer
+network.SetPeerInterest(peerId, (long)InterestLayers.Everyone | (long)InterestLayers.Owner);
+network.AddPeerInterest(peerId, (long)InterestLayers.Visible);
+```
+
+### Reliable vs Unreliable
+- **Tick data** (properties): Unreliable sequenced - newer overwrites older
+- **Spawns/Despawns**: Reliable - must arrive
+- **NetFunction calls**: Reliable - must arrive in order
+- **Inputs**: Reliable - must be processed
+
+---
+
+## Debugging Tools
+
+### Debugger Panel (Editor)
+- Real-time tick inspection
+- Per-peer state viewing
+- Network function call logging
+- Property change history
+
+### TCP Debug Server
+Each `WorldRunner` exposes a TCP debug port for external tools:
+```csharp
+worldRunner.DebugPort  // Port number
+worldRunner.Debug?.Send("EventName", "data");  // Send custom events
+```
+
+---
+
+## Addons System
+
+Nebula supports addons via `INebulaAddon`:
+```csharp
+public class MyAddon : INebulaAddon
+{
+    public void Install()
+    {
+        // Register custom channels, serializers, etc.
+        NetRunner.Instance.ReserveChannel(10, myHandler);
+    }
+}
+```
+
+Install in project settings or via `NebulaPlugins.cs`.
+
+---
+
+## Key Files to Understand
+
+| File | Purpose |
+|------|---------|
+| `NetRunner.cs` | Network singleton, ENet management, server/client modes |
+| `WorldRunner.cs` | World state, tick processing, spawn/despawn, peer management |
+| `NetworkController.cs` | Per-node state, interest, input, dirty tracking |
+| `NetNode.cs` | Base networked node class |
+| `NetPropertiesSerializer.cs` | Property sync logic |
+| `SpawnSerializer.cs` | Node spawn/despawn sync |
+| `Protocol.cs` | Runtime protocol lookups |
+| `Generator/ProtocolGenerator.cs` | Code generation from scenes |
+| `Generator/NetPropertyGenerator.cs` | Property change handler generation |
+
+---
+
+## Common Issues
+
+1. **"Only Net Scenes can be spawned"** - Root node of the scene must inherit from `NetNode*`
+2. **Property not syncing (or node not spawning)** - Ensure it has `[NetProperty]` and is only modified on server. Ensure proper Interest with SetPeerInterest and InitializeInterest.
+3. **Input not working** - Call `Network.InitializeInput<T>()` in `_Ready()`, ensure `InputAuthority` is set
+4. **Interest not updating** - Check `InterestMask`/`InterestRequired` matches `SetPeerInterest()` layers
+5. **Scene spawning for wrong peers** - Check `[NetInterest]` attribute; ensure `Any`/`Required` match peer layers
+6. **NetId lookup fails** - Node may not be registered yet; use `_WorldReady()` instead of `_Ready()`
+7. **"Reached maximum amount of nodes"** - Peer has 512 nodes. Use aggregate patterns (e.g., one node managing many objects via properties)

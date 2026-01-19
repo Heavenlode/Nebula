@@ -28,6 +28,9 @@ namespace Nebula
         // Allow X ticks worth of maximum movement before keyframe
         static readonly Fixed64 POSITION_KEYFRAME_THRESHOLD = new Fixed64(3276.7 * 5);
         static readonly float ROTATION_KEYFRAME_THRESHOLD_DOT = 0.95f;
+        
+        // Pooled buffer for delta serialization (avoids per-tick allocation)
+        [ThreadStatic] private static NetBuffer _deltaBuffer;
 
         Vector3d _position;
         Quaternion _rotation = Quaternion.Identity;
@@ -41,13 +44,13 @@ namespace Nebula
         public Vector3 Rotation => _rotation.GetEuler();
         public Quaternion RotationQuat => _rotation;
 
-        [Signal]
-        public delegate void OnChangeEventHandler();
+        public event Action OnChange;
 
         public enum ChangeType
         {
             Delta = 1 << 0,
             Keyframe = 1 << 1,
+            HighResolution = 1 << 6,  // Flag for high-res quaternion encoding
         }
 
         public ChangeType ClientState { get; private set; } = ChangeType.Delta;
@@ -82,12 +85,12 @@ namespace Nebula
             {
                 if (_positionDelta[i] > maxPositionDelta)
                 {
-                    Debugger.Instance.Log($"Position delta is too high. Clamping. {_positionDelta[i]} to {maxPositionDelta}", Debugger.DebugLevel.WARN);
+                    Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"Position delta is too high. Clamping. {_positionDelta[i]} to {maxPositionDelta}");
                     _positionDelta[i] = maxPositionDelta;
                 }
                 if (_positionDelta[i] < -maxPositionDelta)
                 {
-                    Debugger.Instance.Log($"Position delta is too low. Clamping. {_positionDelta[i]} to {-maxPositionDelta}", Debugger.DebugLevel.WARN);
+                    Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"Position delta is too low. Clamping. {_positionDelta[i]} to {-maxPositionDelta}");
                     _positionDelta[i] = -maxPositionDelta;
                 }
             }
@@ -95,8 +98,18 @@ namespace Nebula
             bool hasChange = _positionDelta != Vector3d.Zero || !IsQuaternionIdentity(_rotationDelta);
             if (hasChange)
             {
-                EmitSignal("OnChange");
+                OnChange?.Invoke();
             }
+        }
+
+        /// <summary>
+        /// Applies a network delta received from the server to this pose.
+        /// Used on the client to accumulate deltas into the cached pose.
+        /// </summary>
+        public void ApplyNetworkDelta(NetPose3D delta)
+        {
+            _position += delta._position;
+            _rotation = (delta._rotation * _rotation).Normalized();
         }
 
         public void ApplyKeyframe(Vector3 position, Vector3 rotation)
@@ -104,7 +117,7 @@ namespace Nebula
             _position = new Vector3d(position.X, position.Y, position.Z);
             _rotation = Quaternion.FromEuler(rotation).Normalized();
             _shouldSendKeyframe = true;
-            EmitSignal("OnChange");
+            OnChange?.Invoke();
         }
 
         public void ApplyKeyframe(Vector3 position, Quaternion rotation)
@@ -112,7 +125,7 @@ namespace Nebula
             _position = new Vector3d(position.X, position.Y, position.Z);
             _rotation = rotation.Normalized();
             _shouldSendKeyframe = true;
-            EmitSignal("OnChange");
+            OnChange?.Invoke();
         }
 
         Vector3d _cumulativePositionDelta;
@@ -136,7 +149,7 @@ namespace Nebula
             if (currentWorld.CurrentTick % KeyframeFrequency == _keyframeOffset)
             {
                 _shouldSendKeyframe = true;
-                EmitSignal("OnChange");
+                OnChange?.Invoke();
             }
 
             if (!_shouldSendKeyframe)
@@ -145,18 +158,18 @@ namespace Nebula
                 {
                     if (FixedMath.Abs(_cumulativePositionDelta[i]) > POSITION_KEYFRAME_THRESHOLD)
                     {
-                        Debugger.Instance.Log($"Cumulative position delta is too high. Sending keyframe. {_cumulativePositionDelta[i]}", Debugger.DebugLevel.VERBOSE);
+                        Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"Cumulative position delta is too high. Sending keyframe. {_cumulativePositionDelta[i]}");
                         _shouldSendKeyframe = true;
-                        EmitSignal("OnChange");
+                        OnChange?.Invoke();
                         break;
                     }
                 }
 
                 if (!_shouldSendKeyframe && Mathf.Abs(_cumulativeRotationDelta.Dot(Quaternion.Identity)) < ROTATION_KEYFRAME_THRESHOLD_DOT)
                 {
-                    Debugger.Instance.Log($"Cumulative rotation delta is too high. Sending keyframe.", Debugger.DebugLevel.VERBOSE);
+                    Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"Cumulative rotation delta is too high. Sending keyframe.");
                     _shouldSendKeyframe = true;
-                    EmitSignal("OnChange");
+                    OnChange?.Invoke();
                 }
             }
 
@@ -180,14 +193,15 @@ namespace Nebula
             }
         }
 
-        public Dictionary<NetPeer, Tick> LastKeyframeSent = [];
+        public Dictionary<UUID, Tick> LastKeyframeSent = [];
+        public Dictionary<UUID, Vector3d> LastPositionSent = [];
 
         #region Quaternion Smallest-Three Encoding
 
         /// <summary>
         /// Packs a quaternion using smallest-three encoding.
         /// </summary>
-        private static void PackQuaternion(HLBuffer buffer, Quaternion q, bool highRes)
+        private static void PackQuaternion(NetBuffer buffer, Quaternion q, bool highRes)
         {
             q = q.Normalized();
             int quatMax = highRes ? HIGH_RES_QUAT_MAX : STANDARD_QUAT_MAX;
@@ -243,12 +257,12 @@ namespace Nebula
                                ((ulong)quantized[1] << 14) |
                                (ulong)quantized[2];
 
-                HLBytes.Pack(buffer, (byte)(packed >> 40));
-                HLBytes.Pack(buffer, (byte)(packed >> 32));
-                HLBytes.Pack(buffer, (byte)(packed >> 24));
-                HLBytes.Pack(buffer, (byte)(packed >> 16));
-                HLBytes.Pack(buffer, (byte)(packed >> 8));
-                HLBytes.Pack(buffer, (byte)(packed));
+                NetWriter.WriteByte(buffer, (byte)(packed >> 40));
+                NetWriter.WriteByte(buffer, (byte)(packed >> 32));
+                NetWriter.WriteByte(buffer, (byte)(packed >> 24));
+                NetWriter.WriteByte(buffer, (byte)(packed >> 16));
+                NetWriter.WriteByte(buffer, (byte)(packed >> 8));
+                NetWriter.WriteByte(buffer, (byte)(packed));
             }
             else
             {
@@ -257,14 +271,14 @@ namespace Nebula
                               (quantized[0] << 20) |
                               (quantized[1] << 10) |
                               quantized[2];
-                HLBytes.Pack(buffer, packed);
+                NetWriter.WriteUInt32(buffer, packed);
             }
         }
 
         /// <summary>
         /// Unpacks a quaternion using smallest-three encoding.
         /// </summary>
-        private static Quaternion UnpackQuaternion(HLBuffer buffer, bool highRes)
+        private static Quaternion UnpackQuaternion(NetBuffer buffer, bool highRes)
         {
             int largestIndex;
             uint q0, q1, q2;
@@ -273,12 +287,12 @@ namespace Nebula
             if (highRes)
             {
                 // Unpack 6 bytes
-                byte b0 = HLBytes.UnpackByte(buffer);
-                byte b1 = HLBytes.UnpackByte(buffer);
-                byte b2 = HLBytes.UnpackByte(buffer);
-                byte b3 = HLBytes.UnpackByte(buffer);
-                byte b4 = HLBytes.UnpackByte(buffer);
-                byte b5 = HLBytes.UnpackByte(buffer);
+                byte b0 = NetReader.ReadByte(buffer);
+                byte b1 = NetReader.ReadByte(buffer);
+                byte b2 = NetReader.ReadByte(buffer);
+                byte b3 = NetReader.ReadByte(buffer);
+                byte b4 = NetReader.ReadByte(buffer);
+                byte b5 = NetReader.ReadByte(buffer);
 
                 ulong packed = ((ulong)b0 << 40) |
                                ((ulong)b1 << 32) |
@@ -294,7 +308,7 @@ namespace Nebula
             }
             else
             {
-                uint packed32 = (uint)HLBytes.UnpackInt32(buffer);
+                uint packed32 = NetReader.ReadUInt32(buffer);
                 largestIndex = (int)(packed32 >> 30);
                 q0 = (packed32 >> 20) & 0x3FF;
                 q1 = (packed32 >> 10) & 0x3FF;
@@ -332,41 +346,61 @@ namespace Nebula
 
         #endregion
 
-        public static HLBuffer NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetPose3D obj)
+        public static void NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetPose3D obj, NetBuffer buffer)
         {
-            var result = new HLBuffer();
+            var peerId = NetRunner.Instance.GetPeerId(peer);
             byte header = 0;
-            bool isOwner = obj.Owner == peer;
+            bool isOwner = obj.Owner.ID == peer.ID;
 
-            if (obj._shouldSendKeyframe || isOwner || !obj.LastKeyframeSent.ContainsKey(peer))
+            if (obj._shouldSendKeyframe || isOwner || !obj.LastKeyframeSent.ContainsKey(peerId))
             {
                 header |= (byte)ChangeType.Keyframe;
-                HLBytes.Pack(result, header);
+                if (isOwner)
+                {
+                    header |= (byte)ChangeType.HighResolution;
+                }
+                NetWriter.WriteByte(buffer, header);
 
                 for (byte i = 0; i < AXIS_COUNT; i++)
                 {
-                    HLBytes.Pack(result, (int)(obj._position[i] * new Fixed64(100)));
+                    NetWriter.WriteInt32(buffer, (obj._position[i] * new Fixed64(100)).FloorToInt());
                 }
 
-                PackQuaternion(result, obj._rotation, isOwner);
+                PackQuaternion(buffer, obj._rotation, isOwner);
 
-                obj.LastKeyframeSent[peer] = currentWorld.CurrentTick;
-                return result;
+                obj.LastKeyframeSent[peerId] = currentWorld.CurrentTick;
+                obj.LastPositionSent[peerId] = obj._position;
+                return;
             }
 
             // Delta - non-owners only (owners always get keyframes)
-            var changeBuff = new HLBuffer();
+            // Use pooled buffer to avoid per-tick allocation
+            _deltaBuffer ??= new NetBuffer();
+            _deltaBuffer.Reset();
+            var changeBuff = _deltaBuffer;
             var positionScale = STANDARD_POSITION_SCALE;
+
+            // Get last sent position for this peer, or current position if never sent
+            if (!obj.LastPositionSent.TryGetValue(peerId, out var lastSentPos))
+            {
+                lastSentPos = obj._position;
+            }
+
+            // Compute the actual delta since last send
+            var deltaToSend = obj._position - lastSentPos;
 
             for (byte i = 0; i < AXIS_COUNT; i++)
             {
-                if (obj._positionDelta[i] != Fixed64.Zero)
+                if (deltaToSend[i] != Fixed64.Zero)
                 {
                     header |= (byte)(1 << (i + CHANGE_HEADER_LENGTH));
-                    var packedPos = (short)(obj._positionDelta[i] * positionScale).FloorToInt();
-                    HLBytes.Pack(changeBuff, packedPos);
+                    var packedPos = (short)(deltaToSend[i] * positionScale).FloorToInt();
+                    NetWriter.WriteInt16(changeBuff, packedPos);
                 }
             }
+
+            // Update last sent position for this peer
+            obj.LastPositionSent[peerId] = obj._position;
 
             if (!IsQuaternionIdentity(obj._rotationDelta))
             {
@@ -374,54 +408,32 @@ namespace Nebula
                 PackQuaternion(changeBuff, obj._rotationDelta, false); // Deltas always standard res
             }
 
-            HLBytes.Pack(result, header);
-            HLBytes.Pack(result, changeBuff);
-            return result;
+            NetWriter.WriteByte(buffer, header);
+            NetWriter.WriteBytes(buffer, changeBuff.WrittenSpan);
         }
 
-        public static Variant GetDeserializeContext(NetPose3D obj)
+        public static NetPose3D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, NetPose3D existing = null)
         {
-            // Client checks if they're the owner
-            bool isOwner = obj.Owner != null && obj.Owner == NetRunner.Instance.ENetHost;
-
-            Godot.Collections.Array result = [
-                new Vector3(obj._position.x.ToPreciseFloat(), obj._position.y.ToPreciseFloat(), obj._position.z.ToPreciseFloat()),
-                obj._rotation,
-                isOwner,
-                obj.Owner
-            ];
-            return result;
-        }
-
-        public static NetPose3D NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, HLBuffer buffer, Variant ctx)
-        {
-            var header = HLBytes.UnpackByte(buffer);
-            var ctxArray = ctx.As<Godot.Collections.Array>();
-            var position = ctxArray[0].As<Vector3>();
-            var rotation = ctxArray[1].As<Quaternion>();
-            var isOwner = ctxArray[2].As<bool>();
-            var owner = ctxArray[3].As<NetPeer>();
-
-            var result = new NetPose3D();
-            result._position = new Vector3d(new Fixed64(position.X), new Fixed64(position.Y), new Fixed64(position.Z));
-            result._rotation = rotation;
-            result.Owner = owner;
+            var header = NetReader.ReadByte(buffer);
 
             if ((header & (byte)ChangeType.Keyframe) != 0)
             {
+                // Keyframe: use existing instance or create new
+                var result = existing ?? new NetPose3D();
                 result.ClientState = ChangeType.Keyframe;
 
                 for (byte i = 0; i < AXIS_COUNT; i++)
                 {
-                    result._position[i] = new Fixed64(HLBytes.UnpackInt32(buffer)) / new Fixed64(100);
+                    result._position[i] = new Fixed64(NetReader.ReadInt32(buffer)) / new Fixed64(100);
                 }
 
-                result._rotation = UnpackQuaternion(buffer, isOwner);
+                // Read high resolution quaternion if the flag is set
+                bool highRes = (header & (byte)ChangeType.HighResolution) != 0;
+                result._rotation = UnpackQuaternion(buffer, highRes);
                 return result;
             }
 
-            // Delta - always standard resolution
-            result.ClientState = ChangeType.Delta;
+            // Delta encoding
             var positionDelta = new Vector3d();
             var positionScale = STANDARD_POSITION_SCALE;
 
@@ -429,34 +441,49 @@ namespace Nebula
             {
                 if ((header & (1 << (i + CHANGE_HEADER_LENGTH))) != 0)
                 {
-                    var unpackedShort = HLBytes.UnpackInt16(buffer);
+                    var unpackedShort = NetReader.ReadInt16(buffer);
                     positionDelta[i] = new Fixed64(unpackedShort) / positionScale;
                 }
             }
 
+            Quaternion rotationDelta = Quaternion.Identity;
             if ((header & (1 << (CHANGE_HEADER_LENGTH + AXIS_COUNT))) != 0)
             {
-                var rotationDelta = UnpackQuaternion(buffer, false);
-                result._rotation = (rotationDelta * result._rotation).Normalized();
+                rotationDelta = UnpackQuaternion(buffer, false);
             }
 
-            result._position += positionDelta;
-            return result;
+            if (existing != null)
+            {
+                // Apply delta to existing instance
+                existing._position += positionDelta;
+                existing._rotation = (rotationDelta * existing._rotation).Normalized();
+                existing.ClientState = ChangeType.Delta;
+                return existing;
+            }
+            else
+            {
+                // No existing instance - create new with delta values
+                var result = new NetPose3D();
+                result.ClientState = ChangeType.Delta;
+                result._position = positionDelta;
+                result._rotation = rotationDelta;
+                return result;
+            }
         }
 
-        public async Task OnBsonDeserialize(Variant context, BsonDocument doc)
+        public async Task OnBsonDeserialize(NetBsonContext context, BsonDocument doc)
         {
             await Task.CompletedTask;
         }
 
-        public async Task<NetPose3D> BsonDeserialize(Variant context, byte[] bson)
+        public async Task<NetPose3D> BsonDeserialize(NetBsonContext context, byte[] bson)
         {
             return await BsonDeserialize(context, bson, this);
         }
 
-        public static async Task<NetPose3D> BsonDeserialize(Variant context, byte[] bson, NetPose3D initialObject)
+        public static async Task<NetPose3D> BsonDeserialize(NetBsonContext context, byte[] bson, NetPose3D initialObject)
         {
-            var bsonValue = BsonTransformer.Instance.DeserializeBsonValue<BsonDocument>(bson);
+            var bsonValue = BsonTransformer.DeserializeBsonValue<BsonDocument>(bson);
             var result = initialObject ?? new NetPose3D();
             var position = bsonValue["Position"].AsBsonArray;
 
@@ -486,7 +513,7 @@ namespace Nebula
             return result;
         }
 
-        public BsonValue BsonSerialize(Variant context)
+        public BsonValue BsonSerialize(NetBsonContext context)
         {
             var doc = new BsonDocument();
             doc["Position"] = new BsonArray { _position.x.ToFormattedFloat(), _position.y.ToFormattedFloat(), _position.z.ToFormattedFloat() };

@@ -13,20 +13,20 @@ public partial class ProtocolBuilder : Node
     {
         GD.Print("[ProtocolBuilder] Starting protocol build...");
         
-        var builder = new ProtocolRegistryBuilder();
-        AddChild(builder);
+        // var builder = new ProtocolRegistryBuilder();
+        // AddChild(builder);
         
-        var success = builder.Build();
+        // var success = builder.Build();
         
-        if (success)
-        {
-            GD.Print("[PROTOCOL_BUILD_SUCCESS]");
-        }
-        else
-        {
-            GD.PrintErr("[PROTOCOL_BUILD_FAILED]");
-        }
+        // if (success)
+        // {
+        //     GD.Print("[PROTOCOL_BUILD_SUCCESS]");
+        // }
+        // else
+        // {
+        //     GD.PrintErr("[PROTOCOL_BUILD_FAILED]");
+        // }
         
-        GetTree().Quit(success ? 0 : 1);
+        // GetTree().Quit(success ? 0 : 1);
     }
 }

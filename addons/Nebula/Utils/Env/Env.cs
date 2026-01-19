@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 namespace Nebula.Utility.Tools
@@ -9,18 +10,28 @@ namespace Nebula.Utility.Tools
     {
         public static Env Instance { get; private set; }
         private bool initialized = false;
-        private Godot.Collections.Dictionary<string, string> env = new Godot.Collections.Dictionary<string, string>();
+        private Dictionary<string, string> env = new Dictionary<string, string>();
 
-        public Godot.Collections.Dictionary<string, string> StartArgs = [];
+        public Dictionary<string, string> StartArgs = [];
 
         public enum DevelopmentModeType {
             Local,
             Unknown,
         }
+        public enum CdnModeType {
+            Local,
+            Live,
+        }
 
         public DevelopmentModeType DevelopmentMode => GetValue("DEVELOPMENT_MODE") switch {
             "local" => DevelopmentModeType.Local,
             _ => DevelopmentModeType.Unknown
+        };
+
+        public CdnModeType CdnMode => GetValue("CDN_MODE") switch {
+            "local" => CdnModeType.Local,
+            "live" => CdnModeType.Live,
+            _ => CdnModeType.Local
         };
 
         public enum ProjectSettingId
@@ -51,9 +62,11 @@ namespace Nebula.Utility.Tools
 
             InitialWorldScene = StartArgs.GetValueOrDefault("initialWorldScene", ProjectSettings.GetSetting(ProjectSettingKeys[ProjectSettingId.WORLD_DEFAULT_SCENE]).AsString());
 
-            if (StartArgs.ContainsKey("worldId"))
+            // Check for worldId with case-insensitive key lookup
+            var worldIdKey = StartArgs.Keys.FirstOrDefault(k => k.Equals("worldId", StringComparison.OrdinalIgnoreCase));
+            if (worldIdKey != null)
             {
-                InitialWorldId = new UUID(StartArgs["worldId"]);
+                InitialWorldId = new UUID(StartArgs[worldIdKey]);
             }
             else
             {
@@ -77,20 +90,20 @@ namespace Nebula.Utility.Tools
                 return OS.GetEnvironment(valuename);
             }
 
-            Godot.Collections.Dictionary<string, string> env;
+            Dictionary<string, string> parsedEnv;
 
             if (HasServerFeatures)
             {
-                env = Parse("res://.env.server");
+                parsedEnv = Parse("res://.env.server");
             }
             else
             {
-                env = Parse("res://.env.client");
+                parsedEnv = Parse("res://.env.client");
             }
 
-            if (env.ContainsKey(valuename))
+            if (parsedEnv.ContainsKey(valuename))
             {
-                return env[valuename];
+                return parsedEnv[valuename];
             }
 
             return "";
@@ -112,13 +125,13 @@ namespace Nebula.Utility.Tools
             }
         }
 
-        private Godot.Collections.Dictionary<string, string> Parse(string filename)
+        private Dictionary<string, string> Parse(string filename)
         {
             if (initialized) return env;
 
             if (!FileAccess.FileExists(filename))
             {
-                return new Godot.Collections.Dictionary<string, string>();
+                return new Dictionary<string, string>();
             }
 
             var file = FileAccess.Open(filename, FileAccess.ModeFlags.Read);

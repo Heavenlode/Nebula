@@ -1,3 +1,4 @@
+#if TOOLS
 using System;
 using Godot;
 
@@ -133,3 +134,4 @@ namespace Nebula.Internal.Editor
         }
     }
 }
+#endif

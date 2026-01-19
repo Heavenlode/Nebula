@@ -36,7 +36,7 @@ namespace Nebula
 		{
 			if (owner is not INetNodeBase)
 			{
-				Debugger.Instance.Log($"Node {owner.GetPath()} does not implement INetNode", Debugger.DebugLevel.ERROR);
+				Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Node {owner.GetPath()} does not implement INetNode");
 				return;
 			}
 			RawNode = owner;
@@ -65,10 +65,31 @@ namespace Nebula
 		public bool DespawnOnUnowned = false;
 
 		public bool IsQueuedForDespawn => CurrentWorld.QueueDespawnedNodes.Contains(this);
+		
+		/// <summary>
+		/// Cached flag to avoid calling Godot's IsQueuedForDeletion() every tick.
+		/// Set to true when QueueNodeForDeletion() is called.
+		/// </summary>
+		internal bool IsMarkedForDeletion { get; private set; } = false;
+		
+		/// <summary>
+		/// Queue this node for deletion. Sets the cached flag and calls QueueFree().
+		/// Use this instead of RawNode.QueueFree() to enable zero-allocation deletion checks.
+		/// </summary>
+		public void QueueNodeForDeletion()
+		{
+			IsMarkedForDeletion = true;
+			RawNode.QueueFree();
+		}
 
+		bool? _isNetScene = null;
 		public bool IsNetScene()
 		{
-			return Protocol.IsNetScene(RawNode.SceneFilePath);
+			if (_isNetScene == null)
+			{
+				_isNetScene = Protocol.IsNetScene(RawNode.SceneFilePath);
+			}
+			return _isNetScene.Value;
 		}
 
 		internal List<Tuple<string, string>> InitialSetNetProperties = [];
@@ -100,6 +121,19 @@ namespace Nebula
 		/// </summary>
 		public event Action<UUID, long, long> InterestChanged;
 
+		/// <summary>
+		/// Client-side only. Fired when this node's interest state changes.
+		/// Parameter is true when interest is gained, false when lost.
+		/// Use this to snap/teleport visual state on regain, or hide on loss.
+		/// </summary>
+		public event Action<bool> OnInterestChanged;
+
+		/// <summary>
+		/// Called by InterestResyncSerializer when the client receives an interest change signal.
+		/// </summary>
+		/// <param name="hasInterest">True if interest was gained, false if lost</param>
+		internal void FireInterestChanged(bool hasInterest) => OnInterestChanged?.Invoke(hasInterest);
+
 		public void SetPeerInterest(UUID peerId, long newInterest, bool recurse = true)
 		{
 			var oldInterest = InterestLayers.TryGetValue(peerId, out var value) ? value : 0;
@@ -126,7 +160,21 @@ namespace Nebula
 
 		public bool IsPeerInterested(UUID peerId)
 		{
-			return InterestLayers.GetValueOrDefault(peerId, 0) > 0 || CurrentWorld.RootScene == this;
+			// Root scene is always visible
+			if (CurrentWorld.RootScene == this) return true;
+
+			var peerLayers = InterestLayers.GetValueOrDefault(peerId, 0);
+			if (peerLayers == 0) return false;
+
+			// Check class-level interest requirements
+			if (Protocol.TryGetSceneInterest(NetSceneFilePath, out var sceneInterest))
+			{
+				bool hasAnyInterest = sceneInterest.InterestAny == 0 || (sceneInterest.InterestAny & peerLayers) != 0;
+				bool hasAllRequired = (sceneInterest.InterestRequired & peerLayers) == sceneInterest.InterestRequired;
+				if (!hasAnyInterest || !hasAllRequired) return false;
+			}
+
+			return true;
 		}
 
 		public bool IsPeerInterested(NetPeer peer)
@@ -150,11 +198,11 @@ namespace Nebula
 		/// Cleans up per-peer cached state when a peer disconnects.
 		/// Called by WorldRunner.CleanupPlayer to prevent memory leaks.
 		/// </summary>
-		internal void CleanupPeerState(NetPeer peer)
+		internal void CleanupPeerState(UUID peerId)
 		{
-			spawnReady.Remove(peer);
-			preparingSpawn.Remove(peer);
-			InterestLayers.Remove(NetRunner.Instance.GetPeerId(peer));
+			spawnReady.Remove(peerId);
+			preparingSpawn.Remove(peerId);
+			InterestLayers.Remove(peerId);
 		}
 
 		public bool IsWorldReady { get; internal set; } = false;
@@ -295,7 +343,7 @@ namespace Nebula
 			var staticChildId = sourceNode.Network.StaticChildId;
 			if (!Protocol.LookupPropertyByStaticChildId(NetSceneFilePath, staticChildId, propertyName, out var prop))
 			{
-				Debugger.Instance.Log($"MarkDirtyRef: Property not found: staticChildId={staticChildId}, prop={propertyName}", Debugger.DebugLevel.ERROR);
+				Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"MarkDirtyRef: Property not found: staticChildId={staticChildId}, prop={propertyName}");
 				return;
 			}
 
@@ -365,7 +413,7 @@ namespace Nebula
 					// For unknown value types, we have to box (rare case)
 					cache.Type = SerialVariantType.Object;
 					cache.RefValue = value;
-					Debugger.Instance.Log($"SetCachedValue: Unknown value type {typeof(T).Name}, boxing", Debugger.DebugLevel.WARN);
+					Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"SetCachedValue: Unknown value type {typeof(T).Name}, boxing");
 					break;
 			}
 		}
@@ -442,7 +490,7 @@ namespace Nebula
 		{
 			if (_inputData == null)
 			{
-				Debugger.Instance.Log("SetInput called but input not initialized. Call InitializeInput<T>() first.", Debugger.DebugLevel.ERROR);
+				Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"SetInput called but input not initialized. Call InitializeInput<T>() first.");
 				return;
 			}
 
@@ -593,12 +641,13 @@ namespace Nebula
 			}
 		}
 
-		internal Dictionary<NetPeer, bool> spawnReady = [];
-		internal Dictionary<NetPeer, bool> preparingSpawn = [];
+		internal Dictionary<UUID, bool> spawnReady = [];
+		internal Dictionary<UUID, bool> preparingSpawn = [];
 
 		public void PrepareSpawn(NetPeer peer)
 		{
-			spawnReady[peer] = true;
+			var peerId = NetRunner.Instance.GetPeerId(peer);
+			spawnReady[peerId] = true;
 			return;
 		}
 
@@ -617,13 +666,15 @@ namespace Nebula
 					StaticNetworkChildren[i]._WorldReady();
 				}
 			}
-			RawNode.Call("_WorldReady");
+			// Direct interface call - avoids Godot's dynamic Call() which allocates StringName/Variant
+			NetNode._WorldReady();
 			IsWorldReady = true;
 		}
 
 		public virtual void _NetworkProcess(Tick tick)
 		{
-			RawNode.Call("_NetworkProcess", tick);
+			// Direct interface call - avoids Godot's dynamic Call() which allocates StringName/Variant
+			NetNode._NetworkProcess(tick);
 		}
 
 
@@ -645,12 +696,12 @@ namespace Nebula
 		{
 			if (!NetRunner.Instance.IsServer)
 			{
-				Debugger.Instance.Log($"Cannot despawn {RawNode.GetPath()}. Only the server can despawn nodes.", Debugger.DebugLevel.ERROR);
+				Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Cannot despawn {RawNode.GetPath()}. Only the server can despawn nodes.");
 				return;
 			}
 			if (!IsNetScene())
 			{
-				Debugger.Instance.Log($"Cannot despawn {RawNode.GetPath()}. Only Net Scenes can be despawned.", Debugger.DebugLevel.ERROR);
+				Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Cannot despawn {RawNode.GetPath()}. Only Net Scenes can be despawned.");
 				return;
 			}
 
@@ -659,7 +710,7 @@ namespace Nebula
 
 		internal void handleDespawn()
 		{
-			Debugger.Instance.Log($"Despawning node {RawNode.GetPath()}", Debugger.DebugLevel.VERBOSE);
+			Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"Despawning node {RawNode.GetPath()}");
 			CurrentWorld.QueueDespawn(this);
 		}
 	}

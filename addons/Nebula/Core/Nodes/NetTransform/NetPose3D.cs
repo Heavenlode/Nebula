@@ -28,6 +28,9 @@ namespace Nebula
         // Allow X ticks worth of maximum movement before keyframe
         static readonly Fixed64 POSITION_KEYFRAME_THRESHOLD = new Fixed64(3276.7 * 5);
         static readonly float ROTATION_KEYFRAME_THRESHOLD_DOT = 0.95f;
+        
+        // Pooled buffer for delta serialization (avoids per-tick allocation)
+        [ThreadStatic] private static NetBuffer _deltaBuffer;
 
         Vector3d _position;
         Quaternion _rotation = Quaternion.Identity;
@@ -82,12 +85,12 @@ namespace Nebula
             {
                 if (_positionDelta[i] > maxPositionDelta)
                 {
-                    Debugger.Instance.Log($"Position delta is too high. Clamping. {_positionDelta[i]} to {maxPositionDelta}", Debugger.DebugLevel.WARN);
+                    Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"Position delta is too high. Clamping. {_positionDelta[i]} to {maxPositionDelta}");
                     _positionDelta[i] = maxPositionDelta;
                 }
                 if (_positionDelta[i] < -maxPositionDelta)
                 {
-                    Debugger.Instance.Log($"Position delta is too low. Clamping. {_positionDelta[i]} to {-maxPositionDelta}", Debugger.DebugLevel.WARN);
+                    Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"Position delta is too low. Clamping. {_positionDelta[i]} to {-maxPositionDelta}");
                     _positionDelta[i] = -maxPositionDelta;
                 }
             }
@@ -155,7 +158,7 @@ namespace Nebula
                 {
                     if (FixedMath.Abs(_cumulativePositionDelta[i]) > POSITION_KEYFRAME_THRESHOLD)
                     {
-                        Debugger.Instance.Log($"Cumulative position delta is too high. Sending keyframe. {_cumulativePositionDelta[i]}", Debugger.DebugLevel.VERBOSE);
+                        Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"Cumulative position delta is too high. Sending keyframe. {_cumulativePositionDelta[i]}");
                         _shouldSendKeyframe = true;
                         OnChange?.Invoke();
                         break;
@@ -164,7 +167,7 @@ namespace Nebula
 
                 if (!_shouldSendKeyframe && Mathf.Abs(_cumulativeRotationDelta.Dot(Quaternion.Identity)) < ROTATION_KEYFRAME_THRESHOLD_DOT)
                 {
-                    Debugger.Instance.Log($"Cumulative rotation delta is too high. Sending keyframe.", Debugger.DebugLevel.VERBOSE);
+                    Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"Cumulative rotation delta is too high. Sending keyframe.");
                     _shouldSendKeyframe = true;
                     OnChange?.Invoke();
                 }
@@ -190,8 +193,8 @@ namespace Nebula
             }
         }
 
-        public Dictionary<NetPeer, Tick> LastKeyframeSent = [];
-        public Dictionary<NetPeer, Vector3d> LastPositionSent = [];
+        public Dictionary<UUID, Tick> LastKeyframeSent = [];
+        public Dictionary<UUID, Vector3d> LastPositionSent = [];
 
         #region Quaternion Smallest-Three Encoding
 
@@ -345,10 +348,11 @@ namespace Nebula
 
         public static void NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetPose3D obj, NetBuffer buffer)
         {
+            var peerId = NetRunner.Instance.GetPeerId(peer);
             byte header = 0;
             bool isOwner = obj.Owner.ID == peer.ID;
 
-            if (obj._shouldSendKeyframe || isOwner || !obj.LastKeyframeSent.ContainsKey(peer))
+            if (obj._shouldSendKeyframe || isOwner || !obj.LastKeyframeSent.ContainsKey(peerId))
             {
                 header |= (byte)ChangeType.Keyframe;
                 if (isOwner)
@@ -364,17 +368,20 @@ namespace Nebula
 
                 PackQuaternion(buffer, obj._rotation, isOwner);
 
-                obj.LastKeyframeSent[peer] = currentWorld.CurrentTick;
-                obj.LastPositionSent[peer] = obj._position;
+                obj.LastKeyframeSent[peerId] = currentWorld.CurrentTick;
+                obj.LastPositionSent[peerId] = obj._position;
                 return;
             }
 
             // Delta - non-owners only (owners always get keyframes)
-            using var changeBuff = new NetBuffer();
+            // Use pooled buffer to avoid per-tick allocation
+            _deltaBuffer ??= new NetBuffer();
+            _deltaBuffer.Reset();
+            var changeBuff = _deltaBuffer;
             var positionScale = STANDARD_POSITION_SCALE;
 
             // Get last sent position for this peer, or current position if never sent
-            if (!obj.LastPositionSent.TryGetValue(peer, out var lastSentPos))
+            if (!obj.LastPositionSent.TryGetValue(peerId, out var lastSentPos))
             {
                 lastSentPos = obj._position;
             }
@@ -393,7 +400,7 @@ namespace Nebula
             }
 
             // Update last sent position for this peer
-            obj.LastPositionSent[peer] = obj._position;
+            obj.LastPositionSent[peerId] = obj._position;
 
             if (!IsQuaternionIdentity(obj._rotationDelta))
             {
@@ -476,7 +483,7 @@ namespace Nebula
 
         public static async Task<NetPose3D> BsonDeserialize(NetBsonContext context, byte[] bson, NetPose3D initialObject)
         {
-            var bsonValue = BsonTransformer.Instance.DeserializeBsonValue<BsonDocument>(bson);
+            var bsonValue = BsonTransformer.DeserializeBsonValue<BsonDocument>(bson);
             var result = initialObject ?? new NetPose3D();
             var position = bsonValue["Position"].AsBsonArray;
 

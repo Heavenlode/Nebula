@@ -18,10 +18,20 @@ namespace Nebula.Utility.Tools
             Local,
             Unknown,
         }
+        public enum CdnModeType {
+            Local,
+            Live,
+        }
 
         public DevelopmentModeType DevelopmentMode => GetValue("DEVELOPMENT_MODE") switch {
             "local" => DevelopmentModeType.Local,
             _ => DevelopmentModeType.Unknown
+        };
+
+        public CdnModeType CdnMode => GetValue("CDN_MODE") switch {
+            "local" => CdnModeType.Local,
+            "live" => CdnModeType.Live,
+            _ => CdnModeType.Local
         };
 
         public enum ProjectSettingId

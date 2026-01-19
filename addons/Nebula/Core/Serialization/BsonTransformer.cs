@@ -1,32 +1,18 @@
 using System;
 using System.IO;
-using Godot;
-using Nebula.Utility.Tools;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 
 namespace Nebula.Serialization
 {
-    public partial class BsonTransformer : Node
+    /// <summary>
+    /// Static utility class for BSON byte serialization/deserialization.
+    /// Type-to-BSON conversion is now handled by BsonTypeHelper and generated code.
+    /// </summary>
+    public static class BsonTransformer
     {
-
-        /// <summary>
-        /// The singleton instance.
-        /// </summary>
-        public static BsonTransformer Instance { get; internal set; }
-
-        /// <inheritdoc/>
-        public override void _EnterTree()
-        {
-            if (Instance != null)
-            {
-                QueueFree();
-            }
-            Instance = this;
-        }
-
-        public byte[] SerializeBsonValue(BsonValue value)
+        public static byte[] SerializeBsonValue(BsonValue value)
         {
             var wrapper = new BsonDocument("value", value);
 
@@ -40,7 +26,7 @@ namespace Nebula.Serialization
             }
         }
 
-        public T DeserializeBsonValue<T>(byte[] bytes) where T : BsonValue
+        public static T DeserializeBsonValue<T>(byte[] bytes) where T : BsonValue
         {
             using (var memoryStream = new MemoryStream(bytes))
             {
@@ -73,7 +59,7 @@ namespace Nebula.Serialization
             }
         }
 
-        private bool IsCompatibleType<T>(BsonValue value) where T : BsonValue
+        private static bool IsCompatibleType<T>(BsonValue value) where T : BsonValue
         {
             if (typeof(T) == typeof(BsonDocument))
                 return value.IsBsonDocument;
@@ -102,7 +88,7 @@ namespace Nebula.Serialization
             return false;
         }
 
-        private T ConvertToType<T>(BsonValue value) where T : BsonValue
+        private static T ConvertToType<T>(BsonValue value) where T : BsonValue
         {
             if (typeof(T) == typeof(BsonDocument))
                 return (T)(BsonValue)value.AsBsonDocument;
@@ -129,100 +115,6 @@ namespace Nebula.Serialization
 
             throw new InvalidCastException(
                 $"Conversion from {value.BsonType} to {typeof(T).Name} is not implemented");
-        }
-
-        /// <summary>
-        /// Serializes a Godot Variant to BSON. This is a bridge method for Godot interop.
-        /// For new code, prefer using IBsonValue/IBsonSerializable directly.
-        /// </summary>
-        public BsonValue SerializeVariant(Variant variant, string subtype = "None")
-        {
-            if (variant.VariantType == Variant.Type.String)
-            {
-                return variant.ToString();
-            }
-            else if (variant.VariantType == Variant.Type.Float)
-            {
-                return variant.AsDouble();
-            }
-            else if (variant.VariantType == Variant.Type.Int)
-            {
-                if (subtype == "Byte")
-                {
-                    return variant.AsByte();
-                }
-                else if (subtype == "Int")
-                {
-                    return variant.AsInt32();
-                }
-                else
-                {
-                    return variant.AsInt64();
-                }
-            }
-            else if (variant.VariantType == Variant.Type.Bool)
-            {
-                return variant.AsBool();
-            }
-            else if (variant.VariantType == Variant.Type.Vector2)
-            {
-                var vec = variant.As<Vector2>();
-                return new BsonArray { vec.X, vec.Y };
-            }
-            else if (variant.VariantType == Variant.Type.Vector3)
-            {
-                var vec = variant.As<Vector3>();
-                return new BsonArray { vec.X, vec.Y, vec.Z };
-            }
-            else if (variant.VariantType == Variant.Type.Nil)
-            {
-                return BsonNull.Value;
-            }
-            else if (variant.VariantType == Variant.Type.Object)
-            {
-                var obj = variant.As<GodotObject>();
-                if (obj == null)
-                {
-                    return BsonNull.Value;
-                }
-                else
-                {
-                    if (obj is IBsonSerializableBase bsonSerializable)
-                    {
-                        return bsonSerializable.BsonSerialize(NetBsonContext.Default);
-                    }
-
-                    Debugger.Instance.Log($"Attempting to serialize an object that does not implement IBsonSerializable<T>: {obj}", Debugger.DebugLevel.ERROR);
-                    return null;
-                }
-            }
-            else if (variant.VariantType == Variant.Type.PackedByteArray)
-            {
-                return new BsonBinaryData(variant.AsByteArray(), BsonBinarySubType.Binary);
-            }
-            else if (variant.VariantType == Variant.Type.PackedInt32Array)
-            {
-                return new BsonArray(variant.AsInt32Array());
-            }
-            else if (variant.VariantType == Variant.Type.PackedInt64Array)
-            {
-                return new BsonArray(variant.AsInt64Array());
-            }
-            else if (variant.VariantType == Variant.Type.Dictionary)
-            {
-                var dict = variant.AsGodotDictionary();
-                var bsonDict = new BsonDocument();
-                foreach (var key in dict.Keys)
-                {
-                    bsonDict[key.ToString()] = SerializeVariant(dict[key]);
-                }
-                return bsonDict;
-            }
-            else
-            {
-                Debugger.Instance.Log($"Serializing to JSON unsupported property type: {variant.VariantType}", Debugger.DebugLevel.ERROR);
-                return null;
-            }
         }
     }
 }

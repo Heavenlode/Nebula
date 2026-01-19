@@ -8,6 +8,8 @@ namespace Nebula.Generators
     internal sealed class SceneBytecode
     {
         public bool IsNetScene { get; set; }
+        public long InterestAny { get; set; }
+        public long InterestRequired { get; set; }
         public List<StaticNetNode> StaticNetNodes { get; } = new();
         public Dictionary<string, Dictionary<string, PropertyData>> Properties { get; } = new();
         public Dictionary<string, Dictionary<string, FunctionData>> Functions { get; } = new();
@@ -34,6 +36,7 @@ namespace Nebula.Generators
         /// </summary>
         public byte LocalIndex { get; set; }
         public long InterestMask { get; set; }
+        public long InterestRequired { get; set; }
         public int ClassIndex { get; set; } = -1;
         public bool NotifyOnChange { get; set; } = false;
         public bool Interpolate { get; set; } = false;
@@ -76,6 +79,16 @@ namespace Nebula.Generators
         /// Avoids intermediate nodePath string lookup at runtime.
         /// </summary>
         public Dictionary<string, Dictionary<byte, Dictionary<string, PropertyData>>> PropertiesByStaticChildId { get; } = new();
+        /// <summary>
+        /// Scene-level interest requirements: scenePath -> (InterestAny, InterestRequired)
+        /// </summary>
+        public Dictionary<string, SceneInterestData> SceneInterestMap { get; } = new();
+    }
+
+    internal sealed class SceneInterestData
+    {
+        public long InterestAny { get; set; }
+        public long InterestRequired { get; set; }
     }
 
     internal sealed class SerializableMethodData

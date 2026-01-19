@@ -116,6 +116,7 @@ namespace Nebula.Serialization
         /// </summary>
         public readonly byte LocalIndex;
         public readonly long InterestMask;
+        public readonly long InterestRequired;
         public readonly int ClassIndex;
         public readonly bool NotifyOnChange;
         public readonly bool Interpolate;
@@ -129,6 +130,7 @@ namespace Nebula.Serialization
             byte index,
             byte localIndex,
             long interestMask,
+            long interestRequired,
             int classIndex,
             bool notifyOnChange = false,
             bool interpolate = false,
@@ -141,6 +143,7 @@ namespace Nebula.Serialization
             Index = index;
             LocalIndex = localIndex;
             InterestMask = interestMask;
+            InterestRequired = interestRequired;
             ClassIndex = classIndex;
             NotifyOnChange = notifyOnChange;
             Interpolate = interpolate;
@@ -186,6 +189,28 @@ namespace Nebula.Serialization
         {
             MethodType = methodType;
             TypeFullName = typeFullName;
+        }
+    }
+
+    /// <summary>
+    /// Scene-level interest requirements for spawn visibility.
+    /// </summary>
+    public readonly struct ProtocolSceneInterest
+    {
+        /// <summary>
+        /// Peer must have ANY of these interest layers (OR logic). 0 = no check.
+        /// </summary>
+        public readonly long InterestAny;
+
+        /// <summary>
+        /// Peer must have ALL of these interest layers (AND logic). 0 = no check.
+        /// </summary>
+        public readonly long InterestRequired;
+
+        public ProtocolSceneInterest(long interestAny, long interestRequired)
+        {
+            InterestAny = interestAny;
+            InterestRequired = interestRequired;
         }
     }
 }

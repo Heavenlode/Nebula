@@ -1,3 +1,4 @@
+#if TOOLS
 using Godot;
 using Nebula.Serialization;
 
@@ -149,3 +150,4 @@ namespace Nebula.Internal.Editor
         }
     }
 }
+#endif

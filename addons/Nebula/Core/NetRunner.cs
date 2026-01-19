@@ -17,8 +17,21 @@ namespace Nebula
     {
         /// <summary>
         /// A fully qualified domain (www.example.com) or IP address (192.168.1.1) of the host. Used for client connections.
+        /// Can be overridden via SERVER_ADDRESS environment variable or .env file.
         /// </summary>
-        [Export] public string ServerAddress = "127.0.0.1";
+        [Export] public string DefaultServerAddress = "127.0.0.1";
+
+        /// <summary>
+        /// Gets the server address, checking environment variable first, then falling back to DefaultServerAddress.
+        /// </summary>
+        public string ServerAddress
+        {
+            get
+            {
+                var envAddress = Env.Instance?.GetValue("SERVER_ADDRESS");
+                return string.IsNullOrEmpty(envAddress) ? DefaultServerAddress : envAddress;
+            }
+        }
 
         /// <summary>
         /// The port for the server to listen on, and the client to connect to.
@@ -30,7 +43,7 @@ namespace Nebula
         /// </summary>
         public void OverridePort(int port)
         {
-            Debugger.Instance.Log($"Overriding port to {port}", Debugger.DebugLevel.VERBOSE);
+            Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"Overriding port to {port}");
             Port = port;
         }
 
@@ -46,18 +59,19 @@ namespace Nebula
 
         /// <summary>
         /// Maximum number of channels per connection.
+        /// Must be at least 250 to support Blastoff admin channel (249).
         /// </summary>
-        private const int MaxChannels = 16;
+        private const int MaxChannels = 251;
 
         public Dictionary<UUID, WorldRunner> Worlds { get; private set; } = [];
         internal Host ENetHost;
         internal Peer ServerPeer;
 
         internal Dictionary<UUID, NetPeer> Peers = [];
-        internal Dictionary<NetPeer, UUID> PeerIds = [];
+        internal Dictionary<uint, UUID> PeerIds = [];  // Key is peer.ID (ENet native ID)
         internal Dictionary<uint, NetPeer> PeersByNativeId = [];
         internal Dictionary<UUID, List<NetPeer>> WorldPeerMap = [];
-        internal Dictionary<NetPeer, WorldRunner> PeerWorldMap = [];
+        internal Dictionary<UUID, WorldRunner> PeerWorldMap = [];
 
         public NetPeer GetPeer(UUID id)
         {
@@ -70,7 +84,7 @@ namespace Nebula
 
         public UUID GetPeerId(NetPeer peer)
         {
-            if (PeerIds.TryGetValue(peer, out var id))
+            if (PeerIds.TryGetValue(peer.ID, out var id))
             {
                 return id;
             }
@@ -118,13 +132,13 @@ namespace Nebula
         /// <summary>
         /// This is only used to prevent plugins from using reserved channels or reserving each other's channels.
         /// </summary>
-        private Dictionary<int, Callable> ReservedChannels = [];
+        private Dictionary<int, Action<NetPeer, byte[]>> ReservedChannels = [];
 
         /// <summary>
         /// Reserve a channel for custom use, e.g. within plugins. If the channel is already reserved, it will throw an exception.
-        /// The handler Callable receives (uint peerId, byte[] packetData). Use GetPeerByNativeId() to get the peer.
+        /// The handler receives (NetPeer peer, byte[] packetData).
         /// </summary>
-        public void ReserveChannel(int channel, Callable handler)
+        public void ReserveChannel(int channel, Action<NetPeer, byte[]> handler)
         {
             if (Enum.IsDefined(typeof(ENetChannelId), channel))
             {
@@ -198,7 +212,7 @@ namespace Nebula
         {
             if (Authentication != null)
             {
-                Debugger.Instance.Log("Setting authentication on NetRunner after it was already set. This is only a bug if it was unintentional.", Debugger.DebugLevel.WARN);
+                Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"Setting authentication on NetRunner after it was already set. This is only a bug if it was unintentional.");
             }
             OnPeerConnected += (uint peerId) =>
             {
@@ -217,6 +231,7 @@ namespace Nebula
 
         public void StartServer()
         {
+            GD.Print($"NativeBridge.IsAvailable: {NativeBridge.IsAvailable}");
             System.Runtime.GCSettings.LatencyMode = System.Runtime.GCLatencyMode.SustainedLowLatency;
 
             if (Authentication == null)
@@ -240,7 +255,7 @@ namespace Nebula
             }
             catch (Exception ex)
             {
-                Debugger.Instance.Log($"Error starting: {ex.Message}", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Error starting: {ex.Message}");
                 return;
             }
 
@@ -256,11 +271,11 @@ namespace Nebula
             try
             {
                 debugEnet.Create(debugAddress, MaxPeers, MaxChannels);
-                Debugger.Instance.Log($"Started debug server on {ServerAddress}:{DebugPort}", Debugger.DebugLevel.VERBOSE);
+                Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"Started debug server on {ServerAddress}:{DebugPort}");
             }
             catch (Exception ex)
             {
-                Debugger.Instance.Log($"Error starting debug server: {ex.Message}", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Error starting debug server: {ex.Message}");
                 debugEnet.Dispose();
                 debugEnet = null;
             }
@@ -340,7 +355,7 @@ namespace Nebula
                             using var buffer = new NetBuffer();
                             NetWriter.WriteBytes(buffer, worldId.ToByteArray());
                             NetWriter.WriteInt32(buffer, world.DebugPort);
-                            SendPacket(netEvent.Peer, 0, buffer.ToArray(), PacketFlags.Reliable);
+                            SendPacket(netEvent.Peer, 0, buffer, PacketFlags.Reliable);
                         }
                         break;
 
@@ -374,6 +389,13 @@ namespace Nebula
         {
             if (!NetStarted)
                 return;
+
+            // Sync native bridge cache once per physics frame (server-side physics uses NativeBridge)
+            // Must be early in processing order so all physics nodes have fresh cache data
+            if (IsServer)
+            {
+                NativeBridge.SyncFromGodot();
+            }
 
             _debugService();
 
@@ -413,12 +435,13 @@ namespace Nebula
                         break;
 
                     case EventType.Receive:
+                    {
                         var channel = netEvent.ChannelID;
                         var packetData = new byte[netEvent.Packet.Length];
                         netEvent.Packet.CopyTo(packetData);
                         netEvent.Packet.Dispose();
 
-                        var data = new NetBuffer(packetData);
+                        using var data = new NetBuffer(packetData);
 
                         switch ((ENetChannelId)channel)
                         {
@@ -426,7 +449,11 @@ namespace Nebula
                                 if (IsServer)
                                 {
                                     var tick = NetReader.ReadInt32(data);
-                                    PeerWorldMap[netEvent.Peer].PeerAcknowledge(netEvent.Peer, tick);
+                                    var peerId = GetPeerId(netEvent.Peer);
+                                    if (PeerWorldMap.TryGetValue(peerId, out var world))
+                                    {
+                                        world.PeerAcknowledge(netEvent.Peer, tick);
+                                    }
                                 }
                                 else
                                 {
@@ -443,7 +470,11 @@ namespace Nebula
                             case ENetChannelId.Input:
                                 if (IsServer)
                                 {
-                                    PeerWorldMap[netEvent.Peer].ReceiveInput(netEvent.Peer, data);
+                                    var peerId = GetPeerId(netEvent.Peer);
+                                    if (PeerWorldMap.TryGetValue(peerId, out var world))
+                                    {
+                                        world.ReceiveInput(netEvent.Peer, data);
+                                    }
                                 }
                                 // Clients should never receive messages on the Input channel
                                 break;
@@ -451,7 +482,11 @@ namespace Nebula
                             case ENetChannelId.Function:
                                 if (IsServer)
                                 {
-                                    PeerWorldMap[netEvent.Peer].ReceiveNetFunction(netEvent.Peer, data);
+                                    var peerId = GetPeerId(netEvent.Peer);
+                                    if (PeerWorldMap.TryGetValue(peerId, out var world))
+                                    {
+                                        world.ReceiveNetFunction(netEvent.Peer, data);
+                                    }
                                 }
                                 else
                                 {
@@ -470,11 +505,16 @@ namespace Nebula
                             default:
                                 if (ReservedChannels.TryGetValue(channel, out var handler))
                                 {
-                                    handler.Call(netEvent.Peer.ID, packetData);
+                                    var peer = GetPeerByNativeId(netEvent.Peer.ID);
+                                    if (peer.IsSet)
+                                    {
+                                        handler(peer, packetData);
+                                    }
                                 }
                                 break;
                         }
                         break;
+                    }
                 }
                 
                 // Check for more events
@@ -497,11 +537,30 @@ namespace Nebula
         }
 
         /// <summary>
+        /// Helper method to send a packet using a NetBuffer directly (zero-allocation).
+        /// Uses the buffer's internal array with proper length to avoid ToArray() allocation.
+        /// </summary>
+        public static void SendPacket(Peer peer, byte channelId, NetBuffer buffer, PacketFlags flags)
+        {
+            var packet = default(Packet);
+            packet.Create(buffer.RawBuffer, buffer.Length, flags);
+            peer.Send(channelId, ref packet);
+        }
+
+        /// <summary>
         /// Helper method to send a reliable packet.
         /// </summary>
         public static void SendReliable(Peer peer, byte channelId, byte[] data)
         {
             SendPacket(peer, channelId, data, PacketFlags.Reliable);
+        }
+
+        /// <summary>
+        /// Helper method to send a reliable packet using a NetBuffer directly (zero-allocation).
+        /// </summary>
+        public static void SendReliable(Peer peer, byte channelId, NetBuffer buffer)
+        {
+            SendPacket(peer, channelId, buffer, PacketFlags.Reliable);
         }
 
         /// <summary>
@@ -513,6 +572,14 @@ namespace Nebula
         }
 
         /// <summary>
+        /// Helper method to send an unreliable packet using a NetBuffer directly (zero-allocation).
+        /// </summary>
+        public static void SendUnreliable(Peer peer, byte channelId, NetBuffer buffer)
+        {
+            SendPacket(peer, channelId, buffer, PacketFlags.None);
+        }
+
+        /// <summary>
         /// Helper method to send an unreliable sequenced packet (newer packets discard older ones).
         /// </summary>
         public static void SendUnreliableSequenced(Peer peer, byte channelId, byte[] data)
@@ -520,11 +587,19 @@ namespace Nebula
             SendPacket(peer, channelId, data, PacketFlags.Unsequenced);
         }
 
+        /// <summary>
+        /// Helper method to send an unreliable sequenced packet using a NetBuffer directly (zero-allocation).
+        /// </summary>
+        public static void SendUnreliableSequenced(Peer peer, byte channelId, NetBuffer buffer)
+        {
+            SendPacket(peer, channelId, buffer, PacketFlags.Unsequenced);
+        }
+
         public void PeerJoinWorld(NetPeer peer, UUID worldId, string token = "")
         {
             var peerId = new UUID();
             Peers[peerId] = peer;
-            PeerIds[peer] = peerId;
+            PeerIds[peer.ID] = peerId;
             Worlds[worldId].JoinPeer(peer, token);
         }
 
@@ -536,7 +611,7 @@ namespace Nebula
             var node = scene.Instantiate();
             if (node is not INetNodeBase netNodeBase)
             {
-                Debugger.Instance.Log($"Failed to create world: root node is not a NetworkController", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Failed to create world: root node is not a NetworkController");
                 return null;
             }
             return SetupWorldInstance(worldId, netNodeBase.Network);

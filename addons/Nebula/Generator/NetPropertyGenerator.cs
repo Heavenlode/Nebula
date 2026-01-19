@@ -225,6 +225,86 @@ public class NetPropertyGenerator : IIncrementalGenerator
     }
 
     /// <summary>
+    /// Generates the expression to serialize a property to BSON using BsonTypeHelper.
+    /// </summary>
+    private static string GetBsonSerializeExpression(PropertyInfo prop)
+    {
+        var normalizedType = prop.PropertyType.Replace("Godot.", "");
+        
+        if (prop.IsEnum)
+        {
+            return $"Nebula.Serialization.BsonTypeHelper.ToBsonEnum({prop.PropertyName})";
+        }
+        
+        if (prop.IsBsonSerializable)
+        {
+            // Check if it's a value type implementing IBsonValue or reference type implementing IBsonSerializable
+            if (prop.IsValueType)
+            {
+                return $"Nebula.Serialization.BsonTypeHelper.ToBsonValue({prop.PropertyName})";
+            }
+            else
+            {
+                return $"Nebula.Serialization.BsonTypeHelper.ToBson({prop.PropertyName}, context)";
+            }
+        }
+        
+        // Standard types handled by BsonTypeHelper
+        return $"Nebula.Serialization.BsonTypeHelper.ToBson({prop.PropertyName})";
+    }
+
+    /// <summary>
+    /// Generates the expression to deserialize a property from BSON using BsonTypeHelper.
+    /// </summary>
+    private static string GetBsonDeserializeExpression(PropertyInfo prop, string bsonValueExpr)
+    {
+        var normalizedType = prop.PropertyType.Replace("Godot.", "");
+        
+        if (prop.IsEnum)
+        {
+            return $"Nebula.Serialization.BsonTypeHelper.ToEnum<{prop.PropertyType}>({bsonValueExpr})";
+        }
+        
+        if (prop.IsBsonSerializable)
+        {
+            if (prop.IsValueType)
+            {
+                return $"Nebula.Serialization.BsonTypeHelper.FromBsonValue<{prop.PropertyType}>({bsonValueExpr})";
+            }
+            else
+            {
+                // Reference types need async deserialization - skip for now, handled separately
+                return null;
+            }
+        }
+        
+        // Map standard types to their BsonTypeHelper methods
+        return normalizedType switch
+        {
+            "string" or "String" or "System.String" => $"Nebula.Serialization.BsonTypeHelper.ToString({bsonValueExpr})",
+            "bool" or "Boolean" or "System.Boolean" => $"Nebula.Serialization.BsonTypeHelper.ToBool({bsonValueExpr})",
+            "byte" or "Byte" or "System.Byte" => $"Nebula.Serialization.BsonTypeHelper.ToByte({bsonValueExpr})",
+            "short" or "Int16" or "System.Int16" => $"Nebula.Serialization.BsonTypeHelper.ToShort({bsonValueExpr})",
+            "int" or "Int32" or "System.Int32" => $"Nebula.Serialization.BsonTypeHelper.ToInt({bsonValueExpr})",
+            "long" or "Int64" or "System.Int64" => $"Nebula.Serialization.BsonTypeHelper.ToLong({bsonValueExpr})",
+            "ulong" or "UInt64" or "System.UInt64" => $"Nebula.Serialization.BsonTypeHelper.ToULong({bsonValueExpr})",
+            "float" or "Single" or "System.Single" => $"Nebula.Serialization.BsonTypeHelper.ToFloat({bsonValueExpr})",
+            "double" or "Double" or "System.Double" => $"Nebula.Serialization.BsonTypeHelper.ToDouble({bsonValueExpr})",
+            "Vector2" => $"Nebula.Serialization.BsonTypeHelper.ToVector2({bsonValueExpr})",
+            "Vector2I" => $"Nebula.Serialization.BsonTypeHelper.ToVector2I({bsonValueExpr})",
+            "Vector3" => $"Nebula.Serialization.BsonTypeHelper.ToVector3({bsonValueExpr})",
+            "Vector3I" => $"Nebula.Serialization.BsonTypeHelper.ToVector3I({bsonValueExpr})",
+            "Vector4" => $"Nebula.Serialization.BsonTypeHelper.ToVector4({bsonValueExpr})",
+            "Quaternion" => $"Nebula.Serialization.BsonTypeHelper.ToQuaternion({bsonValueExpr})",
+            "Color" => $"Nebula.Serialization.BsonTypeHelper.ToColor({bsonValueExpr})",
+            "byte[]" or "Byte[]" or "System.Byte[]" => $"Nebula.Serialization.BsonTypeHelper.ToByteArray({bsonValueExpr})",
+            "int[]" or "Int32[]" or "System.Int32[]" => $"Nebula.Serialization.BsonTypeHelper.ToInt32Array({bsonValueExpr})",
+            "long[]" or "Int64[]" or "System.Int64[]" => $"Nebula.Serialization.BsonTypeHelper.ToInt64Array({bsonValueExpr})",
+            _ => null // Unknown type, will be handled specially
+        };
+    }
+
+    /// <summary>
     /// Generates the default interpolation implementation based on property type.
     /// </summary>
     private static string GetDefaultInterpolationImpl(string propertyType, float speed)
@@ -476,6 +556,60 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine("    public bool SetBsonPropertyByName(string propName, object value) => false;");
                 sb.AppendLine();
             }
+
+            sb.AppendLine("    #endregion");
+            sb.AppendLine();
+
+            // Generate BSON serialization helpers
+            sb.AppendLine("    #region BSON Serialization");
+            sb.AppendLine();
+
+            // Generate WriteBsonProperties - writes all [NetProperty] values to a BsonDocument
+            sb.AppendLine("    /// <summary>");
+            sb.AppendLine("    /// Writes all [NetProperty] values to a BSON document.");
+            sb.AppendLine("    /// Called by BsonSerialize implementations to avoid Godot's property system.");
+            sb.AppendLine("    /// </summary>");
+            sb.AppendLine("    internal override void WriteBsonProperties(MongoDB.Bson.BsonDocument doc, Nebula.Serialization.NetBsonContext context = default)");
+            sb.AppendLine("    {");
+            
+            foreach (var prop in propList)
+            {
+                var serializeExpr = GetBsonSerializeExpression(prop!);
+                sb.AppendLine($"        doc[\"{prop!.PropertyName}\"] = {serializeExpr};");
+            }
+            
+            sb.AppendLine("    }");
+            sb.AppendLine();
+
+            // Generate ReadBsonProperties - reads [NetProperty] values from a BsonDocument
+            sb.AppendLine("    /// <summary>");
+            sb.AppendLine("    /// Reads [NetProperty] values from a BSON document.");
+            sb.AppendLine("    /// Called by BSON deserialization to avoid Godot's property system.");
+            sb.AppendLine("    /// </summary>");
+            sb.AppendLine("    internal override void ReadBsonProperties(MongoDB.Bson.BsonDocument doc)");
+            sb.AppendLine("    {");
+            
+            foreach (var prop in propList)
+            {
+                var deserializeExpr = GetBsonDeserializeExpression(prop!, $"doc[\"{prop!.PropertyName}\"]");
+                if (deserializeExpr != null)
+                {
+                    sb.AppendLine($"        if (doc.Contains(\"{prop!.PropertyName}\")) {prop.PropertyName} = {deserializeExpr};");
+                }
+                else if (prop.IsBsonSerializable && !prop.IsValueType)
+                {
+                    // Reference types implementing IBsonSerializable need special handling
+                    // They use static BsonDeserialize method which may be async
+                    sb.AppendLine($"        // {prop.PropertyName}: IBsonSerializable reference type - requires async deserialization, handle in OnBsonDeserialize");
+                }
+                else
+                {
+                    sb.AppendLine($"        // {prop.PropertyName}: Unknown type {prop.PropertyType} - requires manual handling");
+                }
+            }
+            
+            sb.AppendLine("    }");
+            sb.AppendLine();
 
             sb.AppendLine("    #endregion");
             sb.AppendLine();

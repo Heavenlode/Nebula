@@ -20,11 +20,20 @@ namespace Nebula.Serialization.Serializers
         // Dirty mask snapshot at Begin()
         private long processingDirtyMask = 0;
 
-        private Dictionary<NetPeer, byte[]> peerInitialPropSync = new();
+        private Dictionary<UUID, byte[]> peerInitialPropSync = new();
+        
+        // Cached to avoid Godot StringName allocations every access
+        private string _cachedSceneFilePath;
+        
+        // Cached node lookups to avoid GetNode() allocations
+        private Dictionary<StringName, Node> _nodePathCache = new();
 
         public NetPropertiesSerializer(NetworkController _network)
         {
             network = _network;
+            
+            // Cache SceneFilePath once to avoid Godot StringName allocations on every access
+            _cachedSceneFilePath = network.RawNode.SceneFilePath;
 
             if (!network.IsNetScene())
             {
@@ -45,22 +54,23 @@ namespace Nebula.Serialization.Serializers
 
                 network.InterestChanged += (UUID peerId, long oldInterest, long newInterest) =>
                 {
-                    var peer = NetRunner.Instance.GetPeer(peerId);
-                    
-                    if (!peer.IsSet || !peerInitialPropSync.ContainsKey(peer))
+                    // Fix #7: Use TryGetValue instead of ContainsKey + indexer
+                    if (!peerInitialPropSync.TryGetValue(peerId, out var syncMask))
                         return;
 
                     foreach (var propIndex in nonDefaultProperties)
                     {
-                        var prop = Protocol.UnpackProperty(network.RawNode.SceneFilePath, propIndex);
+                        var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
 
-                        bool wasVisible = (prop.InterestMask & oldInterest) != 0;
-                        bool isNowVisible = (prop.InterestMask & newInterest) != 0;
+                        bool wasVisible = (prop.InterestMask & oldInterest) != 0 
+                            && (prop.InterestRequired & oldInterest) == prop.InterestRequired;
+                        bool isNowVisible = (prop.InterestMask & newInterest) != 0
+                            && (prop.InterestRequired & newInterest) == prop.InterestRequired;
 
                         if (!wasVisible && isNowVisible)
                         {
                             // Mark property as not-yet-synced so Export() will include it
-                            ClearBit(peerInitialPropSync[peer], propIndex);
+                            ClearBit(syncMask, propIndex);
                         }
                     }
                 };
@@ -69,7 +79,7 @@ namespace Nebula.Serialization.Serializers
             {
                 foreach (var propIndex in cachedPropertyChanges.Keys)
                 {
-                    var prop = Protocol.UnpackProperty(network.RawNode.SceneFilePath, propIndex);
+                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                     ref var cachedValue = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(cachedPropertyChanges, propIndex);
                     ImportProperty(prop, network.CurrentWorld.CurrentTick, ref cachedValue);
                 }
@@ -101,16 +111,30 @@ namespace Nebula.Serialization.Serializers
         }
 
         /// <summary>
+        /// Gets a node by path with caching to avoid GetNode() allocations.
+        /// </summary>
+        private Node GetCachedNode(StringName nodePath)
+        {
+            if (!_nodePathCache.TryGetValue(nodePath, out var node))
+            {
+                // Convert StringName to NodePath for GetNode - this allocates once per unique path
+                node = network.RawNode.GetNode(new NodePath(nodePath.ToString()));
+                _nodePathCache[nodePath] = node;
+            }
+            return node;
+        }
+        
+        /// <summary>
         /// Imports a property value from the network. Uses cached old values and generated setters
         /// to avoid crossing the Godot boundary.
         /// </summary>
         public void ImportProperty(ProtocolNetProperty prop, Tick tick, ref PropertyCache newValue)
         {
-            // Get the node that owns this property
-            var propNode = network.RawNode.GetNode(prop.NodePath);
+            // Get the node that owns this property (cached to avoid GetNode allocations)
+            var propNode = GetCachedNode(prop.NodePath);
             if (propNode is not INetNodeBase netNode)
             {
-                Debugger.Instance.Log($"Property node {prop.NodePath} is not INetNodeBase, cannot import", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Property node {prop.NodePath} is not INetNodeBase, cannot import");
                 return;
             }
 
@@ -190,7 +214,7 @@ namespace Nebula.Serialization.Serializers
                     }
 
                     var propertyIndex = propertyByteIndex * BitConstants.BitsInByte + propertyBit;
-                    var prop = Protocol.UnpackProperty(network.RawNode.SceneFilePath, propertyIndex);
+                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propertyIndex);
 
                     var cache = new PropertyCache();
 
@@ -200,7 +224,7 @@ namespace Nebula.Serialization.Serializers
                         var deserializer = Protocol.GetDeserializer(prop.ClassIndex);
                         if (deserializer == null)
                         {
-                            Debugger.Instance.Log($"No deserializer found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
+                            Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"No deserializer found for {prop.NodePath}.{prop.Name}");
                             continue;
                         }
                         // Pass existing cached value for delta encoding support
@@ -215,7 +239,7 @@ namespace Nebula.Serialization.Serializers
                     }
                     else if (prop.VariantType == SerialVariantType.Nil)
                     {
-                        Debugger.Instance.Log($"Property {prop.NodePath}.{prop.Name} has VariantType.Nil, cannot deserialize", Debugger.DebugLevel.ERROR);
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Property {prop.NodePath}.{prop.Name} has VariantType.Nil, cannot deserialize");
                         continue;
                     }
                     else
@@ -340,7 +364,7 @@ namespace Nebula.Serialization.Serializers
                     WriteCustomTypeFromCache(currentWorld, peer, buffer, prop, ref cache);
                     break;
                 default:
-                    Debugger.Instance.Log($"Unsupported cache type: {cache.Type}", Debugger.DebugLevel.ERROR);
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Unsupported cache type: {cache.Type}");
                     break;
             }
         }
@@ -354,13 +378,15 @@ namespace Nebula.Serialization.Serializers
             var serializer = Protocol.GetSerializer(prop.ClassIndex);
             if (serializer == null)
             {
-                Debugger.Instance.Log($"No serializer found for {prop.NodePath}.{prop.Name}", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"No serializer found for {prop.NodePath}.{prop.Name}");
                 return;
             }
             
-            using var tempBuffer = new NetBuffer();
-            serializer(currentWorld, peer, ref cache, tempBuffer);
-            NetWriter.WriteBytes(buffer, tempBuffer.WrittenSpan);
+            // Reuse pooled buffer instead of allocating new one each time (Fix #3)
+            _customTypeBuffer ??= new NetBuffer();
+            _customTypeBuffer.Reset();
+            serializer(currentWorld, peer, ref cache, _customTypeBuffer);
+            NetWriter.WriteBytes(buffer, _customTypeBuffer.WrittenSpan);
         }
 
         public void Begin()
@@ -385,12 +411,15 @@ namespace Nebula.Serialization.Serializers
 
             var data = Deserialize(buffer);
             
+            // Cache IsNodeReady() once before the loop to avoid repeated Godot calls
+            bool isReady = network.RawNode.IsNodeReady();
+            
             foreach (var propIndex in data.properties.Keys)
             {
-                var prop = Protocol.UnpackProperty(network.RawNode.SceneFilePath, propIndex);
+                var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                 // Get a ref to the value in the dictionary for zero-copy
                 ref var propValue = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(data.properties, propIndex);
-                if (network.RawNode.IsNodeReady())
+                if (isReady)
                 {
                     ImportProperty(prop, currentWorld.CurrentTick, ref propValue);
                 }
@@ -403,11 +432,11 @@ namespace Nebula.Serialization.Serializers
 
         private int GetByteCountOfProperties()
         {
-            return (Protocol.GetPropertyCount(network.RawNode.SceneFilePath) / BitConstants.BitsInByte) + 1;
+            return (Protocol.GetPropertyCount(_cachedSceneFilePath) / BitConstants.BitsInByte) + 1;
         }
 
         private HashSet<int> nonDefaultProperties = new();
-        private Dictionary<NetPeer, Dictionary<Tick, byte[]>> peerBufferCache = new();
+        private Dictionary<UUID, Dictionary<Tick, byte[]>> peerBufferCache = new();
         
         /// <summary>
         /// Maximum number of ticks to cache per peer before forced pruning.
@@ -415,6 +444,12 @@ namespace Nebula.Serialization.Serializers
         /// TPS/2 = ~500ms which is plenty of time for acks on a healthy connection.
         /// </summary>
         private static int MaxCachedTicksPerPeer = NetRunner.TPS / 2;
+        
+        // Pooled byte arrays for dirty masks to avoid per-tick allocations
+        private Dictionary<UUID, byte[]> _peerDirtyMaskPool = new();
+        
+        // Pooled buffer for custom type serialization (Fix #3)
+        private NetBuffer _customTypeBuffer;
 
         private bool TryGetInterestLayers(UUID peerId, out long layers)
         {
@@ -426,24 +461,14 @@ namespace Nebula.Serialization.Serializers
 
         private bool PeerHasInterestInProperty(int propIndex, long peerInterestLayers)
         {
-            var prop = Protocol.UnpackProperty(network.RawNode.SceneFilePath, propIndex);
-            return (prop.InterestMask & peerInterestLayers) != 0;
+            var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+            bool hasAnyInterest = (prop.InterestMask & peerInterestLayers) != 0;
+            bool hasAllRequired = (prop.InterestRequired & peerInterestLayers) == prop.InterestRequired;
+            return hasAnyInterest && hasAllRequired;
         }
 
-        private static IEnumerable<int> EnumerateSetBits(byte[] mask)
-        {
-            for (var byteIndex = 0; byteIndex < mask.Length; byteIndex++)
-            {
-                var b = mask[byteIndex];
-                for (var bitIndex = 0; bitIndex < 8; bitIndex++)
-                {
-                    if ((b & (1 << bitIndex)) != 0)
-                    {
-                        yield return byteIndex * 8 + bitIndex;
-                    }
-                }
-            }
-        }
+        // Removed EnumerateSetBits - it used yield return which allocates an enumerator.
+        // Iteration is now inlined at each call site to avoid allocation.
 
         private static void ClearBit(byte[] mask, int bitIndex)
         {
@@ -460,72 +485,67 @@ namespace Nebula.Serialization.Serializers
         private static int _diagnosticCounter = 0;
         private static int _diagnosticLogInterval = 100; // Log every N ticks
         
-        public void Export(WorldRunner currentWorld, NetPeer peerId, NetBuffer buffer)
+        public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
+            var peerId = NetRunner.Instance.GetPeerId(peer);
             int byteCount = GetByteCountOfProperties();
 
             Array.Clear(_propertiesUpdated, 0, byteCount);
             Array.Clear(_filteredProps, 0, byteCount);
 
-            if (!peerInitialPropSync.ContainsKey(peerId))
+            // Fix #7: Use TryGetValue instead of ContainsKey + indexer
+            if (!peerInitialPropSync.TryGetValue(peerId, out var initialSync))
             {
-                peerInitialPropSync[peerId] = new byte[byteCount];
+                initialSync = new byte[byteCount];
+                peerInitialPropSync[peerId] = initialSync;
             }
 
-            if (!currentWorld.HasSpawnedForClient(network.NetId, peerId))
+            if (!currentWorld.HasSpawnedForClient(network.NetId, peer))
             {
                 return;
             }
 
-            if (!peerBufferCache.ContainsKey(peerId))
+            // Fix #7: Use TryGetValue instead of ContainsKey + indexer
+            if (!peerBufferCache.TryGetValue(peerId, out var currentPeerCache))
             {
-                peerBufferCache[peerId] = new Dictionary<Tick, byte[]>();
+                currentPeerCache = new Dictionary<Tick, byte[]>();
+                peerBufferCache[peerId] = currentPeerCache;
             }
 
-            if (!peerBufferCache[peerId].TryGetValue(currentWorld.CurrentTick, out var cachedMask))
+            // Fix #4: Pool the dirty mask byte arrays
+            if (!currentPeerCache.TryGetValue(currentWorld.CurrentTick, out var cachedMask))
             {
-                cachedMask = new byte[byteCount];
-                peerBufferCache[peerId][currentWorld.CurrentTick] = cachedMask;
+                // Try to get from pool, otherwise allocate
+                if (!_peerDirtyMaskPool.TryGetValue(peerId, out cachedMask) || cachedMask.Length != byteCount)
+                {
+                    cachedMask = new byte[byteCount];
+                    _peerDirtyMaskPool[peerId] = cachedMask;
+                }
+                else
+                {
+                    Array.Clear(cachedMask, 0, byteCount);
+                }
+                currentPeerCache[currentWorld.CurrentTick] = cachedMask;
             }
             
-            // DIAGNOSTIC: Log cache sizes periodically to detect memory leaks
-            // _diagnosticCounter++;
-            // if (_diagnosticCounter % _diagnosticLogInterval == 0)
-            // {
-            //     int totalTicksAcrossPeers = 0;
-            //     int diagPeerCount = peerBufferCache.Count;
-            //     var perPeerInfo = new System.Text.StringBuilder();
-            //     foreach (var kvp in peerBufferCache)
-            //     {
-            //         totalTicksAcrossPeers += kvp.Value.Count;
-            //         perPeerInfo.Append($"[Peer {kvp.Key.ID}: {kvp.Value.Count} ticks] ");
-            //     }
-            //     Debugger.Instance.Log($"[NetPropertiesSerializer DIAG] Node={network.RawNode.Name} tick={currentWorld.CurrentTick} peerBufferCache: {diagPeerCount} peers, {totalTicksAcrossPeers} total cached ticks | {perPeerInfo}", Debugger.DebugLevel.VERBOSE);
-                
-            //     // Warn if cache is growing too large
-            //     if (totalTicksAcrossPeers > 500)
-            //     {
-            //         Debugger.Instance.Log($"[NetPropertiesSerializer WARN] Large tick cache detected! {totalTicksAcrossPeers} cached ticks - possible ack issue or memory leak", Debugger.DebugLevel.WARN);
-            //     }
-            // }
+            // Fix #6: Build sorted ticks list ONCE for both pruning and iteration
+            _sortedTicks.Clear();
+            foreach (var tick in currentPeerCache.Keys)
+            {
+                _sortedTicks.Add(tick);
+            }
+            _sortedTicks.Sort();
             
             // SAFEGUARD: Prune oldest ticks if cache exceeds limit to prevent unbounded growth
-            var currentPeerCache = peerBufferCache[peerId];
-            if (currentPeerCache.Count > MaxCachedTicksPerPeer)
+            if (_sortedTicks.Count > MaxCachedTicksPerPeer)
             {
-                // Find and remove oldest ticks
-                _sortedTicks.Clear();
-                foreach (var tick in currentPeerCache.Keys)
-                {
-                    _sortedTicks.Add(tick);
-                }
-                _sortedTicks.Sort();
-                
-                int ticksToRemove = currentPeerCache.Count - MaxCachedTicksPerPeer;
+                int ticksToRemove = _sortedTicks.Count - MaxCachedTicksPerPeer;
                 for (int i = 0; i < ticksToRemove; i++)
                 {
                     currentPeerCache.Remove(_sortedTicks[i]);
                 }
+                // Remove pruned ticks from our sorted list so we don't iterate them below
+                _sortedTicks.RemoveRange(0, ticksToRemove);
             }
 
             // Convert dirty mask to byte array format for existing logic
@@ -541,22 +561,16 @@ namespace Nebula.Serialization.Serializers
             {
                 var byteIndex = propIndex / BitConstants.BitsInByte;
                 var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
-                if ((peerInitialPropSync[peerId][byteIndex] & propSlot) == 0)
+                if ((initialSync[byteIndex] & propSlot) == 0)
                 {
                     cachedMask[byteIndex] |= propSlot;
                 }
             }
 
-            _sortedTicks.Clear();
-            foreach (var tick in peerBufferCache[peerId].Keys)
-            {
-                _sortedTicks.Add(tick);
-            }
-            _sortedTicks.Sort();
-
+            // Use already-sorted _sortedTicks list (Fix #6 - no duplicate sorting)
             foreach (var tick in _sortedTicks)
             {
-                FilterPropsAgainstInterestNoAlloc(peerId, peerBufferCache[peerId][tick], _filteredProps);
+                FilterPropsAgainstInterestNoAlloc(peer, currentPeerCache[tick], _filteredProps);
                 OrByteListInPlace(_propertiesUpdated, _filteredProps);
             }
 
@@ -576,12 +590,18 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
-            // Mark props as synced
-            foreach (var propIndex in EnumerateSetBits(_propertiesUpdated))
+            // Fix #2: Mark props as synced - inline iteration instead of EnumerateSetBits
+            for (var byteIdx = 0; byteIdx < _propertiesUpdated.Length; byteIdx++)
             {
-                var byteIndex = propIndex / BitConstants.BitsInByte;
-                var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
-                peerInitialPropSync[peerId][byteIndex] |= propSlot;
+                var b = _propertiesUpdated[byteIdx];
+                if (b == 0) continue; // Fast skip
+                for (var bitIdx = 0; bitIdx < 8; bitIdx++)
+                {
+                    if ((b & (1 << bitIdx)) != 0)
+                    {
+                        initialSync[byteIdx] |= (byte)(1 << bitIdx);
+                    }
+                }
             }
 
             // Serialize the mask
@@ -594,6 +614,8 @@ namespace Nebula.Serialization.Serializers
             for (var i = 0; i < _propertiesUpdated.Length; i++)
             {
                 var propSegment = _propertiesUpdated[i];
+                if (propSegment == 0) continue; // Fast skip for empty segments
+                
                 for (var j = 0; j < BitConstants.BitsInByte; j++)
                 {
                     if ((propSegment & (byte)(1 << j)) == 0)
@@ -602,17 +624,17 @@ namespace Nebula.Serialization.Serializers
                     }
 
                     var propIndex = i * BitConstants.BitsInByte + j;
-                    var prop = Protocol.UnpackProperty(network.RawNode.SceneFilePath, propIndex);
+                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                     
                     try
                     {
-                        WriteFromCache(currentWorld, peerId, buffer, prop, propIndex);
+                        WriteFromCache(currentWorld, peer, buffer, prop, propIndex);
                     }
                     catch (Exception ex)
                     {
                         var innerMsg = ex.InnerException?.Message ?? ex.Message;
                         var innerStack = ex.InnerException?.StackTrace ?? ex.StackTrace;
-                        Debugger.Instance.Log($"Error serializing property {prop.NodePath}.{prop.Name} from cache: {innerMsg}\n{innerStack}", Debugger.DebugLevel.ERROR);
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Error serializing property {prop.NodePath}.{prop.Name} from cache: {innerMsg}\n{innerStack}");
                     }
                 }
             }
@@ -629,11 +651,21 @@ namespace Nebula.Serialization.Serializers
 
             Array.Copy(dirtyPropsMask, result, dirtyPropsMask.Length);
 
-            foreach (var propIndex in EnumerateSetBits(dirtyPropsMask))
+            // Fix #2: Inline iteration instead of EnumerateSetBits (avoids enumerator allocation)
+            for (var byteIndex = 0; byteIndex < dirtyPropsMask.Length; byteIndex++)
             {
-                if (!PeerHasInterestInProperty(propIndex, peerInterestLayers))
+                var b = dirtyPropsMask[byteIndex];
+                if (b == 0) continue; // Fast skip for empty bytes
+                for (var bitIndex = 0; bitIndex < 8; bitIndex++)
                 {
-                    ClearBit(result, propIndex);
+                    if ((b & (1 << bitIndex)) != 0)
+                    {
+                        var propIndex = byteIndex * 8 + bitIndex;
+                        if (!PeerHasInterestInProperty(propIndex, peerInterestLayers))
+                        {
+                            ClearBit(result, propIndex);
+                        }
+                    }
                 }
             }
         }
@@ -656,20 +688,19 @@ namespace Nebula.Serialization.Serializers
         /// <summary>
         /// Removes all cached data for a specific peer. Call this when a peer disconnects.
         /// </summary>
-        public void CleanupPeer(NetPeer peer)
+        public void CleanupPeer(UUID peerId)
         {
-            // if (peerBufferCache.Remove(peer, out var tickCache))
-            // {
-            //     Debugger.Instance.Log($"[NetPropertiesSerializer] Cleaned up {tickCache.Count} cached ticks for disconnected peer", Debugger.DebugLevel.VERBOSE);
-            // }
-            peerInitialPropSync.Remove(peer);
+            peerBufferCache.Remove(peerId);
+            peerInitialPropSync.Remove(peerId);
+            _peerDirtyMaskPool.Remove(peerId);
         }
 
         // Reusable list to avoid LINQ allocation in Acknowledge
         private List<Tick> _ticksToRemove = new();
         
-        public void Acknowledge(WorldRunner currentWorld, NetPeer peerId, Tick latestAck)
+        public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick latestAck)
         {
+            var peerId = NetRunner.Instance.GetPeerId(peer);
             if (!peerBufferCache.TryGetValue(peerId, out var tickCache))
             {
                 return;
@@ -695,7 +726,7 @@ namespace Nebula.Serialization.Serializers
             // DIAGNOSTIC: Log when acknowledgments are cleaning up ticks
             // if (_ticksToRemove.Count > 0)
             // {
-            //     Debugger.Instance.Log($"[NetPropertiesSerializer ACK] Peer {peerId.ID} acked tick {latestAck}, removed {_ticksToRemove.Count} ticks, {tickCache.Count} remaining for node {network.RawNode.Name}", Debugger.DebugLevel.VERBOSE);
+            //     Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[NetPropertiesSerializer ACK] Peer {peerId.ID} acked tick {latestAck}, removed {_ticksToRemove.Count} ticks, {tickCache.Count} remaining for node {network.RawNode.Name}");
             // }
         }
 

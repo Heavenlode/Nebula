@@ -26,7 +26,7 @@ namespace Nebula
         public bool ExecuteOnCaller { get; set; } = true;
         public override void OnEntry(MethodExecutionArgs args)
         {
-            Debugger.Instance.Log($"NetFunction: {args.Method.Name} called on {args.Instance.GetType().Name}", Debugger.DebugLevel.VERBOSE);
+            Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"NetFunction: {args.Method.Name} called on {args.Instance.GetType().Name}");
             if (args.Instance is INetNodeBase netNode)
             {
                 if (netNode.Network.IsInboundCall)
@@ -49,15 +49,8 @@ namespace Nebula
                     return;
                 }
 
-            var networkScene = "";
-            if (netNode.Network.IsNetScene())
-            {
-                networkScene = netNode.Network.RawNode.SceneFilePath;
-            }
-            else
-            {
-                networkScene = netNode.Network.NetParent.RawNode.SceneFilePath;
-            }
+                // Use cached NetSceneFilePath to avoid Godot StringName allocations
+                var networkScene = netNode.Network.NetSceneFilePath;
 
                 NetId netId;
                 if (netNode.Network.IsNetScene())

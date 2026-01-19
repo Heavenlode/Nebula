@@ -54,7 +54,6 @@ public partial class Main : EditorPlugin
         // Register autoload singletons
         AddAutoloadSingleton(AUTOLOAD_DEBUGGER, "res://addons/Nebula/Utils/Debugger/Debugger.cs");
         AddAutoloadSingleton(AUTOLOAD_ENV, "res://addons/Nebula/Utils/Env/Env.cs");
-        AddAutoloadSingleton(AUTOLOAD_DATA_TRANSFORMER, "res://addons/Nebula/Core/Serialization/BsonTransformer.cs");
         AddAutoloadSingleton(AUTOLOAD_RUNNER, "res://addons/Nebula/Core/NetRunner.cs");
 
         // Project settings controller
@@ -105,7 +104,6 @@ public partial class Main : EditorPlugin
 
         // Remove autoloads
         RemoveAutoloadSingleton(AUTOLOAD_RUNNER);
-        RemoveAutoloadSingleton(AUTOLOAD_DATA_TRANSFORMER);
         RemoveAutoloadSingleton(AUTOLOAD_ENV);
         RemoveAutoloadSingleton(AUTOLOAD_DEBUGGER);
 

@@ -100,7 +100,8 @@ namespace Nebula.Internal.Editor
                 switch (eventType)
                 {
                     case ENetConnection.EventType.Receive:
-                        var data = new NetBuffer(packetPeer.GetPacket());
+                    {
+                        using var data = new NetBuffer(packetPeer.GetPacket());
                         var debugDataType = (WorldRunner.DebugDataType)NetReader.ReadByte(data);
                         switch (debugDataType)
                         {
@@ -180,6 +181,7 @@ namespace Nebula.Internal.Editor
                                 break;
                         }
                         break;
+                    }
                 }
             }
         }

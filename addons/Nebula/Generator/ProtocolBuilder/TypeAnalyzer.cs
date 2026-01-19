@@ -15,6 +15,7 @@ namespace Nebula.Generators
             public string Name { get; init; } = "";
             public string TypeFullName { get; init; } = "";
             public long InterestMask { get; init; }
+            public long InterestRequired { get; init; }
             public bool NotifyOnChange { get; init; } = false;
             public bool Interpolate { get; init; } = false;
             public float InterpolateSpeed { get; init; } = 15f;
@@ -43,6 +44,8 @@ namespace Nebula.Generators
             public string TypeFullName { get; init; } = "";
             public List<NetPropertyInfo> Properties { get; init; } = new();
             public List<NetFunctionInfo> Functions { get; init; } = new();
+            public long InterestAny { get; init; } = 0;
+            public long InterestRequired { get; init; } = 0;
         }
 
         public sealed class SerializableTypeInfo
@@ -116,12 +119,22 @@ namespace Nebula.Generators
                 var scriptPath = GetScriptPath(type, projectRoot);
                 if (string.IsNullOrEmpty(scriptPath)) continue;
 
+                // Extract class-level [NetInterest] attribute
+                var netInterestAttr = type.GetAttributes()
+                    .FirstOrDefault(a => a.AttributeClass?.Name == "NetInterest" || 
+                                        a.AttributeClass?.Name == "NetInterestAttribute");
+                
+                var interestAny = netInterestAttr != null ? GetNamedArgument(netInterestAttr, "Any", 0L) : 0L;
+                var interestRequired = netInterestAttr != null ? GetNamedArgument(netInterestAttr, "Required", 0L) : 0L;
+
                 var netTypeInfo = new NetworkTypeInfo
                 {
                     ScriptPath = scriptPath,
                     TypeFullName = GetFullTypeName(type),
                     Properties = GetNetProperties(type).ToList(),
                     Functions = GetNetFunctions(type).ToList(),
+                    InterestAny = interestAny,
+                    InterestRequired = interestRequired,
                 };
 
                 result.NetNodesByScriptPath[scriptPath] = netTypeInfo;
@@ -302,6 +315,7 @@ namespace Nebula.Generators
                         Name = prop.Name,
                         TypeFullName = GetFullTypeName(prop.Type),
                         InterestMask = GetNamedArgument(netPropAttr, "InterestMask", long.MaxValue),
+                        InterestRequired = GetNamedArgument(netPropAttr, "InterestRequired", 0L),
                         NotifyOnChange = GetNamedArgument(netPropAttr, "NotifyOnChange", false),
                         Interpolate = GetNamedArgument(netPropAttr, "Interpolate", false),
                         InterpolateSpeed = GetNamedArgument(netPropAttr, "InterpolateSpeed", 15f),
@@ -361,10 +375,17 @@ namespace Nebula.Generators
             
             if (arg.Value.Value is T value) return value;
             
-            // Handle enum conversions
-            if (typeof(T) == typeof(int) && arg.Value.Value != null)
+            // Handle numeric type conversions (Roslyn may store values as different numeric types)
+            if (arg.Value.Value != null)
             {
-                return (T)(object)System.Convert.ToInt32(arg.Value.Value);
+                if (typeof(T) == typeof(int))
+                {
+                    return (T)(object)System.Convert.ToInt32(arg.Value.Value);
+                }
+                if (typeof(T) == typeof(long))
+                {
+                    return (T)(object)System.Convert.ToInt64(arg.Value.Value);
+                }
             }
             
             return defaultValue;

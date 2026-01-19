@@ -22,6 +22,12 @@ namespace Nebula.Utility.Nodes
             TargetNode ??= GetParent3D();
             SourceNode ??= GetParent3D();
             NetPose.Owner = Network.NetParent.InputAuthority;
+            
+            // Register SourceNode for zero-alloc property access on server
+            if (NetRunner.Instance.IsServer && SourceNode != null)
+            {
+                NativeBridge.Register(SourceNode);
+            }
 
             NetPose.OnChange += () =>
             {
@@ -45,7 +51,7 @@ namespace Nebula.Utility.Nodes
             {
                 return (Node3D)parent;
             }
-            Debugger.Instance.Log("NetTransform parent is not a Node3D", Debugger.DebugLevel.ERROR);
+            Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"NetTransform parent is not a Node3D");
             return null;
         }
 
@@ -96,7 +102,8 @@ namespace Nebula.Utility.Nodes
             {
                 return;
             }
-            NetPose.ApplyDelta(SourceNode.Position, SourceNode.Rotation);
+            // Use NativeBridge for zero-alloc property access (synced in NetRunner._PhysicsProcess)
+            NetPose.ApplyDelta(NativeBridge.GetPosition(SourceNode), NativeBridge.GetRotation(SourceNode));
             NetPose.NetworkProcess(Network.CurrentWorld);
         }
     }

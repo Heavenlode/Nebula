@@ -178,6 +178,24 @@ namespace Nebula.Serialization
         }
 
         /// <summary>
+        /// Get scene-level interest requirements for a network scene.
+        /// </summary>
+        public static ProtocolSceneInterest GetSceneInterest(string scenePath)
+        {
+            if (GeneratedProtocol.SceneInterestMap.TryGetValue(scenePath, out var interest))
+                return interest;
+            return default;
+        }
+
+        /// <summary>
+        /// Try to get scene-level interest requirements for a network scene.
+        /// </summary>
+        public static bool TryGetSceneInterest(string scenePath, out ProtocolSceneInterest interest)
+        {
+            return GeneratedProtocol.SceneInterestMap.TryGetValue(scenePath, out interest);
+        }
+
+        /// <summary>
         /// Pack a scene path to its byte ID.
         /// </summary>
         public static byte PackScene(string scenePath)

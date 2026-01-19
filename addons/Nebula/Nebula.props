@@ -7,18 +7,9 @@
     <PackageReference Include="ENet-CSharp" Version="2.4.8" />
 
     <!-- Fody Weavers -->
-    <PackageReference Include="Fody" Version="6.8.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="PropertyChanged.Fody" Version="4.1.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>compile; runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="MethodBoundaryAspect.Fody" Version="2.0.149">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>compile; runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Fody" Version="6.8.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
+    <PackageReference Include="MethodBoundaryAspect.Fody" Version="2.0.149" />
 
     <!-- Source Generator -->
     <Compile Remove="$(MSBuildThisFileDirectory)Generator\**" />

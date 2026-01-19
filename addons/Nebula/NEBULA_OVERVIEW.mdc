@@ -57,9 +57,15 @@ Nebula is a custom tick-based, server-authoritative networking library for Godot
 
 ### 4. Interest System
 - Each peer has interest layers (bitmask) per node
-- Properties can have `InterestMask` to filter who receives updates
+- **Scene-level interest**: `[NetInterest]` attribute on classes controls spawn visibility
+- **Property-level interest**: `[NetProperty]` can have `InterestMask` and `InterestRequired`
 - `InitializeInterest(NetPeer peer)` returns initial interest for new peers
 - Interest changes trigger re-sync of relevant properties
+
+**Interest Filtering Logic:**
+- `InterestMask` (or `Any`): Peer must have ANY of these layers (OR logic)
+- `InterestRequired` (or `Required`): Peer must have ALL of these layers (AND logic)
+- Both conditions must be satisfied for visibility
 
 ### 5. Node Limits
 - Maximum **512 nodes per peer** (8 groups × 64 nodes)
@@ -85,6 +91,7 @@ addons/Nebula/
 │   ├── NetRunner.cs         # Singleton network manager
 │   ├── WorldRunner.cs       # Per-world state manager
 │   ├── NetProperty.cs       # [NetProperty] attribute
+│   ├── NetInterest.cs       # [NetInterest] class-level attribute
 │   ├── NetFunction.cs       # [NetFunction] attribute (RPC-like)
 │   ├── NetId.cs             # Network object identifier
 │   ├── UUID.cs              # 16-byte UUID type
@@ -192,12 +199,34 @@ public partial class MyNetworkNode : NetNode3D
 
 ## Attributes
 
+### `[NetInterest]`
+Class-level attribute that controls whether a network scene spawns for a peer based on their interest layers.
+
+```csharp
+// Scene only spawns for peers with interest layer 0x04
+[NetInterest(Required = 0x04)]
+public partial class SecretArea : NetNode3D { }
+
+// Scene spawns for peers with layer 1 OR 2, AND must have layer 4
+[NetInterest(Any = 0x03, Required = 0x04)]
+public partial class SpecialItem : NetNode3D { }
+
+// No scene-level filtering (default behavior)
+public partial class PublicNode : NetNode3D { }
+```
+
+**Properties:**
+- `Any` (long, default 0): Peer must have ANY of these layers. 0 = no check.
+- `Required` (long, default 0): Peer must have ALL of these layers. 0 = no check.
+
 ### `[NetProperty]`
 Marks a property for network synchronization. Only modified on the server.
 
 ```csharp
 [NetProperty]                                    // Basic sync
-[NetProperty(InterestMask = 0x01)]              // Only sync to peers with interest layer 1
+[NetProperty(InterestMask = 0x01)]              // Only sync to peers with ANY of these layers
+[NetProperty(InterestRequired = 0x02)]          // Only sync to peers with ALL of these layers
+[NetProperty(InterestMask = 0x03, InterestRequired = 0x04)]  // Combined: ANY of 0x03 AND ALL of 0x04
 [NetProperty(NotifyOnChange = true)]            // Generate OnNetworkChange{Prop}() callback
 [NetProperty(Interpolate = true)]               // Smooth interpolation on clients
 [NetProperty(Interpolate = true, InterpolateSpeed = 20f)]  // Custom lerp speed
@@ -380,13 +409,34 @@ worldRunner.OnPlayerJoined += (UUID peerId) =>
 ```
 
 ### Interest-Based Visibility
+
+**Scene-Level Interest (spawn control):**
+```csharp
+// Only spawn this scene for peers who are the "owner" or have "visible" interest
+[NetInterest(Any = (long)InterestLayers.Owner | (long)InterestLayers.Visible)]
+public partial class Player : NetNode3D { }
+
+// Only spawn for admins (must have Admin layer)
+[NetInterest(Required = (long)InterestLayers.Admin)]
+public partial class AdminPanel : NetNode3D { }
+```
+
+**Property-Level Interest (data filtering):**
 ```csharp
 // Hide secret data from most players
 [NetProperty(InterestMask = 0x02)]  // Only layer 2 sees this
 public string SecretInfo { get; set; }
 
+// Only owner can see their private inventory
+[NetProperty(InterestRequired = (long)InterestLayers.Owner)]
+public int[] PrivateInventory { get; set; }
+```
+
+**Granting Interest:**
+```csharp
 // Grant interest to specific peer
-network.AddPeerInterest(peerId, 0x02);
+network.SetPeerInterest(peerId, (long)InterestLayers.Everyone | (long)InterestLayers.Owner);
+network.AddPeerInterest(peerId, (long)InterestLayers.Visible);
 ```
 
 ### Reliable vs Unreliable
@@ -451,8 +501,9 @@ Install in project settings or via `NebulaPlugins.cs`.
 ## Common Issues
 
 1. **"Only Net Scenes can be spawned"** - Root node of the scene must inherit from `NetNode*`
-2. **Property not syncing** - Ensure it has `[NetProperty]` attribute and is only modified on server
+2. **Property not syncing (or node not spawning)** - Ensure it has `[NetProperty]` and is only modified on server. Ensure proper Interest with SetPeerInterest and InitializeInterest.
 3. **Input not working** - Call `Network.InitializeInput<T>()` in `_Ready()`, ensure `InputAuthority` is set
-4. **Interest not updating** - Check `InterestMask` matches `SetPeerInterest()` layers
-5. **NetId lookup fails** - Node may not be registered yet; use `_WorldReady()` instead of `_Ready()`
-6. **"Reached maximum amount of nodes"** - Peer has 512 nodes. Use aggregate patterns (e.g., one node managing many objects via properties)
+4. **Interest not updating** - Check `InterestMask`/`InterestRequired` matches `SetPeerInterest()` layers
+5. **Scene spawning for wrong peers** - Check `[NetInterest]` attribute; ensure `Any`/`Required` match peer layers
+6. **NetId lookup fails** - Node may not be registered yet; use `_WorldReady()` instead of `_Ready()`
+7. **"Reached maximum amount of nodes"** - Peer has 512 nodes. Use aggregate patterns (e.g., one node managing many objects via properties)

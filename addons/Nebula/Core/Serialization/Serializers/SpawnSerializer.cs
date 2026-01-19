@@ -18,7 +18,7 @@ namespace Nebula.Serialization.Serializers
         }
 
         private NetworkController netController;
-        private Dictionary<NetPeer, Tick> setupTicks = new();
+        private Dictionary<UUID, Tick> setupTicks = new();
         private bool hasImported = false; // Track if this serializer has already imported
 
         public SpawnSerializer(NetworkController controller)
@@ -35,13 +35,15 @@ namespace Nebula.Serialization.Serializers
             // Use CleanupPeer() for per-peer cleanup on disconnect instead.
         }
         
-        public void CleanupPeer(NetPeer peer)
+        public void CleanupPeer(UUID peerId)
         {
-            setupTicks.Remove(peer);
+            setupTicks.Remove(peerId);
         }
 
         public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            
             if (netController.IsQueuedForDespawn)
             {
                 return;
@@ -54,6 +56,7 @@ namespace Nebula.Serialization.Serializers
 
             if (currentWorld.HasSpawnedForClient(netController.NetId, peer))
             {
+                // This is expected for already-spawned nodes, don't log
                 return;
             }
 
@@ -64,7 +67,7 @@ namespace Nebula.Serialization.Serializers
 
             if (netController.RawNode is INetNodeBase netNode)
             {
-                if (!netNode.Network.spawnReady.GetValueOrDefault(peer, false))
+                if (!netNode.Network.spawnReady.GetValueOrDefault(peerId, false))
                 {
                     netNode.Network.PrepareSpawn(peer);
                     return;
@@ -74,12 +77,18 @@ namespace Nebula.Serialization.Serializers
             var id = currentWorld.TryRegisterPeerNode(netController, peer);
             if (id == 0)
             {
-                Debugger.Instance.Log($"[SpawnSerializer WARN] TryRegisterPeerNode returned 0 for peer {peer.ID}, node {netController.RawNode.Name}", Debugger.DebugLevel.WARN);
+                Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"[SpawnSerializer WARN] TryRegisterPeerNode returned 0 for peer {peer.ID}, node {netController.RawNode.Name}");
                 return;
             }
 
             var sceneId = Protocol.PackScene(netController.NetSceneFilePath);
-            setupTicks[peer] = currentWorld.CurrentTick;
+            // Only set setupTick on FIRST export - don't overwrite on re-exports
+            // Otherwise the ACK can never catch up (setupTick keeps moving forward)
+            if (!setupTicks.ContainsKey(peerId))
+            {
+                setupTicks[peerId] = currentWorld.CurrentTick;
+            }
+
             NetWriter.WriteByte(buffer, sceneId);
 
             if (netController.NetParent == null)
@@ -123,7 +132,9 @@ namespace Nebula.Serialization.Serializers
 
         public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick)
         {
-            if (!setupTicks.TryGetValue(peer, out var setupTick) || setupTick == 0)
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            
+            if (!setupTicks.TryGetValue(peerId, out var setupTick) || setupTick == 0)
             {
                 return;
             }
@@ -131,6 +142,7 @@ namespace Nebula.Serialization.Serializers
             if (tick >= setupTick)
             {
                 currentWorld.SetSpawnedForClient(netController.NetId, peer);
+                setupTicks.Remove(peerId); // Clean up after successful ack
             }
         }
 
@@ -158,7 +170,7 @@ namespace Nebula.Serialization.Serializers
             var networkParent = currentWorld.GetNodeFromNetId(data.parentId);
             if (data.parentId != 0 && networkParent == null)
             {
-                Debugger.Instance.Log($"Parent node not found for: {Protocol.UnpackScene(data.classId).ResourcePath} - Parent ID: {data.parentId}", Debugger.DebugLevel.ERROR);
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Parent node not found for: {Protocol.UnpackScene(data.classId).ResourcePath} - Parent ID: {data.parentId}");
                 return;
             }
 
@@ -242,7 +254,7 @@ namespace Nebula.Serialization.Serializers
                     {
                         parent.RemoveChild(networkChild.RawNode);
                     }
-                    networkChild.RawNode.QueueFree();
+                    networkChild.QueueNodeForDeletion();
                     continue;
                 }
 

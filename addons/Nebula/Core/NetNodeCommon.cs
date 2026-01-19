@@ -24,7 +24,7 @@ namespace Nebula.Utility
             var network = netNode.Network;
             if (!network.IsNetScene())
             {
-                Debugger.Instance.Log($"Only network scenes can be converted to BSON: {network.RawNode.GetPath()} with scene {network.RawNode.SceneFilePath}", Debugger.DebugLevel.ERROR);
+                // Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Only network scenes can be converted to BSON: {network.RawNode.GetPath()} with scene {network.RawNode.SceneFilePath}");
             }
             BsonDocument result = new BsonDocument();
             result["data"] = new BsonDocument();
@@ -32,28 +32,34 @@ namespace Nebula.Utility
             // We retain this for debugging purposes.
             result["nodeName"] = network.RawNode.Name.ToString();
 
-            // foreach (var node in Protocol.ListProperties(network.RawNode.SceneFilePath))
-            // {
-            //     var nodePath = node["nodePath"].AsString();
-            //     var nodeProps = node["properties"].As<Godot.Collections.Array<ProtocolNetProperty>>();
-            //     result["data"][nodePath] = new BsonDocument();
-            //     var nodeData = result["data"][nodePath] as BsonDocument;
-            //     var hasValues = false;
-            //     foreach (var property in nodeProps)
-            //     {
-            //         var prop = network.RawNode.GetNode(nodePath).Get(property.Name);
-            //         var val = BsonTransformer.Instance.SerializeVariant(prop, property.Metadata.TypeIdentifier);
-            //         if (val == null) continue;
-            //         nodeData[property.Name] = val;
-            //         hasValues = true;
-            //     }
-
-            //     if (!hasValues)
-            //     {
-            //         // Delete empty objects from JSON, i.e. network nodes with no network properties.
-            //         (result["data"] as BsonDocument).Remove(nodePath);
-            //     }
-            // }
+            if (GeneratedProtocol.PropertiesMap.TryGetValue(network.RawNode.SceneFilePath, out var nodeMap))
+            {
+                foreach (var nodeEntry in nodeMap)
+                {
+                    var nodePath = nodeEntry.Key;
+                    
+                    // Get the target node
+                    var targetNode = network.RawNode.GetNodeOrNull(nodePath);
+                    if (targetNode == null) continue;
+                    
+                    var nodeData = new BsonDocument();
+                    
+                    // Call WriteBsonProperties through concrete base types to use virtual dispatch
+                    // (not interface dispatch, which would call the empty default implementation)
+                    if (targetNode is NetNode3D nn3d)
+                        nn3d.WriteBsonProperties(nodeData, context);
+                    else if (targetNode is NetNode2D nn2d)
+                        nn2d.WriteBsonProperties(nodeData, context);
+                    else if (targetNode is NetNode nn)
+                        nn.WriteBsonProperties(nodeData, context);
+                    
+                    // Only add if there are actual properties
+                    if (nodeData.ElementCount > 0)
+                    {
+                        result["data"][nodePath] = nodeData;
+                    }
+                }
+            }
 
             if (context.Recurse)
             {
@@ -135,106 +141,39 @@ namespace Nebula.Utility
             {
                 var nodePath = netNodePathAndProps.Name;
                 var nodeProps = netNodePathAndProps.Value as BsonDocument;
-                var targetNode = node.GetNodeOrNull<INetNodeBase>(nodePath);
+                var targetNode = node.GetNodeOrNull(nodePath);
                 if (targetNode == null)
                 {
-                    Debugger.Instance.Log($"Node not found for: ${nodePath}", Debugger.DebugLevel.ERROR);
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Node not found for: ${nodePath}");
                     continue;
                 }
-                targetNode.Network.NetParent = node.Network;
+                
+                // Get the INetNodeBase interface for network setup
+                if (targetNode is INetNodeBase netNodeBase)
+                {
+                    netNodeBase.Network.NetParent = node.Network;
+                }
+                
+                // Track which properties are being set for network initialization
                 foreach (var prop in nodeProps)
                 {
                     node.Network.InitialSetNetProperties.Add(new Tuple<string, string>(nodePath, prop.Name));
-                    ProtocolNetProperty propData;
-                    if (!Protocol.LookupProperty(node.SceneFilePath, nodePath, prop.Name, out propData))
-                    {
-                        throw new Exception($"Failed to unpack property: {nodePath}.{prop.Name}");
-                    }
-                    var variantType = propData.VariantType;
-                    try
-                    {
-                        if (variantType == SerialVariantType.String)
-                        {
-                            targetNode.Network.RawNode.Set(prop.Name, prop.Value.ToString());
-                        }
-                        else if (variantType == SerialVariantType.Float)
-                        {
-                            targetNode.Network.RawNode.Set(prop.Name, prop.Value.AsDouble);
-                        }
-                        else if (variantType == SerialVariantType.Int)
-                        {
-                            if (propData.Metadata.TypeIdentifier == "Int" || propData.Metadata.TypeIdentifier == "Enum")
-                            {
-                                targetNode.Network.RawNode.Set(prop.Name, prop.Value.AsInt32);
-                            }
-                            else if (propData.Metadata.TypeIdentifier == "Byte")
-                            {
-                                // Convert MongoDB Binary value to Byte
-                                targetNode.Network.RawNode.Set(prop.Name, (byte)prop.Value.AsInt32);
-                            }
-                            else if (propData.Metadata.TypeIdentifier == "Short")
-                            {
-                                targetNode.Network.RawNode.Set(prop.Name, (short)prop.Value.AsInt32);
-                            }
-                            else
-                            {
-                                targetNode.Network.RawNode.Set(prop.Name, prop.Value.AsInt64);
-                            }
-                        }
-                        else if (variantType == SerialVariantType.Bool)
-                        {
-                            targetNode.Network.RawNode.Set(prop.Name, (bool)prop.Value);
-                        }
-                        else if (variantType == SerialVariantType.Vector2)
-                        {
-                            var vec = prop.Value as BsonArray;
-                            targetNode.Network.RawNode.Set(prop.Name, new Vector2((float)vec[0].AsDouble, (float)vec[1].AsDouble));
-                        }
-                        else if (variantType == SerialVariantType.PackedByteArray)
-                        {
-                            targetNode.Network.RawNode.Set(prop.Name, prop.Value.AsByteArray);
-                        }
-                        else if (variantType == SerialVariantType.PackedInt64Array)
-                        {
-                            targetNode.Network.RawNode.Set(prop.Name, prop.Value.AsBsonArray.Select(x => x.AsInt64).ToArray());
-                        }
-                        else if (variantType == SerialVariantType.Vector3)
-                        {
-                            var vec = prop.Value as BsonArray;
-                            targetNode.Network.RawNode.Set(prop.Name, new Vector3((float)vec[0].AsDouble, (float)vec[1].AsDouble, (float)vec[2].AsDouble));
-                        }
-                        else if (variantType == SerialVariantType.Object)
-                        {
-                            // For complex object types, use the registered BsonDeserialize method
-                            var method = Protocol.GetStaticMethod(propData, StaticMethodType.BsonDeserialize);
-                            if (method == null)
-                            {
-                                Debugger.Instance.Log($"No BsonDeserialize method found for {nodePath}.{prop.Name}", Debugger.DebugLevel.WARN);
-                                continue;
-                            }
-                            var result = method.Invoke(null, new object[] { prop.Value });
-                            
-                            // Use generated SetBsonPropertyByName to bypass Godot's property system
-                            var rawNode = targetNode.Network.RawNode;
-                            var setterMethod = rawNode.GetType().GetMethod("SetBsonPropertyByName");
-                            if (setterMethod != null)
-                            {
-                                var wasSet = (bool)setterMethod.Invoke(rawNode, new object[] { prop.Name, result });
-                                if (!wasSet)
-                                {
-                                    Debugger.Instance.Log($"SetBsonPropertyByName returned false for {nodePath}.{prop.Name}", Debugger.DebugLevel.WARN);
-                                }
-                            }
-                            else
-                            {
-                                Debugger.Instance.Log($"No SetBsonPropertyByName method found on {rawNode.GetType().Name} for {nodePath}.{prop.Name}", Debugger.DebugLevel.WARN);
-                            }
-                        }
-                    }
-                    catch (InvalidCastException e)
-                    {
-                        Debugger.Instance.Log($"Failed to set property: {prop.Name} on {nodePath} with value: {prop.Value} and type: {variantType}. {e.Message}", Debugger.DebugLevel.ERROR);
-                    }
+                }
+                
+                // Call ReadBsonProperties through concrete base types to use virtual dispatch
+                // (not interface dispatch, which would call the empty default implementation)
+                try
+                {
+                    if (targetNode is NetNode3D nn3d)
+                        nn3d.ReadBsonProperties(nodeProps);
+                    else if (targetNode is NetNode2D nn2d)
+                        nn2d.ReadBsonProperties(nodeProps);
+                    else if (targetNode is NetNode nn)
+                        nn.ReadBsonProperties(nodeProps);
+                }
+                catch (Exception e)
+                {
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Failed to read BSON properties for {nodePath}: {e.Message}");
                 }
             }
             if (data.Contains("children"))
@@ -253,7 +192,7 @@ namespace Nebula.Utility
                         var parent = node.GetNodeOrNull(nodePath);
                         if (parent == null)
                         {
-                            Debugger.Instance.Log($"Parent node not found for: {nodePath}", Debugger.DebugLevel.ERROR);
+                            Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Parent node not found for: {nodePath}");
                             continue;
                         }
                         parent.AddChild(childNode);

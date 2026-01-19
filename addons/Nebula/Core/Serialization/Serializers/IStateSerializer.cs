@@ -33,7 +33,7 @@ namespace Nebula.Serialization.Serializers
         /// Server-side only. Called when a peer disconnects to clean up any per-peer cached data.
         /// This prevents memory leaks from accumulating peer-specific state.
         /// </summary>
-        /// <param name="peer">The disconnecting peer</param>
-        public void CleanupPeer(NetPeer peer) { }
+        /// <param name="peerId">The UUID of the disconnecting peer</param>
+        public void CleanupPeer(UUID peerId) { }
     }
 }

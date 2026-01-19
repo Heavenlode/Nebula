@@ -13,6 +13,7 @@ namespace Nebula
 
         public SyncFlags Flags;
         public long InterestMask = long.MaxValue;
+        public long InterestRequired = 0;
 
         /// <summary>
         /// When true, the source generator will emit a virtual OnNetworkChange{PropertyName} method

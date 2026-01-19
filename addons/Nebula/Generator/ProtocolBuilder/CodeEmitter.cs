@@ -36,6 +36,7 @@ namespace Nebula.Generators
             // Scene maps
             EmitScenesMap(sb, data);
             EmitScenesPack(sb, data);
+            EmitSceneInterestMap(sb, data);
             
             // Static network node paths
             EmitStaticNetworkNodePathsMap(sb, data);
@@ -103,6 +104,21 @@ namespace Nebula.Generators
             foreach (var kvp in data.ScenesPack)
             {
                 sb.AppendLine($"                [\"{Escape(kvp.Key)}\"] = {kvp.Value},");
+            }
+            
+            sb.AppendLine("            }.ToFrozenDictionary();");
+            sb.AppendLine();
+        }
+
+        private static void EmitSceneInterestMap(StringBuilder sb, ProtocolData data)
+        {
+            sb.AppendLine("        public static readonly FrozenDictionary<string, ProtocolSceneInterest> SceneInterestMap =");
+            sb.AppendLine("            new Dictionary<string, ProtocolSceneInterest>");
+            sb.AppendLine("            {");
+            
+            foreach (var kvp in data.SceneInterestMap)
+            {
+                sb.AppendLine($"                [\"{Escape(kvp.Key)}\"] = new ProtocolSceneInterest({kvp.Value.InterestAny}L, {kvp.Value.InterestRequired}L),");
             }
             
             sb.AppendLine("            }.ToFrozenDictionary();");
@@ -259,6 +275,7 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    {prop.Index},");
             sb.AppendLine($"{indent}    {prop.LocalIndex},");
             sb.AppendLine($"{indent}    {prop.InterestMask}L,");
+            sb.AppendLine($"{indent}    {prop.InterestRequired}L,");
             sb.AppendLine($"{indent}    {prop.ClassIndex},");
             sb.AppendLine($"{indent}    {prop.NotifyOnChange.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.Interpolate.ToString().ToLowerInvariant()},");
@@ -288,6 +305,7 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    {prop.Index},");
             sb.AppendLine($"{indent}    {prop.LocalIndex},");
             sb.AppendLine($"{indent}    {prop.InterestMask}L,");
+            sb.AppendLine($"{indent}    {prop.InterestRequired}L,");
             sb.AppendLine($"{indent}    {prop.ClassIndex},");
             sb.AppendLine($"{indent}    {prop.NotifyOnChange.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.Interpolate.ToString().ToLowerInvariant()},");

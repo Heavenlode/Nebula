@@ -133,6 +133,16 @@ namespace Nebula.Generators
                 data.ScenesPack[sceneResPath] = sceneId;
                 sceneId++;
 
+                // Scene-level interest requirements
+                if (bytecode.InterestAny != 0 || bytecode.InterestRequired != 0)
+                {
+                    data.SceneInterestMap[sceneResPath] = new SceneInterestData
+                    {
+                        InterestAny = bytecode.InterestAny,
+                        InterestRequired = bytecode.InterestRequired
+                    };
+                }
+
                 // Static network node paths
                 if (bytecode.StaticNetNodes.Count > 0)
                 {
@@ -227,6 +237,13 @@ namespace Nebula.Generators
 
             result.IsNetScene = IsNetNode(rootScript, analysisResult);
 
+            // Extract class-level interest from the root node's type info
+            if (result.IsNetScene && analysisResult.NetNodesByScriptPath.TryGetValue(rootScript, out var rootTypeInfo))
+            {
+                result.InterestAny = rootTypeInfo.InterestAny;
+                result.InterestRequired = rootTypeInfo.InterestRequired;
+            }
+
             // Start at 1 because staticChildId 0 is reserved for the root node (".")
             var nodePathId = 1;
             var propertyCount = 0;
@@ -287,6 +304,7 @@ namespace Nebula.Generators
                             Index = (byte)propertyCount++,
                             LocalIndex = prop.Value.LocalIndex, // Preserve class-local index from nested scene
                             InterestMask = prop.Value.InterestMask,
+                            InterestRequired = prop.Value.InterestRequired,
                             ClassIndex = prop.Value.ClassIndex,
                             NotifyOnChange = prop.Value.NotifyOnChange,
                             Interpolate = prop.Value.Interpolate,
@@ -350,6 +368,7 @@ namespace Nebula.Generators
                             Index = (byte)propertyCount++,
                             LocalIndex = prop.ClassLocalIndex, // Use class-local index from analyzer
                             InterestMask = prop.InterestMask,
+                            InterestRequired = prop.InterestRequired,
                             ClassIndex = classIndex,
                             NotifyOnChange = prop.NotifyOnChange,
                             Interpolate = prop.Interpolate,

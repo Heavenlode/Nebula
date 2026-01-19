@@ -18,6 +18,17 @@ namespace Nebula {
         /// </summary>
         /// <returns>The initial interest layers for the node.</returns>
         public long InitializeInterest(NetPeer peer);
+        
+        /// <summary>
+        /// Called once when the world is ready for this node.
+        /// </summary>
+        public void _WorldReady() { }
+        
+        /// <summary>
+        /// Called each network tick. Override to handle per-tick game logic.
+        /// </summary>
+        /// <param name="tick">The current network tick</param>
+        public void _NetworkProcess(int tick) { }
 
         /// <summary>
         /// Invokes the property change handler for the given property index.

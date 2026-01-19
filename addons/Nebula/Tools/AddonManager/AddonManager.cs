@@ -1,3 +1,4 @@
+#if TOOLS
 using Nebula.Tools;
 
 using System;
@@ -328,3 +329,4 @@ namespace Nebula.Internal.Editor
         }
     }
 }
+#endif

@@ -424,6 +424,214 @@ namespace Nebula
         /// </summary>
         public int CurrentTick { get; internal set; } = 0;
 
+        #region Server Input Buffering
+
+        // ============================================================
+        // HOT PATH OPTIMIZATION: Avoid LINQ, minimize allocations
+        // ============================================================
+
+        private const int SERVER_INPUT_BUFFER_SIZE = 64;  // Power of 2 for fast modulo
+        private const int INPUT_DELAY_TICKS = 2;  // Server simulates this many ticks behind real-time
+
+        /// <summary>
+        /// Per-entity input buffer structure for server-side input buffering.
+        /// </summary>
+        private struct EntityInputBuffer
+        {
+            public byte[][] Inputs;      // Circular buffer of input byte arrays
+            public Tick[] Ticks;         // Tick for each slot
+            public Tick LastReceivedTick;
+            public Tick LastFallbackTick; // Cache for fallback lookup
+            public byte[] LastFallbackInput;
+
+            public void Initialize()
+            {
+                Inputs = new byte[SERVER_INPUT_BUFFER_SIZE][];
+                Ticks = new Tick[SERVER_INPUT_BUFFER_SIZE];
+                for (int i = 0; i < SERVER_INPUT_BUFFER_SIZE; i++)
+                {
+                    Ticks[i] = -1;
+                }
+                LastReceivedTick = -1;
+                LastFallbackTick = -1;
+                LastFallbackInput = null;
+            }
+        }
+
+        /// <summary>
+        /// Input buffers per-entity on the server side.
+        /// Key is NetId (not peer), since inputs are per-entity.
+        /// </summary>
+        private Dictionary<NetId, EntityInputBuffer> _serverInputBuffers = new();
+
+        /// <summary>
+        /// The tick currently being simulated on the server.
+        /// Lags behind CurrentTick by INPUT_DELAY_TICKS to allow inputs to arrive.
+        /// </summary>
+        public Tick SimulationTick { get; private set; } = 0;
+
+        /// <summary>
+        /// Buffers input from a client for a specific entity and tick.
+        /// </summary>
+        private void BufferServerInput(NetId netId, Tick tick, byte[] input)
+        {
+            if (!_serverInputBuffers.TryGetValue(netId, out var buffer))
+            {
+                buffer = new EntityInputBuffer();
+                buffer.Initialize();
+                _serverInputBuffers[netId] = buffer;
+            }
+
+            int slot = (int)(tick & (SERVER_INPUT_BUFFER_SIZE - 1));
+
+            // Only accept if newer than what we have in this slot
+            if (buffer.Ticks[slot] < tick)
+            {
+                // Reuse or allocate byte array
+                if (buffer.Inputs[slot] == null || buffer.Inputs[slot].Length != input.Length)
+                {
+                    buffer.Inputs[slot] = new byte[input.Length];
+                }
+                Array.Copy(input, buffer.Inputs[slot], input.Length);
+                buffer.Ticks[slot] = tick;
+
+                if (tick > buffer.LastReceivedTick)
+                {
+                    buffer.LastReceivedTick = tick;
+                }
+                _serverInputBuffers[netId] = buffer;
+            }
+        }
+
+        /// <summary>
+        /// Gets buffered input for an entity at a specific tick.
+        /// If not available, falls back to most recent input.
+        /// </summary>
+        private byte[] GetServerBufferedInput(NetId netId, Tick tick)
+        {
+            if (!_serverInputBuffers.TryGetValue(netId, out var buffer))
+            {
+                return null;
+            }
+
+            int slot = (int)(tick & (SERVER_INPUT_BUFFER_SIZE - 1));
+
+            // Exact match
+            if (buffer.Ticks[slot] == tick)
+            {
+                return buffer.Inputs[slot];
+            }
+
+            // Fallback: find most recent input before this tick
+            // Use cached fallback if available for this tick
+            if (buffer.LastFallbackTick == tick && buffer.LastFallbackInput != null)
+            {
+                return buffer.LastFallbackInput;
+            }
+
+            // Search for most recent input
+            byte[] fallback = null;
+            Tick bestTick = -1;
+            for (int i = 0; i < SERVER_INPUT_BUFFER_SIZE; i++)
+            {
+                if (buffer.Ticks[i] >= 0 && buffer.Ticks[i] < tick && buffer.Ticks[i] > bestTick)
+                {
+                    bestTick = buffer.Ticks[i];
+                    fallback = buffer.Inputs[i];
+                }
+            }
+
+            // Cache the fallback for this tick
+            buffer.LastFallbackTick = tick;
+            buffer.LastFallbackInput = fallback;
+            _serverInputBuffers[netId] = buffer;
+
+            return fallback;
+        }
+
+        /// <summary>
+        /// Checks if it's ready to simulate the given tick.
+        /// Uses an optimistic strategy - always returns true, using input fallback if needed.
+        /// </summary>
+        private bool IsReadyToSimulate(Tick tick)
+        {
+            // Optimistic strategy: always simulate, use input fallback if needed
+            // Alternative: wait for critical inputs (would add latency)
+            return true;
+        }
+
+        /// <summary>
+        /// Cleans up input buffer for a despawned entity.
+        /// </summary>
+        internal void CleanupEntityInputBuffer(NetId netId)
+        {
+            _serverInputBuffers.Remove(netId);
+        }
+
+        #endregion
+
+        #region Client Prediction
+
+        /// <summary>
+        /// The client's predicted tick (ahead of last received server tick).
+        /// </summary>
+        private Tick _clientPredictedTick = -1;
+
+        /// <summary>
+        /// Whether prediction has been initialized on the client.
+        /// </summary>
+        private bool _predictionInitialized = false;
+
+        /// <summary>
+        /// Cached list of owned entities for prediction (avoid allocation every tick).
+        /// </summary>
+        private List<NetworkController> _ownedEntities = new(16);
+        private bool _ownedEntitiesDirty = true;
+
+        /// <summary>
+        /// Pooled buffer for acknowledgment packets.
+        /// </summary>
+        private NetBuffer _ackBuffer;
+
+        /// <summary>
+        /// Initializes client prediction state from the first received server tick.
+        /// </summary>
+        private void InitializeClientPrediction(Tick serverTick)
+        {
+            if (_predictionInitialized) return;
+
+            CurrentTick = serverTick;
+            _clientPredictedTick = serverTick;
+            _predictionInitialized = true;
+            Log(Debugger.DebugLevel.VERBOSE, $"[Prediction] Initialized: serverTick={serverTick}");
+        }
+
+        /// <summary>
+        /// Rebuilds the cached list of owned entities.
+        /// </summary>
+        private void RebuildOwnedEntitiesCache()
+        {
+            _ownedEntities.Clear();
+            foreach (var kvp in NetScenes)
+            {
+                if (kvp.Value?.IsCurrentOwner == true)
+                {
+                    _ownedEntities.Add(kvp.Value);
+                }
+            }
+            _ownedEntitiesDirty = false;
+        }
+
+        /// <summary>
+        /// Call this when ownership changes to trigger cache rebuild.
+        /// </summary>
+        public void MarkOwnedEntitiesDirty()
+        {
+            _ownedEntitiesDirty = true;
+        }
+
+        #endregion
+
         public NetworkController GetNodeFromNetId(NetId networkId)
         {
             if (networkId.IsNone || !networkId.IsValid)
@@ -601,8 +809,7 @@ namespace Nebula
                     NetScenes.Remove(net_id);
                     continue;
                 }
-                // Use NativeBridge for zero-alloc ProcessMode check
-                if (NativeBridge.GetProcessMode(netController.RawNode) == ProcessModeEnum.Disabled)
+                if (netController.RawNode.ProcessMode == ProcessModeEnum.Disabled)
                 {
                     continue;
                 }
@@ -613,13 +820,34 @@ namespace Nebula
                     {
                         Log(Debugger.DebugLevel.ERROR, $"Network child node is unexpectedly null: {netController.RawNode.SceneFilePath}");
                     }
-                    // Use NativeBridge for zero-alloc ProcessMode check
-                    if (NativeBridge.GetProcessMode(networkChild.RawNode) == ProcessModeEnum.Disabled)
+                    if (networkChild.RawNode.ProcessMode == ProcessModeEnum.Disabled)
                     {
                         continue;
                     }
+                    
+                    // Apply buffered input for this tick before processing
+                    if (networkChild.HasInputSupport)
+                    {
+                        var bufferedInput = GetServerBufferedInput(networkChild.NetId, CurrentTick);
+                        if (bufferedInput != null)
+                        {
+                            networkChild.SetInputBytes(bufferedInput);
+                        }
+                    }
+                    
                     networkChild._NetworkProcess(CurrentTick);
                 }
+                
+                // Apply input for the root netController if it has input support
+                if (netController.HasInputSupport)
+                {
+                    var rootInput = GetServerBufferedInput(netController.NetId, CurrentTick);
+                    if (rootInput != null)
+                    {
+                        netController.SetInputBytes(rootInput);
+                    }
+                }
+                
                 netController._NetworkProcess(CurrentTick);
             }
 
@@ -754,9 +982,6 @@ namespace Nebula
                 netController.QueueNodeForDeletion();
             }
             QueueDespawnedNodes.Clear();
-
-            // Flush pending native bridge writes at end of tick
-            NativeBridge.FlushToGodot();
         }
 
         /// <summary>
@@ -1332,7 +1557,6 @@ namespace Nebula
                         continue;
                     }
                     var serializerInstance = netController.NetNode.Serializers[serializerIdx];
-                    var serializerType = serializerInstance.GetType().Name;
 
                     try
                     {
@@ -1347,9 +1571,21 @@ namespace Nebula
                     {
                         // Log error with context and ABORT processing this tick entirely
                         // to prevent cascading errors from corrupted buffer position
-                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[ImportState ERROR] Failed to import node {localNodeId} serializer {serializerIdx} ({serializerType}): {ex.Message}. Buffer pos={stateBytes.ReadPosition}/{stateBytes.Length}. Aborting tick import.");
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[ImportState ERROR] Failed to import node {localNodeId} serializer {serializerIdx}: {ex.Message}. Buffer pos={stateBytes.ReadPosition}/{stateBytes.Length}. Aborting tick import.");
                         return; // Don't continue processing - buffer position is corrupted
                     }
+                }
+            }
+
+            foreach (var nodeIdSerializerList in nodeIdToSerializerList)
+            {
+                var localNodeId = nodeIdSerializerList.Key;
+                var netController = GetNodeFromNetId(localNodeId);
+                if (!netController.IsWorldReady)
+                {
+                    // Ensure newly spawned nodes are now world-ready
+                    // We don't run this in SpawnSerializer because subsequent serializers may need to run before "ready"
+                    netController._WorldReady();
                 }
             }
         }
@@ -1401,19 +1637,11 @@ namespace Nebula
                     continue;
                 }
 
-                bool hasRemainingData = false;
                 for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                 {
                     var serializer = netController.NetNode.Serializers[serializerIdx];
                     serializer.Acknowledge(this, peer, tick);
-
-                    // Check if serializer still has pending data (would need interface extension)
-                    // For now, we always keep in pending set until explicit removal
                 }
-
-                // Note: We could track if all serializers have no pending data and remove from pendingAcks,
-                // but this requires the serializer to expose whether it has pending ticks.
-                // For now, we keep the object in the set - it's still much better than iterating all NetScenes.
             }
 
             // Remove invalid entries
@@ -1425,16 +1653,21 @@ namespace Nebula
 
         public void ClientProcessTick(int incomingTick, byte[] stateBytes)
         {
+            // Skip old/duplicate ticks
             if (incomingTick <= CurrentTick)
             {
                 return;
             }
 
-            CurrentTick = incomingTick;
+            // Initialize prediction on first tick
+            if (!_predictionInitialized)
+            {
+                InitializeClientPrediction(incomingTick);
+            }
 
+            CurrentTick = incomingTick;
             try
             {
-                // Logging the size of the state bytes
                 Log(Debugger.DebugLevel.VERBOSE, $"Importing state bytes of size {stateBytes.Length}");
                 using var stateBuffer = new NetBuffer(stateBytes);
                 ImportState(stateBuffer);
@@ -1442,35 +1675,241 @@ namespace Nebula
             catch (Exception ex)
             {
                 Log(Debugger.DebugLevel.ERROR, $"[ImportState FAILED] tick {incomingTick}: {ex.Message}");
-                // Still send ack so server doesn't think we're dead - we just couldn't process this tick
+                // Still continue - send ack so server doesn't think we're dead
             }
 
+            // Rebuild owned entities cache if needed
+            if (_ownedEntitiesDirty)
+            {
+                RebuildOwnedEntitiesCache();
+            }
+
+            // ============================================================
+            // RECONCILIATION: Check predictions and rollback if needed
+            // ============================================================
+            for (int i = 0; i < _ownedEntities.Count; i++)
+            {
+                var netController = _ownedEntities[i];
+                if (netController == null || netController.IsMarkedForDeletion) continue;
+
+                // Store confirmed state from server (parent)
+                netController.StoreConfirmedState(incomingTick);
+
+                // Store confirmed state for owned static children
+                foreach (var staticChild in netController.StaticNetworkChildren)
+                {
+                    if (staticChild == null) continue;
+                    if (staticChild.IsMarkedForDeletion) continue;
+                    if (!staticChild.IsCurrentOwner) continue;
+                    staticChild.StoreConfirmedState(incomingTick);
+                }
+
+                // If incoming tick is beyond what we've predicted, we can't compare - just accept server state
+                // This happens when client is behind server (normal case on connection or after lag)
+                bool canCompare = incomingTick <= _clientPredictedTick;
+
+                bool parentMispredicted = false;
+                bool childMispredicted = false;
+                string mispredictedChildName = null;
+
+                if (canCompare)
+                {
+                    // Check for misprediction in parent
+                    parentMispredicted = !netController.CompareStateWithTolerance(incomingTick);
+
+                    // Check for misprediction in any owned static child
+                    foreach (var staticChild in netController.StaticNetworkChildren)
+                    {
+                        if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                        if (!staticChild.IsCurrentOwner) continue;
+                        bool childMatch = staticChild.CompareStateWithTolerance(incomingTick);
+                        if (!childMatch)
+                        {
+                            childMispredicted = true;
+                            mispredictedChildName = staticChild.RawNode?.Name ?? "unknown";
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    // Client is behind server - treat as "misprediction" to force state update
+                    // This ensures we accept the server state and start predicting from there
+                    parentMispredicted = true;
+                }
+
+                if (parentMispredicted || childMispredicted)
+                {
+                    // Misprediction detected - rollback and resimulate
+                    int ticksToResimulate = _clientPredictedTick - incomingTick;
+
+                    // Restore state: use selective rollback when we had a valid comparison (misprediction flags are set),
+                    // use full restore when client was behind server (no comparison was done)
+                    if (canCompare)
+                    {
+                        // Selective rollback - only restore properties that actually mispredicted
+                        netController.RestoreMispredictedToConfirmed();
+                        netController.IsResimulating = true;
+
+                        foreach (var staticChild in netController.StaticNetworkChildren)
+                        {
+                            if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                            if (!staticChild.IsCurrentOwner) continue;
+                            staticChild.RestoreMispredictedToConfirmed();
+                            staticChild.IsResimulating = true;
+                        }
+                    }
+                    else
+                    {
+                        // Full restore - client was behind server, no comparison data available
+                        netController.RestoreToConfirmedState();
+                        netController.IsResimulating = true;
+
+                        foreach (var staticChild in netController.StaticNetworkChildren)
+                        {
+                            if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                            if (!staticChild.IsCurrentOwner) continue;
+                            staticChild.RestoreToConfirmedState();
+                            staticChild.IsResimulating = true;
+                        }
+                    }
+
+                    // If client is behind server, update predicted tick to match server
+                    // This allows client to start predicting from the correct tick
+                    if (_clientPredictedTick < incomingTick)
+                    {
+                        _clientPredictedTick = incomingTick;
+                    }
+
+                    // Re-simulate from confirmed tick to predicted tick (only runs if there are ticks to resim)
+                    for (var resimTick = incomingTick + 1; resimTick <= _clientPredictedTick; resimTick++)
+                    {
+                        // PHASE 1: Apply ALL buffered inputs FIRST
+                        // This ensures that nodes reading input from other nodes (e.g., PlayerShipPhysics
+                        // reading from PlayerShip.Network) have access to the correct input regardless
+                        // of processing order.
+                        var bufferedInput = netController.GetBufferedInput(resimTick);
+                        if (bufferedInput != null)
+                        {
+                            netController.SetInputBytes(bufferedInput);
+                        }
+
+                        foreach (var staticChild in netController.StaticNetworkChildren)
+                        {
+                            if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                            if (!staticChild.IsCurrentOwner) continue;
+
+                            var childBufferedInput = staticChild.GetBufferedInput(resimTick);
+                            if (childBufferedInput != null)
+                            {
+                                staticChild.SetInputBytes(childBufferedInput);
+                            }
+                        }
+
+                        // PHASE 2: Run all simulations AFTER all inputs are set
+                        netController._NetworkProcess(resimTick);
+                        netController.StorePredictedState(resimTick);
+
+                        foreach (var staticChild in netController.StaticNetworkChildren)
+                        {
+                            if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                            if (!staticChild.IsCurrentOwner) continue;
+
+                            staticChild._NetworkProcess(resimTick);
+                            staticChild.StorePredictedState(resimTick);
+                        }
+                    }
+
+                    netController.IsResimulating = false;
+                    foreach (var staticChild in netController.StaticNetworkChildren)
+                    {
+                        if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                        if (!staticChild.IsCurrentOwner) continue;
+                        staticChild.IsResimulating = false;
+                    }
+                }
+                else if (canCompare)
+                {
+                    // Prediction was correct - restore from prediction buffer since ImportState corrupted live values
+                    // We want to continue simulating from our predicted state, not the server's state
+                    netController.RestoreToPredictedState(incomingTick);
+
+                    foreach (var staticChild in netController.StaticNetworkChildren)
+                    {
+                        if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                        if (!staticChild.IsCurrentOwner) continue;
+                        staticChild.RestoreToPredictedState(incomingTick);
+                    }
+                }
+            }
+
+            // ============================================================
+            // PROCESS NON-OWNED ENTITIES with server state
+            // ============================================================
             foreach (var net_id in NetScenes.Keys)
             {
                 var netController = NetScenes[net_id];
-                if (netController == null)
-                    continue;
-                // Use cached flag to avoid Godot method call allocation
+                if (netController == null) continue;
+
                 if (netController.IsMarkedForDeletion)
                 {
                     NetScenes.Remove(net_id);
                     continue;
                 }
-                netController._NetworkProcess(CurrentTick);
-                SendInput(netController);
+
+                // Only process non-owned entities here (owned are handled in prediction)
+                if (!netController.IsCurrentOwner)
+                {
+                    netController._NetworkProcess(CurrentTick);
+                }
 
                 foreach (var staticChild in netController.StaticNetworkChildren)
                 {
-                    // Use cached flag to avoid Godot method call allocation
-                    if (staticChild == null || staticChild.IsMarkedForDeletion)
+                    if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+
+                    if (!staticChild.IsCurrentOwner)
                     {
-                        continue;
+                        staticChild._NetworkProcess(CurrentTick);
                     }
-                    staticChild._NetworkProcess(CurrentTick);
+                }
+            }
+
+            // ============================================================
+            // PREDICTION: Advance predicted tick for owned entities
+            // ============================================================
+            _clientPredictedTick++;
+
+            for (int i = 0; i < _ownedEntities.Count; i++)
+            {
+                var netController = _ownedEntities[i];
+                if (netController == null || netController.IsMarkedForDeletion) continue;
+
+                netController.IsPredicting = true;
+                netController._NetworkProcess(_clientPredictedTick);
+                netController.StorePredictedState(_clientPredictedTick);
+                netController.IsPredicting = false;
+
+                // Send input with redundancy
+                SendInput(netController);
+
+                // Also handle static children
+                foreach (var staticChild in netController.StaticNetworkChildren)
+                {
+                    if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                    if (!staticChild.IsCurrentOwner) continue;
+
+                    staticChild.IsPredicting = true;
+                    staticChild._NetworkProcess(_clientPredictedTick);
+                    staticChild.StorePredictedState(_clientPredictedTick);
+                    staticChild.IsPredicting = false;
+
                     SendInput(staticChild);
                 }
             }
 
+            // ============================================================
+            // PROCESS QUEUED NET FUNCTIONS
+            // ============================================================
             foreach (var queuedFunction in queuedNetFunctions)
             {
                 var functionNode = queuedFunction.Node.GetNode(queuedFunction.FunctionInfo.NodePath) as INetNodeBase;
@@ -1479,7 +1918,6 @@ namespace Nebula
                     Caller = queuedFunction.Sender,
                 };
                 functionNode.Network.IsInboundCall = true;
-                // Convert object[] back to Variant[] at Godot boundary
                 var variantArgs = new Variant[queuedFunction.Args.Length];
                 for (int i = 0; i < queuedFunction.Args.Length; i++)
                 {
@@ -1491,6 +1929,9 @@ namespace Nebula
             }
             queuedNetFunctions.Clear();
 
+            // ============================================================
+            // PROCESS DESPAWNS
+            // ============================================================
             foreach (var netController in QueueDespawnedNodes)
             {
                 DeregisterPeerNode(netController);
@@ -1498,10 +1939,13 @@ namespace Nebula
             }
             QueueDespawnedNodes.Clear();
 
-            // Acknowledge tick
-            using var buffer = new NetBuffer();
-            NetWriter.WriteInt32(buffer, incomingTick);
-            NetRunner.SendUnreliableSequenced(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Tick, buffer);
+            // ============================================================
+            // ACKNOWLEDGE TICK (pooled buffer)
+            // ============================================================
+            _ackBuffer ??= new NetBuffer();
+            _ackBuffer.Reset();
+            NetWriter.WriteInt32(_ackBuffer, incomingTick);
+            NetRunner.SendUnreliableSequenced(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Tick, _ackBuffer);
         }
 
         /// <summary>
@@ -1540,12 +1984,20 @@ namespace Nebula
                 return;
             }
 
+            // Get current input
+            var inputBytes = netNode.GetInputBytes();
+
+            // Buffer this input for the predicted tick (for redundancy and rollback)
+            netNode.BufferInput(_clientPredictedTick, inputBytes);
+
+            // Only send if input has changed (but always buffer)
             if (!netNode.HasInputChanged)
             {
                 return;
             }
 
-            using var inputBuffer = new NetBuffer();
+            // Get pooled buffer to avoid allocation
+            var inputBuffer = netNode.GetPooledInputBuffer();
 
             // Static children don't have their own NetId - use parent's NetId + StaticChildId
             bool isStaticChild = netNode.StaticChildId > 0 && netNode.NetParent != null;
@@ -1560,18 +2012,29 @@ namespace Nebula
                 NetWriter.WriteByte(inputBuffer, 0); // StaticChildId = 0 means not a static child
             }
 
-            // Write the input size followed by the raw bytes
-            var inputBytes = netNode.GetInputBytes();
-            NetWriter.WriteInt32(inputBuffer, inputBytes.Length);
-            NetWriter.WriteBytes(inputBuffer, inputBytes);
+            // Get recent inputs for redundancy
+            var recentInputs = netNode.GetRecentInputs(NetworkController.INPUT_REDUNDANCY_COUNT);
 
-            NetRunner.SendReliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Input, inputBuffer);
+            // Write input count and all recent inputs
+            NetWriter.WriteByte(inputBuffer, (byte)recentInputs.Count);
+
+            for (int i = 0; i < recentInputs.Count; i++)
+            {
+                var (tick, input) = recentInputs[i];
+                NetWriter.WriteInt32(inputBuffer, tick);
+                NetWriter.WriteInt32(inputBuffer, input.Length);
+                NetWriter.WriteBytes(inputBuffer, input);
+            }
+
+            // Send unreliable - input redundancy handles packet loss
+            NetRunner.SendUnreliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Input, inputBuffer);
             netNode.ClearInputChanged();
         }
 
         internal void ReceiveInput(NetPeer peer, NetBuffer buffer)
         {
             if (NetRunner.Instance.IsClient) return;
+
             var networkId = NetReader.ReadUInt16(buffer);
             var staticChildId = NetReader.ReadByte(buffer);
             var worldNetId = GetNetIdFromPeerId(peer, networkId);
@@ -1611,12 +2074,27 @@ namespace Nebula
                 return;
             }
 
-            // Read the input size and bytes
-            var inputSize = NetReader.ReadInt32(buffer);
-            var inputBytes = NetReader.ReadBytes(buffer, inputSize);
-            node.SetInputBytes(inputBytes);
+            // Read input count (redundancy - multiple inputs per packet)
+            var inputCount = NetReader.ReadByte(buffer);
 
-            Debug.Send("Input", $"Received {inputSize} bytes for node {worldNetId} (staticChild={staticChildId})");
+            // Read each tick-tagged input and buffer it
+            for (int i = 0; i < inputCount; i++)
+            {
+                var tick = NetReader.ReadInt32(buffer);
+                var inputSize = NetReader.ReadInt32(buffer);
+                var inputBytes = NetReader.ReadBytes(buffer, inputSize);
+
+                // Buffer the input for this tick
+                BufferServerInput(node.NetId, tick, inputBytes);
+
+                // Also set as current input if this is the most recent tick we've seen
+                if (tick > node.LastConfirmedTick)
+                {
+                    node.SetInputBytes(inputBytes);
+                }
+            }
+
+            Debug.Send("Input", $"Received {inputCount} inputs for node {worldNetId} (staticChild={staticChildId})");
         }
 
         // WARNING: These are not exactly tick-aligned for state reconcilliation. Could cause state issues because the assumed tick is when it is received?

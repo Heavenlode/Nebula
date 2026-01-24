@@ -231,7 +231,6 @@ namespace Nebula
 
         public void StartServer()
         {
-            GD.Print($"NativeBridge.IsAvailable: {NativeBridge.IsAvailable}");
             System.Runtime.GCSettings.LatencyMode = System.Runtime.GCLatencyMode.SustainedLowLatency;
 
             if (Authentication == null)
@@ -389,13 +388,6 @@ namespace Nebula
         {
             if (!NetStarted)
                 return;
-
-            // Sync native bridge cache once per physics frame (server-side physics uses NativeBridge)
-            // Must be early in processing order so all physics nodes have fresh cache data
-            if (IsServer)
-            {
-                NativeBridge.SyncFromGodot();
-            }
 
             _debugService();
 

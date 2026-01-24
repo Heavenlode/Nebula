@@ -10,6 +10,15 @@ namespace Nebula.Generator;
 [Generator]
 public class NetPropertyGenerator : IIncrementalGenerator
 {
+    // Diagnostic for missing NotifyOnChange handler implementation
+    private static readonly DiagnosticDescriptor MissingChangeHandlerDiagnostic = new(
+        id: "NEBULA001",
+        title: "Missing network change handler implementation",
+        messageFormat: "Property '{0}' has NotifyOnChange=true but partial method 'OnNetChange{0}' is not implemented. Add: partial void OnNetChange{0}(int tick, {1} oldVal, {1} newVal) {{ /* your code */ }}",
+        category: "Nebula",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
     // Maps C# types to their PropertyCache field names
     private static readonly Dictionary<string, string> TypeToPropertyCacheField = new()
     {
@@ -59,6 +68,10 @@ public class NetPropertyGenerator : IIncrementalGenerator
         bool notifyOnChange = false;
         bool interpolate = false;
         float interpolateSpeed = 15f;
+        bool predicted = false;
+        float predictionSmoothRate = 0.2f;
+        float predictionSnapThreshold = 2.0f;
+        float predictionTolerance = 0.001f;
 
         foreach (var attr in propertySymbol.GetAttributes())
         {
@@ -77,6 +90,18 @@ public class NetPropertyGenerator : IIncrementalGenerator
                             break;
                         case "InterpolateSpeed" when namedArg.Value.Value is float f:
                             interpolateSpeed = f;
+                            break;
+                        case "Predicted" when namedArg.Value.Value is bool b3:
+                            predicted = b3;
+                            break;
+                        case "PredictionSmoothRate" when namedArg.Value.Value is float f2:
+                            predictionSmoothRate = f2;
+                            break;
+                        case "PredictionSnapThreshold" when namedArg.Value.Value is float f3:
+                            predictionSnapThreshold = f3;
+                            break;
+                        case "PredictionTolerance" when namedArg.Value.Value is float f4:
+                            predictionTolerance = f4;
                             break;
                     }
                 }
@@ -102,6 +127,21 @@ public class NetPropertyGenerator : IIncrementalGenerator
         // Count [NetProperty] properties in all base classes
         int baseClassPropertyCount = CountBaseClassNetProperties(containingType);
 
+        // Check if the user implemented the OnNetChange partial method
+        bool hasChangeHandlerImpl = false;
+        if (notifyOnChange)
+        {
+            var expectedMethodName = $"OnNetChange{propertySymbol.Name}";
+            hasChangeHandlerImpl = containingType.GetMembers(expectedMethodName)
+                .OfType<IMethodSymbol>()
+                .Any(m => m.Parameters.Length == 3 && 
+                          !m.DeclaringSyntaxReferences.All(r => 
+                              r.GetSyntax() is MethodDeclarationSyntax mds && mds.Body == null && mds.ExpressionBody == null));
+        }
+
+        // Get location for diagnostic reporting
+        var propertyLocation = propertySymbol.Locations.FirstOrDefault();
+
         return new PropertyInfo(
             propertySymbol.Name,
             simpleTypeName,
@@ -116,7 +156,13 @@ public class NetPropertyGenerator : IIncrementalGenerator
             interpolate,
             interpolateSpeed,
             isBsonSerializable,
-            baseClassPropertyCount);
+            baseClassPropertyCount,
+            hasChangeHandlerImpl,
+            propertyLocation,
+            predicted,
+            predictionSmoothRate,
+            predictionSnapThreshold,
+            predictionTolerance);
     }
 
     /// <summary>
@@ -305,6 +351,87 @@ public class NetPropertyGenerator : IIncrementalGenerator
     }
 
     /// <summary>
+    /// Generates the comparison expression for prediction tolerance checking.
+    /// Returns code that evaluates to true if values are within tolerance.
+    /// </summary>
+    private static string GetPredictionCompareExpression(PropertyInfo prop, string predictedVar, string confirmedVar)
+    {
+        var normalizedType = prop.PropertyType.Replace("Godot.", "");
+        var toleranceStr = prop.PredictionTolerance.ToString(System.Globalization.CultureInfo.InvariantCulture) + "f";
+
+        return normalizedType switch
+        {
+            "Vector3" => $"({predictedVar} - {confirmedVar}).LengthSquared() <= {toleranceStr} * {toleranceStr}",
+            "Vector2" => $"({predictedVar} - {confirmedVar}).LengthSquared() <= {toleranceStr} * {toleranceStr}",
+            "Quaternion" => $"Godot.Mathf.Abs({predictedVar}.Dot({confirmedVar})) >= 1.0f - {toleranceStr}",
+            "float" or "System.Single" => $"Godot.Mathf.Abs({predictedVar} - {confirmedVar}) <= {toleranceStr}",
+            "double" or "System.Double" => $"System.Math.Abs({predictedVar} - {confirmedVar}) <= {toleranceStr}",
+            "int" or "System.Int32" or "long" or "System.Int64" or "byte" or "System.Byte" => $"{predictedVar} == {confirmedVar}",
+            "bool" or "System.Boolean" => $"{predictedVar} == {confirmedVar}",
+            _ when prop.IsEnum => $"{predictedVar} == {confirmedVar}",
+            _ => $"{predictedVar}.Equals({confirmedVar})" // Fallback for unknown types
+        };
+    }
+
+    /// <summary>
+    /// Generates the smoothing implementation for prediction corrections.
+    /// </summary>
+    private static string GetPredictionSmoothImpl(PropertyInfo prop)
+    {
+        var normalizedType = prop.PropertyType.Replace("Godot.", "");
+        var smoothRateStr = prop.PredictionSmoothRate.ToString(System.Globalization.CultureInfo.InvariantCulture) + "f";
+        var snapThresholdStr = prop.PredictionSnapThreshold.ToString(System.Globalization.CultureInfo.InvariantCulture) + "f";
+
+        return normalizedType switch
+        {
+            "Vector3" => $@"var error = (_render_{prop.PropertyName} - _simulation_{prop.PropertyName}).Length();
+            if (error > {snapThresholdStr})
+            {{
+                _render_{prop.PropertyName} = _simulation_{prop.PropertyName};
+            }}
+            else
+            {{
+                _render_{prop.PropertyName} = _render_{prop.PropertyName}.Lerp(_simulation_{prop.PropertyName}, {smoothRateStr});
+            }}",
+            "Vector2" => $@"var error = (_render_{prop.PropertyName} - _simulation_{prop.PropertyName}).Length();
+            if (error > {snapThresholdStr})
+            {{
+                _render_{prop.PropertyName} = _simulation_{prop.PropertyName};
+            }}
+            else
+            {{
+                _render_{prop.PropertyName} = _render_{prop.PropertyName}.Lerp(_simulation_{prop.PropertyName}, {smoothRateStr});
+            }}",
+            "Quaternion" => $@"var render = _render_{prop.PropertyName};
+            var sim = _simulation_{prop.PropertyName};
+            if (render.LengthSquared() < 0.0001f) render = Godot.Quaternion.Identity;
+            if (sim.LengthSquared() < 0.0001f) sim = Godot.Quaternion.Identity;
+            render = render.Normalized();
+            sim = sim.Normalized();
+            var dot = render.Dot(sim);
+            if (dot < 1.0f - {snapThresholdStr})
+            {{
+                _render_{prop.PropertyName} = sim;
+            }}
+            else
+            {{
+                if (render.Dot(sim) < 0) sim = -sim;
+                _render_{prop.PropertyName} = render.Slerp(sim, {smoothRateStr});
+            }}",
+            "float" or "System.Single" => $@"var error = Godot.Mathf.Abs(_render_{prop.PropertyName} - _simulation_{prop.PropertyName});
+            if (error > {snapThresholdStr})
+            {{
+                _render_{prop.PropertyName} = _simulation_{prop.PropertyName};
+            }}
+            else
+            {{
+                _render_{prop.PropertyName} = Godot.Mathf.Lerp(_render_{prop.PropertyName}, _simulation_{prop.PropertyName}, {smoothRateStr});
+            }}",
+            _ => $"_render_{prop.PropertyName} = _simulation_{prop.PropertyName}; // No smoothing for this type"
+        };
+    }
+
+    /// <summary>
     /// Generates the default interpolation implementation based on property type.
     /// </summary>
     private static string GetDefaultInterpolationImpl(string propertyType, float speed)
@@ -345,6 +472,19 @@ public class NetPropertyGenerator : IIncrementalGenerator
             var sb = new StringBuilder();
             var propList = group.ToList();
 
+            // Report diagnostics for missing change handler implementations
+            foreach (var prop in propList)
+            {
+                if (prop!.NotifyOnChange && !prop.HasChangeHandlerImpl && prop.PropertyLocation != null)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        MissingChangeHandlerDiagnostic,
+                        prop.PropertyLocation,
+                        prop.PropertyName,
+                        prop.PropertyType));
+                }
+            }
+
             // Get the base class property count offset - all props in this class have the same value
             var baseOffset = propList.FirstOrDefault()?.BaseClassPropertyCount ?? 0;
 
@@ -382,12 +522,12 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 {
                     sb.AppendLine($"    /// <summary>");
                     sb.AppendLine($"    /// Called when the {prop!.PropertyName} property changes over the network.");
-                    sb.AppendLine($"    /// Override this method to handle the change.");
+                    sb.AppendLine($"    /// Implement this partial method to handle the change.");
                     sb.AppendLine($"    /// </summary>");
                     sb.AppendLine($"    /// <param name=\"tick\">The network tick when the change occurred</param>");
                     sb.AppendLine($"    /// <param name=\"oldVal\">The previous value</param>");
                     sb.AppendLine($"    /// <param name=\"newVal\">The new value</param>");
-                    sb.AppendLine($"    protected virtual void OnNetChange{prop.PropertyName}(int tick, {prop.PropertyType} oldVal, {prop.PropertyType} newVal) {{ }}");
+                    sb.AppendLine($"    partial void OnNetChange{prop.PropertyName}(int tick, {prop.PropertyType} oldVal, {prop.PropertyType} newVal);");
                     sb.AppendLine($"    public event System.Action<int, {prop.PropertyType}, {prop.PropertyType}> NetChangeListener{prop.PropertyName};");
                     sb.AppendLine();
                 }
@@ -487,7 +627,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 }
                 else
                 {
-                    var indicesStr = string.Join(" or ", notifyIndices.Select(idx => $"propIndex == {idx}"));
+                    var indicesStr = string.Join(" || ", notifyIndices.Select(idx => $"propIndex == {idx}"));
                     sb.AppendLine($"        return {indicesStr};");
                 }
             }
@@ -654,6 +794,17 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine("    /// </summary>");
                 sb.AppendLine("    internal override void ProcessInterpolation(float delta)");
                 sb.AppendLine("    {");
+                
+                // If any property has both Interpolate and Predicted, skip interpolation for owned entities
+                // (prediction handles owned entities, interpolation handles non-owned)
+                var hasPredictedInterpolated = interpolatedProps.Any(p => p!.Predicted);
+                if (hasPredictedInterpolated)
+                {
+                    sb.AppendLine("        // Skip interpolation for owned entities - prediction handles them");
+                    sb.AppendLine("        if (Network.IsCurrentOwner) return;");
+                    sb.AppendLine();
+                }
+                
                 sb.AppendLine("        var parentNetwork = Network.IsNetScene() ? Network : Network.NetParent;");
                 sb.AppendLine("        var scenePath = parentNetwork.NetSceneFilePath;");
                 sb.AppendLine("        var staticChildId = Network.StaticChildId;");
@@ -691,6 +842,209 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine("    internal override void ProcessInterpolation(float delta) { }");
             }
 
+            // Generate prediction methods for properties with Predicted = true
+            var predictedProps = propList.Where(p => p!.Predicted).ToList();
+            if (predictedProps.Count > 0)
+            {
+                sb.AppendLine();
+                sb.AppendLine("    #region Client-Side Prediction");
+                sb.AppendLine();
+                sb.AppendLine("    // ============================================================");
+                sb.AppendLine("    // HOT PATH OPTIMIZATION: Circular buffers, no per-tick allocation");
+                sb.AppendLine("    // ============================================================");
+                sb.AppendLine();
+                sb.AppendLine("    private const int PREDICTION_BUFFER_SIZE = 64; // Power of 2 for fast modulo");
+                sb.AppendLine();
+
+                // Generate per-property storage
+                foreach (var prop in predictedProps)
+                {
+                    sb.AppendLine($"    // Prediction state for {prop!.PropertyName}");
+                    sb.AppendLine($"    private {prop.PropertyType} _render_{prop.PropertyName};");
+                    sb.AppendLine($"    private {prop.PropertyType} _simulation_{prop.PropertyName};");
+                    sb.AppendLine($"    private {prop.PropertyType}[] _predicted_{prop.PropertyName} = new {prop.PropertyType}[PREDICTION_BUFFER_SIZE];");
+                    sb.AppendLine($"    private {prop.PropertyType} _confirmed_{prop.PropertyName};");
+                    sb.AppendLine($"    private int _confirmed_{prop.PropertyName}_GlobalIndex = -1;");
+                    sb.AppendLine($"    private bool _mispredicted_{prop.PropertyName};");
+                    sb.AppendLine();
+                }
+
+                // Generate StorePredictedState
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Stores current predicted state for all predicted properties.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    internal override void StorePredictedState(int tick)");
+                sb.AppendLine("    {");
+                sb.AppendLine("        int slot = tick & (PREDICTION_BUFFER_SIZE - 1);");
+                foreach (var prop in predictedProps)
+                {
+                    sb.AppendLine($"        _predicted_{prop!.PropertyName}[slot] = {prop.PropertyName};");
+                }
+                sb.AppendLine("    }");
+                sb.AppendLine();
+
+                // Generate StoreConfirmedState
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Stores confirmed server state for all predicted properties.");
+                sb.AppendLine("    /// Reads from CachedProperties (where server values are stored during import)");
+                sb.AppendLine("    /// rather than from the properties themselves (which have client-predicted values).");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    internal override void StoreConfirmedState()");
+                sb.AppendLine("    {");
+                sb.AppendLine("        var parentNetwork = Network.IsNetScene() ? Network : Network.NetParent;");
+                sb.AppendLine("        var scenePath = parentNetwork.NetSceneFilePath;");
+                sb.AppendLine("        var staticChildId = Network.StaticChildId;");
+                sb.AppendLine();
+                foreach (var prop in predictedProps)
+                {
+                    var cacheReadExpr = GetCacheReadExpression(prop!, $"parentNetwork.CachedProperties[_confirmed_{prop!.PropertyName}_GlobalIndex]");
+                    sb.AppendLine($"        if (_confirmed_{prop.PropertyName}_GlobalIndex < 0)");
+                    sb.AppendLine("        {");
+                    sb.AppendLine($"            if (Nebula.Serialization.Protocol.LookupPropertyByStaticChildId(scenePath, staticChildId, \"{prop.PropertyName}\", out var prop_{prop.PropertyName}))");
+                    sb.AppendLine("            {");
+                    sb.AppendLine($"                _confirmed_{prop.PropertyName}_GlobalIndex = prop_{prop.PropertyName}.Index;");
+                    sb.AppendLine("            }");
+                    sb.AppendLine("        }");
+                    sb.AppendLine($"        if (_confirmed_{prop.PropertyName}_GlobalIndex >= 0)");
+                    sb.AppendLine("        {");
+                    sb.AppendLine($"            _confirmed_{prop.PropertyName} = {cacheReadExpr};");
+                    sb.AppendLine($"            _simulation_{prop.PropertyName} = {cacheReadExpr};");
+                    sb.AppendLine("        }");
+                    sb.AppendLine();
+                }
+                sb.AppendLine("    }");
+                sb.AppendLine();
+
+                // Generate RestoreToConfirmedState
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Restores all predicted properties to confirmed server state.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    internal override void RestoreToConfirmedState()");
+                sb.AppendLine("    {");
+                foreach (var prop in predictedProps)
+                {
+                    sb.AppendLine($"        {prop!.PropertyName} = _confirmed_{prop.PropertyName};");
+                }
+                sb.AppendLine("        OnConfirmedStateRestored();");
+                sb.AppendLine("    }");
+                sb.AppendLine();
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Called after predicted properties are restored to confirmed state.");
+                sb.AppendLine("    /// Implement this partial method to perform additional actions after rollback.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    partial void OnConfirmedStateRestored();");
+                sb.AppendLine();
+
+                // Generate RestoreMispredictedToConfirmed - only restores properties that actually mispredicted
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Restores only mispredicted properties to confirmed server state.");
+                sb.AppendLine("    /// Properties that matched within tolerance are left unchanged.");
+                sb.AppendLine("    /// This prevents correct predictions from being overwritten by unrelated mispredictions.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    internal override void RestoreMispredictedToConfirmed()");
+                sb.AppendLine("    {");
+                foreach (var prop in predictedProps)
+                {
+                    sb.AppendLine($"        if (_mispredicted_{prop!.PropertyName}) {prop.PropertyName} = _confirmed_{prop.PropertyName};");
+                }
+                sb.AppendLine("        OnConfirmedStateRestored();");
+                sb.AppendLine("    }");
+                sb.AppendLine();
+
+                // Generate RestoreToPredictedState
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Restores all predicted properties from the prediction buffer for a given tick.");
+                sb.AppendLine("    /// Used when prediction was correct and we need to continue with predicted values after import.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    internal override void RestoreToPredictedState(int tick)");
+                sb.AppendLine("    {");
+                sb.AppendLine("        int slot = tick & (PREDICTION_BUFFER_SIZE - 1);");
+                foreach (var prop in predictedProps)
+                {
+                    sb.AppendLine($"        {prop!.PropertyName} = _predicted_{prop.PropertyName}[slot];");
+                }
+                sb.AppendLine("        OnPredictedStateRestored();");
+                sb.AppendLine("    }");
+                sb.AppendLine();
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Called after predicted properties are restored from prediction buffer.");
+                sb.AppendLine("    /// Implement this partial method to perform additional actions after restoration.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    partial void OnPredictedStateRestored();");
+                sb.AppendLine();
+
+                // Generate CompareAllPredictedState
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Compares all predicted properties against confirmed state.");
+                sb.AppendLine("    /// Returns true if all within tolerance, false if any misprediction.");
+                sb.AppendLine("    /// Also sets _mispredicted_PropertyName flags for selective rollback.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    internal override bool CompareAllPredictedState(int tick)");
+                sb.AppendLine("    {");
+                sb.AppendLine("        int slot = tick & (PREDICTION_BUFFER_SIZE - 1);");
+                sb.AppendLine("        bool allMatch = true;");
+                foreach (var prop in predictedProps)
+                {
+                    var compareExpr = GetPredictionCompareExpression(prop!, $"predicted_{prop!.PropertyName}", $"confirmed_{prop.PropertyName}");
+                    sb.AppendLine($"        var predicted_{prop!.PropertyName} = _predicted_{prop.PropertyName}[slot];");
+                    sb.AppendLine($"        var confirmed_{prop.PropertyName} = _confirmed_{prop.PropertyName};");
+                    sb.AppendLine($"        var match_{prop.PropertyName} = {compareExpr};");
+                    sb.AppendLine($"        _mispredicted_{prop.PropertyName} = !match_{prop.PropertyName};");
+                    sb.AppendLine($"        if (!match_{prop.PropertyName}) allMatch = false;");
+                }
+                sb.AppendLine("        return allMatch;");
+                sb.AppendLine("    }");
+                sb.AppendLine();
+
+                // Generate ProcessPredictionSmoothing
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Smooths render values toward simulation values. Called every frame.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    internal override void ProcessPredictionSmoothing(float delta)");
+                sb.AppendLine("    {");
+                sb.AppendLine("        if (!Network.IsCurrentOwner) return;");
+                sb.AppendLine();
+                foreach (var prop in predictedProps)
+                {
+                    sb.AppendLine($"        // Smooth {prop!.PropertyName}");
+                    sb.AppendLine("        {");
+                    var smoothImpl = GetPredictionSmoothImpl(prop);
+                    // Indent each line
+                    foreach (var line in smoothImpl.Split('\n'))
+                    {
+                        sb.AppendLine($"            {line.Trim()}");
+                    }
+                    sb.AppendLine("        }");
+                }
+                sb.AppendLine("    }");
+                sb.AppendLine();
+
+                // Generate render value getters for use in visual code
+                foreach (var prop in predictedProps)
+                {
+                    sb.AppendLine($"    /// <summary>");
+                    sb.AppendLine($"    /// Gets the render value of {prop!.PropertyName} (smoothed after corrections).");
+                    sb.AppendLine($"    /// Use this for visual display instead of the property directly when prediction is active.");
+                    sb.AppendLine($"    /// </summary>");
+                    sb.AppendLine($"    public {prop.PropertyType} GetRender{prop.PropertyName}() => _render_{prop.PropertyName};");
+                    sb.AppendLine();
+                }
+
+                sb.AppendLine("    #endregion");
+            }
+            else
+            {
+                // No predicted properties - generate stubs
+                sb.AppendLine();
+                sb.AppendLine("    internal override void StorePredictedState(int tick) { }");
+                sb.AppendLine("    internal override void StoreConfirmedState() { }");
+                sb.AppendLine("    internal override void RestoreToConfirmedState() { }");
+                sb.AppendLine("    internal override void RestoreMispredictedToConfirmed() { }");
+                sb.AppendLine("    internal override void RestoreToPredictedState(int tick) { }");
+                sb.AppendLine("    internal override bool CompareAllPredictedState(int tick) => true;");
+                sb.AppendLine("    internal override void ProcessPredictionSmoothing(float delta) { }");
+            }
+
             sb.AppendLine("}");
 
             context.AddSource($"{className}.NetProperties.g.cs", sb.ToString());
@@ -709,5 +1063,12 @@ public class NetPropertyGenerator : IIncrementalGenerator
         bool Interpolate,
         float InterpolateSpeed,
         bool IsBsonSerializable,
-        int BaseClassPropertyCount);
+        int BaseClassPropertyCount,
+        bool HasChangeHandlerImpl,
+        Location? PropertyLocation,
+        // Prediction fields
+        bool Predicted,
+        float PredictionSmoothRate,
+        float PredictionSnapThreshold,
+        float PredictionTolerance);
 }

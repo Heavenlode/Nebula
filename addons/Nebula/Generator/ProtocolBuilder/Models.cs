@@ -42,6 +42,10 @@ namespace Nebula.Generators
         public bool Interpolate { get; set; } = false;
         public float InterpolateSpeed { get; set; } = 15f;
         public bool IsEnum { get; set; } = false;
+        /// <summary>
+        /// When true, this property participates in client-side prediction.
+        /// </summary>
+        public bool Predicted { get; set; } = false;
     }
 
     internal sealed class FunctionData

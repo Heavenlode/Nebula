@@ -65,13 +65,13 @@ namespace Nebula
 		public bool DespawnOnUnowned = false;
 
 		public bool IsQueuedForDespawn => CurrentWorld.QueueDespawnedNodes.Contains(this);
-		
+
 		/// <summary>
 		/// Cached flag to avoid calling Godot's IsQueuedForDeletion() every tick.
 		/// Set to true when QueueNodeForDeletion() is called.
 		/// </summary>
 		internal bool IsMarkedForDeletion { get; private set; } = false;
-		
+
 		/// <summary>
 		/// Queue this node for deletion. Sets the cached flag and calls QueueFree().
 		/// Use this instead of RawNode.QueueFree() to enable zero-allocation deletion checks.
@@ -262,6 +262,7 @@ namespace Nebula
 		/// <summary>
 		/// Initializes StaticNetworkChildren array and assigns StaticChildId to each child.
 		/// Uses Protocol data to map node paths to IDs (init-time Godot calls are acceptable).
+		/// Also propagates InputAuthority if parent already has it set.
 		/// </summary>
 		private void InitializeStaticChildren()
 		{
@@ -288,6 +289,12 @@ namespace Nebula
 				{
 					netChild.Network.StaticChildId = nodeId;
 					StaticNetworkChildren[nodeId] = netChild.Network;
+
+					// Inherit InputAuthority from parent if already set
+					if (InputAuthority.IsSet)
+					{
+						netChild.Network.SetInputAuthorityInternal(InputAuthority);
+					}
 				}
 			}
 		}
@@ -514,6 +521,195 @@ namespace Nebula
 
 		#endregion
 
+		#region Client-Side Prediction
+
+		// ============================================================
+		// HOT PATH OPTIMIZATION: All structures designed for zero-allocation tick processing
+		// ============================================================
+
+		// Input buffering (client-side, for redundancy and rollback)
+		// Use array-based circular buffer instead of Dictionary to avoid allocations
+		private const int INPUT_BUFFER_SIZE = 64; // Power of 2 for fast modulo
+		internal const int INPUT_REDUNDANCY_COUNT = 8;
+		private byte[][] _inputBuffer;  // Lazy-init: Pre-allocated slots
+		private Tick[] _inputBufferTicks; // Tick for each slot
+		private Tick _lastBufferedInputTick = -1;
+
+		// Prediction tracking
+		/// <summary>
+		/// True when this entity is currently running predicted simulation (client-side).
+		/// </summary>
+		public bool IsPredicting { get; internal set; }
+
+		/// <summary>
+		/// True during rollback replay (re-simulation after misprediction).
+		/// Use this to skip side effects (sounds, particles) during resimulation.
+		/// </summary>
+		public bool IsResimulating { get; internal set; }
+
+		// Tick tracking for prediction
+		private Tick _lastConfirmedTick = -1;
+		private Tick _lastPredictedTick = -1;
+
+		// Reusable list for GetRecentInputs (avoid allocation on every call)
+		private List<(Tick, byte[])> _recentInputsCache;
+
+		// Pooled buffer for sending input packets (avoids per-tick allocation)
+		private NetBuffer _inputSendBuffer;
+
+		/// <summary>
+		/// Buffers input for the given tick in a circular buffer.
+		/// Used for input redundancy (sending multiple inputs per packet) and rollback replay.
+		/// </summary>
+		/// <param name="tick">The tick this input is for</param>
+		/// <param name="input">The input data to buffer</param>
+		public void BufferInput(Tick tick, ReadOnlySpan<byte> input)
+		{
+			// Lazy init
+			if (_inputBuffer == null)
+			{
+				_inputBuffer = new byte[INPUT_BUFFER_SIZE][];
+				_inputBufferTicks = new Tick[INPUT_BUFFER_SIZE];
+				for (int i = 0; i < INPUT_BUFFER_SIZE; i++)
+				{
+					_inputBufferTicks[i] = -1;
+				}
+			}
+
+			// Circular buffer index using fast modulo (power of 2)
+			int slot = (int)(tick & (INPUT_BUFFER_SIZE - 1));
+
+			// Reuse existing byte array if same size, otherwise allocate once
+			if (_inputBuffer[slot] == null || _inputBuffer[slot].Length != input.Length)
+			{
+				_inputBuffer[slot] = new byte[input.Length];
+			}
+
+			input.CopyTo(_inputBuffer[slot]);
+			_inputBufferTicks[slot] = tick;
+			_lastBufferedInputTick = tick;
+		}
+
+		/// <summary>
+		/// Gets buffered input for the given tick, or null if not found.
+		/// </summary>
+		/// <param name="tick">The tick to retrieve input for</param>
+		/// <returns>The input bytes, or null if not found (too old or never stored)</returns>
+		public byte[] GetBufferedInput(Tick tick)
+		{
+			if (_inputBuffer == null) return null;
+
+			int slot = (int)(tick & (INPUT_BUFFER_SIZE - 1));
+			if (_inputBufferTicks[slot] == tick)
+				return _inputBuffer[slot];
+			return null;  // Input not found (too old or never stored)
+		}
+
+		/// <summary>
+		/// Returns recent inputs for redundant transmission.
+		/// WARNING: Returns cached list - caller must NOT store reference long-term.
+		/// </summary>
+		/// <param name="count">Number of recent inputs to retrieve</param>
+		/// <returns>List of (tick, inputBytes) tuples, most recent first</returns>
+		public List<(Tick, byte[])> GetRecentInputs(int count)
+		{
+			_recentInputsCache ??= new List<(Tick, byte[])>(INPUT_REDUNDANCY_COUNT);
+			_recentInputsCache.Clear();
+
+			if (_inputBuffer == null || _lastBufferedInputTick < 0) return _recentInputsCache;
+
+			// Walk backwards from last buffered tick
+			for (int i = 0; i < count && i < INPUT_BUFFER_SIZE; i++)
+			{
+				var tick = _lastBufferedInputTick - i;
+				if (tick < 0) break;
+
+				var input = GetBufferedInput(tick);
+				if (input != null)
+				{
+					_recentInputsCache.Add((tick, input));
+				}
+			}
+
+			return _recentInputsCache;
+		}
+
+		/// <summary>
+		/// Gets the pooled NetBuffer for sending input packets.
+		/// Reuses the same buffer across ticks to avoid allocation.
+		/// </summary>
+		public NetBuffer GetPooledInputBuffer()
+		{
+			_inputSendBuffer ??= new NetBuffer();
+			_inputSendBuffer.Reset();
+			return _inputSendBuffer;
+		}
+
+		/// <summary>
+		/// Stores predicted state for the given tick by calling the generated method on the NetNode.
+		/// </summary>
+		public void StorePredictedState(Tick tick)
+		{
+			NetNode.StorePredictedState(tick);
+			_lastPredictedTick = tick;
+		}
+
+		/// <summary>
+		/// Stores confirmed server state by calling the generated method on the NetNode.
+		/// </summary>
+		public void StoreConfirmedState(Tick tick)
+		{
+			NetNode.StoreConfirmedState();
+			_lastConfirmedTick = tick;
+		}
+
+	/// <summary>
+	/// Restores properties to confirmed server state for rollback.
+	/// </summary>
+	public void RestoreToConfirmedState()
+	{
+		NetNode.RestoreToConfirmedState();
+	}
+
+	/// <summary>
+	/// Restores only mispredicted properties to confirmed server state.
+	/// Properties that matched within tolerance are left unchanged.
+	/// </summary>
+	public void RestoreMispredictedToConfirmed()
+	{
+		NetNode.RestoreMispredictedToConfirmed();
+	}
+
+	/// <summary>
+	/// Restores properties from the prediction buffer for a given tick.
+	/// Used when prediction was correct and we need to continue with predicted values after server state import.
+	/// </summary>
+	public void RestoreToPredictedState(Tick tick)
+		{
+			NetNode.RestoreToPredictedState(tick);
+		}
+
+		/// <summary>
+		/// Compares predicted state at tick with confirmed state.
+		/// Returns false if ANY predicted property mismatches (misprediction detected).
+		/// </summary>
+		public bool CompareStateWithTolerance(Tick tick)
+		{
+			return NetNode.CompareAllPredictedState(tick);
+		}
+
+		/// <summary>
+		/// The last tick that was confirmed by the server for this entity.
+		/// </summary>
+		public Tick LastConfirmedTick => _lastConfirmedTick;
+
+		/// <summary>
+		/// The last tick that was predicted locally for this entity.
+		/// </summary>
+		public Tick LastPredictedTick => _lastPredictedTick;
+
+		#endregion
+
 		public NetId NetId { get; internal set; }
 		public NetPeer InputAuthority { get; internal set; }
 		public void SetInputAuthority(NetPeer inputAuthority)
@@ -529,11 +725,45 @@ namespace Nebula
 				CurrentWorld.GetPeerWorldState(inputAuthority).Value.OwnedNodes.Add(this);
 			}
 			InputAuthority = inputAuthority;
+
+			// Propagate InputAuthority to all static network children
+			foreach (var staticChild in StaticNetworkChildren)
+			{
+				if (staticChild == null) continue;
+				staticChild.SetInputAuthorityInternal(inputAuthority);
+			}
+		}
+
+		/// <summary>
+		/// Internal method to set InputAuthority without server check (for propagation from parent).
+		/// Also propagates to nested static children.
+		/// </summary>
+		internal void SetInputAuthorityInternal(NetPeer inputAuthority)
+		{
+			if (CurrentWorld != null)
+			{
+				if (InputAuthority.IsSet)
+				{
+					CurrentWorld.GetPeerWorldState(InputAuthority).Value.OwnedNodes.Remove(this);
+				}
+				if (inputAuthority.IsSet)
+				{
+					CurrentWorld.GetPeerWorldState(inputAuthority).Value.OwnedNodes.Add(this);
+				}
+			}
+			InputAuthority = inputAuthority;
+
+			// Recursively propagate to nested static children
+			foreach (var staticChild in StaticNetworkChildren)
+			{
+				if (staticChild == null) continue;
+				staticChild.SetInputAuthorityInternal(inputAuthority);
+			}
 		}
 
 		public bool IsCurrentOwner
 		{
-			get { return NetRunner.Instance.IsServer || (NetRunner.Instance.IsClient && InputAuthority.Equals(NetRunner.Instance.ServerPeer)); }
+			get { return NetRunner.Instance.IsServer || (NetRunner.Instance.IsClient && InputAuthority.IsSet); }
 		}
 
 		public static INetNodeBase FindFromChild(Node node)

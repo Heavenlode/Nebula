@@ -54,7 +54,6 @@ namespace Nebula.Serialization.Serializers
 
                 network.InterestChanged += (UUID peerId, long oldInterest, long newInterest) =>
                 {
-                    // Fix #7: Use TryGetValue instead of ContainsKey + indexer
                     if (!peerInitialPropSync.TryGetValue(peerId, out var syncMask))
                         return;
 
@@ -165,12 +164,35 @@ namespace Nebula.Serialization.Serializers
                 }
             }
 
-            // Update cache (this is the target for interpolated properties)
+            // Update cache (this is the target for interpolated properties and reconciliation)
             network.CachedProperties[prop.Index] = newValue;
 
+            // ============================================================
+            // PREDICTION CHECK: For owned predicted entities, don't directly
+            // apply server state - reconciliation will handle it in WorldRunner.
+            // We still update CachedProperties above for reconciliation comparison.
+            // Only skip immediate application for predicted properties on owned entities
+            // that aren't currently resimulating.
+            // EXCEPTION: During initial spawn (IsWorldReady=false), always apply the
+            // value so the entity starts with the correct server state.
+            // ============================================================
+            bool isOwnedPredicted = network.IsCurrentOwner 
+                && prop.Predicted 
+                && !network.IsResimulating 
+                && NetRunner.Instance.IsClient
+                && network.IsWorldReady;  // Allow initial spawn to apply values
+            
+            if (isOwnedPredicted)
+            {
+                // Don't apply immediately - reconciliation in WorldRunner will handle
+                // The value is already in CachedProperties for StoreConfirmedState
+                return;
+            }
+
             // For interpolated properties, don't set immediately - ProcessInterpolation will handle it
+            // EXCEPTION: During initial spawn (IsWorldReady=false), apply directly so entity starts correct
             // For non-interpolated properties, set via generated setter (no Godot boundary)
-            if (!prop.Interpolate)
+            if (!prop.Interpolate || !network.IsWorldReady)
             {
                 // Use LocalIndex (class-local) not Index (scene-global) for SetNetPropertyByIndex
                 // Call via base class type (NetNode3D/NetNode2D/NetNode) to use virtual dispatch
@@ -419,6 +441,7 @@ namespace Nebula.Serialization.Serializers
                 var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                 // Get a ref to the value in the dictionary for zero-copy
                 ref var propValue = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(data.properties, propIndex);
+                
                 if (isReady)
                 {
                     ImportProperty(prop, currentWorld.CurrentTick, ref propValue);
@@ -493,7 +516,6 @@ namespace Nebula.Serialization.Serializers
             Array.Clear(_propertiesUpdated, 0, byteCount);
             Array.Clear(_filteredProps, 0, byteCount);
 
-            // Fix #7: Use TryGetValue instead of ContainsKey + indexer
             if (!peerInitialPropSync.TryGetValue(peerId, out var initialSync))
             {
                 initialSync = new byte[byteCount];
@@ -505,7 +527,6 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
-            // Fix #7: Use TryGetValue instead of ContainsKey + indexer
             if (!peerBufferCache.TryGetValue(peerId, out var currentPeerCache))
             {
                 currentPeerCache = new Dictionary<Tick, byte[]>();

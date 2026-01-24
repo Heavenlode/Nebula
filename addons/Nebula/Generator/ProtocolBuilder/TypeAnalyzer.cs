@@ -24,6 +24,10 @@ namespace Nebula.Generators
             /// Index of this property within its declaring class (used for SetNetPropertyByIndex).
             /// </summary>
             public byte ClassLocalIndex { get; init; }
+            /// <summary>
+            /// When true, this property participates in client-side prediction.
+            /// </summary>
+            public bool Predicted { get; init; } = false;
         }
 
         public sealed class NetFunctionInfo
@@ -321,6 +325,7 @@ namespace Nebula.Generators
                         InterpolateSpeed = GetNamedArgument(netPropAttr, "InterpolateSpeed", 15f),
                         IsEnum = prop.Type.TypeKind == TypeKind.Enum,
                         ClassLocalIndex = (byte)cumulativeIndex,
+                        Predicted = GetNamedArgument(netPropAttr, "Predicted", false),
                     };
                 }
 

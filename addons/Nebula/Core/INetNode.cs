@@ -57,6 +57,60 @@ namespace Nebula {
         /// </summary>
         /// <param name="delta">Frame delta time in seconds</param>
         public void ProcessInterpolation(float delta) { }
+
+        #region Client-Side Prediction
+
+        /// <summary>
+        /// Stores current predicted state for rollback comparison.
+        /// Generated implementation stores each [NetProperty(Predicted=true)] property
+        /// in a circular buffer indexed by tick.
+        /// </summary>
+        /// <param name="tick">The tick to associate with this predicted state</param>
+        public void StorePredictedState(int tick) { }
+
+        /// <summary>
+        /// Stores confirmed server state for reconciliation.
+        /// Called when authoritative server state is received.
+        /// </summary>
+        public void StoreConfirmedState() { }
+
+        /// <summary>
+        /// Restores properties to confirmed server state (for rollback).
+        /// Called at the start of reconciliation before re-simulating.
+        /// </summary>
+        public void RestoreToConfirmedState() { }
+
+        /// <summary>
+        /// Restores only mispredicted properties to confirmed server state.
+        /// Properties that matched within tolerance are left unchanged.
+        /// This prevents correct predictions from being overwritten by unrelated mispredictions.
+        /// </summary>
+        public void RestoreMispredictedToConfirmed() { }
+
+        /// <summary>
+        /// Restores properties from the prediction buffer for a given tick.
+        /// Used when prediction was correct and we need to continue with predicted values after server state import.
+        /// </summary>
+        public void RestoreToPredictedState(int tick) { }
+
+        /// <summary>
+        /// Compares predicted state at tick with confirmed state.
+        /// Returns true if all predicted properties are within tolerance (no misprediction).
+        /// Returns false if any property exceeds its tolerance threshold.
+        /// </summary>
+        /// <param name="tick">The tick whose predicted state to compare</param>
+        /// <returns>True if states match within tolerance, false if misprediction detected</returns>
+        public bool CompareAllPredictedState(int tick) => true;
+
+        /// <summary>
+        /// Smooths render values toward simulation values.
+        /// Called every frame in _Process for visual smoothing after corrections.
+        /// Only applies to properties with [NetProperty(Predicted=true)].
+        /// </summary>
+        /// <param name="delta">Frame delta time in seconds</param>
+        public void ProcessPredictionSmoothing(float delta) { }
+
+        #endregion
     }
 
     public interface INetNode<T> : INetNodeBase, INetSerializable<T>, IBsonSerializable<T> where T : Godot.Node { }

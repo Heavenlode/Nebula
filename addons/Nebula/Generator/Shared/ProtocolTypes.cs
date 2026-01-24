@@ -121,6 +121,11 @@ namespace Nebula.Serialization
         public readonly bool NotifyOnChange;
         public readonly bool Interpolate;
         public readonly float InterpolateSpeed;
+        /// <summary>
+        /// When true, this property participates in client-side prediction.
+        /// Server state is not directly applied; reconciliation handles it.
+        /// </summary>
+        public readonly bool Predicted;
 
         public ProtocolNetProperty(
             string nodePath,
@@ -134,7 +139,8 @@ namespace Nebula.Serialization
             int classIndex,
             bool notifyOnChange = false,
             bool interpolate = false,
-            float interpolateSpeed = 15f)
+            float interpolateSpeed = 15f,
+            bool predicted = false)
         {
             NodePath = nodePath;
             Name = name;
@@ -148,6 +154,7 @@ namespace Nebula.Serialization
             NotifyOnChange = notifyOnChange;
             Interpolate = interpolate;
             InterpolateSpeed = interpolateSpeed;
+            Predicted = predicted;
         }
     }
 

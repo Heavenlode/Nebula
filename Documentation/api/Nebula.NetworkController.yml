@@ -72,7 +72,7 @@ items:
   fullName: Nebula.NetworkController
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -202,7 +202,7 @@ items:
   fullName: Nebula.NetworkController.NetNode
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -223,7 +223,7 @@ items:
   fullName: Nebula.NetworkController.DespawnOnUnowned
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -246,7 +246,7 @@ items:
   fullName: Nebula.NetworkController.StaticNetworkChildren
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -267,7 +267,7 @@ items:
   fullName: Nebula.NetworkController.DirtyMask
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -290,7 +290,7 @@ items:
   fullName: Nebula.NetworkController.DynamicNetworkChildren
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -311,7 +311,7 @@ items:
   fullName: Nebula.NetworkController.NetworkController(Godot.Node)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -337,7 +337,7 @@ items:
   fullName: Nebula.NetworkController.QueueNodeForDeletion()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -362,7 +362,7 @@ items:
   fullName: Nebula.NetworkController.IsNetScene()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -384,7 +384,7 @@ items:
   fullName: Nebula.NetworkController.SetPeerInterest(Nebula.UUID, long, bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -414,7 +414,7 @@ items:
   fullName: Nebula.NetworkController.AddPeerInterest(Nebula.UUID, long, bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -444,7 +444,7 @@ items:
   fullName: Nebula.NetworkController.IsPeerInterested(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -469,7 +469,7 @@ items:
   fullName: Nebula.NetworkController.IsPeerInterested(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -494,7 +494,7 @@ items:
   fullName: Nebula.NetworkController._Notification(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -522,7 +522,7 @@ items:
   fullName: Nebula.NetworkController.MarkDirty<T>(Nebula.INetNodeBase, string, T)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -559,7 +559,7 @@ items:
   fullName: Nebula.NetworkController.MarkDirtyRef<T>(Nebula.INetNodeBase, string, T)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -596,7 +596,7 @@ items:
   fullName: Nebula.NetworkController.GetInputBytes()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -620,7 +620,7 @@ items:
   fullName: Nebula.NetworkController.SetInputBytes(System.ReadOnlySpan<byte>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -648,7 +648,7 @@ items:
   fullName: Nebula.NetworkController.ClearInputChanged()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -673,7 +673,7 @@ items:
   fullName: Nebula.NetworkController.InitializeInput<TInput>()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -704,7 +704,7 @@ items:
   fullName: Nebula.NetworkController.SetInput<TInput>(in TInput)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -736,7 +736,7 @@ items:
   fullName: Nebula.NetworkController.GetInput<TInput>()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -767,7 +767,7 @@ items:
   fullName: Nebula.NetworkController.BufferInput(int, System.ReadOnlySpan<byte>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -802,7 +802,7 @@ items:
   fullName: Nebula.NetworkController.GetBufferedInput(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -834,7 +834,7 @@ items:
   fullName: Nebula.NetworkController.GetRecentInputs(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -869,7 +869,7 @@ items:
   fullName: Nebula.NetworkController.GetPooledInputBuffer()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -896,7 +896,7 @@ items:
   fullName: Nebula.NetworkController.StorePredictedState(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -924,7 +924,7 @@ items:
   fullName: Nebula.NetworkController.StoreConfirmedState(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -952,7 +952,7 @@ items:
   fullName: Nebula.NetworkController.Reconcile(int, bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -989,7 +989,7 @@ items:
   fullName: Nebula.NetworkController.RestoreToPredictedState(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1020,7 +1020,7 @@ items:
   fullName: Nebula.NetworkController.SetInputAuthority(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1043,7 +1043,7 @@ items:
   fullName: Nebula.NetworkController.FindFromChild(Godot.Node)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1068,7 +1068,7 @@ items:
   fullName: Nebula.NetworkController._OnPeerConnected(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1091,7 +1091,7 @@ items:
   fullName: Nebula.NetworkController.PrepareSpawn(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1114,7 +1114,7 @@ items:
   fullName: Nebula.NetworkController._WorldReady()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1134,7 +1134,7 @@ items:
   fullName: Nebula.NetworkController._NetworkProcess(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1160,7 +1160,7 @@ items:
   fullName: Nebula.NetworkController.NodePathFromNetScene()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1182,7 +1182,7 @@ items:
   fullName: Nebula.NetworkController.Despawn()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1202,7 +1202,7 @@ items:
   fullName: Nebula.NetworkController.RawNode
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1225,7 +1225,7 @@ items:
   fullName: Nebula.NetworkController.NetNodePath
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1248,7 +1248,7 @@ items:
   fullName: Nebula.NetworkController.NetSceneFilePath
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1271,7 +1271,7 @@ items:
   fullName: Nebula.NetworkController.IsQueuedForDespawn
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1294,7 +1294,7 @@ items:
   fullName: Nebula.NetworkController.CurrentWorld
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1317,7 +1317,7 @@ items:
   fullName: Nebula.NetworkController.InterestLayers
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1340,7 +1340,7 @@ items:
   fullName: Nebula.NetworkController.StaticChildId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1370,7 +1370,7 @@ items:
   fullName: Nebula.NetworkController.IsWorldReady
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1393,7 +1393,7 @@ items:
   fullName: Nebula.NetworkController.NetParentId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1416,7 +1416,7 @@ items:
   fullName: Nebula.NetworkController.NetParent
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1439,7 +1439,7 @@ items:
   fullName: Nebula.NetworkController.IsClientSpawn
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1462,7 +1462,7 @@ items:
   fullName: Nebula.NetworkController.HasInputSupport
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1487,7 +1487,7 @@ items:
   fullName: Nebula.NetworkController.HasInputChanged
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1512,7 +1512,7 @@ items:
   fullName: Nebula.NetworkController.IsPredicting
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1537,7 +1537,7 @@ items:
   fullName: Nebula.NetworkController.IsResimulating
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1565,7 +1565,7 @@ items:
   fullName: Nebula.NetworkController.LastConfirmedTick
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1590,7 +1590,7 @@ items:
   fullName: Nebula.NetworkController.LastPredictedTick
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1615,7 +1615,7 @@ items:
   fullName: Nebula.NetworkController.NetId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1638,7 +1638,7 @@ items:
   fullName: Nebula.NetworkController.InputAuthority
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1661,7 +1661,7 @@ items:
   fullName: Nebula.NetworkController.IsCurrentOwner
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1684,7 +1684,7 @@ items:
   fullName: Nebula.NetworkController.InterestChanged
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1707,7 +1707,7 @@ items:
   fullName: Nebula.NetworkController.OnInterestChanged
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula

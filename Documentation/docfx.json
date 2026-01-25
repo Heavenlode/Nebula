@@ -30,7 +30,8 @@
         "exclude": [
           "**/obj/**",
           "**/bin/**",
-          "_site/**"
+          "_site/**",
+          "filterConfig.yml"
         ]
       }
     ],
@@ -63,7 +64,8 @@
     "fileMetadataFiles": [],
     "template": [
       "default",
-      "modern"
+      "modern",
+      "templates/modern"
     ],
     "postProcessors": [],
     "markdownEngineName": "markdig",

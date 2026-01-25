@@ -56,7 +56,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -90,7 +90,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -118,7 +118,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -146,7 +146,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -174,7 +174,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(short)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -202,7 +202,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -230,7 +230,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(long)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -258,7 +258,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(ulong)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -286,7 +286,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(float)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -314,7 +314,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -342,7 +342,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector2)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -367,7 +367,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector2I)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -392,7 +392,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -417,7 +417,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector3I)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -442,7 +442,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector4)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -467,7 +467,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Quaternion)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -492,7 +492,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Color)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -517,7 +517,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -545,7 +545,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(int[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -573,7 +573,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(long[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -601,7 +601,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBsonEnum<T>(T)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -633,7 +633,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Nebula.Serialization.IBsonSerializableBase, Nebula.Serialization.NetBsonContext)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -662,7 +662,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBsonValue<T>(in T)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -694,7 +694,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToString(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -719,7 +719,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToBool(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -744,7 +744,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToByte(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -769,7 +769,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToShort(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -794,7 +794,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToInt(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -819,7 +819,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToLong(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -844,7 +844,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToULong(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -869,7 +869,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToFloat(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -894,7 +894,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToDouble(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -919,7 +919,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToVector2(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -944,7 +944,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToVector2I(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -969,7 +969,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToVector3(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -994,7 +994,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToVector3I(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1019,7 +1019,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToVector4(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1044,7 +1044,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToQuaternion(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1069,7 +1069,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToColor(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1094,7 +1094,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToByteArray(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1119,7 +1119,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToInt32Array(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1144,7 +1144,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToInt64Array(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1169,7 +1169,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.ToEnum<T>(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1201,7 +1201,7 @@ items:
   fullName: Nebula.Serialization.BsonTypeHelper.FromBsonValue<T>(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization

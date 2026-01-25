@@ -21,7 +21,7 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.SpawnSerializer_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.SpawnSerializer_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -151,7 +151,7 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer.SpawnSerializer(Nebula.NetworkController)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -177,7 +177,7 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer.Begin()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -200,7 +200,7 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer.Cleanup()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -223,7 +223,7 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer.CleanupPeer(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -254,7 +254,7 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer.Export(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -291,7 +291,7 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer.Acknowledge(Nebula.WorldRunner, ENet.Peer, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -324,7 +324,7 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer.Import(Nebula.WorldRunner, Nebula.Serialization.NetBuffer, out Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -359,7 +359,7 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer._Process(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/SpawnSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers

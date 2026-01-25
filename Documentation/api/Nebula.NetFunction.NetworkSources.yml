@@ -16,7 +16,7 @@ items:
   fullName: Nebula.NetFunction.NetworkSources
   type: Enum
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -35,7 +35,7 @@ items:
   fullName: Nebula.NetFunction.NetworkSources.Client
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -55,7 +55,7 @@ items:
   fullName: Nebula.NetFunction.NetworkSources.Server
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -75,7 +75,7 @@ items:
   fullName: Nebula.NetFunction.NetworkSources.All
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula

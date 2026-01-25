@@ -23,7 +23,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -51,7 +51,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.NebulaLogInterpolatedStringHandler(int, int, Nebula.Utility.Tools.Debugger.DebugLevel, out bool)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -83,7 +83,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -109,7 +109,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -137,7 +137,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -167,7 +167,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -197,7 +197,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T, int, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -229,7 +229,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -255,7 +255,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(string, int, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -285,7 +285,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.ToStringAndClear()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -307,7 +307,7 @@ items:
   fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.Enabled
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools

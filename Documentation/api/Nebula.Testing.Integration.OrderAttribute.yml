@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Testing.Integration.OrderAttribute
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -92,7 +92,7 @@ items:
   fullName: Nebula.Testing.Integration.OrderAttribute.OrderAttribute(int)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -118,7 +118,7 @@ items:
   fullName: Nebula.Testing.Integration.OrderAttribute.Value
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -1964,7 +1964,7 @@ references:
 - uid: Nebula.Testing.Integration.OrderAttribute.#ctor*
   commentId: Overload:Nebula.Testing.Integration.OrderAttribute.#ctor
   isExternal: true
-  href: Nebula.Testing.Integration.OrderAttribute.-ctor.html#Nebula_Testing_Integration_OrderAttribute__ctor_System_Int32_
+  href: Nebula.Testing.Integration.OrderAttribute.html#Nebula_Testing_Integration_OrderAttribute__ctor_System_Int32_
   name: OrderAttribute
   nameWithType: OrderAttribute.OrderAttribute
   fullName: Nebula.Testing.Integration.OrderAttribute.OrderAttribute
@@ -1985,8 +1985,7 @@ references:
 - uid: Nebula.Testing.Integration.OrderAttribute.Value*
   commentId: Overload:Nebula.Testing.Integration.OrderAttribute.Value
   isExternal: true
-  href: Nebula.Testing.Integration.OrderAttribute.Value.html#Nebula_Testing_Integration_OrderAttribute_Value
+  href: Nebula.Testing.Integration.OrderAttribute.html#Nebula_Testing_Integration_OrderAttribute_Value
   name: Value
   nameWithType: OrderAttribute.Value
   fullName: Nebula.Testing.Integration.OrderAttribute.Value
-memberLayout: SeparatePages

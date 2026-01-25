@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -345,7 +345,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/ServerClientConnector/ServerClientConnector.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/ServerClientConnector/ServerClientConnector.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -367,7 +367,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector.ServerClientConnector()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -7102,18 +7102,17 @@ references:
 - uid: Nebula.Utility.Tools.ServerClientConnector._Ready*
   commentId: Overload:Nebula.Utility.Tools.ServerClientConnector._Ready
   isExternal: true
-  href: Nebula.Utility.Tools.ServerClientConnector._Ready.html#Nebula_Utility_Tools_ServerClientConnector__Ready
+  href: Nebula.Utility.Tools.ServerClientConnector.html#Nebula_Utility_Tools_ServerClientConnector__Ready
   name: _Ready
   nameWithType: ServerClientConnector._Ready
   fullName: Nebula.Utility.Tools.ServerClientConnector._Ready
 - uid: Nebula.Utility.Tools.ServerClientConnector.#ctor*
   commentId: Overload:Nebula.Utility.Tools.ServerClientConnector.#ctor
   isExternal: true
-  href: Nebula.Utility.Tools.ServerClientConnector.-ctor.html#Nebula_Utility_Tools_ServerClientConnector__ctor
+  href: Nebula.Utility.Tools.ServerClientConnector.html#Nebula_Utility_Tools_ServerClientConnector__ctor
   name: ServerClientConnector
   nameWithType: ServerClientConnector.ServerClientConnector
   fullName: Nebula.Utility.Tools.ServerClientConnector.ServerClientConnector
   nameWithType.vb: ServerClientConnector.New
   fullName.vb: Nebula.Utility.Tools.ServerClientConnector.New
   name.vb: New
-memberLayout: SeparatePages

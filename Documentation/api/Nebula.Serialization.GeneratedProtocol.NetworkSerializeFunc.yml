@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
   type: Delegate
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -47,7 +47,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.NetworkSerializeFunc(object, nint)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -75,7 +75,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke(Nebula.WorldRunner, ENet.Peer, ref Nebula.PropertyCache, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -107,7 +107,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke(Nebula.WorldRunner, ENet.Peer, ref Nebula.PropertyCache, Nebula.Serialization.NetBuffer, System.AsyncCallback, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -145,7 +145,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke(ref Nebula.PropertyCache, System.IAsyncResult)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -236,7 +236,7 @@ references:
 - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.#ctor*
   commentId: Overload:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.#ctor
   isExternal: true
-  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.-ctor.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc__ctor_System_Object_System_IntPtr_
+  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc__ctor_System_Object_System_IntPtr_
   name: NetworkSerializeFunc
   nameWithType: GeneratedProtocol.NetworkSerializeFunc.NetworkSerializeFunc
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.NetworkSerializeFunc
@@ -275,14 +275,14 @@ references:
 - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke*
   commentId: Overload:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke
   isExternal: true
-  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc_Invoke_Nebula_WorldRunner_ENet_Peer_Nebula_PropertyCache__Nebula_Serialization_NetBuffer_
+  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc_Invoke_Nebula_WorldRunner_ENet_Peer_Nebula_PropertyCache__Nebula_Serialization_NetBuffer_
   name: Invoke
   nameWithType: GeneratedProtocol.NetworkSerializeFunc.Invoke
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke
 - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke*
   commentId: Overload:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke
   isExternal: true
-  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc_BeginInvoke_Nebula_WorldRunner_ENet_Peer_Nebula_PropertyCache__Nebula_Serialization_NetBuffer_System_AsyncCallback_System_Object_
+  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc_BeginInvoke_Nebula_WorldRunner_ENet_Peer_Nebula_PropertyCache__Nebula_Serialization_NetBuffer_System_AsyncCallback_System_Object_
   name: BeginInvoke
   nameWithType: GeneratedProtocol.NetworkSerializeFunc.BeginInvoke
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke
@@ -305,8 +305,7 @@ references:
 - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke*
   commentId: Overload:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke
   isExternal: true
-  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc_EndInvoke_Nebula_PropertyCache__System_IAsyncResult_
+  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc_EndInvoke_Nebula_PropertyCache__System_IAsyncResult_
   name: EndInvoke
   nameWithType: GeneratedProtocol.NetworkSerializeFunc.EndInvoke
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke
-memberLayout: SeparatePages

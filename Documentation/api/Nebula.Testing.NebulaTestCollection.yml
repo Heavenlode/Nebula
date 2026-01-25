@@ -403,11 +403,10 @@ references:
 - uid: Nebula.Testing.NebulaTestCollection.#ctor*
   commentId: Overload:Nebula.Testing.NebulaTestCollection.#ctor
   isExternal: true
-  href: Nebula.Testing.NebulaTestCollection.-ctor.html#Nebula_Testing_NebulaTestCollection__ctor
+  href: Nebula.Testing.NebulaTestCollection.html#Nebula_Testing_NebulaTestCollection__ctor
   name: NebulaTestCollection
   nameWithType: NebulaTestCollection.NebulaTestCollection
   fullName: Nebula.Testing.NebulaTestCollection.NebulaTestCollection
   nameWithType.vb: NebulaTestCollection.New
   fullName.vb: Nebula.Testing.NebulaTestCollection.New
   name.vb: New
-memberLayout: SeparatePages

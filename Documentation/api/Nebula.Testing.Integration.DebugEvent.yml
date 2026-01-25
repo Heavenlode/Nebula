@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Testing.Integration.DebugEvent
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -43,7 +43,7 @@ items:
   fullName: Nebula.Testing.Integration.DebugEvent.Category
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -66,7 +66,7 @@ items:
   fullName: Nebula.Testing.Integration.DebugEvent.Message
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -335,7 +335,7 @@ references:
 - uid: Nebula.Testing.Integration.DebugEvent.Category*
   commentId: Overload:Nebula.Testing.Integration.DebugEvent.Category
   isExternal: true
-  href: Nebula.Testing.Integration.DebugEvent.Category.html#Nebula_Testing_Integration_DebugEvent_Category
+  href: Nebula.Testing.Integration.DebugEvent.html#Nebula_Testing_Integration_DebugEvent_Category
   name: Category
   nameWithType: DebugEvent.Category
   fullName: Nebula.Testing.Integration.DebugEvent.Category
@@ -353,8 +353,7 @@ references:
 - uid: Nebula.Testing.Integration.DebugEvent.Message*
   commentId: Overload:Nebula.Testing.Integration.DebugEvent.Message
   isExternal: true
-  href: Nebula.Testing.Integration.DebugEvent.Message.html#Nebula_Testing_Integration_DebugEvent_Message
+  href: Nebula.Testing.Integration.DebugEvent.html#Nebula_Testing_Integration_DebugEvent_Message
   name: Message
   nameWithType: DebugEvent.Message
   fullName: Nebula.Testing.Integration.DebugEvent.Message
-memberLayout: SeparatePages

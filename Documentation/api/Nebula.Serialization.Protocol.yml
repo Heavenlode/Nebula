@@ -39,7 +39,7 @@ items:
   fullName: Nebula.Serialization.Protocol
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -73,7 +73,7 @@ items:
   fullName: Nebula.Serialization.Protocol.LookupProperty(string, string, string, out Nebula.Serialization.ProtocolNetProperty)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -109,7 +109,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackProperty(string, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -141,7 +141,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryUnpackProperty(string, int, out Nebula.Serialization.ProtocolNetProperty)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -175,7 +175,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetPropertyCount(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -205,7 +205,7 @@ items:
   fullName: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId(string, byte, string, out Nebula.Serialization.ProtocolNetProperty)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -244,7 +244,7 @@ items:
   fullName: Nebula.Serialization.Protocol.LookupFunction(string, string, string, out Nebula.Serialization.ProtocolNetFunction)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -280,7 +280,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackFunction(string, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -312,7 +312,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetFunctionCount(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -342,7 +342,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetScenePath(byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -372,7 +372,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryGetSceneId(string, out byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -404,7 +404,7 @@ items:
   fullName: Nebula.Serialization.Protocol.IsNetScene(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -434,7 +434,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetSceneInterest(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -464,7 +464,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryGetSceneInterest(string, out Nebula.Serialization.ProtocolSceneInterest)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -496,7 +496,7 @@ items:
   fullName: Nebula.Serialization.Protocol.PackScene(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -526,7 +526,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackScene(byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -556,7 +556,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetStaticNodePath(string, byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -588,7 +588,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryGetStaticNodeId(string, string, out byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -622,7 +622,7 @@ items:
   fullName: Nebula.Serialization.Protocol.PackNode(string, string, out byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -656,7 +656,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackNode(string, byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -688,7 +688,7 @@ items:
   fullName: Nebula.Serialization.Protocol.InvokeStaticMethod(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType, params object[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -725,7 +725,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetStaticMethodCallable(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -757,7 +757,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetStaticMethod(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -786,7 +786,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetDeserializer(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -821,7 +821,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetSerializer(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -856,7 +856,7 @@ items:
   fullName: Nebula.Serialization.Protocol.ToGodotVariantType(Nebula.Serialization.SerialVariantType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -883,7 +883,7 @@ items:
   fullName: Nebula.Serialization.Protocol.FromGodotVariantType(Godot.Variant.Type)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1166,7 +1166,7 @@ references:
 - uid: Nebula.Serialization.Protocol.LookupProperty*
   commentId: Overload:Nebula.Serialization.Protocol.LookupProperty
   isExternal: true
-  href: Nebula.Serialization.Protocol.LookupProperty.html#Nebula_Serialization_Protocol_LookupProperty_System_String_System_String_System_String_Nebula_Serialization_ProtocolNetProperty__
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_LookupProperty_System_String_System_String_System_String_Nebula_Serialization_ProtocolNetProperty__
   name: LookupProperty
   nameWithType: Protocol.LookupProperty
   fullName: Nebula.Serialization.Protocol.LookupProperty
@@ -1203,7 +1203,7 @@ references:
 - uid: Nebula.Serialization.Protocol.UnpackProperty*
   commentId: Overload:Nebula.Serialization.Protocol.UnpackProperty
   isExternal: true
-  href: Nebula.Serialization.Protocol.UnpackProperty.html#Nebula_Serialization_Protocol_UnpackProperty_System_String_System_Int32_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_UnpackProperty_System_String_System_Int32_
   name: UnpackProperty
   nameWithType: Protocol.UnpackProperty
   fullName: Nebula.Serialization.Protocol.UnpackProperty
@@ -1221,21 +1221,21 @@ references:
 - uid: Nebula.Serialization.Protocol.TryUnpackProperty*
   commentId: Overload:Nebula.Serialization.Protocol.TryUnpackProperty
   isExternal: true
-  href: Nebula.Serialization.Protocol.TryUnpackProperty.html#Nebula_Serialization_Protocol_TryUnpackProperty_System_String_System_Int32_Nebula_Serialization_ProtocolNetProperty__
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_TryUnpackProperty_System_String_System_Int32_Nebula_Serialization_ProtocolNetProperty__
   name: TryUnpackProperty
   nameWithType: Protocol.TryUnpackProperty
   fullName: Nebula.Serialization.Protocol.TryUnpackProperty
 - uid: Nebula.Serialization.Protocol.GetPropertyCount*
   commentId: Overload:Nebula.Serialization.Protocol.GetPropertyCount
   isExternal: true
-  href: Nebula.Serialization.Protocol.GetPropertyCount.html#Nebula_Serialization_Protocol_GetPropertyCount_System_String_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetPropertyCount_System_String_
   name: GetPropertyCount
   nameWithType: Protocol.GetPropertyCount
   fullName: Nebula.Serialization.Protocol.GetPropertyCount
 - uid: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId*
   commentId: Overload:Nebula.Serialization.Protocol.LookupPropertyByStaticChildId
   isExternal: true
-  href: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId.html#Nebula_Serialization_Protocol_LookupPropertyByStaticChildId_System_String_System_Byte_System_String_Nebula_Serialization_ProtocolNetProperty__
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_LookupPropertyByStaticChildId_System_String_System_Byte_System_String_Nebula_Serialization_ProtocolNetProperty__
   name: LookupPropertyByStaticChildId
   nameWithType: Protocol.LookupPropertyByStaticChildId
   fullName: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId
@@ -1253,7 +1253,7 @@ references:
 - uid: Nebula.Serialization.Protocol.LookupFunction*
   commentId: Overload:Nebula.Serialization.Protocol.LookupFunction
   isExternal: true
-  href: Nebula.Serialization.Protocol.LookupFunction.html#Nebula_Serialization_Protocol_LookupFunction_System_String_System_String_System_String_Nebula_Serialization_ProtocolNetFunction__
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_LookupFunction_System_String_System_String_System_String_Nebula_Serialization_ProtocolNetFunction__
   name: LookupFunction
   nameWithType: Protocol.LookupFunction
   fullName: Nebula.Serialization.Protocol.LookupFunction
@@ -1268,42 +1268,42 @@ references:
 - uid: Nebula.Serialization.Protocol.UnpackFunction*
   commentId: Overload:Nebula.Serialization.Protocol.UnpackFunction
   isExternal: true
-  href: Nebula.Serialization.Protocol.UnpackFunction.html#Nebula_Serialization_Protocol_UnpackFunction_System_String_System_Int32_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_UnpackFunction_System_String_System_Int32_
   name: UnpackFunction
   nameWithType: Protocol.UnpackFunction
   fullName: Nebula.Serialization.Protocol.UnpackFunction
 - uid: Nebula.Serialization.Protocol.GetFunctionCount*
   commentId: Overload:Nebula.Serialization.Protocol.GetFunctionCount
   isExternal: true
-  href: Nebula.Serialization.Protocol.GetFunctionCount.html#Nebula_Serialization_Protocol_GetFunctionCount_System_String_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetFunctionCount_System_String_
   name: GetFunctionCount
   nameWithType: Protocol.GetFunctionCount
   fullName: Nebula.Serialization.Protocol.GetFunctionCount
 - uid: Nebula.Serialization.Protocol.GetScenePath*
   commentId: Overload:Nebula.Serialization.Protocol.GetScenePath
   isExternal: true
-  href: Nebula.Serialization.Protocol.GetScenePath.html#Nebula_Serialization_Protocol_GetScenePath_System_Byte_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetScenePath_System_Byte_
   name: GetScenePath
   nameWithType: Protocol.GetScenePath
   fullName: Nebula.Serialization.Protocol.GetScenePath
 - uid: Nebula.Serialization.Protocol.TryGetSceneId*
   commentId: Overload:Nebula.Serialization.Protocol.TryGetSceneId
   isExternal: true
-  href: Nebula.Serialization.Protocol.TryGetSceneId.html#Nebula_Serialization_Protocol_TryGetSceneId_System_String_System_Byte__
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_TryGetSceneId_System_String_System_Byte__
   name: TryGetSceneId
   nameWithType: Protocol.TryGetSceneId
   fullName: Nebula.Serialization.Protocol.TryGetSceneId
 - uid: Nebula.Serialization.Protocol.IsNetScene*
   commentId: Overload:Nebula.Serialization.Protocol.IsNetScene
   isExternal: true
-  href: Nebula.Serialization.Protocol.IsNetScene.html#Nebula_Serialization_Protocol_IsNetScene_System_String_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_IsNetScene_System_String_
   name: IsNetScene
   nameWithType: Protocol.IsNetScene
   fullName: Nebula.Serialization.Protocol.IsNetScene
 - uid: Nebula.Serialization.Protocol.GetSceneInterest*
   commentId: Overload:Nebula.Serialization.Protocol.GetSceneInterest
   isExternal: true
-  href: Nebula.Serialization.Protocol.GetSceneInterest.html#Nebula_Serialization_Protocol_GetSceneInterest_System_String_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetSceneInterest_System_String_
   name: GetSceneInterest
   nameWithType: Protocol.GetSceneInterest
   fullName: Nebula.Serialization.Protocol.GetSceneInterest
@@ -1318,21 +1318,21 @@ references:
 - uid: Nebula.Serialization.Protocol.TryGetSceneInterest*
   commentId: Overload:Nebula.Serialization.Protocol.TryGetSceneInterest
   isExternal: true
-  href: Nebula.Serialization.Protocol.TryGetSceneInterest.html#Nebula_Serialization_Protocol_TryGetSceneInterest_System_String_Nebula_Serialization_ProtocolSceneInterest__
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_TryGetSceneInterest_System_String_Nebula_Serialization_ProtocolSceneInterest__
   name: TryGetSceneInterest
   nameWithType: Protocol.TryGetSceneInterest
   fullName: Nebula.Serialization.Protocol.TryGetSceneInterest
 - uid: Nebula.Serialization.Protocol.PackScene*
   commentId: Overload:Nebula.Serialization.Protocol.PackScene
   isExternal: true
-  href: Nebula.Serialization.Protocol.PackScene.html#Nebula_Serialization_Protocol_PackScene_System_String_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_PackScene_System_String_
   name: PackScene
   nameWithType: Protocol.PackScene
   fullName: Nebula.Serialization.Protocol.PackScene
 - uid: Nebula.Serialization.Protocol.UnpackScene*
   commentId: Overload:Nebula.Serialization.Protocol.UnpackScene
   isExternal: true
-  href: Nebula.Serialization.Protocol.UnpackScene.html#Nebula_Serialization_Protocol_UnpackScene_System_Byte_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_UnpackScene_System_Byte_
   name: UnpackScene
   nameWithType: Protocol.UnpackScene
   fullName: Nebula.Serialization.Protocol.UnpackScene
@@ -1352,35 +1352,35 @@ references:
 - uid: Nebula.Serialization.Protocol.GetStaticNodePath*
   commentId: Overload:Nebula.Serialization.Protocol.GetStaticNodePath
   isExternal: true
-  href: Nebula.Serialization.Protocol.GetStaticNodePath.html#Nebula_Serialization_Protocol_GetStaticNodePath_System_String_System_Byte_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetStaticNodePath_System_String_System_Byte_
   name: GetStaticNodePath
   nameWithType: Protocol.GetStaticNodePath
   fullName: Nebula.Serialization.Protocol.GetStaticNodePath
 - uid: Nebula.Serialization.Protocol.TryGetStaticNodeId*
   commentId: Overload:Nebula.Serialization.Protocol.TryGetStaticNodeId
   isExternal: true
-  href: Nebula.Serialization.Protocol.TryGetStaticNodeId.html#Nebula_Serialization_Protocol_TryGetStaticNodeId_System_String_System_String_System_Byte__
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_TryGetStaticNodeId_System_String_System_String_System_Byte__
   name: TryGetStaticNodeId
   nameWithType: Protocol.TryGetStaticNodeId
   fullName: Nebula.Serialization.Protocol.TryGetStaticNodeId
 - uid: Nebula.Serialization.Protocol.PackNode*
   commentId: Overload:Nebula.Serialization.Protocol.PackNode
   isExternal: true
-  href: Nebula.Serialization.Protocol.PackNode.html#Nebula_Serialization_Protocol_PackNode_System_String_System_String_System_Byte__
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_PackNode_System_String_System_String_System_Byte__
   name: PackNode
   nameWithType: Protocol.PackNode
   fullName: Nebula.Serialization.Protocol.PackNode
 - uid: Nebula.Serialization.Protocol.UnpackNode*
   commentId: Overload:Nebula.Serialization.Protocol.UnpackNode
   isExternal: true
-  href: Nebula.Serialization.Protocol.UnpackNode.html#Nebula_Serialization_Protocol_UnpackNode_System_String_System_Byte_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_UnpackNode_System_String_System_Byte_
   name: UnpackNode
   nameWithType: Protocol.UnpackNode
   fullName: Nebula.Serialization.Protocol.UnpackNode
 - uid: Nebula.Serialization.Protocol.InvokeStaticMethod*
   commentId: Overload:Nebula.Serialization.Protocol.InvokeStaticMethod
   isExternal: true
-  href: Nebula.Serialization.Protocol.InvokeStaticMethod.html#Nebula_Serialization_Protocol_InvokeStaticMethod_Nebula_Serialization_ProtocolNetProperty_Nebula_Serialization_StaticMethodType_System_Object___
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_InvokeStaticMethod_Nebula_Serialization_ProtocolNetProperty_Nebula_Serialization_StaticMethodType_System_Object___
   name: InvokeStaticMethod
   nameWithType: Protocol.InvokeStaticMethod
   fullName: Nebula.Serialization.Protocol.InvokeStaticMethod
@@ -1418,7 +1418,7 @@ references:
 - uid: Nebula.Serialization.Protocol.GetStaticMethodCallable*
   commentId: Overload:Nebula.Serialization.Protocol.GetStaticMethodCallable
   isExternal: true
-  href: Nebula.Serialization.Protocol.GetStaticMethodCallable.html#Nebula_Serialization_Protocol_GetStaticMethodCallable_Nebula_Serialization_ProtocolNetProperty_Nebula_Serialization_StaticMethodType_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetStaticMethodCallable_Nebula_Serialization_ProtocolNetProperty_Nebula_Serialization_StaticMethodType_
   name: GetStaticMethodCallable
   nameWithType: Protocol.GetStaticMethodCallable
   fullName: Nebula.Serialization.Protocol.GetStaticMethodCallable
@@ -1470,7 +1470,7 @@ references:
 - uid: Nebula.Serialization.Protocol.GetStaticMethod*
   commentId: Overload:Nebula.Serialization.Protocol.GetStaticMethod
   isExternal: true
-  href: Nebula.Serialization.Protocol.GetStaticMethod.html#Nebula_Serialization_Protocol_GetStaticMethod_Nebula_Serialization_ProtocolNetProperty_Nebula_Serialization_StaticMethodType_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetStaticMethod_Nebula_Serialization_ProtocolNetProperty_Nebula_Serialization_StaticMethodType_
   name: GetStaticMethod
   nameWithType: Protocol.GetStaticMethod
   fullName: Nebula.Serialization.Protocol.GetStaticMethod
@@ -1512,7 +1512,7 @@ references:
 - uid: Nebula.Serialization.Protocol.GetDeserializer*
   commentId: Overload:Nebula.Serialization.Protocol.GetDeserializer
   isExternal: true
-  href: Nebula.Serialization.Protocol.GetDeserializer.html#Nebula_Serialization_Protocol_GetDeserializer_System_Int32_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetDeserializer_System_Int32_
   name: GetDeserializer
   nameWithType: Protocol.GetDeserializer
   fullName: Nebula.Serialization.Protocol.GetDeserializer
@@ -1547,7 +1547,7 @@ references:
 - uid: Nebula.Serialization.Protocol.GetSerializer*
   commentId: Overload:Nebula.Serialization.Protocol.GetSerializer
   isExternal: true
-  href: Nebula.Serialization.Protocol.GetSerializer.html#Nebula_Serialization_Protocol_GetSerializer_System_Int32_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetSerializer_System_Int32_
   name: GetSerializer
   nameWithType: Protocol.GetSerializer
   fullName: Nebula.Serialization.Protocol.GetSerializer
@@ -1582,7 +1582,7 @@ references:
 - uid: Nebula.Serialization.Protocol.ToGodotVariantType*
   commentId: Overload:Nebula.Serialization.Protocol.ToGodotVariantType
   isExternal: true
-  href: Nebula.Serialization.Protocol.ToGodotVariantType.html#Nebula_Serialization_Protocol_ToGodotVariantType_Nebula_Serialization_SerialVariantType_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_ToGodotVariantType_Nebula_Serialization_SerialVariantType_
   name: ToGodotVariantType
   nameWithType: Protocol.ToGodotVariantType
   fullName: Nebula.Serialization.Protocol.ToGodotVariantType
@@ -1620,8 +1620,7 @@ references:
 - uid: Nebula.Serialization.Protocol.FromGodotVariantType*
   commentId: Overload:Nebula.Serialization.Protocol.FromGodotVariantType
   isExternal: true
-  href: Nebula.Serialization.Protocol.FromGodotVariantType.html#Nebula_Serialization_Protocol_FromGodotVariantType_Godot_Variant_Type_
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_FromGodotVariantType_Godot_Variant_Type_
   name: FromGodotVariantType
   nameWithType: Protocol.FromGodotVariantType
   fullName: Nebula.Serialization.Protocol.FromGodotVariantType
-memberLayout: SeparatePages

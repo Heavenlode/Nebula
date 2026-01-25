@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Serialization.BsonTransformer
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTransformer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTransformer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -49,7 +49,7 @@ items:
   fullName: Nebula.Serialization.BsonTransformer.SerializeBsonValue(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTransformer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTransformer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -74,7 +74,7 @@ items:
   fullName: Nebula.Serialization.BsonTransformer.DeserializeBsonValue<T>(byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTransformer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/BsonTransformer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -360,7 +360,7 @@ references:
 - uid: Nebula.Serialization.BsonTransformer.SerializeBsonValue*
   commentId: Overload:Nebula.Serialization.BsonTransformer.SerializeBsonValue
   isExternal: true
-  href: Nebula.Serialization.BsonTransformer.SerializeBsonValue.html#Nebula_Serialization_BsonTransformer_SerializeBsonValue_MongoDB_Bson_BsonValue_
+  href: Nebula.Serialization.BsonTransformer.html#Nebula_Serialization_BsonTransformer_SerializeBsonValue_MongoDB_Bson_BsonValue_
   name: SerializeBsonValue
   nameWithType: BsonTransformer.SerializeBsonValue
   fullName: Nebula.Serialization.BsonTransformer.SerializeBsonValue
@@ -419,7 +419,7 @@ references:
 - uid: Nebula.Serialization.BsonTransformer.DeserializeBsonValue*
   commentId: Overload:Nebula.Serialization.BsonTransformer.DeserializeBsonValue
   isExternal: true
-  href: Nebula.Serialization.BsonTransformer.DeserializeBsonValue.html#Nebula_Serialization_BsonTransformer_DeserializeBsonValue__1_System_Byte___
+  href: Nebula.Serialization.BsonTransformer.html#Nebula_Serialization_BsonTransformer_DeserializeBsonValue__1_System_Byte___
   name: DeserializeBsonValue
   nameWithType: BsonTransformer.DeserializeBsonValue
   fullName: Nebula.Serialization.BsonTransformer.DeserializeBsonValue
@@ -433,4 +433,3 @@ references:
   name: T
   nameWithType: T
   fullName: T
-memberLayout: SeparatePages

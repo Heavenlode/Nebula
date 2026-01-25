@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerCommandBuilder
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -48,7 +48,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.ServerCommandBuilder(Nebula.Testing.Integration.GodotProcess, Nebula.Testing.Integration.GodotProcess)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -76,7 +76,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.Spawn(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -107,7 +107,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.Input(byte, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -141,7 +141,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.Custom(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -435,7 +435,7 @@ references:
 - uid: Nebula.Testing.Integration.ServerCommandBuilder.#ctor*
   commentId: Overload:Nebula.Testing.Integration.ServerCommandBuilder.#ctor
   isExternal: true
-  href: Nebula.Testing.Integration.ServerCommandBuilder.-ctor.html#Nebula_Testing_Integration_ServerCommandBuilder__ctor_Nebula_Testing_Integration_GodotProcess_Nebula_Testing_Integration_GodotProcess_
+  href: Nebula.Testing.Integration.ServerCommandBuilder.html#Nebula_Testing_Integration_ServerCommandBuilder__ctor_Nebula_Testing_Integration_GodotProcess_Nebula_Testing_Integration_GodotProcess_
   name: ServerCommandBuilder
   nameWithType: ServerCommandBuilder.ServerCommandBuilder
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.ServerCommandBuilder
@@ -453,7 +453,7 @@ references:
 - uid: Nebula.Testing.Integration.ServerCommandBuilder.Spawn*
   commentId: Overload:Nebula.Testing.Integration.ServerCommandBuilder.Spawn
   isExternal: true
-  href: Nebula.Testing.Integration.ServerCommandBuilder.Spawn.html#Nebula_Testing_Integration_ServerCommandBuilder_Spawn_System_String_
+  href: Nebula.Testing.Integration.ServerCommandBuilder.html#Nebula_Testing_Integration_ServerCommandBuilder_Spawn_System_String_
   name: Spawn
   nameWithType: ServerCommandBuilder.Spawn
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.Spawn
@@ -479,7 +479,7 @@ references:
 - uid: Nebula.Testing.Integration.ServerCommandBuilder.Input*
   commentId: Overload:Nebula.Testing.Integration.ServerCommandBuilder.Input
   isExternal: true
-  href: Nebula.Testing.Integration.ServerCommandBuilder.Input.html#Nebula_Testing_Integration_ServerCommandBuilder_Input_System_Byte_System_String_
+  href: Nebula.Testing.Integration.ServerCommandBuilder.html#Nebula_Testing_Integration_ServerCommandBuilder_Input_System_Byte_System_String_
   name: Input
   nameWithType: ServerCommandBuilder.Input
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.Input
@@ -505,7 +505,7 @@ references:
 - uid: Nebula.Testing.Integration.ServerCommandBuilder.Custom*
   commentId: Overload:Nebula.Testing.Integration.ServerCommandBuilder.Custom
   isExternal: true
-  href: Nebula.Testing.Integration.ServerCommandBuilder.Custom.html#Nebula_Testing_Integration_ServerCommandBuilder_Custom_System_String_
+  href: Nebula.Testing.Integration.ServerCommandBuilder.html#Nebula_Testing_Integration_ServerCommandBuilder_Custom_System_String_
   name: Custom
   nameWithType: ServerCommandBuilder.Custom
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.Custom
@@ -517,4 +517,3 @@ references:
   name: CustomCommand
   nameWithType: CustomCommand
   fullName: Nebula.Testing.Integration.CustomCommand
-memberLayout: SeparatePages

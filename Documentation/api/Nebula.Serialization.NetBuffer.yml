@@ -39,7 +39,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -74,7 +74,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.DefaultCapacity
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -97,7 +97,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.GetWriteSpan(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -127,7 +127,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.GetReadSpan(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -157,7 +157,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.NetBuffer()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -182,7 +182,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.NetBuffer(int, bool)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -214,7 +214,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.NetBuffer(byte[])
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -246,7 +246,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.NetBuffer(System.ReadOnlySpan<byte>, bool)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -278,7 +278,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.AdvanceWrite(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -306,7 +306,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.AdvanceRead(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -334,7 +334,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Reset()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -359,7 +359,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Clear()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -381,7 +381,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.ResetRead()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -403,7 +403,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.ToArray()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -427,7 +427,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.CopyFrom(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -452,7 +452,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.CopyFrom(System.ReadOnlySpan<byte>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -480,7 +480,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.CopyFrom(byte[], int, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -512,7 +512,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Dispose()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -535,7 +535,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.WritePosition
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -560,7 +560,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.ReadPosition
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -585,7 +585,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Length
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -610,7 +610,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Capacity
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -635,7 +635,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.IsReadComplete
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -660,7 +660,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Remaining
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -685,7 +685,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.WrittenSpan
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -710,7 +710,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.UnreadSpan
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -735,7 +735,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.RawBuffer
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1011,7 +1011,7 @@ references:
 - uid: Nebula.Serialization.NetBuffer.GetWriteSpan*
   commentId: Overload:Nebula.Serialization.NetBuffer.GetWriteSpan
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.GetWriteSpan.html#Nebula_Serialization_NetBuffer_GetWriteSpan_System_Int32_
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_GetWriteSpan_System_Int32_
   name: GetWriteSpan
   nameWithType: NetBuffer.GetWriteSpan
   fullName: Nebula.Serialization.NetBuffer.GetWriteSpan
@@ -1081,7 +1081,7 @@ references:
 - uid: Nebula.Serialization.NetBuffer.GetReadSpan*
   commentId: Overload:Nebula.Serialization.NetBuffer.GetReadSpan
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.GetReadSpan.html#Nebula_Serialization_NetBuffer_GetReadSpan_System_Int32_
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_GetReadSpan_System_Int32_
   name: GetReadSpan
   nameWithType: NetBuffer.GetReadSpan
   fullName: Nebula.Serialization.NetBuffer.GetReadSpan
@@ -1151,7 +1151,7 @@ references:
 - uid: Nebula.Serialization.NetBuffer.#ctor*
   commentId: Overload:Nebula.Serialization.NetBuffer.#ctor
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.-ctor.html#Nebula_Serialization_NetBuffer__ctor
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer__ctor
   name: NetBuffer
   nameWithType: NetBuffer.NetBuffer
   fullName: Nebula.Serialization.NetBuffer.NetBuffer
@@ -1195,49 +1195,49 @@ references:
 - uid: Nebula.Serialization.NetBuffer.AdvanceWrite*
   commentId: Overload:Nebula.Serialization.NetBuffer.AdvanceWrite
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.AdvanceWrite.html#Nebula_Serialization_NetBuffer_AdvanceWrite_System_Int32_
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_AdvanceWrite_System_Int32_
   name: AdvanceWrite
   nameWithType: NetBuffer.AdvanceWrite
   fullName: Nebula.Serialization.NetBuffer.AdvanceWrite
 - uid: Nebula.Serialization.NetBuffer.AdvanceRead*
   commentId: Overload:Nebula.Serialization.NetBuffer.AdvanceRead
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.AdvanceRead.html#Nebula_Serialization_NetBuffer_AdvanceRead_System_Int32_
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_AdvanceRead_System_Int32_
   name: AdvanceRead
   nameWithType: NetBuffer.AdvanceRead
   fullName: Nebula.Serialization.NetBuffer.AdvanceRead
 - uid: Nebula.Serialization.NetBuffer.Reset*
   commentId: Overload:Nebula.Serialization.NetBuffer.Reset
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.Reset.html#Nebula_Serialization_NetBuffer_Reset
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_Reset
   name: Reset
   nameWithType: NetBuffer.Reset
   fullName: Nebula.Serialization.NetBuffer.Reset
 - uid: Nebula.Serialization.NetBuffer.Clear*
   commentId: Overload:Nebula.Serialization.NetBuffer.Clear
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.Clear.html#Nebula_Serialization_NetBuffer_Clear
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_Clear
   name: Clear
   nameWithType: NetBuffer.Clear
   fullName: Nebula.Serialization.NetBuffer.Clear
 - uid: Nebula.Serialization.NetBuffer.ResetRead*
   commentId: Overload:Nebula.Serialization.NetBuffer.ResetRead
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.ResetRead.html#Nebula_Serialization_NetBuffer_ResetRead
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_ResetRead
   name: ResetRead
   nameWithType: NetBuffer.ResetRead
   fullName: Nebula.Serialization.NetBuffer.ResetRead
 - uid: Nebula.Serialization.NetBuffer.ToArray*
   commentId: Overload:Nebula.Serialization.NetBuffer.ToArray
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.ToArray.html#Nebula_Serialization_NetBuffer_ToArray
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_ToArray
   name: ToArray
   nameWithType: NetBuffer.ToArray
   fullName: Nebula.Serialization.NetBuffer.ToArray
 - uid: Nebula.Serialization.NetBuffer.CopyFrom*
   commentId: Overload:Nebula.Serialization.NetBuffer.CopyFrom
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.CopyFrom.html#Nebula_Serialization_NetBuffer_CopyFrom_Nebula_Serialization_NetBuffer_
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_CopyFrom_Nebula_Serialization_NetBuffer_
   name: CopyFrom
   nameWithType: NetBuffer.CopyFrom
   fullName: Nebula.Serialization.NetBuffer.CopyFrom
@@ -1252,7 +1252,7 @@ references:
 - uid: Nebula.Serialization.NetBuffer.Dispose*
   commentId: Overload:Nebula.Serialization.NetBuffer.Dispose
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.Dispose.html#Nebula_Serialization_NetBuffer_Dispose
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_Dispose
   name: Dispose
   nameWithType: NetBuffer.Dispose
   fullName: Nebula.Serialization.NetBuffer.Dispose
@@ -1281,64 +1281,63 @@ references:
 - uid: Nebula.Serialization.NetBuffer.WritePosition*
   commentId: Overload:Nebula.Serialization.NetBuffer.WritePosition
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.WritePosition.html#Nebula_Serialization_NetBuffer_WritePosition
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_WritePosition
   name: WritePosition
   nameWithType: NetBuffer.WritePosition
   fullName: Nebula.Serialization.NetBuffer.WritePosition
 - uid: Nebula.Serialization.NetBuffer.ReadPosition*
   commentId: Overload:Nebula.Serialization.NetBuffer.ReadPosition
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.ReadPosition.html#Nebula_Serialization_NetBuffer_ReadPosition
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_ReadPosition
   name: ReadPosition
   nameWithType: NetBuffer.ReadPosition
   fullName: Nebula.Serialization.NetBuffer.ReadPosition
 - uid: Nebula.Serialization.NetBuffer.Length*
   commentId: Overload:Nebula.Serialization.NetBuffer.Length
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.Length.html#Nebula_Serialization_NetBuffer_Length
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_Length
   name: Length
   nameWithType: NetBuffer.Length
   fullName: Nebula.Serialization.NetBuffer.Length
 - uid: Nebula.Serialization.NetBuffer.Capacity*
   commentId: Overload:Nebula.Serialization.NetBuffer.Capacity
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.Capacity.html#Nebula_Serialization_NetBuffer_Capacity
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_Capacity
   name: Capacity
   nameWithType: NetBuffer.Capacity
   fullName: Nebula.Serialization.NetBuffer.Capacity
 - uid: Nebula.Serialization.NetBuffer.IsReadComplete*
   commentId: Overload:Nebula.Serialization.NetBuffer.IsReadComplete
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.IsReadComplete.html#Nebula_Serialization_NetBuffer_IsReadComplete
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_IsReadComplete
   name: IsReadComplete
   nameWithType: NetBuffer.IsReadComplete
   fullName: Nebula.Serialization.NetBuffer.IsReadComplete
 - uid: Nebula.Serialization.NetBuffer.Remaining*
   commentId: Overload:Nebula.Serialization.NetBuffer.Remaining
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.Remaining.html#Nebula_Serialization_NetBuffer_Remaining
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_Remaining
   name: Remaining
   nameWithType: NetBuffer.Remaining
   fullName: Nebula.Serialization.NetBuffer.Remaining
 - uid: Nebula.Serialization.NetBuffer.WrittenSpan*
   commentId: Overload:Nebula.Serialization.NetBuffer.WrittenSpan
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.WrittenSpan.html#Nebula_Serialization_NetBuffer_WrittenSpan
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_WrittenSpan
   name: WrittenSpan
   nameWithType: NetBuffer.WrittenSpan
   fullName: Nebula.Serialization.NetBuffer.WrittenSpan
 - uid: Nebula.Serialization.NetBuffer.UnreadSpan*
   commentId: Overload:Nebula.Serialization.NetBuffer.UnreadSpan
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.UnreadSpan.html#Nebula_Serialization_NetBuffer_UnreadSpan
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_UnreadSpan
   name: UnreadSpan
   nameWithType: NetBuffer.UnreadSpan
   fullName: Nebula.Serialization.NetBuffer.UnreadSpan
 - uid: Nebula.Serialization.NetBuffer.RawBuffer*
   commentId: Overload:Nebula.Serialization.NetBuffer.RawBuffer
   isExternal: true
-  href: Nebula.Serialization.NetBuffer.RawBuffer.html#Nebula_Serialization_NetBuffer_RawBuffer
+  href: Nebula.Serialization.NetBuffer.html#Nebula_Serialization_NetBuffer_RawBuffer
   name: RawBuffer
   nameWithType: NetBuffer.RawBuffer
   fullName: Nebula.Serialization.NetBuffer.RawBuffer
-memberLayout: SeparatePages

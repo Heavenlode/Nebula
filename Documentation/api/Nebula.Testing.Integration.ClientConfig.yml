@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Testing.Integration.ClientConfig
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -47,7 +47,7 @@ items:
   fullName: Nebula.Testing.Integration.ClientConfig.ClientConfig()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -70,7 +70,7 @@ items:
   fullName: Nebula.Testing.Integration.ClientConfig.DebugPort
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -95,7 +95,7 @@ items:
   fullName: Nebula.Testing.Integration.ClientConfig.ExtraArgs
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -384,7 +384,7 @@ references:
 - uid: Nebula.Testing.Integration.ClientConfig.#ctor*
   commentId: Overload:Nebula.Testing.Integration.ClientConfig.#ctor
   isExternal: true
-  href: Nebula.Testing.Integration.ClientConfig.-ctor.html#Nebula_Testing_Integration_ClientConfig__ctor
+  href: Nebula.Testing.Integration.ClientConfig.html#Nebula_Testing_Integration_ClientConfig__ctor
   name: ClientConfig
   nameWithType: ClientConfig.ClientConfig
   fullName: Nebula.Testing.Integration.ClientConfig.ClientConfig
@@ -394,7 +394,7 @@ references:
 - uid: Nebula.Testing.Integration.ClientConfig.DebugPort*
   commentId: Overload:Nebula.Testing.Integration.ClientConfig.DebugPort
   isExternal: true
-  href: Nebula.Testing.Integration.ClientConfig.DebugPort.html#Nebula_Testing_Integration_ClientConfig_DebugPort
+  href: Nebula.Testing.Integration.ClientConfig.html#Nebula_Testing_Integration_ClientConfig_DebugPort
   name: DebugPort
   nameWithType: ClientConfig.DebugPort
   fullName: Nebula.Testing.Integration.ClientConfig.DebugPort
@@ -412,7 +412,7 @@ references:
 - uid: Nebula.Testing.Integration.ClientConfig.ExtraArgs*
   commentId: Overload:Nebula.Testing.Integration.ClientConfig.ExtraArgs
   isExternal: true
-  href: Nebula.Testing.Integration.ClientConfig.ExtraArgs.html#Nebula_Testing_Integration_ClientConfig_ExtraArgs
+  href: Nebula.Testing.Integration.ClientConfig.html#Nebula_Testing_Integration_ClientConfig_ExtraArgs
   name: ExtraArgs
   nameWithType: ClientConfig.ExtraArgs
   fullName: Nebula.Testing.Integration.ClientConfig.ExtraArgs
@@ -534,4 +534,3 @@ references:
     name: Generic
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.collections.generic
-memberLayout: SeparatePages

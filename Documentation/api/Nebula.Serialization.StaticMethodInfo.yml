@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Serialization.StaticMethodInfo
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -44,7 +44,7 @@ items:
   fullName: Nebula.Serialization.StaticMethodInfo.MethodType
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -65,7 +65,7 @@ items:
   fullName: Nebula.Serialization.StaticMethodInfo.TypeFullName
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -86,7 +86,7 @@ items:
   fullName: Nebula.Serialization.StaticMethodInfo.StaticMethodInfo(Nebula.Serialization.StaticMethodType, string)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -369,11 +369,10 @@ references:
 - uid: Nebula.Serialization.StaticMethodInfo.#ctor*
   commentId: Overload:Nebula.Serialization.StaticMethodInfo.#ctor
   isExternal: true
-  href: Nebula.Serialization.StaticMethodInfo.-ctor.html#Nebula_Serialization_StaticMethodInfo__ctor_Nebula_Serialization_StaticMethodType_System_String_
+  href: Nebula.Serialization.StaticMethodInfo.html#Nebula_Serialization_StaticMethodInfo__ctor_Nebula_Serialization_StaticMethodType_System_String_
   name: StaticMethodInfo
   nameWithType: StaticMethodInfo.StaticMethodInfo
   fullName: Nebula.Serialization.StaticMethodInfo.StaticMethodInfo
   nameWithType.vb: StaticMethodInfo.New
   fullName.vb: Nebula.Serialization.StaticMethodInfo.New
   name.vb: New
-memberLayout: SeparatePages

@@ -24,7 +24,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -69,7 +69,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.StartServer(Nebula.Testing.Integration.ServerConfig?)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -101,7 +101,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.StartClient(Nebula.Testing.Integration.ClientConfig?)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -133,7 +133,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.StartGodot(params string[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -168,7 +168,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -203,7 +203,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -228,7 +228,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -253,7 +253,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest(System.Func<System.Threading.Tasks.Task>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -287,7 +287,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.Dispose()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -310,7 +310,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.IntegrationTestBase()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -333,7 +333,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -358,7 +358,7 @@ items:
   fullName: Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -657,7 +657,7 @@ references:
 - uid: Nebula.Testing.Integration.IntegrationTestBase.StartServer*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.StartServer
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.StartServer.html#Nebula_Testing_Integration_IntegrationTestBase_StartServer_Nebula_Testing_Integration_ServerConfig_
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase_StartServer_Nebula_Testing_Integration_ServerConfig_
   name: StartServer
   nameWithType: IntegrationTestBase.StartServer
   fullName: Nebula.Testing.Integration.IntegrationTestBase.StartServer
@@ -680,7 +680,7 @@ references:
 - uid: Nebula.Testing.Integration.IntegrationTestBase.StartClient*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.StartClient
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.StartClient.html#Nebula_Testing_Integration_IntegrationTestBase_StartClient_Nebula_Testing_Integration_ClientConfig_
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase_StartClient_Nebula_Testing_Integration_ClientConfig_
   name: StartClient
   nameWithType: IntegrationTestBase.StartClient
   fullName: Nebula.Testing.Integration.IntegrationTestBase.StartClient
@@ -695,7 +695,7 @@ references:
 - uid: Nebula.Testing.Integration.IntegrationTestBase.StartGodot*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.StartGodot
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.StartGodot.html#Nebula_Testing_Integration_IntegrationTestBase_StartGodot_System_String___
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase_StartGodot_System_String___
   name: StartGodot
   nameWithType: IntegrationTestBase.StartGodot
   fullName: Nebula.Testing.Integration.IntegrationTestBase.StartGodot
@@ -725,7 +725,7 @@ references:
 - uid: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.StartHeadless
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless.html#Nebula_Testing_Integration_IntegrationTestBase_StartHeadless_System_String_
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase_StartHeadless_System_String_
   name: StartHeadless
   nameWithType: IntegrationTestBase.StartHeadless
   fullName: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless
@@ -743,7 +743,7 @@ references:
 - uid: Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps.html#Nebula_Testing_Integration_IntegrationTestBase_CollectSceneTreeDumps
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase_CollectSceneTreeDumps
   name: CollectSceneTreeDumps
   nameWithType: IntegrationTestBase.CollectSceneTreeDumps
   fullName: Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps
@@ -850,14 +850,14 @@ references:
 - uid: Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers.html#Nebula_Testing_Integration_IntegrationTestBase_CollectDebugBuffers
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase_CollectDebugBuffers
   name: CollectDebugBuffers
   nameWithType: IntegrationTestBase.CollectDebugBuffers
   fullName: Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers
 - uid: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.NebulaTest
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest.html#Nebula_Testing_Integration_IntegrationTestBase_NebulaTest_System_Func_System_Threading_Tasks_Task__
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase_NebulaTest_System_Func_System_Threading_Tasks_Task__
   name: NebulaTest
   nameWithType: IntegrationTestBase.NebulaTest
   fullName: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest
@@ -935,7 +935,7 @@ references:
 - uid: Nebula.Testing.Integration.IntegrationTestBase.Dispose*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.Dispose
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.Dispose.html#Nebula_Testing_Integration_IntegrationTestBase_Dispose
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase_Dispose
   name: Dispose
   nameWithType: IntegrationTestBase.Dispose
   fullName: Nebula.Testing.Integration.IntegrationTestBase.Dispose
@@ -964,7 +964,7 @@ references:
 - uid: Nebula.Testing.Integration.IntegrationTestBase.#ctor*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.#ctor
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.-ctor.html#Nebula_Testing_Integration_IntegrationTestBase__ctor
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase__ctor
   name: IntegrationTestBase
   nameWithType: IntegrationTestBase.IntegrationTestBase
   fullName: Nebula.Testing.Integration.IntegrationTestBase.IntegrationTestBase
@@ -974,7 +974,7 @@ references:
 - uid: Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout.html#Nebula_Testing_Integration_IntegrationTestBase_DefaultTimeout
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase_DefaultTimeout
   name: DefaultTimeout
   nameWithType: IntegrationTestBase.DefaultTimeout
   fullName: Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout
@@ -989,8 +989,7 @@ references:
 - uid: Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath*
   commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath
   isExternal: true
-  href: Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath.html#Nebula_Testing_Integration_IntegrationTestBase_TestProjectPath
+  href: Nebula.Testing.Integration.IntegrationTestBase.html#Nebula_Testing_Integration_IntegrationTestBase_TestProjectPath
   name: TestProjectPath
   nameWithType: IntegrationTestBase.TestProjectPath
   fullName: Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath
-memberLayout: SeparatePages

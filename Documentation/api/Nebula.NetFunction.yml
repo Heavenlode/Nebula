@@ -17,7 +17,7 @@ items:
   fullName: Nebula.NetFunction
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -91,7 +91,7 @@ items:
   fullName: Nebula.NetFunction.OnEntry(MethodBoundaryAspect.Fody.Attributes.MethodExecutionArgs)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -116,7 +116,7 @@ items:
   fullName: Nebula.NetFunction.NetFunction()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -139,7 +139,7 @@ items:
   fullName: Nebula.NetFunction.Source
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -162,7 +162,7 @@ items:
   fullName: Nebula.NetFunction.ExecuteOnCaller
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -2122,7 +2122,7 @@ references:
 - uid: Nebula.NetFunction.OnEntry*
   commentId: Overload:Nebula.NetFunction.OnEntry
   isExternal: true
-  href: Nebula.NetFunction.OnEntry.html#Nebula_NetFunction_OnEntry_MethodBoundaryAspect_Fody_Attributes_MethodExecutionArgs_
+  href: Nebula.NetFunction.html#Nebula_NetFunction_OnEntry_MethodBoundaryAspect_Fody_Attributes_MethodExecutionArgs_
   name: OnEntry
   nameWithType: NetFunction.OnEntry
   fullName: Nebula.NetFunction.OnEntry
@@ -2136,7 +2136,7 @@ references:
 - uid: Nebula.NetFunction.#ctor*
   commentId: Overload:Nebula.NetFunction.#ctor
   isExternal: true
-  href: Nebula.NetFunction.-ctor.html#Nebula_NetFunction__ctor
+  href: Nebula.NetFunction.html#Nebula_NetFunction__ctor
   name: NetFunction
   nameWithType: NetFunction.NetFunction
   fullName: Nebula.NetFunction.NetFunction
@@ -2146,7 +2146,7 @@ references:
 - uid: Nebula.NetFunction.Source*
   commentId: Overload:Nebula.NetFunction.Source
   isExternal: true
-  href: Nebula.NetFunction.Source.html#Nebula_NetFunction_Source
+  href: Nebula.NetFunction.html#Nebula_NetFunction_Source
   name: Source
   nameWithType: NetFunction.Source
   fullName: Nebula.NetFunction.Source
@@ -2181,7 +2181,7 @@ references:
 - uid: Nebula.NetFunction.ExecuteOnCaller*
   commentId: Overload:Nebula.NetFunction.ExecuteOnCaller
   isExternal: true
-  href: Nebula.NetFunction.ExecuteOnCaller.html#Nebula_NetFunction_ExecuteOnCaller
+  href: Nebula.NetFunction.html#Nebula_NetFunction_ExecuteOnCaller
   name: ExecuteOnCaller
   nameWithType: NetFunction.ExecuteOnCaller
   fullName: Nebula.NetFunction.ExecuteOnCaller
@@ -2196,4 +2196,3 @@ references:
   nameWithType.vb: Boolean
   fullName.vb: Boolean
   name.vb: Boolean
-memberLayout: SeparatePages

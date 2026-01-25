@@ -31,7 +31,7 @@ items:
   fullName: Nebula.NetId
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -81,7 +81,7 @@ items:
   fullName: Nebula.NetId.NONE
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -104,7 +104,7 @@ items:
   fullName: Nebula.NetId.Value
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -127,7 +127,7 @@ items:
   fullName: Nebula.NetId.NetId(long)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -155,7 +155,7 @@ items:
   fullName: Nebula.NetId.ToString()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -179,7 +179,7 @@ items:
   fullName: Nebula.NetId.Equals(object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -209,7 +209,7 @@ items:
   fullName: Nebula.NetId.Equals(Nebula.NetId)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -237,7 +237,7 @@ items:
   fullName: Nebula.NetId.GetHashCode()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -261,7 +261,7 @@ items:
   fullName: Nebula.NetId.operator ==(Nebula.NetId, Nebula.NetId)
   type: Operator
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -291,7 +291,7 @@ items:
   fullName: Nebula.NetId.operator !=(Nebula.NetId, Nebula.NetId)
   type: Operator
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -321,7 +321,7 @@ items:
   fullName: Nebula.NetId.explicit operator Nebula.NetId(long)
   type: Operator
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -351,7 +351,7 @@ items:
   fullName: Nebula.NetId.explicit operator long(Nebula.NetId)
   type: Operator
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -381,7 +381,7 @@ items:
   fullName: Nebula.NetId.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, in Nebula.NetId, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -414,7 +414,7 @@ items:
   fullName: Nebula.NetId.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -447,7 +447,7 @@ items:
   fullName: Nebula.NetId.BsonSerialize(in Nebula.NetId)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -476,7 +476,7 @@ items:
   fullName: Nebula.NetId.BsonDeserialize(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -505,7 +505,7 @@ items:
   fullName: Nebula.NetId.IsNone
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -533,7 +533,7 @@ items:
   fullName: Nebula.NetId.IsValid
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -558,7 +558,7 @@ items:
   fullName: Nebula.NetId.None
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -941,7 +941,7 @@ references:
 - uid: Nebula.NetId.#ctor*
   commentId: Overload:Nebula.NetId.#ctor
   isExternal: true
-  href: Nebula.NetId.-ctor.html#Nebula_NetId__ctor_System_Int64_
+  href: Nebula.NetId.html#Nebula_NetId__ctor_System_Int64_
   name: NetId
   nameWithType: NetId.NetId
   fullName: Nebula.NetId.NetId
@@ -973,7 +973,7 @@ references:
 - uid: Nebula.NetId.ToString*
   commentId: Overload:Nebula.NetId.ToString
   isExternal: true
-  href: Nebula.NetId.ToString.html#Nebula_NetId_ToString
+  href: Nebula.NetId.html#Nebula_NetId_ToString
   name: ToString
   nameWithType: NetId.ToString
   fullName: Nebula.NetId.ToString
@@ -1032,7 +1032,7 @@ references:
 - uid: Nebula.NetId.Equals*
   commentId: Overload:Nebula.NetId.Equals
   isExternal: true
-  href: Nebula.NetId.Equals.html#Nebula_NetId_Equals_System_Object_
+  href: Nebula.NetId.html#Nebula_NetId_Equals_System_Object_
   name: Equals
   nameWithType: NetId.Equals
   fullName: Nebula.NetId.Equals
@@ -1137,7 +1137,7 @@ references:
 - uid: Nebula.NetId.GetHashCode*
   commentId: Overload:Nebula.NetId.GetHashCode
   isExternal: true
-  href: Nebula.NetId.GetHashCode.html#Nebula_NetId_GetHashCode
+  href: Nebula.NetId.html#Nebula_NetId_GetHashCode
   name: GetHashCode
   nameWithType: NetId.GetHashCode
   fullName: Nebula.NetId.GetHashCode
@@ -1155,7 +1155,7 @@ references:
 - uid: Nebula.NetId.op_Equality*
   commentId: Overload:Nebula.NetId.op_Equality
   isExternal: true
-  href: Nebula.NetId.op_Equality.html#Nebula_NetId_op_Equality_Nebula_NetId_Nebula_NetId_
+  href: Nebula.NetId.html#Nebula_NetId_op_Equality_Nebula_NetId_Nebula_NetId_
   name: operator ==
   nameWithType: NetId.operator ==
   fullName: Nebula.NetId.operator ==
@@ -1168,11 +1168,11 @@ references:
   - uid: Nebula.NetId.op_Equality*
     name: ==
     isExternal: true
-    href: Nebula.NetId.op_Equality.html#Nebula_NetId_op_Equality_Nebula_NetId_Nebula_NetId_
+    href: Nebula.NetId.html#Nebula_NetId_op_Equality_Nebula_NetId_Nebula_NetId_
 - uid: Nebula.NetId.op_Inequality*
   commentId: Overload:Nebula.NetId.op_Inequality
   isExternal: true
-  href: Nebula.NetId.op_Inequality.html#Nebula_NetId_op_Inequality_Nebula_NetId_Nebula_NetId_
+  href: Nebula.NetId.html#Nebula_NetId_op_Inequality_Nebula_NetId_Nebula_NetId_
   name: operator !=
   nameWithType: NetId.operator !=
   fullName: Nebula.NetId.operator !=
@@ -1185,7 +1185,7 @@ references:
   - uid: Nebula.NetId.op_Inequality*
     name: '!='
     isExternal: true
-    href: Nebula.NetId.op_Inequality.html#Nebula_NetId_op_Inequality_Nebula_NetId_Nebula_NetId_
+    href: Nebula.NetId.html#Nebula_NetId_op_Inequality_Nebula_NetId_Nebula_NetId_
 - uid: Nebula.NetId.op_Explicit*
   commentId: Overload:Nebula.NetId.op_Explicit
   name: explicit operator
@@ -1201,7 +1201,7 @@ references:
 - uid: Nebula.NetId.NetworkSerialize*
   commentId: Overload:Nebula.NetId.NetworkSerialize
   isExternal: true
-  href: Nebula.NetId.NetworkSerialize.html#Nebula_NetId_NetworkSerialize_Nebula_WorldRunner_ENet_Peer_Nebula_NetId__Nebula_Serialization_NetBuffer_
+  href: Nebula.NetId.html#Nebula_NetId_NetworkSerialize_Nebula_WorldRunner_ENet_Peer_Nebula_NetId__Nebula_Serialization_NetBuffer_
   name: NetworkSerialize
   nameWithType: NetId.NetworkSerialize
   fullName: Nebula.NetId.NetworkSerialize
@@ -1237,7 +1237,7 @@ references:
 - uid: Nebula.NetId.NetworkDeserialize*
   commentId: Overload:Nebula.NetId.NetworkDeserialize
   isExternal: true
-  href: Nebula.NetId.NetworkDeserialize.html#Nebula_NetId_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+  href: Nebula.NetId.html#Nebula_NetId_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
   name: NetworkDeserialize
   nameWithType: NetId.NetworkDeserialize
   fullName: Nebula.NetId.NetworkDeserialize
@@ -1245,7 +1245,7 @@ references:
   commentId: M:Nebula.Serialization.INetValue{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
   parent: Nebula.Serialization.INetValue{Nebula.NetId}
   definition: Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
-  href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+  href: Nebula.Serialization.INetValue-1.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
   name: NetworkDeserialize(WorldRunner, Peer, NetBuffer)
   nameWithType: INetValue<NetId>.NetworkDeserialize(WorldRunner, Peer, NetBuffer)
   fullName: Nebula.Serialization.INetValue<Nebula.NetId>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
@@ -1255,7 +1255,7 @@ references:
   - uid: Nebula.Serialization.INetValue{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+    href: Nebula.Serialization.INetValue-1.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -1277,7 +1277,7 @@ references:
   - uid: Nebula.Serialization.INetValue{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+    href: Nebula.Serialization.INetValue-1.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -1298,7 +1298,7 @@ references:
 - uid: Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
   commentId: M:Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
   isExternal: true
-  href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+  href: Nebula.Serialization.INetValue-1.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
   name: NetworkDeserialize(WorldRunner, Peer, NetBuffer)
   nameWithType: INetValue<T>.NetworkDeserialize(WorldRunner, Peer, NetBuffer)
   fullName: Nebula.Serialization.INetValue<T>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
@@ -1308,7 +1308,7 @@ references:
   - uid: Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+    href: Nebula.Serialization.INetValue-1.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -1330,7 +1330,7 @@ references:
   - uid: Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+    href: Nebula.Serialization.INetValue-1.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -1351,7 +1351,7 @@ references:
 - uid: Nebula.NetId.BsonSerialize*
   commentId: Overload:Nebula.NetId.BsonSerialize
   isExternal: true
-  href: Nebula.NetId.BsonSerialize.html#Nebula_NetId_BsonSerialize_Nebula_NetId__
+  href: Nebula.NetId.html#Nebula_NetId_BsonSerialize_Nebula_NetId__
   name: BsonSerialize
   nameWithType: NetId.BsonSerialize
   fullName: Nebula.NetId.BsonSerialize
@@ -1387,7 +1387,7 @@ references:
 - uid: Nebula.NetId.BsonDeserialize*
   commentId: Overload:Nebula.NetId.BsonDeserialize
   isExternal: true
-  href: Nebula.NetId.BsonDeserialize.html#Nebula_NetId_BsonDeserialize_MongoDB_Bson_BsonValue_
+  href: Nebula.NetId.html#Nebula_NetId_BsonDeserialize_MongoDB_Bson_BsonValue_
   name: BsonDeserialize
   nameWithType: NetId.BsonDeserialize
   fullName: Nebula.NetId.BsonDeserialize
@@ -1395,7 +1395,7 @@ references:
   commentId: M:Nebula.Serialization.IBsonValue{Nebula.NetId}.BsonDeserialize(MongoDB.Bson.BsonValue)
   parent: Nebula.Serialization.IBsonValue{Nebula.NetId}
   definition: Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
-  href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
+  href: Nebula.Serialization.IBsonValue-1.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   name: BsonDeserialize(BsonValue)
   nameWithType: IBsonValue<NetId>.BsonDeserialize(BsonValue)
   fullName: Nebula.Serialization.IBsonValue<Nebula.NetId>.BsonDeserialize(MongoDB.Bson.BsonValue)
@@ -1405,7 +1405,7 @@ references:
   - uid: Nebula.Serialization.IBsonValue{Nebula.NetId}.BsonDeserialize(MongoDB.Bson.BsonValue)
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
+    href: Nebula.Serialization.IBsonValue-1.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   - name: (
   - uid: MongoDB.Bson.BsonValue
     name: BsonValue
@@ -1415,7 +1415,7 @@ references:
   - uid: Nebula.Serialization.IBsonValue{Nebula.NetId}.BsonDeserialize(MongoDB.Bson.BsonValue)
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
+    href: Nebula.Serialization.IBsonValue-1.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   - name: (
   - uid: MongoDB.Bson.BsonValue
     name: BsonValue
@@ -1424,7 +1424,7 @@ references:
 - uid: Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
   commentId: M:Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
   isExternal: true
-  href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
+  href: Nebula.Serialization.IBsonValue-1.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   name: BsonDeserialize(BsonValue)
   nameWithType: IBsonValue<T>.BsonDeserialize(BsonValue)
   fullName: Nebula.Serialization.IBsonValue<T>.BsonDeserialize(MongoDB.Bson.BsonValue)
@@ -1434,7 +1434,7 @@ references:
   - uid: Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
+    href: Nebula.Serialization.IBsonValue-1.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   - name: (
   - uid: MongoDB.Bson.BsonValue
     name: BsonValue
@@ -1444,7 +1444,7 @@ references:
   - uid: Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
+    href: Nebula.Serialization.IBsonValue-1.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   - name: (
   - uid: MongoDB.Bson.BsonValue
     name: BsonValue
@@ -1453,22 +1453,21 @@ references:
 - uid: Nebula.NetId.IsNone*
   commentId: Overload:Nebula.NetId.IsNone
   isExternal: true
-  href: Nebula.NetId.IsNone.html#Nebula_NetId_IsNone
+  href: Nebula.NetId.html#Nebula_NetId_IsNone
   name: IsNone
   nameWithType: NetId.IsNone
   fullName: Nebula.NetId.IsNone
 - uid: Nebula.NetId.IsValid*
   commentId: Overload:Nebula.NetId.IsValid
   isExternal: true
-  href: Nebula.NetId.IsValid.html#Nebula_NetId_IsValid
+  href: Nebula.NetId.html#Nebula_NetId_IsValid
   name: IsValid
   nameWithType: NetId.IsValid
   fullName: Nebula.NetId.IsValid
 - uid: Nebula.NetId.None*
   commentId: Overload:Nebula.NetId.None
   isExternal: true
-  href: Nebula.NetId.None.html#Nebula_NetId_None
+  href: Nebula.NetId.html#Nebula_NetId_None
   name: None
   nameWithType: NetId.None
   fullName: Nebula.NetId.None
-memberLayout: SeparatePages

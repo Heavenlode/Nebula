@@ -59,7 +59,7 @@ references:
 - uid: Nebula.ITransformable.GetNetworkTransform*
   commentId: Overload:Nebula.ITransformable.GetNetworkTransform
   isExternal: true
-  href: Nebula.ITransformable.GetNetworkTransform.html#Nebula_ITransformable_GetNetworkTransform
+  href: Nebula.ITransformable.html#Nebula_ITransformable_GetNetworkTransform
   name: GetNetworkTransform
   nameWithType: ITransformable.GetNetworkTransform
   fullName: Nebula.ITransformable.GetNetworkTransform
@@ -76,4 +76,3 @@ references:
   name: Godot
   nameWithType: Godot
   fullName: Godot
-memberLayout: SeparatePages

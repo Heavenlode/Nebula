@@ -21,7 +21,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -614,7 +614,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.ScenesTree
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -649,7 +649,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.Dispose(bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Dock/NetScenes/DockNetScenes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Dock/NetScenes/DockNetScenes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -677,7 +677,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes._OnVisibilityChanged()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -697,7 +697,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.OnInspectNode(Godot.TreeItem, Godot.Node)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Dock/NetScenes/DockNetScenes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Dock/NetScenes/DockNetScenes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -722,7 +722,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes._OnItemSelected()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -742,7 +742,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.EmitSignalInspectNode(Godot.Node)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -765,7 +765,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.DockNetScenes()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -788,7 +788,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.InspectNode
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -14518,7 +14518,7 @@ references:
 - uid: Nebula.Internal.Editor.DockNetScenes.Dispose*
   commentId: Overload:Nebula.Internal.Editor.DockNetScenes.Dispose
   isExternal: true
-  href: Nebula.Internal.Editor.DockNetScenes.Dispose.html#Nebula_Internal_Editor_DockNetScenes_Dispose_System_Boolean_
+  href: Nebula.Internal.Editor.DockNetScenes.html#Nebula_Internal_Editor_DockNetScenes_Dispose_System_Boolean_
   name: Dispose
   nameWithType: DockNetScenes.Dispose
   fullName: Nebula.Internal.Editor.DockNetScenes.Dispose
@@ -14536,14 +14536,14 @@ references:
 - uid: Nebula.Internal.Editor.DockNetScenes._OnVisibilityChanged*
   commentId: Overload:Nebula.Internal.Editor.DockNetScenes._OnVisibilityChanged
   isExternal: true
-  href: Nebula.Internal.Editor.DockNetScenes._OnVisibilityChanged.html#Nebula_Internal_Editor_DockNetScenes__OnVisibilityChanged
+  href: Nebula.Internal.Editor.DockNetScenes.html#Nebula_Internal_Editor_DockNetScenes__OnVisibilityChanged
   name: _OnVisibilityChanged
   nameWithType: DockNetScenes._OnVisibilityChanged
   fullName: Nebula.Internal.Editor.DockNetScenes._OnVisibilityChanged
 - uid: Nebula.Internal.Editor.DockNetScenes.OnInspectNode*
   commentId: Overload:Nebula.Internal.Editor.DockNetScenes.OnInspectNode
   isExternal: true
-  href: Nebula.Internal.Editor.DockNetScenes.OnInspectNode.html#Nebula_Internal_Editor_DockNetScenes_OnInspectNode_Godot_TreeItem_Godot_Node_
+  href: Nebula.Internal.Editor.DockNetScenes.html#Nebula_Internal_Editor_DockNetScenes_OnInspectNode_Godot_TreeItem_Godot_Node_
   name: OnInspectNode
   nameWithType: DockNetScenes.OnInspectNode
   fullName: Nebula.Internal.Editor.DockNetScenes.OnInspectNode
@@ -14557,21 +14557,21 @@ references:
 - uid: Nebula.Internal.Editor.DockNetScenes._OnItemSelected*
   commentId: Overload:Nebula.Internal.Editor.DockNetScenes._OnItemSelected
   isExternal: true
-  href: Nebula.Internal.Editor.DockNetScenes._OnItemSelected.html#Nebula_Internal_Editor_DockNetScenes__OnItemSelected
+  href: Nebula.Internal.Editor.DockNetScenes.html#Nebula_Internal_Editor_DockNetScenes__OnItemSelected
   name: _OnItemSelected
   nameWithType: DockNetScenes._OnItemSelected
   fullName: Nebula.Internal.Editor.DockNetScenes._OnItemSelected
 - uid: Nebula.Internal.Editor.DockNetScenes.EmitSignalInspectNode*
   commentId: Overload:Nebula.Internal.Editor.DockNetScenes.EmitSignalInspectNode
   isExternal: true
-  href: Nebula.Internal.Editor.DockNetScenes.EmitSignalInspectNode.html#Nebula_Internal_Editor_DockNetScenes_EmitSignalInspectNode_Godot_Node_
+  href: Nebula.Internal.Editor.DockNetScenes.html#Nebula_Internal_Editor_DockNetScenes_EmitSignalInspectNode_Godot_Node_
   name: EmitSignalInspectNode
   nameWithType: DockNetScenes.EmitSignalInspectNode
   fullName: Nebula.Internal.Editor.DockNetScenes.EmitSignalInspectNode
 - uid: Nebula.Internal.Editor.DockNetScenes.#ctor*
   commentId: Overload:Nebula.Internal.Editor.DockNetScenes.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.DockNetScenes.-ctor.html#Nebula_Internal_Editor_DockNetScenes__ctor
+  href: Nebula.Internal.Editor.DockNetScenes.html#Nebula_Internal_Editor_DockNetScenes__ctor
   name: DockNetScenes
   nameWithType: DockNetScenes.DockNetScenes
   fullName: Nebula.Internal.Editor.DockNetScenes.DockNetScenes
@@ -14606,4 +14606,3 @@ references:
     name: InspectNodeEventHandler
     isExternal: true
     href: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.html
-memberLayout: SeparatePages

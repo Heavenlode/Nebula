@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Serialization.NetValueLayoutAttribute
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -101,7 +101,7 @@ items:
   fullName: Nebula.Serialization.NetValueLayoutAttribute.NetValueLayoutAttribute(int)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -130,7 +130,7 @@ items:
   fullName: Nebula.Serialization.NetValueLayoutAttribute.SizeInBytes
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1968,7 +1968,7 @@ references:
 - uid: Nebula.Serialization.NetValueLayoutAttribute.#ctor*
   commentId: Overload:Nebula.Serialization.NetValueLayoutAttribute.#ctor
   isExternal: true
-  href: Nebula.Serialization.NetValueLayoutAttribute.-ctor.html#Nebula_Serialization_NetValueLayoutAttribute__ctor_System_Int32_
+  href: Nebula.Serialization.NetValueLayoutAttribute.html#Nebula_Serialization_NetValueLayoutAttribute__ctor_System_Int32_
   name: NetValueLayoutAttribute
   nameWithType: NetValueLayoutAttribute.NetValueLayoutAttribute
   fullName: Nebula.Serialization.NetValueLayoutAttribute.NetValueLayoutAttribute
@@ -1989,8 +1989,7 @@ references:
 - uid: Nebula.Serialization.NetValueLayoutAttribute.SizeInBytes*
   commentId: Overload:Nebula.Serialization.NetValueLayoutAttribute.SizeInBytes
   isExternal: true
-  href: Nebula.Serialization.NetValueLayoutAttribute.SizeInBytes.html#Nebula_Serialization_NetValueLayoutAttribute_SizeInBytes
+  href: Nebula.Serialization.NetValueLayoutAttribute.html#Nebula_Serialization_NetValueLayoutAttribute_SizeInBytes
   name: SizeInBytes
   nameWithType: NetValueLayoutAttribute.SizeInBytes
   fullName: Nebula.Serialization.NetValueLayoutAttribute.SizeInBytes
-memberLayout: SeparatePages

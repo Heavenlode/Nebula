@@ -90,14 +90,14 @@ references:
 - uid: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer*
   commentId: Overload:Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
   isExternal: true
-  href: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
+  href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
   name: ClientAuthenticateWithServer
   nameWithType: IAuthenticator.ClientAuthenticateWithServer
   fullName: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
 - uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient*
   commentId: Overload:Nebula.Authentication.IAuthenticator.ServerAuthenticateClient
   isExternal: true
-  href: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_ENet_Peer_
+  href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_ENet_Peer_
   name: ServerAuthenticateClient
   nameWithType: IAuthenticator.ServerAuthenticateClient
   fullName: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient
@@ -114,4 +114,3 @@ references:
   name: ENet
   nameWithType: ENet
   fullName: ENet
-memberLayout: SeparatePages

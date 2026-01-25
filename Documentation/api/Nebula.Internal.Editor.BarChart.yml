@@ -30,7 +30,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -638,7 +638,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.type
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -673,7 +673,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.debugPanel
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -708,7 +708,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.liveCheckbox
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -743,7 +743,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.tickFrameScene
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -764,7 +764,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.selectedTickFrame
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -785,7 +785,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.previousTickFrame
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -806,7 +806,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.scrollContainer
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -827,7 +827,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.tickFrames
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.BarChart_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -848,7 +848,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -870,7 +870,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart._OnReceiveFrame(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -896,7 +896,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart._OnFrameUpdated(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -922,7 +922,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart._UnhandledInput(Godot.InputEvent)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -947,7 +947,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart._GuiInput(Godot.Control, Godot.InputEvent)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -972,7 +972,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.BarChart()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -995,7 +995,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.Title
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1032,7 +1032,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.MaxValue
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1069,7 +1069,7 @@ items:
   fullName: Nebula.Internal.Editor.BarChart.MinValue
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/Ticks/BarChart.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -15179,14 +15179,14 @@ references:
 - uid: Nebula.Internal.Editor.BarChart._Ready*
   commentId: Overload:Nebula.Internal.Editor.BarChart._Ready
   isExternal: true
-  href: Nebula.Internal.Editor.BarChart._Ready.html#Nebula_Internal_Editor_BarChart__Ready
+  href: Nebula.Internal.Editor.BarChart.html#Nebula_Internal_Editor_BarChart__Ready
   name: _Ready
   nameWithType: BarChart._Ready
   fullName: Nebula.Internal.Editor.BarChart._Ready
 - uid: Nebula.Internal.Editor.BarChart._OnReceiveFrame*
   commentId: Overload:Nebula.Internal.Editor.BarChart._OnReceiveFrame
   isExternal: true
-  href: Nebula.Internal.Editor.BarChart._OnReceiveFrame.html#Nebula_Internal_Editor_BarChart__OnReceiveFrame_System_Int32_
+  href: Nebula.Internal.Editor.BarChart.html#Nebula_Internal_Editor_BarChart__OnReceiveFrame_System_Int32_
   name: _OnReceiveFrame
   nameWithType: BarChart._OnReceiveFrame
   fullName: Nebula.Internal.Editor.BarChart._OnReceiveFrame
@@ -15204,7 +15204,7 @@ references:
 - uid: Nebula.Internal.Editor.BarChart._OnFrameUpdated*
   commentId: Overload:Nebula.Internal.Editor.BarChart._OnFrameUpdated
   isExternal: true
-  href: Nebula.Internal.Editor.BarChart._OnFrameUpdated.html#Nebula_Internal_Editor_BarChart__OnFrameUpdated_System_Int32_
+  href: Nebula.Internal.Editor.BarChart.html#Nebula_Internal_Editor_BarChart__OnFrameUpdated_System_Int32_
   name: _OnFrameUpdated
   nameWithType: BarChart._OnFrameUpdated
   fullName: Nebula.Internal.Editor.BarChart._OnFrameUpdated
@@ -15236,7 +15236,7 @@ references:
 - uid: Nebula.Internal.Editor.BarChart._UnhandledInput*
   commentId: Overload:Nebula.Internal.Editor.BarChart._UnhandledInput
   isExternal: true
-  href: Nebula.Internal.Editor.BarChart._UnhandledInput.html#Nebula_Internal_Editor_BarChart__UnhandledInput_Godot_InputEvent_
+  href: Nebula.Internal.Editor.BarChart.html#Nebula_Internal_Editor_BarChart__UnhandledInput_Godot_InputEvent_
   name: _UnhandledInput
   nameWithType: BarChart._UnhandledInput
   fullName: Nebula.Internal.Editor.BarChart._UnhandledInput
@@ -15250,14 +15250,14 @@ references:
 - uid: Nebula.Internal.Editor.BarChart._GuiInput*
   commentId: Overload:Nebula.Internal.Editor.BarChart._GuiInput
   isExternal: true
-  href: Nebula.Internal.Editor.BarChart._GuiInput.html#Nebula_Internal_Editor_BarChart__GuiInput_Godot_Control_Godot_InputEvent_
+  href: Nebula.Internal.Editor.BarChart.html#Nebula_Internal_Editor_BarChart__GuiInput_Godot_Control_Godot_InputEvent_
   name: _GuiInput
   nameWithType: BarChart._GuiInput
   fullName: Nebula.Internal.Editor.BarChart._GuiInput
 - uid: Nebula.Internal.Editor.BarChart.#ctor*
   commentId: Overload:Nebula.Internal.Editor.BarChart.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.BarChart.-ctor.html#Nebula_Internal_Editor_BarChart__ctor
+  href: Nebula.Internal.Editor.BarChart.html#Nebula_Internal_Editor_BarChart__ctor
   name: BarChart
   nameWithType: BarChart.BarChart
   fullName: Nebula.Internal.Editor.BarChart.BarChart
@@ -15267,7 +15267,7 @@ references:
 - uid: Nebula.Internal.Editor.BarChart.Title*
   commentId: Overload:Nebula.Internal.Editor.BarChart.Title
   isExternal: true
-  href: Nebula.Internal.Editor.BarChart.Title.html#Nebula_Internal_Editor_BarChart_Title
+  href: Nebula.Internal.Editor.BarChart.html#Nebula_Internal_Editor_BarChart_Title
   name: Title
   nameWithType: BarChart.Title
   fullName: Nebula.Internal.Editor.BarChart.Title
@@ -15285,15 +15285,14 @@ references:
 - uid: Nebula.Internal.Editor.BarChart.MaxValue*
   commentId: Overload:Nebula.Internal.Editor.BarChart.MaxValue
   isExternal: true
-  href: Nebula.Internal.Editor.BarChart.MaxValue.html#Nebula_Internal_Editor_BarChart_MaxValue
+  href: Nebula.Internal.Editor.BarChart.html#Nebula_Internal_Editor_BarChart_MaxValue
   name: MaxValue
   nameWithType: BarChart.MaxValue
   fullName: Nebula.Internal.Editor.BarChart.MaxValue
 - uid: Nebula.Internal.Editor.BarChart.MinValue*
   commentId: Overload:Nebula.Internal.Editor.BarChart.MinValue
   isExternal: true
-  href: Nebula.Internal.Editor.BarChart.MinValue.html#Nebula_Internal_Editor_BarChart_MinValue
+  href: Nebula.Internal.Editor.BarChart.html#Nebula_Internal_Editor_BarChart_MinValue
   name: MinValue
   nameWithType: BarChart.MinValue
   fullName: Nebula.Internal.Editor.BarChart.MinValue
-memberLayout: SeparatePages

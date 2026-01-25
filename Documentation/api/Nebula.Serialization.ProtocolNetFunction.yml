@@ -19,7 +19,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -47,7 +47,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.NodePath
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -68,7 +68,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.Name
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -89,7 +89,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.Index
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -110,7 +110,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.Arguments
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -131,7 +131,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.Sources
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -152,7 +152,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.ProtocolNetFunction(string, string, byte, Nebula.Serialization.NetFunctionArgument[], Nebula.Serialization.NetworkSources)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -475,11 +475,10 @@ references:
 - uid: Nebula.Serialization.ProtocolNetFunction.#ctor*
   commentId: Overload:Nebula.Serialization.ProtocolNetFunction.#ctor
   isExternal: true
-  href: Nebula.Serialization.ProtocolNetFunction.-ctor.html#Nebula_Serialization_ProtocolNetFunction__ctor_System_String_System_String_System_Byte_Nebula_Serialization_NetFunctionArgument___Nebula_Serialization_NetworkSources_
+  href: Nebula.Serialization.ProtocolNetFunction.html#Nebula_Serialization_ProtocolNetFunction__ctor_System_String_System_String_System_Byte_Nebula_Serialization_NetFunctionArgument___Nebula_Serialization_NetworkSources_
   name: ProtocolNetFunction
   nameWithType: ProtocolNetFunction.ProtocolNetFunction
   fullName: Nebula.Serialization.ProtocolNetFunction.ProtocolNetFunction
   nameWithType.vb: ProtocolNetFunction.New
   fullName.vb: Nebula.Serialization.ProtocolNetFunction.New
   name.vb: New
-memberLayout: SeparatePages

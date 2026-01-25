@@ -58,7 +58,7 @@ items:
   fullName: Nebula.WorldRunner
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -397,7 +397,7 @@ items:
   fullName: Nebula.WorldRunner.PEER_ACK_TIMEOUT_SECONDS
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -420,7 +420,7 @@ items:
   fullName: Nebula.WorldRunner.ClientAvailableNodes
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -441,7 +441,7 @@ items:
   fullName: Nebula.WorldRunner.RootScene
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -467,7 +467,7 @@ items:
   fullName: Nebula.WorldRunner.TotalRpcCallsProcessed
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -488,7 +488,7 @@ items:
   fullName: Nebula.WorldRunner.RpcCallsThisTick
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -509,7 +509,7 @@ items:
   fullName: Nebula.WorldRunner.AutoPlayerCleanup
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -537,7 +537,7 @@ items:
   fullName: Nebula.WorldRunner.Log(string, Nebula.Utility.Tools.Debugger.DebugLevel)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -565,7 +565,7 @@ items:
   fullName: Nebula.WorldRunner.Log(Nebula.Utility.Tools.Debugger.DebugLevel, ref Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -593,7 +593,7 @@ items:
   fullName: Nebula.WorldRunner._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -615,7 +615,7 @@ items:
   fullName: Nebula.WorldRunner._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -637,7 +637,7 @@ items:
   fullName: Nebula.WorldRunner.MarkOwnedEntitiesDirty()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -659,7 +659,7 @@ items:
   fullName: Nebula.WorldRunner.GetNodeFromNetId(Nebula.NetId)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -684,7 +684,7 @@ items:
   fullName: Nebula.WorldRunner.GetNodeFromNetId(long)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -712,7 +712,7 @@ items:
   fullName: Nebula.WorldRunner.AllocateNetId()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -734,7 +734,7 @@ items:
   fullName: Nebula.WorldRunner.AllocateNetId(ushort)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -762,7 +762,7 @@ items:
   fullName: Nebula.WorldRunner.GetNetId(long)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -790,7 +790,7 @@ items:
   fullName: Nebula.WorldRunner.GetNetIdFromPeerId(ENet.Peer, ushort)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -820,7 +820,7 @@ items:
   fullName: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -849,7 +849,7 @@ items:
   fullName: Nebula.WorldRunner.ServerProcessTick()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -871,7 +871,7 @@ items:
   fullName: Nebula.WorldRunner._PhysicsProcess(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -899,7 +899,7 @@ items:
   fullName: Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId, ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -926,7 +926,7 @@ items:
   fullName: Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId, ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -951,7 +951,7 @@ items:
   fullName: Nebula.WorldRunner.ChangeScene(Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -974,7 +974,7 @@ items:
   fullName: Nebula.WorldRunner.GetPeerWorldState(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -999,7 +999,7 @@ items:
   fullName: Nebula.WorldRunner.GetPeerWorldState(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1024,7 +1024,7 @@ items:
   fullName: Nebula.WorldRunner.SetPeerState(Nebula.UUID, Nebula.WorldRunner.PeerState)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1049,7 +1049,7 @@ items:
   fullName: Nebula.WorldRunner.SetPeerState(ENet.Peer, Nebula.WorldRunner.PeerState)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1074,7 +1074,7 @@ items:
   fullName: Nebula.WorldRunner.GetPeerNodeId(ENet.Peer, Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1101,7 +1101,7 @@ items:
   fullName: Nebula.WorldRunner.GetPeerNode(ENet.Peer, ushort)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1136,7 +1136,7 @@ items:
   fullName: Nebula.WorldRunner.Spawn<T>(T, Nebula.NetworkController, ENet.Peer, Godot.NodePath)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1172,7 +1172,7 @@ items:
   fullName: Nebula.WorldRunner.PeerAcknowledge(ENet.Peer, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1200,7 +1200,7 @@ items:
   fullName: Nebula.WorldRunner.ClientProcessTick(int, byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1228,7 +1228,7 @@ items:
   fullName: Nebula.WorldRunner.CheckStaticInitialization(Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1261,7 +1261,7 @@ items:
   fullName: Nebula.WorldRunner.WorldRunner()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1284,7 +1284,7 @@ items:
   fullName: Nebula.WorldRunner.ClientId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1309,7 +1309,7 @@ items:
   fullName: Nebula.WorldRunner.NetFunctionContext
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1334,7 +1334,7 @@ items:
   fullName: Nebula.WorldRunner.WorldId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1357,7 +1357,7 @@ items:
   fullName: Nebula.WorldRunner.CurrentWorld
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1382,7 +1382,7 @@ items:
   fullName: Nebula.WorldRunner.Debug
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1407,7 +1407,7 @@ items:
   fullName: Nebula.WorldRunner.DebugPort
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1432,7 +1432,7 @@ items:
   fullName: Nebula.WorldRunner.CurrentTick
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1457,7 +1457,7 @@ items:
   fullName: Nebula.WorldRunner.OnPeerSyncStatusChange
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1480,7 +1480,7 @@ items:
   fullName: Nebula.WorldRunner.OnAfterNetworkTick
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1503,7 +1503,7 @@ items:
   fullName: Nebula.WorldRunner.OnPlayerJoined
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1526,7 +1526,7 @@ items:
   fullName: Nebula.WorldRunner.OnPlayerCleanup
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1555,7 +1555,7 @@ references:
 - uid: Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
   commentId: M:Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
   isExternal: true
-  href: Nebula.NetRunner.CreateWorld.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
+  href: Nebula.NetRunner.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
   name: CreateWorld(UUID, PackedScene)
   nameWithType: NetRunner.CreateWorld(UUID, PackedScene)
   fullName: Nebula.NetRunner.CreateWorld(Nebula.UUID, Godot.PackedScene)
@@ -1563,7 +1563,7 @@ references:
   - uid: Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
     name: CreateWorld
     isExternal: true
-    href: Nebula.NetRunner.CreateWorld.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
+    href: Nebula.NetRunner.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
   - name: (
   - uid: Nebula.UUID
     name: UUID
@@ -1579,7 +1579,7 @@ references:
   - uid: Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
     name: CreateWorld
     isExternal: true
-    href: Nebula.NetRunner.CreateWorld.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
+    href: Nebula.NetRunner.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
   - name: (
   - uid: Nebula.UUID
     name: UUID
@@ -8268,7 +8268,7 @@ references:
 - uid: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
   commentId: M:Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
   isExternal: true
-  href: Nebula.WorldRunner.CleanupPlayer.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
   name: CleanupPlayer(Peer)
   nameWithType: WorldRunner.CleanupPlayer(Peer)
   fullName: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
@@ -8276,7 +8276,7 @@ references:
   - uid: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
     name: CleanupPlayer
     isExternal: true
-    href: Nebula.WorldRunner.CleanupPlayer.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
+    href: Nebula.WorldRunner.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
   - name: (
   - uid: ENet.Peer
     name: Peer
@@ -8286,7 +8286,7 @@ references:
   - uid: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
     name: CleanupPlayer
     isExternal: true
-    href: Nebula.WorldRunner.CleanupPlayer.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
+    href: Nebula.WorldRunner.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
   - name: (
   - uid: ENet.Peer
     name: Peer
@@ -8295,7 +8295,7 @@ references:
 - uid: Nebula.NetworkController.DespawnOnUnowned
   commentId: F:Nebula.NetworkController.DespawnOnUnowned
   isExternal: true
-  href: Nebula.NetworkController.DespawnOnUnowned.html#Nebula_NetworkController_DespawnOnUnowned
+  href: Nebula.NetworkController.html#Nebula_NetworkController_DespawnOnUnowned
   name: DespawnOnUnowned
   nameWithType: NetworkController.DespawnOnUnowned
   fullName: Nebula.NetworkController.DespawnOnUnowned
@@ -8313,7 +8313,7 @@ references:
 - uid: Nebula.WorldRunner.Log*
   commentId: Overload:Nebula.WorldRunner.Log
   isExternal: true
-  href: Nebula.WorldRunner.Log.html#Nebula_WorldRunner_Log_System_String_Nebula_Utility_Tools_Debugger_DebugLevel_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_Log_System_String_Nebula_Utility_Tools_Debugger_DebugLevel_
   name: Log
   nameWithType: WorldRunner.Log
   fullName: Nebula.WorldRunner.Log
@@ -8423,7 +8423,7 @@ references:
 - uid: Nebula.WorldRunner._Ready*
   commentId: Overload:Nebula.WorldRunner._Ready
   isExternal: true
-  href: Nebula.WorldRunner._Ready.html#Nebula_WorldRunner__Ready
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner__Ready
   name: _Ready
   nameWithType: WorldRunner._Ready
   fullName: Nebula.WorldRunner._Ready
@@ -8449,21 +8449,21 @@ references:
 - uid: Nebula.WorldRunner._ExitTree*
   commentId: Overload:Nebula.WorldRunner._ExitTree
   isExternal: true
-  href: Nebula.WorldRunner._ExitTree.html#Nebula_WorldRunner__ExitTree
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner__ExitTree
   name: _ExitTree
   nameWithType: WorldRunner._ExitTree
   fullName: Nebula.WorldRunner._ExitTree
 - uid: Nebula.WorldRunner.MarkOwnedEntitiesDirty*
   commentId: Overload:Nebula.WorldRunner.MarkOwnedEntitiesDirty
   isExternal: true
-  href: Nebula.WorldRunner.MarkOwnedEntitiesDirty.html#Nebula_WorldRunner_MarkOwnedEntitiesDirty
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_MarkOwnedEntitiesDirty
   name: MarkOwnedEntitiesDirty
   nameWithType: WorldRunner.MarkOwnedEntitiesDirty
   fullName: Nebula.WorldRunner.MarkOwnedEntitiesDirty
 - uid: Nebula.WorldRunner.GetNodeFromNetId*
   commentId: Overload:Nebula.WorldRunner.GetNodeFromNetId
   isExternal: true
-  href: Nebula.WorldRunner.GetNodeFromNetId.html#Nebula_WorldRunner_GetNodeFromNetId_Nebula_NetId_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetNodeFromNetId_Nebula_NetId_
   name: GetNodeFromNetId
   nameWithType: WorldRunner.GetNodeFromNetId
   fullName: Nebula.WorldRunner.GetNodeFromNetId
@@ -8478,7 +8478,7 @@ references:
 - uid: Nebula.WorldRunner.AllocateNetId*
   commentId: Overload:Nebula.WorldRunner.AllocateNetId
   isExternal: true
-  href: Nebula.WorldRunner.AllocateNetId.html#Nebula_WorldRunner_AllocateNetId
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_AllocateNetId
   name: AllocateNetId
   nameWithType: WorldRunner.AllocateNetId
   fullName: Nebula.WorldRunner.AllocateNetId
@@ -8496,14 +8496,14 @@ references:
 - uid: Nebula.WorldRunner.GetNetId*
   commentId: Overload:Nebula.WorldRunner.GetNetId
   isExternal: true
-  href: Nebula.WorldRunner.GetNetId.html#Nebula_WorldRunner_GetNetId_System_Int64_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetNetId_System_Int64_
   name: GetNetId
   nameWithType: WorldRunner.GetNetId
   fullName: Nebula.WorldRunner.GetNetId
 - uid: Nebula.WorldRunner.GetNetIdFromPeerId*
   commentId: Overload:Nebula.WorldRunner.GetNetIdFromPeerId
   isExternal: true
-  href: Nebula.WorldRunner.GetNetIdFromPeerId.html#Nebula_WorldRunner_GetNetIdFromPeerId_ENet_Peer_System_UInt16_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetNetIdFromPeerId_ENet_Peer_System_UInt16_
   name: GetNetIdFromPeerId
   nameWithType: WorldRunner.GetNetIdFromPeerId
   fullName: Nebula.WorldRunner.GetNetIdFromPeerId
@@ -8523,14 +8523,14 @@ references:
 - uid: Nebula.WorldRunner.CleanupPlayer*
   commentId: Overload:Nebula.WorldRunner.CleanupPlayer
   isExternal: true
-  href: Nebula.WorldRunner.CleanupPlayer.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
   name: CleanupPlayer
   nameWithType: WorldRunner.CleanupPlayer
   fullName: Nebula.WorldRunner.CleanupPlayer
 - uid: Nebula.WorldRunner.ServerProcessTick*
   commentId: Overload:Nebula.WorldRunner.ServerProcessTick
   isExternal: true
-  href: Nebula.WorldRunner.ServerProcessTick.html#Nebula_WorldRunner_ServerProcessTick
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_ServerProcessTick
   name: ServerProcessTick
   nameWithType: WorldRunner.ServerProcessTick
   fullName: Nebula.WorldRunner.ServerProcessTick
@@ -8568,7 +8568,7 @@ references:
 - uid: Nebula.WorldRunner._PhysicsProcess*
   commentId: Overload:Nebula.WorldRunner._PhysicsProcess
   isExternal: true
-  href: Nebula.WorldRunner._PhysicsProcess.html#Nebula_WorldRunner__PhysicsProcess_System_Double_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner__PhysicsProcess_System_Double_
   name: _PhysicsProcess
   nameWithType: WorldRunner._PhysicsProcess
   fullName: Nebula.WorldRunner._PhysicsProcess
@@ -8586,28 +8586,28 @@ references:
 - uid: Nebula.WorldRunner.HasSpawnedForClient*
   commentId: Overload:Nebula.WorldRunner.HasSpawnedForClient
   isExternal: true
-  href: Nebula.WorldRunner.HasSpawnedForClient.html#Nebula_WorldRunner_HasSpawnedForClient_Nebula_NetId_ENet_Peer_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_HasSpawnedForClient_Nebula_NetId_ENet_Peer_
   name: HasSpawnedForClient
   nameWithType: WorldRunner.HasSpawnedForClient
   fullName: Nebula.WorldRunner.HasSpawnedForClient
 - uid: Nebula.WorldRunner.SetSpawnedForClient*
   commentId: Overload:Nebula.WorldRunner.SetSpawnedForClient
   isExternal: true
-  href: Nebula.WorldRunner.SetSpawnedForClient.html#Nebula_WorldRunner_SetSpawnedForClient_Nebula_NetId_ENet_Peer_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_SetSpawnedForClient_Nebula_NetId_ENet_Peer_
   name: SetSpawnedForClient
   nameWithType: WorldRunner.SetSpawnedForClient
   fullName: Nebula.WorldRunner.SetSpawnedForClient
 - uid: Nebula.WorldRunner.ChangeScene*
   commentId: Overload:Nebula.WorldRunner.ChangeScene
   isExternal: true
-  href: Nebula.WorldRunner.ChangeScene.html#Nebula_WorldRunner_ChangeScene_Nebula_NetworkController_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_ChangeScene_Nebula_NetworkController_
   name: ChangeScene
   nameWithType: WorldRunner.ChangeScene
   fullName: Nebula.WorldRunner.ChangeScene
 - uid: Nebula.WorldRunner.GetPeerWorldState*
   commentId: Overload:Nebula.WorldRunner.GetPeerWorldState
   isExternal: true
-  href: Nebula.WorldRunner.GetPeerWorldState.html#Nebula_WorldRunner_GetPeerWorldState_Nebula_UUID_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetPeerWorldState_Nebula_UUID_
   name: GetPeerWorldState
   nameWithType: WorldRunner.GetPeerWorldState
   fullName: Nebula.WorldRunner.GetPeerWorldState
@@ -8680,7 +8680,7 @@ references:
 - uid: Nebula.WorldRunner.SetPeerState*
   commentId: Overload:Nebula.WorldRunner.SetPeerState
   isExternal: true
-  href: Nebula.WorldRunner.SetPeerState.html#Nebula_WorldRunner_SetPeerState_Nebula_UUID_Nebula_WorldRunner_PeerState_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_SetPeerState_Nebula_UUID_Nebula_WorldRunner_PeerState_
   name: SetPeerState
   nameWithType: WorldRunner.SetPeerState
   fullName: Nebula.WorldRunner.SetPeerState
@@ -8715,21 +8715,21 @@ references:
 - uid: Nebula.WorldRunner.GetPeerNodeId*
   commentId: Overload:Nebula.WorldRunner.GetPeerNodeId
   isExternal: true
-  href: Nebula.WorldRunner.GetPeerNodeId.html#Nebula_WorldRunner_GetPeerNodeId_ENet_Peer_Nebula_NetworkController_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetPeerNodeId_ENet_Peer_Nebula_NetworkController_
   name: GetPeerNodeId
   nameWithType: WorldRunner.GetPeerNodeId
   fullName: Nebula.WorldRunner.GetPeerNodeId
 - uid: Nebula.WorldRunner.GetPeerNode*
   commentId: Overload:Nebula.WorldRunner.GetPeerNode
   isExternal: true
-  href: Nebula.WorldRunner.GetPeerNode.html#Nebula_WorldRunner_GetPeerNode_ENet_Peer_System_UInt16_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetPeerNode_ENet_Peer_System_UInt16_
   name: GetPeerNode
   nameWithType: WorldRunner.GetPeerNode
   fullName: Nebula.WorldRunner.GetPeerNode
 - uid: Nebula.WorldRunner.Spawn*
   commentId: Overload:Nebula.WorldRunner.Spawn
   isExternal: true
-  href: Nebula.WorldRunner.Spawn.html#Nebula_WorldRunner_Spawn__1___0_Nebula_NetworkController_ENet_Peer_Godot_NodePath_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_Spawn__1___0_Nebula_NetworkController_ENet_Peer_Godot_NodePath_
   name: Spawn
   nameWithType: WorldRunner.Spawn
   fullName: Nebula.WorldRunner.Spawn
@@ -8753,7 +8753,7 @@ references:
 - uid: Nebula.WorldRunner.PeerAcknowledge*
   commentId: Overload:Nebula.WorldRunner.PeerAcknowledge
   isExternal: true
-  href: Nebula.WorldRunner.PeerAcknowledge.html#Nebula_WorldRunner_PeerAcknowledge_ENet_Peer_System_Int32_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_PeerAcknowledge_ENet_Peer_System_Int32_
   name: PeerAcknowledge
   nameWithType: WorldRunner.PeerAcknowledge
   fullName: Nebula.WorldRunner.PeerAcknowledge
@@ -8771,7 +8771,7 @@ references:
 - uid: Nebula.WorldRunner.ClientProcessTick*
   commentId: Overload:Nebula.WorldRunner.ClientProcessTick
   isExternal: true
-  href: Nebula.WorldRunner.ClientProcessTick.html#Nebula_WorldRunner_ClientProcessTick_System_Int32_System_Byte___
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_ClientProcessTick_System_Int32_System_Byte___
   name: ClientProcessTick
   nameWithType: WorldRunner.ClientProcessTick
   fullName: Nebula.WorldRunner.ClientProcessTick
@@ -8801,14 +8801,14 @@ references:
 - uid: Nebula.WorldRunner.CheckStaticInitialization*
   commentId: Overload:Nebula.WorldRunner.CheckStaticInitialization
   isExternal: true
-  href: Nebula.WorldRunner.CheckStaticInitialization.html#Nebula_WorldRunner_CheckStaticInitialization_Nebula_NetworkController_
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_CheckStaticInitialization_Nebula_NetworkController_
   name: CheckStaticInitialization
   nameWithType: WorldRunner.CheckStaticInitialization
   fullName: Nebula.WorldRunner.CheckStaticInitialization
 - uid: Nebula.WorldRunner.#ctor*
   commentId: Overload:Nebula.WorldRunner.#ctor
   isExternal: true
-  href: Nebula.WorldRunner.-ctor.html#Nebula_WorldRunner__ctor
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner__ctor
   name: WorldRunner
   nameWithType: WorldRunner.WorldRunner
   fullName: Nebula.WorldRunner.WorldRunner
@@ -8818,14 +8818,14 @@ references:
 - uid: Nebula.WorldRunner.ClientId*
   commentId: Overload:Nebula.WorldRunner.ClientId
   isExternal: true
-  href: Nebula.WorldRunner.ClientId.html#Nebula_WorldRunner_ClientId
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_ClientId
   name: ClientId
   nameWithType: WorldRunner.ClientId
   fullName: Nebula.WorldRunner.ClientId
 - uid: Nebula.WorldRunner.NetFunctionContext*
   commentId: Overload:Nebula.WorldRunner.NetFunctionContext
   isExternal: true
-  href: Nebula.WorldRunner.NetFunctionContext.html#Nebula_WorldRunner_NetFunctionContext
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_NetFunctionContext
   name: NetFunctionContext
   nameWithType: WorldRunner.NetFunctionContext
   fullName: Nebula.WorldRunner.NetFunctionContext
@@ -8860,14 +8860,14 @@ references:
 - uid: Nebula.WorldRunner.WorldId*
   commentId: Overload:Nebula.WorldRunner.WorldId
   isExternal: true
-  href: Nebula.WorldRunner.WorldId.html#Nebula_WorldRunner_WorldId
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_WorldId
   name: WorldId
   nameWithType: WorldRunner.WorldId
   fullName: Nebula.WorldRunner.WorldId
 - uid: Nebula.WorldRunner.CurrentWorld*
   commentId: Overload:Nebula.WorldRunner.CurrentWorld
   isExternal: true
-  href: Nebula.WorldRunner.CurrentWorld.html#Nebula_WorldRunner_CurrentWorld
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_CurrentWorld
   name: CurrentWorld
   nameWithType: WorldRunner.CurrentWorld
   fullName: Nebula.WorldRunner.CurrentWorld
@@ -8882,7 +8882,7 @@ references:
 - uid: Nebula.WorldRunner.Debug*
   commentId: Overload:Nebula.WorldRunner.Debug
   isExternal: true
-  href: Nebula.WorldRunner.Debug.html#Nebula_WorldRunner_Debug
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_Debug
   name: Debug
   nameWithType: WorldRunner.Debug
   fullName: Nebula.WorldRunner.Debug
@@ -8917,14 +8917,14 @@ references:
 - uid: Nebula.WorldRunner.DebugPort*
   commentId: Overload:Nebula.WorldRunner.DebugPort
   isExternal: true
-  href: Nebula.WorldRunner.DebugPort.html#Nebula_WorldRunner_DebugPort
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_DebugPort
   name: DebugPort
   nameWithType: WorldRunner.DebugPort
   fullName: Nebula.WorldRunner.DebugPort
 - uid: Nebula.WorldRunner.CurrentTick*
   commentId: Overload:Nebula.WorldRunner.CurrentTick
   isExternal: true
-  href: Nebula.WorldRunner.CurrentTick.html#Nebula_WorldRunner_CurrentTick
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_CurrentTick
   name: CurrentTick
   nameWithType: WorldRunner.CurrentTick
   fullName: Nebula.WorldRunner.CurrentTick
@@ -9117,4 +9117,3 @@ references:
     isExternal: true
     href: Nebula.UUID.html
   - name: )
-memberLayout: SeparatePages

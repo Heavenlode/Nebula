@@ -135,7 +135,7 @@ references:
 - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize*
   commentId: Overload:Nebula.Serialization.INetSerializable`1.NetworkSerialize
   isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
   name: NetworkSerialize
   nameWithType: INetSerializable<T>.NetworkSerialize
   fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize
@@ -190,10 +190,9 @@ references:
 - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize*
   commentId: Overload:Nebula.Serialization.INetSerializable`1.NetworkDeserialize
   isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
   name: NetworkDeserialize
   nameWithType: INetSerializable<T>.NetworkDeserialize
   fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize
   nameWithType.vb: INetSerializable(Of T).NetworkDeserialize
   fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize
-memberLayout: SeparatePages

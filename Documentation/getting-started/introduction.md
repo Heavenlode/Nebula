@@ -33,19 +33,34 @@ The root scene of a WorldRunner is a kind of node called a "NetNode."
 
 A NetNode is a Node that is a part of the network lifecycle, i.e. it can synchronize its state across the network. (The Network Lifecycle chapter talks more about this.)
 
-When a NetNode is the root of a Scene, then it is said to be a NetScene. The WorldRunner root scene must be a NetScene.
+When a NetNode is the root of a Scene (a `.tscn` file), then it is said to be a NetScene. The WorldRunner root scene must be a NetScene.
 
 ![NetScene](~/images/Pasted-image-20250510143316.png)
 
 At this point, you might be wondering "Huh? NetNode vs. NetScene? What's the difference?"
 
-For now, the main thing to know is this:
-* Net*Scenes* are instantiated dynamically
-* Net*Nodes* are not. They exist statically inside NetScenes
+Here's the simple breakdown:
 
-In other words, NetNodes cannot be individually instantiated while the game is running; only NetScenes can.
+**Static Children** are NetNodes that exist inside a scene file but are *not* their own `.tscn`. They're baked into the parent scene and can't be added or removed at runtime.
 
-Also, when you do instantiate a NetScene, it can only be added as a child of another NetScene or a NetNode. You can't instantiate a NetScene to be a child of some non-net Node. Thems the rules!
+**Dynamic Children** are NetScenes (their own `.tscn` files) that are nested inside another scene. These *can* be spawned or despawned at runtime, and Nebula automatically replicates them to clients.
+
+For example, imagine a `Player.tscn` that contains:
+- `Level1` (Node3D) — just a regular node
+- `Level2/Level3` (NetNode3D) — a **static child**, part of the player
+- `Level2/Level3/Item` (Item.tscn) — a **dynamic child**, its own NetScene
+
+When a Player spawns, Nebula automatically:
+1. Spawns the Player on the client
+2. Discovers that Item.tscn is nested inside
+3. Replicates Item to the client with matching state
+
+If the server later despawns that Item, the client's copy gets removed too. It all happens automatically.
+
+**The rules:**
+* Only NetScenes can be spawned/despawned dynamically
+* Static NetNodes live and die with their parent scene
+* NetScenes can only be children of other NetNodes/NetScenes (not random Nodes)
 
 >[!NOTE]
 >More technical details are available. TL;DR it's part of how the network is optimized to be low bandwidth and highly efficient.

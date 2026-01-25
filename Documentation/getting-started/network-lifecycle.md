@@ -1,5 +1,7 @@
 # Network Lifecycle
 
+> Note, this document was written about 50% by a human. The author didn't have time to sit down and write it all out, though someday maybe that will change. It should still be very valuable to you if you are interested in these details. Hail our AI overlords!
+
 In order to understand the network lifecycle, you first need to understand how the Server and Client are different from each other--despite both running the same game.
 
 ## Server characteristics
@@ -125,9 +127,70 @@ If they are, then they can trigger some special view/UI actions such as playing 
 > Unlike the `Money` property, `IsRich` is not a `NetProperty`. This means that it doesn't live in the game network--so it never receives updates from the server--and the client can mutate it freely.
 
 ## Inputs
-If the client cant make any changes to the game state, then how do they even play the game?
+If the client can't make any changes to the game state, then how do they even play the game?
 
-That's what inputs and NetFunctions are for. Nebula supports sending an "Input"
+That's what inputs are for. Nebula has a type-safe input system that lets clients send structured data to the server.
+
+First, define your input as a struct:
+
+```cs
+public struct PlayerInput
+{
+    public bool MoveLeft;
+    public bool MoveRight;
+    public bool Jump;
+}
+```
+
+Initialize the input type in your NetNode:
+
+```cs
+public override void _WorldReady()
+{
+    base._WorldReady();
+    Network.InitializeInput<PlayerInput>();
+}
+```
+
+On the client, set the input each frame:
+
+```cs
+public override void _Process(double delta)
+{
+    if (NetRunner.Instance.IsClient)
+    {
+        Network.SetInput(new PlayerInput
+        {
+            MoveLeft = Input.IsActionPressed("move_left"),
+            MoveRight = Input.IsActionPressed("move_right"),
+            Jump = Input.IsActionPressed("jump")
+        });
+    }
+}
+```
+
+On the server, read and process the input:
+
+```cs
+public override void _NetworkProcess(int tick)
+{
+    base._NetworkProcess(tick);
+    
+    if (NetRunner.Instance.IsServer)
+    {
+        ref readonly var input = ref Network.GetInput<PlayerInput>();
+        
+        if (input.MoveLeft) Position += Vector3.Left * Speed;
+        if (input.MoveRight) Position += Vector3.Right * Speed;
+        if (input.Jump && IsOnFloor) Velocity += Vector3.Up * JumpForce;
+    }
+}
+```
+
+The server processes inputs and updates the authoritative game state. Changes to `[NetProperty]` values are then sent back to all clients.
+
+>[!TIP]
+>Inputs are automatically buffered and sent reliably. You don't need to worry about packet loss—Nebula handles it.
 
 ## State "awareness" (or, Interest Management)
 Interest Management is a feature for the server to decide _who_ gets to see _what._ Think about a game with hidden information: another player's money or items; cards in a card game; "fog of war"; etc.
@@ -162,3 +225,75 @@ Now only the player who "owns" a NetNode will receive updates about that propert
 >You can also designate your own layers beyond these three. Think of it like a 'collision layer' in Godot. It's essentially a clean slate of layers for you to customize however you want. This can be useful for team games, factions, etc.
 
 ## Lifecycle Overview
+
+Here's what happens from start to finish:
+
+### Server Startup
+1. `NetRunner` starts and listens for connections
+2. `WorldRunner` is created with an initial scene
+3. The root NetScene is instantiated and `_WorldReady()` is called
+4. Server begins ticking at the configured rate
+
+### Client Connection
+1. Client connects to server via `NetRunner`
+2. Server assigns client to a World
+3. Server tells client what scene to load
+4. Client instantiates the scene and `_WorldReady()` is called
+5. Client begins receiving tick updates
+
+### Every Tick (Server)
+1. Process all buffered inputs from clients
+2. Run `_NetworkProcess(tick)` on all NetNodes
+3. Detect which `[NetProperty]` values changed (dirty checking)
+4. Serialize and send changes to interested clients
+5. Handle spawns, despawns, and RPCs
+
+### Every Tick (Client)
+1. Receive state update from server
+2. Apply property changes to local NetNodes
+3. Run `_NetworkProcess(tick)` to react to changes
+4. Send any pending inputs to server
+
+### Key Lifecycle Hooks
+
+**`_WorldReady()`** - Called once when a NetNode enters the networked world. Use this to initialize inputs, set up references, etc.
+
+```cs
+public override void _WorldReady()
+{
+    base._WorldReady();
+    Network.InitializeInput<MyInput>();
+    Debugger.Instance.Log("Player ready!");
+}
+```
+
+**`_NetworkProcess(int tick)`** - Called every network tick. Server runs game logic here; clients react to state changes.
+
+```cs
+public override void _NetworkProcess(int tick)
+{
+    base._NetworkProcess(tick);
+    // Your tick logic here
+}
+```
+
+### Spawning and Despawning
+
+Spawn a NetScene dynamically:
+
+```cs
+var player = GD.Load<PackedScene>("res://Player.tscn").Instantiate<NetNode3D>();
+Network.CurrentWorld.Spawn(player, parent: Network, inputAuthority: somePeer);
+```
+
+Despawn a NetScene:
+
+```cs
+playerNode.Network.Despawn();
+```
+
+Both operations automatically replicate to all interested clients.
+
+## What's Next?
+
+Now that you understand how data flows through Nebula, check out the [tutorials](../tutorials/snake/create-a-snake.md) to build something real!

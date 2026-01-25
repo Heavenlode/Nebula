@@ -89,6 +89,79 @@ public partial class Scene : NetNode3D
             var node = PlayerNode.GetNode<NetNode3D>("Level1/Level2/Level3/Item");
             node.Network.Despawn();
         }
+
+        if (command == "CheckDynamicChildren")
+        {
+            var count = PlayerNode.Network.DynamicNetworkChildren.Count;
+            var names = string.Join(",", PlayerNode.Network.DynamicNetworkChildren.Select(c => c.RawNode.Name));
+            Network.CurrentWorld.Debug?.Send("CheckDynamicChildren", $"{count}:{names}");
+        }
+
+        if (command == "CheckItemExists")
+        {
+            var itemNode = PlayerNode.GetNodeOrNull("Level1/Level2/Level3/Item");
+            var exists = itemNode != null;
+            var isNetScene = exists && itemNode is INetNodeBase netNode && netNode.Network != null && netNode.Network.IsNetScene();
+            Network.CurrentWorld.Debug?.Send("CheckItemExists", $"{exists}:{isNetScene}");
+        }
+
+        if (command == "GetItemNetId")
+        {
+            var itemNode = PlayerNode.GetNodeOrNull<NetNode3D>("Level1/Level2/Level3/Item");
+            if (itemNode != null)
+            {
+                Network.CurrentWorld.Debug?.Send("GetItemNetId", itemNode.Network.NetId.ToString());
+            }
+            else
+            {
+                Network.CurrentWorld.Debug?.Send("GetItemNetId", "not_found");
+            }
+        }
+
+        if (command == "CheckItemHasWorld")
+        {
+            var itemNode = PlayerNode.GetNodeOrNull<NetNode3D>("Level1/Level2/Level3/Item");
+            if (itemNode != null)
+            {
+                var hasWorld = itemNode.Network.CurrentWorld != null;
+                Network.CurrentWorld.Debug?.Send("CheckItemHasWorld", hasWorld.ToString());
+            }
+            else
+            {
+                Network.CurrentWorld.Debug?.Send("CheckItemHasWorld", "not_found");
+            }
+        }
+
+        if (command == "CheckStaticChildren")
+        {
+            var count = PlayerNode.Network.StaticNetworkChildren.Length;
+            var names = string.Join(",", PlayerNode.Network.StaticNetworkChildren.Where(c => c != null).Select(c => c.RawNode.Name));
+            Network.CurrentWorld.Debug?.Send("CheckStaticChildren", $"{count}:{names}");
+        }
+
+        if (command == "CheckLevel4Exists")
+        {
+            // Level4 is a child of Item (nested NetScene) - verifies children are preserved
+            var level4Node = PlayerNode.GetNodeOrNull("Level1/Level2/Level3/Item/Level4");
+            var exists = level4Node != null;
+            Network.CurrentWorld.Debug?.Send("CheckLevel4Exists", exists.ToString().ToLower());
+        }
+
+        if (command == "LookupItemByNetId")
+        {
+            // Verify Item is registered with WorldRunner by looking it up via NetId
+            var itemNode = PlayerNode.GetNodeOrNull<NetNode3D>("Level1/Level2/Level3/Item");
+            if (itemNode == null)
+            {
+                Network.CurrentWorld.Debug?.Send("LookupItemByNetId", "false");
+                return;
+            }
+            
+            var netId = itemNode.Network.NetId;
+            var lookedUp = Network.CurrentWorld.GetNodeFromNetId(netId);
+            var found = lookedUp != null && lookedUp.RawNode == itemNode;
+            Network.CurrentWorld.Debug?.Send("LookupItemByNetId", found.ToString().ToLower());
+        }
     }
 
     public Player PlayerNode;

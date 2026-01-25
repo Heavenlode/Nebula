@@ -345,6 +345,8 @@ namespace Nebula.Serialization.Serializers
                     local.CurrentWorld = currentWorld;
                     // Set NetParentId so it gets added to DynamicNetworkChildren
                     local.NetParentId = nodeOut.NetId;
+                    // Register with WorldRunner so it can receive despawn commands
+                    currentWorld.TryRegisterPeerNode(local);
                     // Mark as processed (use 246 as sentinel, > 245 reserved)
                     _nestedDataBuffer[matchIndex].SceneId = 246;
                 }
@@ -385,6 +387,8 @@ namespace Nebula.Serialization.Serializers
                 
                 // Set NetParentId so it gets added to DynamicNetworkChildren
                 instance.Network.NetParentId = nodeOut.NetId;
+                // Register with WorldRunner so it can receive despawn commands
+                currentWorld.TryRegisterPeerNode(instance.Network);
             }
             
             // Also process static children (non-NetScene NetNodes)
@@ -508,8 +512,9 @@ namespace Nebula.Serialization.Serializers
                 var nodePathId = NetReader.ReadByte(buffer);
                 var netId = NetReader.ReadUInt16(buffer);
                 
-                // Skip entries where allocation failed on server (sceneId == 0)
-                if (sceneId == 0) continue;
+                // Skip entries where allocation failed on server (netId == 0)
+                // Note: sceneId=0 is valid (first registered scene), but netId=0 means no allocation
+                if (netId == 0) continue;
                 
                 _nestedDataBuffer[_nestedDataCount++] = new NestedSceneData
                 {

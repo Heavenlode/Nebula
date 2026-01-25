@@ -156,12 +156,6 @@ public static class NativeBridge
         out float zx, out float zy, out float zz);
     
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void bridge_get_local_basis(ulong id,
-        out float xx, out float xy, out float xz,
-        out float yx, out float yy, out float yz,
-        out float zx, out float zy, out float zz);
-    
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     [return: MarshalAs(UnmanagedType.I1)]
     private static extern bool bridge_get_visible(ulong id);
     
@@ -206,15 +200,6 @@ public static class NativeBridge
     
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
     private static extern void bridge_set_process_mode(ulong id, int mode);
-    
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void bridge_set_position(ulong id, float x, float y, float z);
-    
-    [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void bridge_set_basis(ulong id,
-        float xx, float xy, float xz,
-        float yx, float yy, float yz,
-        float zx, float zy, float zz);
     
     // Utility
     [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
@@ -333,25 +318,6 @@ public static class NativeBridge
     {
         if (!IsAvailable) return node.GlobalTransform.Basis;
         bridge_get_basis(node.GetInstanceId(),
-            out var xx, out var xy, out var xz,
-            out var yx, out var yy, out var yz,
-            out var zx, out var zy, out var zz);
-        
-        return new Basis(
-            new Vector3(xx, xy, xz),
-            new Vector3(yx, yy, yz),
-            new Vector3(zx, zy, zz)
-        );
-    }
-    
-    /// <summary>
-    /// Get cached local basis. Zero allocations.
-    /// Returns fresh value even after SetBasis within same tick.
-    /// </summary>
-    public static Basis GetBasis(Node3D node)
-    {
-        if (!IsAvailable) return node.Transform.Basis;
-        bridge_get_local_basis(node.GetInstanceId(),
             out var xx, out var xy, out var xz,
             out var yx, out var yy, out var yz,
             out var zx, out var zy, out var zz);
@@ -511,43 +477,6 @@ public static class NativeBridge
             return;
         }
         bridge_set_process_mode(node.GetInstanceId(), (int)mode);
-    }
-    
-    /// <summary>
-    /// Set position (updates cache immediately and defers Godot write until FlushToGodot).
-    /// This ensures subsequent reads via GetPosition return the updated value.
-    /// </summary>
-    public static void SetPosition(Node3D node, Vector3 position)
-    {
-        if (!IsAvailable)
-        {
-            node.Position = position;
-            return;
-        }
-        bridge_set_position(node.GetInstanceId(), position.X, position.Y, position.Z);
-    }
-    
-    /// <summary>
-    /// Set basis/rotation (updates cache immediately and defers Godot write until FlushToGodot).
-    /// This ensures subsequent reads via GetBasis return the updated value.
-    /// </summary>
-    public static void SetBasis(Node3D node, Basis basis)
-    {
-        if (!IsAvailable)
-        {
-            var t = node.Transform;
-            t.Basis = basis;
-            node.Transform = t;
-            return;
-        }
-        // Pass columns to match C++ expectation
-        var col0 = basis.Column0;
-        var col1 = basis.Column1;
-        var col2 = basis.Column2;
-        bridge_set_basis(node.GetInstanceId(),
-            col0.X, col0.Y, col0.Z,
-            col1.X, col1.Y, col1.Z,
-            col2.X, col2.Y, col2.Z);
     }
     
     #endregion

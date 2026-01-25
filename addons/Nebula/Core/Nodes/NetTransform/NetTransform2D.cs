@@ -12,7 +12,7 @@ namespace Nebula.Utility.Nodes
         [Export]
         public Node2D TargetNode { get; set; }
 
-        [NetProperty]
+        [NetProperty(NotifyOnChange = true)]
         public bool IsTeleporting { get; set; }
 
         [NetProperty]
@@ -22,7 +22,7 @@ namespace Nebula.Utility.Nodes
         public float NetRotation { get; set; }
 
         private bool _isTeleporting = false;
-        public void OnNetworkChangeIsTeleporting(Tick tick, bool from, bool to)
+        partial void OnNetChangeIsTeleporting(Tick tick, bool from, bool to)
         {
             _isTeleporting = true;
         }

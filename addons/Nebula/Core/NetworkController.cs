@@ -416,12 +416,43 @@ namespace Nebula
 				case UUID uuid:
 					cache.UUIDValue = uuid;
 					break;
-				default:
+			default:
+				// Check if it's an enum - enums are stored in appropriately-sized fields
+				if (typeof(T).IsEnum)
+				{
+					var enumVal = value;
+					int enumSize = Unsafe.SizeOf<T>();
+					// Store in the correctly-sized field based on underlying type
+					// Clear LongValue first to ensure upper bytes are zero
+					cache.LongValue = 0;
+					switch (enumSize)
+					{
+						case 1: // byte/sbyte
+							cache.ByteValue = Unsafe.As<T, byte>(ref enumVal);
+							break;
+						case 2: // short/ushort
+							cache.IntValue = Unsafe.As<T, short>(ref enumVal);
+							break;
+						case 4: // int/uint (most common)
+							cache.IntValue = Unsafe.As<T, int>(ref enumVal);
+							break;
+						case 8: // long/ulong
+							cache.LongValue = Unsafe.As<T, long>(ref enumVal);
+							break;
+						default:
+							// Fallback - shouldn't happen for standard enums
+							cache.IntValue = Unsafe.As<T, int>(ref enumVal);
+							break;
+					}
+				}
+				else
+				{
 					// For unknown value types, we have to box (rare case)
 					cache.Type = SerialVariantType.Object;
 					cache.RefValue = value;
 					Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"SetCachedValue: Unknown value type {typeof(T).Name}, boxing");
-					break;
+				}
+				break;
 			}
 		}
 
@@ -664,20 +695,13 @@ namespace Nebula
 		}
 
 	/// <summary>
-	/// Restores properties to confirmed server state for rollback.
+	/// Compares predicted state with confirmed server state and restores mispredicted properties.
+	/// Returns true if any misprediction was detected (rollback needed), false if all predictions correct.
+	/// If forceRestoreAll is true, skips comparison and restores all properties to confirmed state.
 	/// </summary>
-	public void RestoreToConfirmedState()
+	public bool Reconcile(Tick tick, bool forceRestoreAll = false)
 	{
-		NetNode.RestoreToConfirmedState();
-	}
-
-	/// <summary>
-	/// Restores only mispredicted properties to confirmed server state.
-	/// Properties that matched within tolerance are left unchanged.
-	/// </summary>
-	public void RestoreMispredictedToConfirmed()
-	{
-		NetNode.RestoreMispredictedToConfirmed();
+		return NetNode.Reconcile(tick, forceRestoreAll);
 	}
 
 	/// <summary>
@@ -685,18 +709,9 @@ namespace Nebula
 	/// Used when prediction was correct and we need to continue with predicted values after server state import.
 	/// </summary>
 	public void RestoreToPredictedState(Tick tick)
-		{
-			NetNode.RestoreToPredictedState(tick);
-		}
-
-		/// <summary>
-		/// Compares predicted state at tick with confirmed state.
-		/// Returns false if ANY predicted property mismatches (misprediction detected).
-		/// </summary>
-		public bool CompareStateWithTolerance(Tick tick)
-		{
-			return NetNode.CompareAllPredictedState(tick);
-		}
+	{
+		NetNode.RestoreToPredictedState(tick);
+	}
 
 		/// <summary>
 		/// The last tick that was confirmed by the server for this entity.

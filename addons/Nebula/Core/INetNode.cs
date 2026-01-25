@@ -75,40 +75,20 @@ namespace Nebula {
         public void StoreConfirmedState() { }
 
         /// <summary>
-        /// Restores properties to confirmed server state (for rollback).
-        /// Called at the start of reconciliation before re-simulating.
+        /// Compares predicted state with confirmed server state and restores mispredicted properties.
+        /// Combines comparison and selective restoration in a single call.
+        /// If forceRestoreAll is true, skips comparison and restores all properties to confirmed state.
         /// </summary>
-        public void RestoreToConfirmedState() { }
-
-        /// <summary>
-        /// Restores only mispredicted properties to confirmed server state.
-        /// Properties that matched within tolerance are left unchanged.
-        /// This prevents correct predictions from being overwritten by unrelated mispredictions.
-        /// </summary>
-        public void RestoreMispredictedToConfirmed() { }
+        /// <param name="tick">The tick whose predicted state to compare</param>
+        /// <param name="forceRestoreAll">If true, restores all properties without comparing</param>
+        /// <returns>True if any misprediction was detected (rollback needed), false if all predictions correct</returns>
+        public bool Reconcile(int tick, bool forceRestoreAll = false) => false;
 
         /// <summary>
         /// Restores properties from the prediction buffer for a given tick.
         /// Used when prediction was correct and we need to continue with predicted values after server state import.
         /// </summary>
         public void RestoreToPredictedState(int tick) { }
-
-        /// <summary>
-        /// Compares predicted state at tick with confirmed state.
-        /// Returns true if all predicted properties are within tolerance (no misprediction).
-        /// Returns false if any property exceeds its tolerance threshold.
-        /// </summary>
-        /// <param name="tick">The tick whose predicted state to compare</param>
-        /// <returns>True if states match within tolerance, false if misprediction detected</returns>
-        public bool CompareAllPredictedState(int tick) => true;
-
-        /// <summary>
-        /// Smooths render values toward simulation values.
-        /// Called every frame in _Process for visual smoothing after corrections.
-        /// Only applies to properties with [NetProperty(Predicted=true)].
-        /// </summary>
-        /// <param name="delta">Frame delta time in seconds</param>
-        public void ProcessPredictionSmoothing(float delta) { }
 
         #endregion
     }

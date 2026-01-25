@@ -1,17 +1,46 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Godot;
 using Nebula.Utility.Tools;
 
 namespace Nebula.Serialization.Serializers
 {
+    /// <summary>
+    /// Delta encoding flags for property serialization.
+    /// </summary>
+    [Flags]
+    public enum DeltaEncodingFlags : byte
+    {
+        /// <summary>Full value (initial sync, non-delta types, teleport)</summary>
+        Absolute = 0,
+        /// <summary>Small delta: half-float/short encoding</summary>
+        DeltaSmall = 1,
+        /// <summary>Full delta: same type as property</summary>
+        DeltaFull = 2,
+        /// <summary>Quaternion uses smallest-three encoding (6 bytes)</summary>
+        QuatCompressed = 0x80,
+    }
+
     public partial class NetPropertiesSerializer : RefCounted, IStateSerializer
     {
         private struct Data
         {
             public byte[] propertiesUpdated;
             public Dictionary<int, PropertyCache> properties;
+        }
+
+        /// <summary>
+        /// Per-peer property state for delta encoding.
+        /// </summary>
+        private struct PeerPropertyState
+        {
+            public PropertyCache[] LastAcked;      // Last acknowledged values (swapped on ACK)
+            public PropertyCache[] Pending;        // Currently in-flight values
+            public byte[] AckedMask;               // Bit mask: has peer ever acked this property?
+            public byte[] PendingDirtyMask;        // Properties sent but not yet acked (for re-sending)
+            public bool IsInitialized;
         }
 
         private NetworkController network;
@@ -28,6 +57,32 @@ namespace Nebula.Serialization.Serializers
         // Cached node lookups to avoid GetNode() allocations
         private Dictionary<StringName, Node> _nodePathCache = new();
 
+        // ============================================================
+        // DELTA ENCODING STATE
+        // ============================================================
+        
+        /// <summary>Main state dictionary - access via CollectionsMarshal refs only</summary>
+        private Dictionary<UUID, PeerPropertyState> _peerStates = new();
+        
+        /// <summary>Pool of pre-allocated states to avoid allocation on peer join</summary>
+        private Stack<PeerPropertyState> _statePool = new();
+        
+        /// <summary>Pre-cached property count</summary>
+        private readonly int _propertyCount;
+        
+        /// <summary>Pre-cached: does this property type support delta encoding?</summary>
+        private readonly bool[] _propSupportsDelta;
+        
+        /// <summary>Pre-cached property types</summary>
+        private readonly SerialVariantType[] _propTypes;
+
+        /// <summary>
+        /// Small delta threshold - deltas below this use half-float encoding.
+        /// Based on half-float precision (~0.1 unit at magnitude 1024).
+        /// </summary>
+        private const float SmallDeltaThreshold = 1024f;
+        private const float SmallDeltaThresholdSq = SmallDeltaThreshold * SmallDeltaThreshold;
+
         public NetPropertiesSerializer(NetworkController _network)
         {
             network = _network;
@@ -37,14 +92,28 @@ namespace Nebula.Serialization.Serializers
 
             if (!network.IsNetScene())
             {
+                _propertyCount = 0;
+                _propSupportsDelta = Array.Empty<bool>();
+                _propTypes = Array.Empty<SerialVariantType>();
                 return;
+            }
+
+            // Pre-cache property metadata for zero-allocation hot path
+            _propertyCount = Protocol.GetPropertyCount(_cachedSceneFilePath);
+            _propSupportsDelta = new bool[_propertyCount];
+            _propTypes = new SerialVariantType[_propertyCount];
+            
+            for (int i = 0; i < _propertyCount; i++)
+            {
+                var prop = Protocol.UnpackProperty(_cachedSceneFilePath, i);
+                _propTypes[i] = prop.VariantType;
+                _propSupportsDelta[i] = SupportsDelta(prop.VariantType);
             }
 
             int byteCount = GetByteCountOfProperties();
             if (_propertiesUpdated == null || _propertiesUpdated.Length != byteCount)
             {
                 _propertiesUpdated = new byte[byteCount];
-                _filteredProps = new byte[byteCount];
             }
 
             if (NetRunner.Instance.IsServer)
@@ -54,6 +123,7 @@ namespace Nebula.Serialization.Serializers
 
                 network.InterestChanged += (UUID peerId, long oldInterest, long newInterest) =>
                 {
+                    // Handle interest changes for peerInitialPropSync
                     if (!peerInitialPropSync.TryGetValue(peerId, out var syncMask))
                         return;
 
@@ -70,6 +140,13 @@ namespace Nebula.Serialization.Serializers
                         {
                             // Mark property as not-yet-synced so Export() will include it
                             ClearBit(syncMask, propIndex);
+                            
+                            // Also clear the acked mask for delta encoding
+                            ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
+                            if (!Unsafe.IsNullRef(ref state) && state.IsInitialized)
+                            {
+                                ClearBit(state.AckedMask, propIndex);
+                            }
                         }
                     }
                 };
@@ -79,10 +156,57 @@ namespace Nebula.Serialization.Serializers
                 foreach (var propIndex in cachedPropertyChanges.Keys)
                 {
                     var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-                    ref var cachedValue = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(cachedPropertyChanges, propIndex);
+                    ref var cachedValue = ref CollectionsMarshal.GetValueRefOrNullRef(cachedPropertyChanges, propIndex);
                     ImportProperty(prop, network.CurrentWorld.CurrentTick, ref cachedValue);
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines if a property type supports delta encoding.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool SupportsDelta(SerialVariantType type)
+        {
+            return type switch
+            {
+                SerialVariantType.Float => true,
+                SerialVariantType.Int => true,
+                SerialVariantType.Vector2 => true,
+                SerialVariantType.Vector3 => true,
+                // Quaternion uses compressed absolute, not delta
+                // Bool, String, arrays, Object don't support delta
+                _ => false
+            };
+        }
+
+        /// <summary>
+        /// Creates a new PeerPropertyState, either from pool or fresh allocation.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private PeerPropertyState CreateOrGetPooledState()
+        {
+            if (_statePool.Count > 0)
+            {
+                var state = _statePool.Pop();
+                // Clear the arrays for reuse
+                Array.Clear(state.LastAcked, 0, state.LastAcked.Length);
+                Array.Clear(state.Pending, 0, state.Pending.Length);
+                Array.Clear(state.AckedMask, 0, state.AckedMask.Length);
+                Array.Clear(state.PendingDirtyMask, 0, state.PendingDirtyMask.Length);
+                state.IsInitialized = true;
+                return state;
+            }
+            
+            int byteCount = GetByteCountOfProperties();
+            return new PeerPropertyState
+            {
+                LastAcked = new PropertyCache[_propertyCount],
+                Pending = new PropertyCache[_propertyCount],
+                AckedMask = new byte[byteCount],
+                PendingDirtyMask = new byte[byteCount],
+                IsInitialized = true
+            };
         }
 
         /// <summary>
@@ -239,24 +363,23 @@ namespace Nebula.Serialization.Serializers
                     var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propertyIndex);
 
                     var cache = new PropertyCache();
+                    
+                    // Get existing value for delta reconstruction
+                    ref var existingCache = ref network.CachedProperties[propertyIndex];
 
                     if (prop.VariantType == SerialVariantType.Object)
                     {
-                        // Custom types with NetworkDeserialize - use generated deserializer delegate (no reflection)
+                        // Custom types with NetworkDeserialize - always absolute (flag byte still present)
+                        var flags = (DeltaEncodingFlags)NetReader.ReadByte(buffer);
+                        
                         var deserializer = Protocol.GetDeserializer(prop.ClassIndex);
                         if (deserializer == null)
                         {
                             Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"No deserializer found for {prop.NodePath}.{prop.Name}");
                             continue;
                         }
-                        // Pass existing cached value for delta encoding support
-                        var existingValue = propertyIndex < network.CachedProperties.Length
-                            ? network.CachedProperties[propertyIndex].RefValue
-                            : null;
-                        var result = deserializer(network.CurrentWorld, null, buffer, existingValue);
-                        
-                        // Store custom value types in their proper PropertyCache field
-                        // This matches how NetworkController.SetCachedValue stores them on the server
+                        var existingValue = existingCache.RefValue;
+                        var result = deserializer(network.CurrentWorld, default, buffer, existingValue);
                         SetDeserializedValueToCache(result, ref cache);
                     }
                     else if (prop.VariantType == SerialVariantType.Nil)
@@ -266,7 +389,8 @@ namespace Nebula.Serialization.Serializers
                     }
                     else
                     {
-                        ReadPropertyToCache(buffer, prop.VariantType, ref cache);
+                        // Read delta-encoded property (pass subtype for sized int types)
+                        ReadDeltaOrAbsolute(buffer, prop.VariantType, prop.Metadata.TypeIdentifier, ref existingCache, ref cache);
                     }
 
                     data.properties[propertyIndex] = cache;
@@ -276,42 +400,95 @@ namespace Nebula.Serialization.Serializers
         }
 
         /// <summary>
-        /// Stores a deserialized custom type value in the correct PropertyCache field.
-        /// Mirrors the logic in NetworkController.SetCachedValue to ensure server and client use the same fields.
+        /// Reads a property value with delta decoding support.
         /// </summary>
-        private static void SetDeserializedValueToCache(object result, ref PropertyCache cache)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ReadDeltaOrAbsolute(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache existing, ref PropertyCache cache)
         {
-            cache.Type = SerialVariantType.Object;
+            var flags = (DeltaEncodingFlags)NetReader.ReadByte(buffer);
+            cache.Type = type;
             
-            // Store custom value types in their proper field (matching NetworkController.SetCachedValue)
-            switch (result)
+            // Check for quaternion compressed encoding
+            if ((flags & DeltaEncodingFlags.QuatCompressed) != 0)
             {
-                case NetId netId:
-                    cache.NetIdValue = netId;
+                cache.QuatValue = NetReader.ReadQuatSmallestThree(buffer);
+                return;
+            }
+            
+            // Get base encoding type (mask out compression flags)
+            var encoding = flags & (DeltaEncodingFlags)0x7F;
+            
+            switch (encoding)
+            {
+                case DeltaEncodingFlags.Absolute:
+                    // Full absolute value
+                    ReadAbsoluteValue(buffer, type, subtype, ref cache);
                     break;
-                case UUID uuid:
-                    cache.UUIDValue = uuid;
+                    
+                case DeltaEncodingFlags.DeltaSmall:
+                    // Small delta (half-float/short encoding)
+                    ReadSmallDelta(buffer, type, subtype, ref existing, ref cache);
                     break;
+                    
+                case DeltaEncodingFlags.DeltaFull:
+                    // Full delta (same type as property)
+                    ReadFullDelta(buffer, type, subtype, ref existing, ref cache);
+                    break;
+                    
                 default:
-                    // Reference types and unknown value types go in RefValue
-                    cache.RefValue = result;
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Unknown delta encoding flag: {flags}");
+                    ReadAbsoluteValue(buffer, type, subtype, ref cache);
                     break;
             }
         }
 
         /// <summary>
-        /// Reads a property value directly into a PropertyCache. Zero boxing for primitive types.
+        /// Reads an absolute property value (no delta).
         /// </summary>
-        private static void ReadPropertyToCache(NetBuffer buffer, SerialVariantType type, ref PropertyCache cache)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ReadAbsoluteValue(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache cache)
         {
-            cache.Type = type;
             switch (type)
             {
                 case SerialVariantType.Bool:
                     cache.BoolValue = NetReader.ReadBool(buffer);
                     break;
                 case SerialVariantType.Int:
-                    cache.LongValue = NetReader.ReadInt64(buffer);
+                    // Check subtype for sized integer types (enums, byte, short, int, long)
+                    // Clear LongValue first to ensure upper bytes are zero
+                    cache.LongValue = 0;
+                    switch (subtype)
+                    {
+                        case "byte":
+                        case "System.Byte":
+                            cache.ByteValue = NetReader.ReadByte(buffer);
+                            break;
+                        case "sbyte":
+                        case "System.SByte":
+                            cache.ByteValue = NetReader.ReadByte(buffer);
+                            break;
+                        case "short":
+                        case "System.Int16":
+                            cache.IntValue = NetReader.ReadInt16(buffer);
+                            break;
+                        case "ushort":
+                        case "System.UInt16":
+                            cache.IntValue = NetReader.ReadUInt16(buffer);
+                            break;
+                        case "int":
+                        case "Int":
+                        case "System.Int32":
+                            cache.IntValue = NetReader.ReadInt32(buffer);
+                            break;
+                        case "uint":
+                        case "System.UInt32":
+                            cache.IntValue = (int)NetReader.ReadUInt32(buffer);
+                            break;
+                        default:
+                            // Default to Int64 for long, ulong, or unknown subtypes
+                            cache.LongValue = NetReader.ReadInt64(buffer);
+                            break;
+                    }
                     break;
                 case SerialVariantType.Float:
                     cache.FloatValue = NetReader.ReadFloat(buffer);
@@ -343,53 +520,163 @@ namespace Nebula.Serialization.Serializers
         }
 
         /// <summary>
-        /// Writes a property value from the cache. No Godot calls, no boxing.
+        /// Reads a small delta (half-float/short) and applies to existing value.
         /// </summary>
-        private void WriteFromCache(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, ProtocolNetProperty prop, int propIndex)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ReadSmallDelta(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache existing, ref PropertyCache cache)
         {
-            ref var cache = ref network.CachedProperties[propIndex];
-            
-            switch (cache.Type)
+            switch (type)
             {
-                case SerialVariantType.Bool:
-                    NetWriter.WriteBool(buffer, cache.BoolValue);
-                    break;
-                case SerialVariantType.Int:
-                    NetWriter.WriteInt64(buffer, cache.LongValue);
-                    break;
                 case SerialVariantType.Float:
-                    NetWriter.WriteFloat(buffer, cache.FloatValue);
+                    float deltaF = NetReader.ReadHalfFloat(buffer);
+                    cache.FloatValue = existing.FloatValue + deltaF;
                     break;
-                case SerialVariantType.String:
-                    NetWriter.WriteString(buffer, cache.StringValue ?? "");
+                    
+                case SerialVariantType.Int:
+                    // Small delta uses Int16 for all integer types
+                    short deltaS = NetReader.ReadInt16(buffer);
+                    // Store result in the appropriate field based on subtype
+                    cache.LongValue = 0; // Clear first
+                    switch (subtype)
+                    {
+                        case "byte":
+                        case "System.Byte":
+                        case "sbyte":
+                        case "System.SByte":
+                            cache.ByteValue = (byte)(existing.ByteValue + deltaS);
+                            break;
+                        case "short":
+                        case "System.Int16":
+                        case "ushort":
+                        case "System.UInt16":
+                        case "int":
+                        case "Int":
+                        case "System.Int32":
+                        case "uint":
+                        case "System.UInt32":
+                            cache.IntValue = existing.IntValue + deltaS;
+                            break;
+                        default:
+                            cache.LongValue = existing.LongValue + deltaS;
+                            break;
+                    }
                     break;
+                    
                 case SerialVariantType.Vector2:
-                    NetWriter.WriteVector2(buffer, cache.Vec2Value);
+                    float dx2 = NetReader.ReadHalfFloat(buffer);
+                    float dy2 = NetReader.ReadHalfFloat(buffer);
+                    cache.Vec2Value = new Vector2(existing.Vec2Value.X + dx2, existing.Vec2Value.Y + dy2);
                     break;
+                    
                 case SerialVariantType.Vector3:
-                    NetWriter.WriteVector3(buffer, cache.Vec3Value);
+                    float dx3 = NetReader.ReadHalfFloat(buffer);
+                    float dy3 = NetReader.ReadHalfFloat(buffer);
+                    float dz3 = NetReader.ReadHalfFloat(buffer);
+                    cache.Vec3Value = new Vector3(
+                        existing.Vec3Value.X + dx3,
+                        existing.Vec3Value.Y + dy3,
+                        existing.Vec3Value.Z + dz3);
                     break;
-                case SerialVariantType.Quaternion:
-                    NetWriter.WriteQuaternion(buffer, cache.QuatValue);
-                    break;
-                case SerialVariantType.PackedByteArray:
-                    NetWriter.WriteBytesWithLength(buffer, cache.RefValue as byte[] ?? Array.Empty<byte>());
-                    break;
-                case SerialVariantType.PackedInt32Array:
-                    NetWriter.WriteInt32Array(buffer, cache.RefValue as int[] ?? Array.Empty<int>());
-                    break;
-                case SerialVariantType.PackedInt64Array:
-                    NetWriter.WriteInt64Array(buffer, cache.RefValue as long[] ?? Array.Empty<long>());
-                    break;
-                case SerialVariantType.Object:
-                    // Custom types with peer-dependent serialization
-                    WriteCustomTypeFromCache(currentWorld, peer, buffer, prop, ref cache);
-                    break;
+                    
                 default:
-                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Unsupported cache type: {cache.Type}");
+                    // Fallback to absolute for unsupported small delta types
+                    Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"Small delta not supported for type {type}, reading absolute");
+                    ReadAbsoluteValue(buffer, type, subtype, ref cache);
                     break;
             }
         }
+
+        /// <summary>
+        /// Reads a full delta and applies to existing value.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ReadFullDelta(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache existing, ref PropertyCache cache)
+        {
+            switch (type)
+            {
+                case SerialVariantType.Float:
+                    float deltaF = NetReader.ReadFloat(buffer);
+                    cache.FloatValue = existing.FloatValue + deltaF;
+                    break;
+                    
+                case SerialVariantType.Int:
+                    // Full delta uses the same size as the property type for larger deltas
+                    cache.LongValue = 0; // Clear first
+                    switch (subtype)
+                    {
+                        case "byte":
+                        case "System.Byte":
+                        case "sbyte":
+                        case "System.SByte":
+                            // Byte types use Int16 for full delta (more range than byte)
+                            short deltaB = NetReader.ReadInt16(buffer);
+                            cache.ByteValue = (byte)(existing.ByteValue + deltaB);
+                            break;
+                        case "short":
+                        case "System.Int16":
+                        case "ushort":
+                        case "System.UInt16":
+                            short deltaS = NetReader.ReadInt16(buffer);
+                            cache.IntValue = existing.IntValue + deltaS;
+                            break;
+                        case "int":
+                        case "Int":
+                        case "System.Int32":
+                        case "uint":
+                        case "System.UInt32":
+                            int deltaI = NetReader.ReadInt32(buffer);
+                            cache.IntValue = existing.IntValue + deltaI;
+                            break;
+                        default:
+                            // Default to Int64 for long, ulong, or unknown subtypes
+                            long deltaL = NetReader.ReadInt64(buffer);
+                            cache.LongValue = existing.LongValue + deltaL;
+                            break;
+                    }
+                    break;
+                    
+                case SerialVariantType.Vector2:
+                    Vector2 deltaV2 = NetReader.ReadVector2(buffer);
+                    cache.Vec2Value = existing.Vec2Value + deltaV2;
+                    break;
+                    
+                case SerialVariantType.Vector3:
+                    Vector3 deltaV3 = NetReader.ReadVector3(buffer);
+                    cache.Vec3Value = existing.Vec3Value + deltaV3;
+                    break;
+                    
+                default:
+                    // Fallback to absolute for unsupported delta types
+                    Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"Full delta not supported for type {type}, reading absolute");
+                    ReadAbsoluteValue(buffer, type, subtype, ref cache);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Stores a deserialized custom type value in the correct PropertyCache field.
+        /// Mirrors the logic in NetworkController.SetCachedValue to ensure server and client use the same fields.
+        /// </summary>
+        private static void SetDeserializedValueToCache(object result, ref PropertyCache cache)
+        {
+            cache.Type = SerialVariantType.Object;
+            
+            // Store custom value types in their proper field (matching NetworkController.SetCachedValue)
+            switch (result)
+            {
+                case NetId netId:
+                    cache.NetIdValue = netId;
+                    break;
+                case UUID uuid:
+                    cache.UUIDValue = uuid;
+                    break;
+                default:
+                    // Reference types and unknown value types go in RefValue
+                    cache.RefValue = result;
+                    break;
+            }
+        }
+
         
         /// <summary>
         /// Writes a custom type from the cache using a generated serializer delegate.
@@ -459,19 +746,8 @@ namespace Nebula.Serialization.Serializers
         }
 
         private HashSet<int> nonDefaultProperties = new();
-        private Dictionary<UUID, Dictionary<Tick, byte[]>> peerBufferCache = new();
         
-        /// <summary>
-        /// Maximum number of ticks to cache per peer before forced pruning.
-        /// This prevents unbounded memory growth if acknowledgments are delayed.
-        /// TPS/2 = ~500ms which is plenty of time for acks on a healthy connection.
-        /// </summary>
-        private static int MaxCachedTicksPerPeer = NetRunner.TPS / 2;
-        
-        // Pooled byte arrays for dirty masks to avoid per-tick allocations
-        private Dictionary<UUID, byte[]> _peerDirtyMaskPool = new();
-        
-        // Pooled buffer for custom type serialization (Fix #3)
+        // Pooled buffer for custom type serialization
         private NetBuffer _customTypeBuffer;
 
         private bool TryGetInterestLayers(UUID peerId, out long layers)
@@ -501,12 +777,6 @@ namespace Nebula.Serialization.Serializers
         }
 
         private byte[] _propertiesUpdated;
-        private byte[] _filteredProps;
-        private List<Tick> _sortedTicks = new();
-
-        // Diagnostic counters for memory leak detection
-        private static int _diagnosticCounter = 0;
-        private static int _diagnosticLogInterval = 100; // Log every N ticks
         
         public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
@@ -514,7 +784,6 @@ namespace Nebula.Serialization.Serializers
             int byteCount = GetByteCountOfProperties();
 
             Array.Clear(_propertiesUpdated, 0, byteCount);
-            Array.Clear(_filteredProps, 0, byteCount);
 
             if (!peerInitialPropSync.TryGetValue(peerId, out var initialSync))
             {
@@ -527,72 +796,61 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
-            if (!peerBufferCache.TryGetValue(peerId, out var currentPeerCache))
+            // Zero-alloc dictionary access via ref for delta state
+            ref var state = ref CollectionsMarshal.GetValueRefOrAddDefault(_peerStates, peerId, out bool isNew);
+            if (isNew || !state.IsInitialized)
             {
-                currentPeerCache = new Dictionary<Tick, byte[]>();
-                peerBufferCache[peerId] = currentPeerCache;
+                state = CreateOrGetPooledState();
             }
 
-            // Fix #4: Pool the dirty mask byte arrays
-            if (!currentPeerCache.TryGetValue(currentWorld.CurrentTick, out var cachedMask))
-            {
-                // Try to get from pool, otherwise allocate
-                if (!_peerDirtyMaskPool.TryGetValue(peerId, out cachedMask) || cachedMask.Length != byteCount)
-                {
-                    cachedMask = new byte[byteCount];
-                    _peerDirtyMaskPool[peerId] = cachedMask;
-                }
-                else
-                {
-                    Array.Clear(cachedMask, 0, byteCount);
-                }
-                currentPeerCache[currentWorld.CurrentTick] = cachedMask;
-            }
-            
-            // Fix #6: Build sorted ticks list ONCE for both pruning and iteration
-            _sortedTicks.Clear();
-            foreach (var tick in currentPeerCache.Keys)
-            {
-                _sortedTicks.Add(tick);
-            }
-            _sortedTicks.Sort();
-            
-            // SAFEGUARD: Prune oldest ticks if cache exceeds limit to prevent unbounded growth
-            if (_sortedTicks.Count > MaxCachedTicksPerPeer)
-            {
-                int ticksToRemove = _sortedTicks.Count - MaxCachedTicksPerPeer;
-                for (int i = 0; i < ticksToRemove; i++)
-                {
-                    currentPeerCache.Remove(_sortedTicks[i]);
-                }
-                // Remove pruned ticks from our sorted list so we don't iterate them below
-                _sortedTicks.RemoveRange(0, ticksToRemove);
-            }
-
-            // Convert dirty mask to byte array format for existing logic
-            for (int propIndex = 0; propIndex < 64; propIndex++)
+            // Build dirty mask from processingDirtyMask
+            for (int propIndex = 0; propIndex < 64 && propIndex < _propertyCount; propIndex++)
             {
                 if ((processingDirtyMask & (1L << propIndex)) != 0)
                 {
-                    cachedMask[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
+                    _propertiesUpdated[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
                 }
             }
 
+            // Include non-default properties that haven't been synced yet
             foreach (var propIndex in nonDefaultProperties)
             {
                 var byteIndex = propIndex / BitConstants.BitsInByte;
                 var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
                 if ((initialSync[byteIndex] & propSlot) == 0)
                 {
-                    cachedMask[byteIndex] |= propSlot;
+                    _propertiesUpdated[byteIndex] |= propSlot;
                 }
             }
 
-            // Use already-sorted _sortedTicks list (Fix #6 - no duplicate sorting)
-            foreach (var tick in _sortedTicks)
+            // Include properties that were sent but not yet acknowledged (for re-sending)
+            for (var i = 0; i < state.PendingDirtyMask.Length && i < _propertiesUpdated.Length; i++)
             {
-                FilterPropsAgainstInterestNoAlloc(peer, currentPeerCache[tick], _filteredProps);
-                OrByteListInPlace(_propertiesUpdated, _filteredProps);
+                _propertiesUpdated[i] |= state.PendingDirtyMask[i];
+            }
+
+            // Filter against interest layers
+            if (!TryGetInterestLayers(peerId, out var peerInterestLayers))
+            {
+                return;
+            }
+
+            // Apply interest filter inline
+            for (var byteIndex = 0; byteIndex < _propertiesUpdated.Length; byteIndex++)
+            {
+                var b = _propertiesUpdated[byteIndex];
+                if (b == 0) continue;
+                for (var bitIndex = 0; bitIndex < 8; bitIndex++)
+                {
+                    if ((b & (1 << bitIndex)) != 0)
+                    {
+                        var propIndex = byteIndex * 8 + bitIndex;
+                        if (!PeerHasInterestInProperty(propIndex, peerInterestLayers))
+                        {
+                            _propertiesUpdated[byteIndex] &= (byte)~(1 << bitIndex);
+                        }
+                    }
+                }
             }
 
             // Check if there's anything to send
@@ -611,31 +869,27 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
-            // Fix #2: Mark props as synced - inline iteration instead of EnumerateSetBits
+            // Mark props as synced in initialSync (for initial spawn tracking)
+            // and add to PendingDirtyMask (for re-sending until acked)
             for (var byteIdx = 0; byteIdx < _propertiesUpdated.Length; byteIdx++)
             {
                 var b = _propertiesUpdated[byteIdx];
-                if (b == 0) continue; // Fast skip
-                for (var bitIdx = 0; bitIdx < 8; bitIdx++)
-                {
-                    if ((b & (1 << bitIdx)) != 0)
-                    {
-                        initialSync[byteIdx] |= (byte)(1 << bitIdx);
-                    }
-                }
+                if (b == 0) continue;
+                initialSync[byteIdx] |= b;
+                state.PendingDirtyMask[byteIdx] |= b;
             }
 
-            // Serialize the mask
+            // Serialize the dirty mask
             for (var i = 0; i < _propertiesUpdated.Length; i++)
             {
                 NetWriter.WriteByte(buffer, _propertiesUpdated[i]);
             }
 
-            // Serialize property values from cache (no Godot calls)
+            // Serialize property values with delta encoding
             for (var i = 0; i < _propertiesUpdated.Length; i++)
             {
                 var propSegment = _propertiesUpdated[i];
-                if (propSegment == 0) continue; // Fast skip for empty segments
+                if (propSegment == 0) continue;
                 
                 for (var j = 0; j < BitConstants.BitsInByte; j++)
                 {
@@ -645,57 +899,269 @@ namespace Nebula.Serialization.Serializers
                     }
 
                     var propIndex = i * BitConstants.BitsInByte + j;
-                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                     
                     try
                     {
-                        WriteFromCache(currentWorld, peer, buffer, prop, propIndex);
+                        ref var current = ref network.CachedProperties[propIndex];
+                        ref var acked = ref state.LastAcked[propIndex];
+                        bool hasAcked = (state.AckedMask[i] & (1 << j)) != 0;
+                        
+                        // Write with delta encoding
+                        WriteDeltaOrAbsolute(currentWorld, peer, buffer, propIndex, ref current, ref acked, hasAcked);
+                        
+                        // Track in pending state (struct copy, no allocation)
+                        state.Pending[propIndex] = current;
                     }
                     catch (Exception ex)
                     {
+                        var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                         var innerMsg = ex.InnerException?.Message ?? ex.Message;
                         var innerStack = ex.InnerException?.StackTrace ?? ex.StackTrace;
-                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Error serializing property {prop.NodePath}.{prop.Name} from cache: {innerMsg}\n{innerStack}");
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Error serializing property {prop.NodePath}.{prop.Name}: {innerMsg}\n{innerStack}");
                     }
                 }
             }
         }
 
-        private void FilterPropsAgainstInterestNoAlloc(NetPeer peer, byte[] dirtyPropsMask, byte[] result)
+        /// <summary>
+        /// Writes a property value with delta encoding when applicable.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void WriteDeltaOrAbsolute(
+            WorldRunner currentWorld,
+            NetPeer peer,
+            NetBuffer buffer,
+            int propIndex,
+            ref PropertyCache current,
+            ref PropertyCache acked,
+            bool hasAcked)
         {
-            var peerId = NetRunner.Instance.GetPeerId(peer);
-            if (!TryGetInterestLayers(peerId, out var peerInterestLayers))
+            var type = _propTypes[propIndex];
+            
+            // Non-delta types or first sync: send absolute
+            if (!hasAcked || !_propSupportsDelta[propIndex])
             {
-                Array.Clear(result, 0, result.Length);
+                // Quaternion: use smallest-three compression
+                if (type == SerialVariantType.Quaternion)
+                {
+                    NetWriter.WriteByte(buffer, (byte)(DeltaEncodingFlags.Absolute | DeltaEncodingFlags.QuatCompressed));
+                    NetWriter.WriteQuatSmallestThree(buffer, current.QuatValue);
+                }
+                else
+                {
+                    NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.Absolute);
+                    WriteAbsoluteValue(currentWorld, peer, buffer, propIndex, ref current);
+                }
                 return;
             }
-
-            Array.Copy(dirtyPropsMask, result, dirtyPropsMask.Length);
-
-            // Fix #2: Inline iteration instead of EnumerateSetBits (avoids enumerator allocation)
-            for (var byteIndex = 0; byteIndex < dirtyPropsMask.Length; byteIndex++)
+            
+            // Delta encoding path
+            switch (type)
             {
-                var b = dirtyPropsMask[byteIndex];
-                if (b == 0) continue; // Fast skip for empty bytes
-                for (var bitIndex = 0; bitIndex < 8; bitIndex++)
-                {
-                    if ((b & (1 << bitIndex)) != 0)
+                case SerialVariantType.Float:
+                    float deltaF = current.FloatValue - acked.FloatValue;
+                    if (MathF.Abs(deltaF) < SmallDeltaThreshold)
                     {
-                        var propIndex = byteIndex * 8 + bitIndex;
-                        if (!PeerHasInterestInProperty(propIndex, peerInterestLayers))
+                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
+                        NetWriter.WriteHalfFloat(buffer, deltaF);
+                    }
+                    else
+                    {
+                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
+                        NetWriter.WriteFloat(buffer, deltaF);
+                    }
+                    break;
+                    
+                case SerialVariantType.Int:
+                    // Get the property subtype to read from the correct field
+                    var intProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                    var intSubtype = intProp.Metadata.TypeIdentifier;
+                    long currentVal, ackedVal;
+                    
+                    // Read current and acked values from the appropriate field
+                    switch (intSubtype)
+                    {
+                        case "byte":
+                        case "System.Byte":
+                        case "sbyte":
+                        case "System.SByte":
+                            currentVal = current.ByteValue;
+                            ackedVal = acked.ByteValue;
+                            break;
+                        case "short":
+                        case "System.Int16":
+                        case "ushort":
+                        case "System.UInt16":
+                        case "int":
+                        case "Int":
+                        case "System.Int32":
+                        case "uint":
+                        case "System.UInt32":
+                            currentVal = current.IntValue;
+                            ackedVal = acked.IntValue;
+                            break;
+                        default:
+                            currentVal = current.LongValue;
+                            ackedVal = acked.LongValue;
+                            break;
+                    }
+                    
+                    long deltaL = currentVal - ackedVal;
+                    // Use small encoding for deltas that fit in short range
+                    if (deltaL >= short.MinValue && deltaL <= short.MaxValue)
+                    {
+                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
+                        NetWriter.WriteInt16(buffer, (short)deltaL);
+                    }
+                    else
+                    {
+                        // Full delta - write appropriate size based on subtype
+                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
+                        switch (intSubtype)
                         {
-                            ClearBit(result, propIndex);
+                            case "byte":
+                            case "System.Byte":
+                            case "sbyte":
+                            case "System.SByte":
+                            case "short":
+                            case "System.Int16":
+                            case "ushort":
+                            case "System.UInt16":
+                                NetWriter.WriteInt16(buffer, (short)deltaL);
+                                break;
+                            case "int":
+                            case "Int":
+                            case "System.Int32":
+                            case "uint":
+                            case "System.UInt32":
+                                NetWriter.WriteInt32(buffer, (int)deltaL);
+                                break;
+                            default:
+                                NetWriter.WriteInt64(buffer, deltaL);
+                                break;
                         }
                     }
-                }
+                    break;
+                    
+                case SerialVariantType.Vector2:
+                    Vector2 deltaV2 = current.Vec2Value - acked.Vec2Value;
+                    float mag2 = deltaV2.LengthSquared();
+                    if (mag2 < SmallDeltaThresholdSq)
+                    {
+                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
+                        NetWriter.WriteHalfFloat(buffer, deltaV2.X);
+                        NetWriter.WriteHalfFloat(buffer, deltaV2.Y);
+                    }
+                    else
+                    {
+                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
+                        NetWriter.WriteVector2(buffer, deltaV2);
+                    }
+                    break;
+                    
+                case SerialVariantType.Vector3:
+                    Vector3 deltaV3 = current.Vec3Value - acked.Vec3Value;
+                    float mag3 = deltaV3.LengthSquared();
+                    if (mag3 < SmallDeltaThresholdSq)
+                    {
+                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
+                        NetWriter.WriteHalfFloat(buffer, deltaV3.X);
+                        NetWriter.WriteHalfFloat(buffer, deltaV3.Y);
+                        NetWriter.WriteHalfFloat(buffer, deltaV3.Z);
+                    }
+                    else
+                    {
+                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
+                        NetWriter.WriteVector3(buffer, deltaV3);
+                    }
+                    break;
+                    
+                default:
+                    // Fallback to absolute for any other types
+                    NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.Absolute);
+                    WriteAbsoluteValue(currentWorld, peer, buffer, propIndex, ref current);
+                    break;
             }
         }
 
-        private void OrByteListInPlace(byte[] dest, byte[] src)
+        /// <summary>
+        /// Writes an absolute property value (no delta encoding).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void WriteAbsoluteValue(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int propIndex, ref PropertyCache cache)
         {
-            for (var i = 0; i < dest.Length; i++)
+            switch (cache.Type)
             {
-                dest[i] |= src[i];
+                case SerialVariantType.Bool:
+                    NetWriter.WriteBool(buffer, cache.BoolValue);
+                    break;
+                case SerialVariantType.Int:
+                    // Check metadata for sized integer types (enums, byte, short, int, long)
+                    var intProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                    switch (intProp.Metadata.TypeIdentifier)
+                    {
+                        case "byte":
+                        case "System.Byte":
+                            NetWriter.WriteByte(buffer, cache.ByteValue);
+                            break;
+                        case "sbyte":
+                        case "System.SByte":
+                            NetWriter.WriteByte(buffer, (byte)cache.ByteValue);
+                            break;
+                        case "short":
+                        case "System.Int16":
+                            NetWriter.WriteInt16(buffer, (short)cache.IntValue);
+                            break;
+                        case "ushort":
+                        case "System.UInt16":
+                            NetWriter.WriteUInt16(buffer, (ushort)cache.IntValue);
+                            break;
+                        case "int":
+                        case "Int":
+                        case "System.Int32":
+                            NetWriter.WriteInt32(buffer, cache.IntValue);
+                            break;
+                        case "uint":
+                        case "System.UInt32":
+                            NetWriter.WriteUInt32(buffer, (uint)cache.IntValue);
+                            break;
+                        default:
+                            // Default to Int64 for long, ulong, or unknown subtypes
+                            NetWriter.WriteInt64(buffer, cache.LongValue);
+                            break;
+                    }
+                    break;
+                case SerialVariantType.Float:
+                    NetWriter.WriteFloat(buffer, cache.FloatValue);
+                    break;
+                case SerialVariantType.String:
+                    NetWriter.WriteString(buffer, cache.StringValue ?? "");
+                    break;
+                case SerialVariantType.Vector2:
+                    NetWriter.WriteVector2(buffer, cache.Vec2Value);
+                    break;
+                case SerialVariantType.Vector3:
+                    NetWriter.WriteVector3(buffer, cache.Vec3Value);
+                    break;
+                case SerialVariantType.Quaternion:
+                    NetWriter.WriteQuaternion(buffer, cache.QuatValue);
+                    break;
+                case SerialVariantType.PackedByteArray:
+                    NetWriter.WriteBytesWithLength(buffer, cache.RefValue as byte[] ?? Array.Empty<byte>());
+                    break;
+                case SerialVariantType.PackedInt32Array:
+                    NetWriter.WriteInt32Array(buffer, cache.RefValue as int[] ?? Array.Empty<int>());
+                    break;
+                case SerialVariantType.PackedInt64Array:
+                    NetWriter.WriteInt64Array(buffer, cache.RefValue as long[] ?? Array.Empty<long>());
+                    break;
+                case SerialVariantType.Object:
+                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                    WriteCustomTypeFromCache(currentWorld, peer, buffer, prop, ref cache);
+                    break;
+                default:
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Unsupported cache type: {cache.Type}");
+                    break;
             }
         }
 
@@ -708,47 +1174,42 @@ namespace Nebula.Serialization.Serializers
         
         /// <summary>
         /// Removes all cached data for a specific peer. Call this when a peer disconnects.
+        /// Returns the PeerPropertyState to the pool for reuse.
         /// </summary>
         public void CleanupPeer(UUID peerId)
         {
-            peerBufferCache.Remove(peerId);
             peerInitialPropSync.Remove(peerId);
-            _peerDirtyMaskPool.Remove(peerId);
+            
+            // Return the state to the pool for reuse
+            if (_peerStates.TryGetValue(peerId, out var state) && state.IsInitialized)
+            {
+                _statePool.Push(state);
+            }
+            _peerStates.Remove(peerId);
         }
-
-        // Reusable list to avoid LINQ allocation in Acknowledge
-        private List<Tick> _ticksToRemove = new();
         
         public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick latestAck)
         {
             var peerId = NetRunner.Instance.GetPeerId(peer);
-            if (!peerBufferCache.TryGetValue(peerId, out var tickCache))
+            
+            // Zero-alloc ref access
+            ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
+            if (Unsafe.IsNullRef(ref state) || !state.IsInitialized)
             {
                 return;
             }
             
-            int beforeCount = tickCache.Count;
+            // O(1) array swap - Pending becomes LastAcked
+            (state.LastAcked, state.Pending) = (state.Pending, state.LastAcked);
             
-            // Avoid LINQ .ToList() allocation - reuse list
-            _ticksToRemove.Clear();
-            foreach (var tick in tickCache.Keys)
+            // Mark all pending properties as acked (for delta encoding initial sync detection)
+            for (int i = 0; i < state.AckedMask.Length && i < state.PendingDirtyMask.Length; i++)
             {
-                if (tick <= latestAck)
-                {
-                    _ticksToRemove.Add(tick);
-                }
+                state.AckedMask[i] |= state.PendingDirtyMask[i];
             }
             
-            foreach (var tick in _ticksToRemove)
-            {
-                tickCache.Remove(tick);
-            }
-            
-            // DIAGNOSTIC: Log when acknowledgments are cleaning up ticks
-            // if (_ticksToRemove.Count > 0)
-            // {
-            //     Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[NetPropertiesSerializer ACK] Peer {peerId.ID} acked tick {latestAck}, removed {_ticksToRemove.Count} ticks, {tickCache.Count} remaining for node {network.RawNode.Name}");
-            // }
+            // Clear pending dirty mask - these properties are now acknowledged
+            Array.Clear(state.PendingDirtyMask, 0, state.PendingDirtyMask.Length);
         }
 
     }

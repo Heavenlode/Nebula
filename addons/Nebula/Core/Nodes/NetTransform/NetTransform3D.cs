@@ -36,20 +36,34 @@ namespace Nebula.Utility.Nodes
         [Export]
         public float VisualInterpolateSpeed { get; set; } = 20f;
 
-        [NetProperty]
+        [NetProperty(NotifyOnChange = true)]
         public bool IsTeleporting { get; set; }
 
         /// <summary>
         /// Networked position with interpolation for non-owned and prediction for owned entities.
         /// </summary>
-        [NetProperty(Interpolate = true, InterpolateSpeed = 10f, Predicted = true, PredictionTolerance = 20f, NotifyOnChange = true)]
+        [NetProperty(Interpolate = true, InterpolateSpeed = 10f, Predicted = true, NotifyOnChange = true)]
         public Vector3 NetPosition { get; set; }
+
+        /// <summary>
+        /// Tolerance for position misprediction detection.
+        /// Set this from parent nodes that use NetTransform3D via composition.
+        /// </summary>
+        [Export]
+        public float NetPositionPredictionTolerance { get; set; } = 2f;
 
         /// <summary>
         /// Networked rotation with interpolation for non-owned and prediction for owned entities.
         /// </summary>
-        [NetProperty(Interpolate = true, InterpolateSpeed = 15f, Predicted = true, PredictionTolerance = 0.1f, NotifyOnChange = true)]
+        [NetProperty(Interpolate = true, InterpolateSpeed = 15f, Predicted = true, NotifyOnChange = true)]
         public Quaternion NetRotation { get; set; } = Quaternion.Identity;
+
+        /// <summary>
+        /// Tolerance for rotation misprediction detection.
+        /// Set this from parent nodes that use NetTransform3D via composition.
+        /// </summary>
+        [Export]
+        public float NetRotationPredictionTolerance { get; set; } = 0.05f;
 
         /// <summary>
         /// Called when NetPosition changes during network import.
@@ -92,7 +106,7 @@ namespace Nebula.Utility.Nodes
         private bool _visualInitialized = false;
         private bool teleportExported = false;
 
-        public void OnNetworkChangeIsTeleporting(Tick tick, bool from, bool to)
+        partial void OnNetChangeIsTeleporting(Tick tick, bool from, bool to)
         {
             _isTeleporting = true;
             _visualInitialized = false; // Reset so next position snaps
@@ -147,24 +161,19 @@ namespace Nebula.Utility.Nodes
 
         /// <summary>
         /// Called after mispredicted properties are restored during rollback.
-        /// Syncs to SourceNode ONLY the properties that actually mispredicted.
-        /// After RestoreMispredictedToConfirmed runs, mispredicted properties equal their _confirmed values.
+        /// Syncs the restored properties to SourceNode so physics can continue from confirmed state.
         /// </summary>
         partial void OnConfirmedStateRestored()
         {
             if (SourceNode != null)
             {
-                // Only sync properties that were actually restored (mispredicted)
-                // After RestoreMispredictedToConfirmed, restored props equal _confirmed
-                if (NetPosition == _confirmed_NetPosition)
-                {
-                    SourceNode.Position = _confirmed_NetPosition;
-                }
-                if (NetRotation == _confirmed_NetRotation)
-                {
-                    var normalizedRot = SafeNormalize(_confirmed_NetRotation);
-                    SourceNode.Quaternion = normalizedRot;
-                }
+                // Sync position from the (just restored) property
+                SourceNode.Position = NetPosition;
+                
+                // Sync rotation with normalization and hemisphere check
+                var confirmedRot = SafeNormalize(NetRotation);
+                var currentRot = SafeNormalize(SourceNode.Quaternion);
+                SourceNode.Quaternion = EnsureSameHemisphere(confirmedRot, currentRot);
             }
         }
 
@@ -180,7 +189,9 @@ namespace Nebula.Utility.Nodes
             if (SourceNode != null)
             {
                 SourceNode.Position = NetPosition;
-                SourceNode.Quaternion = NetRotation;
+                // Ensure same hemisphere as current SourceNode to avoid "long way around" rotation
+                var currentRot = SafeNormalize(SourceNode.Quaternion);
+                SourceNode.Quaternion = EnsureSameHemisphere(NetRotation, currentRot);
             }
         }
 
@@ -229,6 +240,12 @@ namespace Nebula.Utility.Nodes
             }
         }
 
+        /// <summary>
+        /// Angle threshold (in radians) above which we snap rotation instead of interpolating.
+        /// This prevents the "long way around" rotation when there's a large discrepancy.
+        /// </summary>
+        private const float RotationSnapThreshold = Mathf.Pi / 2f; // 90 degrees
+
         /// <inheritdoc/>
         public override void _Process(double delta)
         {
@@ -253,13 +270,23 @@ namespace Nebula.Utility.Nodes
                 var sourceRot = SafeNormalize(SourceNode.Quaternion);
                 var visualRot = SafeNormalize(target.Quaternion);
                 visualRot = EnsureSameHemisphere(visualRot, sourceRot);
-                target.Quaternion = visualRot.Slerp(sourceRot, t);
+                
+                // Check for large rotation error - snap instead of slerp to avoid visual artifacts
+                float angleDiff = visualRot.AngleTo(sourceRot);
+                if (angleDiff > RotationSnapThreshold)
+                {
+                    target.Quaternion = sourceRot;
+                }
+                else
+                {
+                    target.Quaternion = visualRot.Slerp(sourceRot, t);
+                }
                 return;
             }
 
             // Non-owned client: interpolate toward NetPosition/NetRotation
             Vector3 targetPos = NetPosition;
-            Quaternion targetRot = NetRotation;
+            Quaternion targetRot = SafeNormalize(NetRotation);
 
             // Initialize on first frame or after teleport
             if (!_visualInitialized)
@@ -274,9 +301,20 @@ namespace Nebula.Utility.Nodes
             float t2 = (float)(1.0 - Math.Exp(-VisualInterpolateSpeed * delta));
             target.Position = target.Position.Lerp(targetPos, t2);
             
-            // Ensure quaternions are normalized before Slerp
+            // Ensure quaternions are normalized and on same hemisphere before Slerp
             var currentRot = SafeNormalize(target.Quaternion);
-            target.Quaternion = currentRot.Slerp(targetRot, t2);
+            currentRot = EnsureSameHemisphere(currentRot, targetRot);
+            
+            // Check for large rotation error - snap instead of slerp
+            float angleDiff2 = currentRot.AngleTo(targetRot);
+            if (angleDiff2 > RotationSnapThreshold)
+            {
+                target.Quaternion = targetRot;
+            }
+            else
+            {
+                target.Quaternion = currentRot.Slerp(targetRot, t2);
+            }
         }
 
         /// <summary>

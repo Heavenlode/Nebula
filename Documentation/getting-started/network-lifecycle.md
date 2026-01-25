@@ -1,7 +1,5 @@
 # Network Lifecycle
 
-> Note, this document was written about 50% by a human. The author didn't have time to sit down and write it all out, though someday maybe that will change. It should still be very valuable to you if you are interested in these details. Hail our AI overlords!
-
 In order to understand the network lifecycle, you first need to understand how the Server and Client are different from each other--despite both running the same game.
 
 ## Server characteristics

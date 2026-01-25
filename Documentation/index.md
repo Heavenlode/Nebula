@@ -4,6 +4,8 @@ Welcome to the Nebula networking framework for Godot.
 
 Nebula is a fun, efficient, extensible networking framework designed to make multiplayer game development in Godot a breeze. It's built from the ground up for Godot's C# support, giving you a clean, modern API that feels natural to use.
 
+> Disclaimer: this document was written about 50% by a human. The author didn't have time to sit down and write it all out, though someday maybe that will change. It should still be very valuable to you if you are interested in these details. Hail our AI overlords!
+
 ## Quick Start
 
 Get up and running with Nebula in minutes:
@@ -56,8 +58,4 @@ Spawn a player with an inventory, and all the items inside automatically replica
 3. Every tick, the server processes inputs, updates state, and broadcasts changes
 4. Clients receive updates and can react (play animations, show UI, etc.)
 
-That's the mental model. The docs below fill in the details.
-
-## License
-
-[MIT Licensed](https://raw.githubusercontent.com/Heavenlode/Nebula/main/LICENSE) © 2024 [Heavenlode](https://heavenlode.com)
+That's the mental model.

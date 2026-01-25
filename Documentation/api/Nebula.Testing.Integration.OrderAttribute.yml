@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Testing.Integration.OrderAttribute
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -92,7 +92,7 @@ items:
   fullName: Nebula.Testing.Integration.OrderAttribute.OrderAttribute(int)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -118,7 +118,7 @@ items:
   fullName: Nebula.Testing.Integration.OrderAttribute.Value
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration

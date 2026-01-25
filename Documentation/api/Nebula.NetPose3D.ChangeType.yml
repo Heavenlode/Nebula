@@ -16,7 +16,7 @@ items:
   fullName: Nebula.NetPose3D.ChangeType
   type: Enum
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -35,7 +35,7 @@ items:
   fullName: Nebula.NetPose3D.ChangeType.Delta
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -55,7 +55,7 @@ items:
   fullName: Nebula.NetPose3D.ChangeType.Keyframe
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -75,7 +75,7 @@ items:
   fullName: Nebula.NetPose3D.ChangeType.HighResolution
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula

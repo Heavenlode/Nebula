@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler
   type: Delegate
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -49,7 +49,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.InspectNodeEventHandler(object, nint)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -77,7 +77,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.Invoke(Godot.Node)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -100,7 +100,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.BeginInvoke(Godot.Node, System.AsyncCallback, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -132,7 +132,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.InspectNodeEventHandler.EndInvoke(System.IAsyncResult)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor

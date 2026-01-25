@@ -20,7 +20,7 @@ items:
   fullName: Nebula.Serialization.Serializers.InterestResyncSerializer
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.InterestResyncSerializer_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.InterestResyncSerializer_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -157,7 +157,7 @@ items:
   fullName: Nebula.Serialization.Serializers.InterestResyncSerializer.InterestResyncSerializer(Nebula.NetworkController)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -183,7 +183,7 @@ items:
   fullName: Nebula.Serialization.Serializers.InterestResyncSerializer.Begin()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -206,7 +206,7 @@ items:
   fullName: Nebula.Serialization.Serializers.InterestResyncSerializer.Cleanup()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -229,7 +229,7 @@ items:
   fullName: Nebula.Serialization.Serializers.InterestResyncSerializer.CleanupPeer(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -260,7 +260,7 @@ items:
   fullName: Nebula.Serialization.Serializers.InterestResyncSerializer.Acknowledge(Nebula.WorldRunner, ENet.Peer, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -293,7 +293,7 @@ items:
   fullName: Nebula.Serialization.Serializers.InterestResyncSerializer.Export(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -330,7 +330,7 @@ items:
   fullName: Nebula.Serialization.Serializers.InterestResyncSerializer.Import(Nebula.WorldRunner, Nebula.Serialization.NetBuffer, out Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/Serializers/InterestResyncSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers

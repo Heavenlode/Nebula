@@ -38,7 +38,7 @@ items:
   fullName: Nebula.NativeBridge
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -83,7 +83,7 @@ items:
   fullName: Nebula.NativeBridge.Register(Godot.Node)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -111,7 +111,7 @@ items:
   fullName: Nebula.NativeBridge.Unregister(Godot.Node)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -136,7 +136,7 @@ items:
   fullName: Nebula.NativeBridge.SyncFromGodot()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -161,7 +161,7 @@ items:
   fullName: Nebula.NativeBridge.FlushToGodot()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -186,7 +186,7 @@ items:
   fullName: Nebula.NativeBridge.GetPosition(Godot.Node3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -213,7 +213,7 @@ items:
   fullName: Nebula.NativeBridge.GetGlobalPosition(Godot.Node3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -240,7 +240,7 @@ items:
   fullName: Nebula.NativeBridge.GetRotation(Godot.Node3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -267,7 +267,7 @@ items:
   fullName: Nebula.NativeBridge.GetGlobalTransform(Godot.Node3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -294,7 +294,7 @@ items:
   fullName: Nebula.NativeBridge.GetGlobalBasis(Godot.Node3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -321,7 +321,7 @@ items:
   fullName: Nebula.NativeBridge.GetVisible(Godot.Node3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -348,7 +348,7 @@ items:
   fullName: Nebula.NativeBridge.GetProcessMode(Godot.Node)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -375,7 +375,7 @@ items:
   fullName: Nebula.NativeBridge.GetLinearVelocity(Godot.RigidBody3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -402,7 +402,7 @@ items:
   fullName: Nebula.NativeBridge.GetAngularVelocity(Godot.RigidBody3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -429,7 +429,7 @@ items:
   fullName: Nebula.NativeBridge.GetMass(Godot.RigidBody3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -456,7 +456,7 @@ items:
   fullName: Nebula.NativeBridge.GetVelocity(Godot.CharacterBody3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -483,7 +483,7 @@ items:
   fullName: Nebula.NativeBridge.IsOnFloor(Godot.CharacterBody3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -510,7 +510,7 @@ items:
   fullName: Nebula.NativeBridge.IsColliding(Godot.RayCast3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -537,7 +537,7 @@ items:
   fullName: Nebula.NativeBridge.GetCollisionPoint(Godot.RayCast3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -564,7 +564,7 @@ items:
   fullName: Nebula.NativeBridge.GetCollisionNormal(Godot.RayCast3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -591,7 +591,7 @@ items:
   fullName: Nebula.NativeBridge.GetColliderId(Godot.RayCast3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -618,7 +618,7 @@ items:
   fullName: Nebula.NativeBridge.SetVisible(Godot.Node3D, bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -648,7 +648,7 @@ items:
   fullName: Nebula.NativeBridge.SetProcessMode(Godot.Node, Godot.Node.ProcessModeEnum)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -675,7 +675,7 @@ items:
   fullName: Nebula.NativeBridge.DistanceTo(Godot.Node3D, Godot.Node3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -704,7 +704,7 @@ items:
   fullName: Nebula.NativeBridge.DistanceSquaredTo(Godot.Node3D, Godot.Node3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -736,7 +736,7 @@ items:
   fullName: Nebula.NativeBridge.IsAvailable
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NativeBridge.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NativeBridge.cs
   assemblies:
   - Nebula
   namespace: Nebula

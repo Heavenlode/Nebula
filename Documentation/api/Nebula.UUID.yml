@@ -32,7 +32,7 @@ items:
   fullName: Nebula.UUID
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -76,7 +76,7 @@ items:
   fullName: Nebula.UUID.Guid
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -99,7 +99,7 @@ items:
   fullName: Nebula.UUID.UUID()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -124,7 +124,7 @@ items:
   fullName: Nebula.UUID.UUID(string)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -152,7 +152,7 @@ items:
   fullName: Nebula.UUID.UUID(byte[])
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -180,7 +180,7 @@ items:
   fullName: Nebula.UUID.UUID(System.Guid)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -208,7 +208,7 @@ items:
   fullName: Nebula.UUID.NewUUID()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -232,7 +232,7 @@ items:
   fullName: Nebula.UUID.ToString()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -256,7 +256,7 @@ items:
   fullName: Nebula.UUID.Equals(object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -286,7 +286,7 @@ items:
   fullName: Nebula.UUID.Equals(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -314,7 +314,7 @@ items:
   fullName: Nebula.UUID.GetHashCode()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -338,7 +338,7 @@ items:
   fullName: Nebula.UUID.operator ==(Nebula.UUID, Nebula.UUID)
   type: Operator
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -368,7 +368,7 @@ items:
   fullName: Nebula.UUID.operator !=(Nebula.UUID, Nebula.UUID)
   type: Operator
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -398,7 +398,7 @@ items:
   fullName: Nebula.UUID.ToByteArray()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -425,7 +425,7 @@ items:
   fullName: Nebula.UUID.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, in Nebula.UUID, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -458,7 +458,7 @@ items:
   fullName: Nebula.UUID.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -491,7 +491,7 @@ items:
   fullName: Nebula.UUID.BsonSerialize(in Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -520,7 +520,7 @@ items:
   fullName: Nebula.UUID.BsonDeserialize(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -549,7 +549,7 @@ items:
   fullName: Nebula.UUID.IsEmpty
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -577,7 +577,7 @@ items:
   fullName: Nebula.UUID.Empty
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/UUID.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/UUID.cs
   assemblies:
   - Nebula
   namespace: Nebula

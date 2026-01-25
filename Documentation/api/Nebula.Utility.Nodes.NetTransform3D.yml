@@ -40,7 +40,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -469,7 +469,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D._WorldReady()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -492,7 +492,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.GetParent3D()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -514,7 +514,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.Face(Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -537,7 +537,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D._NetworkProcess(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -567,7 +567,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D._Process(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -595,7 +595,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -620,7 +620,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3, Godot.Quaternion)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -647,7 +647,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged(bool, bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -675,7 +675,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.OnNetPositionChanged(Godot.Vector3, Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -700,7 +700,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged(Godot.Quaternion, Godot.Quaternion)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -725,7 +725,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -755,7 +755,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -785,7 +785,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName(string, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -817,7 +817,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition(float, Godot.Vector3, Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -858,7 +858,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation(float, Godot.Quaternion, Godot.Quaternion)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -899,7 +899,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetTransform3D()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -922,7 +922,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.SourceNode
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -964,7 +964,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.TargetNode
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1010,7 +1010,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.VisualInterpolateSpeed
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1052,7 +1052,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.IsTeleporting
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1089,7 +1089,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetPosition
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1137,7 +1137,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetPositionPredictionTolerance
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1179,7 +1179,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetRotation
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1227,7 +1227,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetRotationPredictionTolerance
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1269,7 +1269,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerIsTeleporting
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1290,7 +1290,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerNetPosition
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1311,7 +1311,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerNetRotation
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes

@@ -16,7 +16,7 @@ items:
   fullName: Nebula.NetInterest
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetInterest.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetInterest.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -102,7 +102,7 @@ items:
   fullName: Nebula.NetInterest.Any
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetInterest.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetInterest.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -128,7 +128,7 @@ items:
   fullName: Nebula.NetInterest.Required
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetInterest.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetInterest.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -154,7 +154,7 @@ items:
   fullName: Nebula.NetInterest.NetInterest()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetInterest.cs
+    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetInterest.cs
   assemblies:
   - Nebula
   namespace: Nebula

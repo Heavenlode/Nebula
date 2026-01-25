@@ -1,0 +1,106 @@
+/* Custom styles to make Inherited Members collapsible */
+
+/* Style the collapsible inherited members section */
+.inheritedMembers-section {
+  margin: 1rem 0;
+}
+
+.inheritedMembers-section > details {
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 0.375rem;
+}
+
+.inheritedMembers-section > details > summary {
+  padding: 0.75rem 1rem;
+  background-color: var(--bs-tertiary-bg, #f8f9fa);
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.inheritedMembers-section > details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.inheritedMembers-section > details > summary:hover {
+  background-color: var(--bs-secondary-bg, #e9ecef);
+}
+
+.inheritedMembers-section > details[open] > summary {
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.inheritedMembers-section > details > summary::before {
+  content: '▶';
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.inheritedMembers-section > details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.inheritedMembers-section > details > .content {
+  padding: 1rem;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.inheritedMembers-section .member-count {
+  font-weight: normal;
+  color: var(--bs-secondary-color, #6c757d);
+  font-size: 0.875rem;
+}
+
+/* Make the inherited member items more compact with multi-column layout */
+.inheritedMembers-section .content dd {
+  column-count: 2;
+  column-gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .inheritedMembers-section .content dd {
+    column-count: 1;
+  }
+}
+
+.inheritedMembers-section .content dd > div {
+  break-inside: avoid;
+  padding: 0.15rem 0;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .inheritedMembers-section > details {
+    border-color: var(--bs-border-color, #495057);
+  }
+  
+  .inheritedMembers-section > details > summary {
+    background-color: var(--bs-tertiary-bg, #2b3035);
+  }
+  
+  .inheritedMembers-section > details > summary:hover {
+    background-color: var(--bs-secondary-bg, #343a40);
+  }
+}
+
+/* Also support DocFX dark theme class */
+[data-bs-theme="dark"] .inheritedMembers-section > details {
+  border-color: var(--bs-border-color, #495057);
+}
+
+[data-bs-theme="dark"] .inheritedMembers-section > details > summary {
+  background-color: var(--bs-tertiary-bg, #2b3035);
+}
+
+[data-bs-theme="dark"] .inheritedMembers-section > details > summary:hover {
+  background-color: var(--bs-secondary-bg, #343a40);
+}

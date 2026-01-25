@@ -1,6 +1,6 @@
-﻿<Project Sdk="Godot.NET.Sdk/4.5.0-dev.3">
+<Project Sdk="Godot.NET.Sdk/4.5.0-dev.3">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <LangVersion>latest</LangVersion>
     <EnablePreviewFeatures>True</EnablePreviewFeatures>
@@ -15,6 +15,11 @@
     <Content Remove="test\**" />
     <EmbeddedResource Remove="test\**" />
     <None Remove="test\**" />
+    <!-- Exclude ENet-CSharp submodule (we use the NuGet package instead) -->
+    <Compile Remove="ENet-CSharp\**" />
+    <Content Remove="ENet-CSharp\**" />
+    <EmbeddedResource Remove="ENet-CSharp\**" />
+    <None Remove="ENet-CSharp\**" />
   </ItemGroup>
   <Import Project="addons\Nebula\Nebula.props" />
 

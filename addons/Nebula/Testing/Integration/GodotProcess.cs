@@ -311,18 +311,22 @@ public sealed class GodotProcess : IDisposable
 
         // Start listener task for incoming debug events
         _debugListenerCts = new CancellationTokenSource();
-        _debugListenerTask = Task.Run(async () =>
+        _debugListenerTask = Task.Run(() =>
         {
             var buffer = new byte[4096];
             var messageBuffer = new MemoryStream();
+
+            // Set read timeout to allow checking cancellation periodically
+            _debugStream!.ReadTimeout = 100; // 100ms timeout
 
             try
             {
                 while (!_debugListenerCts!.Token.IsCancellationRequested && _debugConnected)
                 {
-                    if (_debugClient!.Available > 0)
+                    try
                     {
-                        var bytesRead = await _debugStream!.ReadAsync(buffer, 0, buffer.Length, _debugListenerCts.Token);
+                        // Use synchronous read with timeout instead of unreliable Available check
+                        var bytesRead = _debugStream!.Read(buffer, 0, buffer.Length);
                         if (bytesRead == 0)
                         {
                             _debugConnected = false;
@@ -333,15 +337,15 @@ public sealed class GodotProcess : IDisposable
                         messageBuffer.Write(buffer, 0, bytesRead);
                         ProcessMessages(messageBuffer);
                     }
-                    else
+                    catch (IOException)
                     {
-                        await Task.Delay(10, _debugListenerCts.Token);
+                        // Read timeout - this is expected, just continue the loop
+                        // to check cancellation and try again
                     }
                 }
             }
             catch (OperationCanceledException) { }
-            catch (IOException) { _debugConnected = false; }
-            catch (Exception) { /* Silently handle connection issues */ }
+            catch (Exception) { _debugConnected = false; }
         }, _debugListenerCts.Token);
     }
 
@@ -357,6 +361,9 @@ public sealed class GodotProcess : IDisposable
 
             // Read message length (first 4 bytes)
             int msgLen = BitConverter.ToInt32(data, offset);
+
+            // Sanity check - message length should be reasonable
+            if (msgLen < 0 || msgLen > 1000000) break;
 
             // Check if we have the full message
             if (offset + 4 + msgLen > data.Length) break;

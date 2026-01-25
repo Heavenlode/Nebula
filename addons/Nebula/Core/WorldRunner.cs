@@ -222,6 +222,7 @@ namespace Nebula
                         {
                             var stream = client.GetStream();
                             stream.Write(data, 0, data.Length);
+                            stream.Flush(); // Ensure data is sent immediately
                         }
                         else
                         {
@@ -1406,12 +1407,46 @@ namespace Nebula
                 node.Network.NetParent = RootScene;
                 var targetNode = netNodePath == default || netNodePath.IsEmpty ? RootScene.RawNode : RootScene.RawNode.GetNode(netNodePath);
                 targetNode.AddChild(node);
+                
+                // Cache node path ID for spawn serialization
+                if (netNodePath != default && !netNodePath.IsEmpty)
+                {
+                    if (Protocol.PackNode(RootScene.NetSceneFilePath, netNodePath, out var pathId))
+                    {
+                        node.Network.CachedNodePathIdInParent = pathId;
+                    }
+                    else
+                    {
+                        node.Network.CachedNodePathIdInParent = 255;
+                    }
+                }
+                else
+                {
+                    node.Network.CachedNodePathIdInParent = 255;
+                }
             }
             else
             {
                 node.Network.NetParent = parent;
                 var targetNode = netNodePath == default || netNodePath.IsEmpty ? parent.RawNode : parent.RawNode.GetNode(netNodePath);
                 targetNode.AddChild(node);
+                
+                // Cache node path ID for spawn serialization
+                if (netNodePath != default && !netNodePath.IsEmpty)
+                {
+                    if (Protocol.PackNode(parent.NetSceneFilePath, netNodePath, out var pathId))
+                    {
+                        node.Network.CachedNodePathIdInParent = pathId;
+                    }
+                    else
+                    {
+                        node.Network.CachedNodePathIdInParent = 255;
+                    }
+                }
+                else
+                {
+                    node.Network.CachedNodePathIdInParent = 255;
+                }
             }
             node.Network._NetworkPrepare(this);
             node.Network._WorldReady();

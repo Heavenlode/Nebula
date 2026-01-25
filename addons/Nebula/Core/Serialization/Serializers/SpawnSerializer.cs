@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using Nebula.Utility.Tools;
 
@@ -12,10 +11,26 @@ namespace Nebula.Serialization.Serializers
             public byte classId;
             public ushort parentId;
             public byte nodePathId;
-            public Vector3 position;
-            public Vector3 rotation;
             public byte hasInputAuthority;
+            public int nestedCount;
         }
+
+        /// <summary>
+        /// Data for a nested NetScene included in spawn message.
+        /// Struct to avoid heap allocation.
+        /// </summary>
+        private struct NestedSceneData
+        {
+            public byte SceneId;
+            public byte NodePathId;
+            public ushort NetId;
+        }
+
+        // Pre-allocated buffers for nested scene handling (static to avoid per-instance allocation)
+        private static readonly List<NetworkController> _nestedSceneBuffer = new(16);
+        private static readonly NestedSceneData[] _nestedDataBuffer = new NestedSceneData[64];
+        private static int _nestedDataCount;
+        private static readonly List<NetworkController> _allLocalNestedScenes = new(64);
 
         private NetworkController netController;
         private Dictionary<UUID, Tick> setupTicks = new();
@@ -82,6 +97,12 @@ namespace Nebula.Serialization.Serializers
             }
 
             var sceneId = Protocol.PackScene(netController.NetSceneFilePath);
+            if (sceneId > 245)
+            {
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, 
+                    $"SceneId {sceneId} exceeds safe limit (245). Too many registered scenes.");
+            }
+            
             // Only set setupTick on FIRST export - don't overwrite on re-exports
             // Otherwise the ACK can never catch up (setupTick keeps moving forward)
             if (!setupTicks.ContainsKey(peerId))
@@ -94,6 +115,9 @@ namespace Nebula.Serialization.Serializers
             if (netController.NetParent == null)
             {
                 NetWriter.WriteUInt16(buffer, 0);
+                
+                // Write nested NetScenes for root scene
+                ExportNestedScenes(currentWorld, peer, buffer);
                 return;
             }
 
@@ -118,19 +142,71 @@ namespace Nebula.Serialization.Serializers
                 throw new System.Exception($"FAILED TO PACK FOR SPAWN: Node path not found for {netController.RawNode.GetPath()}, relativePath={relativePath}");
             }
 
-            if (netController.RawNode is Node3D node)
-            {
-                NetWriter.WriteVector3(buffer, node.Position);
-                NetWriter.WriteVector3(buffer, node.Rotation);
-            }
-
             var hasInputAuth = netController.InputAuthority.Equals(peer) ? (byte)1 : (byte)0;
             NetWriter.WriteByte(buffer, hasInputAuth);
+            
+            // Write nested NetScenes
+            ExportNestedScenes(currentWorld, peer, buffer);
 
             currentWorld.Debug?.Send("Spawn", $"Exported:{netController.RawNode.SceneFilePath}");
 
             // Mark spawned immediately so NetPropertiesSerializer can export in the same tick
             currentWorld.SetSpawnedForClient(netController.NetId, peer);
+        }
+        
+        /// <summary>
+        /// Exports all nested NetScenes in the subtree.
+        /// </summary>
+        private void ExportNestedScenes(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
+        {
+            // Collect nested NetScenes recursively (entire subtree)
+            _nestedSceneBuffer.Clear();
+            CollectNestedNetScenesRecursive(netController, _nestedSceneBuffer);
+            
+            NetWriter.WriteByte(buffer, (byte)_nestedSceneBuffer.Count);
+            
+            for (int i = 0; i < _nestedSceneBuffer.Count; i++)
+            {
+                var nested = _nestedSceneBuffer[i];
+                
+                // Allocate peer-specific ID for this nested scene
+                var nestedPeerId = currentWorld.TryRegisterPeerNode(nested, peer);
+                if (nestedPeerId == 0)
+                {
+                    // Failed to allocate ID - write zeros so client can skip
+                    NetWriter.WriteByte(buffer, 0);
+                    NetWriter.WriteByte(buffer, 0);
+                    NetWriter.WriteUInt16(buffer, 0);
+                    continue;
+                }
+                
+                var nestedSceneId = Protocol.PackScene(nested.NetSceneFilePath);
+                if (nestedSceneId > 245)
+                {
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, 
+                        $"SceneId {nestedSceneId} exceeds safe limit (245). Too many registered scenes.");
+                }
+                
+                NetWriter.WriteByte(buffer, nestedSceneId);
+                NetWriter.WriteByte(buffer, nested.CachedNodePathIdInParent);
+                NetWriter.WriteUInt16(buffer, nestedPeerId);
+                
+                // Mark nested as spawned so its NetPropertiesSerializer exports in same tick
+                currentWorld.SetSpawnedForClient(nested.NetId, peer);
+            }
+        }
+        
+        /// <summary>
+        /// Recursively collects all nested NetScenes in the subtree.
+        /// </summary>
+        private static void CollectNestedNetScenesRecursive(NetworkController parent, List<NetworkController> results)
+        {
+            foreach (var child in parent.DynamicNetworkChildren)
+            {
+                results.Add(child);
+                // Recurse into child's nested scenes
+                CollectNestedNetScenesRecursive(child, results);
+            }
         }
 
         public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick)
@@ -196,7 +272,8 @@ namespace Nebula.Serialization.Serializers
             }
             currentWorld.TryRegisterPeerNode(controllerOut);
 
-            ProcessChildNodes(controllerOut);
+            // Reconcile local nested scenes against spawn data
+            ProcessChildNodes(controllerOut, currentWorld);
 
             // Clean up the old blank node - just queue free, don't try to remove from parent
             // since it might have already been freed or reparented
@@ -231,70 +308,216 @@ namespace Nebula.Serialization.Serializers
             currentWorld.Debug?.Send("Spawn", $"Imported:{controllerOut.RawNode.SceneFilePath}");
         }
 
-        private void ProcessChildNodes(NetworkController nodeOut)
+        /// <summary>
+        /// Reconciles local nested NetScenes against spawn data.
+        /// Keeps matched scenes (syncs NetId), deletes unmatched local scenes,
+        /// and creates new scenes from unmatched spawn data.
+        /// </summary>
+        private void ProcessChildNodes(NetworkController nodeOut, WorldRunner currentWorld)
         {
-            var children = nodeOut.RawNode.GetChildren().ToList();
-            var networkChildren = new List<NetworkController>();
-
-            while (children.Count > 0)
+            // Collect all local nested scenes (flat list)
+            CollectAllNestedScenes(nodeOut);
+            
+            // Match local instances against spawn data
+            for (int i = 0; i < _allLocalNestedScenes.Count; i++)
             {
-                var child = children[0];
-                children.RemoveAt(0);
-
-                // Only process nodes that implement INetNodeBase
-                if (child is not INetNodeBase netNodeBase)
+                var local = _allLocalNestedScenes[i];
+                var localPathId = local.CachedNodePathIdInParent;
+                var localSceneId = Protocol.PackScene(local.NetSceneFilePath);
+                
+                // Linear search spawn data for match
+                int matchIndex = -1;
+                for (int j = 0; j < _nestedDataCount; j++)
                 {
-                    // Still need to check grandchildren
-                    children.AddRange(child.GetChildren());
-                    continue;
-                }
-
-                var networkChild = netNodeBase.Network;
-                if (networkChild != null && networkChild.IsNetScene())
-                {
-                    // Remove from parent if it has one, then queue for deletion
-                    var parent = networkChild.RawNode.GetParent();
-                    if (parent != null)
+                    if (_nestedDataBuffer[j].NodePathId == localPathId &&
+                        _nestedDataBuffer[j].SceneId == localSceneId)
                     {
-                        parent.RemoveChild(networkChild.RawNode);
+                        matchIndex = j;
+                        break;
                     }
-                    networkChild.QueueNodeForDeletion();
-                    continue;
                 }
-
-                children.AddRange(child.GetChildren());
-
-                if (networkChild == null)
+                
+                if (matchIndex >= 0)
                 {
+                    // Keep local, sync NetId
+                    local.NetId = new NetId(_nestedDataBuffer[matchIndex].NetId);
+                    local.IsClientSpawn = true;
+                    local.CurrentWorld = currentWorld;
+                    // Set NetParentId so it gets added to DynamicNetworkChildren
+                    local.NetParentId = nodeOut.NetId;
+                    // Mark as processed (use 246 as sentinel, > 245 reserved)
+                    _nestedDataBuffer[matchIndex].SceneId = 246;
+                }
+                else
+                {
+                    // Server removed this - delete local
+                    var parent = local.RawNode.GetParent();
+                    parent?.RemoveChild(local.RawNode);
+                    local.QueueNodeForDeletion();
+                }
+            }
+            
+            // Create any new NetScenes from unmatched spawn data
+            for (int i = 0; i < _nestedDataCount; i++)
+            {
+                if (_nestedDataBuffer[i].SceneId >= 246 || _nestedDataBuffer[i].SceneId == 0) 
+                    continue;
+                
+                var data = _nestedDataBuffer[i];
+                var instance = Protocol.UnpackScene(data.SceneId).Instantiate<INetNodeBase>();
+                instance.Network.NetId = new NetId(data.NetId);
+                instance.Network.IsClientSpawn = true;
+                instance.Network.CurrentWorld = currentWorld;
+                
+                // Add to correct parent node using the path
+                Node targetParent;
+                if (data.NodePathId == 255)
+                {
+                    // Direct child of root
+                    targetParent = nodeOut.RawNode;
+                }
+                else
+                {
+                    targetParent = nodeOut.RawNode.GetNode(
+                        Protocol.UnpackNode(nodeOut.NetSceneFilePath, data.NodePathId));
+                }
+                targetParent.AddChild(instance.Network.RawNode);
+                
+                // Set NetParentId so it gets added to DynamicNetworkChildren
+                instance.Network.NetParentId = nodeOut.NetId;
+            }
+            
+            // Also process static children (non-NetScene NetNodes)
+            ProcessStaticChildNodes(nodeOut);
+        }
+        
+        /// <summary>
+        /// Processes static children (non-NetScene NetNodes) - sets up their network state.
+        /// </summary>
+        private void ProcessStaticChildNodes(NetworkController nodeOut)
+        {
+            // Use index-based iteration to avoid GetChildren() allocation
+            ProcessStaticChildNodesRecursive(nodeOut.RawNode, nodeOut);
+        }
+        
+        private void ProcessStaticChildNodesRecursive(Node node, NetworkController root)
+        {
+            for (int i = 0; i < node.GetChildCount(); i++)
+            {
+                var child = node.GetChild(i);
+                
+                if (child is INetNodeBase netNodeBase)
+                {
+                    var networkChild = netNodeBase.Network;
+                    if (networkChild != null)
+                    {
+                        if (networkChild.IsNetScene())
+                        {
+                            // Skip NetScenes - they're handled by ProcessChildNodes
+                            continue;
+                        }
+                        
+                        // Static child - set up network state
+                        networkChild.IsClientSpawn = true;
+                        networkChild.InputAuthority = root.InputAuthority;
+                    }
+                }
+                
+                // Recurse into children
+                ProcessStaticChildNodesRecursive(child, root);
+            }
+        }
+        
+        /// <summary>
+        /// Collects all nested NetScenes in the subtree into a flat list.
+        /// Also computes CachedNodePathIdInParent for each.
+        /// </summary>
+        private void CollectAllNestedScenes(NetworkController root)
+        {
+            _allLocalNestedScenes.Clear();
+            CollectNestedRecursive(root.RawNode, root.RawNode, root.NetSceneFilePath);
+        }
+        
+        private void CollectNestedRecursive(Node treeRoot, Node node, string rootScenePath)
+        {
+            for (int i = 0; i < node.GetChildCount(); i++)
+            {
+                var child = node.GetChild(i);
+                
+                if (child is INetNodeBase netNode && netNode.Network != null && netNode.Network.IsNetScene())
+                {
+                    _allLocalNestedScenes.Add(netNode.Network);
+                    
+                    // Compute and cache the node path ID for matching
+                    var relativePath = treeRoot.GetPathTo(child);
+                    if (relativePath == "." || relativePath.IsEmpty)
+                    {
+                        netNode.Network.CachedNodePathIdInParent = 255;
+                    }
+                    else if (Protocol.PackNode(rootScenePath, relativePath, out var pathId))
+                    {
+                        netNode.Network.CachedNodePathIdInParent = pathId;
+                    }
+                    else
+                    {
+                        netNode.Network.CachedNodePathIdInParent = 255;
+                    }
+                    
+                    // Recurse INTO this nested scene to find deeper nested scenes
+                    CollectNestedRecursive(treeRoot, child, rootScenePath);
                     continue;
                 }
-
-                networkChild.IsClientSpawn = true;
-                networkChild.InputAuthority = nodeOut.InputAuthority;
-                networkChildren.Add(networkChild);
+                
+                CollectNestedRecursive(treeRoot, child, rootScenePath);
             }
-
-            networkChildren.Reverse();
         }
 
-        private Data Deserialize(NetBuffer data)
+        private Data Deserialize(NetBuffer buffer)
         {
             var spawnData = new Data
             {
-                classId = NetReader.ReadByte(data),
-                parentId = NetReader.ReadUInt16(data),
+                classId = NetReader.ReadByte(buffer),
+                parentId = NetReader.ReadUInt16(buffer),
             };
 
             if (spawnData.parentId == 0)
             {
+                // Root scene - read nested count
+                spawnData.nestedCount = NetReader.ReadByte(buffer);
+                DeserializeNestedScenes(buffer, spawnData.nestedCount);
                 return spawnData;
             }
 
-            spawnData.nodePathId = NetReader.ReadByte(data);
-            spawnData.position = NetReader.ReadVector3(data);
-            spawnData.rotation = NetReader.ReadVector3(data);
-            spawnData.hasInputAuthority = NetReader.ReadByte(data);
+            spawnData.nodePathId = NetReader.ReadByte(buffer);
+            spawnData.hasInputAuthority = NetReader.ReadByte(buffer);
+            
+            // Read nested scenes
+            spawnData.nestedCount = NetReader.ReadByte(buffer);
+            DeserializeNestedScenes(buffer, spawnData.nestedCount);
+            
             return spawnData;
+        }
+        
+        private static void DeserializeNestedScenes(NetBuffer buffer, int count)
+        {
+            _nestedDataCount = 0;
+            
+            for (int i = 0; i < count && i < _nestedDataBuffer.Length; i++)
+            {
+                var sceneId = NetReader.ReadByte(buffer);
+                var nodePathId = NetReader.ReadByte(buffer);
+                var netId = NetReader.ReadUInt16(buffer);
+                
+                // Skip entries where allocation failed on server (sceneId == 0)
+                if (sceneId == 0) continue;
+                
+                _nestedDataBuffer[_nestedDataCount++] = new NestedSceneData
+                {
+                    SceneId = sceneId,
+                    NodePathId = nodePathId,
+                    NetId = netId
+                };
+            }
         }
 
         public void _Process(double delta) {}

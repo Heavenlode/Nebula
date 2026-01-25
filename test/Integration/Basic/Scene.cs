@@ -32,15 +32,30 @@ public partial class Scene : NetNode3D
 
         if (command.StartsWith("Input:"))
         {
+            // Only the client should handle input commands (clients set input, server receives it)
+            if (NetRunner.Instance.IsServer) return;
+            
             var inputParts = command.Substring("Input:".Length).Trim().Split(':');
             if (inputParts.Length != 2)
             {
                 Debugger.Instance.Log($"Invalid Input command: {command}", Debugger.DebugLevel.ERROR);
                 return;
             }
-            var inputCommand = byte.Parse(inputParts[0]);
+            var inputChannel = byte.Parse(inputParts[0]);
             var inputValue = inputParts[1];
-            PlayerNode.Network.SetNetworkInput(inputCommand, inputValue);
+            
+            // Parse the command string to the enum
+            var testCommand = inputValue switch
+            {
+                "add_score" => TestCommand.AddScore,
+                "subtract_score" => TestCommand.SubtractScore,
+                "clear_input" => TestCommand.ClearInput,
+                "foo" => TestCommand.Foo,
+                "bar" => TestCommand.Bar,
+                _ => TestCommand.None
+            };
+            
+            PlayerNode.Network.SetInput(new TestInput { Command = testCommand, Channel = inputChannel });
         }
 
         if (command == "GetScore")
@@ -50,10 +65,17 @@ public partial class Scene : NetNode3D
 
         if (command == "VerifyNodeStructure")
         {
-            var node = PlayerNode.GetNode("Level1/Level2/Level3/Item/Level4");
+            // Use GetNodeOrNull to avoid crash on client if node doesn't exist
+            var node = PlayerNode.GetNodeOrNull("Level1/Level2/Level3/Item/Level4");
             if (node != null)
             {
                 Network.CurrentWorld.Debug?.Send("VerifyNodeStructure", "true");
+            }
+            else
+            {
+                // On client, static children of NetNodes may not be replicated yet
+                // Send result instead of throwing so test can see the actual state
+                Network.CurrentWorld.Debug?.Send("VerifyNodeStructure", "false");
             }
         }
 
@@ -83,10 +105,9 @@ public partial class Scene : NetNode3D
         var instance = packedScene.Instantiate();
         if (instance is NetNode3D netNode3D)
         {
-            var parentWrapper = new NetNodeWrapper(this);
             PlayerNode = Network.CurrentWorld.Spawn(
                 netNode3D,
-                parentWrapper,
+                parent: Network,
                 inputAuthority: NetRunner.Instance.Peers.Values.First()
             ) as Player;
             Debugger.Instance.Log($"Spawned: {scenePath}");

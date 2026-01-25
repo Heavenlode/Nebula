@@ -22,10 +22,7 @@ config/features=PackedStringArray("4.5", "C#", "Mobile")
 
 Debugger="*res://addons/Nebula/Utils/Debugger/Debugger.cs"
 Env="*res://addons/Nebula/Utils/Env/Env.cs"
-BsonTransformer="*res://addons/Nebula/Core/Serialization/BsonTransformer.cs"
-ProtocolRegistry="*res://addons/Nebula/Core/Serialization/ProtocolRegistry.cs"
 NetRunner="*res://addons/Nebula/Core/NetRunner.cs"
-ProtocolRegistryBuilder="*res://addons/Nebula/Core/Serialization/ProtocolRegistryBuilder.cs"
 
 [dotnet]
 

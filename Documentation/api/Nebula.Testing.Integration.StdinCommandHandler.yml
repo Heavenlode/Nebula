@@ -18,7 +18,7 @@ items:
   fullName: Nebula.Testing.Integration.StdinCommandHandler
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Testing.Integration.StdinCommandHandler_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Testing.Integration.StdinCommandHandler_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -356,7 +356,7 @@ items:
   fullName: Nebula.Testing.Integration.StdinCommandHandler._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/StdinCommandHandler.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/StdinCommandHandler.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -378,7 +378,7 @@ items:
   fullName: Nebula.Testing.Integration.StdinCommandHandler._Process(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/StdinCommandHandler.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/StdinCommandHandler.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -406,7 +406,7 @@ items:
   fullName: Nebula.Testing.Integration.StdinCommandHandler._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/StdinCommandHandler.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/StdinCommandHandler.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -428,7 +428,7 @@ items:
   fullName: Nebula.Testing.Integration.StdinCommandHandler.StdinCommandHandler()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/StdinCommandHandler.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/StdinCommandHandler.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -451,7 +451,7 @@ items:
   fullName: Nebula.Testing.Integration.StdinCommandHandler.CommandReceived
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Testing.Integration.StdinCommandHandler_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Testing.Integration.StdinCommandHandler_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration

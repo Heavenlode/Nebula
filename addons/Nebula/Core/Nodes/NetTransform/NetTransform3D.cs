@@ -69,7 +69,7 @@ namespace Nebula.Utility.Nodes
         /// Called when NetPosition changes during network import.
         /// During initial spawn, sync to SourceNode so physics starts at correct position.
         /// </summary>
-        partial void OnNetChangeNetPosition(int tick, Vector3 oldVal, Vector3 newVal)
+        protected virtual void OnNetChangeNetPosition(int tick, Vector3 oldVal, Vector3 newVal)
         {
             // During spawn (before world ready), sync imported position to SourceNode
             if (!Network.IsWorldReady && NetRunner.Instance.IsClient)
@@ -86,7 +86,7 @@ namespace Nebula.Utility.Nodes
         /// Called when NetRotation changes during network import.
         /// During initial spawn, sync to SourceNode so physics starts at correct rotation.
         /// </summary>
-        partial void OnNetChangeNetRotation(int tick, Quaternion oldVal, Quaternion newVal)
+        protected virtual void OnNetChangeNetRotation(int tick, Quaternion oldVal, Quaternion newVal)
         {
             // Ensure the rotation is normalized for interpolation
             NetRotation = SafeNormalize(newVal);
@@ -106,7 +106,7 @@ namespace Nebula.Utility.Nodes
         private bool _visualInitialized = false;
         private bool teleportExported = false;
 
-        partial void OnNetChangeIsTeleporting(Tick tick, bool from, bool to)
+        protected virtual void OnNetChangeIsTeleporting(int tick, bool oldVal, bool newVal)
         {
             _isTeleporting = true;
             _visualInitialized = false; // Reset so next position snaps

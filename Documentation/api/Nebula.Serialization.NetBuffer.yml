@@ -39,7 +39,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -74,7 +74,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.DefaultCapacity
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -97,7 +97,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.GetWriteSpan(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -127,7 +127,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.GetReadSpan(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -157,7 +157,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.NetBuffer()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -182,7 +182,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.NetBuffer(int, bool)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -214,7 +214,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.NetBuffer(byte[])
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -246,7 +246,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.NetBuffer(System.ReadOnlySpan<byte>, bool)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -278,7 +278,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.AdvanceWrite(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -306,7 +306,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.AdvanceRead(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -334,7 +334,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Reset()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -359,7 +359,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Clear()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -381,7 +381,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.ResetRead()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -403,7 +403,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.ToArray()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -427,7 +427,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.CopyFrom(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -452,7 +452,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.CopyFrom(System.ReadOnlySpan<byte>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -480,7 +480,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.CopyFrom(byte[], int, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -512,7 +512,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Dispose()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -535,7 +535,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.WritePosition
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -560,7 +560,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.ReadPosition
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -585,7 +585,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Length
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -610,7 +610,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Capacity
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -635,7 +635,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.IsReadComplete
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -660,7 +660,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.Remaining
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -685,7 +685,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.WrittenSpan
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -710,7 +710,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.UnreadSpan
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -735,7 +735,7 @@ items:
   fullName: Nebula.Serialization.NetBuffer.RawBuffer
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetBuffer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetBuffer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization

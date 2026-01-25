@@ -28,7 +28,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -63,7 +63,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.Start(string[], string?)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -98,7 +98,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.WaitForOutput(string, System.TimeSpan?)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -133,7 +133,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.SendCommand(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -162,7 +162,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.RequestSceneTreeDump(System.TimeSpan?)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -194,7 +194,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.WaitForExit(System.TimeSpan?)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -222,7 +222,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.ConnectDebug(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -253,7 +253,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.GetDebugBuffer()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -278,7 +278,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent(string, string, System.TimeSpan?)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -315,7 +315,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent(string, string, System.TimeSpan?)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -356,7 +356,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.Dispose()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -379,7 +379,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.Label
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -404,7 +404,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.DebugPort
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -429,7 +429,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.AllOutput
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -452,7 +452,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.HasExited
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -475,7 +475,7 @@ items:
   fullName: Nebula.Testing.Integration.GodotProcess.ExitCode
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration

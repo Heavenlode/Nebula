@@ -14,11 +14,11 @@ namespace Nebula.Generator;
 [Generator]
 public class NetPropertyGenerator : IIncrementalGenerator
 {
-    // Diagnostic for missing NotifyOnChange handler implementation
+    // Diagnostic for missing NotifyOnChange handler override (warning, not error - empty virtual is valid)
     private static readonly DiagnosticDescriptor MissingChangeHandlerDiagnostic = new(
         id: "NEBULA001",
-        title: "Missing network change handler implementation",
-        messageFormat: "Property '{0}' has NotifyOnChange=true but 'OnNetChange{0}' is not implemented",
+        title: "Network change handler not defined",
+        messageFormat: "Property '{0}' has NotifyOnChange=true but the virtual method 'OnNetChange{0}' is not defined. Define the method to handle changes.",
         category: "Nebula",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
@@ -128,16 +128,17 @@ public class NetPropertyGenerator : IIncrementalGenerator
         // Count [NetProperty] properties in all base classes
         int baseClassPropertyCount = CountBaseClassNetProperties(containingType);
 
-        // Check if the user implemented the OnNetChange partial method
+        // Check if the user defined the OnNetChange virtual method on the declaring class
+        // The user must define: protected virtual void OnNetChange{PropertyName}(int tick, T oldVal, T newVal)
+        // Derived classes can then override it.
         bool hasChangeHandlerImpl = false;
         if (notifyOnChange)
         {
             var expectedMethodName = $"OnNetChange{propertySymbol.Name}";
+            // Look for the method defined in this class (virtual or override)
             hasChangeHandlerImpl = containingType.GetMembers(expectedMethodName)
                 .OfType<IMethodSymbol>()
-                .Any(m => m.Parameters.Length == 3 && 
-                          !m.DeclaringSyntaxReferences.All(r => 
-                              r.GetSyntax() is MethodDeclarationSyntax mds && mds.Body == null && mds.ExpressionBody == null));
+                .Any(m => m.Parameters.Length == 3 && (m.IsVirtual || m.IsOverride));
         }
 
         // Check if the user defined the {PropertyName}PredictionTolerance property
@@ -475,24 +476,19 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine();
             }
 
-            // Generate virtual OnNetworkChange{PropertyName} methods for properties with NotifyOnChange = true
+            // Generate events for properties with NotifyOnChange = true
+            // NOTE: The virtual OnNetChange{PropertyName} method must be defined by the user on the class
+            // that declares the [NetProperty(NotifyOnChange = true)]. Derived classes can override it.
+            // NEBULA001 will warn if the method is not defined.
             var notifyProps = propList.Where(p => p!.NotifyOnChange).ToList();
             if (notifyProps.Count > 0)
             {
-                sb.AppendLine("    #region Network Change Handlers");
+                sb.AppendLine("    #region Network Change Events");
                 sb.AppendLine();
 
                 foreach (var prop in notifyProps)
                 {
-                    sb.AppendLine($"    /// <summary>");
-                    sb.AppendLine($"    /// Called when the {prop!.PropertyName} property changes over the network.");
-                    sb.AppendLine($"    /// Implement this partial method to handle the change.");
-                    sb.AppendLine($"    /// </summary>");
-                    sb.AppendLine($"    /// <param name=\"tick\">The network tick when the change occurred</param>");
-                    sb.AppendLine($"    /// <param name=\"oldVal\">The previous value</param>");
-                    sb.AppendLine($"    /// <param name=\"newVal\">The new value</param>");
-                    sb.AppendLine($"    partial void OnNetChange{prop.PropertyName}(int tick, {prop.PropertyType} oldVal, {prop.PropertyType} newVal);");
-                    sb.AppendLine($"    public event System.Action<int, {prop.PropertyType}, {prop.PropertyType}> NetChangeListener{prop.PropertyName};");
+                    sb.AppendLine($"    public event System.Action<int, {prop!.PropertyType}, {prop.PropertyType}> NetChangeListener{prop.PropertyName};");
                     sb.AppendLine();
                 }
 

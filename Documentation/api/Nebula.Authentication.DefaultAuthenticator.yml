@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Authentication.DefaultAuthenticator
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
   assemblies:
   - Nebula
   namespace: Nebula.Authentication
@@ -47,7 +47,7 @@ items:
   fullName: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
   assemblies:
   - Nebula
   namespace: Nebula.Authentication
@@ -70,7 +70,7 @@ items:
   fullName: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
   assemblies:
   - Nebula
   namespace: Nebula.Authentication
@@ -96,7 +96,7 @@ items:
   fullName: Nebula.Authentication.DefaultAuthenticator.DefaultAuthenticator()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
   assemblies:
   - Nebula
   namespace: Nebula.Authentication

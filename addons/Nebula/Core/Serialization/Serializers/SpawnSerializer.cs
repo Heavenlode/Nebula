@@ -118,6 +118,9 @@ namespace Nebula.Serialization.Serializers
                 
                 // Write nested NetScenes for root scene
                 ExportNestedScenes(currentWorld, peer, buffer);
+                
+                // Mark spawned immediately so NetPropertiesSerializer can export in the same tick
+                currentWorld.SetSpawnedForClient(netController.NetId, peer);
                 return;
             }
 

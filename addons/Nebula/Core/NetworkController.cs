@@ -82,15 +82,15 @@ namespace Nebula
 			RawNode.QueueFree();
 		}
 
-	bool? _isNetScene = null;
-	public bool IsNetScene()
-	{
-		if (_isNetScene == null)
+		bool? _isNetScene = null;
+		public bool IsNetScene()
 		{
-			_isNetScene = Protocol.IsNetScene(RawNode.SceneFilePath);
+			if (_isNetScene == null)
+			{
+				_isNetScene = Protocol.IsNetScene(RawNode.SceneFilePath);
+			}
+			return _isNetScene.Value;
 		}
-		return _isNetScene.Value;
-	}
 
 		internal List<Tuple<string, string>> InitialSetNetProperties = [];
 		public WorldRunner CurrentWorld { get; internal set; }
@@ -267,51 +267,51 @@ namespace Nebula
 			}
 		}
 
-	/// <summary>
-	/// Discovers nested NetScenes in the scene tree and populates DynamicNetworkChildren.
-	/// Also sets CachedNodePathIdInParent for spawn serialization.
-	/// Called on server during Setup().
-	/// </summary>
-	private void InitializeDynamicChildren()
-	{
-		DynamicNetworkChildren.Clear();
-		DiscoverDynamicChildrenRecursive(RawNode, RawNode);
-	}
-
-	private void DiscoverDynamicChildrenRecursive(Node treeRoot, Node node)
-	{
-		for (int i = 0; i < node.GetChildCount(); i++)
+		/// <summary>
+		/// Discovers nested NetScenes in the scene tree and populates DynamicNetworkChildren.
+		/// Also sets CachedNodePathIdInParent for spawn serialization.
+		/// Called on server during Setup().
+		/// </summary>
+		private void InitializeDynamicChildren()
 		{
-			var child = node.GetChild(i);
-
-			if (child is INetNodeBase netNode && netNode.Network != null && netNode.Network.IsNetScene())
-			{
-				DynamicNetworkChildren.Add(netNode.Network);
-
-				// Compute and cache the node path ID for spawn serialization
-				var relativePath = treeRoot.GetPathTo(child);
-				if (relativePath == "." || relativePath.IsEmpty)
-				{
-					netNode.Network.CachedNodePathIdInParent = 255;
-				}
-				else if (Protocol.PackNode(NetSceneFilePath, relativePath, out var pathId))
-				{
-					netNode.Network.CachedNodePathIdInParent = pathId;
-				}
-				else
-				{
-					netNode.Network.CachedNodePathIdInParent = 255;
-				}
-
-				// Recurse into nested NetScene to discover its children
-				netNode.Network.InitializeDynamicChildren();
-				continue;
-			}
-
-			// Continue traversing non-NetScene nodes
-			DiscoverDynamicChildrenRecursive(treeRoot, child);
+			DynamicNetworkChildren.Clear();
+			DiscoverDynamicChildrenRecursive(RawNode, RawNode);
 		}
-	}
+
+		private void DiscoverDynamicChildrenRecursive(Node treeRoot, Node node)
+		{
+			for (int i = 0; i < node.GetChildCount(); i++)
+			{
+				var child = node.GetChild(i);
+
+				if (child is INetNodeBase netNode && netNode.Network != null && netNode.Network.IsNetScene())
+				{
+					DynamicNetworkChildren.Add(netNode.Network);
+
+					// Compute and cache the node path ID for spawn serialization
+					var relativePath = treeRoot.GetPathTo(child);
+					if (relativePath == "." || relativePath.IsEmpty)
+					{
+						netNode.Network.CachedNodePathIdInParent = 255;
+					}
+					else if (Protocol.PackNode(NetSceneFilePath, relativePath, out var pathId))
+					{
+						netNode.Network.CachedNodePathIdInParent = pathId;
+					}
+					else
+					{
+						netNode.Network.CachedNodePathIdInParent = 255;
+					}
+
+					// Recurse into nested NetScene to discover its children
+					netNode.Network.InitializeDynamicChildren();
+					continue;
+				}
+
+				// Continue traversing non-NetScene nodes
+				DiscoverDynamicChildrenRecursive(treeRoot, child);
+			}
+		}
 
 		/// <summary>
 		/// Initializes StaticNetworkChildren array and assigns StaticChildId to each child.
@@ -470,43 +470,43 @@ namespace Nebula
 				case UUID uuid:
 					cache.UUIDValue = uuid;
 					break;
-			default:
-				// Check if it's an enum - enums are stored in appropriately-sized fields
-				if (typeof(T).IsEnum)
-				{
-					var enumVal = value;
-					int enumSize = Unsafe.SizeOf<T>();
-					// Store in the correctly-sized field based on underlying type
-					// Clear LongValue first to ensure upper bytes are zero
-					cache.LongValue = 0;
-					switch (enumSize)
+				default:
+					// Check if it's an enum - enums are stored in appropriately-sized fields
+					if (typeof(T).IsEnum)
 					{
-						case 1: // byte/sbyte
-							cache.ByteValue = Unsafe.As<T, byte>(ref enumVal);
-							break;
-						case 2: // short/ushort
-							cache.IntValue = Unsafe.As<T, short>(ref enumVal);
-							break;
-						case 4: // int/uint (most common)
-							cache.IntValue = Unsafe.As<T, int>(ref enumVal);
-							break;
-						case 8: // long/ulong
-							cache.LongValue = Unsafe.As<T, long>(ref enumVal);
-							break;
-						default:
-							// Fallback - shouldn't happen for standard enums
-							cache.IntValue = Unsafe.As<T, int>(ref enumVal);
-							break;
+						var enumVal = value;
+						int enumSize = Unsafe.SizeOf<T>();
+						// Store in the correctly-sized field based on underlying type
+						// Clear LongValue first to ensure upper bytes are zero
+						cache.LongValue = 0;
+						switch (enumSize)
+						{
+							case 1: // byte/sbyte
+								cache.ByteValue = Unsafe.As<T, byte>(ref enumVal);
+								break;
+							case 2: // short/ushort
+								cache.IntValue = Unsafe.As<T, short>(ref enumVal);
+								break;
+							case 4: // int/uint (most common)
+								cache.IntValue = Unsafe.As<T, int>(ref enumVal);
+								break;
+							case 8: // long/ulong
+								cache.LongValue = Unsafe.As<T, long>(ref enumVal);
+								break;
+							default:
+								// Fallback - shouldn't happen for standard enums
+								cache.IntValue = Unsafe.As<T, int>(ref enumVal);
+								break;
+						}
 					}
-				}
-				else
-				{
-					// For unknown value types, we have to box (rare case)
-					cache.Type = SerialVariantType.Object;
-					cache.RefValue = value;
-					Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"SetCachedValue: Unknown value type {typeof(T).Name}, boxing");
-				}
-				break;
+					else
+					{
+						// For unknown value types, we have to box (rare case)
+						cache.Type = SerialVariantType.Object;
+						cache.RefValue = value;
+						Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"SetCachedValue: Unknown value type {typeof(T).Name}, boxing");
+					}
+					break;
 			}
 		}
 
@@ -748,24 +748,24 @@ namespace Nebula
 			_lastConfirmedTick = tick;
 		}
 
-	/// <summary>
-	/// Compares predicted state with confirmed server state and restores mispredicted properties.
-	/// Returns true if any misprediction was detected (rollback needed), false if all predictions correct.
-	/// If forceRestoreAll is true, skips comparison and restores all properties to confirmed state.
-	/// </summary>
-	public bool Reconcile(Tick tick, bool forceRestoreAll = false)
-	{
-		return NetNode.Reconcile(tick, forceRestoreAll);
-	}
+		/// <summary>
+		/// Compares predicted state with confirmed server state and restores mispredicted properties.
+		/// Returns true if any misprediction was detected (rollback needed), false if all predictions correct.
+		/// If forceRestoreAll is true, skips comparison and restores all properties to confirmed state.
+		/// </summary>
+		public bool Reconcile(Tick tick, bool forceRestoreAll = false)
+		{
+			return NetNode.Reconcile(tick, forceRestoreAll);
+		}
 
-	/// <summary>
-	/// Restores properties from the prediction buffer for a given tick.
-	/// Used when prediction was correct and we need to continue with predicted values after server state import.
-	/// </summary>
-	public void RestoreToPredictedState(Tick tick)
-	{
-		NetNode.RestoreToPredictedState(tick);
-	}
+		/// <summary>
+		/// Restores properties from the prediction buffer for a given tick.
+		/// Used when prediction was correct and we need to continue with predicted values after server state import.
+		/// </summary>
+		public void RestoreToPredictedState(Tick tick)
+		{
+			NetNode.RestoreToPredictedState(tick);
+		}
 
 		/// <summary>
 		/// The last tick that was confirmed by the server for this entity.
@@ -848,7 +848,8 @@ namespace Nebula
 
 		public void _OnPeerConnected(UUID peerId)
 		{
-			SetPeerInterest(peerId, NetNode.InitializeInterest(NetRunner.Instance.Peers[peerId]));
+			var peer = NetRunner.Instance.Peers[peerId];
+			SetPeerInterest(peerId, NetNode.InitializeInterest(peer), recurse: false);
 		}
 
 		internal void _NetworkPrepare(WorldRunner world)
@@ -873,15 +874,15 @@ namespace Nebula
 				{
 					return;
 				}
-			for (var i = DynamicNetworkChildren.Count - 1; i >= 0; i--)
-			{
-				var networkChild = DynamicNetworkChildren.ElementAt(i);
-				networkChild.InterestLayers = InterestLayers;
-				networkChild.InputAuthority = InputAuthority;
-				networkChild.CurrentWorld = world;
-				networkChild.NetParentId = NetId;
-				networkChild._NetworkPrepare(world);
-			}
+				for (var i = DynamicNetworkChildren.Count - 1; i >= 0; i--)
+				{
+					var networkChild = DynamicNetworkChildren.ElementAt(i);
+					networkChild.InterestLayers = InterestLayers;
+					networkChild.InputAuthority = InputAuthority;
+					networkChild.CurrentWorld = world;
+					networkChild.NetParentId = NetId;
+					networkChild._NetworkPrepare(world);
+				}
 				for (var i = StaticNetworkChildren.Length - 1; i >= 1; i--)
 				{
 					var networkChild = StaticNetworkChildren[i];

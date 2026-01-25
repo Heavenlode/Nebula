@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Serialization.NetValueLayoutAttribute
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -101,7 +101,7 @@ items:
   fullName: Nebula.Serialization.NetValueLayoutAttribute.NetValueLayoutAttribute(int)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -130,7 +130,7 @@ items:
   fullName: Nebula.Serialization.NetValueLayoutAttribute.SizeInBytes
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/NetValueLayoutAttribute.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization

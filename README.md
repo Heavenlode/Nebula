@@ -53,7 +53,7 @@ public partial class Player : NetNode3D
     }
 
     // Synced to all clients, with interpolation for smooth movement
-    [NetProperty(Interpolate = true, Predicted = true)]
+    [NetProperty(Interpolate = true, Predicted = true, NotifyOnChange = true)]
     public Vector3 Position { get; set; }
     
     // Required for predicted properties - defines misprediction threshold
@@ -64,7 +64,7 @@ public partial class Player : NetNode3D
     public int SecretScore { get; set; }
 
     // Called when Position changes on clients
-    partial void OnNetChangePosition(int tick, Vector3 oldVal, Vector3 newVal)
+    protected virtual void OnNetChangePosition(int tick, Vector3 oldVal, Vector3 newVal)
     {
         GD.Print($"Moved to {newVal}");
     }
@@ -102,7 +102,7 @@ public partial class Player : NetNode3D
 - **Source generators** — No boilerplate; annotate properties and methods
 - **Compile-time validation** — Errors like missing handlers caught at build time
 - **Typed inputs** — Zero-allocation input structs with full type safety
-- **Partial methods** — Hook into network events with generated partial methods
+- **Virtual methods** — Hook into network events with overridable virtual methods
 
 ### Performance
 - **GC-friendly design** — Hot paths avoid allocations; no lag spikes from .NET garbage collection

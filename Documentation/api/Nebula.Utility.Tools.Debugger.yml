@@ -20,7 +20,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -357,7 +357,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger._EnterTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -379,7 +379,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.IsEnabled(Nebula.Utility.Tools.Debugger.DebugLevel)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -404,7 +404,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.Log(string, Nebula.Utility.Tools.Debugger.DebugLevel)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -432,7 +432,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.Log(Nebula.Utility.Tools.Debugger.DebugLevel, ref Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -460,7 +460,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.Debugger()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -483,7 +483,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.Instance
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -506,7 +506,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.EditorInstance
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools

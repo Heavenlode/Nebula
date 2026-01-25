@@ -1476,6 +1476,13 @@ namespace Nebula
 
             // Fix #5: Initialize pending acks tracking for this peer
             _peerPendingAcks[peerId] = new HashSet<NetworkController>();
+            
+            // Initialize interest layers for the root scene immediately so properties
+            // can be exported on the same tick as the spawn
+            if (RootScene != null)
+            {
+                RootScene._OnPeerConnected(peerId);
+            }
         }
 
         internal void ExitPeer(NetPeer peer)

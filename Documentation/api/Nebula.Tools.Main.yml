@@ -18,7 +18,7 @@ items:
   fullName: Nebula.Tools.Main
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -444,7 +444,7 @@ items:
   fullName: Nebula.Tools.Main._GetPluginName()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Tools/Main.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Main.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -469,7 +469,7 @@ items:
   fullName: Nebula.Tools.Main._EnterTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Tools/Main.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Main.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -495,7 +495,7 @@ items:
   fullName: Nebula.Tools.Main._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Tools/Main.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Main.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -521,7 +521,7 @@ items:
   fullName: Nebula.Tools.Main.RegisterMenuItem(string, System.Action)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Tools/Main.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Main.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -553,7 +553,7 @@ items:
   fullName: Nebula.Tools.Main.Main()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Tools/Main.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Main.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools

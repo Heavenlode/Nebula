@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -345,7 +345,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Utils/ServerClientConnector/ServerClientConnector.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Utils/ServerClientConnector/ServerClientConnector.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -367,7 +367,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector.ServerClientConnector()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools

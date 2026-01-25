@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Testing.Integration.PriorityOrderer
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -46,7 +46,7 @@ items:
   fullName: Nebula.Testing.Integration.PriorityOrderer.OrderTestCases<TTestCase>(System.Collections.Generic.IEnumerable<TTestCase>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -79,7 +79,7 @@ items:
   fullName: Nebula.Testing.Integration.PriorityOrderer.PriorityOrderer()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration

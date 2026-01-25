@@ -17,7 +17,7 @@ items:
   fullName: Nebula.NetFunction
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -91,7 +91,7 @@ items:
   fullName: Nebula.NetFunction.OnEntry(MethodBoundaryAspect.Fody.Attributes.MethodExecutionArgs)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -116,7 +116,7 @@ items:
   fullName: Nebula.NetFunction.NetFunction()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -139,7 +139,7 @@ items:
   fullName: Nebula.NetFunction.Source
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -162,7 +162,7 @@ items:
   fullName: Nebula.NetFunction.ExecuteOnCaller
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/NetFunction.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetFunction.cs
   assemblies:
   - Nebula
   namespace: Nebula

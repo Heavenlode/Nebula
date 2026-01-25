@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Testing.NebulaTestFixture
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/NebulaTestFixture.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/NebulaTestFixture.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing
@@ -53,7 +53,7 @@ items:
   fullName: Nebula.Testing.NebulaTestFixture.NebulaTestFixture()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/NebulaTestFixture.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/NebulaTestFixture.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing
@@ -76,7 +76,7 @@ items:
   fullName: Nebula.Testing.NebulaTestFixture.Dispose()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Testing/NebulaTestFixture.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/NebulaTestFixture.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing

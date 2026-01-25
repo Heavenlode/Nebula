@@ -22,7 +22,7 @@ namespace Nebula.Utility.Nodes
         public float NetRotation { get; set; }
 
         private bool _isTeleporting = false;
-        partial void OnNetChangeIsTeleporting(Tick tick, bool from, bool to)
+        protected virtual void OnNetChangeIsTeleporting(int tick, bool oldVal, bool newVal)
         {
             _isTeleporting = true;
         }

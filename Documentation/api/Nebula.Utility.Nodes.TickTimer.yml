@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Utility.Nodes.TickTimer
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -45,7 +45,7 @@ items:
   fullName: Nebula.Utility.Nodes.TickTimer.TickTimer(int, int)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -73,7 +73,7 @@ items:
   fullName: Nebula.Utility.Nodes.TickTimer.CreateFromSeconds(int, float)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -103,7 +103,7 @@ items:
   fullName: Nebula.Utility.Nodes.TickTimer.IsDone(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/ab43bcb2efbbe672edc7ba19367c646b8bcca38c/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes

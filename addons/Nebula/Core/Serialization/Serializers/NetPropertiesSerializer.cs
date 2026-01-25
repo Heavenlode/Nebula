@@ -265,28 +265,9 @@ namespace Nebula.Serialization.Serializers
             ref var oldValue = ref network.CachedProperties[prop.Index];
 
             bool valueChanged = !PropertyCacheEquals(ref oldValue, ref newValue);
-
-            // Fire change callbacks if value changed
-            if (valueChanged)
-            {
-                if (prop.NotifyOnChange)
-                {
-                    // Use LocalIndex (cumulative class index) not Index (scene-global) - matches generated switch cases
-                    // Call via base class type to use virtual dispatch (not interface dispatch)
-                    if (propNode is NetNode3D nn3d)
-                    {
-                        nn3d.InvokePropertyChangeHandler(prop.LocalIndex, tick, ref oldValue, ref newValue);
-                    }
-                    else if (propNode is NetNode2D nn2d)
-                    {
-                        nn2d.InvokePropertyChangeHandler(prop.LocalIndex, tick, ref oldValue, ref newValue);
-                    }
-                    else if (propNode is NetNode nn)
-                    {
-                        nn.InvokePropertyChangeHandler(prop.LocalIndex, tick, ref oldValue, ref newValue);
-                    }
-                }
-            }
+            
+            // Copy old value BEFORE updating cache (needed for callback after value changes)
+            PropertyCache oldValueSnapshot = oldValue;
 
             // Update cache (this is the target for interpolated properties and reconciliation)
             network.CachedProperties[prop.Index] = newValue;
@@ -310,6 +291,11 @@ namespace Nebula.Serialization.Serializers
             {
                 // Don't apply immediately - reconciliation in WorldRunner will handle
                 // The value is already in CachedProperties for StoreConfirmedState
+                // Fire callback after cache update but before return (property not set yet for predicted)
+                if (valueChanged && prop.NotifyOnChange)
+                {
+                    FirePropertyChangeCallback(propNode, prop.LocalIndex, tick, ref oldValueSnapshot, ref newValue);
+                }
                 return;
             }
 
@@ -333,6 +319,34 @@ namespace Nebula.Serialization.Serializers
                 {
                     netNodeBase.SetNetPropertyByIndex(prop.LocalIndex, ref newValue);
                 }
+            }
+            
+            // Fire change callbacks AFTER value is set (cache updated, property set if applicable)
+            if (valueChanged && prop.NotifyOnChange)
+            {
+                FirePropertyChangeCallback(propNode, prop.LocalIndex, tick, ref oldValueSnapshot, ref newValue);
+            }
+        }
+        
+        /// <summary>
+        /// Helper to fire property change callbacks via the correct base class type for virtual dispatch.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void FirePropertyChangeCallback(Node propNode, int localIndex, Tick tick, ref PropertyCache oldValue, ref PropertyCache newValue)
+        {
+            // Use LocalIndex (cumulative class index) not Index (scene-global) - matches generated switch cases
+            // Call via base class type to use virtual dispatch (not interface dispatch)
+            if (propNode is NetNode3D nn3d)
+            {
+                nn3d.InvokePropertyChangeHandler(localIndex, tick, ref oldValue, ref newValue);
+            }
+            else if (propNode is NetNode2D nn2d)
+            {
+                nn2d.InvokePropertyChangeHandler(localIndex, tick, ref oldValue, ref newValue);
+            }
+            else if (propNode is NetNode nn)
+            {
+                nn.InvokePropertyChangeHandler(localIndex, tick, ref oldValue, ref newValue);
             }
         }
 

@@ -6,6 +6,7 @@ items:
   parent: Nebula.Utility.Tools
   children:
   - Nebula.Utility.Tools.Debugger.MethodName.#ctor
+  - Nebula.Utility.Tools.Debugger.MethodName.IsEnabled
   - Nebula.Utility.Tools.Debugger.MethodName.Log
   - Nebula.Utility.Tools.Debugger.MethodName._EnterTree
   langs:
@@ -16,7 +17,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -255,7 +256,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.MethodName._EnterTree
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -266,6 +267,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _EnterTree As StringName
+- uid: Nebula.Utility.Tools.Debugger.MethodName.IsEnabled
+  commentId: F:Nebula.Utility.Tools.Debugger.MethodName.IsEnabled
+  id: IsEnabled
+  parent: Nebula.Utility.Tools.Debugger.MethodName
+  langs:
+  - csharp
+  - vb
+  name: IsEnabled
+  nameWithType: Debugger.MethodName.IsEnabled
+  fullName: Nebula.Utility.Tools.Debugger.MethodName.IsEnabled
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  summary: Cached name for the 'IsEnabled' method.
+  example: []
+  syntax:
+    content: public static readonly StringName IsEnabled
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly IsEnabled As StringName
 - uid: Nebula.Utility.Tools.Debugger.MethodName.Log
   commentId: F:Nebula.Utility.Tools.Debugger.MethodName.Log
   id: Log
@@ -278,7 +302,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.MethodName.Log
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -301,7 +325,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -2091,10 +2115,11 @@ references:
 - uid: Nebula.Utility.Tools.Debugger.MethodName.#ctor*
   commentId: Overload:Nebula.Utility.Tools.Debugger.MethodName.#ctor
   isExternal: true
-  href: Nebula.Utility.Tools.Debugger.MethodName.html#Nebula_Utility_Tools_Debugger_MethodName__ctor
+  href: Nebula.Utility.Tools.Debugger.MethodName.-ctor.html#Nebula_Utility_Tools_Debugger_MethodName__ctor
   name: MethodName
   nameWithType: Debugger.MethodName.MethodName
   fullName: Nebula.Utility.Tools.Debugger.MethodName.MethodName
   nameWithType.vb: Debugger.MethodName.New
   fullName.vb: Nebula.Utility.Tools.Debugger.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

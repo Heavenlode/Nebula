@@ -14,7 +14,7 @@ items:
   fullName: Nebula.NetNode.SignalName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -60,7 +60,7 @@ items:
   fullName: Nebula.NetNode.SignalName.SignalName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -462,10 +462,11 @@ references:
 - uid: Nebula.NetNode.SignalName.#ctor*
   commentId: Overload:Nebula.NetNode.SignalName.#ctor
   isExternal: true
-  href: Nebula.NetNode.SignalName.html#Nebula_NetNode_SignalName__ctor
+  href: Nebula.NetNode.SignalName.-ctor.html#Nebula_NetNode_SignalName__ctor
   name: SignalName
   nameWithType: NetNode.SignalName.SignalName
   fullName: Nebula.NetNode.SignalName.SignalName
   nameWithType.vb: NetNode.SignalName.New
   fullName.vb: Nebula.NetNode.SignalName.New
   name.vb: New
+memberLayout: SeparatePages

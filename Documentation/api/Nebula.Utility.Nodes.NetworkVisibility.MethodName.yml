@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetworkVisibility.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -326,7 +326,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetworkVisibility.MethodName._EnterTree
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -349,7 +349,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetworkVisibility.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -2659,10 +2659,11 @@ references:
 - uid: Nebula.Utility.Nodes.NetworkVisibility.MethodName.#ctor*
   commentId: Overload:Nebula.Utility.Nodes.NetworkVisibility.MethodName.#ctor
   isExternal: true
-  href: Nebula.Utility.Nodes.NetworkVisibility.MethodName.html#Nebula_Utility_Nodes_NetworkVisibility_MethodName__ctor
+  href: Nebula.Utility.Nodes.NetworkVisibility.MethodName.-ctor.html#Nebula_Utility_Nodes_NetworkVisibility_MethodName__ctor
   name: MethodName
   nameWithType: NetworkVisibility.MethodName.MethodName
   fullName: Nebula.Utility.Nodes.NetworkVisibility.MethodName.MethodName
   nameWithType.vb: NetworkVisibility.MethodName.New
   fullName.vb: Nebula.Utility.Nodes.NetworkVisibility.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

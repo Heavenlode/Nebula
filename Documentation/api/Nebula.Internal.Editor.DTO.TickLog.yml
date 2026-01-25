@@ -454,10 +454,11 @@ references:
 - uid: Nebula.Internal.Editor.DTO.TickLog.#ctor*
   commentId: Overload:Nebula.Internal.Editor.DTO.TickLog.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.DTO.TickLog.html#Nebula_Internal_Editor_DTO_TickLog__ctor
+  href: Nebula.Internal.Editor.DTO.TickLog.-ctor.html#Nebula_Internal_Editor_DTO_TickLog__ctor
   name: TickLog
   nameWithType: TickLog.TickLog
   fullName: Nebula.Internal.Editor.DTO.TickLog.TickLog
   nameWithType.vb: TickLog.New
   fullName.vb: Nebula.Internal.Editor.DTO.TickLog.New
   name.vb: New
+memberLayout: SeparatePages

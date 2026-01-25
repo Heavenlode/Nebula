@@ -1,0 +1,1519 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.NetReader
+  commentId: T:Nebula.Serialization.NetReader
+  id: NetReader
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.NetReader.ReadAsVariant(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType)
+  - Nebula.Serialization.NetReader.ReadBool(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadByType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType)
+  - Nebula.Serialization.NetReader.ReadByte(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadBytes(Nebula.Serialization.NetBuffer,System.Int32)
+  - Nebula.Serialization.NetReader.ReadBytesWithLength(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadDouble(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadFloat(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadHalf(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadHalfFloat(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadInt16(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadInt32(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadInt32Array(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadInt64(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadInt64Array(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadQuatSmallestThree(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadQuaternion(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadQuaternionFull(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadRemainingBytes(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadString(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadUInt16(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadUInt32(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadUInt64(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadVector2(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadVector2Full(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadVector3(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadVector3Half(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetReader.ReadWithType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType@)
+  langs:
+  - csharp
+  - vb
+  name: NetReader
+  nameWithType: NetReader
+  fullName: Nebula.Serialization.NetReader
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    High-performance binary reader using BinaryPrimitives for zero-allocation deserialization.
+
+    Replaces the old HLBytes.Unpack* methods.
+  example: []
+  syntax:
+    content: public static class NetReader
+    content.vb: Public Module NetReader
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Serialization.NetReader.ReadByte(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadByte(Nebula.Serialization.NetBuffer)
+  id: ReadByte(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadByte(NetBuffer)
+  nameWithType: NetReader.ReadByte(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadByte(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static byte ReadByte(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Byte
+    content.vb: Public Shared Function ReadByte(buffer As NetBuffer) As Byte
+  overload: Nebula.Serialization.NetReader.ReadByte*
+- uid: Nebula.Serialization.NetReader.ReadBool(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadBool(Nebula.Serialization.NetBuffer)
+  id: ReadBool(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadBool(NetBuffer)
+  nameWithType: NetReader.ReadBool(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadBool(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static bool ReadBool(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function ReadBool(buffer As NetBuffer) As Boolean
+  overload: Nebula.Serialization.NetReader.ReadBool*
+- uid: Nebula.Serialization.NetReader.ReadInt16(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadInt16(Nebula.Serialization.NetBuffer)
+  id: ReadInt16(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadInt16(NetBuffer)
+  nameWithType: NetReader.ReadInt16(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadInt16(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static short ReadInt16(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Int16
+    content.vb: Public Shared Function ReadInt16(buffer As NetBuffer) As Short
+  overload: Nebula.Serialization.NetReader.ReadInt16*
+- uid: Nebula.Serialization.NetReader.ReadUInt16(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadUInt16(Nebula.Serialization.NetBuffer)
+  id: ReadUInt16(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadUInt16(NetBuffer)
+  nameWithType: NetReader.ReadUInt16(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadUInt16(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static ushort ReadUInt16(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.UInt16
+    content.vb: Public Shared Function ReadUInt16(buffer As NetBuffer) As UShort
+  overload: Nebula.Serialization.NetReader.ReadUInt16*
+- uid: Nebula.Serialization.NetReader.ReadInt32(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadInt32(Nebula.Serialization.NetBuffer)
+  id: ReadInt32(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadInt32(NetBuffer)
+  nameWithType: NetReader.ReadInt32(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadInt32(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static int ReadInt32(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function ReadInt32(buffer As NetBuffer) As Integer
+  overload: Nebula.Serialization.NetReader.ReadInt32*
+- uid: Nebula.Serialization.NetReader.ReadUInt32(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadUInt32(Nebula.Serialization.NetBuffer)
+  id: ReadUInt32(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadUInt32(NetBuffer)
+  nameWithType: NetReader.ReadUInt32(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadUInt32(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static uint ReadUInt32(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.UInt32
+    content.vb: Public Shared Function ReadUInt32(buffer As NetBuffer) As UInteger
+  overload: Nebula.Serialization.NetReader.ReadUInt32*
+- uid: Nebula.Serialization.NetReader.ReadInt64(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadInt64(Nebula.Serialization.NetBuffer)
+  id: ReadInt64(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadInt64(NetBuffer)
+  nameWithType: NetReader.ReadInt64(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadInt64(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static long ReadInt64(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Int64
+    content.vb: Public Shared Function ReadInt64(buffer As NetBuffer) As Long
+  overload: Nebula.Serialization.NetReader.ReadInt64*
+- uid: Nebula.Serialization.NetReader.ReadUInt64(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadUInt64(Nebula.Serialization.NetBuffer)
+  id: ReadUInt64(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadUInt64(NetBuffer)
+  nameWithType: NetReader.ReadUInt64(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadUInt64(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static ulong ReadUInt64(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.UInt64
+    content.vb: Public Shared Function ReadUInt64(buffer As NetBuffer) As ULong
+  overload: Nebula.Serialization.NetReader.ReadUInt64*
+- uid: Nebula.Serialization.NetReader.ReadFloat(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadFloat(Nebula.Serialization.NetBuffer)
+  id: ReadFloat(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadFloat(NetBuffer)
+  nameWithType: NetReader.ReadFloat(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadFloat(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static float ReadFloat(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Single
+    content.vb: Public Shared Function ReadFloat(buffer As NetBuffer) As Single
+  overload: Nebula.Serialization.NetReader.ReadFloat*
+- uid: Nebula.Serialization.NetReader.ReadDouble(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadDouble(Nebula.Serialization.NetBuffer)
+  id: ReadDouble(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadDouble(NetBuffer)
+  nameWithType: NetReader.ReadDouble(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadDouble(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static double ReadDouble(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Double
+    content.vb: Public Shared Function ReadDouble(buffer As NetBuffer) As Double
+  overload: Nebula.Serialization.NetReader.ReadDouble*
+- uid: Nebula.Serialization.NetReader.ReadHalf(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadHalf(Nebula.Serialization.NetBuffer)
+  id: ReadHalf(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadHalf(NetBuffer)
+  nameWithType: NetReader.ReadHalf(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadHalf(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Half ReadHalf(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Half
+    content.vb: Public Shared Function ReadHalf(buffer As NetBuffer) As Half
+  overload: Nebula.Serialization.NetReader.ReadHalf*
+- uid: Nebula.Serialization.NetReader.ReadHalfFloat(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadHalfFloat(Nebula.Serialization.NetBuffer)
+  id: ReadHalfFloat(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadHalfFloat(NetBuffer)
+  nameWithType: NetReader.ReadHalfFloat(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadHalfFloat(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Reads a half-precision float and returns it as a full float.
+
+    Convenience method for delta decoding.
+  example: []
+  syntax:
+    content: public static float ReadHalfFloat(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Single
+    content.vb: Public Shared Function ReadHalfFloat(buffer As NetBuffer) As Single
+  overload: Nebula.Serialization.NetReader.ReadHalfFloat*
+- uid: Nebula.Serialization.NetReader.ReadVector2(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadVector2(Nebula.Serialization.NetBuffer)
+  id: ReadVector2(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadVector2(NetBuffer)
+  nameWithType: NetReader.ReadVector2(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadVector2(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector2 ReadVector2(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: Godot.Vector2
+    content.vb: Public Shared Function ReadVector2(buffer As NetBuffer) As Vector2
+  overload: Nebula.Serialization.NetReader.ReadVector2*
+- uid: Nebula.Serialization.NetReader.ReadVector2Full(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadVector2Full(Nebula.Serialization.NetBuffer)
+  id: ReadVector2Full(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadVector2Full(NetBuffer)
+  nameWithType: NetReader.ReadVector2Full(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadVector2Full(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector2 ReadVector2Full(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: Godot.Vector2
+    content.vb: Public Shared Function ReadVector2Full(buffer As NetBuffer) As Vector2
+  overload: Nebula.Serialization.NetReader.ReadVector2Full*
+- uid: Nebula.Serialization.NetReader.ReadVector3(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadVector3(Nebula.Serialization.NetBuffer)
+  id: ReadVector3(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadVector3(NetBuffer)
+  nameWithType: NetReader.ReadVector3(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadVector3(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector3 ReadVector3(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function ReadVector3(buffer As NetBuffer) As Vector3
+  overload: Nebula.Serialization.NetReader.ReadVector3*
+- uid: Nebula.Serialization.NetReader.ReadVector3Half(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadVector3Half(Nebula.Serialization.NetBuffer)
+  id: ReadVector3Half(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadVector3Half(NetBuffer)
+  nameWithType: NetReader.ReadVector3Half(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadVector3Half(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector3 ReadVector3Half(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function ReadVector3Half(buffer As NetBuffer) As Vector3
+  overload: Nebula.Serialization.NetReader.ReadVector3Half*
+- uid: Nebula.Serialization.NetReader.ReadQuaternion(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadQuaternion(Nebula.Serialization.NetBuffer)
+  id: ReadQuaternion(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadQuaternion(NetBuffer)
+  nameWithType: NetReader.ReadQuaternion(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadQuaternion(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Quaternion ReadQuaternion(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: Godot.Quaternion
+    content.vb: Public Shared Function ReadQuaternion(buffer As NetBuffer) As Quaternion
+  overload: Nebula.Serialization.NetReader.ReadQuaternion*
+- uid: Nebula.Serialization.NetReader.ReadQuaternionFull(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadQuaternionFull(Nebula.Serialization.NetBuffer)
+  id: ReadQuaternionFull(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadQuaternionFull(NetBuffer)
+  nameWithType: NetReader.ReadQuaternionFull(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadQuaternionFull(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Quaternion ReadQuaternionFull(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: Godot.Quaternion
+    content.vb: Public Shared Function ReadQuaternionFull(buffer As NetBuffer) As Quaternion
+  overload: Nebula.Serialization.NetReader.ReadQuaternionFull*
+- uid: Nebula.Serialization.NetReader.ReadQuatSmallestThree(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadQuatSmallestThree(Nebula.Serialization.NetBuffer)
+  id: ReadQuatSmallestThree(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadQuatSmallestThree(NetBuffer)
+  nameWithType: NetReader.ReadQuatSmallestThree(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadQuatSmallestThree(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Reads a quaternion encoded with smallest-three compression (6 bytes).
+
+    Reconstructs the largest component from the other three.
+  example: []
+  syntax:
+    content: public static Quaternion ReadQuatSmallestThree(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: Godot.Quaternion
+    content.vb: Public Shared Function ReadQuatSmallestThree(buffer As NetBuffer) As Quaternion
+  overload: Nebula.Serialization.NetReader.ReadQuatSmallestThree*
+- uid: Nebula.Serialization.NetReader.ReadBytes(Nebula.Serialization.NetBuffer,System.Int32)
+  commentId: M:Nebula.Serialization.NetReader.ReadBytes(Nebula.Serialization.NetBuffer,System.Int32)
+  id: ReadBytes(Nebula.Serialization.NetBuffer,System.Int32)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadBytes(NetBuffer, int)
+  nameWithType: NetReader.ReadBytes(NetBuffer, int)
+  fullName: Nebula.Serialization.NetReader.ReadBytes(Nebula.Serialization.NetBuffer, int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Reads a fixed number of bytes into a new array.
+  example: []
+  syntax:
+    content: public static byte[] ReadBytes(NetBuffer buffer, int count)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: count
+      type: System.Int32
+    return:
+      type: System.Byte[]
+    content.vb: Public Shared Function ReadBytes(buffer As NetBuffer, count As Integer) As Byte()
+  overload: Nebula.Serialization.NetReader.ReadBytes*
+  nameWithType.vb: NetReader.ReadBytes(NetBuffer, Integer)
+  fullName.vb: Nebula.Serialization.NetReader.ReadBytes(Nebula.Serialization.NetBuffer, Integer)
+  name.vb: ReadBytes(NetBuffer, Integer)
+- uid: Nebula.Serialization.NetReader.ReadBytesWithLength(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadBytesWithLength(Nebula.Serialization.NetBuffer)
+  id: ReadBytesWithLength(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadBytesWithLength(NetBuffer)
+  nameWithType: NetReader.ReadBytesWithLength(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadBytesWithLength(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Reads bytes with a length prefix.
+  example: []
+  syntax:
+    content: public static byte[] ReadBytesWithLength(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Byte[]
+    content.vb: Public Shared Function ReadBytesWithLength(buffer As NetBuffer) As Byte()
+  overload: Nebula.Serialization.NetReader.ReadBytesWithLength*
+- uid: Nebula.Serialization.NetReader.ReadRemainingBytes(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadRemainingBytes(Nebula.Serialization.NetBuffer)
+  id: ReadRemainingBytes(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadRemainingBytes(NetBuffer)
+  nameWithType: NetReader.ReadRemainingBytes(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadRemainingBytes(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Reads all remaining bytes in the buffer.
+  example: []
+  syntax:
+    content: public static byte[] ReadRemainingBytes(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Byte[]
+    content.vb: Public Shared Function ReadRemainingBytes(buffer As NetBuffer) As Byte()
+  overload: Nebula.Serialization.NetReader.ReadRemainingBytes*
+- uid: Nebula.Serialization.NetReader.ReadString(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadString(Nebula.Serialization.NetBuffer)
+  id: ReadString(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadString(NetBuffer)
+  nameWithType: NetReader.ReadString(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadString(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Reads a UTF-8 string with length prefix.
+  example: []
+  syntax:
+    content: public static string ReadString(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.String
+    content.vb: Public Shared Function ReadString(buffer As NetBuffer) As String
+  overload: Nebula.Serialization.NetReader.ReadString*
+- uid: Nebula.Serialization.NetReader.ReadInt32Array(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadInt32Array(Nebula.Serialization.NetBuffer)
+  id: ReadInt32Array(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadInt32Array(NetBuffer)
+  nameWithType: NetReader.ReadInt32Array(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadInt32Array(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static int[] ReadInt32Array(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Int32[]
+    content.vb: Public Shared Function ReadInt32Array(buffer As NetBuffer) As Integer()
+  overload: Nebula.Serialization.NetReader.ReadInt32Array*
+- uid: Nebula.Serialization.NetReader.ReadInt64Array(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetReader.ReadInt64Array(Nebula.Serialization.NetBuffer)
+  id: ReadInt64Array(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadInt64Array(NetBuffer)
+  nameWithType: NetReader.ReadInt64Array(NetBuffer)
+  fullName: Nebula.Serialization.NetReader.ReadInt64Array(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static long[] ReadInt64Array(NetBuffer buffer)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: System.Int64[]
+    content.vb: Public Shared Function ReadInt64Array(buffer As NetBuffer) As Long()
+  overload: Nebula.Serialization.NetReader.ReadInt64Array*
+- uid: Nebula.Serialization.NetReader.ReadWithType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType@)
+  commentId: M:Nebula.Serialization.NetReader.ReadWithType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType@)
+  id: ReadWithType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType@)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadWithType(NetBuffer, out SerialVariantType)
+  nameWithType: NetReader.ReadWithType(NetBuffer, out SerialVariantType)
+  fullName: Nebula.Serialization.NetReader.ReadWithType(Nebula.Serialization.NetBuffer, out Nebula.Serialization.SerialVariantType)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Reads a type tag and then the value. Used for polymorphic deserialization.
+
+    Returns the type that was read via out parameter.
+  example: []
+  syntax:
+    content: public static object ReadWithType(NetBuffer buffer, out SerialVariantType type)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: type
+      type: Nebula.Serialization.SerialVariantType
+    return:
+      type: System.Object
+    content.vb: Public Shared Function ReadWithType(buffer As NetBuffer, type As SerialVariantType) As Object
+  overload: Nebula.Serialization.NetReader.ReadWithType*
+  nameWithType.vb: NetReader.ReadWithType(NetBuffer, SerialVariantType)
+  fullName.vb: Nebula.Serialization.NetReader.ReadWithType(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType)
+  name.vb: ReadWithType(NetBuffer, SerialVariantType)
+- uid: Nebula.Serialization.NetReader.ReadByType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType)
+  commentId: M:Nebula.Serialization.NetReader.ReadByType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType)
+  id: ReadByType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadByType(NetBuffer, SerialVariantType)
+  nameWithType: NetReader.ReadByType(NetBuffer, SerialVariantType)
+  fullName: Nebula.Serialization.NetReader.ReadByType(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Reads a value based on its SerialVariantType without reading the type tag.
+  example: []
+  syntax:
+    content: public static object ReadByType(NetBuffer buffer, SerialVariantType type)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: type
+      type: Nebula.Serialization.SerialVariantType
+    return:
+      type: System.Object
+    content.vb: Public Shared Function ReadByType(buffer As NetBuffer, type As SerialVariantType) As Object
+  overload: Nebula.Serialization.NetReader.ReadByType*
+- uid: Nebula.Serialization.NetReader.ReadAsVariant(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType)
+  commentId: M:Nebula.Serialization.NetReader.ReadAsVariant(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType)
+  id: ReadAsVariant(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadAsVariant(NetBuffer, SerialVariantType)
+  nameWithType: NetReader.ReadAsVariant(NetBuffer, SerialVariantType)
+  fullName: Nebula.Serialization.NetReader.ReadAsVariant(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Reads a value and converts it to Godot.Variant.
+
+    Only use this at the boundary where you need to interface with Godot APIs.
+  example: []
+  syntax:
+    content: public static Variant ReadAsVariant(NetBuffer buffer, SerialVariantType type)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: type
+      type: Nebula.Serialization.SerialVariantType
+    return:
+      type: Godot.Variant
+    content.vb: Public Shared Function ReadAsVariant(buffer As NetBuffer, type As SerialVariantType) As [Variant]
+  overload: Nebula.Serialization.NetReader.ReadAsVariant*
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Serialization.NetReader.ReadByte*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadByte
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadByte.html#Nebula_Serialization_NetReader_ReadByte_Nebula_Serialization_NetBuffer_
+  name: ReadByte
+  nameWithType: NetReader.ReadByte
+  fullName: Nebula.Serialization.NetReader.ReadByte
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: Nebula.Serialization.NetReader.ReadBool*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadBool
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadBool.html#Nebula_Serialization_NetReader_ReadBool_Nebula_Serialization_NetBuffer_
+  name: ReadBool
+  nameWithType: NetReader.ReadBool
+  fullName: Nebula.Serialization.NetReader.ReadBool
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.Serialization.NetReader.ReadInt16*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadInt16
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadInt16.html#Nebula_Serialization_NetReader_ReadInt16_Nebula_Serialization_NetBuffer_
+  name: ReadInt16
+  nameWithType: NetReader.ReadInt16
+  fullName: Nebula.Serialization.NetReader.ReadInt16
+- uid: System.Int16
+  commentId: T:System.Int16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: short
+  nameWithType: short
+  fullName: short
+  nameWithType.vb: Short
+  fullName.vb: Short
+  name.vb: Short
+- uid: Nebula.Serialization.NetReader.ReadUInt16*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadUInt16
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadUInt16.html#Nebula_Serialization_NetReader_ReadUInt16_Nebula_Serialization_NetBuffer_
+  name: ReadUInt16
+  nameWithType: NetReader.ReadUInt16
+  fullName: Nebula.Serialization.NetReader.ReadUInt16
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: Nebula.Serialization.NetReader.ReadInt32*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadInt32
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadInt32.html#Nebula_Serialization_NetReader_ReadInt32_Nebula_Serialization_NetBuffer_
+  name: ReadInt32
+  nameWithType: NetReader.ReadInt32
+  fullName: Nebula.Serialization.NetReader.ReadInt32
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.Serialization.NetReader.ReadUInt32*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadUInt32
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadUInt32.html#Nebula_Serialization_NetReader_ReadUInt32_Nebula_Serialization_NetBuffer_
+  name: ReadUInt32
+  nameWithType: NetReader.ReadUInt32
+  fullName: Nebula.Serialization.NetReader.ReadUInt32
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: Nebula.Serialization.NetReader.ReadInt64*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadInt64
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadInt64.html#Nebula_Serialization_NetReader_ReadInt64_Nebula_Serialization_NetBuffer_
+  name: ReadInt64
+  nameWithType: NetReader.ReadInt64
+  fullName: Nebula.Serialization.NetReader.ReadInt64
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: Nebula.Serialization.NetReader.ReadUInt64*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadUInt64
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadUInt64.html#Nebula_Serialization_NetReader_ReadUInt64_Nebula_Serialization_NetBuffer_
+  name: ReadUInt64
+  nameWithType: NetReader.ReadUInt64
+  fullName: Nebula.Serialization.NetReader.ReadUInt64
+- uid: System.UInt64
+  commentId: T:System.UInt64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint64
+  name: ulong
+  nameWithType: ulong
+  fullName: ulong
+  nameWithType.vb: ULong
+  fullName.vb: ULong
+  name.vb: ULong
+- uid: Nebula.Serialization.NetReader.ReadFloat*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadFloat
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadFloat.html#Nebula_Serialization_NetReader_ReadFloat_Nebula_Serialization_NetBuffer_
+  name: ReadFloat
+  nameWithType: NetReader.ReadFloat
+  fullName: Nebula.Serialization.NetReader.ReadFloat
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: Nebula.Serialization.NetReader.ReadDouble*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadDouble
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadDouble.html#Nebula_Serialization_NetReader_ReadDouble_Nebula_Serialization_NetBuffer_
+  name: ReadDouble
+  nameWithType: NetReader.ReadDouble
+  fullName: Nebula.Serialization.NetReader.ReadDouble
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: Nebula.Serialization.NetReader.ReadHalf*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadHalf
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadHalf.html#Nebula_Serialization_NetReader_ReadHalf_Nebula_Serialization_NetBuffer_
+  name: ReadHalf
+  nameWithType: NetReader.ReadHalf
+  fullName: Nebula.Serialization.NetReader.ReadHalf
+- uid: System.Half
+  commentId: T:System.Half
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.half
+  name: Half
+  nameWithType: Half
+  fullName: System.Half
+- uid: Nebula.Serialization.NetReader.ReadHalfFloat*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadHalfFloat
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadHalfFloat.html#Nebula_Serialization_NetReader_ReadHalfFloat_Nebula_Serialization_NetBuffer_
+  name: ReadHalfFloat
+  nameWithType: NetReader.ReadHalfFloat
+  fullName: Nebula.Serialization.NetReader.ReadHalfFloat
+- uid: Nebula.Serialization.NetReader.ReadVector2*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadVector2
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadVector2.html#Nebula_Serialization_NetReader_ReadVector2_Nebula_Serialization_NetBuffer_
+  name: ReadVector2
+  nameWithType: NetReader.ReadVector2
+  fullName: Nebula.Serialization.NetReader.ReadVector2
+- uid: Godot.Vector2
+  commentId: T:Godot.Vector2
+  parent: Godot
+  isExternal: true
+  name: Vector2
+  nameWithType: Vector2
+  fullName: Godot.Vector2
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.Serialization.NetReader.ReadVector2Full*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadVector2Full
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadVector2Full.html#Nebula_Serialization_NetReader_ReadVector2Full_Nebula_Serialization_NetBuffer_
+  name: ReadVector2Full
+  nameWithType: NetReader.ReadVector2Full
+  fullName: Nebula.Serialization.NetReader.ReadVector2Full
+- uid: Nebula.Serialization.NetReader.ReadVector3*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadVector3
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadVector3.html#Nebula_Serialization_NetReader_ReadVector3_Nebula_Serialization_NetBuffer_
+  name: ReadVector3
+  nameWithType: NetReader.ReadVector3
+  fullName: Nebula.Serialization.NetReader.ReadVector3
+- uid: Godot.Vector3
+  commentId: T:Godot.Vector3
+  parent: Godot
+  isExternal: true
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Godot.Vector3
+- uid: Nebula.Serialization.NetReader.ReadVector3Half*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadVector3Half
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadVector3Half.html#Nebula_Serialization_NetReader_ReadVector3Half_Nebula_Serialization_NetBuffer_
+  name: ReadVector3Half
+  nameWithType: NetReader.ReadVector3Half
+  fullName: Nebula.Serialization.NetReader.ReadVector3Half
+- uid: Nebula.Serialization.NetReader.ReadQuaternion*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadQuaternion
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadQuaternion.html#Nebula_Serialization_NetReader_ReadQuaternion_Nebula_Serialization_NetBuffer_
+  name: ReadQuaternion
+  nameWithType: NetReader.ReadQuaternion
+  fullName: Nebula.Serialization.NetReader.ReadQuaternion
+- uid: Godot.Quaternion
+  commentId: T:Godot.Quaternion
+  parent: Godot
+  isExternal: true
+  name: Quaternion
+  nameWithType: Quaternion
+  fullName: Godot.Quaternion
+- uid: Nebula.Serialization.NetReader.ReadQuaternionFull*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadQuaternionFull
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadQuaternionFull.html#Nebula_Serialization_NetReader_ReadQuaternionFull_Nebula_Serialization_NetBuffer_
+  name: ReadQuaternionFull
+  nameWithType: NetReader.ReadQuaternionFull
+  fullName: Nebula.Serialization.NetReader.ReadQuaternionFull
+- uid: Nebula.Serialization.NetReader.ReadQuatSmallestThree*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadQuatSmallestThree
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadQuatSmallestThree.html#Nebula_Serialization_NetReader_ReadQuatSmallestThree_Nebula_Serialization_NetBuffer_
+  name: ReadQuatSmallestThree
+  nameWithType: NetReader.ReadQuatSmallestThree
+  fullName: Nebula.Serialization.NetReader.ReadQuatSmallestThree
+- uid: Nebula.Serialization.NetReader.ReadBytes*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadBytes
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadBytes.html#Nebula_Serialization_NetReader_ReadBytes_Nebula_Serialization_NetBuffer_System_Int32_
+  name: ReadBytes
+  nameWithType: NetReader.ReadBytes
+  fullName: Nebula.Serialization.NetReader.ReadBytes
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.NetReader.ReadBytesWithLength*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadBytesWithLength
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadBytesWithLength.html#Nebula_Serialization_NetReader_ReadBytesWithLength_Nebula_Serialization_NetBuffer_
+  name: ReadBytesWithLength
+  nameWithType: NetReader.ReadBytesWithLength
+  fullName: Nebula.Serialization.NetReader.ReadBytesWithLength
+- uid: Nebula.Serialization.NetReader.ReadRemainingBytes*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadRemainingBytes
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadRemainingBytes.html#Nebula_Serialization_NetReader_ReadRemainingBytes_Nebula_Serialization_NetBuffer_
+  name: ReadRemainingBytes
+  nameWithType: NetReader.ReadRemainingBytes
+  fullName: Nebula.Serialization.NetReader.ReadRemainingBytes
+- uid: Nebula.Serialization.NetReader.ReadString*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadString
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadString.html#Nebula_Serialization_NetReader_ReadString_Nebula_Serialization_NetBuffer_
+  name: ReadString
+  nameWithType: NetReader.ReadString
+  fullName: Nebula.Serialization.NetReader.ReadString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.Serialization.NetReader.ReadInt32Array*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadInt32Array
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadInt32Array.html#Nebula_Serialization_NetReader_ReadInt32Array_Nebula_Serialization_NetBuffer_
+  name: ReadInt32Array
+  nameWithType: NetReader.ReadInt32Array
+  fullName: Nebula.Serialization.NetReader.ReadInt32Array
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.NetReader.ReadInt64Array*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadInt64Array
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadInt64Array.html#Nebula_Serialization_NetReader_ReadInt64Array_Nebula_Serialization_NetBuffer_
+  name: ReadInt64Array
+  nameWithType: NetReader.ReadInt64Array
+  fullName: Nebula.Serialization.NetReader.ReadInt64Array
+- uid: System.Int64[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long[]
+  nameWithType: long[]
+  fullName: long[]
+  nameWithType.vb: Long()
+  fullName.vb: Long()
+  name.vb: Long()
+  spec.csharp:
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.NetReader.ReadWithType*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadWithType
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadWithType.html#Nebula_Serialization_NetReader_ReadWithType_Nebula_Serialization_NetBuffer_Nebula_Serialization_SerialVariantType__
+  name: ReadWithType
+  nameWithType: NetReader.ReadWithType
+  fullName: Nebula.Serialization.NetReader.ReadWithType
+- uid: Nebula.Serialization.SerialVariantType
+  commentId: T:Nebula.Serialization.SerialVariantType
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.SerialVariantType.html
+  name: SerialVariantType
+  nameWithType: SerialVariantType
+  fullName: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.NetReader.ReadByType*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadByType
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadByType.html#Nebula_Serialization_NetReader_ReadByType_Nebula_Serialization_NetBuffer_Nebula_Serialization_SerialVariantType_
+  name: ReadByType
+  nameWithType: NetReader.ReadByType
+  fullName: Nebula.Serialization.NetReader.ReadByType
+- uid: Nebula.Serialization.NetReader.ReadAsVariant*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadAsVariant
+  isExternal: true
+  href: Nebula.Serialization.NetReader.ReadAsVariant.html#Nebula_Serialization_NetReader_ReadAsVariant_Nebula_Serialization_NetBuffer_Nebula_Serialization_SerialVariantType_
+  name: ReadAsVariant
+  nameWithType: NetReader.ReadAsVariant
+  fullName: Nebula.Serialization.NetReader.ReadAsVariant
+- uid: Godot.Variant
+  commentId: T:Godot.Variant
+  parent: Godot
+  isExternal: true
+  name: Variant
+  nameWithType: Variant
+  fullName: Godot.Variant
+memberLayout: SeparatePages

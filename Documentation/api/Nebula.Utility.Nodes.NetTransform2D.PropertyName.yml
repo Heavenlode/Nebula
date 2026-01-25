@@ -21,7 +21,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -38,7 +38,6 @@ items:
   - Godot.Node2D.PropertyName
   - Nebula.NetNode2D.PropertyName
   inheritedMembers:
-  - Nebula.NetNode2D.PropertyName.Node
   - Nebula.NetNode2D.PropertyName.Network
   - Godot.Node2D.PropertyName.Position
   - Godot.Node2D.PropertyName.Rotation
@@ -108,7 +107,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName.SourceNode
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -131,7 +130,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName.TargetNode
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -154,7 +153,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName.IsTeleporting
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -177,7 +176,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName.NetPosition
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -200,7 +199,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName.NetRotation
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -223,7 +222,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName._isTeleporting
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -246,7 +245,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName.teleportExported
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -269,7 +268,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -449,19 +448,11 @@ references:
     name: PropertyName
     isExternal: true
     href: Nebula.NetNode2D.PropertyName.html
-- uid: Nebula.NetNode2D.PropertyName.Node
-  commentId: F:Nebula.NetNode2D.PropertyName.Node
-  parent: Nebula.NetNode2D.PropertyName
-  isExternal: true
-  href: Nebula.NetNode2D.PropertyName.html#Nebula_NetNode2D_PropertyName_Node
-  name: Node
-  nameWithType: NetNode2D.PropertyName.Node
-  fullName: Nebula.NetNode2D.PropertyName.Node
 - uid: Nebula.NetNode2D.PropertyName.Network
   commentId: F:Nebula.NetNode2D.PropertyName.Network
   parent: Nebula.NetNode2D.PropertyName
   isExternal: true
-  href: Nebula.NetNode2D.PropertyName.html#Nebula_NetNode2D_PropertyName_Network
+  href: Nebula.NetNode2D.PropertyName.Network.html#Nebula_NetNode2D_PropertyName_Network
   name: Network
   nameWithType: NetNode2D.PropertyName.Network
   fullName: Nebula.NetNode2D.PropertyName.Network
@@ -1057,10 +1048,11 @@ references:
 - uid: Nebula.Utility.Nodes.NetTransform2D.PropertyName.#ctor*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform2D.PropertyName.#ctor
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform2D.PropertyName.html#Nebula_Utility_Nodes_NetTransform2D_PropertyName__ctor
+  href: Nebula.Utility.Nodes.NetTransform2D.PropertyName.-ctor.html#Nebula_Utility_Nodes_NetTransform2D_PropertyName__ctor
   name: PropertyName
   nameWithType: NetTransform2D.PropertyName.PropertyName
   fullName: Nebula.Utility.Nodes.NetTransform2D.PropertyName.PropertyName
   nameWithType.vb: NetTransform2D.PropertyName.New
   fullName.vb: Nebula.Utility.Nodes.NetTransform2D.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

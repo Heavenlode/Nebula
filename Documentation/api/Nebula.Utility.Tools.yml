@@ -10,11 +10,13 @@ items:
   - Nebula.Utility.Tools.Debugger.PropertyName
   - Nebula.Utility.Tools.Debugger.SignalName
   - Nebula.Utility.Tools.Env
+  - Nebula.Utility.Tools.Env.CdnModeType
   - Nebula.Utility.Tools.Env.DevelopmentModeType
   - Nebula.Utility.Tools.Env.MethodName
   - Nebula.Utility.Tools.Env.ProjectSettingId
   - Nebula.Utility.Tools.Env.PropertyName
   - Nebula.Utility.Tools.Env.SignalName
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
   - Nebula.Utility.Tools.ServerClientConnector
   - Nebula.Utility.Tools.ServerClientConnector.MethodName
   - Nebula.Utility.Tools.ServerClientConnector.PropertyName
@@ -29,6 +31,14 @@ items:
   assemblies:
   - Nebula
 references:
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  commentId: T:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.html
+  name: NebulaLogInterpolatedStringHandler
+  nameWithType: NebulaLogInterpolatedStringHandler
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
 - uid: Nebula.Utility.Tools.Debugger
   commentId: T:Nebula.Utility.Tools.Debugger
   parent: Nebula.Utility.Tools
@@ -182,6 +192,34 @@ references:
     name: DevelopmentModeType
     isExternal: true
     href: Nebula.Utility.Tools.Env.DevelopmentModeType.html
+- uid: Nebula.Utility.Tools.Env.CdnModeType
+  commentId: T:Nebula.Utility.Tools.Env.CdnModeType
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.Env.html
+  name: Env.CdnModeType
+  nameWithType: Env.CdnModeType
+  fullName: Nebula.Utility.Tools.Env.CdnModeType
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.CdnModeType
+    name: CdnModeType
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.CdnModeType.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Env
+    name: Env
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Env.CdnModeType
+    name: CdnModeType
+    isExternal: true
+    href: Nebula.Utility.Tools.Env.CdnModeType.html
 - uid: Nebula.Utility.Tools.Env.ProjectSettingId
   commentId: T:Nebula.Utility.Tools.Env.ProjectSettingId
   parent: Nebula.Utility.Tools
@@ -416,3 +454,4 @@ references:
     name: Tools
     isExternal: true
     href: Nebula.Utility.Tools.html
+memberLayout: SeparatePages

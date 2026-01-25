@@ -4,14 +4,16 @@ items:
   commentId: N:Nebula
   id: Nebula
   children:
+  - Nebula.CustomPropertyType
   - Nebula.INebulaAddon
-  - Nebula.INetNode
+  - Nebula.INetNodeBase
+  - Nebula.INetNode`1
+  - Nebula.ITransformable
+  - Nebula.NativeBridge
   - Nebula.NetFunction
   - Nebula.NetFunction.NetworkSources
   - Nebula.NetId
-  - Nebula.NetId.MethodName
-  - Nebula.NetId.PropertyName
-  - Nebula.NetId.SignalName
+  - Nebula.NetInterest
   - Nebula.NetNode
   - Nebula.NetNode.MethodName
   - Nebula.NetNode.PropertyName
@@ -24,14 +26,9 @@ items:
   - Nebula.NetNode3D.MethodName
   - Nebula.NetNode3D.PropertyName
   - Nebula.NetNode3D.SignalName
-  - Nebula.NetNodeWrapper
-  - Nebula.NetNodeWrapper.MethodName
-  - Nebula.NetNodeWrapper.PropertyName
-  - Nebula.NetNodeWrapper.SignalName
   - Nebula.NetPose3D
   - Nebula.NetPose3D.ChangeType
   - Nebula.NetPose3D.MethodName
-  - Nebula.NetPose3D.OnChangeEventHandler
   - Nebula.NetPose3D.PropertyName
   - Nebula.NetPose3D.SignalName
   - Nebula.NetProperty
@@ -39,29 +36,19 @@ items:
   - Nebula.NetRunner
   - Nebula.NetRunner.ENetChannelId
   - Nebula.NetRunner.MethodName
-  - Nebula.NetRunner.OnConnectedToServerEventHandler
-  - Nebula.NetRunner.OnPeerConnectedEventHandler
-  - Nebula.NetRunner.OnPeerDisconnectedEventHandler
-  - Nebula.NetRunner.OnWorldCreatedEventHandler
   - Nebula.NetRunner.PropertyName
   - Nebula.NetRunner.SignalName
   - Nebula.NetworkController
-  - Nebula.NetworkController.InterestChangedEventHandler
   - Nebula.NetworkController.MethodName
-  - Nebula.NetworkController.NetPropertyChangedEventHandler
-  - Nebula.NetworkController.NetworkChildrenSearchToggle
   - Nebula.NetworkController.PropertyName
   - Nebula.NetworkController.SignalName
+  - Nebula.PropertyCache
   - Nebula.UUID
-  - Nebula.UUID.MethodName
-  - Nebula.UUID.PropertyName
-  - Nebula.UUID.SignalName
   - Nebula.WorldRunner
   - Nebula.WorldRunner.DebugDataType
+  - Nebula.WorldRunner.DebugMessenger
   - Nebula.WorldRunner.MethodName
-  - Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-  - Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-  - Nebula.WorldRunner.OnPlayerJoinedEventHandler
+  - Nebula.WorldRunner.NetFunctionCtx
   - Nebula.WorldRunner.PeerState
   - Nebula.WorldRunner.PeerSyncStatus
   - Nebula.WorldRunner.PropertyName
@@ -83,14 +70,56 @@ references:
   name: INebulaAddon
   nameWithType: INebulaAddon
   fullName: Nebula.INebulaAddon
-- uid: Nebula.INetNode
-  commentId: T:Nebula.INetNode
+- uid: Nebula.INetNodeBase
+  commentId: T:Nebula.INetNodeBase
   parent: Nebula
   isExternal: true
-  href: Nebula.INetNode.html
-  name: INetNode
-  nameWithType: INetNode
-  fullName: Nebula.INetNode
+  href: Nebula.INetNodeBase.html
+  name: INetNodeBase
+  nameWithType: INetNodeBase
+  fullName: Nebula.INetNodeBase
+- uid: Nebula.INetNode`1
+  commentId: T:Nebula.INetNode`1
+  isExternal: true
+  href: Nebula.INetNode-1.html
+  name: INetNode<T>
+  nameWithType: INetNode<T>
+  fullName: Nebula.INetNode<T>
+  nameWithType.vb: INetNode(Of T)
+  fullName.vb: Nebula.INetNode(Of T)
+  name.vb: INetNode(Of T)
+  spec.csharp:
+  - uid: Nebula.INetNode`1
+    name: INetNode
+    isExternal: true
+    href: Nebula.INetNode-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.INetNode`1
+    name: INetNode
+    isExternal: true
+    href: Nebula.INetNode-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.ITransformable
+  commentId: T:Nebula.ITransformable
+  isExternal: true
+  href: Nebula.ITransformable.html
+  name: ITransformable
+  nameWithType: ITransformable
+  fullName: Nebula.ITransformable
+- uid: Nebula.NativeBridge
+  commentId: T:Nebula.NativeBridge
+  isExternal: true
+  href: Nebula.NativeBridge.html
+  name: NativeBridge
+  nameWithType: NativeBridge
+  fullName: Nebula.NativeBridge
 - uid: Nebula.NetFunction
   commentId: T:Nebula.NetFunction
   isExternal: true
@@ -134,87 +163,13 @@ references:
   name: NetId
   nameWithType: NetId
   fullName: Nebula.NetId
-- uid: Nebula.NetId.MethodName
-  commentId: T:Nebula.NetId.MethodName
+- uid: Nebula.NetInterest
+  commentId: T:Nebula.NetInterest
   isExternal: true
-  href: Nebula.NetId.html
-  name: NetId.MethodName
-  nameWithType: NetId.MethodName
-  fullName: Nebula.NetId.MethodName
-  spec.csharp:
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: .
-  - uid: Nebula.NetId.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.NetId.MethodName.html
-  spec.vb:
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: .
-  - uid: Nebula.NetId.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.NetId.MethodName.html
-- uid: Nebula.NetId.PropertyName
-  commentId: T:Nebula.NetId.PropertyName
-  isExternal: true
-  href: Nebula.NetId.html
-  name: NetId.PropertyName
-  nameWithType: NetId.PropertyName
-  fullName: Nebula.NetId.PropertyName
-  spec.csharp:
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: .
-  - uid: Nebula.NetId.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.NetId.PropertyName.html
-  spec.vb:
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: .
-  - uid: Nebula.NetId.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.NetId.PropertyName.html
-- uid: Nebula.NetId.SignalName
-  commentId: T:Nebula.NetId.SignalName
-  isExternal: true
-  href: Nebula.NetId.html
-  name: NetId.SignalName
-  nameWithType: NetId.SignalName
-  fullName: Nebula.NetId.SignalName
-  spec.csharp:
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: .
-  - uid: Nebula.NetId.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.NetId.SignalName.html
-  spec.vb:
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: .
-  - uid: Nebula.NetId.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.NetId.SignalName.html
+  href: Nebula.NetInterest.html
+  name: NetInterest
+  nameWithType: NetInterest
+  fullName: Nebula.NetInterest
 - uid: Nebula.NetNode
   commentId: T:Nebula.NetNode
   parent: Nebula
@@ -488,95 +443,6 @@ references:
     name: SignalName
     isExternal: true
     href: Nebula.NetNode3D.SignalName.html
-- uid: Nebula.NetNodeWrapper
-  commentId: T:Nebula.NetNodeWrapper
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetNodeWrapper.html
-  name: NetNodeWrapper
-  nameWithType: NetNodeWrapper
-  fullName: Nebula.NetNodeWrapper
-- uid: Nebula.NetNodeWrapper.MethodName
-  commentId: T:Nebula.NetNodeWrapper.MethodName
-  isExternal: true
-  href: Nebula.NetNodeWrapper.html
-  name: NetNodeWrapper.MethodName
-  nameWithType: NetNodeWrapper.MethodName
-  fullName: Nebula.NetNodeWrapper.MethodName
-  spec.csharp:
-  - uid: Nebula.NetNodeWrapper
-    name: NetNodeWrapper
-    isExternal: true
-    href: Nebula.NetNodeWrapper.html
-  - name: .
-  - uid: Nebula.NetNodeWrapper.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.NetNodeWrapper.MethodName.html
-  spec.vb:
-  - uid: Nebula.NetNodeWrapper
-    name: NetNodeWrapper
-    isExternal: true
-    href: Nebula.NetNodeWrapper.html
-  - name: .
-  - uid: Nebula.NetNodeWrapper.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.NetNodeWrapper.MethodName.html
-- uid: Nebula.NetNodeWrapper.PropertyName
-  commentId: T:Nebula.NetNodeWrapper.PropertyName
-  isExternal: true
-  href: Nebula.NetNodeWrapper.html
-  name: NetNodeWrapper.PropertyName
-  nameWithType: NetNodeWrapper.PropertyName
-  fullName: Nebula.NetNodeWrapper.PropertyName
-  spec.csharp:
-  - uid: Nebula.NetNodeWrapper
-    name: NetNodeWrapper
-    isExternal: true
-    href: Nebula.NetNodeWrapper.html
-  - name: .
-  - uid: Nebula.NetNodeWrapper.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.NetNodeWrapper.PropertyName.html
-  spec.vb:
-  - uid: Nebula.NetNodeWrapper
-    name: NetNodeWrapper
-    isExternal: true
-    href: Nebula.NetNodeWrapper.html
-  - name: .
-  - uid: Nebula.NetNodeWrapper.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.NetNodeWrapper.PropertyName.html
-- uid: Nebula.NetNodeWrapper.SignalName
-  commentId: T:Nebula.NetNodeWrapper.SignalName
-  isExternal: true
-  href: Nebula.NetNodeWrapper.html
-  name: NetNodeWrapper.SignalName
-  nameWithType: NetNodeWrapper.SignalName
-  fullName: Nebula.NetNodeWrapper.SignalName
-  spec.csharp:
-  - uid: Nebula.NetNodeWrapper
-    name: NetNodeWrapper
-    isExternal: true
-    href: Nebula.NetNodeWrapper.html
-  - name: .
-  - uid: Nebula.NetNodeWrapper.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.NetNodeWrapper.SignalName.html
-  spec.vb:
-  - uid: Nebula.NetNodeWrapper
-    name: NetNodeWrapper
-    isExternal: true
-    href: Nebula.NetNodeWrapper.html
-  - name: .
-  - uid: Nebula.NetNodeWrapper.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.NetNodeWrapper.SignalName.html
 - uid: Nebula.NetProperty
   commentId: T:Nebula.NetProperty
   parent: Nebula
@@ -649,118 +515,6 @@ references:
     name: ENetChannelId
     isExternal: true
     href: Nebula.NetRunner.ENetChannelId.html
-- uid: Nebula.NetRunner.OnPeerConnectedEventHandler
-  commentId: T:Nebula.NetRunner.OnPeerConnectedEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetRunner.html
-  name: NetRunner.OnPeerConnectedEventHandler
-  nameWithType: NetRunner.OnPeerConnectedEventHandler
-  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler
-  spec.csharp:
-  - uid: Nebula.NetRunner
-    name: NetRunner
-    isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnPeerConnectedEventHandler
-    name: OnPeerConnectedEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnPeerConnectedEventHandler.html
-  spec.vb:
-  - uid: Nebula.NetRunner
-    name: NetRunner
-    isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnPeerConnectedEventHandler
-    name: OnPeerConnectedEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnPeerConnectedEventHandler.html
-- uid: Nebula.NetRunner.OnPeerDisconnectedEventHandler
-  commentId: T:Nebula.NetRunner.OnPeerDisconnectedEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetRunner.html
-  name: NetRunner.OnPeerDisconnectedEventHandler
-  nameWithType: NetRunner.OnPeerDisconnectedEventHandler
-  fullName: Nebula.NetRunner.OnPeerDisconnectedEventHandler
-  spec.csharp:
-  - uid: Nebula.NetRunner
-    name: NetRunner
-    isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnPeerDisconnectedEventHandler
-    name: OnPeerDisconnectedEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnPeerDisconnectedEventHandler.html
-  spec.vb:
-  - uid: Nebula.NetRunner
-    name: NetRunner
-    isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnPeerDisconnectedEventHandler
-    name: OnPeerDisconnectedEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnPeerDisconnectedEventHandler.html
-- uid: Nebula.NetRunner.OnConnectedToServerEventHandler
-  commentId: T:Nebula.NetRunner.OnConnectedToServerEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetRunner.html
-  name: NetRunner.OnConnectedToServerEventHandler
-  nameWithType: NetRunner.OnConnectedToServerEventHandler
-  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler
-  spec.csharp:
-  - uid: Nebula.NetRunner
-    name: NetRunner
-    isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnConnectedToServerEventHandler
-    name: OnConnectedToServerEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnConnectedToServerEventHandler.html
-  spec.vb:
-  - uid: Nebula.NetRunner
-    name: NetRunner
-    isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnConnectedToServerEventHandler
-    name: OnConnectedToServerEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnConnectedToServerEventHandler.html
-- uid: Nebula.NetRunner.OnWorldCreatedEventHandler
-  commentId: T:Nebula.NetRunner.OnWorldCreatedEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetRunner.html
-  name: NetRunner.OnWorldCreatedEventHandler
-  nameWithType: NetRunner.OnWorldCreatedEventHandler
-  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler
-  spec.csharp:
-  - uid: Nebula.NetRunner
-    name: NetRunner
-    isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnWorldCreatedEventHandler
-    name: OnWorldCreatedEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnWorldCreatedEventHandler.html
-  spec.vb:
-  - uid: Nebula.NetRunner
-    name: NetRunner
-    isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnWorldCreatedEventHandler
-    name: OnWorldCreatedEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnWorldCreatedEventHandler.html
 - uid: Nebula.NetRunner.MethodName
   commentId: T:Nebula.NetRunner.MethodName
   isExternal: true
@@ -850,90 +604,6 @@ references:
   name: NetworkController
   nameWithType: NetworkController
   fullName: Nebula.NetworkController
-- uid: Nebula.NetworkController.InterestChangedEventHandler
-  commentId: T:Nebula.NetworkController.InterestChangedEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetworkController.html
-  name: NetworkController.InterestChangedEventHandler
-  nameWithType: NetworkController.InterestChangedEventHandler
-  fullName: Nebula.NetworkController.InterestChangedEventHandler
-  spec.csharp:
-  - uid: Nebula.NetworkController
-    name: NetworkController
-    isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.InterestChangedEventHandler
-    name: InterestChangedEventHandler
-    isExternal: true
-    href: Nebula.NetworkController.InterestChangedEventHandler.html
-  spec.vb:
-  - uid: Nebula.NetworkController
-    name: NetworkController
-    isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.InterestChangedEventHandler
-    name: InterestChangedEventHandler
-    isExternal: true
-    href: Nebula.NetworkController.InterestChangedEventHandler.html
-- uid: Nebula.NetworkController.NetPropertyChangedEventHandler
-  commentId: T:Nebula.NetworkController.NetPropertyChangedEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetworkController.html
-  name: NetworkController.NetPropertyChangedEventHandler
-  nameWithType: NetworkController.NetPropertyChangedEventHandler
-  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler
-  spec.csharp:
-  - uid: Nebula.NetworkController
-    name: NetworkController
-    isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.NetPropertyChangedEventHandler
-    name: NetPropertyChangedEventHandler
-    isExternal: true
-    href: Nebula.NetworkController.NetPropertyChangedEventHandler.html
-  spec.vb:
-  - uid: Nebula.NetworkController
-    name: NetworkController
-    isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.NetPropertyChangedEventHandler
-    name: NetPropertyChangedEventHandler
-    isExternal: true
-    href: Nebula.NetworkController.NetPropertyChangedEventHandler.html
-- uid: Nebula.NetworkController.NetworkChildrenSearchToggle
-  commentId: T:Nebula.NetworkController.NetworkChildrenSearchToggle
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetworkController.html
-  name: NetworkController.NetworkChildrenSearchToggle
-  nameWithType: NetworkController.NetworkChildrenSearchToggle
-  fullName: Nebula.NetworkController.NetworkChildrenSearchToggle
-  spec.csharp:
-  - uid: Nebula.NetworkController
-    name: NetworkController
-    isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.NetworkChildrenSearchToggle
-    name: NetworkChildrenSearchToggle
-    isExternal: true
-    href: Nebula.NetworkController.NetworkChildrenSearchToggle.html
-  spec.vb:
-  - uid: Nebula.NetworkController
-    name: NetworkController
-    isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.NetworkChildrenSearchToggle
-    name: NetworkChildrenSearchToggle
-    isExternal: true
-    href: Nebula.NetworkController.NetworkChildrenSearchToggle.html
 - uid: Nebula.NetworkController.MethodName
   commentId: T:Nebula.NetworkController.MethodName
   isExternal: true
@@ -1023,34 +693,6 @@ references:
   name: NetPose3D
   nameWithType: NetPose3D
   fullName: Nebula.NetPose3D
-- uid: Nebula.NetPose3D.OnChangeEventHandler
-  commentId: T:Nebula.NetPose3D.OnChangeEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetPose3D.html
-  name: NetPose3D.OnChangeEventHandler
-  nameWithType: NetPose3D.OnChangeEventHandler
-  fullName: Nebula.NetPose3D.OnChangeEventHandler
-  spec.csharp:
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
-    isExternal: true
-    href: Nebula.NetPose3D.html
-  - name: .
-  - uid: Nebula.NetPose3D.OnChangeEventHandler
-    name: OnChangeEventHandler
-    isExternal: true
-    href: Nebula.NetPose3D.OnChangeEventHandler.html
-  spec.vb:
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
-    isExternal: true
-    href: Nebula.NetPose3D.html
-  - name: .
-  - uid: Nebula.NetPose3D.OnChangeEventHandler
-    name: OnChangeEventHandler
-    isExternal: true
-    href: Nebula.NetPose3D.OnChangeEventHandler.html
 - uid: Nebula.NetPose3D.ChangeType
   commentId: T:Nebula.NetPose3D.ChangeType
   parent: Nebula
@@ -1168,87 +810,6 @@ references:
   name: UUID
   nameWithType: UUID
   fullName: Nebula.UUID
-- uid: Nebula.UUID.MethodName
-  commentId: T:Nebula.UUID.MethodName
-  isExternal: true
-  href: Nebula.UUID.html
-  name: UUID.MethodName
-  nameWithType: UUID.MethodName
-  fullName: Nebula.UUID.MethodName
-  spec.csharp:
-  - uid: Nebula.UUID
-    name: UUID
-    isExternal: true
-    href: Nebula.UUID.html
-  - name: .
-  - uid: Nebula.UUID.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.UUID.MethodName.html
-  spec.vb:
-  - uid: Nebula.UUID
-    name: UUID
-    isExternal: true
-    href: Nebula.UUID.html
-  - name: .
-  - uid: Nebula.UUID.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.UUID.MethodName.html
-- uid: Nebula.UUID.PropertyName
-  commentId: T:Nebula.UUID.PropertyName
-  isExternal: true
-  href: Nebula.UUID.html
-  name: UUID.PropertyName
-  nameWithType: UUID.PropertyName
-  fullName: Nebula.UUID.PropertyName
-  spec.csharp:
-  - uid: Nebula.UUID
-    name: UUID
-    isExternal: true
-    href: Nebula.UUID.html
-  - name: .
-  - uid: Nebula.UUID.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.UUID.PropertyName.html
-  spec.vb:
-  - uid: Nebula.UUID
-    name: UUID
-    isExternal: true
-    href: Nebula.UUID.html
-  - name: .
-  - uid: Nebula.UUID.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.UUID.PropertyName.html
-- uid: Nebula.UUID.SignalName
-  commentId: T:Nebula.UUID.SignalName
-  isExternal: true
-  href: Nebula.UUID.html
-  name: UUID.SignalName
-  nameWithType: UUID.SignalName
-  fullName: Nebula.UUID.SignalName
-  spec.csharp:
-  - uid: Nebula.UUID
-    name: UUID
-    isExternal: true
-    href: Nebula.UUID.html
-  - name: .
-  - uid: Nebula.UUID.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.UUID.SignalName.html
-  spec.vb:
-  - uid: Nebula.UUID
-    name: UUID
-    isExternal: true
-    href: Nebula.UUID.html
-  - name: .
-  - uid: Nebula.UUID.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.UUID.SignalName.html
 - uid: Nebula.WorldRunner
   commentId: T:Nebula.WorldRunner
   parent: Nebula
@@ -1257,6 +818,34 @@ references:
   name: WorldRunner
   nameWithType: WorldRunner
   fullName: Nebula.WorldRunner
+- uid: Nebula.WorldRunner.NetFunctionCtx
+  commentId: T:Nebula.WorldRunner.NetFunctionCtx
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner.NetFunctionCtx
+  nameWithType: WorldRunner.NetFunctionCtx
+  fullName: Nebula.WorldRunner.NetFunctionCtx
+  spec.csharp:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.NetFunctionCtx
+    name: NetFunctionCtx
+    isExternal: true
+    href: Nebula.WorldRunner.NetFunctionCtx.html
+  spec.vb:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.NetFunctionCtx
+    name: NetFunctionCtx
+    isExternal: true
+    href: Nebula.WorldRunner.NetFunctionCtx.html
 - uid: Nebula.WorldRunner.PeerSyncStatus
   commentId: T:Nebula.WorldRunner.PeerSyncStatus
   parent: Nebula
@@ -1313,34 +902,6 @@ references:
     name: PeerState
     isExternal: true
     href: Nebula.WorldRunner.PeerState.html
-- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-  commentId: T:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.WorldRunner.html
-  name: WorldRunner.OnPeerSyncStatusChangeEventHandler
-  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler
-  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-  spec.csharp:
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: .
-  - uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-    name: OnPeerSyncStatusChangeEventHandler
-    isExternal: true
-    href: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.html
-  spec.vb:
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: .
-  - uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-    name: OnPeerSyncStatusChangeEventHandler
-    isExternal: true
-    href: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.html
 - uid: Nebula.WorldRunner.DebugDataType
   commentId: T:Nebula.WorldRunner.DebugDataType
   parent: Nebula
@@ -1369,62 +930,34 @@ references:
     name: DebugDataType
     isExternal: true
     href: Nebula.WorldRunner.DebugDataType.html
-- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-  commentId: T:Nebula.WorldRunner.OnAfterNetworkTickEventHandler
+- uid: Nebula.WorldRunner.DebugMessenger
+  commentId: T:Nebula.WorldRunner.DebugMessenger
   parent: Nebula
   isExternal: true
   href: Nebula.WorldRunner.html
-  name: WorldRunner.OnAfterNetworkTickEventHandler
-  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler
-  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
+  name: WorldRunner.DebugMessenger
+  nameWithType: WorldRunner.DebugMessenger
+  fullName: Nebula.WorldRunner.DebugMessenger
   spec.csharp:
   - uid: Nebula.WorldRunner
     name: WorldRunner
     isExternal: true
     href: Nebula.WorldRunner.html
   - name: .
-  - uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-    name: OnAfterNetworkTickEventHandler
+  - uid: Nebula.WorldRunner.DebugMessenger
+    name: DebugMessenger
     isExternal: true
-    href: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.html
+    href: Nebula.WorldRunner.DebugMessenger.html
   spec.vb:
   - uid: Nebula.WorldRunner
     name: WorldRunner
     isExternal: true
     href: Nebula.WorldRunner.html
   - name: .
-  - uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-    name: OnAfterNetworkTickEventHandler
+  - uid: Nebula.WorldRunner.DebugMessenger
+    name: DebugMessenger
     isExternal: true
-    href: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.html
-- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler
-  commentId: T:Nebula.WorldRunner.OnPlayerJoinedEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.WorldRunner.html
-  name: WorldRunner.OnPlayerJoinedEventHandler
-  nameWithType: WorldRunner.OnPlayerJoinedEventHandler
-  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler
-  spec.csharp:
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: .
-  - uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler
-    name: OnPlayerJoinedEventHandler
-    isExternal: true
-    href: Nebula.WorldRunner.OnPlayerJoinedEventHandler.html
-  spec.vb:
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: .
-  - uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler
-    name: OnPlayerJoinedEventHandler
-    isExternal: true
-    href: Nebula.WorldRunner.OnPlayerJoinedEventHandler.html
+    href: Nebula.WorldRunner.DebugMessenger.html
 - uid: Nebula.WorldRunner.MethodName
   commentId: T:Nebula.WorldRunner.MethodName
   isExternal: true
@@ -1506,6 +1039,22 @@ references:
     name: SignalName
     isExternal: true
     href: Nebula.WorldRunner.SignalName.html
+- uid: Nebula.PropertyCache
+  commentId: T:Nebula.PropertyCache
+  parent: Nebula
+  isExternal: true
+  href: Nebula.PropertyCache.html
+  name: PropertyCache
+  nameWithType: PropertyCache
+  fullName: Nebula.PropertyCache
+- uid: Nebula.CustomPropertyType
+  commentId: T:Nebula.CustomPropertyType
+  parent: Nebula
+  isExternal: true
+  href: Nebula.CustomPropertyType.html
+  name: CustomPropertyType
+  nameWithType: CustomPropertyType
+  fullName: Nebula.CustomPropertyType
 - uid: Nebula
   commentId: N:Nebula
   isExternal: true
@@ -1513,3 +1062,4 @@ references:
   name: Nebula
   nameWithType: Nebula
   fullName: Nebula
+memberLayout: SeparatePages

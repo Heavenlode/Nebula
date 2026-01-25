@@ -6,7 +6,7 @@ items:
   parent: Nebula.Authentication
   children:
   - Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
-  - Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  - Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(ENet.Peer)
   langs:
   - csharp
   - vb
@@ -38,26 +38,26 @@ items:
     content: void ClientAuthenticateWithServer()
     content.vb: Sub ClientAuthenticateWithServer()
   overload: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer*
-- uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
-  commentId: M:Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
-  id: ServerAuthenticateClient(Godot.ENetPacketPeer)
+- uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(ENet.Peer)
+  commentId: M:Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(ENet.Peer)
+  id: ServerAuthenticateClient(ENet.Peer)
   parent: Nebula.Authentication.IAuthenticator
   langs:
   - csharp
   - vb
-  name: ServerAuthenticateClient(ENetPacketPeer)
-  nameWithType: IAuthenticator.ServerAuthenticateClient(ENetPacketPeer)
-  fullName: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  name: ServerAuthenticateClient(Peer)
+  nameWithType: IAuthenticator.ServerAuthenticateClient(Peer)
+  fullName: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(ENet.Peer)
   type: Method
   assemblies:
   - Nebula
   namespace: Nebula.Authentication
   syntax:
-    content: void ServerAuthenticateClient(ENetPacketPeer peer)
+    content: void ServerAuthenticateClient(Peer peer)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
-    content.vb: Sub ServerAuthenticateClient(peer As ENetPacketPeer)
+      type: ENet.Peer
+    content.vb: Sub ServerAuthenticateClient(peer As Peer)
   overload: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient*
 references:
 - uid: Nebula.Authentication
@@ -90,27 +90,28 @@ references:
 - uid: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer*
   commentId: Overload:Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
   isExternal: true
-  href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
+  href: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
   name: ClientAuthenticateWithServer
   nameWithType: IAuthenticator.ClientAuthenticateWithServer
   fullName: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
 - uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient*
   commentId: Overload:Nebula.Authentication.IAuthenticator.ServerAuthenticateClient
   isExternal: true
-  href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_Godot_ENetPacketPeer_
+  href: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_ENet_Peer_
   name: ServerAuthenticateClient
   nameWithType: IAuthenticator.ServerAuthenticateClient
   fullName: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient
-- uid: Godot.ENetPacketPeer
-  commentId: T:Godot.ENetPacketPeer
-  parent: Godot
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
   isExternal: true
-  name: ENetPacketPeer
-  nameWithType: ENetPacketPeer
-  fullName: Godot.ENetPacketPeer
-- uid: Godot
-  commentId: N:Godot
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: ENet
+  commentId: N:ENet
   isExternal: true
-  name: Godot
-  nameWithType: Godot
-  fullName: Godot
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
+memberLayout: SeparatePages

@@ -6,25 +6,38 @@ items:
   parent: Nebula
   children:
   - Nebula.NetworkController.PropertyName.#ctor
-  - Nebula.NetworkController.PropertyName.AttachedNetNode
+  - Nebula.NetworkController.PropertyName.CachedNodePathIdInParent
   - Nebula.NetworkController.PropertyName.CurrentWorld
   - Nebula.NetworkController.PropertyName.DespawnOnUnowned
-  - Nebula.NetworkController.PropertyName.InputAuthority
-  - Nebula.NetworkController.PropertyName.InputBuffer
-  - Nebula.NetworkController.PropertyName.InterestLayers
+  - Nebula.NetworkController.PropertyName.DirtyMask
+  - Nebula.NetworkController.PropertyName.HasInputChanged
+  - Nebula.NetworkController.PropertyName.HasInputSupport
   - Nebula.NetworkController.PropertyName.IsClientSpawn
   - Nebula.NetworkController.PropertyName.IsCurrentOwner
   - Nebula.NetworkController.PropertyName.IsInboundCall
+  - Nebula.NetworkController.PropertyName.IsMarkedForDeletion
+  - Nebula.NetworkController.PropertyName.IsPredicting
+  - Nebula.NetworkController.PropertyName.IsQueuedForDespawn
+  - Nebula.NetworkController.PropertyName.IsResimulating
   - Nebula.NetworkController.PropertyName.IsWorldReady
-  - Nebula.NetworkController.PropertyName.NetId
+  - Nebula.NetworkController.PropertyName.LastConfirmedTick
+  - Nebula.NetworkController.PropertyName.LastPredictedTick
+  - Nebula.NetworkController.PropertyName.NetNodePath
   - Nebula.NetworkController.PropertyName.NetParent
-  - Nebula.NetworkController.PropertyName.NetParentId
-  - Nebula.NetworkController.PropertyName.PreviousInputBuffer
-  - Nebula.NetworkController.PropertyName._networkParentId
-  - Nebula.NetworkController.PropertyName._prepareNetId
+  - Nebula.NetworkController.PropertyName.NetSceneFilePath
+  - Nebula.NetworkController.PropertyName.RawNode
+  - Nebula.NetworkController.PropertyName.StaticChildId
+  - Nebula.NetworkController.PropertyName.StaticNetworkChildren
+  - Nebula.NetworkController.PropertyName._attachedNetNodePath
+  - Nebula.NetworkController.PropertyName._attachedNetNodeSceneFilePath
+  - Nebula.NetworkController.PropertyName._inputBufferTicks
+  - Nebula.NetworkController.PropertyName._inputChanged
+  - Nebula.NetworkController.PropertyName._inputData
+  - Nebula.NetworkController.PropertyName._lastBufferedInputTick
+  - Nebula.NetworkController.PropertyName._lastConfirmedTick
+  - Nebula.NetworkController.PropertyName._lastPredictedTick
   - Nebula.NetworkController.PropertyName._prepareStaticChildPath
-  - Nebula.NetworkController.PropertyName.preparingSpawn
-  - Nebula.NetworkController.PropertyName.spawnReady
+  - Nebula.NetworkController.PropertyName._previousInputData
   langs:
   - csharp
   - vb
@@ -33,7 +46,7 @@ items:
   fullName: Nebula.NetworkController.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -54,29 +67,121 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
-- uid: Nebula.NetworkController.PropertyName.AttachedNetNode
-  commentId: F:Nebula.NetworkController.PropertyName.AttachedNetNode
-  id: AttachedNetNode
+- uid: Nebula.NetworkController.PropertyName.RawNode
+  commentId: F:Nebula.NetworkController.PropertyName.RawNode
+  id: RawNode
   parent: Nebula.NetworkController.PropertyName
   langs:
   - csharp
   - vb
-  name: AttachedNetNode
-  nameWithType: NetworkController.PropertyName.AttachedNetNode
-  fullName: Nebula.NetworkController.PropertyName.AttachedNetNode
+  name: RawNode
+  nameWithType: NetworkController.PropertyName.RawNode
+  fullName: Nebula.NetworkController.PropertyName.RawNode
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'AttachedNetNode' property.
+  summary: Cached name for the 'RawNode' property.
   example: []
   syntax:
-    content: public static readonly StringName AttachedNetNode
+    content: public static readonly StringName RawNode
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly AttachedNetNode As StringName
+    content.vb: Public Shared ReadOnly RawNode As StringName
+- uid: Nebula.NetworkController.PropertyName.NetNodePath
+  commentId: F:Nebula.NetworkController.PropertyName.NetNodePath
+  id: NetNodePath
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: NetNodePath
+  nameWithType: NetworkController.PropertyName.NetNodePath
+  fullName: Nebula.NetworkController.PropertyName.NetNodePath
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'NetNodePath' property.
+  example: []
+  syntax:
+    content: public static readonly StringName NetNodePath
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly NetNodePath As StringName
+- uid: Nebula.NetworkController.PropertyName.NetSceneFilePath
+  commentId: F:Nebula.NetworkController.PropertyName.NetSceneFilePath
+  id: NetSceneFilePath
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: NetSceneFilePath
+  nameWithType: NetworkController.PropertyName.NetSceneFilePath
+  fullName: Nebula.NetworkController.PropertyName.NetSceneFilePath
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'NetSceneFilePath' property.
+  example: []
+  syntax:
+    content: public static readonly StringName NetSceneFilePath
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly NetSceneFilePath As StringName
+- uid: Nebula.NetworkController.PropertyName.IsQueuedForDespawn
+  commentId: F:Nebula.NetworkController.PropertyName.IsQueuedForDespawn
+  id: IsQueuedForDespawn
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: IsQueuedForDespawn
+  nameWithType: NetworkController.PropertyName.IsQueuedForDespawn
+  fullName: Nebula.NetworkController.PropertyName.IsQueuedForDespawn
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'IsQueuedForDespawn' property.
+  example: []
+  syntax:
+    content: public static readonly StringName IsQueuedForDespawn
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly IsQueuedForDespawn As StringName
+- uid: Nebula.NetworkController.PropertyName.IsMarkedForDeletion
+  commentId: F:Nebula.NetworkController.PropertyName.IsMarkedForDeletion
+  id: IsMarkedForDeletion
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: IsMarkedForDeletion
+  nameWithType: NetworkController.PropertyName.IsMarkedForDeletion
+  fullName: Nebula.NetworkController.PropertyName.IsMarkedForDeletion
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'IsMarkedForDeletion' property.
+  example: []
+  syntax:
+    content: public static readonly StringName IsMarkedForDeletion
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly IsMarkedForDeletion As StringName
 - uid: Nebula.NetworkController.PropertyName.CurrentWorld
   commentId: F:Nebula.NetworkController.PropertyName.CurrentWorld
   id: CurrentWorld
@@ -89,7 +194,7 @@ items:
   fullName: Nebula.NetworkController.PropertyName.CurrentWorld
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -100,6 +205,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly CurrentWorld As StringName
+- uid: Nebula.NetworkController.PropertyName.StaticChildId
+  commentId: F:Nebula.NetworkController.PropertyName.StaticChildId
+  id: StaticChildId
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: StaticChildId
+  nameWithType: NetworkController.PropertyName.StaticChildId
+  fullName: Nebula.NetworkController.PropertyName.StaticChildId
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'StaticChildId' property.
+  example: []
+  syntax:
+    content: public static readonly StringName StaticChildId
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly StaticChildId As StringName
 - uid: Nebula.NetworkController.PropertyName.IsWorldReady
   commentId: F:Nebula.NetworkController.PropertyName.IsWorldReady
   id: IsWorldReady
@@ -112,7 +240,7 @@ items:
   fullName: Nebula.NetworkController.PropertyName.IsWorldReady
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -123,29 +251,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly IsWorldReady As StringName
-- uid: Nebula.NetworkController.PropertyName.NetParentId
-  commentId: F:Nebula.NetworkController.PropertyName.NetParentId
-  id: NetParentId
-  parent: Nebula.NetworkController.PropertyName
-  langs:
-  - csharp
-  - vb
-  name: NetParentId
-  nameWithType: NetworkController.PropertyName.NetParentId
-  fullName: Nebula.NetworkController.PropertyName.NetParentId
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'NetParentId' property.
-  example: []
-  syntax:
-    content: public static readonly StringName NetParentId
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly NetParentId As StringName
 - uid: Nebula.NetworkController.PropertyName.NetParent
   commentId: F:Nebula.NetworkController.PropertyName.NetParent
   id: NetParent
@@ -158,7 +263,7 @@ items:
   fullName: Nebula.NetworkController.PropertyName.NetParent
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -181,7 +286,7 @@ items:
   fullName: Nebula.NetworkController.PropertyName.IsClientSpawn
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -192,52 +297,144 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly IsClientSpawn As StringName
-- uid: Nebula.NetworkController.PropertyName.NetId
-  commentId: F:Nebula.NetworkController.PropertyName.NetId
-  id: NetId
+- uid: Nebula.NetworkController.PropertyName.HasInputSupport
+  commentId: F:Nebula.NetworkController.PropertyName.HasInputSupport
+  id: HasInputSupport
   parent: Nebula.NetworkController.PropertyName
   langs:
   - csharp
   - vb
-  name: NetId
-  nameWithType: NetworkController.PropertyName.NetId
-  fullName: Nebula.NetworkController.PropertyName.NetId
+  name: HasInputSupport
+  nameWithType: NetworkController.PropertyName.HasInputSupport
+  fullName: Nebula.NetworkController.PropertyName.HasInputSupport
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'NetId' property.
+  summary: Cached name for the 'HasInputSupport' property.
   example: []
   syntax:
-    content: public static readonly StringName NetId
+    content: public static readonly StringName HasInputSupport
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly NetId As StringName
-- uid: Nebula.NetworkController.PropertyName.InputAuthority
-  commentId: F:Nebula.NetworkController.PropertyName.InputAuthority
-  id: InputAuthority
+    content.vb: Public Shared ReadOnly HasInputSupport As StringName
+- uid: Nebula.NetworkController.PropertyName.HasInputChanged
+  commentId: F:Nebula.NetworkController.PropertyName.HasInputChanged
+  id: HasInputChanged
   parent: Nebula.NetworkController.PropertyName
   langs:
   - csharp
   - vb
-  name: InputAuthority
-  nameWithType: NetworkController.PropertyName.InputAuthority
-  fullName: Nebula.NetworkController.PropertyName.InputAuthority
+  name: HasInputChanged
+  nameWithType: NetworkController.PropertyName.HasInputChanged
+  fullName: Nebula.NetworkController.PropertyName.HasInputChanged
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'InputAuthority' property.
+  summary: Cached name for the 'HasInputChanged' property.
   example: []
   syntax:
-    content: public static readonly StringName InputAuthority
+    content: public static readonly StringName HasInputChanged
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly InputAuthority As StringName
+    content.vb: Public Shared ReadOnly HasInputChanged As StringName
+- uid: Nebula.NetworkController.PropertyName.IsPredicting
+  commentId: F:Nebula.NetworkController.PropertyName.IsPredicting
+  id: IsPredicting
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: IsPredicting
+  nameWithType: NetworkController.PropertyName.IsPredicting
+  fullName: Nebula.NetworkController.PropertyName.IsPredicting
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'IsPredicting' property.
+  example: []
+  syntax:
+    content: public static readonly StringName IsPredicting
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly IsPredicting As StringName
+- uid: Nebula.NetworkController.PropertyName.IsResimulating
+  commentId: F:Nebula.NetworkController.PropertyName.IsResimulating
+  id: IsResimulating
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: IsResimulating
+  nameWithType: NetworkController.PropertyName.IsResimulating
+  fullName: Nebula.NetworkController.PropertyName.IsResimulating
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'IsResimulating' property.
+  example: []
+  syntax:
+    content: public static readonly StringName IsResimulating
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly IsResimulating As StringName
+- uid: Nebula.NetworkController.PropertyName.LastConfirmedTick
+  commentId: F:Nebula.NetworkController.PropertyName.LastConfirmedTick
+  id: LastConfirmedTick
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: LastConfirmedTick
+  nameWithType: NetworkController.PropertyName.LastConfirmedTick
+  fullName: Nebula.NetworkController.PropertyName.LastConfirmedTick
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'LastConfirmedTick' property.
+  example: []
+  syntax:
+    content: public static readonly StringName LastConfirmedTick
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly LastConfirmedTick As StringName
+- uid: Nebula.NetworkController.PropertyName.LastPredictedTick
+  commentId: F:Nebula.NetworkController.PropertyName.LastPredictedTick
+  id: LastPredictedTick
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: LastPredictedTick
+  nameWithType: NetworkController.PropertyName.LastPredictedTick
+  fullName: Nebula.NetworkController.PropertyName.LastPredictedTick
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'LastPredictedTick' property.
+  example: []
+  syntax:
+    content: public static readonly StringName LastPredictedTick
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly LastPredictedTick As StringName
 - uid: Nebula.NetworkController.PropertyName.IsCurrentOwner
   commentId: F:Nebula.NetworkController.PropertyName.IsCurrentOwner
   id: IsCurrentOwner
@@ -250,7 +447,7 @@ items:
   fullName: Nebula.NetworkController.PropertyName.IsCurrentOwner
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -273,7 +470,7 @@ items:
   fullName: Nebula.NetworkController.PropertyName.IsInboundCall
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -284,6 +481,52 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly IsInboundCall As StringName
+- uid: Nebula.NetworkController.PropertyName._attachedNetNodePath
+  commentId: F:Nebula.NetworkController.PropertyName._attachedNetNodePath
+  id: _attachedNetNodePath
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _attachedNetNodePath
+  nameWithType: NetworkController.PropertyName._attachedNetNodePath
+  fullName: Nebula.NetworkController.PropertyName._attachedNetNodePath
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_attachedNetNodePath' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _attachedNetNodePath
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _attachedNetNodePath As StringName
+- uid: Nebula.NetworkController.PropertyName._attachedNetNodeSceneFilePath
+  commentId: F:Nebula.NetworkController.PropertyName._attachedNetNodeSceneFilePath
+  id: _attachedNetNodeSceneFilePath
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _attachedNetNodeSceneFilePath
+  nameWithType: NetworkController.PropertyName._attachedNetNodeSceneFilePath
+  fullName: Nebula.NetworkController.PropertyName._attachedNetNodeSceneFilePath
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_attachedNetNodeSceneFilePath' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _attachedNetNodeSceneFilePath
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _attachedNetNodeSceneFilePath As StringName
 - uid: Nebula.NetworkController.PropertyName.DespawnOnUnowned
   commentId: F:Nebula.NetworkController.PropertyName.DespawnOnUnowned
   id: DespawnOnUnowned
@@ -296,7 +539,7 @@ items:
   fullName: Nebula.NetworkController.PropertyName.DespawnOnUnowned
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -307,167 +550,236 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly DespawnOnUnowned As StringName
-- uid: Nebula.NetworkController.PropertyName.InputBuffer
-  commentId: F:Nebula.NetworkController.PropertyName.InputBuffer
-  id: InputBuffer
+- uid: Nebula.NetworkController.PropertyName.StaticNetworkChildren
+  commentId: F:Nebula.NetworkController.PropertyName.StaticNetworkChildren
+  id: StaticNetworkChildren
   parent: Nebula.NetworkController.PropertyName
   langs:
   - csharp
   - vb
-  name: InputBuffer
-  nameWithType: NetworkController.PropertyName.InputBuffer
-  fullName: Nebula.NetworkController.PropertyName.InputBuffer
+  name: StaticNetworkChildren
+  nameWithType: NetworkController.PropertyName.StaticNetworkChildren
+  fullName: Nebula.NetworkController.PropertyName.StaticNetworkChildren
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'InputBuffer' field.
+  summary: Cached name for the 'StaticNetworkChildren' field.
   example: []
   syntax:
-    content: public static readonly StringName InputBuffer
+    content: public static readonly StringName StaticNetworkChildren
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly InputBuffer As StringName
-- uid: Nebula.NetworkController.PropertyName.PreviousInputBuffer
-  commentId: F:Nebula.NetworkController.PropertyName.PreviousInputBuffer
-  id: PreviousInputBuffer
+    content.vb: Public Shared ReadOnly StaticNetworkChildren As StringName
+- uid: Nebula.NetworkController.PropertyName.CachedNodePathIdInParent
+  commentId: F:Nebula.NetworkController.PropertyName.CachedNodePathIdInParent
+  id: CachedNodePathIdInParent
   parent: Nebula.NetworkController.PropertyName
   langs:
   - csharp
   - vb
-  name: PreviousInputBuffer
-  nameWithType: NetworkController.PropertyName.PreviousInputBuffer
-  fullName: Nebula.NetworkController.PropertyName.PreviousInputBuffer
+  name: CachedNodePathIdInParent
+  nameWithType: NetworkController.PropertyName.CachedNodePathIdInParent
+  fullName: Nebula.NetworkController.PropertyName.CachedNodePathIdInParent
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'PreviousInputBuffer' field.
+  summary: Cached name for the 'CachedNodePathIdInParent' field.
   example: []
   syntax:
-    content: public static readonly StringName PreviousInputBuffer
+    content: public static readonly StringName CachedNodePathIdInParent
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly PreviousInputBuffer As StringName
-- uid: Nebula.NetworkController.PropertyName.InterestLayers
-  commentId: F:Nebula.NetworkController.PropertyName.InterestLayers
-  id: InterestLayers
+    content.vb: Public Shared ReadOnly CachedNodePathIdInParent As StringName
+- uid: Nebula.NetworkController.PropertyName.DirtyMask
+  commentId: F:Nebula.NetworkController.PropertyName.DirtyMask
+  id: DirtyMask
   parent: Nebula.NetworkController.PropertyName
   langs:
   - csharp
   - vb
-  name: InterestLayers
-  nameWithType: NetworkController.PropertyName.InterestLayers
-  fullName: Nebula.NetworkController.PropertyName.InterestLayers
+  name: DirtyMask
+  nameWithType: NetworkController.PropertyName.DirtyMask
+  fullName: Nebula.NetworkController.PropertyName.DirtyMask
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'InterestLayers' field.
+  summary: Cached name for the 'DirtyMask' field.
   example: []
   syntax:
-    content: public static readonly StringName InterestLayers
+    content: public static readonly StringName DirtyMask
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly InterestLayers As StringName
-- uid: Nebula.NetworkController.PropertyName._networkParentId
-  commentId: F:Nebula.NetworkController.PropertyName._networkParentId
-  id: _networkParentId
+    content.vb: Public Shared ReadOnly DirtyMask As StringName
+- uid: Nebula.NetworkController.PropertyName._inputData
+  commentId: F:Nebula.NetworkController.PropertyName._inputData
+  id: _inputData
   parent: Nebula.NetworkController.PropertyName
   langs:
   - csharp
   - vb
-  name: _networkParentId
-  nameWithType: NetworkController.PropertyName._networkParentId
-  fullName: Nebula.NetworkController.PropertyName._networkParentId
+  name: _inputData
+  nameWithType: NetworkController.PropertyName._inputData
+  fullName: Nebula.NetworkController.PropertyName._inputData
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the '_networkParentId' field.
+  summary: Cached name for the '_inputData' field.
   example: []
   syntax:
-    content: public static readonly StringName _networkParentId
+    content: public static readonly StringName _inputData
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly _networkParentId As StringName
-- uid: Nebula.NetworkController.PropertyName.spawnReady
-  commentId: F:Nebula.NetworkController.PropertyName.spawnReady
-  id: spawnReady
+    content.vb: Public Shared ReadOnly _inputData As StringName
+- uid: Nebula.NetworkController.PropertyName._previousInputData
+  commentId: F:Nebula.NetworkController.PropertyName._previousInputData
+  id: _previousInputData
   parent: Nebula.NetworkController.PropertyName
   langs:
   - csharp
   - vb
-  name: spawnReady
-  nameWithType: NetworkController.PropertyName.spawnReady
-  fullName: Nebula.NetworkController.PropertyName.spawnReady
+  name: _previousInputData
+  nameWithType: NetworkController.PropertyName._previousInputData
+  fullName: Nebula.NetworkController.PropertyName._previousInputData
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'spawnReady' field.
+  summary: Cached name for the '_previousInputData' field.
   example: []
   syntax:
-    content: public static readonly StringName spawnReady
+    content: public static readonly StringName _previousInputData
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly spawnReady As StringName
-- uid: Nebula.NetworkController.PropertyName.preparingSpawn
-  commentId: F:Nebula.NetworkController.PropertyName.preparingSpawn
-  id: preparingSpawn
+    content.vb: Public Shared ReadOnly _previousInputData As StringName
+- uid: Nebula.NetworkController.PropertyName._inputChanged
+  commentId: F:Nebula.NetworkController.PropertyName._inputChanged
+  id: _inputChanged
   parent: Nebula.NetworkController.PropertyName
   langs:
   - csharp
   - vb
-  name: preparingSpawn
-  nameWithType: NetworkController.PropertyName.preparingSpawn
-  fullName: Nebula.NetworkController.PropertyName.preparingSpawn
+  name: _inputChanged
+  nameWithType: NetworkController.PropertyName._inputChanged
+  fullName: Nebula.NetworkController.PropertyName._inputChanged
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'preparingSpawn' field.
+  summary: Cached name for the '_inputChanged' field.
   example: []
   syntax:
-    content: public static readonly StringName preparingSpawn
+    content: public static readonly StringName _inputChanged
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly preparingSpawn As StringName
-- uid: Nebula.NetworkController.PropertyName._prepareNetId
-  commentId: F:Nebula.NetworkController.PropertyName._prepareNetId
-  id: _prepareNetId
+    content.vb: Public Shared ReadOnly _inputChanged As StringName
+- uid: Nebula.NetworkController.PropertyName._inputBufferTicks
+  commentId: F:Nebula.NetworkController.PropertyName._inputBufferTicks
+  id: _inputBufferTicks
   parent: Nebula.NetworkController.PropertyName
   langs:
   - csharp
   - vb
-  name: _prepareNetId
-  nameWithType: NetworkController.PropertyName._prepareNetId
-  fullName: Nebula.NetworkController.PropertyName._prepareNetId
+  name: _inputBufferTicks
+  nameWithType: NetworkController.PropertyName._inputBufferTicks
+  fullName: Nebula.NetworkController.PropertyName._inputBufferTicks
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the '_prepareNetId' field.
+  summary: Cached name for the '_inputBufferTicks' field.
   example: []
   syntax:
-    content: public static readonly StringName _prepareNetId
+    content: public static readonly StringName _inputBufferTicks
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly _prepareNetId As StringName
+    content.vb: Public Shared ReadOnly _inputBufferTicks As StringName
+- uid: Nebula.NetworkController.PropertyName._lastBufferedInputTick
+  commentId: F:Nebula.NetworkController.PropertyName._lastBufferedInputTick
+  id: _lastBufferedInputTick
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _lastBufferedInputTick
+  nameWithType: NetworkController.PropertyName._lastBufferedInputTick
+  fullName: Nebula.NetworkController.PropertyName._lastBufferedInputTick
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_lastBufferedInputTick' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _lastBufferedInputTick
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _lastBufferedInputTick As StringName
+- uid: Nebula.NetworkController.PropertyName._lastConfirmedTick
+  commentId: F:Nebula.NetworkController.PropertyName._lastConfirmedTick
+  id: _lastConfirmedTick
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _lastConfirmedTick
+  nameWithType: NetworkController.PropertyName._lastConfirmedTick
+  fullName: Nebula.NetworkController.PropertyName._lastConfirmedTick
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_lastConfirmedTick' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _lastConfirmedTick
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _lastConfirmedTick As StringName
+- uid: Nebula.NetworkController.PropertyName._lastPredictedTick
+  commentId: F:Nebula.NetworkController.PropertyName._lastPredictedTick
+  id: _lastPredictedTick
+  parent: Nebula.NetworkController.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _lastPredictedTick
+  nameWithType: NetworkController.PropertyName._lastPredictedTick
+  fullName: Nebula.NetworkController.PropertyName._lastPredictedTick
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_lastPredictedTick' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _lastPredictedTick
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _lastPredictedTick As StringName
 - uid: Nebula.NetworkController.PropertyName._prepareStaticChildPath
   commentId: F:Nebula.NetworkController.PropertyName._prepareStaticChildPath
   id: _prepareStaticChildPath
@@ -480,7 +792,7 @@ items:
   fullName: Nebula.NetworkController.PropertyName._prepareStaticChildPath
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -503,7 +815,7 @@ items:
   fullName: Nebula.NetworkController.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -821,10 +1133,11 @@ references:
 - uid: Nebula.NetworkController.PropertyName.#ctor*
   commentId: Overload:Nebula.NetworkController.PropertyName.#ctor
   isExternal: true
-  href: Nebula.NetworkController.PropertyName.html#Nebula_NetworkController_PropertyName__ctor
+  href: Nebula.NetworkController.PropertyName.-ctor.html#Nebula_NetworkController_PropertyName__ctor
   name: PropertyName
   nameWithType: NetworkController.PropertyName.PropertyName
   fullName: Nebula.NetworkController.PropertyName.PropertyName
   nameWithType.vb: NetworkController.PropertyName.New
   fullName.vb: Nebula.NetworkController.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

@@ -5,7 +5,8 @@ items:
   id: IBsonSerializableBase
   parent: Nebula.Serialization
   children:
-  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  - Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
   langs:
   - csharp
   - vb
@@ -16,32 +17,66 @@ items:
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
+  summary: Non-generic base interface for reference type BSON serialization.
+  example: []
   syntax:
     content: public interface IBsonSerializableBase
     content.vb: Public Interface IBsonSerializableBase
-- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-  id: BsonSerialize(Godot.Variant)
+- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  id: BsonSerialize(Nebula.Serialization.NetBsonContext)
   parent: Nebula.Serialization.IBsonSerializableBase
   langs:
   - csharp
   - vb
-  name: BsonSerialize(Variant)
-  nameWithType: IBsonSerializableBase.BsonSerialize(Variant)
-  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  name: BsonSerialize(NetBsonContext)
+  nameWithType: IBsonSerializableBase.BsonSerialize(NetBsonContext)
+  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
   type: Method
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
   syntax:
-    content: BsonValue BsonSerialize(Variant context)
+    content: BsonValue BsonSerialize(NetBsonContext context)
     parameters:
     - id: context
-      type: Godot.Variant
+      type: Nebula.Serialization.NetBsonContext
     return:
       type: MongoDB.Bson.BsonValue
-    content.vb: Function BsonSerialize(context As [Variant]) As BsonValue
+    content.vb: Function BsonSerialize(context As NetBsonContext) As BsonValue
   overload: Nebula.Serialization.IBsonSerializableBase.BsonSerialize*
+- uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  id: OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  parent: Nebula.Serialization.IBsonSerializableBase
+  langs:
+  - csharp
+  - vb
+  name: OnBsonDeserialize(NetBsonContext, BsonDocument)
+  nameWithType: IBsonSerializableBase.OnBsonDeserialize(NetBsonContext, BsonDocument)
+  fullName: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext, MongoDB.Bson.BsonDocument)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Virtual method called during BSON deserialization to allow custom deserialization logic.
+
+    Override this in derived classes to handle type-specific deserialization.
+  example: []
+  syntax:
+    content: Task OnBsonDeserialize(NetBsonContext context, BsonDocument doc)
+    parameters:
+    - id: context
+      type: Nebula.Serialization.NetBsonContext
+      description: The deserialization context
+    - id: doc
+      type: MongoDB.Bson.BsonDocument
+      description: The BSON document being deserialized
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Function OnBsonDeserialize(context As NetBsonContext, doc As BsonDocument) As Task
+  overload: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize*
 references:
 - uid: Nebula.Serialization
   commentId: N:Nebula.Serialization
@@ -73,17 +108,18 @@ references:
 - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize*
   commentId: Overload:Nebula.Serialization.IBsonSerializableBase.BsonSerialize
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+  href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
   name: BsonSerialize
   nameWithType: IBsonSerializableBase.BsonSerialize
   fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize
-- uid: Godot.Variant
-  commentId: T:Godot.Variant
-  parent: Godot
+- uid: Nebula.Serialization.NetBsonContext
+  commentId: T:Nebula.Serialization.NetBsonContext
+  parent: Nebula.Serialization
   isExternal: true
-  name: Variant
-  nameWithType: Variant
-  fullName: Godot.Variant
+  href: Nebula.Serialization.NetBsonContext.html
+  name: NetBsonContext
+  nameWithType: NetBsonContext
+  fullName: Nebula.Serialization.NetBsonContext
 - uid: MongoDB.Bson.BsonValue
   commentId: T:MongoDB.Bson.BsonValue
   parent: MongoDB.Bson
@@ -91,12 +127,6 @@ references:
   name: BsonValue
   nameWithType: BsonValue
   fullName: MongoDB.Bson.BsonValue
-- uid: Godot
-  commentId: N:Godot
-  isExternal: true
-  name: Godot
-  nameWithType: Godot
-  fullName: Godot
 - uid: MongoDB.Bson
   commentId: N:MongoDB.Bson
   isExternal: true
@@ -119,3 +149,63 @@ references:
   - uid: MongoDB.Bson
     name: Bson
     isExternal: true
+- uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize*
+  commentId: Overload:Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  name: OnBsonDeserialize
+  nameWithType: IBsonSerializableBase.OnBsonDeserialize
+  fullName: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize
+- uid: MongoDB.Bson.BsonDocument
+  commentId: T:MongoDB.Bson.BsonDocument
+  parent: MongoDB.Bson
+  isExternal: true
+  name: BsonDocument
+  nameWithType: BsonDocument
+  fullName: MongoDB.Bson.BsonDocument
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+memberLayout: SeparatePages

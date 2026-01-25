@@ -8,10 +8,14 @@ items:
   - Nebula.Utility.Nodes.NetTransform3D.PropertyName.#ctor
   - Nebula.Utility.Nodes.NetTransform3D.PropertyName.IsTeleporting
   - Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetPosition
+  - Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetPositionPredictionTolerance
   - Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetRotation
+  - Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetRotationPredictionTolerance
   - Nebula.Utility.Nodes.NetTransform3D.PropertyName.SourceNode
   - Nebula.Utility.Nodes.NetTransform3D.PropertyName.TargetNode
+  - Nebula.Utility.Nodes.NetTransform3D.PropertyName.VisualInterpolateSpeed
   - Nebula.Utility.Nodes.NetTransform3D.PropertyName._isTeleporting
+  - Nebula.Utility.Nodes.NetTransform3D.PropertyName._visualInitialized
   - Nebula.Utility.Nodes.NetTransform3D.PropertyName.teleportExported
   langs:
   - csharp
@@ -21,7 +25,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -37,7 +41,6 @@ items:
   - Godot.Node3D.PropertyName
   - Nebula.NetNode3D.PropertyName
   inheritedMembers:
-  - Nebula.NetNode3D.PropertyName.Node
   - Nebula.NetNode3D.PropertyName.Network
   - Godot.Node3D.PropertyName.Transform
   - Godot.Node3D.PropertyName.GlobalTransform
@@ -97,7 +100,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.SourceNode
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -120,7 +123,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.TargetNode
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -131,6 +134,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly TargetNode As StringName
+- uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName.VisualInterpolateSpeed
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.PropertyName.VisualInterpolateSpeed
+  id: VisualInterpolateSpeed
+  parent: Nebula.Utility.Nodes.NetTransform3D.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: VisualInterpolateSpeed
+  nameWithType: NetTransform3D.PropertyName.VisualInterpolateSpeed
+  fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.VisualInterpolateSpeed
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Cached name for the 'VisualInterpolateSpeed' property.
+  example: []
+  syntax:
+    content: public static readonly StringName VisualInterpolateSpeed
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly VisualInterpolateSpeed As StringName
 - uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName.IsTeleporting
   commentId: F:Nebula.Utility.Nodes.NetTransform3D.PropertyName.IsTeleporting
   id: IsTeleporting
@@ -143,7 +169,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.IsTeleporting
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -166,7 +192,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetPosition
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -177,6 +203,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly NetPosition As StringName
+- uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetPositionPredictionTolerance
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetPositionPredictionTolerance
+  id: NetPositionPredictionTolerance
+  parent: Nebula.Utility.Nodes.NetTransform3D.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: NetPositionPredictionTolerance
+  nameWithType: NetTransform3D.PropertyName.NetPositionPredictionTolerance
+  fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetPositionPredictionTolerance
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Cached name for the 'NetPositionPredictionTolerance' property.
+  example: []
+  syntax:
+    content: public static readonly StringName NetPositionPredictionTolerance
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly NetPositionPredictionTolerance As StringName
 - uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetRotation
   commentId: F:Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetRotation
   id: NetRotation
@@ -189,7 +238,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetRotation
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -200,6 +249,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly NetRotation As StringName
+- uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetRotationPredictionTolerance
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetRotationPredictionTolerance
+  id: NetRotationPredictionTolerance
+  parent: Nebula.Utility.Nodes.NetTransform3D.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: NetRotationPredictionTolerance
+  nameWithType: NetTransform3D.PropertyName.NetRotationPredictionTolerance
+  fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.NetRotationPredictionTolerance
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Cached name for the 'NetRotationPredictionTolerance' property.
+  example: []
+  syntax:
+    content: public static readonly StringName NetRotationPredictionTolerance
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly NetRotationPredictionTolerance As StringName
 - uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName._isTeleporting
   commentId: F:Nebula.Utility.Nodes.NetTransform3D.PropertyName._isTeleporting
   id: _isTeleporting
@@ -212,7 +284,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName._isTeleporting
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -223,6 +295,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _isTeleporting As StringName
+- uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName._visualInitialized
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.PropertyName._visualInitialized
+  id: _visualInitialized
+  parent: Nebula.Utility.Nodes.NetTransform3D.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _visualInitialized
+  nameWithType: NetTransform3D.PropertyName._visualInitialized
+  fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName._visualInitialized
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Cached name for the '_visualInitialized' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _visualInitialized
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _visualInitialized As StringName
 - uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName.teleportExported
   commentId: F:Nebula.Utility.Nodes.NetTransform3D.PropertyName.teleportExported
   id: teleportExported
@@ -235,7 +330,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.teleportExported
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -258,7 +353,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -415,19 +510,11 @@ references:
     name: PropertyName
     isExternal: true
     href: Nebula.NetNode3D.PropertyName.html
-- uid: Nebula.NetNode3D.PropertyName.Node
-  commentId: F:Nebula.NetNode3D.PropertyName.Node
-  parent: Nebula.NetNode3D.PropertyName
-  isExternal: true
-  href: Nebula.NetNode3D.PropertyName.html#Nebula_NetNode3D_PropertyName_Node
-  name: Node
-  nameWithType: NetNode3D.PropertyName.Node
-  fullName: Nebula.NetNode3D.PropertyName.Node
 - uid: Nebula.NetNode3D.PropertyName.Network
   commentId: F:Nebula.NetNode3D.PropertyName.Network
   parent: Nebula.NetNode3D.PropertyName
   isExternal: true
-  href: Nebula.NetNode3D.PropertyName.html#Nebula_NetNode3D_PropertyName_Network
+  href: Nebula.NetNode3D.PropertyName.Network.html#Nebula_NetNode3D_PropertyName_Network
   name: Network
   nameWithType: NetNode3D.PropertyName.Network
   fullName: Nebula.NetNode3D.PropertyName.Network
@@ -953,10 +1040,11 @@ references:
 - uid: Nebula.Utility.Nodes.NetTransform3D.PropertyName.#ctor*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.PropertyName.#ctor
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.PropertyName.html#Nebula_Utility_Nodes_NetTransform3D_PropertyName__ctor
+  href: Nebula.Utility.Nodes.NetTransform3D.PropertyName.-ctor.html#Nebula_Utility_Nodes_NetTransform3D_PropertyName__ctor
   name: PropertyName
   nameWithType: NetTransform3D.PropertyName.PropertyName
   fullName: Nebula.Utility.Nodes.NetTransform3D.PropertyName.PropertyName
   nameWithType.vb: NetTransform3D.PropertyName.New
   fullName.vb: Nebula.Utility.Nodes.NetTransform3D.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

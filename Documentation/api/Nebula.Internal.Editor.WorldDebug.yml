@@ -36,7 +36,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -628,7 +628,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.worldIdLabel
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -663,7 +663,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.SelectedTickFrameId
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -684,7 +684,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.disconnected
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -705,7 +705,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug._OnTickFrameSelected(Godot.Control)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldDebug.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldDebug.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -728,7 +728,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.Setup(Nebula.UUID, int, LiteDB.LiteDatabase)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldDebug.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldDebug.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -758,7 +758,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldDebug.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldDebug.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -780,7 +780,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug._Process(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldDebug.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldDebug.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -808,7 +808,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.GetFrame(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldDebug.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldDebug.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -836,7 +836,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.GetFrames(int[], bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldDebug.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldDebug.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -866,7 +866,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.GetLogs()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldDebug.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldDebug.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -888,7 +888,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.Dispose(bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldDebug.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldDebug.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -916,7 +916,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameReceived(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -942,7 +942,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameUpdated(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -968,7 +968,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameSelected(Godot.Control)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -991,7 +991,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.EmitSignalLog(int, string, string, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1023,7 +1023,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.EmitSignalNetFunctionCalled(int, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1051,7 +1051,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.WorldDebug()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldDebug.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldDebug.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1074,7 +1074,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.IsLive
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldDebug.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldDebug.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1097,7 +1097,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.TickFrameReceived
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1119,7 +1119,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.TickFrameUpdated
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1141,7 +1141,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.TickFrameSelected
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1163,7 +1163,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.Log
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1185,7 +1185,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.NetFunctionCalled
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -14863,14 +14863,14 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug._OnTickFrameSelected*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug._OnTickFrameSelected
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug__OnTickFrameSelected_Godot_Control_
+  href: Nebula.Internal.Editor.WorldDebug._OnTickFrameSelected.html#Nebula_Internal_Editor_WorldDebug__OnTickFrameSelected_Godot_Control_
   name: _OnTickFrameSelected
   nameWithType: WorldDebug._OnTickFrameSelected
   fullName: Nebula.Internal.Editor.WorldDebug._OnTickFrameSelected
 - uid: Nebula.Internal.Editor.WorldDebug.Setup*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.Setup
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_Setup_Nebula_UUID_System_Int32_LiteDB_LiteDatabase_
+  href: Nebula.Internal.Editor.WorldDebug.Setup.html#Nebula_Internal_Editor_WorldDebug_Setup_Nebula_UUID_System_Int32_LiteDB_LiteDatabase_
   name: Setup
   nameWithType: WorldDebug.Setup
   fullName: Nebula.Internal.Editor.WorldDebug.Setup
@@ -14924,7 +14924,7 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug._ExitTree*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug._ExitTree
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug__ExitTree
+  href: Nebula.Internal.Editor.WorldDebug._ExitTree.html#Nebula_Internal_Editor_WorldDebug__ExitTree
   name: _ExitTree
   nameWithType: WorldDebug._ExitTree
   fullName: Nebula.Internal.Editor.WorldDebug._ExitTree
@@ -14962,7 +14962,7 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug._Process*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug._Process
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug__Process_System_Double_
+  href: Nebula.Internal.Editor.WorldDebug._Process.html#Nebula_Internal_Editor_WorldDebug__Process_System_Double_
   name: _Process
   nameWithType: WorldDebug._Process
   fullName: Nebula.Internal.Editor.WorldDebug._Process
@@ -14980,7 +14980,7 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug.GetFrame*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.GetFrame
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_GetFrame_System_Int32_
+  href: Nebula.Internal.Editor.WorldDebug.GetFrame.html#Nebula_Internal_Editor_WorldDebug_GetFrame_System_Int32_
   name: GetFrame
   nameWithType: WorldDebug.GetFrame
   fullName: Nebula.Internal.Editor.WorldDebug.GetFrame
@@ -15016,7 +15016,7 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug.GetFrames*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.GetFrames
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_GetFrames_System_Int32___System_Boolean_
+  href: Nebula.Internal.Editor.WorldDebug.GetFrames.html#Nebula_Internal_Editor_WorldDebug_GetFrames_System_Int32___System_Boolean_
   name: GetFrames
   nameWithType: WorldDebug.GetFrames
   fullName: Nebula.Internal.Editor.WorldDebug.GetFrames
@@ -15053,7 +15053,7 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug.GetLogs*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.GetLogs
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_GetLogs
+  href: Nebula.Internal.Editor.WorldDebug.GetLogs.html#Nebula_Internal_Editor_WorldDebug_GetLogs
   name: GetLogs
   nameWithType: WorldDebug.GetLogs
   fullName: Nebula.Internal.Editor.WorldDebug.GetLogs
@@ -15091,35 +15091,35 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug.Dispose*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.Dispose
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_Dispose_System_Boolean_
+  href: Nebula.Internal.Editor.WorldDebug.Dispose.html#Nebula_Internal_Editor_WorldDebug_Dispose_System_Boolean_
   name: Dispose
   nameWithType: WorldDebug.Dispose
   fullName: Nebula.Internal.Editor.WorldDebug.Dispose
 - uid: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameReceived*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameReceived
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_EmitSignalTickFrameReceived_System_Int32_
+  href: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameReceived.html#Nebula_Internal_Editor_WorldDebug_EmitSignalTickFrameReceived_System_Int32_
   name: EmitSignalTickFrameReceived
   nameWithType: WorldDebug.EmitSignalTickFrameReceived
   fullName: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameReceived
 - uid: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameUpdated*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameUpdated
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_EmitSignalTickFrameUpdated_System_Int32_
+  href: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameUpdated.html#Nebula_Internal_Editor_WorldDebug_EmitSignalTickFrameUpdated_System_Int32_
   name: EmitSignalTickFrameUpdated
   nameWithType: WorldDebug.EmitSignalTickFrameUpdated
   fullName: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameUpdated
 - uid: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameSelected*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameSelected
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_EmitSignalTickFrameSelected_Godot_Control_
+  href: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameSelected.html#Nebula_Internal_Editor_WorldDebug_EmitSignalTickFrameSelected_Godot_Control_
   name: EmitSignalTickFrameSelected
   nameWithType: WorldDebug.EmitSignalTickFrameSelected
   fullName: Nebula.Internal.Editor.WorldDebug.EmitSignalTickFrameSelected
 - uid: Nebula.Internal.Editor.WorldDebug.EmitSignalLog*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.EmitSignalLog
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_EmitSignalLog_System_Int32_System_String_System_String_System_String_
+  href: Nebula.Internal.Editor.WorldDebug.EmitSignalLog.html#Nebula_Internal_Editor_WorldDebug_EmitSignalLog_System_Int32_System_String_System_String_System_String_
   name: EmitSignalLog
   nameWithType: WorldDebug.EmitSignalLog
   fullName: Nebula.Internal.Editor.WorldDebug.EmitSignalLog
@@ -15137,14 +15137,14 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug.EmitSignalNetFunctionCalled*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.EmitSignalNetFunctionCalled
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_EmitSignalNetFunctionCalled_System_Int32_System_String_
+  href: Nebula.Internal.Editor.WorldDebug.EmitSignalNetFunctionCalled.html#Nebula_Internal_Editor_WorldDebug_EmitSignalNetFunctionCalled_System_Int32_System_String_
   name: EmitSignalNetFunctionCalled
   nameWithType: WorldDebug.EmitSignalNetFunctionCalled
   fullName: Nebula.Internal.Editor.WorldDebug.EmitSignalNetFunctionCalled
 - uid: Nebula.Internal.Editor.WorldDebug.#ctor*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug__ctor
+  href: Nebula.Internal.Editor.WorldDebug.-ctor.html#Nebula_Internal_Editor_WorldDebug__ctor
   name: WorldDebug
   nameWithType: WorldDebug.WorldDebug
   fullName: Nebula.Internal.Editor.WorldDebug.WorldDebug
@@ -15154,7 +15154,7 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug.IsLive*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.IsLive
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.html#Nebula_Internal_Editor_WorldDebug_IsLive
+  href: Nebula.Internal.Editor.WorldDebug.IsLive.html#Nebula_Internal_Editor_WorldDebug_IsLive
   name: IsLive
   nameWithType: WorldDebug.IsLive
   fullName: Nebula.Internal.Editor.WorldDebug.IsLive
@@ -15298,3 +15298,4 @@ references:
     name: NetFunctionCalledEventHandler
     isExternal: true
     href: Nebula.Internal.Editor.WorldDebug.NetFunctionCalledEventHandler.html
+memberLayout: SeparatePages

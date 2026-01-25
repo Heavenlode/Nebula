@@ -1,0 +1,610 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Testing.Integration.ServerConfig
+  commentId: T:Nebula.Testing.Integration.ServerConfig
+  id: ServerConfig
+  parent: Nebula.Testing.Integration
+  children:
+  - Nebula.Testing.Integration.ServerConfig.#ctor
+  - Nebula.Testing.Integration.ServerConfig.DebugPort
+  - Nebula.Testing.Integration.ServerConfig.ExtraArgs
+  - Nebula.Testing.Integration.ServerConfig.InitialWorldScene
+  - Nebula.Testing.Integration.ServerConfig.WorldId
+  langs:
+  - csharp
+  - vb
+  name: ServerConfig
+  nameWithType: ServerConfig
+  fullName: Nebula.Testing.Integration.ServerConfig
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Configuration for starting a Godot server instance.
+  example: []
+  syntax:
+    content: public class ServerConfig
+    content.vb: Public Class ServerConfig
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Testing.Integration.ServerConfig.#ctor
+  commentId: M:Nebula.Testing.Integration.ServerConfig.#ctor
+  id: '#ctor'
+  parent: Nebula.Testing.Integration.ServerConfig
+  langs:
+  - csharp
+  - vb
+  name: ServerConfig()
+  nameWithType: ServerConfig.ServerConfig()
+  fullName: Nebula.Testing.Integration.ServerConfig.ServerConfig()
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  syntax:
+    content: public ServerConfig()
+    content.vb: Public Sub New()
+  overload: Nebula.Testing.Integration.ServerConfig.#ctor*
+  nameWithType.vb: ServerConfig.New()
+  fullName.vb: Nebula.Testing.Integration.ServerConfig.New()
+  name.vb: New()
+- uid: Nebula.Testing.Integration.ServerConfig.InitialWorldScene
+  commentId: P:Nebula.Testing.Integration.ServerConfig.InitialWorldScene
+  id: InitialWorldScene
+  parent: Nebula.Testing.Integration.ServerConfig
+  langs:
+  - csharp
+  - vb
+  name: InitialWorldScene
+  nameWithType: ServerConfig.InitialWorldScene
+  fullName: Nebula.Testing.Integration.ServerConfig.InitialWorldScene
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  syntax:
+    content: public string InitialWorldScene { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property InitialWorldScene As String
+  overload: Nebula.Testing.Integration.ServerConfig.InitialWorldScene*
+- uid: Nebula.Testing.Integration.ServerConfig.WorldId
+  commentId: P:Nebula.Testing.Integration.ServerConfig.WorldId
+  id: WorldId
+  parent: Nebula.Testing.Integration.ServerConfig
+  langs:
+  - csharp
+  - vb
+  name: WorldId
+  nameWithType: ServerConfig.WorldId
+  fullName: Nebula.Testing.Integration.ServerConfig.WorldId
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  syntax:
+    content: public string? WorldId { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property WorldId As String
+  overload: Nebula.Testing.Integration.ServerConfig.WorldId*
+- uid: Nebula.Testing.Integration.ServerConfig.DebugPort
+  commentId: P:Nebula.Testing.Integration.ServerConfig.DebugPort
+  id: DebugPort
+  parent: Nebula.Testing.Integration.ServerConfig
+  langs:
+  - csharp
+  - vb
+  name: DebugPort
+  nameWithType: ServerConfig.DebugPort
+  fullName: Nebula.Testing.Integration.ServerConfig.DebugPort
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Port for the debug ENet connection. 0 means use a random available port.
+  example: []
+  syntax:
+    content: public int DebugPort { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property DebugPort As Integer
+  overload: Nebula.Testing.Integration.ServerConfig.DebugPort*
+- uid: Nebula.Testing.Integration.ServerConfig.ExtraArgs
+  commentId: P:Nebula.Testing.Integration.ServerConfig.ExtraArgs
+  id: ExtraArgs
+  parent: Nebula.Testing.Integration.ServerConfig
+  langs:
+  - csharp
+  - vb
+  name: ExtraArgs
+  nameWithType: ServerConfig.ExtraArgs
+  fullName: Nebula.Testing.Integration.ServerConfig.ExtraArgs
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  syntax:
+    content: public Dictionary<string, string> ExtraArgs { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.String,System.String}
+    content.vb: Public Property ExtraArgs As Dictionary(Of String, String)
+  overload: Nebula.Testing.Integration.ServerConfig.ExtraArgs*
+references:
+- uid: Nebula.Testing.Integration
+  commentId: N:Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Testing.Integration
+  nameWithType: Nebula.Testing.Integration
+  fullName: Nebula.Testing.Integration
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Testing
+    name: Testing
+    isExternal: true
+    href: Nebula.Testing.html
+  - name: .
+  - uid: Nebula.Testing.Integration
+    name: Integration
+    isExternal: true
+    href: Nebula.Testing.Integration.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Testing
+    name: Testing
+    isExternal: true
+    href: Nebula.Testing.html
+  - name: .
+  - uid: Nebula.Testing.Integration
+    name: Integration
+    isExternal: true
+    href: Nebula.Testing.Integration.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Testing.Integration.ServerConfig.#ctor*
+  commentId: Overload:Nebula.Testing.Integration.ServerConfig.#ctor
+  isExternal: true
+  href: Nebula.Testing.Integration.ServerConfig.-ctor.html#Nebula_Testing_Integration_ServerConfig__ctor
+  name: ServerConfig
+  nameWithType: ServerConfig.ServerConfig
+  fullName: Nebula.Testing.Integration.ServerConfig.ServerConfig
+  nameWithType.vb: ServerConfig.New
+  fullName.vb: Nebula.Testing.Integration.ServerConfig.New
+  name.vb: New
+- uid: Nebula.Testing.Integration.ServerConfig.InitialWorldScene*
+  commentId: Overload:Nebula.Testing.Integration.ServerConfig.InitialWorldScene
+  isExternal: true
+  href: Nebula.Testing.Integration.ServerConfig.InitialWorldScene.html#Nebula_Testing_Integration_ServerConfig_InitialWorldScene
+  name: InitialWorldScene
+  nameWithType: ServerConfig.InitialWorldScene
+  fullName: Nebula.Testing.Integration.ServerConfig.InitialWorldScene
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.Testing.Integration.ServerConfig.WorldId*
+  commentId: Overload:Nebula.Testing.Integration.ServerConfig.WorldId
+  isExternal: true
+  href: Nebula.Testing.Integration.ServerConfig.WorldId.html#Nebula_Testing_Integration_ServerConfig_WorldId
+  name: WorldId
+  nameWithType: ServerConfig.WorldId
+  fullName: Nebula.Testing.Integration.ServerConfig.WorldId
+- uid: Nebula.Testing.Integration.ServerConfig.DebugPort*
+  commentId: Overload:Nebula.Testing.Integration.ServerConfig.DebugPort
+  isExternal: true
+  href: Nebula.Testing.Integration.ServerConfig.DebugPort.html#Nebula_Testing_Integration_ServerConfig_DebugPort
+  name: DebugPort
+  nameWithType: ServerConfig.DebugPort
+  fullName: Nebula.Testing.Integration.ServerConfig.DebugPort
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.Testing.Integration.ServerConfig.ExtraArgs*
+  commentId: Overload:Nebula.Testing.Integration.ServerConfig.ExtraArgs
+  isExternal: true
+  href: Nebula.Testing.Integration.ServerConfig.ExtraArgs.html#Nebula_Testing_Integration_ServerConfig_ExtraArgs
+  name: ExtraArgs
+  nameWithType: ServerConfig.ExtraArgs
+  fullName: Nebula.Testing.Integration.ServerConfig.ExtraArgs
+- uid: System.Collections.Generic.Dictionary{System.String,System.String}
+  commentId: T:System.Collections.Generic.Dictionary{System.String,System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<string, string>
+  nameWithType: Dictionary<string, string>
+  fullName: System.Collections.Generic.Dictionary<string, string>
+  nameWithType.vb: Dictionary(Of String, String)
+  fullName.vb: System.Collections.Generic.Dictionary(Of String, String)
+  name.vb: Dictionary(Of String, String)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+memberLayout: SeparatePages

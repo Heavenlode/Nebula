@@ -7,40 +7,45 @@ items:
   children:
   - Nebula.WorldRunner.#ctor
   - Nebula.WorldRunner.AllocateNetId
-  - Nebula.WorldRunner.AllocateNetId(System.Byte)
+  - Nebula.WorldRunner.AllocateNetId(System.UInt16)
   - Nebula.WorldRunner.AutoPlayerCleanup
-  - Nebula.WorldRunner.ChangeScene(Nebula.NetNodeWrapper)
-  - Nebula.WorldRunner.CheckStaticInitialization(Nebula.NetNodeWrapper)
-  - Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)
+  - Nebula.WorldRunner.ChangeScene(Nebula.NetworkController)
+  - Nebula.WorldRunner.CheckStaticInitialization(Nebula.NetworkController)
+  - Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
   - Nebula.WorldRunner.ClientAvailableNodes
-  - Nebula.WorldRunner.ClientHandleTick(System.Int32,System.Byte[])
+  - Nebula.WorldRunner.ClientId
+  - Nebula.WorldRunner.ClientProcessTick(System.Int32,System.Byte[])
   - Nebula.WorldRunner.CurrentTick
   - Nebula.WorldRunner.CurrentWorld
-  - Nebula.WorldRunner.DebugEnet
-  - Nebula.WorldRunner.EmitSignalOnAfterNetworkTick(System.Int32)
-  - Nebula.WorldRunner.EmitSignalOnPeerSyncStatusChange(System.String,System.Int32)
-  - Nebula.WorldRunner.EmitSignalOnPlayerJoined(Nebula.UUID)
+  - Nebula.WorldRunner.Debug
+  - Nebula.WorldRunner.DebugPort
   - Nebula.WorldRunner.GetNetId(System.Int64)
-  - Nebula.WorldRunner.GetNetIdFromPeerId(Godot.ENetPacketPeer,System.Byte)
+  - Nebula.WorldRunner.GetNetIdFromPeerId(ENet.Peer,System.UInt16)
   - Nebula.WorldRunner.GetNodeFromNetId(Nebula.NetId)
   - Nebula.WorldRunner.GetNodeFromNetId(System.Int64)
-  - Nebula.WorldRunner.GetPeerNode(Godot.ENetPacketPeer,System.Byte)
-  - Nebula.WorldRunner.GetPeerNodeId(Godot.ENetPacketPeer,Nebula.NetNodeWrapper)
-  - Nebula.WorldRunner.GetPeerWorldState(Godot.ENetPacketPeer)
+  - Nebula.WorldRunner.GetPeerNode(ENet.Peer,System.UInt16)
+  - Nebula.WorldRunner.GetPeerNodeId(ENet.Peer,Nebula.NetworkController)
+  - Nebula.WorldRunner.GetPeerWorldState(ENet.Peer)
   - Nebula.WorldRunner.GetPeerWorldState(Nebula.UUID)
-  - Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId,Godot.ENetPacketPeer)
-  - Nebula.WorldRunner.InputStore
+  - Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId,ENet.Peer)
+  - Nebula.WorldRunner.Log(Nebula.Utility.Tools.Debugger.DebugLevel,Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler@)
   - Nebula.WorldRunner.Log(System.String,Nebula.Utility.Tools.Debugger.DebugLevel)
+  - Nebula.WorldRunner.MarkOwnedEntitiesDirty
+  - Nebula.WorldRunner.NetFunctionContext
   - Nebula.WorldRunner.OnAfterNetworkTick
   - Nebula.WorldRunner.OnPeerSyncStatusChange
+  - Nebula.WorldRunner.OnPlayerCleanup
   - Nebula.WorldRunner.OnPlayerJoined
-  - Nebula.WorldRunner.PeerAcknowledge(Godot.ENetPacketPeer,System.Int32)
+  - Nebula.WorldRunner.PEER_ACK_TIMEOUT_SECONDS
+  - Nebula.WorldRunner.PeerAcknowledge(ENet.Peer,System.Int32)
   - Nebula.WorldRunner.RootScene
+  - Nebula.WorldRunner.RpcCallsThisTick
   - Nebula.WorldRunner.ServerProcessTick
-  - Nebula.WorldRunner.SetPeerState(Godot.ENetPacketPeer,Nebula.WorldRunner.PeerState)
+  - Nebula.WorldRunner.SetPeerState(ENet.Peer,Nebula.WorldRunner.PeerState)
   - Nebula.WorldRunner.SetPeerState(Nebula.UUID,Nebula.WorldRunner.PeerState)
-  - Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId,Godot.ENetPacketPeer)
-  - Nebula.WorldRunner.Spawn``1(``0,Nebula.NetNodeWrapper,Godot.ENetPacketPeer,System.String)
+  - Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId,ENet.Peer)
+  - Nebula.WorldRunner.Spawn``1(``0,Nebula.NetworkController,ENet.Peer,Godot.NodePath)
+  - Nebula.WorldRunner.TotalRpcCallsProcessed
   - Nebula.WorldRunner.WorldId
   - Nebula.WorldRunner._ExitTree
   - Nebula.WorldRunner._PhysicsProcess(System.Double)
@@ -53,14 +58,14 @@ items:
   fullName: Nebula.WorldRunner
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
   summary: >-
     Manages the network state of all <xref href="Nebula.NetNode" data-throw-if-not-resolved="false"></xref>s in the scene.
 
-    Inside the <xref href="Nebula.NetRunner" data-throw-if-not-resolved="false"></xref> are one or more “Worlds”. Each World represents some part of the game that is isolated from other parts. For example, different maps, dungeon instances, etc. Worlds are dynamically created by calling <xref href="Nebula.NetRunner.CreateWorld(Nebula.UUID%2cGodot.PackedScene)" data-throw-if-not-resolved="false"></xref>.
+    Inside the <xref href="Nebula.NetRunner" data-throw-if-not-resolved="false"></xref> are one or more "Worlds". Each World represents some part of the game that is isolated from other parts. For example, different maps, dungeon instances, etc. Worlds are dynamically created by calling <xref href="Nebula.NetRunner.CreateWorld(Nebula.UUID%2cGodot.PackedScene)" data-throw-if-not-resolved="false"></xref>.
 
 
     Worlds cannot directly interact with each other and do not share state.
@@ -380,6 +385,29 @@ items:
     arguments:
     - type: System.String
       value: res://addons/Nebula/Core/WorldRunner.cs
+- uid: Nebula.WorldRunner.PEER_ACK_TIMEOUT_SECONDS
+  commentId: F:Nebula.WorldRunner.PEER_ACK_TIMEOUT_SECONDS
+  id: PEER_ACK_TIMEOUT_SECONDS
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: PEER_ACK_TIMEOUT_SECONDS
+  nameWithType: WorldRunner.PEER_ACK_TIMEOUT_SECONDS
+  fullName: Nebula.WorldRunner.PEER_ACK_TIMEOUT_SECONDS
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Maximum time in seconds a peer can go without acknowledging a tick before being force disconnected.
+  example: []
+  syntax:
+    content: public const float PEER_ACK_TIMEOUT_SECONDS = 5
+    return:
+      type: System.Single
+    content.vb: Public Const PEER_ACK_TIMEOUT_SECONDS As Single = 5
 - uid: Nebula.WorldRunner.ClientAvailableNodes
   commentId: F:Nebula.WorldRunner.ClientAvailableNodes
   id: ClientAvailableNodes
@@ -392,15 +420,15 @@ items:
   fullName: Nebula.WorldRunner.ClientAvailableNodes
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public long ClientAvailableNodes
+    content: public long[] ClientAvailableNodes
     return:
-      type: System.Int64
-    content.vb: Public ClientAvailableNodes As Long
+      type: System.Int64[]
+    content.vb: Public ClientAvailableNodes As Long()
 - uid: Nebula.WorldRunner.RootScene
   commentId: F:Nebula.WorldRunner.RootScene
   id: RootScene
@@ -413,17 +441,62 @@ items:
   fullName: Nebula.WorldRunner.RootScene
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Only used by the client to determine the current root scene.
+  summary: >-
+    The root NetworkController for this world. Set during world creation.
+
+    Used as the default parent when spawning nodes without an explicit parent.
   example: []
   syntax:
-    content: public NetNodeWrapper RootScene
+    content: public NetworkController RootScene
     return:
-      type: Nebula.NetNodeWrapper
-    content.vb: Public RootScene As NetNodeWrapper
+      type: Nebula.NetworkController
+    content.vb: Public RootScene As NetworkController
+- uid: Nebula.WorldRunner.TotalRpcCallsProcessed
+  commentId: F:Nebula.WorldRunner.TotalRpcCallsProcessed
+  id: TotalRpcCallsProcessed
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: TotalRpcCallsProcessed
+  nameWithType: WorldRunner.TotalRpcCallsProcessed
+  fullName: Nebula.WorldRunner.TotalRpcCallsProcessed
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public static long TotalRpcCallsProcessed
+    return:
+      type: System.Int64
+    content.vb: Public Shared TotalRpcCallsProcessed As Long
+- uid: Nebula.WorldRunner.RpcCallsThisTick
+  commentId: F:Nebula.WorldRunner.RpcCallsThisTick
+  id: RpcCallsThisTick
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: RpcCallsThisTick
+  nameWithType: WorldRunner.RpcCallsThisTick
+  fullName: Nebula.WorldRunner.RpcCallsThisTick
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public static long RpcCallsThisTick
+    return:
+      type: System.Int64
+    content.vb: Public Shared RpcCallsThisTick As Long
 - uid: Nebula.WorldRunner.AutoPlayerCleanup
   commentId: F:Nebula.WorldRunner.AutoPlayerCleanup
   id: AutoPlayerCleanup
@@ -436,16 +509,16 @@ items:
   fullName: Nebula.WorldRunner.AutoPlayerCleanup
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
   summary: >-
     When a player disconnects, we automatically dispose of their data in the World. If you wish to manually handle this,
 
-    (e.g. you wish to save their data first), then set this to false, and call <xref href="Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)" data-throw-if-not-resolved="false"></xref> when you are ready to dispose of their data yourself.
+    (e.g. you wish to save their data first), then set this to false, and call <xref href="Nebula.WorldRunner.CleanupPlayer(ENet.Peer)" data-throw-if-not-resolved="false"></xref> when you are ready to dispose of their data yourself.
 
-    <xref href="Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)" data-throw-if-not-resolved="false"></xref> is all that is needed to fully dispose of their data on the server, including freeing their owned nodes (when <xref href="Nebula.NetworkController.DespawnOnUnowned" data-throw-if-not-resolved="false"></xref> is true).
+    <xref href="Nebula.WorldRunner.CleanupPlayer(ENet.Peer)" data-throw-if-not-resolved="false"></xref> is all that is needed to fully dispose of their data on the server, including freeing their owned nodes (when <xref href="Nebula.NetworkController.DespawnOnUnowned" data-throw-if-not-resolved="false"></xref> is true).
   example: []
   syntax:
     content: public bool AutoPlayerCleanup
@@ -464,7 +537,7 @@ items:
   fullName: Nebula.WorldRunner.Log(string, Nebula.Utility.Tools.Debugger.DebugLevel)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -480,6 +553,34 @@ items:
   nameWithType.vb: WorldRunner.Log(String, Debugger.DebugLevel)
   fullName.vb: Nebula.WorldRunner.Log(String, Nebula.Utility.Tools.Debugger.DebugLevel)
   name.vb: Log(String, DebugLevel)
+- uid: Nebula.WorldRunner.Log(Nebula.Utility.Tools.Debugger.DebugLevel,Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler@)
+  commentId: M:Nebula.WorldRunner.Log(Nebula.Utility.Tools.Debugger.DebugLevel,Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler@)
+  id: Log(Nebula.Utility.Tools.Debugger.DebugLevel,Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler@)
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: Log(DebugLevel, ref NebulaLogInterpolatedStringHandler)
+  nameWithType: WorldRunner.Log(Debugger.DebugLevel, ref NebulaLogInterpolatedStringHandler)
+  fullName: Nebula.WorldRunner.Log(Nebula.Utility.Tools.Debugger.DebugLevel, ref Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public void Log(Debugger.DebugLevel level, ref NebulaLogInterpolatedStringHandler handler)
+    parameters:
+    - id: level
+      type: Nebula.Utility.Tools.Debugger.DebugLevel
+    - id: handler
+      type: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+    content.vb: Public Sub Log(level As Debugger.DebugLevel, handler As NebulaLogInterpolatedStringHandler)
+  overload: Nebula.WorldRunner.Log*
+  nameWithType.vb: WorldRunner.Log(Debugger.DebugLevel, NebulaLogInterpolatedStringHandler)
+  fullName.vb: Nebula.WorldRunner.Log(Nebula.Utility.Tools.Debugger.DebugLevel, Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler)
+  name.vb: Log(DebugLevel, NebulaLogInterpolatedStringHandler)
 - uid: Nebula.WorldRunner._Ready
   commentId: M:Nebula.WorldRunner._Ready
   id: _Ready
@@ -492,7 +593,7 @@ items:
   fullName: Nebula.WorldRunner._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -514,7 +615,7 @@ items:
   fullName: Nebula.WorldRunner._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -524,6 +625,28 @@ items:
     content.vb: Public Overrides Sub _ExitTree()
   overridden: Godot.Node._ExitTree
   overload: Nebula.WorldRunner._ExitTree*
+- uid: Nebula.WorldRunner.MarkOwnedEntitiesDirty
+  commentId: M:Nebula.WorldRunner.MarkOwnedEntitiesDirty
+  id: MarkOwnedEntitiesDirty
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: MarkOwnedEntitiesDirty()
+  nameWithType: WorldRunner.MarkOwnedEntitiesDirty()
+  fullName: Nebula.WorldRunner.MarkOwnedEntitiesDirty()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Call this when ownership changes to trigger cache rebuild.
+  example: []
+  syntax:
+    content: public void MarkOwnedEntitiesDirty()
+    content.vb: Public Sub MarkOwnedEntitiesDirty()
+  overload: Nebula.WorldRunner.MarkOwnedEntitiesDirty*
 - uid: Nebula.WorldRunner.GetNodeFromNetId(Nebula.NetId)
   commentId: M:Nebula.WorldRunner.GetNodeFromNetId(Nebula.NetId)
   id: GetNodeFromNetId(Nebula.NetId)
@@ -536,18 +659,18 @@ items:
   fullName: Nebula.WorldRunner.GetNodeFromNetId(Nebula.NetId)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public NetNodeWrapper GetNodeFromNetId(NetId networkId)
+    content: public NetworkController GetNodeFromNetId(NetId networkId)
     parameters:
     - id: networkId
       type: Nebula.NetId
     return:
-      type: Nebula.NetNodeWrapper
-    content.vb: Public Function GetNodeFromNetId(networkId As NetId) As NetNodeWrapper
+      type: Nebula.NetworkController
+    content.vb: Public Function GetNodeFromNetId(networkId As NetId) As NetworkController
   overload: Nebula.WorldRunner.GetNodeFromNetId*
 - uid: Nebula.WorldRunner.GetNodeFromNetId(System.Int64)
   commentId: M:Nebula.WorldRunner.GetNodeFromNetId(System.Int64)
@@ -561,18 +684,18 @@ items:
   fullName: Nebula.WorldRunner.GetNodeFromNetId(long)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public NetNodeWrapper GetNodeFromNetId(long networkId)
+    content: public NetworkController GetNodeFromNetId(long networkId)
     parameters:
     - id: networkId
       type: System.Int64
     return:
-      type: Nebula.NetNodeWrapper
-    content.vb: Public Function GetNodeFromNetId(networkId As Long) As NetNodeWrapper
+      type: Nebula.NetworkController
+    content.vb: Public Function GetNodeFromNetId(networkId As Long) As NetworkController
   overload: Nebula.WorldRunner.GetNodeFromNetId*
   nameWithType.vb: WorldRunner.GetNodeFromNetId(Long)
   fullName.vb: Nebula.WorldRunner.GetNodeFromNetId(Long)
@@ -589,7 +712,7 @@ items:
   fullName: Nebula.WorldRunner.AllocateNetId()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -599,34 +722,34 @@ items:
       type: Nebula.NetId
     content.vb: Public Function AllocateNetId() As NetId
   overload: Nebula.WorldRunner.AllocateNetId*
-- uid: Nebula.WorldRunner.AllocateNetId(System.Byte)
-  commentId: M:Nebula.WorldRunner.AllocateNetId(System.Byte)
-  id: AllocateNetId(System.Byte)
+- uid: Nebula.WorldRunner.AllocateNetId(System.UInt16)
+  commentId: M:Nebula.WorldRunner.AllocateNetId(System.UInt16)
+  id: AllocateNetId(System.UInt16)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: AllocateNetId(byte)
-  nameWithType: WorldRunner.AllocateNetId(byte)
-  fullName: Nebula.WorldRunner.AllocateNetId(byte)
+  name: AllocateNetId(ushort)
+  nameWithType: WorldRunner.AllocateNetId(ushort)
+  fullName: Nebula.WorldRunner.AllocateNetId(ushort)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public NetId AllocateNetId(byte id)
+    content: public NetId AllocateNetId(ushort id)
     parameters:
     - id: id
-      type: System.Byte
+      type: System.UInt16
     return:
       type: Nebula.NetId
-    content.vb: Public Function AllocateNetId(id As Byte) As NetId
+    content.vb: Public Function AllocateNetId(id As UShort) As NetId
   overload: Nebula.WorldRunner.AllocateNetId*
-  nameWithType.vb: WorldRunner.AllocateNetId(Byte)
-  fullName.vb: Nebula.WorldRunner.AllocateNetId(Byte)
-  name.vb: AllocateNetId(Byte)
+  nameWithType.vb: WorldRunner.AllocateNetId(UShort)
+  fullName.vb: Nebula.WorldRunner.AllocateNetId(UShort)
+  name.vb: AllocateNetId(UShort)
 - uid: Nebula.WorldRunner.GetNetId(System.Int64)
   commentId: M:Nebula.WorldRunner.GetNetId(System.Int64)
   id: GetNetId(System.Int64)
@@ -639,7 +762,7 @@ items:
   fullName: Nebula.WorldRunner.GetNetId(long)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -655,61 +778,64 @@ items:
   nameWithType.vb: WorldRunner.GetNetId(Long)
   fullName.vb: Nebula.WorldRunner.GetNetId(Long)
   name.vb: GetNetId(Long)
-- uid: Nebula.WorldRunner.GetNetIdFromPeerId(Godot.ENetPacketPeer,System.Byte)
-  commentId: M:Nebula.WorldRunner.GetNetIdFromPeerId(Godot.ENetPacketPeer,System.Byte)
-  id: GetNetIdFromPeerId(Godot.ENetPacketPeer,System.Byte)
+- uid: Nebula.WorldRunner.GetNetIdFromPeerId(ENet.Peer,System.UInt16)
+  commentId: M:Nebula.WorldRunner.GetNetIdFromPeerId(ENet.Peer,System.UInt16)
+  id: GetNetIdFromPeerId(ENet.Peer,System.UInt16)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: GetNetIdFromPeerId(ENetPacketPeer, byte)
-  nameWithType: WorldRunner.GetNetIdFromPeerId(ENetPacketPeer, byte)
-  fullName: Nebula.WorldRunner.GetNetIdFromPeerId(Godot.ENetPacketPeer, byte)
+  name: GetNetIdFromPeerId(Peer, ushort)
+  nameWithType: WorldRunner.GetNetIdFromPeerId(Peer, ushort)
+  fullName: Nebula.WorldRunner.GetNetIdFromPeerId(ENet.Peer, ushort)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public NetId GetNetIdFromPeerId(ENetPacketPeer peer, byte id)
+    content: public NetId GetNetIdFromPeerId(Peer peer, ushort id)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
     - id: id
-      type: System.Byte
+      type: System.UInt16
     return:
       type: Nebula.NetId
-    content.vb: Public Function GetNetIdFromPeerId(peer As ENetPacketPeer, id As Byte) As NetId
+    content.vb: Public Function GetNetIdFromPeerId(peer As Peer, id As UShort) As NetId
   overload: Nebula.WorldRunner.GetNetIdFromPeerId*
-  nameWithType.vb: WorldRunner.GetNetIdFromPeerId(ENetPacketPeer, Byte)
-  fullName.vb: Nebula.WorldRunner.GetNetIdFromPeerId(Godot.ENetPacketPeer, Byte)
-  name.vb: GetNetIdFromPeerId(ENetPacketPeer, Byte)
-- uid: Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)
-  commentId: M:Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)
-  id: CleanupPlayer(Godot.ENetPacketPeer)
+  nameWithType.vb: WorldRunner.GetNetIdFromPeerId(Peer, UShort)
+  fullName.vb: Nebula.WorldRunner.GetNetIdFromPeerId(ENet.Peer, UShort)
+  name.vb: GetNetIdFromPeerId(Peer, UShort)
+- uid: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
+  commentId: M:Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
+  id: CleanupPlayer(ENet.Peer)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: CleanupPlayer(ENetPacketPeer)
-  nameWithType: WorldRunner.CleanupPlayer(ENetPacketPeer)
-  fullName: Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)
+  name: CleanupPlayer(Peer)
+  nameWithType: WorldRunner.CleanupPlayer(Peer)
+  fullName: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Immediately disconnects the player from the world and frees all of their data from the server, including freeing their owned nodes (when <xref href="Nebula.NetworkController.DespawnOnUnowned" data-throw-if-not-resolved="false"></xref> is true).
+  summary: >-
+    Immediately disconnects the player from the world and frees all of their data from the server, including freeing their owned nodes (when <xref href="Nebula.NetworkController.DespawnOnUnowned" data-throw-if-not-resolved="false"></xref> is true).
+
+    Safe to call multiple times - will return early if peer was already cleaned up.
   example: []
   syntax:
-    content: public void CleanupPlayer(ENetPacketPeer peer)
+    content: public void CleanupPlayer(Peer peer)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
       description: ''
-    content.vb: Public Sub CleanupPlayer(peer As ENetPacketPeer)
+    content.vb: Public Sub CleanupPlayer(peer As Peer)
   overload: Nebula.WorldRunner.CleanupPlayer*
 - uid: Nebula.WorldRunner.ServerProcessTick
   commentId: M:Nebula.WorldRunner.ServerProcessTick
@@ -723,7 +849,7 @@ items:
   fullName: Nebula.WorldRunner.ServerProcessTick()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -745,7 +871,7 @@ items:
   fullName: Nebula.WorldRunner._PhysicsProcess(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -761,80 +887,80 @@ items:
   nameWithType.vb: WorldRunner._PhysicsProcess(Double)
   fullName.vb: Nebula.WorldRunner._PhysicsProcess(Double)
   name.vb: _PhysicsProcess(Double)
-- uid: Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId,Godot.ENetPacketPeer)
-  commentId: M:Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId,Godot.ENetPacketPeer)
-  id: HasSpawnedForClient(Nebula.NetId,Godot.ENetPacketPeer)
+- uid: Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId,ENet.Peer)
+  commentId: M:Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId,ENet.Peer)
+  id: HasSpawnedForClient(Nebula.NetId,ENet.Peer)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: HasSpawnedForClient(NetId, ENetPacketPeer)
-  nameWithType: WorldRunner.HasSpawnedForClient(NetId, ENetPacketPeer)
-  fullName: Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId, Godot.ENetPacketPeer)
+  name: HasSpawnedForClient(NetId, Peer)
+  nameWithType: WorldRunner.HasSpawnedForClient(NetId, Peer)
+  fullName: Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId, ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public bool HasSpawnedForClient(NetId networkId, ENetPacketPeer peer)
+    content: public bool HasSpawnedForClient(NetId networkId, Peer peer)
     parameters:
     - id: networkId
       type: Nebula.NetId
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
     return:
       type: System.Boolean
-    content.vb: Public Function HasSpawnedForClient(networkId As NetId, peer As ENetPacketPeer) As Boolean
+    content.vb: Public Function HasSpawnedForClient(networkId As NetId, peer As Peer) As Boolean
   overload: Nebula.WorldRunner.HasSpawnedForClient*
-- uid: Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId,Godot.ENetPacketPeer)
-  commentId: M:Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId,Godot.ENetPacketPeer)
-  id: SetSpawnedForClient(Nebula.NetId,Godot.ENetPacketPeer)
+- uid: Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId,ENet.Peer)
+  commentId: M:Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId,ENet.Peer)
+  id: SetSpawnedForClient(Nebula.NetId,ENet.Peer)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: SetSpawnedForClient(NetId, ENetPacketPeer)
-  nameWithType: WorldRunner.SetSpawnedForClient(NetId, ENetPacketPeer)
-  fullName: Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId, Godot.ENetPacketPeer)
+  name: SetSpawnedForClient(NetId, Peer)
+  nameWithType: WorldRunner.SetSpawnedForClient(NetId, Peer)
+  fullName: Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId, ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public void SetSpawnedForClient(NetId networkId, ENetPacketPeer peer)
+    content: public void SetSpawnedForClient(NetId networkId, Peer peer)
     parameters:
     - id: networkId
       type: Nebula.NetId
     - id: peer
-      type: Godot.ENetPacketPeer
-    content.vb: Public Sub SetSpawnedForClient(networkId As NetId, peer As ENetPacketPeer)
+      type: ENet.Peer
+    content.vb: Public Sub SetSpawnedForClient(networkId As NetId, peer As Peer)
   overload: Nebula.WorldRunner.SetSpawnedForClient*
-- uid: Nebula.WorldRunner.ChangeScene(Nebula.NetNodeWrapper)
-  commentId: M:Nebula.WorldRunner.ChangeScene(Nebula.NetNodeWrapper)
-  id: ChangeScene(Nebula.NetNodeWrapper)
+- uid: Nebula.WorldRunner.ChangeScene(Nebula.NetworkController)
+  commentId: M:Nebula.WorldRunner.ChangeScene(Nebula.NetworkController)
+  id: ChangeScene(Nebula.NetworkController)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: ChangeScene(NetNodeWrapper)
-  nameWithType: WorldRunner.ChangeScene(NetNodeWrapper)
-  fullName: Nebula.WorldRunner.ChangeScene(Nebula.NetNodeWrapper)
+  name: ChangeScene(NetworkController)
+  nameWithType: WorldRunner.ChangeScene(NetworkController)
+  fullName: Nebula.WorldRunner.ChangeScene(Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public void ChangeScene(NetNodeWrapper node)
+    content: public void ChangeScene(NetworkController netController)
     parameters:
-    - id: node
-      type: Nebula.NetNodeWrapper
-    content.vb: Public Sub ChangeScene(node As NetNodeWrapper)
+    - id: netController
+      type: Nebula.NetworkController
+    content.vb: Public Sub ChangeScene(netController As NetworkController)
   overload: Nebula.WorldRunner.ChangeScene*
 - uid: Nebula.WorldRunner.GetPeerWorldState(Nebula.UUID)
   commentId: M:Nebula.WorldRunner.GetPeerWorldState(Nebula.UUID)
@@ -848,7 +974,7 @@ items:
   fullName: Nebula.WorldRunner.GetPeerWorldState(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -861,30 +987,30 @@ items:
       type: System.Nullable{Nebula.WorldRunner.PeerState}
     content.vb: Public Function GetPeerWorldState(peerId As UUID) As WorldRunner.PeerState?
   overload: Nebula.WorldRunner.GetPeerWorldState*
-- uid: Nebula.WorldRunner.GetPeerWorldState(Godot.ENetPacketPeer)
-  commentId: M:Nebula.WorldRunner.GetPeerWorldState(Godot.ENetPacketPeer)
-  id: GetPeerWorldState(Godot.ENetPacketPeer)
+- uid: Nebula.WorldRunner.GetPeerWorldState(ENet.Peer)
+  commentId: M:Nebula.WorldRunner.GetPeerWorldState(ENet.Peer)
+  id: GetPeerWorldState(ENet.Peer)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: GetPeerWorldState(ENetPacketPeer)
-  nameWithType: WorldRunner.GetPeerWorldState(ENetPacketPeer)
-  fullName: Nebula.WorldRunner.GetPeerWorldState(Godot.ENetPacketPeer)
+  name: GetPeerWorldState(Peer)
+  nameWithType: WorldRunner.GetPeerWorldState(Peer)
+  fullName: Nebula.WorldRunner.GetPeerWorldState(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public WorldRunner.PeerState? GetPeerWorldState(ENetPacketPeer peer)
+    content: public WorldRunner.PeerState? GetPeerWorldState(Peer peer)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
     return:
       type: System.Nullable{Nebula.WorldRunner.PeerState}
-    content.vb: Public Function GetPeerWorldState(peer As ENetPacketPeer) As WorldRunner.PeerState?
+    content.vb: Public Function GetPeerWorldState(peer As Peer) As WorldRunner.PeerState?
   overload: Nebula.WorldRunner.GetPeerWorldState*
 - uid: Nebula.WorldRunner.SetPeerState(Nebula.UUID,Nebula.WorldRunner.PeerState)
   commentId: M:Nebula.WorldRunner.SetPeerState(Nebula.UUID,Nebula.WorldRunner.PeerState)
@@ -898,7 +1024,7 @@ items:
   fullName: Nebula.WorldRunner.SetPeerState(Nebula.UUID, Nebula.WorldRunner.PeerState)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -911,198 +1037,198 @@ items:
       type: Nebula.WorldRunner.PeerState
     content.vb: Public Sub SetPeerState(peerId As UUID, state As WorldRunner.PeerState)
   overload: Nebula.WorldRunner.SetPeerState*
-- uid: Nebula.WorldRunner.SetPeerState(Godot.ENetPacketPeer,Nebula.WorldRunner.PeerState)
-  commentId: M:Nebula.WorldRunner.SetPeerState(Godot.ENetPacketPeer,Nebula.WorldRunner.PeerState)
-  id: SetPeerState(Godot.ENetPacketPeer,Nebula.WorldRunner.PeerState)
+- uid: Nebula.WorldRunner.SetPeerState(ENet.Peer,Nebula.WorldRunner.PeerState)
+  commentId: M:Nebula.WorldRunner.SetPeerState(ENet.Peer,Nebula.WorldRunner.PeerState)
+  id: SetPeerState(ENet.Peer,Nebula.WorldRunner.PeerState)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: SetPeerState(ENetPacketPeer, PeerState)
-  nameWithType: WorldRunner.SetPeerState(ENetPacketPeer, WorldRunner.PeerState)
-  fullName: Nebula.WorldRunner.SetPeerState(Godot.ENetPacketPeer, Nebula.WorldRunner.PeerState)
+  name: SetPeerState(Peer, PeerState)
+  nameWithType: WorldRunner.SetPeerState(Peer, WorldRunner.PeerState)
+  fullName: Nebula.WorldRunner.SetPeerState(ENet.Peer, Nebula.WorldRunner.PeerState)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public void SetPeerState(ENetPacketPeer peer, WorldRunner.PeerState state)
+    content: public void SetPeerState(Peer peer, WorldRunner.PeerState state)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
     - id: state
       type: Nebula.WorldRunner.PeerState
-    content.vb: Public Sub SetPeerState(peer As ENetPacketPeer, state As WorldRunner.PeerState)
+    content.vb: Public Sub SetPeerState(peer As Peer, state As WorldRunner.PeerState)
   overload: Nebula.WorldRunner.SetPeerState*
-- uid: Nebula.WorldRunner.GetPeerNodeId(Godot.ENetPacketPeer,Nebula.NetNodeWrapper)
-  commentId: M:Nebula.WorldRunner.GetPeerNodeId(Godot.ENetPacketPeer,Nebula.NetNodeWrapper)
-  id: GetPeerNodeId(Godot.ENetPacketPeer,Nebula.NetNodeWrapper)
+- uid: Nebula.WorldRunner.GetPeerNodeId(ENet.Peer,Nebula.NetworkController)
+  commentId: M:Nebula.WorldRunner.GetPeerNodeId(ENet.Peer,Nebula.NetworkController)
+  id: GetPeerNodeId(ENet.Peer,Nebula.NetworkController)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: GetPeerNodeId(ENetPacketPeer, NetNodeWrapper)
-  nameWithType: WorldRunner.GetPeerNodeId(ENetPacketPeer, NetNodeWrapper)
-  fullName: Nebula.WorldRunner.GetPeerNodeId(Godot.ENetPacketPeer, Nebula.NetNodeWrapper)
+  name: GetPeerNodeId(Peer, NetworkController)
+  nameWithType: WorldRunner.GetPeerNodeId(Peer, NetworkController)
+  fullName: Nebula.WorldRunner.GetPeerNodeId(ENet.Peer, Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public byte GetPeerNodeId(ENetPacketPeer peer, NetNodeWrapper node)
+    content: public ushort GetPeerNodeId(Peer peer, NetworkController node)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
     - id: node
-      type: Nebula.NetNodeWrapper
+      type: Nebula.NetworkController
     return:
-      type: System.Byte
-    content.vb: Public Function GetPeerNodeId(peer As ENetPacketPeer, node As NetNodeWrapper) As Byte
+      type: System.UInt16
+    content.vb: Public Function GetPeerNodeId(peer As Peer, node As NetworkController) As UShort
   overload: Nebula.WorldRunner.GetPeerNodeId*
-- uid: Nebula.WorldRunner.GetPeerNode(Godot.ENetPacketPeer,System.Byte)
-  commentId: M:Nebula.WorldRunner.GetPeerNode(Godot.ENetPacketPeer,System.Byte)
-  id: GetPeerNode(Godot.ENetPacketPeer,System.Byte)
+- uid: Nebula.WorldRunner.GetPeerNode(ENet.Peer,System.UInt16)
+  commentId: M:Nebula.WorldRunner.GetPeerNode(ENet.Peer,System.UInt16)
+  id: GetPeerNode(ENet.Peer,System.UInt16)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: GetPeerNode(ENetPacketPeer, byte)
-  nameWithType: WorldRunner.GetPeerNode(ENetPacketPeer, byte)
-  fullName: Nebula.WorldRunner.GetPeerNode(Godot.ENetPacketPeer, byte)
+  name: GetPeerNode(Peer, ushort)
+  nameWithType: WorldRunner.GetPeerNode(Peer, ushort)
+  fullName: Nebula.WorldRunner.GetPeerNode(ENet.Peer, ushort)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   summary: Get the network node from a peer and a network ID relative to that peer.
   example: []
   syntax:
-    content: public NetNodeWrapper GetPeerNode(ENetPacketPeer peer, byte networkId)
+    content: public NetworkController GetPeerNode(Peer peer, ushort networkId)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
       description: ''
     - id: networkId
-      type: System.Byte
+      type: System.UInt16
       description: ''
     return:
-      type: Nebula.NetNodeWrapper
+      type: Nebula.NetworkController
       description: ''
-    content.vb: Public Function GetPeerNode(peer As ENetPacketPeer, networkId As Byte) As NetNodeWrapper
+    content.vb: Public Function GetPeerNode(peer As Peer, networkId As UShort) As NetworkController
   overload: Nebula.WorldRunner.GetPeerNode*
-  nameWithType.vb: WorldRunner.GetPeerNode(ENetPacketPeer, Byte)
-  fullName.vb: Nebula.WorldRunner.GetPeerNode(Godot.ENetPacketPeer, Byte)
-  name.vb: GetPeerNode(ENetPacketPeer, Byte)
-- uid: Nebula.WorldRunner.Spawn``1(``0,Nebula.NetNodeWrapper,Godot.ENetPacketPeer,System.String)
-  commentId: M:Nebula.WorldRunner.Spawn``1(``0,Nebula.NetNodeWrapper,Godot.ENetPacketPeer,System.String)
-  id: Spawn``1(``0,Nebula.NetNodeWrapper,Godot.ENetPacketPeer,System.String)
+  nameWithType.vb: WorldRunner.GetPeerNode(Peer, UShort)
+  fullName.vb: Nebula.WorldRunner.GetPeerNode(ENet.Peer, UShort)
+  name.vb: GetPeerNode(Peer, UShort)
+- uid: Nebula.WorldRunner.Spawn``1(``0,Nebula.NetworkController,ENet.Peer,Godot.NodePath)
+  commentId: M:Nebula.WorldRunner.Spawn``1(``0,Nebula.NetworkController,ENet.Peer,Godot.NodePath)
+  id: Spawn``1(``0,Nebula.NetworkController,ENet.Peer,Godot.NodePath)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: Spawn<T>(T, NetNodeWrapper, ENetPacketPeer, string)
-  nameWithType: WorldRunner.Spawn<T>(T, NetNodeWrapper, ENetPacketPeer, string)
-  fullName: Nebula.WorldRunner.Spawn<T>(T, Nebula.NetNodeWrapper, Godot.ENetPacketPeer, string)
+  name: Spawn<T>(T, NetworkController, Peer, NodePath)
+  nameWithType: WorldRunner.Spawn<T>(T, NetworkController, Peer, NodePath)
+  fullName: Nebula.WorldRunner.Spawn<T>(T, Nebula.NetworkController, ENet.Peer, Godot.NodePath)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: 'public T Spawn<T>(T node, NetNodeWrapper parent = null, ENetPacketPeer inputAuthority = null, string nodePath = ".") where T : Node, INetNode'
+    content: 'public T Spawn<T>(T node, NetworkController parent = null, Peer inputAuthority = default, NodePath netNodePath = null) where T : Node, INetNodeBase'
     parameters:
     - id: node
       type: '{T}'
     - id: parent
-      type: Nebula.NetNodeWrapper
+      type: Nebula.NetworkController
     - id: inputAuthority
-      type: Godot.ENetPacketPeer
-    - id: nodePath
-      type: System.String
+      type: ENet.Peer
+    - id: netNodePath
+      type: Godot.NodePath
     typeParameters:
     - id: T
     return:
       type: '{T}'
-    content.vb: Public Function Spawn(Of T As {Node, INetNode})(node As T, parent As NetNodeWrapper = Nothing, inputAuthority As ENetPacketPeer = Nothing, nodePath As String = ".") As T
+    content.vb: Public Function Spawn(Of T As {Node, INetNodeBase})(node As T, parent As NetworkController = Nothing, inputAuthority As Peer = Nothing, netNodePath As NodePath = Nothing) As T
   overload: Nebula.WorldRunner.Spawn*
-  nameWithType.vb: WorldRunner.Spawn(Of T)(T, NetNodeWrapper, ENetPacketPeer, String)
-  fullName.vb: Nebula.WorldRunner.Spawn(Of T)(T, Nebula.NetNodeWrapper, Godot.ENetPacketPeer, String)
-  name.vb: Spawn(Of T)(T, NetNodeWrapper, ENetPacketPeer, String)
-- uid: Nebula.WorldRunner.PeerAcknowledge(Godot.ENetPacketPeer,System.Int32)
-  commentId: M:Nebula.WorldRunner.PeerAcknowledge(Godot.ENetPacketPeer,System.Int32)
-  id: PeerAcknowledge(Godot.ENetPacketPeer,System.Int32)
+  nameWithType.vb: WorldRunner.Spawn(Of T)(T, NetworkController, Peer, NodePath)
+  fullName.vb: Nebula.WorldRunner.Spawn(Of T)(T, Nebula.NetworkController, ENet.Peer, Godot.NodePath)
+  name.vb: Spawn(Of T)(T, NetworkController, Peer, NodePath)
+- uid: Nebula.WorldRunner.PeerAcknowledge(ENet.Peer,System.Int32)
+  commentId: M:Nebula.WorldRunner.PeerAcknowledge(ENet.Peer,System.Int32)
+  id: PeerAcknowledge(ENet.Peer,System.Int32)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: PeerAcknowledge(ENetPacketPeer, int)
-  nameWithType: WorldRunner.PeerAcknowledge(ENetPacketPeer, int)
-  fullName: Nebula.WorldRunner.PeerAcknowledge(Godot.ENetPacketPeer, int)
+  name: PeerAcknowledge(Peer, int)
+  nameWithType: WorldRunner.PeerAcknowledge(Peer, int)
+  fullName: Nebula.WorldRunner.PeerAcknowledge(ENet.Peer, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public void PeerAcknowledge(ENetPacketPeer peer, int tick)
+    content: public void PeerAcknowledge(Peer peer, int tick)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
     - id: tick
       type: System.Int32
-    content.vb: Public Sub PeerAcknowledge(peer As ENetPacketPeer, tick As Integer)
+    content.vb: Public Sub PeerAcknowledge(peer As Peer, tick As Integer)
   overload: Nebula.WorldRunner.PeerAcknowledge*
-  nameWithType.vb: WorldRunner.PeerAcknowledge(ENetPacketPeer, Integer)
-  fullName.vb: Nebula.WorldRunner.PeerAcknowledge(Godot.ENetPacketPeer, Integer)
-  name.vb: PeerAcknowledge(ENetPacketPeer, Integer)
-- uid: Nebula.WorldRunner.ClientHandleTick(System.Int32,System.Byte[])
-  commentId: M:Nebula.WorldRunner.ClientHandleTick(System.Int32,System.Byte[])
-  id: ClientHandleTick(System.Int32,System.Byte[])
+  nameWithType.vb: WorldRunner.PeerAcknowledge(Peer, Integer)
+  fullName.vb: Nebula.WorldRunner.PeerAcknowledge(ENet.Peer, Integer)
+  name.vb: PeerAcknowledge(Peer, Integer)
+- uid: Nebula.WorldRunner.ClientProcessTick(System.Int32,System.Byte[])
+  commentId: M:Nebula.WorldRunner.ClientProcessTick(System.Int32,System.Byte[])
+  id: ClientProcessTick(System.Int32,System.Byte[])
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: ClientHandleTick(int, byte[])
-  nameWithType: WorldRunner.ClientHandleTick(int, byte[])
-  fullName: Nebula.WorldRunner.ClientHandleTick(int, byte[])
+  name: ClientProcessTick(int, byte[])
+  nameWithType: WorldRunner.ClientProcessTick(int, byte[])
+  fullName: Nebula.WorldRunner.ClientProcessTick(int, byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public void ClientHandleTick(int incomingTick, byte[] stateBytes)
+    content: public void ClientProcessTick(int incomingTick, byte[] stateBytes)
     parameters:
     - id: incomingTick
       type: System.Int32
     - id: stateBytes
       type: System.Byte[]
-    content.vb: Public Sub ClientHandleTick(incomingTick As Integer, stateBytes As Byte())
-  overload: Nebula.WorldRunner.ClientHandleTick*
-  nameWithType.vb: WorldRunner.ClientHandleTick(Integer, Byte())
-  fullName.vb: Nebula.WorldRunner.ClientHandleTick(Integer, Byte())
-  name.vb: ClientHandleTick(Integer, Byte())
-- uid: Nebula.WorldRunner.CheckStaticInitialization(Nebula.NetNodeWrapper)
-  commentId: M:Nebula.WorldRunner.CheckStaticInitialization(Nebula.NetNodeWrapper)
-  id: CheckStaticInitialization(Nebula.NetNodeWrapper)
+    content.vb: Public Sub ClientProcessTick(incomingTick As Integer, stateBytes As Byte())
+  overload: Nebula.WorldRunner.ClientProcessTick*
+  nameWithType.vb: WorldRunner.ClientProcessTick(Integer, Byte())
+  fullName.vb: Nebula.WorldRunner.ClientProcessTick(Integer, Byte())
+  name.vb: ClientProcessTick(Integer, Byte())
+- uid: Nebula.WorldRunner.CheckStaticInitialization(Nebula.NetworkController)
+  commentId: M:Nebula.WorldRunner.CheckStaticInitialization(Nebula.NetworkController)
+  id: CheckStaticInitialization(Nebula.NetworkController)
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: CheckStaticInitialization(NetNodeWrapper)
-  nameWithType: WorldRunner.CheckStaticInitialization(NetNodeWrapper)
-  fullName: Nebula.WorldRunner.CheckStaticInitialization(Nebula.NetNodeWrapper)
+  name: CheckStaticInitialization(NetworkController)
+  nameWithType: WorldRunner.CheckStaticInitialization(NetworkController)
+  fullName: Nebula.WorldRunner.CheckStaticInitialization(Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1114,93 +1240,15 @@ items:
     All network nodes on the client side must come from the server by gaining Interest in the node.
   example: []
   syntax:
-    content: public bool CheckStaticInitialization(NetNodeWrapper wrapper)
+    content: public bool CheckStaticInitialization(NetworkController network)
     parameters:
-    - id: wrapper
-      type: Nebula.NetNodeWrapper
-      description: ''
+    - id: network
+      type: Nebula.NetworkController
     return:
       type: System.Boolean
       description: ''
-    content.vb: Public Function CheckStaticInitialization(wrapper As NetNodeWrapper) As Boolean
+    content.vb: Public Function CheckStaticInitialization(network As NetworkController) As Boolean
   overload: Nebula.WorldRunner.CheckStaticInitialization*
-- uid: Nebula.WorldRunner.EmitSignalOnPeerSyncStatusChange(System.String,System.Int32)
-  commentId: M:Nebula.WorldRunner.EmitSignalOnPeerSyncStatusChange(System.String,System.Int32)
-  id: EmitSignalOnPeerSyncStatusChange(System.String,System.Int32)
-  parent: Nebula.WorldRunner
-  langs:
-  - csharp
-  - vb
-  name: EmitSignalOnPeerSyncStatusChange(string, int)
-  nameWithType: WorldRunner.EmitSignalOnPeerSyncStatusChange(string, int)
-  fullName: Nebula.WorldRunner.EmitSignalOnPeerSyncStatusChange(string, int)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.WorldRunner_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: protected void EmitSignalOnPeerSyncStatusChange(string peerId, int status)
-    parameters:
-    - id: peerId
-      type: System.String
-    - id: status
-      type: System.Int32
-    content.vb: Protected Sub EmitSignalOnPeerSyncStatusChange(peerId As String, status As Integer)
-  overload: Nebula.WorldRunner.EmitSignalOnPeerSyncStatusChange*
-  nameWithType.vb: WorldRunner.EmitSignalOnPeerSyncStatusChange(String, Integer)
-  fullName.vb: Nebula.WorldRunner.EmitSignalOnPeerSyncStatusChange(String, Integer)
-  name.vb: EmitSignalOnPeerSyncStatusChange(String, Integer)
-- uid: Nebula.WorldRunner.EmitSignalOnAfterNetworkTick(System.Int32)
-  commentId: M:Nebula.WorldRunner.EmitSignalOnAfterNetworkTick(System.Int32)
-  id: EmitSignalOnAfterNetworkTick(System.Int32)
-  parent: Nebula.WorldRunner
-  langs:
-  - csharp
-  - vb
-  name: EmitSignalOnAfterNetworkTick(int)
-  nameWithType: WorldRunner.EmitSignalOnAfterNetworkTick(int)
-  fullName: Nebula.WorldRunner.EmitSignalOnAfterNetworkTick(int)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.WorldRunner_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: protected void EmitSignalOnAfterNetworkTick(int tick)
-    parameters:
-    - id: tick
-      type: System.Int32
-    content.vb: Protected Sub EmitSignalOnAfterNetworkTick(tick As Integer)
-  overload: Nebula.WorldRunner.EmitSignalOnAfterNetworkTick*
-  nameWithType.vb: WorldRunner.EmitSignalOnAfterNetworkTick(Integer)
-  fullName.vb: Nebula.WorldRunner.EmitSignalOnAfterNetworkTick(Integer)
-  name.vb: EmitSignalOnAfterNetworkTick(Integer)
-- uid: Nebula.WorldRunner.EmitSignalOnPlayerJoined(Nebula.UUID)
-  commentId: M:Nebula.WorldRunner.EmitSignalOnPlayerJoined(Nebula.UUID)
-  id: EmitSignalOnPlayerJoined(Nebula.UUID)
-  parent: Nebula.WorldRunner
-  langs:
-  - csharp
-  - vb
-  name: EmitSignalOnPlayerJoined(UUID)
-  nameWithType: WorldRunner.EmitSignalOnPlayerJoined(UUID)
-  fullName: Nebula.WorldRunner.EmitSignalOnPlayerJoined(Nebula.UUID)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.WorldRunner_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: protected void EmitSignalOnPlayerJoined(UUID peerId)
-    parameters:
-    - id: peerId
-      type: Nebula.UUID
-    content.vb: Protected Sub EmitSignalOnPlayerJoined(peerId As UUID)
-  overload: Nebula.WorldRunner.EmitSignalOnPlayerJoined*
 - uid: Nebula.WorldRunner.#ctor
   commentId: M:Nebula.WorldRunner.#ctor
   id: '#ctor'
@@ -1213,7 +1261,7 @@ items:
   fullName: Nebula.WorldRunner.WorldRunner()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1224,6 +1272,56 @@ items:
   nameWithType.vb: WorldRunner.New()
   fullName.vb: Nebula.WorldRunner.New()
   name.vb: New()
+- uid: Nebula.WorldRunner.ClientId
+  commentId: P:Nebula.WorldRunner.ClientId
+  id: ClientId
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: ClientId
+  nameWithType: WorldRunner.ClientId
+  fullName: Nebula.WorldRunner.ClientId
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Client identifier for debugging. Set via --clientId=X command line argument.
+  example: []
+  syntax:
+    content: public static int ClientId { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Shared ReadOnly Property ClientId As Integer
+  overload: Nebula.WorldRunner.ClientId*
+- uid: Nebula.WorldRunner.NetFunctionContext
+  commentId: P:Nebula.WorldRunner.NetFunctionContext
+  id: NetFunctionContext
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: NetFunctionContext
+  nameWithType: WorldRunner.NetFunctionContext
+  fullName: Nebula.WorldRunner.NetFunctionContext
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Provides context about the current network function call.
+  example: []
+  syntax:
+    content: public WorldRunner.NetFunctionCtx NetFunctionContext { get; }
+    parameters: []
+    return:
+      type: Nebula.WorldRunner.NetFunctionCtx
+    content.vb: Public ReadOnly Property NetFunctionContext As WorldRunner.NetFunctionCtx
+  overload: Nebula.WorldRunner.NetFunctionContext*
 - uid: Nebula.WorldRunner.WorldId
   commentId: P:Nebula.WorldRunner.WorldId
   id: WorldId
@@ -1236,7 +1334,7 @@ items:
   fullName: Nebula.WorldRunner.WorldId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1259,7 +1357,7 @@ items:
   fullName: Nebula.WorldRunner.CurrentWorld
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1272,52 +1370,56 @@ items:
       type: Nebula.WorldRunner
     content.vb: Public Shared ReadOnly Property CurrentWorld As WorldRunner
   overload: Nebula.WorldRunner.CurrentWorld*
-- uid: Nebula.WorldRunner.InputStore
-  commentId: P:Nebula.WorldRunner.InputStore
-  id: InputStore
+- uid: Nebula.WorldRunner.Debug
+  commentId: P:Nebula.WorldRunner.Debug
+  id: Debug
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: InputStore
-  nameWithType: WorldRunner.InputStore
-  fullName: Nebula.WorldRunner.InputStore
+  name: Debug
+  nameWithType: WorldRunner.Debug
+  fullName: Nebula.WorldRunner.Debug
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Debug messenger for sending test events via TCP.
+  example: []
   syntax:
-    content: public Dictionary<ENetPacketPeer, Dictionary<byte, Dictionary<int, Variant>>> InputStore { get; }
+    content: public WorldRunner.DebugMessenger Debug { get; }
     parameters: []
     return:
-      type: Godot.Collections.Dictionary{Godot.ENetPacketPeer,Godot.Collections.Dictionary{System.Byte,Godot.Collections.Dictionary{System.Int32,Godot.Variant}}}
-    content.vb: Public ReadOnly Property InputStore As Dictionary(Of ENetPacketPeer, Dictionary(Of Byte, Dictionary(Of Integer, [Variant])))
-  overload: Nebula.WorldRunner.InputStore*
-- uid: Nebula.WorldRunner.DebugEnet
-  commentId: P:Nebula.WorldRunner.DebugEnet
-  id: DebugEnet
+      type: Nebula.WorldRunner.DebugMessenger
+    content.vb: Public ReadOnly Property Debug As WorldRunner.DebugMessenger
+  overload: Nebula.WorldRunner.Debug*
+- uid: Nebula.WorldRunner.DebugPort
+  commentId: P:Nebula.WorldRunner.DebugPort
+  id: DebugPort
   parent: Nebula.WorldRunner
   langs:
   - csharp
   - vb
-  name: DebugEnet
-  nameWithType: WorldRunner.DebugEnet
-  fullName: Nebula.WorldRunner.DebugEnet
+  name: DebugPort
+  nameWithType: WorldRunner.DebugPort
+  fullName: Nebula.WorldRunner.DebugPort
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Port for the debug TCP connection. 0 means use a random available port.
+  example: []
   syntax:
-    content: public ENetConnection DebugEnet { get; }
+    content: public int DebugPort { get; set; }
     parameters: []
     return:
-      type: Godot.ENetConnection
-    content.vb: Public ReadOnly Property DebugEnet As ENetConnection
-  overload: Nebula.WorldRunner.DebugEnet*
+      type: System.Int32
+    content.vb: Public Property DebugPort As Integer
+  overload: Nebula.WorldRunner.DebugPort*
 - uid: Nebula.WorldRunner.CurrentTick
   commentId: P:Nebula.WorldRunner.CurrentTick
   id: CurrentTick
@@ -1330,7 +1432,7 @@ items:
   fullName: Nebula.WorldRunner.CurrentTick
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1355,16 +1457,17 @@ items:
   fullName: Nebula.WorldRunner.OnPeerSyncStatusChange
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.WorldRunner_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: "Invoked when a peer's sync status changes. Parameters: (peerId, newStatus)"
   example: []
   syntax:
-    content: public event WorldRunner.OnPeerSyncStatusChangeEventHandler OnPeerSyncStatusChange
+    content: public event Action<UUID, WorldRunner.PeerSyncStatus> OnPeerSyncStatusChange
     return:
-      type: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-    content.vb: Public Event OnPeerSyncStatusChange As WorldRunner.OnPeerSyncStatusChangeEventHandler
+      type: System.Action{Nebula.UUID,Nebula.WorldRunner.PeerSyncStatus}
+    content.vb: Public Event OnPeerSyncStatusChange As Action(Of UUID, WorldRunner.PeerSyncStatus)
 - uid: Nebula.WorldRunner.OnAfterNetworkTick
   commentId: E:Nebula.WorldRunner.OnAfterNetworkTick
   id: OnAfterNetworkTick
@@ -1377,16 +1480,17 @@ items:
   fullName: Nebula.WorldRunner.OnAfterNetworkTick
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.WorldRunner_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Invoked after each network tick completes.
   example: []
   syntax:
-    content: public event WorldRunner.OnAfterNetworkTickEventHandler OnAfterNetworkTick
+    content: public event Action<int> OnAfterNetworkTick
     return:
-      type: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-    content.vb: Public Event OnAfterNetworkTick As WorldRunner.OnAfterNetworkTickEventHandler
+      type: System.Action{System.Int32}
+    content.vb: Public Event OnAfterNetworkTick As Action(Of Integer)
 - uid: Nebula.WorldRunner.OnPlayerJoined
   commentId: E:Nebula.WorldRunner.OnPlayerJoined
   id: OnPlayerJoined
@@ -1399,16 +1503,38 @@ items:
   fullName: Nebula.WorldRunner.OnPlayerJoined
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.WorldRunner_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Invoked when a player joins the world (sync status becomes IN_WORLD).
   example: []
   syntax:
-    content: public event WorldRunner.OnPlayerJoinedEventHandler OnPlayerJoined
+    content: public event Action<UUID> OnPlayerJoined
     return:
-      type: Nebula.WorldRunner.OnPlayerJoinedEventHandler
-    content.vb: Public Event OnPlayerJoined As WorldRunner.OnPlayerJoinedEventHandler
+      type: System.Action{Nebula.UUID}
+    content.vb: Public Event OnPlayerJoined As Action(Of UUID)
+- uid: Nebula.WorldRunner.OnPlayerCleanup
+  commentId: E:Nebula.WorldRunner.OnPlayerCleanup
+  id: OnPlayerCleanup
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: OnPlayerCleanup
+  nameWithType: WorldRunner.OnPlayerCleanup
+  fullName: Nebula.WorldRunner.OnPlayerCleanup
+  type: Event
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public event Action<UUID> OnPlayerCleanup
+    return:
+      type: System.Action{Nebula.UUID}
+    content.vb: Public Event OnPlayerCleanup As Action(Of UUID)
 references:
 - uid: Nebula.NetNode
   commentId: T:Nebula.NetNode
@@ -1429,7 +1555,7 @@ references:
 - uid: Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
   commentId: M:Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
+  href: Nebula.NetRunner.CreateWorld.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
   name: CreateWorld(UUID, PackedScene)
   nameWithType: NetRunner.CreateWorld(UUID, PackedScene)
   fullName: Nebula.NetRunner.CreateWorld(Nebula.UUID, Godot.PackedScene)
@@ -1437,7 +1563,7 @@ references:
   - uid: Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
     name: CreateWorld
     isExternal: true
-    href: Nebula.NetRunner.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
+    href: Nebula.NetRunner.CreateWorld.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
   - name: (
   - uid: Nebula.UUID
     name: UUID
@@ -1453,7 +1579,7 @@ references:
   - uid: Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
     name: CreateWorld
     isExternal: true
-    href: Nebula.NetRunner.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
+    href: Nebula.NetRunner.CreateWorld.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
   - name: (
   - uid: Nebula.UUID
     name: UUID
@@ -8086,6 +8212,48 @@ references:
   name: Godot
   nameWithType: Godot
   fullName: Godot
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: System.Int64[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long[]
+  nameWithType: long[]
+  fullName: long[]
+  nameWithType.vb: Long()
+  fullName.vb: Long()
+  name.vb: Long()
+  spec.csharp:
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: (
+  - name: )
+- uid: Nebula.NetworkController
+  commentId: T:Nebula.NetworkController
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetworkController.html
+  name: NetworkController
+  nameWithType: NetworkController
+  fullName: Nebula.NetworkController
 - uid: System.Int64
   commentId: T:System.Int64
   parent: System
@@ -8097,45 +8265,37 @@ references:
   nameWithType.vb: Long
   fullName.vb: Long
   name.vb: Long
-- uid: Nebula.NetNodeWrapper
-  commentId: T:Nebula.NetNodeWrapper
-  parent: Nebula
+- uid: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
+  commentId: M:Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
   isExternal: true
-  href: Nebula.NetNodeWrapper.html
-  name: NetNodeWrapper
-  nameWithType: NetNodeWrapper
-  fullName: Nebula.NetNodeWrapper
-- uid: Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)
-  commentId: M:Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)
-  isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_CleanupPlayer_Godot_ENetPacketPeer_
-  name: CleanupPlayer(ENetPacketPeer)
-  nameWithType: WorldRunner.CleanupPlayer(ENetPacketPeer)
-  fullName: Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)
+  href: Nebula.WorldRunner.CleanupPlayer.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
+  name: CleanupPlayer(Peer)
+  nameWithType: WorldRunner.CleanupPlayer(Peer)
+  fullName: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
   spec.csharp:
-  - uid: Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)
+  - uid: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
     name: CleanupPlayer
     isExternal: true
-    href: Nebula.WorldRunner.html#Nebula_WorldRunner_CleanupPlayer_Godot_ENetPacketPeer_
+    href: Nebula.WorldRunner.CleanupPlayer.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
   - name: (
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: )
   spec.vb:
-  - uid: Nebula.WorldRunner.CleanupPlayer(Godot.ENetPacketPeer)
+  - uid: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
     name: CleanupPlayer
     isExternal: true
-    href: Nebula.WorldRunner.html#Nebula_WorldRunner_CleanupPlayer_Godot_ENetPacketPeer_
+    href: Nebula.WorldRunner.CleanupPlayer.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
   - name: (
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: )
 - uid: Nebula.NetworkController.DespawnOnUnowned
   commentId: F:Nebula.NetworkController.DespawnOnUnowned
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_DespawnOnUnowned
+  href: Nebula.NetworkController.DespawnOnUnowned.html#Nebula_NetworkController_DespawnOnUnowned
   name: DespawnOnUnowned
   nameWithType: NetworkController.DespawnOnUnowned
   fullName: Nebula.NetworkController.DespawnOnUnowned
@@ -8153,7 +8313,7 @@ references:
 - uid: Nebula.WorldRunner.Log*
   commentId: Overload:Nebula.WorldRunner.Log
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_Log_System_String_Nebula_Utility_Tools_Debugger_DebugLevel_
+  href: Nebula.WorldRunner.Log.html#Nebula_WorldRunner_Log_System_String_Nebula_Utility_Tools_Debugger_DebugLevel_
   name: Log
   nameWithType: WorldRunner.Log
   fullName: Nebula.WorldRunner.Log
@@ -8233,6 +8393,14 @@ references:
     name: Tools
     isExternal: true
     href: Nebula.Utility.Tools.html
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  commentId: T:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.html
+  name: NebulaLogInterpolatedStringHandler
+  nameWithType: NebulaLogInterpolatedStringHandler
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
 - uid: Godot.Node._Ready
   commentId: M:Godot.Node._Ready
   parent: Godot.Node
@@ -8255,7 +8423,7 @@ references:
 - uid: Nebula.WorldRunner._Ready*
   commentId: Overload:Nebula.WorldRunner._Ready
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner__Ready
+  href: Nebula.WorldRunner._Ready.html#Nebula_WorldRunner__Ready
   name: _Ready
   nameWithType: WorldRunner._Ready
   fullName: Nebula.WorldRunner._Ready
@@ -8281,14 +8449,21 @@ references:
 - uid: Nebula.WorldRunner._ExitTree*
   commentId: Overload:Nebula.WorldRunner._ExitTree
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner__ExitTree
+  href: Nebula.WorldRunner._ExitTree.html#Nebula_WorldRunner__ExitTree
   name: _ExitTree
   nameWithType: WorldRunner._ExitTree
   fullName: Nebula.WorldRunner._ExitTree
+- uid: Nebula.WorldRunner.MarkOwnedEntitiesDirty*
+  commentId: Overload:Nebula.WorldRunner.MarkOwnedEntitiesDirty
+  isExternal: true
+  href: Nebula.WorldRunner.MarkOwnedEntitiesDirty.html#Nebula_WorldRunner_MarkOwnedEntitiesDirty
+  name: MarkOwnedEntitiesDirty
+  nameWithType: WorldRunner.MarkOwnedEntitiesDirty
+  fullName: Nebula.WorldRunner.MarkOwnedEntitiesDirty
 - uid: Nebula.WorldRunner.GetNodeFromNetId*
   commentId: Overload:Nebula.WorldRunner.GetNodeFromNetId
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetNodeFromNetId_Nebula_NetId_
+  href: Nebula.WorldRunner.GetNodeFromNetId.html#Nebula_WorldRunner_GetNodeFromNetId_Nebula_NetId_
   name: GetNodeFromNetId
   nameWithType: WorldRunner.GetNodeFromNetId
   fullName: Nebula.WorldRunner.GetNodeFromNetId
@@ -8303,53 +8478,59 @@ references:
 - uid: Nebula.WorldRunner.AllocateNetId*
   commentId: Overload:Nebula.WorldRunner.AllocateNetId
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_AllocateNetId
+  href: Nebula.WorldRunner.AllocateNetId.html#Nebula_WorldRunner_AllocateNetId
   name: AllocateNetId
   nameWithType: WorldRunner.AllocateNetId
   fullName: Nebula.WorldRunner.AllocateNetId
-- uid: System.Byte
-  commentId: T:System.Byte
+- uid: System.UInt16
+  commentId: T:System.UInt16
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.byte
-  name: byte
-  nameWithType: byte
-  fullName: byte
-  nameWithType.vb: Byte
-  fullName.vb: Byte
-  name.vb: Byte
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
 - uid: Nebula.WorldRunner.GetNetId*
   commentId: Overload:Nebula.WorldRunner.GetNetId
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetNetId_System_Int64_
+  href: Nebula.WorldRunner.GetNetId.html#Nebula_WorldRunner_GetNetId_System_Int64_
   name: GetNetId
   nameWithType: WorldRunner.GetNetId
   fullName: Nebula.WorldRunner.GetNetId
 - uid: Nebula.WorldRunner.GetNetIdFromPeerId*
   commentId: Overload:Nebula.WorldRunner.GetNetIdFromPeerId
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetNetIdFromPeerId_Godot_ENetPacketPeer_System_Byte_
+  href: Nebula.WorldRunner.GetNetIdFromPeerId.html#Nebula_WorldRunner_GetNetIdFromPeerId_ENet_Peer_System_UInt16_
   name: GetNetIdFromPeerId
   nameWithType: WorldRunner.GetNetIdFromPeerId
   fullName: Nebula.WorldRunner.GetNetIdFromPeerId
-- uid: Godot.ENetPacketPeer
-  commentId: T:Godot.ENetPacketPeer
-  parent: Godot
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
   isExternal: true
-  name: ENetPacketPeer
-  nameWithType: ENetPacketPeer
-  fullName: Godot.ENetPacketPeer
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: ENet
+  commentId: N:ENet
+  isExternal: true
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
 - uid: Nebula.WorldRunner.CleanupPlayer*
   commentId: Overload:Nebula.WorldRunner.CleanupPlayer
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_CleanupPlayer_Godot_ENetPacketPeer_
+  href: Nebula.WorldRunner.CleanupPlayer.html#Nebula_WorldRunner_CleanupPlayer_ENet_Peer_
   name: CleanupPlayer
   nameWithType: WorldRunner.CleanupPlayer
   fullName: Nebula.WorldRunner.CleanupPlayer
 - uid: Nebula.WorldRunner.ServerProcessTick*
   commentId: Overload:Nebula.WorldRunner.ServerProcessTick
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_ServerProcessTick
+  href: Nebula.WorldRunner.ServerProcessTick.html#Nebula_WorldRunner_ServerProcessTick
   name: ServerProcessTick
   nameWithType: WorldRunner.ServerProcessTick
   fullName: Nebula.WorldRunner.ServerProcessTick
@@ -8387,7 +8568,7 @@ references:
 - uid: Nebula.WorldRunner._PhysicsProcess*
   commentId: Overload:Nebula.WorldRunner._PhysicsProcess
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner__PhysicsProcess_System_Double_
+  href: Nebula.WorldRunner._PhysicsProcess.html#Nebula_WorldRunner__PhysicsProcess_System_Double_
   name: _PhysicsProcess
   nameWithType: WorldRunner._PhysicsProcess
   fullName: Nebula.WorldRunner._PhysicsProcess
@@ -8405,28 +8586,28 @@ references:
 - uid: Nebula.WorldRunner.HasSpawnedForClient*
   commentId: Overload:Nebula.WorldRunner.HasSpawnedForClient
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_HasSpawnedForClient_Nebula_NetId_Godot_ENetPacketPeer_
+  href: Nebula.WorldRunner.HasSpawnedForClient.html#Nebula_WorldRunner_HasSpawnedForClient_Nebula_NetId_ENet_Peer_
   name: HasSpawnedForClient
   nameWithType: WorldRunner.HasSpawnedForClient
   fullName: Nebula.WorldRunner.HasSpawnedForClient
 - uid: Nebula.WorldRunner.SetSpawnedForClient*
   commentId: Overload:Nebula.WorldRunner.SetSpawnedForClient
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_SetSpawnedForClient_Nebula_NetId_Godot_ENetPacketPeer_
+  href: Nebula.WorldRunner.SetSpawnedForClient.html#Nebula_WorldRunner_SetSpawnedForClient_Nebula_NetId_ENet_Peer_
   name: SetSpawnedForClient
   nameWithType: WorldRunner.SetSpawnedForClient
   fullName: Nebula.WorldRunner.SetSpawnedForClient
 - uid: Nebula.WorldRunner.ChangeScene*
   commentId: Overload:Nebula.WorldRunner.ChangeScene
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_ChangeScene_Nebula_NetNodeWrapper_
+  href: Nebula.WorldRunner.ChangeScene.html#Nebula_WorldRunner_ChangeScene_Nebula_NetworkController_
   name: ChangeScene
   nameWithType: WorldRunner.ChangeScene
   fullName: Nebula.WorldRunner.ChangeScene
 - uid: Nebula.WorldRunner.GetPeerWorldState*
   commentId: Overload:Nebula.WorldRunner.GetPeerWorldState
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetPeerWorldState_Nebula_UUID_
+  href: Nebula.WorldRunner.GetPeerWorldState.html#Nebula_WorldRunner_GetPeerWorldState_Nebula_UUID_
   name: GetPeerWorldState
   nameWithType: WorldRunner.GetPeerWorldState
   fullName: Nebula.WorldRunner.GetPeerWorldState
@@ -8499,7 +8680,7 @@ references:
 - uid: Nebula.WorldRunner.SetPeerState*
   commentId: Overload:Nebula.WorldRunner.SetPeerState
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_SetPeerState_Nebula_UUID_Nebula_WorldRunner_PeerState_
+  href: Nebula.WorldRunner.SetPeerState.html#Nebula_WorldRunner_SetPeerState_Nebula_UUID_Nebula_WorldRunner_PeerState_
   name: SetPeerState
   nameWithType: WorldRunner.SetPeerState
   fullName: Nebula.WorldRunner.SetPeerState
@@ -8534,21 +8715,21 @@ references:
 - uid: Nebula.WorldRunner.GetPeerNodeId*
   commentId: Overload:Nebula.WorldRunner.GetPeerNodeId
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetPeerNodeId_Godot_ENetPacketPeer_Nebula_NetNodeWrapper_
+  href: Nebula.WorldRunner.GetPeerNodeId.html#Nebula_WorldRunner_GetPeerNodeId_ENet_Peer_Nebula_NetworkController_
   name: GetPeerNodeId
   nameWithType: WorldRunner.GetPeerNodeId
   fullName: Nebula.WorldRunner.GetPeerNodeId
 - uid: Nebula.WorldRunner.GetPeerNode*
   commentId: Overload:Nebula.WorldRunner.GetPeerNode
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetPeerNode_Godot_ENetPacketPeer_System_Byte_
+  href: Nebula.WorldRunner.GetPeerNode.html#Nebula_WorldRunner_GetPeerNode_ENet_Peer_System_UInt16_
   name: GetPeerNode
   nameWithType: WorldRunner.GetPeerNode
   fullName: Nebula.WorldRunner.GetPeerNode
 - uid: Nebula.WorldRunner.Spawn*
   commentId: Overload:Nebula.WorldRunner.Spawn
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_Spawn__1___0_Nebula_NetNodeWrapper_Godot_ENetPacketPeer_System_String_
+  href: Nebula.WorldRunner.Spawn.html#Nebula_WorldRunner_Spawn__1___0_Nebula_NetworkController_ENet_Peer_Godot_NodePath_
   name: Spawn
   nameWithType: WorldRunner.Spawn
   fullName: Nebula.WorldRunner.Spawn
@@ -8558,6 +8739,13 @@ references:
   name: T
   nameWithType: T
   fullName: T
+- uid: Godot.NodePath
+  commentId: T:Godot.NodePath
+  parent: Godot
+  isExternal: true
+  name: NodePath
+  nameWithType: NodePath
+  fullName: Godot.NodePath
 - uid: T
   name: T
   nameWithType: T
@@ -8565,7 +8753,7 @@ references:
 - uid: Nebula.WorldRunner.PeerAcknowledge*
   commentId: Overload:Nebula.WorldRunner.PeerAcknowledge
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_PeerAcknowledge_Godot_ENetPacketPeer_System_Int32_
+  href: Nebula.WorldRunner.PeerAcknowledge.html#Nebula_WorldRunner_PeerAcknowledge_ENet_Peer_System_Int32_
   name: PeerAcknowledge
   nameWithType: WorldRunner.PeerAcknowledge
   fullName: Nebula.WorldRunner.PeerAcknowledge
@@ -8580,13 +8768,13 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
-- uid: Nebula.WorldRunner.ClientHandleTick*
-  commentId: Overload:Nebula.WorldRunner.ClientHandleTick
+- uid: Nebula.WorldRunner.ClientProcessTick*
+  commentId: Overload:Nebula.WorldRunner.ClientProcessTick
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_ClientHandleTick_System_Int32_System_Byte___
-  name: ClientHandleTick
-  nameWithType: WorldRunner.ClientHandleTick
-  fullName: Nebula.WorldRunner.ClientHandleTick
+  href: Nebula.WorldRunner.ClientProcessTick.html#Nebula_WorldRunner_ClientProcessTick_System_Int32_System_Byte___
+  name: ClientProcessTick
+  nameWithType: WorldRunner.ClientProcessTick
+  fullName: Nebula.WorldRunner.ClientProcessTick
 - uid: System.Byte[]
   isExternal: true
   href: https://learn.microsoft.com/dotnet/api/system.byte
@@ -8613,52 +8801,73 @@ references:
 - uid: Nebula.WorldRunner.CheckStaticInitialization*
   commentId: Overload:Nebula.WorldRunner.CheckStaticInitialization
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_CheckStaticInitialization_Nebula_NetNodeWrapper_
+  href: Nebula.WorldRunner.CheckStaticInitialization.html#Nebula_WorldRunner_CheckStaticInitialization_Nebula_NetworkController_
   name: CheckStaticInitialization
   nameWithType: WorldRunner.CheckStaticInitialization
   fullName: Nebula.WorldRunner.CheckStaticInitialization
-- uid: Nebula.WorldRunner.EmitSignalOnPeerSyncStatusChange*
-  commentId: Overload:Nebula.WorldRunner.EmitSignalOnPeerSyncStatusChange
-  isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_EmitSignalOnPeerSyncStatusChange_System_String_System_Int32_
-  name: EmitSignalOnPeerSyncStatusChange
-  nameWithType: WorldRunner.EmitSignalOnPeerSyncStatusChange
-  fullName: Nebula.WorldRunner.EmitSignalOnPeerSyncStatusChange
-- uid: Nebula.WorldRunner.EmitSignalOnAfterNetworkTick*
-  commentId: Overload:Nebula.WorldRunner.EmitSignalOnAfterNetworkTick
-  isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_EmitSignalOnAfterNetworkTick_System_Int32_
-  name: EmitSignalOnAfterNetworkTick
-  nameWithType: WorldRunner.EmitSignalOnAfterNetworkTick
-  fullName: Nebula.WorldRunner.EmitSignalOnAfterNetworkTick
-- uid: Nebula.WorldRunner.EmitSignalOnPlayerJoined*
-  commentId: Overload:Nebula.WorldRunner.EmitSignalOnPlayerJoined
-  isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_EmitSignalOnPlayerJoined_Nebula_UUID_
-  name: EmitSignalOnPlayerJoined
-  nameWithType: WorldRunner.EmitSignalOnPlayerJoined
-  fullName: Nebula.WorldRunner.EmitSignalOnPlayerJoined
 - uid: Nebula.WorldRunner.#ctor*
   commentId: Overload:Nebula.WorldRunner.#ctor
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner__ctor
+  href: Nebula.WorldRunner.-ctor.html#Nebula_WorldRunner__ctor
   name: WorldRunner
   nameWithType: WorldRunner.WorldRunner
   fullName: Nebula.WorldRunner.WorldRunner
   nameWithType.vb: WorldRunner.New
   fullName.vb: Nebula.WorldRunner.New
   name.vb: New
+- uid: Nebula.WorldRunner.ClientId*
+  commentId: Overload:Nebula.WorldRunner.ClientId
+  isExternal: true
+  href: Nebula.WorldRunner.ClientId.html#Nebula_WorldRunner_ClientId
+  name: ClientId
+  nameWithType: WorldRunner.ClientId
+  fullName: Nebula.WorldRunner.ClientId
+- uid: Nebula.WorldRunner.NetFunctionContext*
+  commentId: Overload:Nebula.WorldRunner.NetFunctionContext
+  isExternal: true
+  href: Nebula.WorldRunner.NetFunctionContext.html#Nebula_WorldRunner_NetFunctionContext
+  name: NetFunctionContext
+  nameWithType: WorldRunner.NetFunctionContext
+  fullName: Nebula.WorldRunner.NetFunctionContext
+- uid: Nebula.WorldRunner.NetFunctionCtx
+  commentId: T:Nebula.WorldRunner.NetFunctionCtx
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner.NetFunctionCtx
+  nameWithType: WorldRunner.NetFunctionCtx
+  fullName: Nebula.WorldRunner.NetFunctionCtx
+  spec.csharp:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.NetFunctionCtx
+    name: NetFunctionCtx
+    isExternal: true
+    href: Nebula.WorldRunner.NetFunctionCtx.html
+  spec.vb:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.NetFunctionCtx
+    name: NetFunctionCtx
+    isExternal: true
+    href: Nebula.WorldRunner.NetFunctionCtx.html
 - uid: Nebula.WorldRunner.WorldId*
   commentId: Overload:Nebula.WorldRunner.WorldId
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_WorldId
+  href: Nebula.WorldRunner.WorldId.html#Nebula_WorldRunner_WorldId
   name: WorldId
   nameWithType: WorldRunner.WorldId
   fullName: Nebula.WorldRunner.WorldId
 - uid: Nebula.WorldRunner.CurrentWorld*
   commentId: Overload:Nebula.WorldRunner.CurrentWorld
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_CurrentWorld
+  href: Nebula.WorldRunner.CurrentWorld.html#Nebula_WorldRunner_CurrentWorld
   name: CurrentWorld
   nameWithType: WorldRunner.CurrentWorld
   fullName: Nebula.WorldRunner.CurrentWorld
@@ -8670,87 +8879,173 @@ references:
   name: WorldRunner
   nameWithType: WorldRunner
   fullName: Nebula.WorldRunner
-- uid: Nebula.WorldRunner.InputStore*
-  commentId: Overload:Nebula.WorldRunner.InputStore
+- uid: Nebula.WorldRunner.Debug*
+  commentId: Overload:Nebula.WorldRunner.Debug
   isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_InputStore
-  name: InputStore
-  nameWithType: WorldRunner.InputStore
-  fullName: Nebula.WorldRunner.InputStore
-- uid: Godot.Collections.Dictionary{Godot.ENetPacketPeer,Godot.Collections.Dictionary{System.Byte,Godot.Collections.Dictionary{System.Int32,Godot.Variant}}}
-  commentId: T:Godot.Collections.Dictionary{Godot.ENetPacketPeer,Godot.Collections.Dictionary{System.Byte,Godot.Collections.Dictionary{System.Int32,Godot.Variant}}}
-  parent: Godot.Collections
-  definition: Godot.Collections.Dictionary`2
-  href: https://learn.microsoft.com/dotnet/api/system.byte
-  name: Dictionary<ENetPacketPeer, Dictionary<byte, Dictionary<int, Variant>>>
-  nameWithType: Dictionary<ENetPacketPeer, Dictionary<byte, Dictionary<int, Variant>>>
-  fullName: Godot.Collections.Dictionary<Godot.ENetPacketPeer, Godot.Collections.Dictionary<byte, Godot.Collections.Dictionary<int, Godot.Variant>>>
-  nameWithType.vb: Dictionary(Of ENetPacketPeer, Dictionary(Of Byte, Dictionary(Of Integer, Variant)))
-  fullName.vb: Godot.Collections.Dictionary(Of Godot.ENetPacketPeer, Godot.Collections.Dictionary(Of Byte, Godot.Collections.Dictionary(Of Integer, Godot.Variant)))
-  name.vb: Dictionary(Of ENetPacketPeer, Dictionary(Of Byte, Dictionary(Of Integer, Variant)))
+  href: Nebula.WorldRunner.Debug.html#Nebula_WorldRunner_Debug
+  name: Debug
+  nameWithType: WorldRunner.Debug
+  fullName: Nebula.WorldRunner.Debug
+- uid: Nebula.WorldRunner.DebugMessenger
+  commentId: T:Nebula.WorldRunner.DebugMessenger
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner.DebugMessenger
+  nameWithType: WorldRunner.DebugMessenger
+  fullName: Nebula.WorldRunner.DebugMessenger
   spec.csharp:
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
     isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.DebugMessenger
+    name: DebugMessenger
+    isExternal: true
+    href: Nebula.WorldRunner.DebugMessenger.html
+  spec.vb:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.DebugMessenger
+    name: DebugMessenger
+    isExternal: true
+    href: Nebula.WorldRunner.DebugMessenger.html
+- uid: Nebula.WorldRunner.DebugPort*
+  commentId: Overload:Nebula.WorldRunner.DebugPort
+  isExternal: true
+  href: Nebula.WorldRunner.DebugPort.html#Nebula_WorldRunner_DebugPort
+  name: DebugPort
+  nameWithType: WorldRunner.DebugPort
+  fullName: Nebula.WorldRunner.DebugPort
+- uid: Nebula.WorldRunner.CurrentTick*
+  commentId: Overload:Nebula.WorldRunner.CurrentTick
+  isExternal: true
+  href: Nebula.WorldRunner.CurrentTick.html#Nebula_WorldRunner_CurrentTick
+  name: CurrentTick
+  nameWithType: WorldRunner.CurrentTick
+  fullName: Nebula.WorldRunner.CurrentTick
+- uid: System.Action{Nebula.UUID,Nebula.WorldRunner.PeerSyncStatus}
+  commentId: T:System.Action{Nebula.UUID,Nebula.WorldRunner.PeerSyncStatus}
+  parent: System
+  definition: System.Action`2
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<UUID, WorldRunner.PeerSyncStatus>
+  nameWithType: Action<UUID, WorldRunner.PeerSyncStatus>
+  fullName: System.Action<Nebula.UUID, Nebula.WorldRunner.PeerSyncStatus>
+  nameWithType.vb: Action(Of UUID, WorldRunner.PeerSyncStatus)
+  fullName.vb: System.Action(Of Nebula.UUID, Nebula.WorldRunner.PeerSyncStatus)
+  name.vb: Action(Of UUID, WorldRunner.PeerSyncStatus)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
   - name: <
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: Nebula.UUID
+    name: UUID
     isExternal: true
+    href: Nebula.UUID.html
   - name: ','
   - name: " "
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
     isExternal: true
-  - name: <
-  - uid: System.Byte
-    name: byte
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.PeerSyncStatus
+    name: PeerSyncStatus
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
+    href: Nebula.WorldRunner.PeerSyncStatus.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
   - name: ','
   - name: " "
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
     isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.PeerSyncStatus
+    name: PeerSyncStatus
+    isExternal: true
+    href: Nebula.WorldRunner.PeerSyncStatus.html
+  - name: )
+- uid: System.Action`2
+  commentId: T:System.Action`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<T1, T2>
+  nameWithType: Action<T1, T2>
+  fullName: System.Action<T1, T2>
+  nameWithType.vb: Action(Of T1, T2)
+  fullName.vb: System.Action(Of T1, T2)
+  name.vb: Action(Of T1, T2)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: )
+- uid: System.Action{System.Int32}
+  commentId: T:System.Action{System.Int32}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<int>
+  nameWithType: Action<int>
+  fullName: System.Action<int>
+  nameWithType.vb: Action(Of Integer)
+  fullName.vb: System.Action(Of Integer)
+  name.vb: Action(Of Integer)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
   - name: <
   - uid: System.Int32
     name: int
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: '>'
-  - name: '>'
   - name: '>'
   spec.vb:
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-  - name: (
-  - name: Of
-  - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
-    isExternal: true
-  - name: (
-  - name: Of
-  - name: " "
-  - uid: System.Byte
-    name: Byte
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
-  - name: ','
-  - name: " "
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
-    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
   - name: (
   - name: Of
   - name: " "
@@ -8758,169 +9053,68 @@ references:
     name: Integer
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
   - name: )
-  - name: )
-  - name: )
-- uid: Godot.Collections.Dictionary`2
-  commentId: T:Godot.Collections.Dictionary`2
+- uid: System.Action`1
+  commentId: T:System.Action`1
   isExternal: true
-  name: Dictionary<TKey, TValue>
-  nameWithType: Dictionary<TKey, TValue>
-  fullName: Godot.Collections.Dictionary<TKey, TValue>
-  nameWithType.vb: Dictionary(Of TKey, TValue)
-  fullName.vb: Godot.Collections.Dictionary(Of TKey, TValue)
-  name.vb: Dictionary(Of TKey, TValue)
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
   spec.csharp:
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
+  - uid: System.Action`1
+    name: Action
     isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
   - name: <
-  - name: TKey
-  - name: ','
-  - name: " "
-  - name: TValue
+  - name: T
   - name: '>'
   spec.vb:
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
+  - uid: System.Action`1
+    name: Action
     isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
   - name: (
   - name: Of
   - name: " "
-  - name: TKey
-  - name: ','
-  - name: " "
-  - name: TValue
+  - name: T
   - name: )
-- uid: Godot.Collections
-  commentId: N:Godot.Collections
-  isExternal: true
-  name: Godot.Collections
-  nameWithType: Godot.Collections
-  fullName: Godot.Collections
+- uid: System.Action{Nebula.UUID}
+  commentId: T:System.Action{Nebula.UUID}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<UUID>
+  nameWithType: Action<UUID>
+  fullName: System.Action<Nebula.UUID>
+  nameWithType.vb: Action(Of UUID)
+  fullName.vb: System.Action(Of Nebula.UUID)
+  name.vb: Action(Of UUID)
   spec.csharp:
-  - uid: Godot
-    name: Godot
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-  - name: .
-  - uid: Godot.Collections
-    name: Collections
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: Nebula.UUID
+    name: UUID
     isExternal: true
+    href: Nebula.UUID.html
+  - name: '>'
   spec.vb:
-  - uid: Godot
-    name: Godot
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-  - name: .
-  - uid: Godot.Collections
-    name: Collections
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
     isExternal: true
-- uid: Nebula.WorldRunner.DebugEnet*
-  commentId: Overload:Nebula.WorldRunner.DebugEnet
-  isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_DebugEnet
-  name: DebugEnet
-  nameWithType: WorldRunner.DebugEnet
-  fullName: Nebula.WorldRunner.DebugEnet
-- uid: Godot.ENetConnection
-  commentId: T:Godot.ENetConnection
-  parent: Godot
-  isExternal: true
-  name: ENetConnection
-  nameWithType: ENetConnection
-  fullName: Godot.ENetConnection
-- uid: Nebula.WorldRunner.CurrentTick*
-  commentId: Overload:Nebula.WorldRunner.CurrentTick
-  isExternal: true
-  href: Nebula.WorldRunner.html#Nebula_WorldRunner_CurrentTick
-  name: CurrentTick
-  nameWithType: WorldRunner.CurrentTick
-  fullName: Nebula.WorldRunner.CurrentTick
-- uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-  commentId: T:Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.WorldRunner.html
-  name: WorldRunner.OnPeerSyncStatusChangeEventHandler
-  nameWithType: WorldRunner.OnPeerSyncStatusChangeEventHandler
-  fullName: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-  spec.csharp:
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: .
-  - uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-    name: OnPeerSyncStatusChangeEventHandler
-    isExternal: true
-    href: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.html
-  spec.vb:
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: .
-  - uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-    name: OnPeerSyncStatusChangeEventHandler
-    isExternal: true
-    href: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler.html
-- uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-  commentId: T:Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.WorldRunner.html
-  name: WorldRunner.OnAfterNetworkTickEventHandler
-  nameWithType: WorldRunner.OnAfterNetworkTickEventHandler
-  fullName: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-  spec.csharp:
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: .
-  - uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-    name: OnAfterNetworkTickEventHandler
-    isExternal: true
-    href: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.html
-  spec.vb:
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: .
-  - uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-    name: OnAfterNetworkTickEventHandler
-    isExternal: true
-    href: Nebula.WorldRunner.OnAfterNetworkTickEventHandler.html
-- uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler
-  commentId: T:Nebula.WorldRunner.OnPlayerJoinedEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.WorldRunner.html
-  name: WorldRunner.OnPlayerJoinedEventHandler
-  nameWithType: WorldRunner.OnPlayerJoinedEventHandler
-  fullName: Nebula.WorldRunner.OnPlayerJoinedEventHandler
-  spec.csharp:
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: .
-  - uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler
-    name: OnPlayerJoinedEventHandler
-    isExternal: true
-    href: Nebula.WorldRunner.OnPlayerJoinedEventHandler.html
-  spec.vb:
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: .
-  - uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler
-    name: OnPlayerJoinedEventHandler
-    isExternal: true
-    href: Nebula.WorldRunner.OnPlayerJoinedEventHandler.html
+    href: Nebula.UUID.html
+  - name: )
+memberLayout: SeparatePages

@@ -19,8 +19,6 @@ items:
   - Nebula.Internal.Editor.DockNetScenes.PropertyName
   - Nebula.Internal.Editor.DockNetScenes.SignalName
   - Nebula.Internal.Editor.Downloader
-  - Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-  - Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
   - Nebula.Internal.Editor.Downloader.MethodName
   - Nebula.Internal.Editor.Downloader.PropertyName
   - Nebula.Internal.Editor.Downloader.SignalName
@@ -150,62 +148,6 @@ references:
   name: Downloader
   nameWithType: Downloader
   fullName: Nebula.Internal.Editor.Downloader
-- uid: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-  commentId: T:Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-  parent: Nebula.Internal.Editor
-  isExternal: true
-  href: Nebula.Internal.Editor.Downloader.html
-  name: Downloader.DownloadCompletedEventHandler
-  nameWithType: Downloader.DownloadCompletedEventHandler
-  fullName: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-  spec.csharp:
-  - uid: Nebula.Internal.Editor.Downloader
-    name: Downloader
-    isExternal: true
-    href: Nebula.Internal.Editor.Downloader.html
-  - name: .
-  - uid: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-    name: DownloadCompletedEventHandler
-    isExternal: true
-    href: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler.html
-  spec.vb:
-  - uid: Nebula.Internal.Editor.Downloader
-    name: Downloader
-    isExternal: true
-    href: Nebula.Internal.Editor.Downloader.html
-  - name: .
-  - uid: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-    name: DownloadCompletedEventHandler
-    isExternal: true
-    href: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler.html
-- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-  commentId: T:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-  parent: Nebula.Internal.Editor
-  isExternal: true
-  href: Nebula.Internal.Editor.Downloader.html
-  name: Downloader.DownloadFailedEventHandler
-  nameWithType: Downloader.DownloadFailedEventHandler
-  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-  spec.csharp:
-  - uid: Nebula.Internal.Editor.Downloader
-    name: Downloader
-    isExternal: true
-    href: Nebula.Internal.Editor.Downloader.html
-  - name: .
-  - uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-    name: DownloadFailedEventHandler
-    isExternal: true
-    href: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.html
-  spec.vb:
-  - uid: Nebula.Internal.Editor.Downloader
-    name: Downloader
-    isExternal: true
-    href: Nebula.Internal.Editor.Downloader.html
-  - name: .
-  - uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-    name: DownloadFailedEventHandler
-    isExternal: true
-    href: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.html
 - uid: Nebula.Internal.Editor.Downloader.MethodName
   commentId: T:Nebula.Internal.Editor.Downloader.MethodName
   isExternal: true
@@ -1049,3 +991,4 @@ references:
     name: Editor
     isExternal: true
     href: Nebula.Internal.Editor.html
+memberLayout: SeparatePages

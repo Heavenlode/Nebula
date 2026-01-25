@@ -8,11 +8,9 @@ items:
   - Nebula.NetPose3D.MethodName.#ctor
   - Nebula.NetPose3D.MethodName.ApplyDelta
   - Nebula.NetPose3D.MethodName.ApplyKeyframe
-  - Nebula.NetPose3D.MethodName.BsonDeserialize
-  - Nebula.NetPose3D.MethodName.GetDeserializeContext
-  - Nebula.NetPose3D.MethodName.NetworkDeserialize
+  - Nebula.NetPose3D.MethodName.ApplyNetworkDelta
+  - Nebula.NetPose3D.MethodName.IsQuaternionIdentity
   - Nebula.NetPose3D.MethodName.NetworkProcess
-  - Nebula.NetPose3D.MethodName.NetworkSerialize
   langs:
   - csharp
   - vb
@@ -21,7 +19,7 @@ items:
   fullName: Nebula.NetPose3D.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -117,7 +115,7 @@ items:
   fullName: Nebula.NetPose3D.MethodName.ApplyDelta
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -128,6 +126,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly ApplyDelta As StringName
+- uid: Nebula.NetPose3D.MethodName.ApplyNetworkDelta
+  commentId: F:Nebula.NetPose3D.MethodName.ApplyNetworkDelta
+  id: ApplyNetworkDelta
+  parent: Nebula.NetPose3D.MethodName
+  langs:
+  - csharp
+  - vb
+  name: ApplyNetworkDelta
+  nameWithType: NetPose3D.MethodName.ApplyNetworkDelta
+  fullName: Nebula.NetPose3D.MethodName.ApplyNetworkDelta
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'ApplyNetworkDelta' method.
+  example: []
+  syntax:
+    content: public static readonly StringName ApplyNetworkDelta
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly ApplyNetworkDelta As StringName
 - uid: Nebula.NetPose3D.MethodName.ApplyKeyframe
   commentId: F:Nebula.NetPose3D.MethodName.ApplyKeyframe
   id: ApplyKeyframe
@@ -140,7 +161,7 @@ items:
   fullName: Nebula.NetPose3D.MethodName.ApplyKeyframe
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -151,6 +172,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly ApplyKeyframe As StringName
+- uid: Nebula.NetPose3D.MethodName.IsQuaternionIdentity
+  commentId: F:Nebula.NetPose3D.MethodName.IsQuaternionIdentity
+  id: IsQuaternionIdentity
+  parent: Nebula.NetPose3D.MethodName
+  langs:
+  - csharp
+  - vb
+  name: IsQuaternionIdentity
+  nameWithType: NetPose3D.MethodName.IsQuaternionIdentity
+  fullName: Nebula.NetPose3D.MethodName.IsQuaternionIdentity
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'IsQuaternionIdentity' method.
+  example: []
+  syntax:
+    content: public static readonly StringName IsQuaternionIdentity
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly IsQuaternionIdentity As StringName
 - uid: Nebula.NetPose3D.MethodName.NetworkProcess
   commentId: F:Nebula.NetPose3D.MethodName.NetworkProcess
   id: NetworkProcess
@@ -163,7 +207,7 @@ items:
   fullName: Nebula.NetPose3D.MethodName.NetworkProcess
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -174,98 +218,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly NetworkProcess As StringName
-- uid: Nebula.NetPose3D.MethodName.NetworkSerialize
-  commentId: F:Nebula.NetPose3D.MethodName.NetworkSerialize
-  id: NetworkSerialize
-  parent: Nebula.NetPose3D.MethodName
-  langs:
-  - csharp
-  - vb
-  name: NetworkSerialize
-  nameWithType: NetPose3D.MethodName.NetworkSerialize
-  fullName: Nebula.NetPose3D.MethodName.NetworkSerialize
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'NetworkSerialize' method.
-  example: []
-  syntax:
-    content: public static readonly StringName NetworkSerialize
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly NetworkSerialize As StringName
-- uid: Nebula.NetPose3D.MethodName.GetDeserializeContext
-  commentId: F:Nebula.NetPose3D.MethodName.GetDeserializeContext
-  id: GetDeserializeContext
-  parent: Nebula.NetPose3D.MethodName
-  langs:
-  - csharp
-  - vb
-  name: GetDeserializeContext
-  nameWithType: NetPose3D.MethodName.GetDeserializeContext
-  fullName: Nebula.NetPose3D.MethodName.GetDeserializeContext
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'GetDeserializeContext' method.
-  example: []
-  syntax:
-    content: public static readonly StringName GetDeserializeContext
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly GetDeserializeContext As StringName
-- uid: Nebula.NetPose3D.MethodName.NetworkDeserialize
-  commentId: F:Nebula.NetPose3D.MethodName.NetworkDeserialize
-  id: NetworkDeserialize
-  parent: Nebula.NetPose3D.MethodName
-  langs:
-  - csharp
-  - vb
-  name: NetworkDeserialize
-  nameWithType: NetPose3D.MethodName.NetworkDeserialize
-  fullName: Nebula.NetPose3D.MethodName.NetworkDeserialize
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'NetworkDeserialize' method.
-  example: []
-  syntax:
-    content: public static readonly StringName NetworkDeserialize
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly NetworkDeserialize As StringName
-- uid: Nebula.NetPose3D.MethodName.BsonDeserialize
-  commentId: F:Nebula.NetPose3D.MethodName.BsonDeserialize
-  id: BsonDeserialize
-  parent: Nebula.NetPose3D.MethodName
-  langs:
-  - csharp
-  - vb
-  name: BsonDeserialize
-  nameWithType: NetPose3D.MethodName.BsonDeserialize
-  fullName: Nebula.NetPose3D.MethodName.BsonDeserialize
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'BsonDeserialize' method.
-  example: []
-  syntax:
-    content: public static readonly StringName BsonDeserialize
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly BsonDeserialize As StringName
 - uid: Nebula.NetPose3D.MethodName.#ctor
   commentId: M:Nebula.NetPose3D.MethodName.#ctor
   id: '#ctor'
@@ -278,7 +230,7 @@ items:
   fullName: Nebula.NetPose3D.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1037,10 +989,11 @@ references:
 - uid: Nebula.NetPose3D.MethodName.#ctor*
   commentId: Overload:Nebula.NetPose3D.MethodName.#ctor
   isExternal: true
-  href: Nebula.NetPose3D.MethodName.html#Nebula_NetPose3D_MethodName__ctor
+  href: Nebula.NetPose3D.MethodName.-ctor.html#Nebula_NetPose3D_MethodName__ctor
   name: MethodName
   nameWithType: NetPose3D.MethodName.MethodName
   fullName: Nebula.NetPose3D.MethodName.MethodName
   nameWithType.vb: NetPose3D.MethodName.New
   fullName.vb: Nebula.NetPose3D.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

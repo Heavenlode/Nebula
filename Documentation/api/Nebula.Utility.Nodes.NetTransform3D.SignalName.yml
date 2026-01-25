@@ -14,7 +14,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.SignalName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -63,7 +63,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.SignalName.SignalName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -560,10 +560,11 @@ references:
 - uid: Nebula.Utility.Nodes.NetTransform3D.SignalName.#ctor*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.SignalName.#ctor
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.SignalName.html#Nebula_Utility_Nodes_NetTransform3D_SignalName__ctor
+  href: Nebula.Utility.Nodes.NetTransform3D.SignalName.-ctor.html#Nebula_Utility_Nodes_NetTransform3D_SignalName__ctor
   name: SignalName
   nameWithType: NetTransform3D.SignalName.SignalName
   fullName: Nebula.Utility.Nodes.NetTransform3D.SignalName.SignalName
   nameWithType.vb: NetTransform3D.SignalName.New
   fullName.vb: Nebula.Utility.Nodes.NetTransform3D.SignalName.New
   name.vb: New
+memberLayout: SeparatePages

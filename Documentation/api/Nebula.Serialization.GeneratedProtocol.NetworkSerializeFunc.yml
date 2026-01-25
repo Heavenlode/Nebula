@@ -1,0 +1,312 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  commentId: T:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  id: GeneratedProtocol.NetworkSerializeFunc
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.#ctor(System.Object,System.IntPtr)
+  - Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke(Nebula.WorldRunner,ENet.Peer,Nebula.PropertyCache@,Nebula.Serialization.NetBuffer,System.AsyncCallback,System.Object)
+  - Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke(Nebula.PropertyCache@,System.IAsyncResult)
+  - Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke(Nebula.WorldRunner,ENet.Peer,Nebula.PropertyCache@,Nebula.Serialization.NetBuffer)
+  langs:
+  - csharp
+  - vb
+  name: GeneratedProtocol.NetworkSerializeFunc
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  type: Delegate
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Delegate for reflection-free network serialization. Works directly with PropertyCache.
+  example: []
+  syntax:
+    content: public delegate void GeneratedProtocol.NetworkSerializeFunc(WorldRunner world, Peer peer, ref PropertyCache cache, NetBuffer buffer)
+    parameters:
+    - id: world
+      type: Nebula.WorldRunner
+    - id: peer
+      type: ENet.Peer
+    - id: cache
+      type: Nebula.PropertyCache
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Delegate Sub GeneratedProtocol.NetworkSerializeFunc(world As WorldRunner, peer As Peer, cache As PropertyCache, buffer As NetBuffer)
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.#ctor(System.Object,System.IntPtr)
+  commentId: M:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.#ctor(System.Object,System.IntPtr)
+  id: '#ctor(System.Object,System.IntPtr)'
+  parent: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  langs:
+  - csharp
+  - vb
+  name: NetworkSerializeFunc(object, nint)
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc.NetworkSerializeFunc(object, nint)
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.NetworkSerializeFunc(object, nint)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public NetworkSerializeFunc(object @object, nint method)
+    parameters:
+    - id: object
+      type: System.Object
+    - id: method
+      type: System.IntPtr
+    content.vb: Public Sub New([object] As Object, method As IntPtr)
+  overload: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.#ctor*
+  nameWithType.vb: GeneratedProtocol.NetworkSerializeFunc.New(Object, IntPtr)
+  fullName.vb: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.New(Object, System.IntPtr)
+  name.vb: New(Object, IntPtr)
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke(Nebula.WorldRunner,ENet.Peer,Nebula.PropertyCache@,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke(Nebula.WorldRunner,ENet.Peer,Nebula.PropertyCache@,Nebula.Serialization.NetBuffer)
+  id: Invoke(Nebula.WorldRunner,ENet.Peer,Nebula.PropertyCache@,Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  langs:
+  - csharp
+  - vb
+  name: Invoke(WorldRunner, Peer, ref PropertyCache, NetBuffer)
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc.Invoke(WorldRunner, Peer, ref PropertyCache, NetBuffer)
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke(Nebula.WorldRunner, ENet.Peer, ref Nebula.PropertyCache, Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public virtual void Invoke(WorldRunner world, Peer peer, ref PropertyCache cache, NetBuffer buffer)
+    parameters:
+    - id: world
+      type: Nebula.WorldRunner
+    - id: peer
+      type: ENet.Peer
+    - id: cache
+      type: Nebula.PropertyCache
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Overridable Sub Invoke(world As WorldRunner, peer As Peer, cache As PropertyCache, buffer As NetBuffer)
+  overload: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke*
+  nameWithType.vb: GeneratedProtocol.NetworkSerializeFunc.Invoke(WorldRunner, Peer, PropertyCache, NetBuffer)
+  fullName.vb: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke(Nebula.WorldRunner, ENet.Peer, Nebula.PropertyCache, Nebula.Serialization.NetBuffer)
+  name.vb: Invoke(WorldRunner, Peer, PropertyCache, NetBuffer)
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke(Nebula.WorldRunner,ENet.Peer,Nebula.PropertyCache@,Nebula.Serialization.NetBuffer,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke(Nebula.WorldRunner,ENet.Peer,Nebula.PropertyCache@,Nebula.Serialization.NetBuffer,System.AsyncCallback,System.Object)
+  id: BeginInvoke(Nebula.WorldRunner,ENet.Peer,Nebula.PropertyCache@,Nebula.Serialization.NetBuffer,System.AsyncCallback,System.Object)
+  parent: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  langs:
+  - csharp
+  - vb
+  name: BeginInvoke(WorldRunner, Peer, ref PropertyCache, NetBuffer, AsyncCallback, object)
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc.BeginInvoke(WorldRunner, Peer, ref PropertyCache, NetBuffer, AsyncCallback, object)
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke(Nebula.WorldRunner, ENet.Peer, ref Nebula.PropertyCache, Nebula.Serialization.NetBuffer, System.AsyncCallback, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public virtual IAsyncResult BeginInvoke(WorldRunner world, Peer peer, ref PropertyCache cache, NetBuffer buffer, AsyncCallback callback, object @object)
+    parameters:
+    - id: world
+      type: Nebula.WorldRunner
+    - id: peer
+      type: ENet.Peer
+    - id: cache
+      type: Nebula.PropertyCache
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: callback
+      type: System.AsyncCallback
+    - id: object
+      type: System.Object
+    return:
+      type: System.IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(world As WorldRunner, peer As Peer, cache As PropertyCache, buffer As NetBuffer, callback As AsyncCallback, [object] As Object) As IAsyncResult
+  overload: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke*
+  nameWithType.vb: GeneratedProtocol.NetworkSerializeFunc.BeginInvoke(WorldRunner, Peer, PropertyCache, NetBuffer, AsyncCallback, Object)
+  fullName.vb: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke(Nebula.WorldRunner, ENet.Peer, Nebula.PropertyCache, Nebula.Serialization.NetBuffer, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(WorldRunner, Peer, PropertyCache, NetBuffer, AsyncCallback, Object)
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke(Nebula.PropertyCache@,System.IAsyncResult)
+  commentId: M:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke(Nebula.PropertyCache@,System.IAsyncResult)
+  id: EndInvoke(Nebula.PropertyCache@,System.IAsyncResult)
+  parent: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  langs:
+  - csharp
+  - vb
+  name: EndInvoke(ref PropertyCache, IAsyncResult)
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc.EndInvoke(ref PropertyCache, IAsyncResult)
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke(ref Nebula.PropertyCache, System.IAsyncResult)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public virtual void EndInvoke(ref PropertyCache cache, IAsyncResult result)
+    parameters:
+    - id: cache
+      type: Nebula.PropertyCache
+    - id: result
+      type: System.IAsyncResult
+    content.vb: Public Overridable Sub EndInvoke(cache As PropertyCache, result As IAsyncResult)
+  overload: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke*
+  nameWithType.vb: GeneratedProtocol.NetworkSerializeFunc.EndInvoke(PropertyCache, IAsyncResult)
+  fullName.vb: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke(Nebula.PropertyCache, System.IAsyncResult)
+  name.vb: EndInvoke(PropertyCache, IAsyncResult)
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.WorldRunner
+  commentId: T:Nebula.WorldRunner
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner
+  nameWithType: WorldRunner
+  fullName: Nebula.WorldRunner
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
+  isExternal: true
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: Nebula.PropertyCache
+  commentId: T:Nebula.PropertyCache
+  parent: Nebula
+  isExternal: true
+  href: Nebula.PropertyCache.html
+  name: PropertyCache
+  nameWithType: PropertyCache
+  fullName: Nebula.PropertyCache
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: ENet
+  commentId: N:ENet
+  isExternal: true
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.#ctor*
+  commentId: Overload:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.#ctor
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.-ctor.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc__ctor_System_Object_System_IntPtr_
+  name: NetworkSerializeFunc
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc.NetworkSerializeFunc
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.NetworkSerializeFunc
+  nameWithType.vb: GeneratedProtocol.NetworkSerializeFunc.New
+  fullName.vb: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.New
+  name.vb: New
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke*
+  commentId: Overload:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc_Invoke_Nebula_WorldRunner_ENet_Peer_Nebula_PropertyCache__Nebula_Serialization_NetBuffer_
+  name: Invoke
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc.Invoke
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.Invoke
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke*
+  commentId: Overload:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc_BeginInvoke_Nebula_WorldRunner_ENet_Peer_Nebula_PropertyCache__Nebula_Serialization_NetBuffer_System_AsyncCallback_System_Object_
+  name: BeginInvoke
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc.BeginInvoke
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.BeginInvoke
+- uid: System.AsyncCallback
+  commentId: T:System.AsyncCallback
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.asynccallback
+  name: AsyncCallback
+  nameWithType: AsyncCallback
+  fullName: System.AsyncCallback
+- uid: System.IAsyncResult
+  commentId: T:System.IAsyncResult
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iasyncresult
+  name: IAsyncResult
+  nameWithType: IAsyncResult
+  fullName: System.IAsyncResult
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke*
+  commentId: Overload:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke.html#Nebula_Serialization_GeneratedProtocol_NetworkSerializeFunc_EndInvoke_Nebula_PropertyCache__System_IAsyncResult_
+  name: EndInvoke
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc.EndInvoke
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.EndInvoke
+memberLayout: SeparatePages

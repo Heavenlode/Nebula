@@ -6,6 +6,7 @@ items:
   parent: Nebula
   children:
   - Nebula.NetPose3D.ChangeType.Delta
+  - Nebula.NetPose3D.ChangeType.HighResolution
   - Nebula.NetPose3D.ChangeType.Keyframe
   langs:
   - csharp
@@ -15,7 +16,7 @@ items:
   fullName: Nebula.NetPose3D.ChangeType
   type: Enum
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -34,7 +35,7 @@ items:
   fullName: Nebula.NetPose3D.ChangeType.Delta
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -54,12 +55,32 @@ items:
   fullName: Nebula.NetPose3D.ChangeType.Keyframe
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
     content: Keyframe = 2
+    return:
+      type: Nebula.NetPose3D.ChangeType
+- uid: Nebula.NetPose3D.ChangeType.HighResolution
+  commentId: F:Nebula.NetPose3D.ChangeType.HighResolution
+  id: HighResolution
+  parent: Nebula.NetPose3D.ChangeType
+  langs:
+  - csharp
+  - vb
+  name: HighResolution
+  nameWithType: NetPose3D.ChangeType.HighResolution
+  fullName: Nebula.NetPose3D.ChangeType.HighResolution
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: HighResolution = 64
     return:
       type: Nebula.NetPose3D.ChangeType
 references:
@@ -98,3 +119,4 @@ references:
     name: ChangeType
     isExternal: true
     href: Nebula.NetPose3D.ChangeType.html
+memberLayout: SeparatePages

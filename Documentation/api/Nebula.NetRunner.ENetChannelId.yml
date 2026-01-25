@@ -5,6 +5,7 @@ items:
   id: NetRunner.ENetChannelId
   parent: Nebula
   children:
+  - Nebula.NetRunner.ENetChannelId.Despawn
   - Nebula.NetRunner.ENetChannelId.Function
   - Nebula.NetRunner.ENetChannelId.Input
   - Nebula.NetRunner.ENetChannelId.Tick
@@ -16,7 +17,7 @@ items:
   fullName: Nebula.NetRunner.ENetChannelId
   type: Enum
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -37,7 +38,7 @@ items:
   fullName: Nebula.NetRunner.ENetChannelId.Tick
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -59,7 +60,7 @@ items:
   fullName: Nebula.NetRunner.ENetChannelId.Input
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -81,7 +82,7 @@ items:
   fullName: Nebula.NetRunner.ENetChannelId.Function
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -89,6 +90,28 @@ items:
   example: []
   syntax:
     content: Function = 3
+    return:
+      type: Nebula.NetRunner.ENetChannelId
+- uid: Nebula.NetRunner.ENetChannelId.Despawn
+  commentId: F:Nebula.NetRunner.ENetChannelId.Despawn
+  id: Despawn
+  parent: Nebula.NetRunner.ENetChannelId
+  langs:
+  - csharp
+  - vb
+  name: Despawn
+  nameWithType: NetRunner.ENetChannelId.Despawn
+  fullName: Nebula.NetRunner.ENetChannelId.Despawn
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Despawn request.
+  example: []
+  syntax:
+    content: Despawn = 4
     return:
       type: Nebula.NetRunner.ENetChannelId
 references:
@@ -127,3 +150,4 @@ references:
     name: ENetChannelId
     isExternal: true
     href: Nebula.NetRunner.ENetChannelId.html
+memberLayout: SeparatePages

@@ -7,20 +7,25 @@ items:
   children:
   - Nebula.NetPose3D.#ctor
   - Nebula.NetPose3D.ApplyDelta(Godot.Vector3,Godot.Vector3)
+  - Nebula.NetPose3D.ApplyKeyframe(Godot.Vector3,Godot.Quaternion)
   - Nebula.NetPose3D.ApplyKeyframe(Godot.Vector3,Godot.Vector3)
-  - Nebula.NetPose3D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetPose3D)
-  - Nebula.NetPose3D.BsonSerialize(Godot.Variant)
+  - Nebula.NetPose3D.ApplyNetworkDelta(Nebula.NetPose3D)
+  - Nebula.NetPose3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  - Nebula.NetPose3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetPose3D)
+  - Nebula.NetPose3D.BsonSerialize(Nebula.Serialization.NetBsonContext)
   - Nebula.NetPose3D.ClientState
-  - Nebula.NetPose3D.EmitSignalOnChange
-  - Nebula.NetPose3D.GetDeserializeContext(Nebula.NetPose3D)
   - Nebula.NetPose3D.KeyframeFrequency
-  - Nebula.NetPose3D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - Nebula.NetPose3D.LastKeyframeSent
+  - Nebula.NetPose3D.LastPositionSent
+  - Nebula.NetPose3D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetPose3D)
   - Nebula.NetPose3D.NetworkProcess(Nebula.WorldRunner)
-  - Nebula.NetPose3D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetPose3D)
+  - Nebula.NetPose3D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetPose3D,Nebula.Serialization.NetBuffer)
+  - Nebula.NetPose3D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
   - Nebula.NetPose3D.OnChange
   - Nebula.NetPose3D.Owner
   - Nebula.NetPose3D.Position
   - Nebula.NetPose3D.Rotation
+  - Nebula.NetPose3D.RotationQuat
   langs:
   - csharp
   - vb
@@ -29,7 +34,7 @@ items:
   fullName: Nebula.NetPose3D
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -161,7 +166,7 @@ items:
   fullName: Nebula.NetPose3D.KeyframeFrequency
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -182,15 +187,59 @@ items:
   fullName: Nebula.NetPose3D.Owner
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: The owner peer receives high resolution updates.
+  example: []
+  syntax:
+    content: public Peer Owner
+    return:
+      type: ENet.Peer
+    content.vb: Public Owner As Peer
+- uid: Nebula.NetPose3D.LastKeyframeSent
+  commentId: F:Nebula.NetPose3D.LastKeyframeSent
+  id: LastKeyframeSent
+  parent: Nebula.NetPose3D
+  langs:
+  - csharp
+  - vb
+  name: LastKeyframeSent
+  nameWithType: NetPose3D.LastKeyframeSent
+  fullName: Nebula.NetPose3D.LastKeyframeSent
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public ENetPacketPeer Owner
+    content: public Dictionary<UUID, int> LastKeyframeSent
     return:
-      type: Godot.ENetPacketPeer
-    content.vb: Public Owner As ENetPacketPeer
+      type: System.Collections.Generic.Dictionary{Nebula.UUID,System.Int32}
+    content.vb: Public LastKeyframeSent As Dictionary(Of UUID, Integer)
+- uid: Nebula.NetPose3D.LastPositionSent
+  commentId: F:Nebula.NetPose3D.LastPositionSent
+  id: LastPositionSent
+  parent: Nebula.NetPose3D
+  langs:
+  - csharp
+  - vb
+  name: LastPositionSent
+  nameWithType: NetPose3D.LastPositionSent
+  fullName: Nebula.NetPose3D.LastPositionSent
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Dictionary<UUID, Vector3d> LastPositionSent
+    return:
+      type: System.Collections.Generic.Dictionary{Nebula.UUID,FixedMathSharp.Vector3d}
+    content.vb: Public LastPositionSent As Dictionary(Of UUID, Vector3d)
 - uid: Nebula.NetPose3D.#ctor
   commentId: M:Nebula.NetPose3D.#ctor
   id: '#ctor'
@@ -203,7 +252,7 @@ items:
   fullName: Nebula.NetPose3D.NetPose3D()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -226,28 +275,49 @@ items:
   fullName: Nebula.NetPose3D.ApplyDelta(Godot.Vector3, Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: >-
-    Applies a position and rotation change based on Vector3 values.
-
-    Position deltas are sent as shorts with 0.1 unit precision, allowing ±3276.7 units per tick.
-
-    Rotation deltas are sent as shorts with 0.01 degree precision, allowing ±327.67 degrees per tick.
+  summary: Applies a position and rotation change.
   example: []
   syntax:
     content: public void ApplyDelta(Vector3 newPosition, Vector3 newRotation)
     parameters:
     - id: newPosition
       type: Godot.Vector3
-      description: ''
     - id: newRotation
       type: Godot.Vector3
-      description: ''
     content.vb: Public Sub ApplyDelta(newPosition As Vector3, newRotation As Vector3)
   overload: Nebula.NetPose3D.ApplyDelta*
+- uid: Nebula.NetPose3D.ApplyNetworkDelta(Nebula.NetPose3D)
+  commentId: M:Nebula.NetPose3D.ApplyNetworkDelta(Nebula.NetPose3D)
+  id: ApplyNetworkDelta(Nebula.NetPose3D)
+  parent: Nebula.NetPose3D
+  langs:
+  - csharp
+  - vb
+  name: ApplyNetworkDelta(NetPose3D)
+  nameWithType: NetPose3D.ApplyNetworkDelta(NetPose3D)
+  fullName: Nebula.NetPose3D.ApplyNetworkDelta(Nebula.NetPose3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Applies a network delta received from the server to this pose.
+
+    Used on the client to accumulate deltas into the cached pose.
+  example: []
+  syntax:
+    content: public void ApplyNetworkDelta(NetPose3D delta)
+    parameters:
+    - id: delta
+      type: Nebula.NetPose3D
+    content.vb: Public Sub ApplyNetworkDelta(delta As NetPose3D)
+  overload: Nebula.NetPose3D.ApplyNetworkDelta*
 - uid: Nebula.NetPose3D.ApplyKeyframe(Godot.Vector3,Godot.Vector3)
   commentId: M:Nebula.NetPose3D.ApplyKeyframe(Godot.Vector3,Godot.Vector3)
   id: ApplyKeyframe(Godot.Vector3,Godot.Vector3)
@@ -260,7 +330,7 @@ items:
   fullName: Nebula.NetPose3D.ApplyKeyframe(Godot.Vector3, Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -272,6 +342,31 @@ items:
     - id: rotation
       type: Godot.Vector3
     content.vb: Public Sub ApplyKeyframe(position As Vector3, rotation As Vector3)
+  overload: Nebula.NetPose3D.ApplyKeyframe*
+- uid: Nebula.NetPose3D.ApplyKeyframe(Godot.Vector3,Godot.Quaternion)
+  commentId: M:Nebula.NetPose3D.ApplyKeyframe(Godot.Vector3,Godot.Quaternion)
+  id: ApplyKeyframe(Godot.Vector3,Godot.Quaternion)
+  parent: Nebula.NetPose3D
+  langs:
+  - csharp
+  - vb
+  name: ApplyKeyframe(Vector3, Quaternion)
+  nameWithType: NetPose3D.ApplyKeyframe(Vector3, Quaternion)
+  fullName: Nebula.NetPose3D.ApplyKeyframe(Godot.Vector3, Godot.Quaternion)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public void ApplyKeyframe(Vector3 position, Quaternion rotation)
+    parameters:
+    - id: position
+      type: Godot.Vector3
+    - id: rotation
+      type: Godot.Quaternion
+    content.vb: Public Sub ApplyKeyframe(position As Vector3, rotation As Quaternion)
   overload: Nebula.NetPose3D.ApplyKeyframe*
 - uid: Nebula.NetPose3D.NetworkProcess(Nebula.WorldRunner)
   commentId: M:Nebula.NetPose3D.NetworkProcess(Nebula.WorldRunner)
@@ -285,7 +380,7 @@ items:
   fullName: Nebula.NetPose3D.NetworkProcess(Nebula.WorldRunner)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -296,187 +391,223 @@ items:
       type: Nebula.WorldRunner
     content.vb: Public Sub NetworkProcess(currentWorld As WorldRunner)
   overload: Nebula.NetPose3D.NetworkProcess*
-- uid: Nebula.NetPose3D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetPose3D)
-  commentId: M:Nebula.NetPose3D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetPose3D)
-  id: NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetPose3D)
+- uid: Nebula.NetPose3D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetPose3D,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.NetPose3D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetPose3D,Nebula.Serialization.NetBuffer)
+  id: NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetPose3D,Nebula.Serialization.NetBuffer)
   isEii: true
   parent: Nebula.NetPose3D
   langs:
   - csharp
   - vb
-  name: NetworkSerialize(WorldRunner, ENetPacketPeer, NetPose3D)
-  nameWithType: NetPose3D.NetworkSerialize(WorldRunner, ENetPacketPeer, NetPose3D)
-  fullName: Nebula.NetPose3D.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.NetPose3D)
+  name: NetworkSerialize(WorldRunner, Peer, NetPose3D, NetBuffer)
+  nameWithType: NetPose3D.NetworkSerialize(WorldRunner, Peer, NetPose3D, NetBuffer)
+  fullName: Nebula.NetPose3D.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.NetPose3D, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Serialize the object to the network buffer.
   example: []
   syntax:
-    content: static HLBuffer NetworkSerialize(WorldRunner currentWorld, ENetPacketPeer peer, NetPose3D obj)
+    content: static void NetworkSerialize(WorldRunner currentWorld, Peer peer, NetPose3D obj, NetBuffer buffer)
     parameters:
     - id: currentWorld
       type: Nebula.WorldRunner
+      description: The current world runner
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
+      description: The target peer
     - id: obj
       type: Nebula.NetPose3D
-    return:
-      type: Nebula.Serialization.HLBuffer
-    content.vb: Shared Function NetworkSerialize(currentWorld As WorldRunner, peer As ENetPacketPeer, obj As NetPose3D) As HLBuffer
+      description: The object to serialize
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+      description: The buffer to write to
+    content.vb: Shared Sub NetworkSerialize(currentWorld As WorldRunner, peer As Peer, obj As NetPose3D, buffer As NetBuffer)
   overload: Nebula.NetPose3D.NetworkSerialize*
   implements:
-  - Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetPose3D)
-- uid: Nebula.NetPose3D.GetDeserializeContext(Nebula.NetPose3D)
-  commentId: M:Nebula.NetPose3D.GetDeserializeContext(Nebula.NetPose3D)
-  id: GetDeserializeContext(Nebula.NetPose3D)
+  - Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetPose3D,Nebula.Serialization.NetBuffer)
+- uid: Nebula.NetPose3D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetPose3D)
+  commentId: M:Nebula.NetPose3D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetPose3D)
+  id: NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetPose3D)
   isEii: true
   parent: Nebula.NetPose3D
   langs:
   - csharp
   - vb
-  name: GetDeserializeContext(NetPose3D)
-  nameWithType: NetPose3D.GetDeserializeContext(NetPose3D)
-  fullName: Nebula.NetPose3D.GetDeserializeContext(Nebula.NetPose3D)
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetPose3D)
+  nameWithType: NetPose3D.NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetPose3D)
+  fullName: Nebula.NetPose3D.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.NetPose3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Deserialize an object from the network buffer.
   example: []
   syntax:
-    content: static Variant GetDeserializeContext(NetPose3D obj)
-    parameters:
-    - id: obj
-      type: Nebula.NetPose3D
-    return:
-      type: Godot.Variant
-    content.vb: Shared Function GetDeserializeContext(obj As NetPose3D) As [Variant]
-  overload: Nebula.NetPose3D.GetDeserializeContext*
-  implements:
-  - Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.GetDeserializeContext(Nebula.NetPose3D)
-- uid: Nebula.NetPose3D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  commentId: M:Nebula.NetPose3D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  id: NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  isEii: true
-  parent: Nebula.NetPose3D
-  langs:
-  - csharp
-  - vb
-  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  nameWithType: NetPose3D.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName: Nebula.NetPose3D.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  example: []
-  syntax:
-    content: static NetPose3D NetworkDeserialize(WorldRunner currentWorld, ENetPacketPeer peer, HLBuffer buffer, Variant ctx)
+    content: static NetPose3D NetworkDeserialize(WorldRunner currentWorld, Peer peer, NetBuffer buffer, NetPose3D existing = null)
     parameters:
     - id: currentWorld
       type: Nebula.WorldRunner
+      description: The current world runner
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
+      description: The source peer
     - id: buffer
-      type: Nebula.Serialization.HLBuffer
-    - id: ctx
-      type: Godot.Variant
+      type: Nebula.Serialization.NetBuffer
+      description: The buffer to read from
+    - id: existing
+      type: Nebula.NetPose3D
+      description: Optional existing instance to update (for delta encoding support)
     return:
       type: Nebula.NetPose3D
-    content.vb: Shared Function NetworkDeserialize(currentWorld As WorldRunner, peer As ENetPacketPeer, buffer As HLBuffer, ctx As [Variant]) As NetPose3D
+      description: The deserialized object (may be the updated existing instance or a new one)
+    content.vb: Shared Function NetworkDeserialize(currentWorld As WorldRunner, peer As Peer, buffer As NetBuffer, existing As NetPose3D = Nothing) As NetPose3D
   overload: Nebula.NetPose3D.NetworkDeserialize*
   implements:
-  - Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-- uid: Nebula.NetPose3D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetPose3D)
-  commentId: M:Nebula.NetPose3D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetPose3D)
-  id: BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetPose3D)
+  - Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetPose3D)
+- uid: Nebula.NetPose3D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  commentId: M:Nebula.NetPose3D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  id: OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  parent: Nebula.NetPose3D
+  langs:
+  - csharp
+  - vb
+  name: OnBsonDeserialize(NetBsonContext, BsonDocument)
+  nameWithType: NetPose3D.OnBsonDeserialize(NetBsonContext, BsonDocument)
+  fullName: Nebula.NetPose3D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext, MongoDB.Bson.BsonDocument)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Virtual method called during BSON deserialization to allow custom deserialization logic.
+
+    Override this in derived classes to handle type-specific deserialization.
+  example: []
+  syntax:
+    content: public Task OnBsonDeserialize(NetBsonContext context, BsonDocument doc)
+    parameters:
+    - id: context
+      type: Nebula.Serialization.NetBsonContext
+      description: The deserialization context
+    - id: doc
+      type: MongoDB.Bson.BsonDocument
+      description: The BSON document being deserialized
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function OnBsonDeserialize(context As NetBsonContext, doc As BsonDocument) As Task
+  overload: Nebula.NetPose3D.OnBsonDeserialize*
+  implements:
+  - Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+- uid: Nebula.NetPose3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  commentId: M:Nebula.NetPose3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  id: BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  parent: Nebula.NetPose3D
+  langs:
+  - csharp
+  - vb
+  name: BsonDeserialize(NetBsonContext, byte[])
+  nameWithType: NetPose3D.BsonDeserialize(NetBsonContext, byte[])
+  fullName: Nebula.NetPose3D.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Instance method for BSON deserialization convenience.
+  example: []
+  syntax:
+    content: public Task<NetPose3D> BsonDeserialize(NetBsonContext context, byte[] bson)
+    parameters:
+    - id: context
+      type: Nebula.Serialization.NetBsonContext
+    - id: bson
+      type: System.Byte[]
+    return:
+      type: System.Threading.Tasks.Task{Nebula.NetPose3D}
+    content.vb: Public Function BsonDeserialize(context As NetBsonContext, bson As Byte()) As Task(Of NetPose3D)
+  overload: Nebula.NetPose3D.BsonDeserialize*
+  implements:
+  - Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  nameWithType.vb: NetPose3D.BsonDeserialize(NetBsonContext, Byte())
+  fullName.vb: Nebula.NetPose3D.BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte())
+  name.vb: BsonDeserialize(NetBsonContext, Byte())
+- uid: Nebula.NetPose3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetPose3D)
+  commentId: M:Nebula.NetPose3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetPose3D)
+  id: BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetPose3D)
   isEii: true
   parent: Nebula.NetPose3D
   langs:
   - csharp
   - vb
-  name: BsonDeserialize(Variant, byte[], NetPose3D)
-  nameWithType: NetPose3D.BsonDeserialize(Variant, byte[], NetPose3D)
-  fullName: Nebula.NetPose3D.BsonDeserialize(Godot.Variant, byte[], Nebula.NetPose3D)
+  name: BsonDeserialize(NetBsonContext, byte[], NetPose3D)
+  nameWithType: NetPose3D.BsonDeserialize(NetBsonContext, byte[], NetPose3D)
+  fullName: Nebula.NetPose3D.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[], Nebula.NetPose3D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: >-
+    Static method for BSON deserialization. This handles the base deserialization
+
+    and then calls the virtual OnBsonDeserialize method for custom logic.
   example: []
   syntax:
-    content: static NetPose3D BsonDeserialize(Variant context, byte[] bson, NetPose3D initialObject)
+    content: static Task<NetPose3D> BsonDeserialize(NetBsonContext context, byte[] bson, NetPose3D initialObject)
     parameters:
     - id: context
-      type: Godot.Variant
+      type: Nebula.Serialization.NetBsonContext
     - id: bson
       type: System.Byte[]
     - id: initialObject
       type: Nebula.NetPose3D
     return:
-      type: Nebula.NetPose3D
-    content.vb: Shared Function BsonDeserialize(context As [Variant], bson As Byte(), initialObject As NetPose3D) As NetPose3D
+      type: System.Threading.Tasks.Task{Nebula.NetPose3D}
+    content.vb: Shared Function BsonDeserialize(context As NetBsonContext, bson As Byte(), initialObject As NetPose3D) As Task(Of NetPose3D)
   overload: Nebula.NetPose3D.BsonDeserialize*
   implements:
-  - Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetPose3D)
-  nameWithType.vb: NetPose3D.BsonDeserialize(Variant, Byte(), NetPose3D)
-  fullName.vb: Nebula.NetPose3D.BsonDeserialize(Godot.Variant, Byte(), Nebula.NetPose3D)
-  name.vb: BsonDeserialize(Variant, Byte(), NetPose3D)
-- uid: Nebula.NetPose3D.BsonSerialize(Godot.Variant)
-  commentId: M:Nebula.NetPose3D.BsonSerialize(Godot.Variant)
-  id: BsonSerialize(Godot.Variant)
+  - Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetPose3D)
+  nameWithType.vb: NetPose3D.BsonDeserialize(NetBsonContext, Byte(), NetPose3D)
+  fullName.vb: Nebula.NetPose3D.BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte(), Nebula.NetPose3D)
+  name.vb: BsonDeserialize(NetBsonContext, Byte(), NetPose3D)
+- uid: Nebula.NetPose3D.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  commentId: M:Nebula.NetPose3D.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  id: BsonSerialize(Nebula.Serialization.NetBsonContext)
   parent: Nebula.NetPose3D
   langs:
   - csharp
   - vb
-  name: BsonSerialize(Variant)
-  nameWithType: NetPose3D.BsonSerialize(Variant)
-  fullName: Nebula.NetPose3D.BsonSerialize(Godot.Variant)
+  name: BsonSerialize(NetBsonContext)
+  nameWithType: NetPose3D.BsonSerialize(NetBsonContext)
+  fullName: Nebula.NetPose3D.BsonSerialize(Nebula.Serialization.NetBsonContext)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
   assemblies:
   - Nebula
   namespace: Nebula
   example: []
   syntax:
-    content: public BsonValue BsonSerialize(Variant context)
+    content: public BsonValue BsonSerialize(NetBsonContext context)
     parameters:
     - id: context
-      type: Godot.Variant
+      type: Nebula.Serialization.NetBsonContext
     return:
       type: MongoDB.Bson.BsonValue
-    content.vb: Public Function BsonSerialize(context As [Variant]) As BsonValue
+    content.vb: Public Function BsonSerialize(context As NetBsonContext) As BsonValue
   overload: Nebula.NetPose3D.BsonSerialize*
   implements:
-  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-- uid: Nebula.NetPose3D.EmitSignalOnChange
-  commentId: M:Nebula.NetPose3D.EmitSignalOnChange
-  id: EmitSignalOnChange
-  parent: Nebula.NetPose3D
-  langs:
-  - csharp
-  - vb
-  name: EmitSignalOnChange()
-  nameWithType: NetPose3D.EmitSignalOnChange()
-  fullName: Nebula.NetPose3D.EmitSignalOnChange()
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetPose3D_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: protected void EmitSignalOnChange()
-    content.vb: Protected Sub EmitSignalOnChange()
-  overload: Nebula.NetPose3D.EmitSignalOnChange*
+  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
 - uid: Nebula.NetPose3D.Position
   commentId: P:Nebula.NetPose3D.Position
   id: Position
@@ -489,7 +620,7 @@ items:
   fullName: Nebula.NetPose3D.Position
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -512,7 +643,7 @@ items:
   fullName: Nebula.NetPose3D.Rotation
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -523,6 +654,29 @@ items:
       type: Godot.Vector3
     content.vb: Public ReadOnly Property Rotation As Vector3
   overload: Nebula.NetPose3D.Rotation*
+- uid: Nebula.NetPose3D.RotationQuat
+  commentId: P:Nebula.NetPose3D.RotationQuat
+  id: RotationQuat
+  parent: Nebula.NetPose3D
+  langs:
+  - csharp
+  - vb
+  name: RotationQuat
+  nameWithType: NetPose3D.RotationQuat
+  fullName: Nebula.NetPose3D.RotationQuat
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Quaternion RotationQuat { get; }
+    parameters: []
+    return:
+      type: Godot.Quaternion
+    content.vb: Public ReadOnly Property RotationQuat As Quaternion
+  overload: Nebula.NetPose3D.RotationQuat*
 - uid: Nebula.NetPose3D.ClientState
   commentId: P:Nebula.NetPose3D.ClientState
   id: ClientState
@@ -535,7 +689,7 @@ items:
   fullName: Nebula.NetPose3D.ClientState
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetPose3D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -558,16 +712,15 @@ items:
   fullName: Nebula.NetPose3D.OnChange
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetPose3D_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  example: []
   syntax:
-    content: public event NetPose3D.OnChangeEventHandler OnChange
+    content: public event Action OnChange
     return:
-      type: Nebula.NetPose3D.OnChangeEventHandler
-    content.vb: Public Event OnChange As NetPose3D.OnChangeEventHandler
+      type: System.Action
+    content.vb: Public Event OnChange As Action
 references:
 - uid: Nebula
   commentId: N:Nebula
@@ -3294,17 +3447,186 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
-- uid: Godot.ENetPacketPeer
-  commentId: T:Godot.ENetPacketPeer
-  parent: Godot
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
   isExternal: true
-  name: ENetPacketPeer
-  nameWithType: ENetPacketPeer
-  fullName: Godot.ENetPacketPeer
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: ENet
+  commentId: N:ENet
+  isExternal: true
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
+- uid: System.Collections.Generic.Dictionary{Nebula.UUID,System.Int32}
+  commentId: T:System.Collections.Generic.Dictionary{Nebula.UUID,System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<UUID, int>
+  nameWithType: Dictionary<UUID, int>
+  fullName: System.Collections.Generic.Dictionary<Nebula.UUID, int>
+  nameWithType.vb: Dictionary(Of UUID, Integer)
+  fullName.vb: System.Collections.Generic.Dictionary(Of Nebula.UUID, Integer)
+  name.vb: Dictionary(Of UUID, Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections.Generic.Dictionary{Nebula.UUID,FixedMathSharp.Vector3d}
+  commentId: T:System.Collections.Generic.Dictionary{Nebula.UUID,FixedMathSharp.Vector3d}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<UUID, Vector3d>
+  nameWithType: Dictionary<UUID, Vector3d>
+  fullName: System.Collections.Generic.Dictionary<Nebula.UUID, FixedMathSharp.Vector3d>
+  nameWithType.vb: Dictionary(Of UUID, Vector3d)
+  fullName.vb: System.Collections.Generic.Dictionary(Of Nebula.UUID, FixedMathSharp.Vector3d)
+  name.vb: Dictionary(Of UUID, Vector3d)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: FixedMathSharp.Vector3d
+    name: Vector3d
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: FixedMathSharp.Vector3d
+    name: Vector3d
+    isExternal: true
+  - name: )
 - uid: Nebula.NetPose3D.#ctor*
   commentId: Overload:Nebula.NetPose3D.#ctor
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D__ctor
+  href: Nebula.NetPose3D.-ctor.html#Nebula_NetPose3D__ctor
   name: NetPose3D
   nameWithType: NetPose3D.NetPose3D
   fullName: Nebula.NetPose3D.NetPose3D
@@ -3314,7 +3636,7 @@ references:
 - uid: Nebula.NetPose3D.ApplyDelta*
   commentId: Overload:Nebula.NetPose3D.ApplyDelta
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_ApplyDelta_Godot_Vector3_Godot_Vector3_
+  href: Nebula.NetPose3D.ApplyDelta.html#Nebula_NetPose3D_ApplyDelta_Godot_Vector3_Godot_Vector3_
   name: ApplyDelta
   nameWithType: NetPose3D.ApplyDelta
   fullName: Nebula.NetPose3D.ApplyDelta
@@ -3325,17 +3647,39 @@ references:
   name: Vector3
   nameWithType: Vector3
   fullName: Godot.Vector3
+- uid: Nebula.NetPose3D.ApplyNetworkDelta*
+  commentId: Overload:Nebula.NetPose3D.ApplyNetworkDelta
+  isExternal: true
+  href: Nebula.NetPose3D.ApplyNetworkDelta.html#Nebula_NetPose3D_ApplyNetworkDelta_Nebula_NetPose3D_
+  name: ApplyNetworkDelta
+  nameWithType: NetPose3D.ApplyNetworkDelta
+  fullName: Nebula.NetPose3D.ApplyNetworkDelta
+- uid: Nebula.NetPose3D
+  commentId: T:Nebula.NetPose3D
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetPose3D.html
+  name: NetPose3D
+  nameWithType: NetPose3D
+  fullName: Nebula.NetPose3D
 - uid: Nebula.NetPose3D.ApplyKeyframe*
   commentId: Overload:Nebula.NetPose3D.ApplyKeyframe
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_ApplyKeyframe_Godot_Vector3_Godot_Vector3_
+  href: Nebula.NetPose3D.ApplyKeyframe.html#Nebula_NetPose3D_ApplyKeyframe_Godot_Vector3_Godot_Vector3_
   name: ApplyKeyframe
   nameWithType: NetPose3D.ApplyKeyframe
   fullName: Nebula.NetPose3D.ApplyKeyframe
+- uid: Godot.Quaternion
+  commentId: T:Godot.Quaternion
+  parent: Godot
+  isExternal: true
+  name: Quaternion
+  nameWithType: Quaternion
+  fullName: Godot.Quaternion
 - uid: Nebula.NetPose3D.NetworkProcess*
   commentId: Overload:Nebula.NetPose3D.NetworkProcess
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_NetworkProcess_Nebula_WorldRunner_
+  href: Nebula.NetPose3D.NetworkProcess.html#Nebula_NetPose3D_NetworkProcess_Nebula_WorldRunner_
   name: NetworkProcess
   nameWithType: NetPose3D.NetworkProcess
   fullName: Nebula.NetPose3D.NetworkProcess
@@ -3350,25 +3694,25 @@ references:
 - uid: Nebula.NetPose3D.NetworkSerialize*
   commentId: Overload:Nebula.NetPose3D.NetworkSerialize
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_NetPose3D_
+  href: Nebula.NetPose3D.NetworkSerialize.html#Nebula_NetPose3D_NetworkSerialize_Nebula_WorldRunner_ENet_Peer_Nebula_NetPose3D_Nebula_Serialization_NetBuffer_
   name: NetworkSerialize
   nameWithType: NetPose3D.NetworkSerialize
   fullName: Nebula.NetPose3D.NetworkSerialize
-- uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetPose3D)
-  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetPose3D)
+- uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetPose3D,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetPose3D,Nebula.Serialization.NetBuffer)
   parent: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}
-  definition: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
-  name: NetworkSerialize(WorldRunner, ENetPacketPeer, NetPose3D)
-  nameWithType: INetSerializable<NetPose3D>.NetworkSerialize(WorldRunner, ENetPacketPeer, NetPose3D)
-  fullName: Nebula.Serialization.INetSerializable<Nebula.NetPose3D>.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.NetPose3D)
-  nameWithType.vb: INetSerializable(Of NetPose3D).NetworkSerialize(WorldRunner, ENetPacketPeer, NetPose3D)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetPose3D).NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.NetPose3D)
+  definition: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+  href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  name: NetworkSerialize(WorldRunner, Peer, NetPose3D, NetBuffer)
+  nameWithType: INetSerializable<NetPose3D>.NetworkSerialize(WorldRunner, Peer, NetPose3D, NetBuffer)
+  fullName: Nebula.Serialization.INetSerializable<Nebula.NetPose3D>.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.NetPose3D, Nebula.Serialization.NetBuffer)
+  nameWithType.vb: INetSerializable(Of NetPose3D).NetworkSerialize(WorldRunner, Peer, NetPose3D, NetBuffer)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetPose3D).NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.NetPose3D, Nebula.Serialization.NetBuffer)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetPose3D)
+  - uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetPose3D,Nebula.Serialization.NetBuffer)
     name: NetworkSerialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -3376,8 +3720,8 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
@@ -3385,12 +3729,18 @@ references:
     name: NetPose3D
     isExternal: true
     href: Nebula.NetPose3D.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetPose3D)
+  - uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetPose3D,Nebula.Serialization.NetBuffer)
     name: NetworkSerialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -3398,8 +3748,8 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
@@ -3407,37 +3757,35 @@ references:
     name: NetPose3D
     isExternal: true
     href: Nebula.NetPose3D.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
-- uid: Nebula.NetPose3D
-  commentId: T:Nebula.NetPose3D
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetPose3D.html
-  name: NetPose3D
-  nameWithType: NetPose3D
-  fullName: Nebula.NetPose3D
-- uid: Nebula.Serialization.HLBuffer
-  commentId: T:Nebula.Serialization.HLBuffer
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
   parent: Nebula.Serialization
   isExternal: true
-  href: Nebula.Serialization.HLBuffer.html
-  name: HLBuffer
-  nameWithType: HLBuffer
-  fullName: Nebula.Serialization.HLBuffer
-- uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
-  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
   isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
-  name: NetworkSerialize(WorldRunner, ENetPacketPeer, T)
-  nameWithType: INetSerializable<T>.NetworkSerialize(WorldRunner, ENetPacketPeer, T)
-  fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, T)
-  nameWithType.vb: INetSerializable(Of T).NetworkSerialize(WorldRunner, ENetPacketPeer, T)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, T)
+  href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  name: NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  nameWithType: INetSerializable<T>.NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer)
+  nameWithType.vb: INetSerializable(Of T).NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
     name: NetworkSerialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -3445,18 +3793,24 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
   - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
     name: NetworkSerialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -3464,106 +3818,41 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
   - name: T
-  - name: )
-- uid: Nebula.NetPose3D.GetDeserializeContext*
-  commentId: Overload:Nebula.NetPose3D.GetDeserializeContext
-  isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_GetDeserializeContext_Nebula_NetPose3D_
-  name: GetDeserializeContext
-  nameWithType: NetPose3D.GetDeserializeContext
-  fullName: Nebula.NetPose3D.GetDeserializeContext
-- uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.GetDeserializeContext(Nebula.NetPose3D)
-  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.GetDeserializeContext(Nebula.NetPose3D)
-  parent: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}
-  definition: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  name: GetDeserializeContext(NetPose3D)
-  nameWithType: INetSerializable<NetPose3D>.GetDeserializeContext(NetPose3D)
-  fullName: Nebula.Serialization.INetSerializable<Nebula.NetPose3D>.GetDeserializeContext(Nebula.NetPose3D)
-  nameWithType.vb: INetSerializable(Of NetPose3D).GetDeserializeContext(NetPose3D)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetPose3D).GetDeserializeContext(Nebula.NetPose3D)
-  spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.GetDeserializeContext(Nebula.NetPose3D)
-    name: GetDeserializeContext
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
-    isExternal: true
-    href: Nebula.NetPose3D.html
-  - name: )
-  spec.vb:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.GetDeserializeContext(Nebula.NetPose3D)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
-    isExternal: true
-    href: Nebula.NetPose3D.html
-  - name: )
-- uid: Godot.Variant
-  commentId: T:Godot.Variant
-  parent: Godot
-  isExternal: true
-  name: Variant
-  nameWithType: Variant
-  fullName: Godot.Variant
-- uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-  commentId: M:Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-  isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  name: GetDeserializeContext(T)
-  nameWithType: INetSerializable<T>.GetDeserializeContext(T)
-  fullName: Nebula.Serialization.INetSerializable<T>.GetDeserializeContext(T)
-  nameWithType.vb: INetSerializable(Of T).GetDeserializeContext(T)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of T).GetDeserializeContext(T)
-  spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - name: T
-  - name: )
-  spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - name: T
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
 - uid: Nebula.NetPose3D.NetworkDeserialize*
   commentId: Overload:Nebula.NetPose3D.NetworkDeserialize
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+  href: Nebula.NetPose3D.NetworkDeserialize.html#Nebula_NetPose3D_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_Nebula_NetPose3D_
   name: NetworkDeserialize
   nameWithType: NetPose3D.NetworkDeserialize
   fullName: Nebula.NetPose3D.NetworkDeserialize
-- uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+- uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetPose3D)
+  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetPose3D)
   parent: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}
-  definition: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
-  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  nameWithType: INetSerializable<NetPose3D>.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName: Nebula.Serialization.INetSerializable<Nebula.NetPose3D>.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  nameWithType.vb: INetSerializable(Of NetPose3D).NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetPose3D).NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
+  definition: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetPose3D)
+  nameWithType: INetSerializable<NetPose3D>.NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetPose3D)
+  fullName: Nebula.Serialization.INetSerializable<Nebula.NetPose3D>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.NetPose3D)
+  nameWithType.vb: INetSerializable(Of NetPose3D).NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetPose3D)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetPose3D).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.NetPose3D)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetPose3D)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -3571,26 +3860,27 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
+    href: Nebula.Serialization.NetBuffer.html
   - name: ','
   - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.NetPose3D
+    name: NetPose3D
     isExternal: true
+    href: Nebula.NetPose3D.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - uid: Nebula.Serialization.INetSerializable{Nebula.NetPose3D}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetPose3D)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -3598,35 +3888,36 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
+    href: Nebula.Serialization.NetBuffer.html
   - name: ','
   - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.NetPose3D
+    name: NetPose3D
     isExternal: true
+    href: Nebula.NetPose3D.html
   - name: )
-- uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+- uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
   isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
-  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  nameWithType: INetSerializable<T>.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  nameWithType.vb: INetSerializable(Of T).NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
+  href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  nameWithType: INetSerializable<T>.NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, T)
+  nameWithType.vb: INetSerializable(Of T).NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, T)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -3634,75 +3925,201 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
+    href: Nebula.Serialization.NetBuffer.html
   - name: ','
   - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.NetPose3D.OnBsonDeserialize*
+  commentId: Overload:Nebula.NetPose3D.OnBsonDeserialize
+  isExternal: true
+  href: Nebula.NetPose3D.OnBsonDeserialize.html#Nebula_NetPose3D_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  name: OnBsonDeserialize
+  nameWithType: NetPose3D.OnBsonDeserialize
+  fullName: Nebula.NetPose3D.OnBsonDeserialize
+- uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  parent: Nebula.Serialization.IBsonSerializableBase
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  name: OnBsonDeserialize(NetBsonContext, BsonDocument)
+  nameWithType: IBsonSerializableBase.OnBsonDeserialize(NetBsonContext, BsonDocument)
+  fullName: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext, MongoDB.Bson.BsonDocument)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+    name: OnBsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: MongoDB.Bson.BsonDocument
+    name: BsonDocument
     isExternal: true
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-    name: NetworkDeserialize
+  - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+    name: OnBsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
   - name: (
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
-    href: Nebula.WorldRunner.html
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: MongoDB.Bson.BsonDocument
+    name: BsonDocument
     isExternal: true
   - name: )
+- uid: Nebula.Serialization.NetBsonContext
+  commentId: T:Nebula.Serialization.NetBsonContext
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBsonContext.html
+  name: NetBsonContext
+  nameWithType: NetBsonContext
+  fullName: Nebula.Serialization.NetBsonContext
+- uid: MongoDB.Bson.BsonDocument
+  commentId: T:MongoDB.Bson.BsonDocument
+  parent: MongoDB.Bson
+  isExternal: true
+  name: BsonDocument
+  nameWithType: BsonDocument
+  fullName: MongoDB.Bson.BsonDocument
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: MongoDB.Bson
+  commentId: N:MongoDB.Bson
+  isExternal: true
+  name: MongoDB.Bson
+  nameWithType: MongoDB.Bson
+  fullName: MongoDB.Bson
+  spec.csharp:
+  - uid: MongoDB
+    name: MongoDB
+    isExternal: true
+  - name: .
+  - uid: MongoDB.Bson
+    name: Bson
+    isExternal: true
+  spec.vb:
+  - uid: MongoDB
+    name: MongoDB
+    isExternal: true
+  - name: .
+  - uid: MongoDB.Bson
+    name: Bson
+    isExternal: true
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
 - uid: Nebula.NetPose3D.BsonDeserialize*
   commentId: Overload:Nebula.NetPose3D.BsonDeserialize
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_BsonDeserialize_Godot_Variant_System_Byte___Nebula_NetPose3D_
+  href: Nebula.NetPose3D.BsonDeserialize.html#Nebula_NetPose3D_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
   name: BsonDeserialize
   nameWithType: NetPose3D.BsonDeserialize
   fullName: Nebula.NetPose3D.BsonDeserialize
-- uid: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetPose3D)
-  commentId: M:Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetPose3D)
+- uid: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  commentId: M:Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
   parent: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}
-  definition: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-  href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
-  name: BsonDeserialize(Variant, byte[], NetPose3D)
-  nameWithType: IBsonSerializable<NetPose3D>.BsonDeserialize(Variant, byte[], NetPose3D)
-  fullName: Nebula.Serialization.IBsonSerializable<Nebula.NetPose3D>.BsonDeserialize(Godot.Variant, byte[], Nebula.NetPose3D)
-  nameWithType.vb: IBsonSerializable(Of NetPose3D).BsonDeserialize(Variant, Byte(), NetPose3D)
-  fullName.vb: Nebula.Serialization.IBsonSerializable(Of Nebula.NetPose3D).BsonDeserialize(Godot.Variant, Byte(), Nebula.NetPose3D)
-  name.vb: BsonDeserialize(Variant, Byte(), NetPose3D)
+  definition: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  name: BsonDeserialize(NetBsonContext, byte[])
+  nameWithType: IBsonSerializable<NetPose3D>.BsonDeserialize(NetBsonContext, byte[])
+  fullName: Nebula.Serialization.IBsonSerializable<Nebula.NetPose3D>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[])
+  nameWithType.vb: IBsonSerializable(Of NetPose3D).BsonDeserialize(NetBsonContext, Byte())
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of Nebula.NetPose3D).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte())
+  name.vb: BsonDeserialize(NetBsonContext, Byte())
   spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetPose3D)
+  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
   - uid: System.Byte
@@ -3711,22 +4128,17 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.byte
   - name: '['
   - name: ']'
-  - name: ','
-  - name: " "
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
-    isExternal: true
-    href: Nebula.NetPose3D.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetPose3D)
+  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
   - uid: System.Byte
@@ -3735,12 +4147,6 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.byte
   - name: (
   - name: )
-  - name: ','
-  - name: " "
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
-    isExternal: true
-    href: Nebula.NetPose3D.html
   - name: )
 - uid: System.Byte[]
   isExternal: true
@@ -3765,25 +4171,198 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.byte
   - name: (
   - name: )
-- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-  isExternal: true
-  href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
-  name: BsonDeserialize(Variant, byte[], T)
-  nameWithType: IBsonSerializable<T>.BsonDeserialize(Variant, byte[], T)
-  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Godot.Variant, byte[], T)
-  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(Variant, Byte(), T)
-  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Godot.Variant, Byte(), T)
-  name.vb: BsonDeserialize(Variant, Byte(), T)
+- uid: System.Threading.Tasks.Task{Nebula.NetPose3D}
+  commentId: T:System.Threading.Tasks.Task{Nebula.NetPose3D}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<NetPose3D>
+  nameWithType: Task<NetPose3D>
+  fullName: System.Threading.Tasks.Task<Nebula.NetPose3D>
+  nameWithType.vb: Task(Of NetPose3D)
+  fullName.vb: System.Threading.Tasks.Task(Of Nebula.NetPose3D)
+  name.vb: Task(Of NetPose3D)
   spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Nebula.NetPose3D
+    name: NetPose3D
+    isExternal: true
+    href: Nebula.NetPose3D.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.NetPose3D
+    name: NetPose3D
+    isExternal: true
+    href: Nebula.NetPose3D.html
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  name: BsonDeserialize(NetBsonContext, byte[])
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(NetBsonContext, byte[])
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[])
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(NetBsonContext, Byte())
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte())
+  name.vb: BsonDeserialize(NetBsonContext, Byte())
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetPose3D)
+  commentId: M:Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetPose3D)
+  parent: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}
+  definition: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  name: BsonDeserialize(NetBsonContext, byte[], NetPose3D)
+  nameWithType: IBsonSerializable<NetPose3D>.BsonDeserialize(NetBsonContext, byte[], NetPose3D)
+  fullName: Nebula.Serialization.IBsonSerializable<Nebula.NetPose3D>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[], Nebula.NetPose3D)
+  nameWithType.vb: IBsonSerializable(Of NetPose3D).BsonDeserialize(NetBsonContext, Byte(), NetPose3D)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of Nebula.NetPose3D).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte(), Nebula.NetPose3D)
+  name.vb: BsonDeserialize(NetBsonContext, Byte(), NetPose3D)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetPose3D)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: Nebula.NetPose3D
+    name: NetPose3D
+    isExternal: true
+    href: Nebula.NetPose3D.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetPose3D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetPose3D)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: Nebula.NetPose3D
+    name: NetPose3D
+    isExternal: true
+    href: Nebula.NetPose3D.html
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  name: BsonDeserialize(NetBsonContext, byte[], T)
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(NetBsonContext, byte[], T)
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[], T)
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(NetBsonContext, Byte(), T)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte(), T)
+  name.vb: BsonDeserialize(NetBsonContext, Byte(), T)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
   - uid: System.Byte
@@ -3797,14 +4376,15 @@ references:
   - name: T
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
   - uid: System.Byte
@@ -3820,37 +4400,39 @@ references:
 - uid: Nebula.NetPose3D.BsonSerialize*
   commentId: Overload:Nebula.NetPose3D.BsonSerialize
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_BsonSerialize_Godot_Variant_
+  href: Nebula.NetPose3D.BsonSerialize.html#Nebula_NetPose3D_BsonSerialize_Nebula_Serialization_NetBsonContext_
   name: BsonSerialize
   nameWithType: NetPose3D.BsonSerialize
   fullName: Nebula.NetPose3D.BsonSerialize
-- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
   parent: Nebula.Serialization.IBsonSerializableBase
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
-  name: BsonSerialize(Variant)
-  nameWithType: IBsonSerializableBase.BsonSerialize(Variant)
-  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  name: BsonSerialize(NetBsonContext)
+  nameWithType: IBsonSerializableBase.BsonSerialize(NetBsonContext)
+  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
   spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
     name: BsonSerialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+    href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
     name: BsonSerialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+    href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: )
 - uid: MongoDB.Bson.BsonValue
   commentId: T:MongoDB.Bson.BsonValue
@@ -3859,53 +4441,31 @@ references:
   name: BsonValue
   nameWithType: BsonValue
   fullName: MongoDB.Bson.BsonValue
-- uid: MongoDB.Bson
-  commentId: N:MongoDB.Bson
-  isExternal: true
-  name: MongoDB.Bson
-  nameWithType: MongoDB.Bson
-  fullName: MongoDB.Bson
-  spec.csharp:
-  - uid: MongoDB
-    name: MongoDB
-    isExternal: true
-  - name: .
-  - uid: MongoDB.Bson
-    name: Bson
-    isExternal: true
-  spec.vb:
-  - uid: MongoDB
-    name: MongoDB
-    isExternal: true
-  - name: .
-  - uid: MongoDB.Bson
-    name: Bson
-    isExternal: true
-- uid: Nebula.NetPose3D.EmitSignalOnChange*
-  commentId: Overload:Nebula.NetPose3D.EmitSignalOnChange
-  isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_EmitSignalOnChange
-  name: EmitSignalOnChange
-  nameWithType: NetPose3D.EmitSignalOnChange
-  fullName: Nebula.NetPose3D.EmitSignalOnChange
 - uid: Nebula.NetPose3D.Position*
   commentId: Overload:Nebula.NetPose3D.Position
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_Position
+  href: Nebula.NetPose3D.Position.html#Nebula_NetPose3D_Position
   name: Position
   nameWithType: NetPose3D.Position
   fullName: Nebula.NetPose3D.Position
 - uid: Nebula.NetPose3D.Rotation*
   commentId: Overload:Nebula.NetPose3D.Rotation
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_Rotation
+  href: Nebula.NetPose3D.Rotation.html#Nebula_NetPose3D_Rotation
   name: Rotation
   nameWithType: NetPose3D.Rotation
   fullName: Nebula.NetPose3D.Rotation
+- uid: Nebula.NetPose3D.RotationQuat*
+  commentId: Overload:Nebula.NetPose3D.RotationQuat
+  isExternal: true
+  href: Nebula.NetPose3D.RotationQuat.html#Nebula_NetPose3D_RotationQuat
+  name: RotationQuat
+  nameWithType: NetPose3D.RotationQuat
+  fullName: Nebula.NetPose3D.RotationQuat
 - uid: Nebula.NetPose3D.ClientState*
   commentId: Overload:Nebula.NetPose3D.ClientState
   isExternal: true
-  href: Nebula.NetPose3D.html#Nebula_NetPose3D_ClientState
+  href: Nebula.NetPose3D.ClientState.html#Nebula_NetPose3D_ClientState
   name: ClientState
   nameWithType: NetPose3D.ClientState
   fullName: Nebula.NetPose3D.ClientState
@@ -3937,31 +4497,12 @@ references:
     name: ChangeType
     isExternal: true
     href: Nebula.NetPose3D.ChangeType.html
-- uid: Nebula.NetPose3D.OnChangeEventHandler
-  commentId: T:Nebula.NetPose3D.OnChangeEventHandler
-  parent: Nebula
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
   isExternal: true
-  href: Nebula.NetPose3D.html
-  name: NetPose3D.OnChangeEventHandler
-  nameWithType: NetPose3D.OnChangeEventHandler
-  fullName: Nebula.NetPose3D.OnChangeEventHandler
-  spec.csharp:
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
-    isExternal: true
-    href: Nebula.NetPose3D.html
-  - name: .
-  - uid: Nebula.NetPose3D.OnChangeEventHandler
-    name: OnChangeEventHandler
-    isExternal: true
-    href: Nebula.NetPose3D.OnChangeEventHandler.html
-  spec.vb:
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
-    isExternal: true
-    href: Nebula.NetPose3D.html
-  - name: .
-  - uid: Nebula.NetPose3D.OnChangeEventHandler
-    name: OnChangeEventHandler
-    isExternal: true
-    href: Nebula.NetPose3D.OnChangeEventHandler.html
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+memberLayout: SeparatePages

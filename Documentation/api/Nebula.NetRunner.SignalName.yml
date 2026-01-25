@@ -6,10 +6,6 @@ items:
   parent: Nebula
   children:
   - Nebula.NetRunner.SignalName.#ctor
-  - Nebula.NetRunner.SignalName.OnConnectedToServer
-  - Nebula.NetRunner.SignalName.OnPeerConnected
-  - Nebula.NetRunner.SignalName.OnPeerDisconnected
-  - Nebula.NetRunner.SignalName.OnWorldCreated
   langs:
   - csharp
   - vb
@@ -18,7 +14,7 @@ items:
   fullName: Nebula.NetRunner.SignalName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -52,98 +48,6 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
-- uid: Nebula.NetRunner.SignalName.OnPeerConnected
-  commentId: F:Nebula.NetRunner.SignalName.OnPeerConnected
-  id: OnPeerConnected
-  parent: Nebula.NetRunner.SignalName
-  langs:
-  - csharp
-  - vb
-  name: OnPeerConnected
-  nameWithType: NetRunner.SignalName.OnPeerConnected
-  fullName: Nebula.NetRunner.SignalName.OnPeerConnected
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'OnPeerConnected' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName OnPeerConnected
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnPeerConnected As StringName
-- uid: Nebula.NetRunner.SignalName.OnPeerDisconnected
-  commentId: F:Nebula.NetRunner.SignalName.OnPeerDisconnected
-  id: OnPeerDisconnected
-  parent: Nebula.NetRunner.SignalName
-  langs:
-  - csharp
-  - vb
-  name: OnPeerDisconnected
-  nameWithType: NetRunner.SignalName.OnPeerDisconnected
-  fullName: Nebula.NetRunner.SignalName.OnPeerDisconnected
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'OnPeerDisconnected' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName OnPeerDisconnected
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnPeerDisconnected As StringName
-- uid: Nebula.NetRunner.SignalName.OnConnectedToServer
-  commentId: F:Nebula.NetRunner.SignalName.OnConnectedToServer
-  id: OnConnectedToServer
-  parent: Nebula.NetRunner.SignalName
-  langs:
-  - csharp
-  - vb
-  name: OnConnectedToServer
-  nameWithType: NetRunner.SignalName.OnConnectedToServer
-  fullName: Nebula.NetRunner.SignalName.OnConnectedToServer
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'OnConnectedToServer' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName OnConnectedToServer
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnConnectedToServer As StringName
-- uid: Nebula.NetRunner.SignalName.OnWorldCreated
-  commentId: F:Nebula.NetRunner.SignalName.OnWorldCreated
-  id: OnWorldCreated
-  parent: Nebula.NetRunner.SignalName
-  langs:
-  - csharp
-  - vb
-  name: OnWorldCreated
-  nameWithType: NetRunner.SignalName.OnWorldCreated
-  fullName: Nebula.NetRunner.SignalName.OnWorldCreated
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'OnWorldCreated' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName OnWorldCreated
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnWorldCreated As StringName
 - uid: Nebula.NetRunner.SignalName.#ctor
   commentId: M:Nebula.NetRunner.SignalName.#ctor
   id: '#ctor'
@@ -156,7 +60,7 @@ items:
   fullName: Nebula.NetRunner.SignalName.SignalName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -555,20 +459,14 @@ references:
   name: Godot
   nameWithType: Godot
   fullName: Godot
-- uid: Godot.StringName
-  commentId: T:Godot.StringName
-  parent: Godot
-  isExternal: true
-  name: StringName
-  nameWithType: StringName
-  fullName: Godot.StringName
 - uid: Nebula.NetRunner.SignalName.#ctor*
   commentId: Overload:Nebula.NetRunner.SignalName.#ctor
   isExternal: true
-  href: Nebula.NetRunner.SignalName.html#Nebula_NetRunner_SignalName__ctor
+  href: Nebula.NetRunner.SignalName.-ctor.html#Nebula_NetRunner_SignalName__ctor
   name: SignalName
   nameWithType: NetRunner.SignalName.SignalName
   fullName: Nebula.NetRunner.SignalName.SignalName
   nameWithType.vb: NetRunner.SignalName.New
   fullName.vb: Nebula.NetRunner.SignalName.New
   name.vb: New
+memberLayout: SeparatePages

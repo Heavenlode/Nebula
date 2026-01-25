@@ -1,0 +1,1620 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.GeneratedProtocol
+  commentId: T:Nebula.Serialization.GeneratedProtocol
+  id: GeneratedProtocol
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.GeneratedProtocol.Deserializers
+  - Nebula.Serialization.GeneratedProtocol.FunctionsLookup
+  - Nebula.Serialization.GeneratedProtocol.FunctionsMap
+  - Nebula.Serialization.GeneratedProtocol.PropertiesByStaticChildId
+  - Nebula.Serialization.GeneratedProtocol.PropertiesLookup
+  - Nebula.Serialization.GeneratedProtocol.PropertiesMap
+  - Nebula.Serialization.GeneratedProtocol.SceneInterestMap
+  - Nebula.Serialization.GeneratedProtocol.ScenesMap
+  - Nebula.Serialization.GeneratedProtocol.ScenesPack
+  - Nebula.Serialization.GeneratedProtocol.SerialTypePack
+  - Nebula.Serialization.GeneratedProtocol.Serializers
+  - Nebula.Serialization.GeneratedProtocol.StaticMethods
+  - Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsMap
+  - Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsPack
+  langs:
+  - csharp
+  - vb
+  name: GeneratedProtocol
+  nameWithType: GeneratedProtocol
+  fullName: Nebula.Serialization.GeneratedProtocol
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Auto-generated protocol data for network serialization.
+
+    Use the Protocol helper class for convenient access methods.
+  example: []
+  syntax:
+    content: public static class GeneratedProtocol
+    content.vb: Public Module GeneratedProtocol
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Serialization.GeneratedProtocol.StaticMethods
+  commentId: F:Nebula.Serialization.GeneratedProtocol.StaticMethods
+  id: StaticMethods
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: StaticMethods
+  nameWithType: GeneratedProtocol.StaticMethods
+  fullName: Nebula.Serialization.GeneratedProtocol.StaticMethods
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<int, StaticMethodInfo> StaticMethods
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.StaticMethodInfo}
+    content.vb: Public Shared ReadOnly StaticMethods As FrozenDictionary(Of Integer, StaticMethodInfo)
+- uid: Nebula.Serialization.GeneratedProtocol.ScenesMap
+  commentId: F:Nebula.Serialization.GeneratedProtocol.ScenesMap
+  id: ScenesMap
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: ScenesMap
+  nameWithType: GeneratedProtocol.ScenesMap
+  fullName: Nebula.Serialization.GeneratedProtocol.ScenesMap
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<byte, string> ScenesMap
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.Byte,System.String}
+    content.vb: Public Shared ReadOnly ScenesMap As FrozenDictionary(Of Byte, String)
+- uid: Nebula.Serialization.GeneratedProtocol.ScenesPack
+  commentId: F:Nebula.Serialization.GeneratedProtocol.ScenesPack
+  id: ScenesPack
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: ScenesPack
+  nameWithType: GeneratedProtocol.ScenesPack
+  fullName: Nebula.Serialization.GeneratedProtocol.ScenesPack
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<string, byte> ScenesPack
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.String,System.Byte}
+    content.vb: Public Shared ReadOnly ScenesPack As FrozenDictionary(Of String, Byte)
+- uid: Nebula.Serialization.GeneratedProtocol.SceneInterestMap
+  commentId: F:Nebula.Serialization.GeneratedProtocol.SceneInterestMap
+  id: SceneInterestMap
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: SceneInterestMap
+  nameWithType: GeneratedProtocol.SceneInterestMap
+  fullName: Nebula.Serialization.GeneratedProtocol.SceneInterestMap
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<string, ProtocolSceneInterest> SceneInterestMap
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolSceneInterest}
+    content.vb: Public Shared ReadOnly SceneInterestMap As FrozenDictionary(Of String, ProtocolSceneInterest)
+- uid: Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsMap
+  commentId: F:Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsMap
+  id: StaticNetworkNodePathsMap
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: StaticNetworkNodePathsMap
+  nameWithType: GeneratedProtocol.StaticNetworkNodePathsMap
+  fullName: Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsMap
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<string, FrozenDictionary<byte, string>> StaticNetworkNodePathsMap
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Byte,System.String}}
+    content.vb: Public Shared ReadOnly StaticNetworkNodePathsMap As FrozenDictionary(Of String, FrozenDictionary(Of Byte, String))
+- uid: Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsPack
+  commentId: F:Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsPack
+  id: StaticNetworkNodePathsPack
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: StaticNetworkNodePathsPack
+  nameWithType: GeneratedProtocol.StaticNetworkNodePathsPack
+  fullName: Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsPack
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<string, FrozenDictionary<string, byte>> StaticNetworkNodePathsPack
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,System.Byte}}
+    content.vb: Public Shared ReadOnly StaticNetworkNodePathsPack As FrozenDictionary(Of String, FrozenDictionary(Of String, Byte))
+- uid: Nebula.Serialization.GeneratedProtocol.PropertiesMap
+  commentId: F:Nebula.Serialization.GeneratedProtocol.PropertiesMap
+  id: PropertiesMap
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: PropertiesMap
+  nameWithType: GeneratedProtocol.PropertiesMap
+  fullName: Nebula.Serialization.GeneratedProtocol.PropertiesMap
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<string, FrozenDictionary<string, FrozenDictionary<string, ProtocolNetProperty>>> PropertiesMap
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolNetProperty}}}
+    content.vb: Public Shared ReadOnly PropertiesMap As FrozenDictionary(Of String, FrozenDictionary(Of String, FrozenDictionary(Of String, ProtocolNetProperty)))
+- uid: Nebula.Serialization.GeneratedProtocol.PropertiesLookup
+  commentId: F:Nebula.Serialization.GeneratedProtocol.PropertiesLookup
+  id: PropertiesLookup
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: PropertiesLookup
+  nameWithType: GeneratedProtocol.PropertiesLookup
+  fullName: Nebula.Serialization.GeneratedProtocol.PropertiesLookup
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<string, FrozenDictionary<int, ProtocolNetProperty>> PropertiesLookup
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.ProtocolNetProperty}}
+    content.vb: Public Shared ReadOnly PropertiesLookup As FrozenDictionary(Of String, FrozenDictionary(Of Integer, ProtocolNetProperty))
+- uid: Nebula.Serialization.GeneratedProtocol.PropertiesByStaticChildId
+  commentId: F:Nebula.Serialization.GeneratedProtocol.PropertiesByStaticChildId
+  id: PropertiesByStaticChildId
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: PropertiesByStaticChildId
+  nameWithType: GeneratedProtocol.PropertiesByStaticChildId
+  fullName: Nebula.Serialization.GeneratedProtocol.PropertiesByStaticChildId
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<string, FrozenDictionary<byte, FrozenDictionary<string, ProtocolNetProperty>>> PropertiesByStaticChildId
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Byte,System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolNetProperty}}}
+    content.vb: Public Shared ReadOnly PropertiesByStaticChildId As FrozenDictionary(Of String, FrozenDictionary(Of Byte, FrozenDictionary(Of String, ProtocolNetProperty)))
+- uid: Nebula.Serialization.GeneratedProtocol.FunctionsMap
+  commentId: F:Nebula.Serialization.GeneratedProtocol.FunctionsMap
+  id: FunctionsMap
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: FunctionsMap
+  nameWithType: GeneratedProtocol.FunctionsMap
+  fullName: Nebula.Serialization.GeneratedProtocol.FunctionsMap
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<string, FrozenDictionary<string, FrozenDictionary<string, ProtocolNetFunction>>> FunctionsMap
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolNetFunction}}}
+    content.vb: Public Shared ReadOnly FunctionsMap As FrozenDictionary(Of String, FrozenDictionary(Of String, FrozenDictionary(Of String, ProtocolNetFunction)))
+- uid: Nebula.Serialization.GeneratedProtocol.FunctionsLookup
+  commentId: F:Nebula.Serialization.GeneratedProtocol.FunctionsLookup
+  id: FunctionsLookup
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: FunctionsLookup
+  nameWithType: GeneratedProtocol.FunctionsLookup
+  fullName: Nebula.Serialization.GeneratedProtocol.FunctionsLookup
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<string, FrozenDictionary<int, ProtocolNetFunction>> FunctionsLookup
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.ProtocolNetFunction}}
+    content.vb: Public Shared ReadOnly FunctionsLookup As FrozenDictionary(Of String, FrozenDictionary(Of Integer, ProtocolNetFunction))
+- uid: Nebula.Serialization.GeneratedProtocol.SerialTypePack
+  commentId: F:Nebula.Serialization.GeneratedProtocol.SerialTypePack
+  id: SerialTypePack
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: SerialTypePack
+  nameWithType: GeneratedProtocol.SerialTypePack
+  fullName: Nebula.Serialization.GeneratedProtocol.SerialTypePack
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<string, int> SerialTypePack
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.String,System.Int32}
+    content.vb: Public Shared ReadOnly SerialTypePack As FrozenDictionary(Of String, Integer)
+- uid: Nebula.Serialization.GeneratedProtocol.Deserializers
+  commentId: F:Nebula.Serialization.GeneratedProtocol.Deserializers
+  id: Deserializers
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: Deserializers
+  nameWithType: GeneratedProtocol.Deserializers
+  fullName: Nebula.Serialization.GeneratedProtocol.Deserializers
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<int, GeneratedProtocol.NetworkDeserializeFunc> Deserializers
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc}
+    content.vb: Public Shared ReadOnly Deserializers As FrozenDictionary(Of Integer, GeneratedProtocol.NetworkDeserializeFunc)
+- uid: Nebula.Serialization.GeneratedProtocol.Serializers
+  commentId: F:Nebula.Serialization.GeneratedProtocol.Serializers
+  id: Serializers
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: Serializers
+  nameWithType: GeneratedProtocol.Serializers
+  fullName: Nebula.Serialization.GeneratedProtocol.Serializers
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<int, GeneratedProtocol.NetworkSerializeFunc> Serializers
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc}
+    content.vb: Public Shared ReadOnly Serializers As FrozenDictionary(Of Integer, GeneratedProtocol.NetworkSerializeFunc)
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.StaticMethodInfo}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.StaticMethodInfo}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<int, StaticMethodInfo>
+  nameWithType: FrozenDictionary<int, StaticMethodInfo>
+  fullName: System.Collections.Frozen.FrozenDictionary<int, Nebula.Serialization.StaticMethodInfo>
+  nameWithType.vb: FrozenDictionary(Of Integer, StaticMethodInfo)
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of Integer, Nebula.Serialization.StaticMethodInfo)
+  name.vb: FrozenDictionary(Of Integer, StaticMethodInfo)
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.StaticMethodInfo
+    name: StaticMethodInfo
+    isExternal: true
+    href: Nebula.Serialization.StaticMethodInfo.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.StaticMethodInfo
+    name: StaticMethodInfo
+    isExternal: true
+    href: Nebula.Serialization.StaticMethodInfo.html
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary`2
+  commentId: T:System.Collections.Frozen.FrozenDictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<TKey, TValue>
+  nameWithType: FrozenDictionary<TKey, TValue>
+  fullName: System.Collections.Frozen.FrozenDictionary<TKey, TValue>
+  nameWithType.vb: FrozenDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of TKey, TValue)
+  name.vb: FrozenDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Frozen
+  commentId: N:System.Collections.Frozen
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Frozen
+  nameWithType: System.Collections.Frozen
+  fullName: System.Collections.Frozen
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Frozen
+    name: Frozen
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Frozen
+    name: Frozen
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen
+- uid: System.Collections.Frozen.FrozenDictionary{System.Byte,System.String}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.Byte,System.String}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<byte, string>
+  nameWithType: FrozenDictionary<byte, string>
+  fullName: System.Collections.Frozen.FrozenDictionary<byte, string>
+  nameWithType.vb: FrozenDictionary(Of Byte, String)
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of Byte, String)
+  name.vb: FrozenDictionary(Of Byte, String)
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.String,System.Byte}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.String,System.Byte}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<string, byte>
+  nameWithType: FrozenDictionary<string, byte>
+  fullName: System.Collections.Frozen.FrozenDictionary<string, byte>
+  nameWithType.vb: FrozenDictionary(Of String, Byte)
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of String, Byte)
+  name.vb: FrozenDictionary(Of String, Byte)
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolSceneInterest}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolSceneInterest}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<string, ProtocolSceneInterest>
+  nameWithType: FrozenDictionary<string, ProtocolSceneInterest>
+  fullName: System.Collections.Frozen.FrozenDictionary<string, Nebula.Serialization.ProtocolSceneInterest>
+  nameWithType.vb: FrozenDictionary(Of String, ProtocolSceneInterest)
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of String, Nebula.Serialization.ProtocolSceneInterest)
+  name.vb: FrozenDictionary(Of String, ProtocolSceneInterest)
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolSceneInterest
+    name: ProtocolSceneInterest
+    isExternal: true
+    href: Nebula.Serialization.ProtocolSceneInterest.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolSceneInterest
+    name: ProtocolSceneInterest
+    isExternal: true
+    href: Nebula.Serialization.ProtocolSceneInterest.html
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Byte,System.String}}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Byte,System.String}}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<string, FrozenDictionary<byte, string>>
+  nameWithType: FrozenDictionary<string, FrozenDictionary<byte, string>>
+  fullName: System.Collections.Frozen.FrozenDictionary<string, System.Collections.Frozen.FrozenDictionary<byte, string>>
+  nameWithType.vb: FrozenDictionary(Of String, FrozenDictionary(Of Byte, String))
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of String, System.Collections.Frozen.FrozenDictionary(Of Byte, String))
+  name.vb: FrozenDictionary(Of String, FrozenDictionary(Of Byte, String))
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,System.Byte}}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,System.Byte}}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<string, FrozenDictionary<string, byte>>
+  nameWithType: FrozenDictionary<string, FrozenDictionary<string, byte>>
+  fullName: System.Collections.Frozen.FrozenDictionary<string, System.Collections.Frozen.FrozenDictionary<string, byte>>
+  nameWithType.vb: FrozenDictionary(Of String, FrozenDictionary(Of String, Byte))
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of String, System.Collections.Frozen.FrozenDictionary(Of String, Byte))
+  name.vb: FrozenDictionary(Of String, FrozenDictionary(Of String, Byte))
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolNetProperty}}}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolNetProperty}}}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<string, FrozenDictionary<string, FrozenDictionary<string, ProtocolNetProperty>>>
+  nameWithType: FrozenDictionary<string, FrozenDictionary<string, FrozenDictionary<string, ProtocolNetProperty>>>
+  fullName: System.Collections.Frozen.FrozenDictionary<string, System.Collections.Frozen.FrozenDictionary<string, System.Collections.Frozen.FrozenDictionary<string, Nebula.Serialization.ProtocolNetProperty>>>
+  nameWithType.vb: FrozenDictionary(Of String, FrozenDictionary(Of String, FrozenDictionary(Of String, ProtocolNetProperty)))
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of String, System.Collections.Frozen.FrozenDictionary(Of String, System.Collections.Frozen.FrozenDictionary(Of String, Nebula.Serialization.ProtocolNetProperty)))
+  name.vb: FrozenDictionary(Of String, FrozenDictionary(Of String, FrozenDictionary(Of String, ProtocolNetProperty)))
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolNetProperty
+    name: ProtocolNetProperty
+    isExternal: true
+    href: Nebula.Serialization.ProtocolNetProperty.html
+  - name: '>'
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolNetProperty
+    name: ProtocolNetProperty
+    isExternal: true
+    href: Nebula.Serialization.ProtocolNetProperty.html
+  - name: )
+  - name: )
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.ProtocolNetProperty}}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.ProtocolNetProperty}}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<string, FrozenDictionary<int, ProtocolNetProperty>>
+  nameWithType: FrozenDictionary<string, FrozenDictionary<int, ProtocolNetProperty>>
+  fullName: System.Collections.Frozen.FrozenDictionary<string, System.Collections.Frozen.FrozenDictionary<int, Nebula.Serialization.ProtocolNetProperty>>
+  nameWithType.vb: FrozenDictionary(Of String, FrozenDictionary(Of Integer, ProtocolNetProperty))
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of String, System.Collections.Frozen.FrozenDictionary(Of Integer, Nebula.Serialization.ProtocolNetProperty))
+  name.vb: FrozenDictionary(Of String, FrozenDictionary(Of Integer, ProtocolNetProperty))
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolNetProperty
+    name: ProtocolNetProperty
+    isExternal: true
+    href: Nebula.Serialization.ProtocolNetProperty.html
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolNetProperty
+    name: ProtocolNetProperty
+    isExternal: true
+    href: Nebula.Serialization.ProtocolNetProperty.html
+  - name: )
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Byte,System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolNetProperty}}}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Byte,System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolNetProperty}}}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<string, FrozenDictionary<byte, FrozenDictionary<string, ProtocolNetProperty>>>
+  nameWithType: FrozenDictionary<string, FrozenDictionary<byte, FrozenDictionary<string, ProtocolNetProperty>>>
+  fullName: System.Collections.Frozen.FrozenDictionary<string, System.Collections.Frozen.FrozenDictionary<byte, System.Collections.Frozen.FrozenDictionary<string, Nebula.Serialization.ProtocolNetProperty>>>
+  nameWithType.vb: FrozenDictionary(Of String, FrozenDictionary(Of Byte, FrozenDictionary(Of String, ProtocolNetProperty)))
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of String, System.Collections.Frozen.FrozenDictionary(Of Byte, System.Collections.Frozen.FrozenDictionary(Of String, Nebula.Serialization.ProtocolNetProperty)))
+  name.vb: FrozenDictionary(Of String, FrozenDictionary(Of Byte, FrozenDictionary(Of String, ProtocolNetProperty)))
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolNetProperty
+    name: ProtocolNetProperty
+    isExternal: true
+    href: Nebula.Serialization.ProtocolNetProperty.html
+  - name: '>'
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolNetProperty
+    name: ProtocolNetProperty
+    isExternal: true
+    href: Nebula.Serialization.ProtocolNetProperty.html
+  - name: )
+  - name: )
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolNetFunction}}}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.String,Nebula.Serialization.ProtocolNetFunction}}}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<string, FrozenDictionary<string, FrozenDictionary<string, ProtocolNetFunction>>>
+  nameWithType: FrozenDictionary<string, FrozenDictionary<string, FrozenDictionary<string, ProtocolNetFunction>>>
+  fullName: System.Collections.Frozen.FrozenDictionary<string, System.Collections.Frozen.FrozenDictionary<string, System.Collections.Frozen.FrozenDictionary<string, Nebula.Serialization.ProtocolNetFunction>>>
+  nameWithType.vb: FrozenDictionary(Of String, FrozenDictionary(Of String, FrozenDictionary(Of String, ProtocolNetFunction)))
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of String, System.Collections.Frozen.FrozenDictionary(Of String, System.Collections.Frozen.FrozenDictionary(Of String, Nebula.Serialization.ProtocolNetFunction)))
+  name.vb: FrozenDictionary(Of String, FrozenDictionary(Of String, FrozenDictionary(Of String, ProtocolNetFunction)))
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolNetFunction
+    name: ProtocolNetFunction
+    isExternal: true
+    href: Nebula.Serialization.ProtocolNetFunction.html
+  - name: '>'
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolNetFunction
+    name: ProtocolNetFunction
+    isExternal: true
+    href: Nebula.Serialization.ProtocolNetFunction.html
+  - name: )
+  - name: )
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.ProtocolNetFunction}}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.String,System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.ProtocolNetFunction}}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<string, FrozenDictionary<int, ProtocolNetFunction>>
+  nameWithType: FrozenDictionary<string, FrozenDictionary<int, ProtocolNetFunction>>
+  fullName: System.Collections.Frozen.FrozenDictionary<string, System.Collections.Frozen.FrozenDictionary<int, Nebula.Serialization.ProtocolNetFunction>>
+  nameWithType.vb: FrozenDictionary(Of String, FrozenDictionary(Of Integer, ProtocolNetFunction))
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of String, System.Collections.Frozen.FrozenDictionary(Of Integer, Nebula.Serialization.ProtocolNetFunction))
+  name.vb: FrozenDictionary(Of String, FrozenDictionary(Of Integer, ProtocolNetFunction))
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolNetFunction
+    name: ProtocolNetFunction
+    isExternal: true
+    href: Nebula.Serialization.ProtocolNetFunction.html
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.ProtocolNetFunction
+    name: ProtocolNetFunction
+    isExternal: true
+    href: Nebula.Serialization.ProtocolNetFunction.html
+  - name: )
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.String,System.Int32}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.String,System.Int32}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<string, int>
+  nameWithType: FrozenDictionary<string, int>
+  fullName: System.Collections.Frozen.FrozenDictionary<string, int>
+  nameWithType.vb: FrozenDictionary(Of String, Integer)
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of String, Integer)
+  name.vb: FrozenDictionary(Of String, Integer)
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<int, GeneratedProtocol.NetworkDeserializeFunc>
+  nameWithType: FrozenDictionary<int, GeneratedProtocol.NetworkDeserializeFunc>
+  fullName: System.Collections.Frozen.FrozenDictionary<int, Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc>
+  nameWithType.vb: FrozenDictionary(Of Integer, GeneratedProtocol.NetworkDeserializeFunc)
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of Integer, Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc)
+  name.vb: FrozenDictionary(Of Integer, GeneratedProtocol.NetworkDeserializeFunc)
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+    name: NetworkDeserializeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+    name: NetworkDeserializeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc.html
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<int, GeneratedProtocol.NetworkSerializeFunc>
+  nameWithType: FrozenDictionary<int, GeneratedProtocol.NetworkSerializeFunc>
+  fullName: System.Collections.Frozen.FrozenDictionary<int, Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc>
+  nameWithType.vb: FrozenDictionary(Of Integer, GeneratedProtocol.NetworkSerializeFunc)
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of Integer, Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc)
+  name.vb: FrozenDictionary(Of Integer, GeneratedProtocol.NetworkSerializeFunc)
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+    name: NetworkSerializeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+    name: NetworkSerializeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html
+  - name: )
+memberLayout: SeparatePages

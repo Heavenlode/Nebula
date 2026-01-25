@@ -1,0 +1,697 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.PropertyCache
+  commentId: T:Nebula.PropertyCache
+  id: PropertyCache
+  parent: Nebula
+  children:
+  - Nebula.PropertyCache.BoolValue
+  - Nebula.PropertyCache.ByteValue
+  - Nebula.PropertyCache.DoubleValue
+  - Nebula.PropertyCache.FloatValue
+  - Nebula.PropertyCache.IntValue
+  - Nebula.PropertyCache.LongValue
+  - Nebula.PropertyCache.NetIdValue
+  - Nebula.PropertyCache.QuatValue
+  - Nebula.PropertyCache.RefValue
+  - Nebula.PropertyCache.StringValue
+  - Nebula.PropertyCache.Type
+  - Nebula.PropertyCache.UUIDValue
+  - Nebula.PropertyCache.Vec2Value
+  - Nebula.PropertyCache.Vec3Value
+  langs:
+  - csharp
+  - vb
+  name: PropertyCache
+  nameWithType: PropertyCache
+  fullName: Nebula.PropertyCache
+  type: Struct
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Union struct for caching property values without boxing.
+
+    Generated to include all discovered INetValue&lt;T&gt; types.
+
+    Max value type size: 16 bytes. Reference types start at offset 24.
+  example: []
+  syntax:
+    content: public struct PropertyCache
+    content.vb: Public Structure PropertyCache
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.GetType
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: Nebula.PropertyCache.Type
+  commentId: F:Nebula.PropertyCache.Type
+  id: Type
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: Type
+  nameWithType: PropertyCache.Type
+  fullName: Nebula.PropertyCache.Type
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Type tag indicating which field is valid
+  example: []
+  syntax:
+    content: public SerialVariantType Type
+    return:
+      type: Nebula.Serialization.SerialVariantType
+    content.vb: Public Type As SerialVariantType
+- uid: Nebula.PropertyCache.BoolValue
+  commentId: F:Nebula.PropertyCache.BoolValue
+  id: BoolValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: BoolValue
+  nameWithType: PropertyCache.BoolValue
+  fullName: Nebula.PropertyCache.BoolValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public bool BoolValue
+    return:
+      type: System.Boolean
+    content.vb: Public BoolValue As Boolean
+- uid: Nebula.PropertyCache.ByteValue
+  commentId: F:Nebula.PropertyCache.ByteValue
+  id: ByteValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: ByteValue
+  nameWithType: PropertyCache.ByteValue
+  fullName: Nebula.PropertyCache.ByteValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public byte ByteValue
+    return:
+      type: System.Byte
+    content.vb: Public ByteValue As Byte
+- uid: Nebula.PropertyCache.IntValue
+  commentId: F:Nebula.PropertyCache.IntValue
+  id: IntValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: IntValue
+  nameWithType: PropertyCache.IntValue
+  fullName: Nebula.PropertyCache.IntValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public int IntValue
+    return:
+      type: System.Int32
+    content.vb: Public IntValue As Integer
+- uid: Nebula.PropertyCache.LongValue
+  commentId: F:Nebula.PropertyCache.LongValue
+  id: LongValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: LongValue
+  nameWithType: PropertyCache.LongValue
+  fullName: Nebula.PropertyCache.LongValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public long LongValue
+    return:
+      type: System.Int64
+    content.vb: Public LongValue As Long
+- uid: Nebula.PropertyCache.FloatValue
+  commentId: F:Nebula.PropertyCache.FloatValue
+  id: FloatValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: FloatValue
+  nameWithType: PropertyCache.FloatValue
+  fullName: Nebula.PropertyCache.FloatValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public float FloatValue
+    return:
+      type: System.Single
+    content.vb: Public FloatValue As Single
+- uid: Nebula.PropertyCache.DoubleValue
+  commentId: F:Nebula.PropertyCache.DoubleValue
+  id: DoubleValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: DoubleValue
+  nameWithType: PropertyCache.DoubleValue
+  fullName: Nebula.PropertyCache.DoubleValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public double DoubleValue
+    return:
+      type: System.Double
+    content.vb: Public DoubleValue As Double
+- uid: Nebula.PropertyCache.Vec2Value
+  commentId: F:Nebula.PropertyCache.Vec2Value
+  id: Vec2Value
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: Vec2Value
+  nameWithType: PropertyCache.Vec2Value
+  fullName: Nebula.PropertyCache.Vec2Value
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Vector2 Vec2Value
+    return:
+      type: Godot.Vector2
+    content.vb: Public Vec2Value As Vector2
+- uid: Nebula.PropertyCache.Vec3Value
+  commentId: F:Nebula.PropertyCache.Vec3Value
+  id: Vec3Value
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: Vec3Value
+  nameWithType: PropertyCache.Vec3Value
+  fullName: Nebula.PropertyCache.Vec3Value
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Vector3 Vec3Value
+    return:
+      type: Godot.Vector3
+    content.vb: Public Vec3Value As Vector3
+- uid: Nebula.PropertyCache.QuatValue
+  commentId: F:Nebula.PropertyCache.QuatValue
+  id: QuatValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: QuatValue
+  nameWithType: PropertyCache.QuatValue
+  fullName: Nebula.PropertyCache.QuatValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Quaternion QuatValue
+    return:
+      type: Godot.Quaternion
+    content.vb: Public QuatValue As Quaternion
+- uid: Nebula.PropertyCache.NetIdValue
+  commentId: F:Nebula.PropertyCache.NetIdValue
+  id: NetIdValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: NetIdValue
+  nameWithType: PropertyCache.NetIdValue
+  fullName: Nebula.PropertyCache.NetIdValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public NetId NetIdValue
+    return:
+      type: Nebula.NetId
+    content.vb: Public NetIdValue As NetId
+- uid: Nebula.PropertyCache.UUIDValue
+  commentId: F:Nebula.PropertyCache.UUIDValue
+  id: UUIDValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: UUIDValue
+  nameWithType: PropertyCache.UUIDValue
+  fullName: Nebula.PropertyCache.UUIDValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public UUID UUIDValue
+    return:
+      type: Nebula.UUID
+    content.vb: Public UUIDValue As UUID
+- uid: Nebula.PropertyCache.StringValue
+  commentId: F:Nebula.PropertyCache.StringValue
+  id: StringValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: StringValue
+  nameWithType: PropertyCache.StringValue
+  fullName: Nebula.PropertyCache.StringValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public string? StringValue
+    return:
+      type: System.String
+    content.vb: Public StringValue As String
+- uid: Nebula.PropertyCache.RefValue
+  commentId: F:Nebula.PropertyCache.RefValue
+  id: RefValue
+  parent: Nebula.PropertyCache
+  langs:
+  - csharp
+  - vb
+  name: RefValue
+  nameWithType: PropertyCache.RefValue
+  fullName: Nebula.PropertyCache.RefValue
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public object? RefValue
+    return:
+      type: System.Object
+    content.vb: Public RefValue As Object
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Serialization.SerialVariantType
+  commentId: T:Nebula.Serialization.SerialVariantType
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.SerialVariantType.html
+  name: SerialVariantType
+  nameWithType: SerialVariantType
+  fullName: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: Godot.Vector2
+  commentId: T:Godot.Vector2
+  parent: Godot
+  isExternal: true
+  name: Vector2
+  nameWithType: Vector2
+  fullName: Godot.Vector2
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Godot.Vector3
+  commentId: T:Godot.Vector3
+  parent: Godot
+  isExternal: true
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Godot.Vector3
+- uid: Godot.Quaternion
+  commentId: T:Godot.Quaternion
+  parent: Godot
+  isExternal: true
+  name: Quaternion
+  nameWithType: Quaternion
+  fullName: Godot.Quaternion
+- uid: Nebula.NetId
+  commentId: T:Nebula.NetId
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetId.html
+  name: NetId
+  nameWithType: NetId
+  fullName: Nebula.NetId
+- uid: Nebula.UUID
+  commentId: T:Nebula.UUID
+  parent: Nebula
+  isExternal: true
+  href: Nebula.UUID.html
+  name: UUID
+  nameWithType: UUID
+  fullName: Nebula.UUID
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

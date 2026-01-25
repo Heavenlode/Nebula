@@ -6,34 +6,63 @@ items:
   parent: Nebula
   children:
   - Nebula.NetworkController.#ctor(Godot.Node)
-  - Nebula.NetworkController.AttachedNetNode
+  - Nebula.NetworkController.AddPeerInterest(Nebula.UUID,System.Int64,System.Boolean)
+  - Nebula.NetworkController.BufferInput(System.Int32,System.ReadOnlySpan{System.Byte})
+  - Nebula.NetworkController.ClearInputChanged
   - Nebula.NetworkController.CurrentWorld
   - Nebula.NetworkController.Despawn
   - Nebula.NetworkController.DespawnOnUnowned
-  - Nebula.NetworkController.EmitSignalInterestChanged(Nebula.UUID,System.Int64)
-  - Nebula.NetworkController.EmitSignalNetPropertyChanged(System.String,Godot.StringName)
+  - Nebula.NetworkController.DirtyMask
+  - Nebula.NetworkController.DynamicNetworkChildren
   - Nebula.NetworkController.FindFromChild(Godot.Node)
-  - Nebula.NetworkController.GetInput
-  - Nebula.NetworkController.GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle,System.Boolean)
-  - Nebula.NetworkController.GetNetworkInput(System.Byte,Godot.Variant)
+  - Nebula.NetworkController.GetBufferedInput(System.Int32)
+  - Nebula.NetworkController.GetInputBytes
+  - Nebula.NetworkController.GetInput``1
+  - Nebula.NetworkController.GetPooledInputBuffer
+  - Nebula.NetworkController.GetRecentInputs(System.Int32)
+  - Nebula.NetworkController.HasInputChanged
+  - Nebula.NetworkController.HasInputSupport
+  - Nebula.NetworkController.InitializeInput``1
   - Nebula.NetworkController.InputAuthority
   - Nebula.NetworkController.InterestChanged
   - Nebula.NetworkController.InterestLayers
   - Nebula.NetworkController.IsClientSpawn
   - Nebula.NetworkController.IsCurrentOwner
   - Nebula.NetworkController.IsNetScene
+  - Nebula.NetworkController.IsPeerInterested(ENet.Peer)
+  - Nebula.NetworkController.IsPeerInterested(Nebula.UUID)
+  - Nebula.NetworkController.IsPredicting
+  - Nebula.NetworkController.IsQueuedForDespawn
+  - Nebula.NetworkController.IsResimulating
   - Nebula.NetworkController.IsWorldReady
+  - Nebula.NetworkController.LastConfirmedTick
+  - Nebula.NetworkController.LastPredictedTick
+  - Nebula.NetworkController.MarkDirtyRef``1(Nebula.INetNodeBase,System.String,``0)
+  - Nebula.NetworkController.MarkDirty``1(Nebula.INetNodeBase,System.String,``0)
   - Nebula.NetworkController.NetId
+  - Nebula.NetworkController.NetNode
+  - Nebula.NetworkController.NetNodePath
   - Nebula.NetworkController.NetParent
   - Nebula.NetworkController.NetParentId
-  - Nebula.NetworkController.NetPropertyChanged
+  - Nebula.NetworkController.NetSceneFilePath
   - Nebula.NetworkController.NodePathFromNetScene
-  - Nebula.NetworkController.PrepareSpawn(Godot.ENetPacketPeer)
-  - Nebula.NetworkController.SetInputAuthority(Godot.ENetPacketPeer)
-  - Nebula.NetworkController.SetNetworkInput(System.Byte,Godot.Variant)
+  - Nebula.NetworkController.OnInterestChanged
+  - Nebula.NetworkController.PrepareSpawn(ENet.Peer)
+  - Nebula.NetworkController.QueueNodeForDeletion
+  - Nebula.NetworkController.RawNode
+  - Nebula.NetworkController.Reconcile(System.Int32,System.Boolean)
+  - Nebula.NetworkController.RestoreToPredictedState(System.Int32)
+  - Nebula.NetworkController.SetInputAuthority(ENet.Peer)
+  - Nebula.NetworkController.SetInputBytes(System.ReadOnlySpan{System.Byte})
+  - Nebula.NetworkController.SetInput``1(``0@)
   - Nebula.NetworkController.SetPeerInterest(Nebula.UUID,System.Int64,System.Boolean)
+  - Nebula.NetworkController.StaticChildId
+  - Nebula.NetworkController.StaticNetworkChildren
+  - Nebula.NetworkController.StoreConfirmedState(System.Int32)
+  - Nebula.NetworkController.StorePredictedState(System.Int32)
   - Nebula.NetworkController._NetworkProcess(System.Int32)
   - Nebula.NetworkController._Notification(System.Int32)
+  - Nebula.NetworkController._OnPeerConnected(Nebula.UUID)
   - Nebula.NetworkController._WorldReady
   langs:
   - csharp
@@ -43,7 +72,7 @@ items:
   fullName: Nebula.NetworkController
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -161,6 +190,27 @@ items:
     arguments:
     - type: System.String
       value: res://addons/Nebula/Core/NetworkController.cs
+- uid: Nebula.NetworkController.NetNode
+  commentId: F:Nebula.NetworkController.NetNode
+  id: NetNode
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: NetNode
+  nameWithType: NetworkController.NetNode
+  fullName: Nebula.NetworkController.NetNode
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public INetNodeBase NetNode
+    return:
+      type: Nebula.INetNodeBase
+    content.vb: Public NetNode As INetNodeBase
 - uid: Nebula.NetworkController.DespawnOnUnowned
   commentId: F:Nebula.NetworkController.DespawnOnUnowned
   id: DespawnOnUnowned
@@ -173,7 +223,7 @@ items:
   fullName: Nebula.NetworkController.DespawnOnUnowned
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -184,27 +234,122 @@ items:
     return:
       type: System.Boolean
     content.vb: Public DespawnOnUnowned As Boolean
-- uid: Nebula.NetworkController.InterestLayers
-  commentId: F:Nebula.NetworkController.InterestLayers
-  id: InterestLayers
+- uid: Nebula.NetworkController.StaticNetworkChildren
+  commentId: F:Nebula.NetworkController.StaticNetworkChildren
+  id: StaticNetworkChildren
   parent: Nebula.NetworkController
   langs:
   - csharp
   - vb
-  name: InterestLayers
-  nameWithType: NetworkController.InterestLayers
-  fullName: Nebula.NetworkController.InterestLayers
+  name: StaticNetworkChildren
+  nameWithType: NetworkController.StaticNetworkChildren
+  fullName: Nebula.NetworkController.StaticNetworkChildren
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public Dictionary<UUID, long> InterestLayers
+    content: public NetworkController[] StaticNetworkChildren
     return:
-      type: Godot.Collections.Dictionary{Nebula.UUID,System.Int64}
-    content.vb: Public InterestLayers As Dictionary(Of UUID, Long)
+      type: Nebula.NetworkController[]
+    content.vb: Public StaticNetworkChildren As NetworkController()
+- uid: Nebula.NetworkController.DirtyMask
+  commentId: F:Nebula.NetworkController.DirtyMask
+  id: DirtyMask
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: DirtyMask
+  nameWithType: NetworkController.DirtyMask
+  fullName: Nebula.NetworkController.DirtyMask
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Bitmask of dirty properties. Bit N is set if property index N has changed since last export.
+  example: []
+  syntax:
+    content: public long DirtyMask
+    return:
+      type: System.Int64
+    content.vb: Public DirtyMask As Long
+- uid: Nebula.NetworkController.DynamicNetworkChildren
+  commentId: F:Nebula.NetworkController.DynamicNetworkChildren
+  id: DynamicNetworkChildren
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: DynamicNetworkChildren
+  nameWithType: NetworkController.DynamicNetworkChildren
+  fullName: Nebula.NetworkController.DynamicNetworkChildren
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public HashSet<NetworkController> DynamicNetworkChildren
+    return:
+      type: System.Collections.Generic.HashSet{Nebula.NetworkController}
+    content.vb: Public DynamicNetworkChildren As HashSet(Of NetworkController)
+- uid: Nebula.NetworkController.#ctor(Godot.Node)
+  commentId: M:Nebula.NetworkController.#ctor(Godot.Node)
+  id: '#ctor(Godot.Node)'
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: NetworkController(Node)
+  nameWithType: NetworkController.NetworkController(Node)
+  fullName: Nebula.NetworkController.NetworkController(Godot.Node)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public NetworkController(Node owner)
+    parameters:
+    - id: owner
+      type: Godot.Node
+    content.vb: Public Sub New(owner As Node)
+  overload: Nebula.NetworkController.#ctor*
+  nameWithType.vb: NetworkController.New(Node)
+  fullName.vb: Nebula.NetworkController.New(Godot.Node)
+  name.vb: New(Node)
+- uid: Nebula.NetworkController.QueueNodeForDeletion
+  commentId: M:Nebula.NetworkController.QueueNodeForDeletion
+  id: QueueNodeForDeletion
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: QueueNodeForDeletion()
+  nameWithType: NetworkController.QueueNodeForDeletion()
+  fullName: Nebula.NetworkController.QueueNodeForDeletion()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Queue this node for deletion. Sets the cached flag and calls QueueFree().
+
+    Use this instead of RawNode.QueueFree() to enable zero-allocation deletion checks.
+  example: []
+  syntax:
+    content: public void QueueNodeForDeletion()
+    content.vb: Public Sub QueueNodeForDeletion()
+  overload: Nebula.NetworkController.QueueNodeForDeletion*
 - uid: Nebula.NetworkController.IsNetScene
   commentId: M:Nebula.NetworkController.IsNetScene
   id: IsNetScene
@@ -217,7 +362,7 @@ items:
   fullName: Nebula.NetworkController.IsNetScene()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -239,12 +384,42 @@ items:
   fullName: Nebula.NetworkController.SetPeerInterest(Nebula.UUID, long, bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public void SetPeerInterest(UUID peerId, long interestLayers, bool recurse = true)
+    content: public void SetPeerInterest(UUID peerId, long newInterest, bool recurse = true)
+    parameters:
+    - id: peerId
+      type: Nebula.UUID
+    - id: newInterest
+      type: System.Int64
+    - id: recurse
+      type: System.Boolean
+    content.vb: Public Sub SetPeerInterest(peerId As UUID, newInterest As Long, recurse As Boolean = True)
+  overload: Nebula.NetworkController.SetPeerInterest*
+  nameWithType.vb: NetworkController.SetPeerInterest(UUID, Long, Boolean)
+  fullName.vb: Nebula.NetworkController.SetPeerInterest(Nebula.UUID, Long, Boolean)
+  name.vb: SetPeerInterest(UUID, Long, Boolean)
+- uid: Nebula.NetworkController.AddPeerInterest(Nebula.UUID,System.Int64,System.Boolean)
+  commentId: M:Nebula.NetworkController.AddPeerInterest(Nebula.UUID,System.Int64,System.Boolean)
+  id: AddPeerInterest(Nebula.UUID,System.Int64,System.Boolean)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: AddPeerInterest(UUID, long, bool)
+  nameWithType: NetworkController.AddPeerInterest(UUID, long, bool)
+  fullName: Nebula.NetworkController.AddPeerInterest(Nebula.UUID, long, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public void AddPeerInterest(UUID peerId, long interestLayers, bool recurse = true)
     parameters:
     - id: peerId
       type: Nebula.UUID
@@ -252,11 +427,61 @@ items:
       type: System.Int64
     - id: recurse
       type: System.Boolean
-    content.vb: Public Sub SetPeerInterest(peerId As UUID, interestLayers As Long, recurse As Boolean = True)
-  overload: Nebula.NetworkController.SetPeerInterest*
-  nameWithType.vb: NetworkController.SetPeerInterest(UUID, Long, Boolean)
-  fullName.vb: Nebula.NetworkController.SetPeerInterest(Nebula.UUID, Long, Boolean)
-  name.vb: SetPeerInterest(UUID, Long, Boolean)
+    content.vb: Public Sub AddPeerInterest(peerId As UUID, interestLayers As Long, recurse As Boolean = True)
+  overload: Nebula.NetworkController.AddPeerInterest*
+  nameWithType.vb: NetworkController.AddPeerInterest(UUID, Long, Boolean)
+  fullName.vb: Nebula.NetworkController.AddPeerInterest(Nebula.UUID, Long, Boolean)
+  name.vb: AddPeerInterest(UUID, Long, Boolean)
+- uid: Nebula.NetworkController.IsPeerInterested(Nebula.UUID)
+  commentId: M:Nebula.NetworkController.IsPeerInterested(Nebula.UUID)
+  id: IsPeerInterested(Nebula.UUID)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: IsPeerInterested(UUID)
+  nameWithType: NetworkController.IsPeerInterested(UUID)
+  fullName: Nebula.NetworkController.IsPeerInterested(Nebula.UUID)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public bool IsPeerInterested(UUID peerId)
+    parameters:
+    - id: peerId
+      type: Nebula.UUID
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsPeerInterested(peerId As UUID) As Boolean
+  overload: Nebula.NetworkController.IsPeerInterested*
+- uid: Nebula.NetworkController.IsPeerInterested(ENet.Peer)
+  commentId: M:Nebula.NetworkController.IsPeerInterested(ENet.Peer)
+  id: IsPeerInterested(ENet.Peer)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: IsPeerInterested(Peer)
+  nameWithType: NetworkController.IsPeerInterested(Peer)
+  fullName: Nebula.NetworkController.IsPeerInterested(ENet.Peer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public bool IsPeerInterested(Peer peer)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsPeerInterested(peer As Peer) As Boolean
+  overload: Nebula.NetworkController.IsPeerInterested*
 - uid: Nebula.NetworkController._Notification(System.Int32)
   commentId: M:Nebula.NetworkController._Notification(System.Int32)
   id: _Notification(System.Int32)
@@ -269,7 +494,7 @@ items:
   fullName: Nebula.NetworkController._Notification(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -285,112 +510,526 @@ items:
   nameWithType.vb: NetworkController._Notification(Integer)
   fullName.vb: Nebula.NetworkController._Notification(Integer)
   name.vb: _Notification(Integer)
-- uid: Nebula.NetworkController.SetNetworkInput(System.Byte,Godot.Variant)
-  commentId: M:Nebula.NetworkController.SetNetworkInput(System.Byte,Godot.Variant)
-  id: SetNetworkInput(System.Byte,Godot.Variant)
+- uid: Nebula.NetworkController.MarkDirty``1(Nebula.INetNodeBase,System.String,``0)
+  commentId: M:Nebula.NetworkController.MarkDirty``1(Nebula.INetNodeBase,System.String,``0)
+  id: MarkDirty``1(Nebula.INetNodeBase,System.String,``0)
   parent: Nebula.NetworkController
   langs:
   - csharp
   - vb
-  name: SetNetworkInput(byte, Variant)
-  nameWithType: NetworkController.SetNetworkInput(byte, Variant)
-  fullName: Nebula.NetworkController.SetNetworkInput(byte, Godot.Variant)
+  name: MarkDirty<T>(INetNodeBase, string, T)
+  nameWithType: NetworkController.MarkDirty<T>(INetNodeBase, string, T)
+  fullName: Nebula.NetworkController.MarkDirty<T>(Nebula.INetNodeBase, string, T)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: >-
+    Marks a value-type property as dirty and caches its value.
+
+    Called by generated On{Prop}Changed methods. No boxing occurs.
+  example: []
   syntax:
-    content: public void SetNetworkInput(byte input, Variant value)
+    content: 'public void MarkDirty<T>(INetNodeBase sourceNode, string propertyName, T value) where T : struct'
     parameters:
-    - id: input
-      type: System.Byte
+    - id: sourceNode
+      type: Nebula.INetNodeBase
+    - id: propertyName
+      type: System.String
     - id: value
-      type: Godot.Variant
-    content.vb: Public Sub SetNetworkInput(input As Byte, value As [Variant])
-  overload: Nebula.NetworkController.SetNetworkInput*
-  nameWithType.vb: NetworkController.SetNetworkInput(Byte, Variant)
-  fullName.vb: Nebula.NetworkController.SetNetworkInput(Byte, Godot.Variant)
-  name.vb: SetNetworkInput(Byte, Variant)
-- uid: Nebula.NetworkController.GetNetworkInput(System.Byte,Godot.Variant)
-  commentId: M:Nebula.NetworkController.GetNetworkInput(System.Byte,Godot.Variant)
-  id: GetNetworkInput(System.Byte,Godot.Variant)
+      type: '{T}'
+    typeParameters:
+    - id: T
+    content.vb: Public Sub MarkDirty(Of T As Structure)(sourceNode As INetNodeBase, propertyName As String, value As T)
+  overload: Nebula.NetworkController.MarkDirty*
+  nameWithType.vb: NetworkController.MarkDirty(Of T)(INetNodeBase, String, T)
+  fullName.vb: Nebula.NetworkController.MarkDirty(Of T)(Nebula.INetNodeBase, String, T)
+  name.vb: MarkDirty(Of T)(INetNodeBase, String, T)
+- uid: Nebula.NetworkController.MarkDirtyRef``1(Nebula.INetNodeBase,System.String,``0)
+  commentId: M:Nebula.NetworkController.MarkDirtyRef``1(Nebula.INetNodeBase,System.String,``0)
+  id: MarkDirtyRef``1(Nebula.INetNodeBase,System.String,``0)
   parent: Nebula.NetworkController
   langs:
   - csharp
   - vb
-  name: GetNetworkInput(byte, Variant)
-  nameWithType: NetworkController.GetNetworkInput(byte, Variant)
-  fullName: Nebula.NetworkController.GetNetworkInput(byte, Godot.Variant)
+  name: MarkDirtyRef<T>(INetNodeBase, string, T)
+  nameWithType: NetworkController.MarkDirtyRef<T>(INetNodeBase, string, T)
+  fullName: Nebula.NetworkController.MarkDirtyRef<T>(Nebula.INetNodeBase, string, T)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: >-
+    Marks a reference-type property as dirty and caches its value.
+
+    Called by generated On{Prop}Changed methods.
+  example: []
   syntax:
-    content: public Variant GetNetworkInput(byte input, Variant defaultValue)
+    content: 'public void MarkDirtyRef<T>(INetNodeBase sourceNode, string propertyName, T value) where T : class'
+    parameters:
+    - id: sourceNode
+      type: Nebula.INetNodeBase
+    - id: propertyName
+      type: System.String
+    - id: value
+      type: '{T}'
+    typeParameters:
+    - id: T
+    content.vb: Public Sub MarkDirtyRef(Of T As Class)(sourceNode As INetNodeBase, propertyName As String, value As T)
+  overload: Nebula.NetworkController.MarkDirtyRef*
+  nameWithType.vb: NetworkController.MarkDirtyRef(Of T)(INetNodeBase, String, T)
+  fullName.vb: Nebula.NetworkController.MarkDirtyRef(Of T)(Nebula.INetNodeBase, String, T)
+  name.vb: MarkDirtyRef(Of T)(INetNodeBase, String, T)
+- uid: Nebula.NetworkController.GetInputBytes
+  commentId: M:Nebula.NetworkController.GetInputBytes
+  id: GetInputBytes
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: GetInputBytes()
+  nameWithType: NetworkController.GetInputBytes()
+  fullName: Nebula.NetworkController.GetInputBytes()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Gets the current input as a byte span for network serialization.
+  example: []
+  syntax:
+    content: public ReadOnlySpan<byte> GetInputBytes()
+    return:
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public Function GetInputBytes() As ReadOnlySpan(Of Byte)
+  overload: Nebula.NetworkController.GetInputBytes*
+- uid: Nebula.NetworkController.SetInputBytes(System.ReadOnlySpan{System.Byte})
+  commentId: M:Nebula.NetworkController.SetInputBytes(System.ReadOnlySpan{System.Byte})
+  id: SetInputBytes(System.ReadOnlySpan{System.Byte})
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: SetInputBytes(ReadOnlySpan<byte>)
+  nameWithType: NetworkController.SetInputBytes(ReadOnlySpan<byte>)
+  fullName: Nebula.NetworkController.SetInputBytes(System.ReadOnlySpan<byte>)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Sets the current input from bytes received from the network.
+  example: []
+  syntax:
+    content: public void SetInputBytes(ReadOnlySpan<byte> bytes)
+    parameters:
+    - id: bytes
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public Sub SetInputBytes(bytes As ReadOnlySpan(Of Byte))
+  overload: Nebula.NetworkController.SetInputBytes*
+  nameWithType.vb: NetworkController.SetInputBytes(ReadOnlySpan(Of Byte))
+  fullName.vb: Nebula.NetworkController.SetInputBytes(System.ReadOnlySpan(Of Byte))
+  name.vb: SetInputBytes(ReadOnlySpan(Of Byte))
+- uid: Nebula.NetworkController.ClearInputChanged
+  commentId: M:Nebula.NetworkController.ClearInputChanged
+  id: ClearInputChanged
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: ClearInputChanged()
+  nameWithType: NetworkController.ClearInputChanged()
+  fullName: Nebula.NetworkController.ClearInputChanged()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Clears the input changed flag after the input has been sent.
+
+    Also saves the sent input for comparison on next SetInput call.
+  example: []
+  syntax:
+    content: public void ClearInputChanged()
+    content.vb: Public Sub ClearInputChanged()
+  overload: Nebula.NetworkController.ClearInputChanged*
+- uid: Nebula.NetworkController.InitializeInput``1
+  commentId: M:Nebula.NetworkController.InitializeInput``1
+  id: InitializeInput``1
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: InitializeInput<TInput>()
+  nameWithType: NetworkController.InitializeInput<TInput>()
+  fullName: Nebula.NetworkController.InitializeInput<TInput>()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Initializes input support for this node with the specified input struct type.
+
+    Call this in your node's constructor.
+  example: []
+  syntax:
+    content: 'public void InitializeInput<TInput>() where TInput : unmanaged'
+    typeParameters:
+    - id: TInput
+      description: The unmanaged struct type for network input.
+    content.vb: Public Sub InitializeInput(Of TInput As Structure)()
+  overload: Nebula.NetworkController.InitializeInput*
+  nameWithType.vb: NetworkController.InitializeInput(Of TInput)()
+  fullName.vb: Nebula.NetworkController.InitializeInput(Of TInput)()
+  name.vb: InitializeInput(Of TInput)()
+- uid: Nebula.NetworkController.SetInput``1(``0@)
+  commentId: M:Nebula.NetworkController.SetInput``1(``0@)
+  id: SetInput``1(``0@)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: SetInput<TInput>(in TInput)
+  nameWithType: NetworkController.SetInput<TInput>(in TInput)
+  fullName: Nebula.NetworkController.SetInput<TInput>(in TInput)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Sets the current input for this network tick. Only call on the client that owns this node.
+  example: []
+  syntax:
+    content: 'public void SetInput<TInput>(in TInput input) where TInput : unmanaged'
     parameters:
     - id: input
-      type: System.Byte
-    - id: defaultValue
-      type: Godot.Variant
-    return:
-      type: Godot.Variant
-    content.vb: Public Function GetNetworkInput(input As Byte, defaultValue As [Variant]) As [Variant]
-  overload: Nebula.NetworkController.GetNetworkInput*
-  nameWithType.vb: NetworkController.GetNetworkInput(Byte, Variant)
-  fullName.vb: Nebula.NetworkController.GetNetworkInput(Byte, Godot.Variant)
-  name.vb: GetNetworkInput(Byte, Variant)
-- uid: Nebula.NetworkController.#ctor(Godot.Node)
-  commentId: M:Nebula.NetworkController.#ctor(Godot.Node)
-  id: '#ctor(Godot.Node)'
+      type: '{TInput}'
+      description: The input struct to send to the server.
+    typeParameters:
+    - id: TInput
+      description: The unmanaged struct type for network input.
+    content.vb: Public Sub SetInput(Of TInput As Structure)(input As TInput)
+  overload: Nebula.NetworkController.SetInput*
+  nameWithType.vb: NetworkController.SetInput(Of TInput)(TInput)
+  fullName.vb: Nebula.NetworkController.SetInput(Of TInput)(TInput)
+  name.vb: SetInput(Of TInput)(TInput)
+- uid: Nebula.NetworkController.GetInput``1
+  commentId: M:Nebula.NetworkController.GetInput``1
+  id: GetInput``1
   parent: Nebula.NetworkController
   langs:
   - csharp
   - vb
-  name: NetworkController(Node)
-  nameWithType: NetworkController.NetworkController(Node)
-  fullName: Nebula.NetworkController.NetworkController(Godot.Node)
-  type: Constructor
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: public NetworkController(Node owner)
-    parameters:
-    - id: owner
-      type: Godot.Node
-    content.vb: Public Sub New(owner As Node)
-  overload: Nebula.NetworkController.#ctor*
-  nameWithType.vb: NetworkController.New(Node)
-  fullName.vb: Nebula.NetworkController.New(Godot.Node)
-  name.vb: New(Node)
-- uid: Nebula.NetworkController.SetInputAuthority(Godot.ENetPacketPeer)
-  commentId: M:Nebula.NetworkController.SetInputAuthority(Godot.ENetPacketPeer)
-  id: SetInputAuthority(Godot.ENetPacketPeer)
-  parent: Nebula.NetworkController
-  langs:
-  - csharp
-  - vb
-  name: SetInputAuthority(ENetPacketPeer)
-  nameWithType: NetworkController.SetInputAuthority(ENetPacketPeer)
-  fullName: Nebula.NetworkController.SetInputAuthority(Godot.ENetPacketPeer)
+  name: GetInput<TInput>()
+  nameWithType: NetworkController.GetInput<TInput>()
+  fullName: Nebula.NetworkController.GetInput<TInput>()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Gets the current input. Use this on the server to read client input.
+  example: []
+  syntax:
+    content: 'public ref readonly TInput GetInput<TInput>() where TInput : unmanaged'
+    typeParameters:
+    - id: TInput
+      description: The unmanaged struct type for network input.
+    return:
+      type: '{TInput}'
+      description: A readonly reference to the current input.
+    content.vb: Public Function GetInput(Of TInput As Structure)() As TInput
+  overload: Nebula.NetworkController.GetInput*
+  nameWithType.vb: NetworkController.GetInput(Of TInput)()
+  fullName.vb: Nebula.NetworkController.GetInput(Of TInput)()
+  name.vb: GetInput(Of TInput)()
+- uid: Nebula.NetworkController.BufferInput(System.Int32,System.ReadOnlySpan{System.Byte})
+  commentId: M:Nebula.NetworkController.BufferInput(System.Int32,System.ReadOnlySpan{System.Byte})
+  id: BufferInput(System.Int32,System.ReadOnlySpan{System.Byte})
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: BufferInput(int, ReadOnlySpan<byte>)
+  nameWithType: NetworkController.BufferInput(int, ReadOnlySpan<byte>)
+  fullName: Nebula.NetworkController.BufferInput(int, System.ReadOnlySpan<byte>)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Buffers input for the given tick in a circular buffer.
+
+    Used for input redundancy (sending multiple inputs per packet) and rollback replay.
+  example: []
+  syntax:
+    content: public void BufferInput(int tick, ReadOnlySpan<byte> input)
+    parameters:
+    - id: tick
+      type: System.Int32
+      description: The tick this input is for
+    - id: input
+      type: System.ReadOnlySpan{System.Byte}
+      description: The input data to buffer
+    content.vb: Public Sub BufferInput(tick As Integer, input As ReadOnlySpan(Of Byte))
+  overload: Nebula.NetworkController.BufferInput*
+  nameWithType.vb: NetworkController.BufferInput(Integer, ReadOnlySpan(Of Byte))
+  fullName.vb: Nebula.NetworkController.BufferInput(Integer, System.ReadOnlySpan(Of Byte))
+  name.vb: BufferInput(Integer, ReadOnlySpan(Of Byte))
+- uid: Nebula.NetworkController.GetBufferedInput(System.Int32)
+  commentId: M:Nebula.NetworkController.GetBufferedInput(System.Int32)
+  id: GetBufferedInput(System.Int32)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: GetBufferedInput(int)
+  nameWithType: NetworkController.GetBufferedInput(int)
+  fullName: Nebula.NetworkController.GetBufferedInput(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Gets buffered input for the given tick, or null if not found.
+  example: []
+  syntax:
+    content: public byte[] GetBufferedInput(int tick)
+    parameters:
+    - id: tick
+      type: System.Int32
+      description: The tick to retrieve input for
+    return:
+      type: System.Byte[]
+      description: The input bytes, or null if not found (too old or never stored)
+    content.vb: Public Function GetBufferedInput(tick As Integer) As Byte()
+  overload: Nebula.NetworkController.GetBufferedInput*
+  nameWithType.vb: NetworkController.GetBufferedInput(Integer)
+  fullName.vb: Nebula.NetworkController.GetBufferedInput(Integer)
+  name.vb: GetBufferedInput(Integer)
+- uid: Nebula.NetworkController.GetRecentInputs(System.Int32)
+  commentId: M:Nebula.NetworkController.GetRecentInputs(System.Int32)
+  id: GetRecentInputs(System.Int32)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: GetRecentInputs(int)
+  nameWithType: NetworkController.GetRecentInputs(int)
+  fullName: Nebula.NetworkController.GetRecentInputs(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Returns recent inputs for redundant transmission.
+
+    WARNING: Returns cached list - caller must NOT store reference long-term.
+  example: []
+  syntax:
+    content: public List<(int, byte[])> GetRecentInputs(int count)
+    parameters:
+    - id: count
+      type: System.Int32
+      description: Number of recent inputs to retrieve
+    return:
+      type: System.Collections.Generic.List{System.ValueTuple{System.Int32,System.Byte[]}}
+      description: List of (tick, inputBytes) tuples, most recent first
+    content.vb: Public Function GetRecentInputs(count As Integer) As List(Of (Integer, Byte()))
+  overload: Nebula.NetworkController.GetRecentInputs*
+  nameWithType.vb: NetworkController.GetRecentInputs(Integer)
+  fullName.vb: Nebula.NetworkController.GetRecentInputs(Integer)
+  name.vb: GetRecentInputs(Integer)
+- uid: Nebula.NetworkController.GetPooledInputBuffer
+  commentId: M:Nebula.NetworkController.GetPooledInputBuffer
+  id: GetPooledInputBuffer
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: GetPooledInputBuffer()
+  nameWithType: NetworkController.GetPooledInputBuffer()
+  fullName: Nebula.NetworkController.GetPooledInputBuffer()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Gets the pooled NetBuffer for sending input packets.
+
+    Reuses the same buffer across ticks to avoid allocation.
+  example: []
+  syntax:
+    content: public NetBuffer GetPooledInputBuffer()
+    return:
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Function GetPooledInputBuffer() As NetBuffer
+  overload: Nebula.NetworkController.GetPooledInputBuffer*
+- uid: Nebula.NetworkController.StorePredictedState(System.Int32)
+  commentId: M:Nebula.NetworkController.StorePredictedState(System.Int32)
+  id: StorePredictedState(System.Int32)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: StorePredictedState(int)
+  nameWithType: NetworkController.StorePredictedState(int)
+  fullName: Nebula.NetworkController.StorePredictedState(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Stores predicted state for the given tick by calling the generated method on the NetNode.
+  example: []
+  syntax:
+    content: public void StorePredictedState(int tick)
+    parameters:
+    - id: tick
+      type: System.Int32
+    content.vb: Public Sub StorePredictedState(tick As Integer)
+  overload: Nebula.NetworkController.StorePredictedState*
+  nameWithType.vb: NetworkController.StorePredictedState(Integer)
+  fullName.vb: Nebula.NetworkController.StorePredictedState(Integer)
+  name.vb: StorePredictedState(Integer)
+- uid: Nebula.NetworkController.StoreConfirmedState(System.Int32)
+  commentId: M:Nebula.NetworkController.StoreConfirmedState(System.Int32)
+  id: StoreConfirmedState(System.Int32)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: StoreConfirmedState(int)
+  nameWithType: NetworkController.StoreConfirmedState(int)
+  fullName: Nebula.NetworkController.StoreConfirmedState(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Stores confirmed server state by calling the generated method on the NetNode.
+  example: []
+  syntax:
+    content: public void StoreConfirmedState(int tick)
+    parameters:
+    - id: tick
+      type: System.Int32
+    content.vb: Public Sub StoreConfirmedState(tick As Integer)
+  overload: Nebula.NetworkController.StoreConfirmedState*
+  nameWithType.vb: NetworkController.StoreConfirmedState(Integer)
+  fullName.vb: Nebula.NetworkController.StoreConfirmedState(Integer)
+  name.vb: StoreConfirmedState(Integer)
+- uid: Nebula.NetworkController.Reconcile(System.Int32,System.Boolean)
+  commentId: M:Nebula.NetworkController.Reconcile(System.Int32,System.Boolean)
+  id: Reconcile(System.Int32,System.Boolean)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: Reconcile(int, bool)
+  nameWithType: NetworkController.Reconcile(int, bool)
+  fullName: Nebula.NetworkController.Reconcile(int, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Compares predicted state with confirmed server state and restores mispredicted properties.
+
+    Returns true if any misprediction was detected (rollback needed), false if all predictions correct.
+
+    If forceRestoreAll is true, skips comparison and restores all properties to confirmed state.
+  example: []
+  syntax:
+    content: public bool Reconcile(int tick, bool forceRestoreAll = false)
+    parameters:
+    - id: tick
+      type: System.Int32
+    - id: forceRestoreAll
+      type: System.Boolean
+    return:
+      type: System.Boolean
+    content.vb: Public Function Reconcile(tick As Integer, forceRestoreAll As Boolean = False) As Boolean
+  overload: Nebula.NetworkController.Reconcile*
+  nameWithType.vb: NetworkController.Reconcile(Integer, Boolean)
+  fullName.vb: Nebula.NetworkController.Reconcile(Integer, Boolean)
+  name.vb: Reconcile(Integer, Boolean)
+- uid: Nebula.NetworkController.RestoreToPredictedState(System.Int32)
+  commentId: M:Nebula.NetworkController.RestoreToPredictedState(System.Int32)
+  id: RestoreToPredictedState(System.Int32)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: RestoreToPredictedState(int)
+  nameWithType: NetworkController.RestoreToPredictedState(int)
+  fullName: Nebula.NetworkController.RestoreToPredictedState(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Restores properties from the prediction buffer for a given tick.
+
+    Used when prediction was correct and we need to continue with predicted values after server state import.
+  example: []
+  syntax:
+    content: public void RestoreToPredictedState(int tick)
+    parameters:
+    - id: tick
+      type: System.Int32
+    content.vb: Public Sub RestoreToPredictedState(tick As Integer)
+  overload: Nebula.NetworkController.RestoreToPredictedState*
+  nameWithType.vb: NetworkController.RestoreToPredictedState(Integer)
+  fullName.vb: Nebula.NetworkController.RestoreToPredictedState(Integer)
+  name.vb: RestoreToPredictedState(Integer)
+- uid: Nebula.NetworkController.SetInputAuthority(ENet.Peer)
+  commentId: M:Nebula.NetworkController.SetInputAuthority(ENet.Peer)
+  id: SetInputAuthority(ENet.Peer)
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: SetInputAuthority(Peer)
+  nameWithType: NetworkController.SetInputAuthority(Peer)
+  fullName: Nebula.NetworkController.SetInputAuthority(ENet.Peer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public void SetInputAuthority(ENetPacketPeer inputAuthority)
+    content: public void SetInputAuthority(Peer inputAuthority)
     parameters:
     - id: inputAuthority
-      type: Godot.ENetPacketPeer
-    content.vb: Public Sub SetInputAuthority(inputAuthority As ENetPacketPeer)
+      type: ENet.Peer
+    content.vb: Public Sub SetInputAuthority(inputAuthority As Peer)
   overload: Nebula.NetworkController.SetInputAuthority*
 - uid: Nebula.NetworkController.FindFromChild(Godot.Node)
   commentId: M:Nebula.NetworkController.FindFromChild(Godot.Node)
@@ -404,91 +1043,64 @@ items:
   fullName: Nebula.NetworkController.FindFromChild(Godot.Node)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public static INetNode FindFromChild(Node node)
+    content: public static INetNodeBase FindFromChild(Node node)
     parameters:
     - id: node
       type: Godot.Node
     return:
-      type: Nebula.INetNode
-    content.vb: Public Shared Function FindFromChild(node As Node) As INetNode
+      type: Nebula.INetNodeBase
+    content.vb: Public Shared Function FindFromChild(node As Node) As INetNodeBase
   overload: Nebula.NetworkController.FindFromChild*
-- uid: Nebula.NetworkController.GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle,System.Boolean)
-  commentId: M:Nebula.NetworkController.GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle,System.Boolean)
-  id: GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle,System.Boolean)
+- uid: Nebula.NetworkController._OnPeerConnected(Nebula.UUID)
+  commentId: M:Nebula.NetworkController._OnPeerConnected(Nebula.UUID)
+  id: _OnPeerConnected(Nebula.UUID)
   parent: Nebula.NetworkController
   langs:
   - csharp
   - vb
-  name: GetNetworkChildren(NetworkChildrenSearchToggle, bool)
-  nameWithType: NetworkController.GetNetworkChildren(NetworkController.NetworkChildrenSearchToggle, bool)
-  fullName: Nebula.NetworkController.GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle, bool)
+  name: _OnPeerConnected(UUID)
+  nameWithType: NetworkController._OnPeerConnected(UUID)
+  fullName: Nebula.NetworkController._OnPeerConnected(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public IEnumerable<NetNodeWrapper> GetNetworkChildren(NetworkController.NetworkChildrenSearchToggle searchToggle = NetworkChildrenSearchToggle.EXCLUDE_SCENES, bool nestedSceneChildren = true)
+    content: public void _OnPeerConnected(UUID peerId)
     parameters:
-    - id: searchToggle
-      type: Nebula.NetworkController.NetworkChildrenSearchToggle
-    - id: nestedSceneChildren
-      type: System.Boolean
-    return:
-      type: System.Collections.Generic.IEnumerable{Nebula.NetNodeWrapper}
-    content.vb: Public Function GetNetworkChildren(searchToggle As NetworkController.NetworkChildrenSearchToggle = NetworkChildrenSearchToggle.EXCLUDE_SCENES, nestedSceneChildren As Boolean = True) As IEnumerable(Of NetNodeWrapper)
-  overload: Nebula.NetworkController.GetNetworkChildren*
-  nameWithType.vb: NetworkController.GetNetworkChildren(NetworkController.NetworkChildrenSearchToggle, Boolean)
-  fullName.vb: Nebula.NetworkController.GetNetworkChildren(Nebula.NetworkController.NetworkChildrenSearchToggle, Boolean)
-  name.vb: GetNetworkChildren(NetworkChildrenSearchToggle, Boolean)
-- uid: Nebula.NetworkController.Despawn
-  commentId: M:Nebula.NetworkController.Despawn
-  id: Despawn
+    - id: peerId
+      type: Nebula.UUID
+    content.vb: Public Sub _OnPeerConnected(peerId As UUID)
+  overload: Nebula.NetworkController._OnPeerConnected*
+- uid: Nebula.NetworkController.PrepareSpawn(ENet.Peer)
+  commentId: M:Nebula.NetworkController.PrepareSpawn(ENet.Peer)
+  id: PrepareSpawn(ENet.Peer)
   parent: Nebula.NetworkController
   langs:
   - csharp
   - vb
-  name: Despawn()
-  nameWithType: NetworkController.Despawn()
-  fullName: Nebula.NetworkController.Despawn()
+  name: PrepareSpawn(Peer)
+  nameWithType: NetworkController.PrepareSpawn(Peer)
+  fullName: Nebula.NetworkController.PrepareSpawn(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public void Despawn()
-    content.vb: Public Sub Despawn()
-  overload: Nebula.NetworkController.Despawn*
-- uid: Nebula.NetworkController.PrepareSpawn(Godot.ENetPacketPeer)
-  commentId: M:Nebula.NetworkController.PrepareSpawn(Godot.ENetPacketPeer)
-  id: PrepareSpawn(Godot.ENetPacketPeer)
-  parent: Nebula.NetworkController
-  langs:
-  - csharp
-  - vb
-  name: PrepareSpawn(ENetPacketPeer)
-  nameWithType: NetworkController.PrepareSpawn(ENetPacketPeer)
-  fullName: Nebula.NetworkController.PrepareSpawn(Godot.ENetPacketPeer)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: public void PrepareSpawn(ENetPacketPeer peer)
+    content: public void PrepareSpawn(Peer peer)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
-    content.vb: Public Sub PrepareSpawn(peer As ENetPacketPeer)
+      type: ENet.Peer
+    content.vb: Public Sub PrepareSpawn(peer As Peer)
   overload: Nebula.NetworkController.PrepareSpawn*
 - uid: Nebula.NetworkController._WorldReady
   commentId: M:Nebula.NetworkController._WorldReady
@@ -502,7 +1114,7 @@ items:
   fullName: Nebula.NetworkController._WorldReady()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -522,7 +1134,7 @@ items:
   fullName: Nebula.NetworkController._NetworkProcess(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -536,28 +1148,6 @@ items:
   nameWithType.vb: NetworkController._NetworkProcess(Integer)
   fullName.vb: Nebula.NetworkController._NetworkProcess(Integer)
   name.vb: _NetworkProcess(Integer)
-- uid: Nebula.NetworkController.GetInput
-  commentId: M:Nebula.NetworkController.GetInput
-  id: GetInput
-  parent: Nebula.NetworkController
-  langs:
-  - csharp
-  - vb
-  name: GetInput()
-  nameWithType: NetworkController.GetInput()
-  fullName: Nebula.NetworkController.GetInput()
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: public Dictionary<int, Variant> GetInput()
-    return:
-      type: Godot.Collections.Dictionary{System.Int32,Godot.Variant}
-    content.vb: Public Function GetInput() As Dictionary(Of Integer, [Variant])
-  overload: Nebula.NetworkController.GetInput*
 - uid: Nebula.NetworkController.NodePathFromNetScene
   commentId: M:Nebula.NetworkController.NodePathFromNetScene
   id: NodePathFromNetScene
@@ -570,7 +1160,7 @@ items:
   fullName: Nebula.NetworkController.NodePathFromNetScene()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -580,85 +1170,118 @@ items:
       type: System.String
     content.vb: Public Function NodePathFromNetScene() As String
   overload: Nebula.NetworkController.NodePathFromNetScene*
-- uid: Nebula.NetworkController.EmitSignalInterestChanged(Nebula.UUID,System.Int64)
-  commentId: M:Nebula.NetworkController.EmitSignalInterestChanged(Nebula.UUID,System.Int64)
-  id: EmitSignalInterestChanged(Nebula.UUID,System.Int64)
+- uid: Nebula.NetworkController.Despawn
+  commentId: M:Nebula.NetworkController.Despawn
+  id: Despawn
   parent: Nebula.NetworkController
   langs:
   - csharp
   - vb
-  name: EmitSignalInterestChanged(UUID, long)
-  nameWithType: NetworkController.EmitSignalInterestChanged(UUID, long)
-  fullName: Nebula.NetworkController.EmitSignalInterestChanged(Nebula.UUID, long)
+  name: Despawn()
+  nameWithType: NetworkController.Despawn()
+  fullName: Nebula.NetworkController.Despawn()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetworkController_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: protected void EmitSignalInterestChanged(UUID peerId, long interestLayers)
-    parameters:
-    - id: peerId
-      type: Nebula.UUID
-    - id: interestLayers
-      type: System.Int64
-    content.vb: Protected Sub EmitSignalInterestChanged(peerId As UUID, interestLayers As Long)
-  overload: Nebula.NetworkController.EmitSignalInterestChanged*
-  nameWithType.vb: NetworkController.EmitSignalInterestChanged(UUID, Long)
-  fullName.vb: Nebula.NetworkController.EmitSignalInterestChanged(Nebula.UUID, Long)
-  name.vb: EmitSignalInterestChanged(UUID, Long)
-- uid: Nebula.NetworkController.EmitSignalNetPropertyChanged(System.String,Godot.StringName)
-  commentId: M:Nebula.NetworkController.EmitSignalNetPropertyChanged(System.String,Godot.StringName)
-  id: EmitSignalNetPropertyChanged(System.String,Godot.StringName)
+    content: public void Despawn()
+    content.vb: Public Sub Despawn()
+  overload: Nebula.NetworkController.Despawn*
+- uid: Nebula.NetworkController.RawNode
+  commentId: P:Nebula.NetworkController.RawNode
+  id: RawNode
   parent: Nebula.NetworkController
   langs:
   - csharp
   - vb
-  name: EmitSignalNetPropertyChanged(string, StringName)
-  nameWithType: NetworkController.EmitSignalNetPropertyChanged(string, StringName)
-  fullName: Nebula.NetworkController.EmitSignalNetPropertyChanged(string, Godot.StringName)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetworkController_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: protected void EmitSignalNetPropertyChanged(string nodePath, StringName propertyName)
-    parameters:
-    - id: nodePath
-      type: System.String
-    - id: propertyName
-      type: Godot.StringName
-    content.vb: Protected Sub EmitSignalNetPropertyChanged(nodePath As String, propertyName As StringName)
-  overload: Nebula.NetworkController.EmitSignalNetPropertyChanged*
-  nameWithType.vb: NetworkController.EmitSignalNetPropertyChanged(String, StringName)
-  fullName.vb: Nebula.NetworkController.EmitSignalNetPropertyChanged(String, Godot.StringName)
-  name.vb: EmitSignalNetPropertyChanged(String, StringName)
-- uid: Nebula.NetworkController.AttachedNetNode
-  commentId: P:Nebula.NetworkController.AttachedNetNode
-  id: AttachedNetNode
-  parent: Nebula.NetworkController
-  langs:
-  - csharp
-  - vb
-  name: AttachedNetNode
-  nameWithType: NetworkController.AttachedNetNode
-  fullName: Nebula.NetworkController.AttachedNetNode
+  name: RawNode
+  nameWithType: NetworkController.RawNode
+  fullName: Nebula.NetworkController.RawNode
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public NetNodeWrapper AttachedNetNode { get; }
+    content: public Node RawNode { get; }
     parameters: []
     return:
-      type: Nebula.NetNodeWrapper
-    content.vb: Public ReadOnly Property AttachedNetNode As NetNodeWrapper
-  overload: Nebula.NetworkController.AttachedNetNode*
+      type: Godot.Node
+    content.vb: Public ReadOnly Property RawNode As Node
+  overload: Nebula.NetworkController.RawNode*
+- uid: Nebula.NetworkController.NetNodePath
+  commentId: P:Nebula.NetworkController.NetNodePath
+  id: NetNodePath
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: NetNodePath
+  nameWithType: NetworkController.NetNodePath
+  fullName: Nebula.NetworkController.NetNodePath
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public NodePath NetNodePath { get; }
+    parameters: []
+    return:
+      type: Godot.NodePath
+    content.vb: Public ReadOnly Property NetNodePath As NodePath
+  overload: Nebula.NetworkController.NetNodePath*
+- uid: Nebula.NetworkController.NetSceneFilePath
+  commentId: P:Nebula.NetworkController.NetSceneFilePath
+  id: NetSceneFilePath
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: NetSceneFilePath
+  nameWithType: NetworkController.NetSceneFilePath
+  fullName: Nebula.NetworkController.NetSceneFilePath
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public string NetSceneFilePath { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property NetSceneFilePath As String
+  overload: Nebula.NetworkController.NetSceneFilePath*
+- uid: Nebula.NetworkController.IsQueuedForDespawn
+  commentId: P:Nebula.NetworkController.IsQueuedForDespawn
+  id: IsQueuedForDespawn
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: IsQueuedForDespawn
+  nameWithType: NetworkController.IsQueuedForDespawn
+  fullName: Nebula.NetworkController.IsQueuedForDespawn
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public bool IsQueuedForDespawn { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsQueuedForDespawn As Boolean
+  overload: Nebula.NetworkController.IsQueuedForDespawn*
 - uid: Nebula.NetworkController.CurrentWorld
   commentId: P:Nebula.NetworkController.CurrentWorld
   id: CurrentWorld
@@ -671,7 +1294,7 @@ items:
   fullName: Nebula.NetworkController.CurrentWorld
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -682,6 +1305,59 @@ items:
       type: Nebula.WorldRunner
     content.vb: Public ReadOnly Property CurrentWorld As WorldRunner
   overload: Nebula.NetworkController.CurrentWorld*
+- uid: Nebula.NetworkController.InterestLayers
+  commentId: P:Nebula.NetworkController.InterestLayers
+  id: InterestLayers
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: InterestLayers
+  nameWithType: NetworkController.InterestLayers
+  fullName: Nebula.NetworkController.InterestLayers
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public Dictionary<UUID, long> InterestLayers { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{Nebula.UUID,System.Int64}
+    content.vb: Public Property InterestLayers As Dictionary(Of UUID, Long)
+  overload: Nebula.NetworkController.InterestLayers*
+- uid: Nebula.NetworkController.StaticChildId
+  commentId: P:Nebula.NetworkController.StaticChildId
+  id: StaticChildId
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: StaticChildId
+  nameWithType: NetworkController.StaticChildId
+  fullName: Nebula.NetworkController.StaticChildId
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    The static child ID for this node within its parent NetScene.
+
+    Assigned during Setup() from Protocol.StaticNetworkNodePathsMap.
+
+    Root NetScene nodes use their own ID (typically 0 for ".").
+  example: []
+  syntax:
+    content: public byte StaticChildId { get; }
+    parameters: []
+    return:
+      type: System.Byte
+    content.vb: Public ReadOnly Property StaticChildId As Byte
+  overload: Nebula.NetworkController.StaticChildId*
 - uid: Nebula.NetworkController.IsWorldReady
   commentId: P:Nebula.NetworkController.IsWorldReady
   id: IsWorldReady
@@ -694,7 +1370,7 @@ items:
   fullName: Nebula.NetworkController.IsWorldReady
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -717,7 +1393,7 @@ items:
   fullName: Nebula.NetworkController.NetParentId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -740,16 +1416,16 @@ items:
   fullName: Nebula.NetworkController.NetParent
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public NetNodeWrapper NetParent { get; }
+    content: public NetworkController NetParent { get; }
     parameters: []
     return:
-      type: Nebula.NetNodeWrapper
-    content.vb: Public ReadOnly Property NetParent As NetNodeWrapper
+      type: Nebula.NetworkController
+    content.vb: Public ReadOnly Property NetParent As NetworkController
   overload: Nebula.NetworkController.NetParent*
 - uid: Nebula.NetworkController.IsClientSpawn
   commentId: P:Nebula.NetworkController.IsClientSpawn
@@ -763,7 +1439,7 @@ items:
   fullName: Nebula.NetworkController.IsClientSpawn
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -774,6 +1450,159 @@ items:
       type: System.Boolean
     content.vb: Public ReadOnly Property IsClientSpawn As Boolean
   overload: Nebula.NetworkController.IsClientSpawn*
+- uid: Nebula.NetworkController.HasInputSupport
+  commentId: P:Nebula.NetworkController.HasInputSupport
+  id: HasInputSupport
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: HasInputSupport
+  nameWithType: NetworkController.HasInputSupport
+  fullName: Nebula.NetworkController.HasInputSupport
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Returns true if this node supports network input (InitializeInput was called).
+  example: []
+  syntax:
+    content: public bool HasInputSupport { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property HasInputSupport As Boolean
+  overload: Nebula.NetworkController.HasInputSupport*
+- uid: Nebula.NetworkController.HasInputChanged
+  commentId: P:Nebula.NetworkController.HasInputChanged
+  id: HasInputChanged
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: HasInputChanged
+  nameWithType: NetworkController.HasInputChanged
+  fullName: Nebula.NetworkController.HasInputChanged
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Returns true if the input has changed since the last network tick.
+  example: []
+  syntax:
+    content: public bool HasInputChanged { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property HasInputChanged As Boolean
+  overload: Nebula.NetworkController.HasInputChanged*
+- uid: Nebula.NetworkController.IsPredicting
+  commentId: P:Nebula.NetworkController.IsPredicting
+  id: IsPredicting
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: IsPredicting
+  nameWithType: NetworkController.IsPredicting
+  fullName: Nebula.NetworkController.IsPredicting
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: True when this entity is currently running predicted simulation (client-side).
+  example: []
+  syntax:
+    content: public bool IsPredicting { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsPredicting As Boolean
+  overload: Nebula.NetworkController.IsPredicting*
+- uid: Nebula.NetworkController.IsResimulating
+  commentId: P:Nebula.NetworkController.IsResimulating
+  id: IsResimulating
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: IsResimulating
+  nameWithType: NetworkController.IsResimulating
+  fullName: Nebula.NetworkController.IsResimulating
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    True during rollback replay (re-simulation after misprediction).
+
+    Use this to skip side effects (sounds, particles) during resimulation.
+  example: []
+  syntax:
+    content: public bool IsResimulating { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsResimulating As Boolean
+  overload: Nebula.NetworkController.IsResimulating*
+- uid: Nebula.NetworkController.LastConfirmedTick
+  commentId: P:Nebula.NetworkController.LastConfirmedTick
+  id: LastConfirmedTick
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: LastConfirmedTick
+  nameWithType: NetworkController.LastConfirmedTick
+  fullName: Nebula.NetworkController.LastConfirmedTick
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: The last tick that was confirmed by the server for this entity.
+  example: []
+  syntax:
+    content: public int LastConfirmedTick { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property LastConfirmedTick As Integer
+  overload: Nebula.NetworkController.LastConfirmedTick*
+- uid: Nebula.NetworkController.LastPredictedTick
+  commentId: P:Nebula.NetworkController.LastPredictedTick
+  id: LastPredictedTick
+  parent: Nebula.NetworkController
+  langs:
+  - csharp
+  - vb
+  name: LastPredictedTick
+  nameWithType: NetworkController.LastPredictedTick
+  fullName: Nebula.NetworkController.LastPredictedTick
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: The last tick that was predicted locally for this entity.
+  example: []
+  syntax:
+    content: public int LastPredictedTick { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property LastPredictedTick As Integer
+  overload: Nebula.NetworkController.LastPredictedTick*
 - uid: Nebula.NetworkController.NetId
   commentId: P:Nebula.NetworkController.NetId
   id: NetId
@@ -786,7 +1615,7 @@ items:
   fullName: Nebula.NetworkController.NetId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -809,16 +1638,16 @@ items:
   fullName: Nebula.NetworkController.InputAuthority
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public ENetPacketPeer InputAuthority { get; }
+    content: public Peer InputAuthority { get; }
     parameters: []
     return:
-      type: Godot.ENetPacketPeer
-    content.vb: Public ReadOnly Property InputAuthority As ENetPacketPeer
+      type: ENet.Peer
+    content.vb: Public ReadOnly Property InputAuthority As Peer
   overload: Nebula.NetworkController.InputAuthority*
 - uid: Nebula.NetworkController.IsCurrentOwner
   commentId: P:Nebula.NetworkController.IsCurrentOwner
@@ -832,7 +1661,7 @@ items:
   fullName: Nebula.NetworkController.IsCurrentOwner
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetworkController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -855,38 +1684,45 @@ items:
   fullName: Nebula.NetworkController.InterestChanged
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetworkController_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: "Invoked when a peer's interest layers change. Parameters: (peerId, oldInterest, newInterest)"
   example: []
   syntax:
-    content: public event NetworkController.InterestChangedEventHandler InterestChanged
+    content: public event Action<UUID, long, long> InterestChanged
     return:
-      type: Nebula.NetworkController.InterestChangedEventHandler
-    content.vb: Public Event InterestChanged As NetworkController.InterestChangedEventHandler
-- uid: Nebula.NetworkController.NetPropertyChanged
-  commentId: E:Nebula.NetworkController.NetPropertyChanged
-  id: NetPropertyChanged
+      type: System.Action{Nebula.UUID,System.Int64,System.Int64}
+    content.vb: Public Event InterestChanged As Action(Of UUID, Long, Long)
+- uid: Nebula.NetworkController.OnInterestChanged
+  commentId: E:Nebula.NetworkController.OnInterestChanged
+  id: OnInterestChanged
   parent: Nebula.NetworkController
   langs:
   - csharp
   - vb
-  name: NetPropertyChanged
-  nameWithType: NetworkController.NetPropertyChanged
-  fullName: Nebula.NetworkController.NetPropertyChanged
+  name: OnInterestChanged
+  nameWithType: NetworkController.OnInterestChanged
+  fullName: Nebula.NetworkController.OnInterestChanged
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetworkController_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: >-
+    Client-side only. Fired when this node's interest state changes.
+
+    Parameter is true when interest is gained, false when lost.
+
+    Use this to snap/teleport visual state on regain, or hide on loss.
   example: []
   syntax:
-    content: public event NetworkController.NetPropertyChangedEventHandler NetPropertyChanged
+    content: public event Action<bool> OnInterestChanged
     return:
-      type: Nebula.NetworkController.NetPropertyChangedEventHandler
-    content.vb: Public Event NetPropertyChanged As NetworkController.NetPropertyChangedEventHandler
+      type: System.Action{System.Boolean}
+    content.vb: Public Event OnInterestChanged As Action(Of Boolean)
 references:
 - uid: Nebula.NetNode
   commentId: T:Nebula.NetNode
@@ -3434,6 +4270,14 @@ references:
   name: Godot
   nameWithType: Godot
   fullName: Godot
+- uid: Nebula.INetNodeBase
+  commentId: T:Nebula.INetNodeBase
+  parent: Nebula
+  isExternal: true
+  href: Nebula.INetNodeBase.html
+  name: INetNodeBase
+  nameWithType: INetNodeBase
+  fullName: Nebula.INetNodeBase
 - uid: System.Boolean
   commentId: T:System.Boolean
   parent: System
@@ -3445,126 +4289,29 @@ references:
   nameWithType.vb: Boolean
   fullName.vb: Boolean
   name.vb: Boolean
-- uid: Godot.Collections.Dictionary{Nebula.UUID,System.Int64}
-  commentId: T:Godot.Collections.Dictionary{Nebula.UUID,System.Int64}
-  parent: Godot.Collections
-  definition: Godot.Collections.Dictionary`2
-  href: Nebula.UUID.html
-  name: Dictionary<UUID, long>
-  nameWithType: Dictionary<UUID, long>
-  fullName: Godot.Collections.Dictionary<Nebula.UUID, long>
-  nameWithType.vb: Dictionary(Of UUID, Long)
-  fullName.vb: Godot.Collections.Dictionary(Of Nebula.UUID, Long)
-  name.vb: Dictionary(Of UUID, Long)
+- uid: Nebula.NetworkController[]
+  isExternal: true
+  href: Nebula.NetworkController.html
+  name: NetworkController[]
+  nameWithType: NetworkController[]
+  fullName: Nebula.NetworkController[]
+  nameWithType.vb: NetworkController()
+  fullName.vb: Nebula.NetworkController()
+  name.vb: NetworkController()
   spec.csharp:
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
+  - uid: Nebula.NetworkController
+    name: NetworkController
     isExternal: true
-  - name: <
-  - uid: Nebula.UUID
-    name: UUID
-    isExternal: true
-    href: Nebula.UUID.html
-  - name: ','
-  - name: " "
-  - uid: System.Int64
-    name: long
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int64
-  - name: '>'
+    href: Nebula.NetworkController.html
+  - name: '['
+  - name: ']'
   spec.vb:
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
+  - uid: Nebula.NetworkController
+    name: NetworkController
     isExternal: true
+    href: Nebula.NetworkController.html
   - name: (
-  - name: Of
-  - name: " "
-  - uid: Nebula.UUID
-    name: UUID
-    isExternal: true
-    href: Nebula.UUID.html
-  - name: ','
-  - name: " "
-  - uid: System.Int64
-    name: Long
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int64
   - name: )
-- uid: Godot.Collections.Dictionary`2
-  commentId: T:Godot.Collections.Dictionary`2
-  isExternal: true
-  name: Dictionary<TKey, TValue>
-  nameWithType: Dictionary<TKey, TValue>
-  fullName: Godot.Collections.Dictionary<TKey, TValue>
-  nameWithType.vb: Dictionary(Of TKey, TValue)
-  fullName.vb: Godot.Collections.Dictionary(Of TKey, TValue)
-  name.vb: Dictionary(Of TKey, TValue)
-  spec.csharp:
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
-    isExternal: true
-  - name: <
-  - name: TKey
-  - name: ','
-  - name: " "
-  - name: TValue
-  - name: '>'
-  spec.vb:
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
-    isExternal: true
-  - name: (
-  - name: Of
-  - name: " "
-  - name: TKey
-  - name: ','
-  - name: " "
-  - name: TValue
-  - name: )
-- uid: Godot.Collections
-  commentId: N:Godot.Collections
-  isExternal: true
-  name: Godot.Collections
-  nameWithType: Godot.Collections
-  fullName: Godot.Collections
-  spec.csharp:
-  - uid: Godot
-    name: Godot
-    isExternal: true
-  - name: .
-  - uid: Godot.Collections
-    name: Collections
-    isExternal: true
-  spec.vb:
-  - uid: Godot
-    name: Godot
-    isExternal: true
-  - name: .
-  - uid: Godot.Collections
-    name: Collections
-    isExternal: true
-- uid: Nebula.NetworkController.IsNetScene*
-  commentId: Overload:Nebula.NetworkController.IsNetScene
-  isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_IsNetScene
-  name: IsNetScene
-  nameWithType: NetworkController.IsNetScene
-  fullName: Nebula.NetworkController.IsNetScene
-- uid: Nebula.NetworkController.SetPeerInterest*
-  commentId: Overload:Nebula.NetworkController.SetPeerInterest
-  isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_SetPeerInterest_Nebula_UUID_System_Int64_System_Boolean_
-  name: SetPeerInterest
-  nameWithType: NetworkController.SetPeerInterest
-  fullName: Nebula.NetworkController.SetPeerInterest
-- uid: Nebula.UUID
-  commentId: T:Nebula.UUID
-  parent: Nebula
-  isExternal: true
-  href: Nebula.UUID.html
-  name: UUID
-  nameWithType: UUID
-  fullName: Nebula.UUID
 - uid: System.Int64
   commentId: T:System.Int64
   parent: System
@@ -3576,226 +4323,64 @@ references:
   nameWithType.vb: Long
   fullName.vb: Long
   name.vb: Long
-- uid: Godot.GodotObject._Notification(System.Int32)
-  commentId: M:Godot.GodotObject._Notification(System.Int32)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: _Notification(int)
-  nameWithType: GodotObject._Notification(int)
-  fullName: Godot.GodotObject._Notification(int)
-  nameWithType.vb: GodotObject._Notification(Integer)
-  fullName.vb: Godot.GodotObject._Notification(Integer)
-  name.vb: _Notification(Integer)
-  spec.csharp:
-  - uid: Godot.GodotObject._Notification(System.Int32)
-    name: _Notification
-    isExternal: true
-  - name: (
-  - uid: System.Int32
-    name: int
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._Notification(System.Int32)
-    name: _Notification
-    isExternal: true
-  - name: (
-  - uid: System.Int32
-    name: Integer
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: )
-- uid: Nebula.NetworkController._Notification*
-  commentId: Overload:Nebula.NetworkController._Notification
-  isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController__Notification_System_Int32_
-  name: _Notification
-  nameWithType: NetworkController._Notification
-  fullName: Nebula.NetworkController._Notification
-- uid: System.Int32
-  commentId: T:System.Int32
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: int
-  nameWithType: int
-  fullName: int
-  nameWithType.vb: Integer
-  fullName.vb: Integer
-  name.vb: Integer
-- uid: Nebula.NetworkController.SetNetworkInput*
-  commentId: Overload:Nebula.NetworkController.SetNetworkInput
-  isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_SetNetworkInput_System_Byte_Godot_Variant_
-  name: SetNetworkInput
-  nameWithType: NetworkController.SetNetworkInput
-  fullName: Nebula.NetworkController.SetNetworkInput
-- uid: System.Byte
-  commentId: T:System.Byte
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.byte
-  name: byte
-  nameWithType: byte
-  fullName: byte
-  nameWithType.vb: Byte
-  fullName.vb: Byte
-  name.vb: Byte
-- uid: Godot.Variant
-  commentId: T:Godot.Variant
-  parent: Godot
-  isExternal: true
-  name: Variant
-  nameWithType: Variant
-  fullName: Godot.Variant
-- uid: Nebula.NetworkController.GetNetworkInput*
-  commentId: Overload:Nebula.NetworkController.GetNetworkInput
-  isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_GetNetworkInput_System_Byte_Godot_Variant_
-  name: GetNetworkInput
-  nameWithType: NetworkController.GetNetworkInput
-  fullName: Nebula.NetworkController.GetNetworkInput
-- uid: Nebula.NetworkController.#ctor*
-  commentId: Overload:Nebula.NetworkController.#ctor
-  isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController__ctor_Godot_Node_
-  name: NetworkController
-  nameWithType: NetworkController.NetworkController
-  fullName: Nebula.NetworkController.NetworkController
-  nameWithType.vb: NetworkController.New
-  fullName.vb: Nebula.NetworkController.New
-  name.vb: New
-- uid: Godot.Node
-  commentId: T:Godot.Node
-  parent: Godot
-  isExternal: true
-  name: Node
-  nameWithType: Node
-  fullName: Godot.Node
-- uid: Nebula.NetworkController.SetInputAuthority*
-  commentId: Overload:Nebula.NetworkController.SetInputAuthority
-  isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_SetInputAuthority_Godot_ENetPacketPeer_
-  name: SetInputAuthority
-  nameWithType: NetworkController.SetInputAuthority
-  fullName: Nebula.NetworkController.SetInputAuthority
-- uid: Godot.ENetPacketPeer
-  commentId: T:Godot.ENetPacketPeer
-  parent: Godot
-  isExternal: true
-  name: ENetPacketPeer
-  nameWithType: ENetPacketPeer
-  fullName: Godot.ENetPacketPeer
-- uid: Nebula.NetworkController.FindFromChild*
-  commentId: Overload:Nebula.NetworkController.FindFromChild
-  isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_FindFromChild_Godot_Node_
-  name: FindFromChild
-  nameWithType: NetworkController.FindFromChild
-  fullName: Nebula.NetworkController.FindFromChild
-- uid: Nebula.INetNode
-  commentId: T:Nebula.INetNode
-  parent: Nebula
-  isExternal: true
-  href: Nebula.INetNode.html
-  name: INetNode
-  nameWithType: INetNode
-  fullName: Nebula.INetNode
-- uid: Nebula.NetworkController.GetNetworkChildren*
-  commentId: Overload:Nebula.NetworkController.GetNetworkChildren
-  isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_GetNetworkChildren_Nebula_NetworkController_NetworkChildrenSearchToggle_System_Boolean_
-  name: GetNetworkChildren
-  nameWithType: NetworkController.GetNetworkChildren
-  fullName: Nebula.NetworkController.GetNetworkChildren
-- uid: Nebula.NetworkController.NetworkChildrenSearchToggle
-  commentId: T:Nebula.NetworkController.NetworkChildrenSearchToggle
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetworkController.html
-  name: NetworkController.NetworkChildrenSearchToggle
-  nameWithType: NetworkController.NetworkChildrenSearchToggle
-  fullName: Nebula.NetworkController.NetworkChildrenSearchToggle
-  spec.csharp:
-  - uid: Nebula.NetworkController
-    name: NetworkController
-    isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.NetworkChildrenSearchToggle
-    name: NetworkChildrenSearchToggle
-    isExternal: true
-    href: Nebula.NetworkController.NetworkChildrenSearchToggle.html
-  spec.vb:
-  - uid: Nebula.NetworkController
-    name: NetworkController
-    isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.NetworkChildrenSearchToggle
-    name: NetworkChildrenSearchToggle
-    isExternal: true
-    href: Nebula.NetworkController.NetworkChildrenSearchToggle.html
-- uid: System.Collections.Generic.IEnumerable{Nebula.NetNodeWrapper}
-  commentId: T:System.Collections.Generic.IEnumerable{Nebula.NetNodeWrapper}
+- uid: System.Collections.Generic.HashSet{Nebula.NetworkController}
+  commentId: T:System.Collections.Generic.HashSet{Nebula.NetworkController}
   parent: System.Collections.Generic
-  definition: System.Collections.Generic.IEnumerable`1
-  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
-  name: IEnumerable<NetNodeWrapper>
-  nameWithType: IEnumerable<NetNodeWrapper>
-  fullName: System.Collections.Generic.IEnumerable<Nebula.NetNodeWrapper>
-  nameWithType.vb: IEnumerable(Of NetNodeWrapper)
-  fullName.vb: System.Collections.Generic.IEnumerable(Of Nebula.NetNodeWrapper)
-  name.vb: IEnumerable(Of NetNodeWrapper)
+  definition: System.Collections.Generic.HashSet`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<NetworkController>
+  nameWithType: HashSet<NetworkController>
+  fullName: System.Collections.Generic.HashSet<Nebula.NetworkController>
+  nameWithType.vb: HashSet(Of NetworkController)
+  fullName.vb: System.Collections.Generic.HashSet(Of Nebula.NetworkController)
+  name.vb: HashSet(Of NetworkController)
   spec.csharp:
-  - uid: System.Collections.Generic.IEnumerable`1
-    name: IEnumerable
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
   - name: <
-  - uid: Nebula.NetNodeWrapper
-    name: NetNodeWrapper
+  - uid: Nebula.NetworkController
+    name: NetworkController
     isExternal: true
-    href: Nebula.NetNodeWrapper.html
+    href: Nebula.NetworkController.html
   - name: '>'
   spec.vb:
-  - uid: System.Collections.Generic.IEnumerable`1
-    name: IEnumerable
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
   - name: (
   - name: Of
   - name: " "
-  - uid: Nebula.NetNodeWrapper
-    name: NetNodeWrapper
+  - uid: Nebula.NetworkController
+    name: NetworkController
     isExternal: true
-    href: Nebula.NetNodeWrapper.html
+    href: Nebula.NetworkController.html
   - name: )
-- uid: System.Collections.Generic.IEnumerable`1
-  commentId: T:System.Collections.Generic.IEnumerable`1
+- uid: System.Collections.Generic.HashSet`1
+  commentId: T:System.Collections.Generic.HashSet`1
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
-  name: IEnumerable<T>
-  nameWithType: IEnumerable<T>
-  fullName: System.Collections.Generic.IEnumerable<T>
-  nameWithType.vb: IEnumerable(Of T)
-  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
-  name.vb: IEnumerable(Of T)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<T>
+  nameWithType: HashSet<T>
+  fullName: System.Collections.Generic.HashSet<T>
+  nameWithType.vb: HashSet(Of T)
+  fullName.vb: System.Collections.Generic.HashSet(Of T)
+  name.vb: HashSet(Of T)
   spec.csharp:
-  - uid: System.Collections.Generic.IEnumerable`1
-    name: IEnumerable
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
   - name: <
   - name: T
   - name: '>'
   spec.vb:
-  - uid: System.Collections.Generic.IEnumerable`1
-    name: IEnumerable
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
   - name: (
   - name: Of
   - name: " "
@@ -3838,91 +4423,135 @@ references:
     name: Generic
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.collections.generic
-- uid: Nebula.NetworkController.Despawn*
-  commentId: Overload:Nebula.NetworkController.Despawn
+- uid: Nebula.NetworkController.#ctor*
+  commentId: Overload:Nebula.NetworkController.#ctor
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_Despawn
-  name: Despawn
-  nameWithType: NetworkController.Despawn
-  fullName: Nebula.NetworkController.Despawn
-- uid: Nebula.NetworkController.PrepareSpawn*
-  commentId: Overload:Nebula.NetworkController.PrepareSpawn
+  href: Nebula.NetworkController.-ctor.html#Nebula_NetworkController__ctor_Godot_Node_
+  name: NetworkController
+  nameWithType: NetworkController.NetworkController
+  fullName: Nebula.NetworkController.NetworkController
+  nameWithType.vb: NetworkController.New
+  fullName.vb: Nebula.NetworkController.New
+  name.vb: New
+- uid: Godot.Node
+  commentId: T:Godot.Node
+  parent: Godot
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_PrepareSpawn_Godot_ENetPacketPeer_
-  name: PrepareSpawn
-  nameWithType: NetworkController.PrepareSpawn
-  fullName: Nebula.NetworkController.PrepareSpawn
-- uid: Nebula.NetworkController._WorldReady*
-  commentId: Overload:Nebula.NetworkController._WorldReady
+  name: Node
+  nameWithType: Node
+  fullName: Godot.Node
+- uid: Nebula.NetworkController.QueueNodeForDeletion*
+  commentId: Overload:Nebula.NetworkController.QueueNodeForDeletion
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController__WorldReady
-  name: _WorldReady
-  nameWithType: NetworkController._WorldReady
-  fullName: Nebula.NetworkController._WorldReady
-- uid: Nebula.NetworkController._NetworkProcess*
-  commentId: Overload:Nebula.NetworkController._NetworkProcess
+  href: Nebula.NetworkController.QueueNodeForDeletion.html#Nebula_NetworkController_QueueNodeForDeletion
+  name: QueueNodeForDeletion
+  nameWithType: NetworkController.QueueNodeForDeletion
+  fullName: Nebula.NetworkController.QueueNodeForDeletion
+- uid: Nebula.NetworkController.IsNetScene*
+  commentId: Overload:Nebula.NetworkController.IsNetScene
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController__NetworkProcess_System_Int32_
-  name: _NetworkProcess
-  nameWithType: NetworkController._NetworkProcess
-  fullName: Nebula.NetworkController._NetworkProcess
-- uid: Nebula.NetworkController.GetInput*
-  commentId: Overload:Nebula.NetworkController.GetInput
+  href: Nebula.NetworkController.IsNetScene.html#Nebula_NetworkController_IsNetScene
+  name: IsNetScene
+  nameWithType: NetworkController.IsNetScene
+  fullName: Nebula.NetworkController.IsNetScene
+- uid: Nebula.NetworkController.SetPeerInterest*
+  commentId: Overload:Nebula.NetworkController.SetPeerInterest
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_GetInput
-  name: GetInput
-  nameWithType: NetworkController.GetInput
-  fullName: Nebula.NetworkController.GetInput
-- uid: Godot.Collections.Dictionary{System.Int32,Godot.Variant}
-  commentId: T:Godot.Collections.Dictionary{System.Int32,Godot.Variant}
-  parent: Godot.Collections
-  definition: Godot.Collections.Dictionary`2
+  href: Nebula.NetworkController.SetPeerInterest.html#Nebula_NetworkController_SetPeerInterest_Nebula_UUID_System_Int64_System_Boolean_
+  name: SetPeerInterest
+  nameWithType: NetworkController.SetPeerInterest
+  fullName: Nebula.NetworkController.SetPeerInterest
+- uid: Nebula.UUID
+  commentId: T:Nebula.UUID
+  parent: Nebula
+  isExternal: true
+  href: Nebula.UUID.html
+  name: UUID
+  nameWithType: UUID
+  fullName: Nebula.UUID
+- uid: Nebula.NetworkController.AddPeerInterest*
+  commentId: Overload:Nebula.NetworkController.AddPeerInterest
+  isExternal: true
+  href: Nebula.NetworkController.AddPeerInterest.html#Nebula_NetworkController_AddPeerInterest_Nebula_UUID_System_Int64_System_Boolean_
+  name: AddPeerInterest
+  nameWithType: NetworkController.AddPeerInterest
+  fullName: Nebula.NetworkController.AddPeerInterest
+- uid: Nebula.NetworkController.IsPeerInterested*
+  commentId: Overload:Nebula.NetworkController.IsPeerInterested
+  isExternal: true
+  href: Nebula.NetworkController.IsPeerInterested.html#Nebula_NetworkController_IsPeerInterested_Nebula_UUID_
+  name: IsPeerInterested
+  nameWithType: NetworkController.IsPeerInterested
+  fullName: Nebula.NetworkController.IsPeerInterested
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
+  isExternal: true
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: ENet
+  commentId: N:ENet
+  isExternal: true
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
+- uid: Godot.GodotObject._Notification(System.Int32)
+  commentId: M:Godot.GodotObject._Notification(System.Int32)
+  parent: Godot.GodotObject
+  isExternal: true
   href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: Dictionary<int, Variant>
-  nameWithType: Dictionary<int, Variant>
-  fullName: Godot.Collections.Dictionary<int, Godot.Variant>
-  nameWithType.vb: Dictionary(Of Integer, Variant)
-  fullName.vb: Godot.Collections.Dictionary(Of Integer, Godot.Variant)
-  name.vb: Dictionary(Of Integer, Variant)
+  name: _Notification(int)
+  nameWithType: GodotObject._Notification(int)
+  fullName: Godot.GodotObject._Notification(int)
+  nameWithType.vb: GodotObject._Notification(Integer)
+  fullName.vb: Godot.GodotObject._Notification(Integer)
+  name.vb: _Notification(Integer)
   spec.csharp:
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
+  - uid: Godot.GodotObject._Notification(System.Int32)
+    name: _Notification
     isExternal: true
-  - name: <
+  - name: (
   - uid: System.Int32
     name: int
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: '>'
+  - name: )
   spec.vb:
-  - uid: Godot.Collections.Dictionary`2
-    name: Dictionary
+  - uid: Godot.GodotObject._Notification(System.Int32)
+    name: _Notification
     isExternal: true
   - name: (
-  - name: Of
-  - name: " "
   - uid: System.Int32
     name: Integer
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
   - name: )
-- uid: Nebula.NetworkController.NodePathFromNetScene*
-  commentId: Overload:Nebula.NetworkController.NodePathFromNetScene
+- uid: Nebula.NetworkController._Notification*
+  commentId: Overload:Nebula.NetworkController._Notification
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_NodePathFromNetScene
-  name: NodePathFromNetScene
-  nameWithType: NetworkController.NodePathFromNetScene
-  fullName: Nebula.NetworkController.NodePathFromNetScene
+  href: Nebula.NetworkController._Notification.html#Nebula_NetworkController__Notification_System_Int32_
+  name: _Notification
+  nameWithType: NetworkController._Notification
+  fullName: Nebula.NetworkController._Notification
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.NetworkController.MarkDirty*
+  commentId: Overload:Nebula.NetworkController.MarkDirty
+  isExternal: true
+  href: Nebula.NetworkController.MarkDirty.html#Nebula_NetworkController_MarkDirty__1_Nebula_INetNodeBase_System_String___0_
+  name: MarkDirty
+  nameWithType: NetworkController.MarkDirty
+  fullName: Nebula.NetworkController.MarkDirty
 - uid: System.String
   commentId: T:System.String
   parent: System
@@ -3934,46 +4563,430 @@ references:
   nameWithType.vb: String
   fullName.vb: String
   name.vb: String
-- uid: Nebula.NetworkController.EmitSignalInterestChanged*
-  commentId: Overload:Nebula.NetworkController.EmitSignalInterestChanged
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Nebula.NetworkController.MarkDirtyRef*
+  commentId: Overload:Nebula.NetworkController.MarkDirtyRef
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_EmitSignalInterestChanged_Nebula_UUID_System_Int64_
-  name: EmitSignalInterestChanged
-  nameWithType: NetworkController.EmitSignalInterestChanged
-  fullName: Nebula.NetworkController.EmitSignalInterestChanged
-- uid: Nebula.NetworkController.EmitSignalNetPropertyChanged*
-  commentId: Overload:Nebula.NetworkController.EmitSignalNetPropertyChanged
+  href: Nebula.NetworkController.MarkDirtyRef.html#Nebula_NetworkController_MarkDirtyRef__1_Nebula_INetNodeBase_System_String___0_
+  name: MarkDirtyRef
+  nameWithType: NetworkController.MarkDirtyRef
+  fullName: Nebula.NetworkController.MarkDirtyRef
+- uid: Nebula.NetworkController.GetInputBytes*
+  commentId: Overload:Nebula.NetworkController.GetInputBytes
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_EmitSignalNetPropertyChanged_System_String_Godot_StringName_
-  name: EmitSignalNetPropertyChanged
-  nameWithType: NetworkController.EmitSignalNetPropertyChanged
-  fullName: Nebula.NetworkController.EmitSignalNetPropertyChanged
-- uid: Godot.StringName
-  commentId: T:Godot.StringName
+  href: Nebula.NetworkController.GetInputBytes.html#Nebula_NetworkController_GetInputBytes
+  name: GetInputBytes
+  nameWithType: NetworkController.GetInputBytes
+  fullName: Nebula.NetworkController.GetInputBytes
+- uid: System.ReadOnlySpan{System.Byte}
+  commentId: T:System.ReadOnlySpan{System.Byte}
+  parent: System
+  definition: System.ReadOnlySpan`1
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<byte>
+  nameWithType: ReadOnlySpan<byte>
+  fullName: System.ReadOnlySpan<byte>
+  nameWithType.vb: ReadOnlySpan(Of Byte)
+  fullName.vb: System.ReadOnlySpan(Of Byte)
+  name.vb: ReadOnlySpan(Of Byte)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.ReadOnlySpan`1
+  commentId: T:System.ReadOnlySpan`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<T>
+  nameWithType: ReadOnlySpan<T>
+  fullName: System.ReadOnlySpan<T>
+  nameWithType.vb: ReadOnlySpan(Of T)
+  fullName.vb: System.ReadOnlySpan(Of T)
+  name.vb: ReadOnlySpan(Of T)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.NetworkController.SetInputBytes*
+  commentId: Overload:Nebula.NetworkController.SetInputBytes
+  isExternal: true
+  href: Nebula.NetworkController.SetInputBytes.html#Nebula_NetworkController_SetInputBytes_System_ReadOnlySpan_System_Byte__
+  name: SetInputBytes
+  nameWithType: NetworkController.SetInputBytes
+  fullName: Nebula.NetworkController.SetInputBytes
+- uid: Nebula.NetworkController.ClearInputChanged*
+  commentId: Overload:Nebula.NetworkController.ClearInputChanged
+  isExternal: true
+  href: Nebula.NetworkController.ClearInputChanged.html#Nebula_NetworkController_ClearInputChanged
+  name: ClearInputChanged
+  nameWithType: NetworkController.ClearInputChanged
+  fullName: Nebula.NetworkController.ClearInputChanged
+- uid: Nebula.NetworkController.InitializeInput*
+  commentId: Overload:Nebula.NetworkController.InitializeInput
+  isExternal: true
+  href: Nebula.NetworkController.InitializeInput.html#Nebula_NetworkController_InitializeInput__1
+  name: InitializeInput
+  nameWithType: NetworkController.InitializeInput
+  fullName: Nebula.NetworkController.InitializeInput
+- uid: Nebula.NetworkController.SetInput*
+  commentId: Overload:Nebula.NetworkController.SetInput
+  isExternal: true
+  href: Nebula.NetworkController.SetInput.html#Nebula_NetworkController_SetInput__1___0__
+  name: SetInput
+  nameWithType: NetworkController.SetInput
+  fullName: Nebula.NetworkController.SetInput
+- uid: '{TInput}'
+  commentId: '!:TInput'
+  definition: TInput
+  name: TInput
+  nameWithType: TInput
+  fullName: TInput
+- uid: TInput
+  name: TInput
+  nameWithType: TInput
+  fullName: TInput
+- uid: Nebula.NetworkController.GetInput*
+  commentId: Overload:Nebula.NetworkController.GetInput
+  isExternal: true
+  href: Nebula.NetworkController.GetInput.html#Nebula_NetworkController_GetInput__1
+  name: GetInput
+  nameWithType: NetworkController.GetInput
+  fullName: Nebula.NetworkController.GetInput
+- uid: Nebula.NetworkController.BufferInput*
+  commentId: Overload:Nebula.NetworkController.BufferInput
+  isExternal: true
+  href: Nebula.NetworkController.BufferInput.html#Nebula_NetworkController_BufferInput_System_Int32_System_ReadOnlySpan_System_Byte__
+  name: BufferInput
+  nameWithType: NetworkController.BufferInput
+  fullName: Nebula.NetworkController.BufferInput
+- uid: Nebula.NetworkController.GetBufferedInput*
+  commentId: Overload:Nebula.NetworkController.GetBufferedInput
+  isExternal: true
+  href: Nebula.NetworkController.GetBufferedInput.html#Nebula_NetworkController_GetBufferedInput_System_Int32_
+  name: GetBufferedInput
+  nameWithType: NetworkController.GetBufferedInput
+  fullName: Nebula.NetworkController.GetBufferedInput
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: Nebula.NetworkController.GetRecentInputs*
+  commentId: Overload:Nebula.NetworkController.GetRecentInputs
+  isExternal: true
+  href: Nebula.NetworkController.GetRecentInputs.html#Nebula_NetworkController_GetRecentInputs_System_Int32_
+  name: GetRecentInputs
+  nameWithType: NetworkController.GetRecentInputs
+  fullName: Nebula.NetworkController.GetRecentInputs
+- uid: System.Collections.Generic.List{System.ValueTuple{System.Int32,System.Byte[]}}
+  commentId: T:System.Collections.Generic.List{System.ValueTuple{System.Int32,System.Byte[]}}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<(int, byte[])>
+  nameWithType: List<(int, byte[])>
+  fullName: System.Collections.Generic.List<(int, byte[])>
+  nameWithType.vb: List(Of (Integer, Byte()))
+  fullName.vb: System.Collections.Generic.List(Of (Integer, Byte()))
+  name.vb: List(Of (Integer, Byte()))
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.NetworkController.GetPooledInputBuffer*
+  commentId: Overload:Nebula.NetworkController.GetPooledInputBuffer
+  isExternal: true
+  href: Nebula.NetworkController.GetPooledInputBuffer.html#Nebula_NetworkController_GetPooledInputBuffer
+  name: GetPooledInputBuffer
+  nameWithType: NetworkController.GetPooledInputBuffer
+  fullName: Nebula.NetworkController.GetPooledInputBuffer
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.NetworkController.StorePredictedState*
+  commentId: Overload:Nebula.NetworkController.StorePredictedState
+  isExternal: true
+  href: Nebula.NetworkController.StorePredictedState.html#Nebula_NetworkController_StorePredictedState_System_Int32_
+  name: StorePredictedState
+  nameWithType: NetworkController.StorePredictedState
+  fullName: Nebula.NetworkController.StorePredictedState
+- uid: Nebula.NetworkController.StoreConfirmedState*
+  commentId: Overload:Nebula.NetworkController.StoreConfirmedState
+  isExternal: true
+  href: Nebula.NetworkController.StoreConfirmedState.html#Nebula_NetworkController_StoreConfirmedState_System_Int32_
+  name: StoreConfirmedState
+  nameWithType: NetworkController.StoreConfirmedState
+  fullName: Nebula.NetworkController.StoreConfirmedState
+- uid: Nebula.NetworkController.Reconcile*
+  commentId: Overload:Nebula.NetworkController.Reconcile
+  isExternal: true
+  href: Nebula.NetworkController.Reconcile.html#Nebula_NetworkController_Reconcile_System_Int32_System_Boolean_
+  name: Reconcile
+  nameWithType: NetworkController.Reconcile
+  fullName: Nebula.NetworkController.Reconcile
+- uid: Nebula.NetworkController.RestoreToPredictedState*
+  commentId: Overload:Nebula.NetworkController.RestoreToPredictedState
+  isExternal: true
+  href: Nebula.NetworkController.RestoreToPredictedState.html#Nebula_NetworkController_RestoreToPredictedState_System_Int32_
+  name: RestoreToPredictedState
+  nameWithType: NetworkController.RestoreToPredictedState
+  fullName: Nebula.NetworkController.RestoreToPredictedState
+- uid: Nebula.NetworkController.SetInputAuthority*
+  commentId: Overload:Nebula.NetworkController.SetInputAuthority
+  isExternal: true
+  href: Nebula.NetworkController.SetInputAuthority.html#Nebula_NetworkController_SetInputAuthority_ENet_Peer_
+  name: SetInputAuthority
+  nameWithType: NetworkController.SetInputAuthority
+  fullName: Nebula.NetworkController.SetInputAuthority
+- uid: Nebula.NetworkController.FindFromChild*
+  commentId: Overload:Nebula.NetworkController.FindFromChild
+  isExternal: true
+  href: Nebula.NetworkController.FindFromChild.html#Nebula_NetworkController_FindFromChild_Godot_Node_
+  name: FindFromChild
+  nameWithType: NetworkController.FindFromChild
+  fullName: Nebula.NetworkController.FindFromChild
+- uid: Nebula.NetworkController._OnPeerConnected*
+  commentId: Overload:Nebula.NetworkController._OnPeerConnected
+  isExternal: true
+  href: Nebula.NetworkController._OnPeerConnected.html#Nebula_NetworkController__OnPeerConnected_Nebula_UUID_
+  name: _OnPeerConnected
+  nameWithType: NetworkController._OnPeerConnected
+  fullName: Nebula.NetworkController._OnPeerConnected
+- uid: Nebula.NetworkController.PrepareSpawn*
+  commentId: Overload:Nebula.NetworkController.PrepareSpawn
+  isExternal: true
+  href: Nebula.NetworkController.PrepareSpawn.html#Nebula_NetworkController_PrepareSpawn_ENet_Peer_
+  name: PrepareSpawn
+  nameWithType: NetworkController.PrepareSpawn
+  fullName: Nebula.NetworkController.PrepareSpawn
+- uid: Nebula.NetworkController._WorldReady*
+  commentId: Overload:Nebula.NetworkController._WorldReady
+  isExternal: true
+  href: Nebula.NetworkController._WorldReady.html#Nebula_NetworkController__WorldReady
+  name: _WorldReady
+  nameWithType: NetworkController._WorldReady
+  fullName: Nebula.NetworkController._WorldReady
+- uid: Nebula.NetworkController._NetworkProcess*
+  commentId: Overload:Nebula.NetworkController._NetworkProcess
+  isExternal: true
+  href: Nebula.NetworkController._NetworkProcess.html#Nebula_NetworkController__NetworkProcess_System_Int32_
+  name: _NetworkProcess
+  nameWithType: NetworkController._NetworkProcess
+  fullName: Nebula.NetworkController._NetworkProcess
+- uid: Nebula.NetworkController.NodePathFromNetScene*
+  commentId: Overload:Nebula.NetworkController.NodePathFromNetScene
+  isExternal: true
+  href: Nebula.NetworkController.NodePathFromNetScene.html#Nebula_NetworkController_NodePathFromNetScene
+  name: NodePathFromNetScene
+  nameWithType: NetworkController.NodePathFromNetScene
+  fullName: Nebula.NetworkController.NodePathFromNetScene
+- uid: Nebula.NetworkController.Despawn*
+  commentId: Overload:Nebula.NetworkController.Despawn
+  isExternal: true
+  href: Nebula.NetworkController.Despawn.html#Nebula_NetworkController_Despawn
+  name: Despawn
+  nameWithType: NetworkController.Despawn
+  fullName: Nebula.NetworkController.Despawn
+- uid: Nebula.NetworkController.RawNode*
+  commentId: Overload:Nebula.NetworkController.RawNode
+  isExternal: true
+  href: Nebula.NetworkController.RawNode.html#Nebula_NetworkController_RawNode
+  name: RawNode
+  nameWithType: NetworkController.RawNode
+  fullName: Nebula.NetworkController.RawNode
+- uid: Nebula.NetworkController.NetNodePath*
+  commentId: Overload:Nebula.NetworkController.NetNodePath
+  isExternal: true
+  href: Nebula.NetworkController.NetNodePath.html#Nebula_NetworkController_NetNodePath
+  name: NetNodePath
+  nameWithType: NetworkController.NetNodePath
+  fullName: Nebula.NetworkController.NetNodePath
+- uid: Godot.NodePath
+  commentId: T:Godot.NodePath
   parent: Godot
   isExternal: true
-  name: StringName
-  nameWithType: StringName
-  fullName: Godot.StringName
-- uid: Nebula.NetworkController.AttachedNetNode*
-  commentId: Overload:Nebula.NetworkController.AttachedNetNode
+  name: NodePath
+  nameWithType: NodePath
+  fullName: Godot.NodePath
+- uid: Nebula.NetworkController.NetSceneFilePath*
+  commentId: Overload:Nebula.NetworkController.NetSceneFilePath
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_AttachedNetNode
-  name: AttachedNetNode
-  nameWithType: NetworkController.AttachedNetNode
-  fullName: Nebula.NetworkController.AttachedNetNode
-- uid: Nebula.NetNodeWrapper
-  commentId: T:Nebula.NetNodeWrapper
-  parent: Nebula
+  href: Nebula.NetworkController.NetSceneFilePath.html#Nebula_NetworkController_NetSceneFilePath
+  name: NetSceneFilePath
+  nameWithType: NetworkController.NetSceneFilePath
+  fullName: Nebula.NetworkController.NetSceneFilePath
+- uid: Nebula.NetworkController.IsQueuedForDespawn*
+  commentId: Overload:Nebula.NetworkController.IsQueuedForDespawn
   isExternal: true
-  href: Nebula.NetNodeWrapper.html
-  name: NetNodeWrapper
-  nameWithType: NetNodeWrapper
-  fullName: Nebula.NetNodeWrapper
+  href: Nebula.NetworkController.IsQueuedForDespawn.html#Nebula_NetworkController_IsQueuedForDespawn
+  name: IsQueuedForDespawn
+  nameWithType: NetworkController.IsQueuedForDespawn
+  fullName: Nebula.NetworkController.IsQueuedForDespawn
 - uid: Nebula.NetworkController.CurrentWorld*
   commentId: Overload:Nebula.NetworkController.CurrentWorld
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_CurrentWorld
+  href: Nebula.NetworkController.CurrentWorld.html#Nebula_NetworkController_CurrentWorld
   name: CurrentWorld
   nameWithType: NetworkController.CurrentWorld
   fullName: Nebula.NetworkController.CurrentWorld
@@ -3985,17 +4998,123 @@ references:
   name: WorldRunner
   nameWithType: WorldRunner
   fullName: Nebula.WorldRunner
+- uid: Nebula.NetworkController.InterestLayers*
+  commentId: Overload:Nebula.NetworkController.InterestLayers
+  isExternal: true
+  href: Nebula.NetworkController.InterestLayers.html#Nebula_NetworkController_InterestLayers
+  name: InterestLayers
+  nameWithType: NetworkController.InterestLayers
+  fullName: Nebula.NetworkController.InterestLayers
+- uid: System.Collections.Generic.Dictionary{Nebula.UUID,System.Int64}
+  commentId: T:System.Collections.Generic.Dictionary{Nebula.UUID,System.Int64}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<UUID, long>
+  nameWithType: Dictionary<UUID, long>
+  fullName: System.Collections.Generic.Dictionary<Nebula.UUID, long>
+  nameWithType.vb: Dictionary(Of UUID, Long)
+  fullName.vb: System.Collections.Generic.Dictionary(Of Nebula.UUID, Long)
+  name.vb: Dictionary(Of UUID, Long)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: Nebula.NetworkController.StaticChildId*
+  commentId: Overload:Nebula.NetworkController.StaticChildId
+  isExternal: true
+  href: Nebula.NetworkController.StaticChildId.html#Nebula_NetworkController_StaticChildId
+  name: StaticChildId
+  nameWithType: NetworkController.StaticChildId
+  fullName: Nebula.NetworkController.StaticChildId
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
 - uid: Nebula.NetworkController.IsWorldReady*
   commentId: Overload:Nebula.NetworkController.IsWorldReady
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_IsWorldReady
+  href: Nebula.NetworkController.IsWorldReady.html#Nebula_NetworkController_IsWorldReady
   name: IsWorldReady
   nameWithType: NetworkController.IsWorldReady
   fullName: Nebula.NetworkController.IsWorldReady
 - uid: Nebula.NetworkController.NetParentId*
   commentId: Overload:Nebula.NetworkController.NetParentId
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_NetParentId
+  href: Nebula.NetworkController.NetParentId.html#Nebula_NetworkController_NetParentId
   name: NetParentId
   nameWithType: NetworkController.NetParentId
   fullName: Nebula.NetworkController.NetParentId
@@ -4010,91 +5129,248 @@ references:
 - uid: Nebula.NetworkController.NetParent*
   commentId: Overload:Nebula.NetworkController.NetParent
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_NetParent
+  href: Nebula.NetworkController.NetParent.html#Nebula_NetworkController_NetParent
   name: NetParent
   nameWithType: NetworkController.NetParent
   fullName: Nebula.NetworkController.NetParent
+- uid: Nebula.NetworkController
+  commentId: T:Nebula.NetworkController
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetworkController.html
+  name: NetworkController
+  nameWithType: NetworkController
+  fullName: Nebula.NetworkController
 - uid: Nebula.NetworkController.IsClientSpawn*
   commentId: Overload:Nebula.NetworkController.IsClientSpawn
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_IsClientSpawn
+  href: Nebula.NetworkController.IsClientSpawn.html#Nebula_NetworkController_IsClientSpawn
   name: IsClientSpawn
   nameWithType: NetworkController.IsClientSpawn
   fullName: Nebula.NetworkController.IsClientSpawn
+- uid: Nebula.NetworkController.HasInputSupport*
+  commentId: Overload:Nebula.NetworkController.HasInputSupport
+  isExternal: true
+  href: Nebula.NetworkController.HasInputSupport.html#Nebula_NetworkController_HasInputSupport
+  name: HasInputSupport
+  nameWithType: NetworkController.HasInputSupport
+  fullName: Nebula.NetworkController.HasInputSupport
+- uid: Nebula.NetworkController.HasInputChanged*
+  commentId: Overload:Nebula.NetworkController.HasInputChanged
+  isExternal: true
+  href: Nebula.NetworkController.HasInputChanged.html#Nebula_NetworkController_HasInputChanged
+  name: HasInputChanged
+  nameWithType: NetworkController.HasInputChanged
+  fullName: Nebula.NetworkController.HasInputChanged
+- uid: Nebula.NetworkController.IsPredicting*
+  commentId: Overload:Nebula.NetworkController.IsPredicting
+  isExternal: true
+  href: Nebula.NetworkController.IsPredicting.html#Nebula_NetworkController_IsPredicting
+  name: IsPredicting
+  nameWithType: NetworkController.IsPredicting
+  fullName: Nebula.NetworkController.IsPredicting
+- uid: Nebula.NetworkController.IsResimulating*
+  commentId: Overload:Nebula.NetworkController.IsResimulating
+  isExternal: true
+  href: Nebula.NetworkController.IsResimulating.html#Nebula_NetworkController_IsResimulating
+  name: IsResimulating
+  nameWithType: NetworkController.IsResimulating
+  fullName: Nebula.NetworkController.IsResimulating
+- uid: Nebula.NetworkController.LastConfirmedTick*
+  commentId: Overload:Nebula.NetworkController.LastConfirmedTick
+  isExternal: true
+  href: Nebula.NetworkController.LastConfirmedTick.html#Nebula_NetworkController_LastConfirmedTick
+  name: LastConfirmedTick
+  nameWithType: NetworkController.LastConfirmedTick
+  fullName: Nebula.NetworkController.LastConfirmedTick
+- uid: Nebula.NetworkController.LastPredictedTick*
+  commentId: Overload:Nebula.NetworkController.LastPredictedTick
+  isExternal: true
+  href: Nebula.NetworkController.LastPredictedTick.html#Nebula_NetworkController_LastPredictedTick
+  name: LastPredictedTick
+  nameWithType: NetworkController.LastPredictedTick
+  fullName: Nebula.NetworkController.LastPredictedTick
 - uid: Nebula.NetworkController.NetId*
   commentId: Overload:Nebula.NetworkController.NetId
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_NetId
+  href: Nebula.NetworkController.NetId.html#Nebula_NetworkController_NetId
   name: NetId
   nameWithType: NetworkController.NetId
   fullName: Nebula.NetworkController.NetId
 - uid: Nebula.NetworkController.InputAuthority*
   commentId: Overload:Nebula.NetworkController.InputAuthority
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_InputAuthority
+  href: Nebula.NetworkController.InputAuthority.html#Nebula_NetworkController_InputAuthority
   name: InputAuthority
   nameWithType: NetworkController.InputAuthority
   fullName: Nebula.NetworkController.InputAuthority
 - uid: Nebula.NetworkController.IsCurrentOwner*
   commentId: Overload:Nebula.NetworkController.IsCurrentOwner
   isExternal: true
-  href: Nebula.NetworkController.html#Nebula_NetworkController_IsCurrentOwner
+  href: Nebula.NetworkController.IsCurrentOwner.html#Nebula_NetworkController_IsCurrentOwner
   name: IsCurrentOwner
   nameWithType: NetworkController.IsCurrentOwner
   fullName: Nebula.NetworkController.IsCurrentOwner
-- uid: Nebula.NetworkController.InterestChangedEventHandler
-  commentId: T:Nebula.NetworkController.InterestChangedEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetworkController.html
-  name: NetworkController.InterestChangedEventHandler
-  nameWithType: NetworkController.InterestChangedEventHandler
-  fullName: Nebula.NetworkController.InterestChangedEventHandler
+- uid: System.Action{Nebula.UUID,System.Int64,System.Int64}
+  commentId: T:System.Action{Nebula.UUID,System.Int64,System.Int64}
+  parent: System
+  definition: System.Action`3
+  href: https://learn.microsoft.com/dotnet/api/system.action-3
+  name: Action<UUID, long, long>
+  nameWithType: Action<UUID, long, long>
+  fullName: System.Action<Nebula.UUID, long, long>
+  nameWithType.vb: Action(Of UUID, Long, Long)
+  fullName.vb: System.Action(Of Nebula.UUID, Long, Long)
+  name.vb: Action(Of UUID, Long, Long)
   spec.csharp:
-  - uid: Nebula.NetworkController
-    name: NetworkController
+  - uid: System.Action`3
+    name: Action
     isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.InterestChangedEventHandler
-    name: InterestChangedEventHandler
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: <
+  - uid: Nebula.UUID
+    name: UUID
     isExternal: true
-    href: Nebula.NetworkController.InterestChangedEventHandler.html
+    href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: ','
+  - name: " "
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '>'
   spec.vb:
-  - uid: Nebula.NetworkController
-    name: NetworkController
+  - uid: System.Action`3
+    name: Action
     isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.InterestChangedEventHandler
-    name: InterestChangedEventHandler
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
     isExternal: true
-    href: Nebula.NetworkController.InterestChangedEventHandler.html
-- uid: Nebula.NetworkController.NetPropertyChangedEventHandler
-  commentId: T:Nebula.NetworkController.NetPropertyChangedEventHandler
-  parent: Nebula
+    href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: ','
+  - name: " "
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: )
+- uid: System.Action`3
+  commentId: T:System.Action`3
   isExternal: true
-  href: Nebula.NetworkController.html
-  name: NetworkController.NetPropertyChangedEventHandler
-  nameWithType: NetworkController.NetPropertyChangedEventHandler
-  fullName: Nebula.NetworkController.NetPropertyChangedEventHandler
+  href: https://learn.microsoft.com/dotnet/api/system.action-3
+  name: Action<T1, T2, T3>
+  nameWithType: Action<T1, T2, T3>
+  fullName: System.Action<T1, T2, T3>
+  nameWithType.vb: Action(Of T1, T2, T3)
+  fullName.vb: System.Action(Of T1, T2, T3)
+  name.vb: Action(Of T1, T2, T3)
   spec.csharp:
-  - uid: Nebula.NetworkController
-    name: NetworkController
+  - uid: System.Action`3
+    name: Action
     isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.NetPropertyChangedEventHandler
-    name: NetPropertyChangedEventHandler
-    isExternal: true
-    href: Nebula.NetworkController.NetPropertyChangedEventHandler.html
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: <
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: ','
+  - name: " "
+  - name: T3
+  - name: '>'
   spec.vb:
-  - uid: Nebula.NetworkController
-    name: NetworkController
+  - uid: System.Action`3
+    name: Action
     isExternal: true
-    href: Nebula.NetworkController.html
-  - name: .
-  - uid: Nebula.NetworkController.NetPropertyChangedEventHandler
-    name: NetPropertyChangedEventHandler
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: ','
+  - name: " "
+  - name: T3
+  - name: )
+- uid: System.Action{System.Boolean}
+  commentId: T:System.Action{System.Boolean}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<bool>
+  nameWithType: Action<bool>
+  fullName: System.Action<bool>
+  nameWithType.vb: Action(Of Boolean)
+  fullName.vb: System.Action(Of Boolean)
+  name.vb: Action(Of Boolean)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.NetworkController.NetPropertyChangedEventHandler.html
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+memberLayout: SeparatePages

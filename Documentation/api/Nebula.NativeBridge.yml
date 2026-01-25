@@ -1,0 +1,1288 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.NativeBridge
+  commentId: T:Nebula.NativeBridge
+  id: NativeBridge
+  parent: Nebula
+  children:
+  - Nebula.NativeBridge.DistanceSquaredTo(Godot.Node3D,Godot.Node3D)
+  - Nebula.NativeBridge.DistanceTo(Godot.Node3D,Godot.Node3D)
+  - Nebula.NativeBridge.FlushToGodot
+  - Nebula.NativeBridge.GetAngularVelocity(Godot.RigidBody3D)
+  - Nebula.NativeBridge.GetColliderId(Godot.RayCast3D)
+  - Nebula.NativeBridge.GetCollisionNormal(Godot.RayCast3D)
+  - Nebula.NativeBridge.GetCollisionPoint(Godot.RayCast3D)
+  - Nebula.NativeBridge.GetGlobalBasis(Godot.Node3D)
+  - Nebula.NativeBridge.GetGlobalPosition(Godot.Node3D)
+  - Nebula.NativeBridge.GetGlobalTransform(Godot.Node3D)
+  - Nebula.NativeBridge.GetLinearVelocity(Godot.RigidBody3D)
+  - Nebula.NativeBridge.GetMass(Godot.RigidBody3D)
+  - Nebula.NativeBridge.GetPosition(Godot.Node3D)
+  - Nebula.NativeBridge.GetProcessMode(Godot.Node)
+  - Nebula.NativeBridge.GetRotation(Godot.Node3D)
+  - Nebula.NativeBridge.GetVelocity(Godot.CharacterBody3D)
+  - Nebula.NativeBridge.GetVisible(Godot.Node3D)
+  - Nebula.NativeBridge.IsAvailable
+  - Nebula.NativeBridge.IsColliding(Godot.RayCast3D)
+  - Nebula.NativeBridge.IsOnFloor(Godot.CharacterBody3D)
+  - Nebula.NativeBridge.Register(Godot.Node)
+  - Nebula.NativeBridge.SetProcessMode(Godot.Node,Godot.Node.ProcessModeEnum)
+  - Nebula.NativeBridge.SetVisible(Godot.Node3D,System.Boolean)
+  - Nebula.NativeBridge.SyncFromGodot
+  - Nebula.NativeBridge.Unregister(Godot.Node)
+  langs:
+  - csharp
+  - vb
+  name: NativeBridge
+  nameWithType: NativeBridge
+  fullName: Nebula.NativeBridge
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Zero-allocation bridge to Godot node properties via native P/Invoke.
+
+
+    Usage:
+
+    1. Register nodes in _Ready: NativeBridge.Register(this);
+
+    2. Call SyncFromGodot() once per frame/tick to refresh caches
+
+    3. Use GetGlobalPosition(), GetLinearVelocity(), etc. instead of Godot properties
+
+    4. Call FlushToGodot() to apply pending writes (SetVisible, SetProcessMode)
+
+    5. Unregister in cleanup: NativeBridge.Unregister(this);
+  example: []
+  syntax:
+    content: public static class NativeBridge
+    content.vb: Public Module NativeBridge
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.NativeBridge.Register(Godot.Node)
+  commentId: M:Nebula.NativeBridge.Register(Godot.Node)
+  id: Register(Godot.Node)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: Register(Node)
+  nameWithType: NativeBridge.Register(Node)
+  fullName: Nebula.NativeBridge.Register(Godot.Node)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Register a node for cached property access.
+
+    Call this in _Ready() for nodes you want to access via the bridge.
+  example: []
+  syntax:
+    content: public static void Register(Node node)
+    parameters:
+    - id: node
+      type: Godot.Node
+    content.vb: Public Shared Sub Register(node As Node)
+  overload: Nebula.NativeBridge.Register*
+- uid: Nebula.NativeBridge.Unregister(Godot.Node)
+  commentId: M:Nebula.NativeBridge.Unregister(Godot.Node)
+  id: Unregister(Godot.Node)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: Unregister(Node)
+  nameWithType: NativeBridge.Unregister(Node)
+  fullName: Nebula.NativeBridge.Unregister(Godot.Node)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Unregister a node. Call this when the node is being freed.
+  example: []
+  syntax:
+    content: public static void Unregister(Node node)
+    parameters:
+    - id: node
+      type: Godot.Node
+    content.vb: Public Shared Sub Unregister(node As Node)
+  overload: Nebula.NativeBridge.Unregister*
+- uid: Nebula.NativeBridge.SyncFromGodot
+  commentId: M:Nebula.NativeBridge.SyncFromGodot
+  id: SyncFromGodot
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: SyncFromGodot()
+  nameWithType: NativeBridge.SyncFromGodot()
+  fullName: Nebula.NativeBridge.SyncFromGodot()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Refresh all cached node properties from Godot.
+
+    Call this once per frame/tick before reading cached values.
+  example: []
+  syntax:
+    content: public static void SyncFromGodot()
+    content.vb: Public Shared Sub SyncFromGodot()
+  overload: Nebula.NativeBridge.SyncFromGodot*
+- uid: Nebula.NativeBridge.FlushToGodot
+  commentId: M:Nebula.NativeBridge.FlushToGodot
+  id: FlushToGodot
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: FlushToGodot()
+  nameWithType: NativeBridge.FlushToGodot()
+  fullName: Nebula.NativeBridge.FlushToGodot()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Apply all pending property writes to Godot.
+
+    Call this once per frame/tick after setting values.
+  example: []
+  syntax:
+    content: public static void FlushToGodot()
+    content.vb: Public Shared Sub FlushToGodot()
+  overload: Nebula.NativeBridge.FlushToGodot*
+- uid: Nebula.NativeBridge.GetPosition(Godot.Node3D)
+  commentId: M:Nebula.NativeBridge.GetPosition(Godot.Node3D)
+  id: GetPosition(Godot.Node3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetPosition(Node3D)
+  nameWithType: NativeBridge.GetPosition(Node3D)
+  fullName: Nebula.NativeBridge.GetPosition(Godot.Node3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached local position. Zero allocations.
+  example: []
+  syntax:
+    content: public static Vector3 GetPosition(Node3D node)
+    parameters:
+    - id: node
+      type: Godot.Node3D
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function GetPosition(node As Node3D) As Vector3
+  overload: Nebula.NativeBridge.GetPosition*
+- uid: Nebula.NativeBridge.GetGlobalPosition(Godot.Node3D)
+  commentId: M:Nebula.NativeBridge.GetGlobalPosition(Godot.Node3D)
+  id: GetGlobalPosition(Godot.Node3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetGlobalPosition(Node3D)
+  nameWithType: NativeBridge.GetGlobalPosition(Node3D)
+  fullName: Nebula.NativeBridge.GetGlobalPosition(Godot.Node3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached global position. Zero allocations.
+  example: []
+  syntax:
+    content: public static Vector3 GetGlobalPosition(Node3D node)
+    parameters:
+    - id: node
+      type: Godot.Node3D
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function GetGlobalPosition(node As Node3D) As Vector3
+  overload: Nebula.NativeBridge.GetGlobalPosition*
+- uid: Nebula.NativeBridge.GetRotation(Godot.Node3D)
+  commentId: M:Nebula.NativeBridge.GetRotation(Godot.Node3D)
+  id: GetRotation(Godot.Node3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetRotation(Node3D)
+  nameWithType: NativeBridge.GetRotation(Node3D)
+  fullName: Nebula.NativeBridge.GetRotation(Godot.Node3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached rotation (euler angles). Zero allocations.
+  example: []
+  syntax:
+    content: public static Vector3 GetRotation(Node3D node)
+    parameters:
+    - id: node
+      type: Godot.Node3D
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function GetRotation(node As Node3D) As Vector3
+  overload: Nebula.NativeBridge.GetRotation*
+- uid: Nebula.NativeBridge.GetGlobalTransform(Godot.Node3D)
+  commentId: M:Nebula.NativeBridge.GetGlobalTransform(Godot.Node3D)
+  id: GetGlobalTransform(Godot.Node3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetGlobalTransform(Node3D)
+  nameWithType: NativeBridge.GetGlobalTransform(Node3D)
+  fullName: Nebula.NativeBridge.GetGlobalTransform(Godot.Node3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached global transform. Zero allocations.
+  example: []
+  syntax:
+    content: public static Transform3D GetGlobalTransform(Node3D node)
+    parameters:
+    - id: node
+      type: Godot.Node3D
+    return:
+      type: Godot.Transform3D
+    content.vb: Public Shared Function GetGlobalTransform(node As Node3D) As Transform3D
+  overload: Nebula.NativeBridge.GetGlobalTransform*
+- uid: Nebula.NativeBridge.GetGlobalBasis(Godot.Node3D)
+  commentId: M:Nebula.NativeBridge.GetGlobalBasis(Godot.Node3D)
+  id: GetGlobalBasis(Godot.Node3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetGlobalBasis(Node3D)
+  nameWithType: NativeBridge.GetGlobalBasis(Node3D)
+  fullName: Nebula.NativeBridge.GetGlobalBasis(Godot.Node3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached global transform basis. Zero allocations.
+  example: []
+  syntax:
+    content: public static Basis GetGlobalBasis(Node3D node)
+    parameters:
+    - id: node
+      type: Godot.Node3D
+    return:
+      type: Godot.Basis
+    content.vb: Public Shared Function GetGlobalBasis(node As Node3D) As Basis
+  overload: Nebula.NativeBridge.GetGlobalBasis*
+- uid: Nebula.NativeBridge.GetVisible(Godot.Node3D)
+  commentId: M:Nebula.NativeBridge.GetVisible(Godot.Node3D)
+  id: GetVisible(Godot.Node3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetVisible(Node3D)
+  nameWithType: NativeBridge.GetVisible(Node3D)
+  fullName: Nebula.NativeBridge.GetVisible(Godot.Node3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached visibility. Zero allocations.
+  example: []
+  syntax:
+    content: public static bool GetVisible(Node3D node)
+    parameters:
+    - id: node
+      type: Godot.Node3D
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function GetVisible(node As Node3D) As Boolean
+  overload: Nebula.NativeBridge.GetVisible*
+- uid: Nebula.NativeBridge.GetProcessMode(Godot.Node)
+  commentId: M:Nebula.NativeBridge.GetProcessMode(Godot.Node)
+  id: GetProcessMode(Godot.Node)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetProcessMode(Node)
+  nameWithType: NativeBridge.GetProcessMode(Node)
+  fullName: Nebula.NativeBridge.GetProcessMode(Godot.Node)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached process mode. Zero allocations.
+  example: []
+  syntax:
+    content: public static Node.ProcessModeEnum GetProcessMode(Node node)
+    parameters:
+    - id: node
+      type: Godot.Node
+    return:
+      type: Godot.Node.ProcessModeEnum
+    content.vb: Public Shared Function GetProcessMode(node As Node) As Node.ProcessModeEnum
+  overload: Nebula.NativeBridge.GetProcessMode*
+- uid: Nebula.NativeBridge.GetLinearVelocity(Godot.RigidBody3D)
+  commentId: M:Nebula.NativeBridge.GetLinearVelocity(Godot.RigidBody3D)
+  id: GetLinearVelocity(Godot.RigidBody3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetLinearVelocity(RigidBody3D)
+  nameWithType: NativeBridge.GetLinearVelocity(RigidBody3D)
+  fullName: Nebula.NativeBridge.GetLinearVelocity(Godot.RigidBody3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached linear velocity. Zero allocations.
+  example: []
+  syntax:
+    content: public static Vector3 GetLinearVelocity(RigidBody3D node)
+    parameters:
+    - id: node
+      type: Godot.RigidBody3D
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function GetLinearVelocity(node As RigidBody3D) As Vector3
+  overload: Nebula.NativeBridge.GetLinearVelocity*
+- uid: Nebula.NativeBridge.GetAngularVelocity(Godot.RigidBody3D)
+  commentId: M:Nebula.NativeBridge.GetAngularVelocity(Godot.RigidBody3D)
+  id: GetAngularVelocity(Godot.RigidBody3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetAngularVelocity(RigidBody3D)
+  nameWithType: NativeBridge.GetAngularVelocity(RigidBody3D)
+  fullName: Nebula.NativeBridge.GetAngularVelocity(Godot.RigidBody3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached angular velocity. Zero allocations.
+  example: []
+  syntax:
+    content: public static Vector3 GetAngularVelocity(RigidBody3D node)
+    parameters:
+    - id: node
+      type: Godot.RigidBody3D
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function GetAngularVelocity(node As RigidBody3D) As Vector3
+  overload: Nebula.NativeBridge.GetAngularVelocity*
+- uid: Nebula.NativeBridge.GetMass(Godot.RigidBody3D)
+  commentId: M:Nebula.NativeBridge.GetMass(Godot.RigidBody3D)
+  id: GetMass(Godot.RigidBody3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetMass(RigidBody3D)
+  nameWithType: NativeBridge.GetMass(RigidBody3D)
+  fullName: Nebula.NativeBridge.GetMass(Godot.RigidBody3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached mass. Zero allocations.
+  example: []
+  syntax:
+    content: public static float GetMass(RigidBody3D node)
+    parameters:
+    - id: node
+      type: Godot.RigidBody3D
+    return:
+      type: System.Single
+    content.vb: Public Shared Function GetMass(node As RigidBody3D) As Single
+  overload: Nebula.NativeBridge.GetMass*
+- uid: Nebula.NativeBridge.GetVelocity(Godot.CharacterBody3D)
+  commentId: M:Nebula.NativeBridge.GetVelocity(Godot.CharacterBody3D)
+  id: GetVelocity(Godot.CharacterBody3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetVelocity(CharacterBody3D)
+  nameWithType: NativeBridge.GetVelocity(CharacterBody3D)
+  fullName: Nebula.NativeBridge.GetVelocity(Godot.CharacterBody3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached velocity. Zero allocations.
+  example: []
+  syntax:
+    content: public static Vector3 GetVelocity(CharacterBody3D node)
+    parameters:
+    - id: node
+      type: Godot.CharacterBody3D
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function GetVelocity(node As CharacterBody3D) As Vector3
+  overload: Nebula.NativeBridge.GetVelocity*
+- uid: Nebula.NativeBridge.IsOnFloor(Godot.CharacterBody3D)
+  commentId: M:Nebula.NativeBridge.IsOnFloor(Godot.CharacterBody3D)
+  id: IsOnFloor(Godot.CharacterBody3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: IsOnFloor(CharacterBody3D)
+  nameWithType: NativeBridge.IsOnFloor(CharacterBody3D)
+  fullName: Nebula.NativeBridge.IsOnFloor(Godot.CharacterBody3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached is_on_floor. Zero allocations.
+  example: []
+  syntax:
+    content: public static bool IsOnFloor(CharacterBody3D node)
+    parameters:
+    - id: node
+      type: Godot.CharacterBody3D
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function IsOnFloor(node As CharacterBody3D) As Boolean
+  overload: Nebula.NativeBridge.IsOnFloor*
+- uid: Nebula.NativeBridge.IsColliding(Godot.RayCast3D)
+  commentId: M:Nebula.NativeBridge.IsColliding(Godot.RayCast3D)
+  id: IsColliding(Godot.RayCast3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: IsColliding(RayCast3D)
+  nameWithType: NativeBridge.IsColliding(RayCast3D)
+  fullName: Nebula.NativeBridge.IsColliding(Godot.RayCast3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached is_colliding. Zero allocations.
+  example: []
+  syntax:
+    content: public static bool IsColliding(RayCast3D ray)
+    parameters:
+    - id: ray
+      type: Godot.RayCast3D
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function IsColliding(ray As RayCast3D) As Boolean
+  overload: Nebula.NativeBridge.IsColliding*
+- uid: Nebula.NativeBridge.GetCollisionPoint(Godot.RayCast3D)
+  commentId: M:Nebula.NativeBridge.GetCollisionPoint(Godot.RayCast3D)
+  id: GetCollisionPoint(Godot.RayCast3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetCollisionPoint(RayCast3D)
+  nameWithType: NativeBridge.GetCollisionPoint(RayCast3D)
+  fullName: Nebula.NativeBridge.GetCollisionPoint(Godot.RayCast3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached collision point. Zero allocations.
+  example: []
+  syntax:
+    content: public static Vector3 GetCollisionPoint(RayCast3D ray)
+    parameters:
+    - id: ray
+      type: Godot.RayCast3D
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function GetCollisionPoint(ray As RayCast3D) As Vector3
+  overload: Nebula.NativeBridge.GetCollisionPoint*
+- uid: Nebula.NativeBridge.GetCollisionNormal(Godot.RayCast3D)
+  commentId: M:Nebula.NativeBridge.GetCollisionNormal(Godot.RayCast3D)
+  id: GetCollisionNormal(Godot.RayCast3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetCollisionNormal(RayCast3D)
+  nameWithType: NativeBridge.GetCollisionNormal(RayCast3D)
+  fullName: Nebula.NativeBridge.GetCollisionNormal(Godot.RayCast3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached collision normal. Zero allocations.
+  example: []
+  syntax:
+    content: public static Vector3 GetCollisionNormal(RayCast3D ray)
+    parameters:
+    - id: ray
+      type: Godot.RayCast3D
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function GetCollisionNormal(ray As RayCast3D) As Vector3
+  overload: Nebula.NativeBridge.GetCollisionNormal*
+- uid: Nebula.NativeBridge.GetColliderId(Godot.RayCast3D)
+  commentId: M:Nebula.NativeBridge.GetColliderId(Godot.RayCast3D)
+  id: GetColliderId(Godot.RayCast3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: GetColliderId(RayCast3D)
+  nameWithType: NativeBridge.GetColliderId(RayCast3D)
+  fullName: Nebula.NativeBridge.GetColliderId(Godot.RayCast3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get cached collider instance ID. Zero allocations.
+  example: []
+  syntax:
+    content: public static ulong GetColliderId(RayCast3D ray)
+    parameters:
+    - id: ray
+      type: Godot.RayCast3D
+    return:
+      type: System.UInt64
+    content.vb: Public Shared Function GetColliderId(ray As RayCast3D) As ULong
+  overload: Nebula.NativeBridge.GetColliderId*
+- uid: Nebula.NativeBridge.SetVisible(Godot.Node3D,System.Boolean)
+  commentId: M:Nebula.NativeBridge.SetVisible(Godot.Node3D,System.Boolean)
+  id: SetVisible(Godot.Node3D,System.Boolean)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: SetVisible(Node3D, bool)
+  nameWithType: NativeBridge.SetVisible(Node3D, bool)
+  fullName: Nebula.NativeBridge.SetVisible(Godot.Node3D, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Set visibility (deferred until FlushToGodot).
+  example: []
+  syntax:
+    content: public static void SetVisible(Node3D node, bool visible)
+    parameters:
+    - id: node
+      type: Godot.Node3D
+    - id: visible
+      type: System.Boolean
+    content.vb: Public Shared Sub SetVisible(node As Node3D, visible As Boolean)
+  overload: Nebula.NativeBridge.SetVisible*
+  nameWithType.vb: NativeBridge.SetVisible(Node3D, Boolean)
+  fullName.vb: Nebula.NativeBridge.SetVisible(Godot.Node3D, Boolean)
+  name.vb: SetVisible(Node3D, Boolean)
+- uid: Nebula.NativeBridge.SetProcessMode(Godot.Node,Godot.Node.ProcessModeEnum)
+  commentId: M:Nebula.NativeBridge.SetProcessMode(Godot.Node,Godot.Node.ProcessModeEnum)
+  id: SetProcessMode(Godot.Node,Godot.Node.ProcessModeEnum)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: SetProcessMode(Node, ProcessModeEnum)
+  nameWithType: NativeBridge.SetProcessMode(Node, Node.ProcessModeEnum)
+  fullName: Nebula.NativeBridge.SetProcessMode(Godot.Node, Godot.Node.ProcessModeEnum)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Set process mode (deferred until FlushToGodot).
+  example: []
+  syntax:
+    content: public static void SetProcessMode(Node node, Node.ProcessModeEnum mode)
+    parameters:
+    - id: node
+      type: Godot.Node
+    - id: mode
+      type: Godot.Node.ProcessModeEnum
+    content.vb: Public Shared Sub SetProcessMode(node As Node, mode As Node.ProcessModeEnum)
+  overload: Nebula.NativeBridge.SetProcessMode*
+- uid: Nebula.NativeBridge.DistanceTo(Godot.Node3D,Godot.Node3D)
+  commentId: M:Nebula.NativeBridge.DistanceTo(Godot.Node3D,Godot.Node3D)
+  id: DistanceTo(Godot.Node3D,Godot.Node3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: DistanceTo(Node3D, Node3D)
+  nameWithType: NativeBridge.DistanceTo(Node3D, Node3D)
+  fullName: Nebula.NativeBridge.DistanceTo(Godot.Node3D, Godot.Node3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Calculate distance between two registered nodes. Zero allocations.
+  example: []
+  syntax:
+    content: public static float DistanceTo(Node3D nodeA, Node3D nodeB)
+    parameters:
+    - id: nodeA
+      type: Godot.Node3D
+    - id: nodeB
+      type: Godot.Node3D
+    return:
+      type: System.Single
+    content.vb: Public Shared Function DistanceTo(nodeA As Node3D, nodeB As Node3D) As Single
+  overload: Nebula.NativeBridge.DistanceTo*
+- uid: Nebula.NativeBridge.DistanceSquaredTo(Godot.Node3D,Godot.Node3D)
+  commentId: M:Nebula.NativeBridge.DistanceSquaredTo(Godot.Node3D,Godot.Node3D)
+  id: DistanceSquaredTo(Godot.Node3D,Godot.Node3D)
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: DistanceSquaredTo(Node3D, Node3D)
+  nameWithType: NativeBridge.DistanceSquaredTo(Node3D, Node3D)
+  fullName: Nebula.NativeBridge.DistanceSquaredTo(Godot.Node3D, Godot.Node3D)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Calculate squared distance between two registered nodes. Zero allocations.
+
+    Faster than DistanceTo when you only need to compare distances.
+  example: []
+  syntax:
+    content: public static float DistanceSquaredTo(Node3D nodeA, Node3D nodeB)
+    parameters:
+    - id: nodeA
+      type: Godot.Node3D
+    - id: nodeB
+      type: Godot.Node3D
+    return:
+      type: System.Single
+    content.vb: Public Shared Function DistanceSquaredTo(nodeA As Node3D, nodeB As Node3D) As Single
+  overload: Nebula.NativeBridge.DistanceSquaredTo*
+- uid: Nebula.NativeBridge.IsAvailable
+  commentId: P:Nebula.NativeBridge.IsAvailable
+  id: IsAvailable
+  parent: Nebula.NativeBridge
+  langs:
+  - csharp
+  - vb
+  name: IsAvailable
+  nameWithType: NativeBridge.IsAvailable
+  fullName: Nebula.NativeBridge.IsAvailable
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NativeBridge.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public static bool IsAvailable { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Shared ReadOnly Property IsAvailable As Boolean
+  overload: Nebula.NativeBridge.IsAvailable*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.NativeBridge.Register*
+  commentId: Overload:Nebula.NativeBridge.Register
+  isExternal: true
+  href: Nebula.NativeBridge.Register.html#Nebula_NativeBridge_Register_Godot_Node_
+  name: Register
+  nameWithType: NativeBridge.Register
+  fullName: Nebula.NativeBridge.Register
+- uid: Godot.Node
+  commentId: T:Godot.Node
+  parent: Godot
+  isExternal: true
+  name: Node
+  nameWithType: Node
+  fullName: Godot.Node
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.NativeBridge.Unregister*
+  commentId: Overload:Nebula.NativeBridge.Unregister
+  isExternal: true
+  href: Nebula.NativeBridge.Unregister.html#Nebula_NativeBridge_Unregister_Godot_Node_
+  name: Unregister
+  nameWithType: NativeBridge.Unregister
+  fullName: Nebula.NativeBridge.Unregister
+- uid: Nebula.NativeBridge.SyncFromGodot*
+  commentId: Overload:Nebula.NativeBridge.SyncFromGodot
+  isExternal: true
+  href: Nebula.NativeBridge.SyncFromGodot.html#Nebula_NativeBridge_SyncFromGodot
+  name: SyncFromGodot
+  nameWithType: NativeBridge.SyncFromGodot
+  fullName: Nebula.NativeBridge.SyncFromGodot
+- uid: Nebula.NativeBridge.FlushToGodot*
+  commentId: Overload:Nebula.NativeBridge.FlushToGodot
+  isExternal: true
+  href: Nebula.NativeBridge.FlushToGodot.html#Nebula_NativeBridge_FlushToGodot
+  name: FlushToGodot
+  nameWithType: NativeBridge.FlushToGodot
+  fullName: Nebula.NativeBridge.FlushToGodot
+- uid: Nebula.NativeBridge.GetPosition*
+  commentId: Overload:Nebula.NativeBridge.GetPosition
+  isExternal: true
+  href: Nebula.NativeBridge.GetPosition.html#Nebula_NativeBridge_GetPosition_Godot_Node3D_
+  name: GetPosition
+  nameWithType: NativeBridge.GetPosition
+  fullName: Nebula.NativeBridge.GetPosition
+- uid: Godot.Node3D
+  commentId: T:Godot.Node3D
+  parent: Godot
+  isExternal: true
+  name: Node3D
+  nameWithType: Node3D
+  fullName: Godot.Node3D
+- uid: Godot.Vector3
+  commentId: T:Godot.Vector3
+  parent: Godot
+  isExternal: true
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Godot.Vector3
+- uid: Nebula.NativeBridge.GetGlobalPosition*
+  commentId: Overload:Nebula.NativeBridge.GetGlobalPosition
+  isExternal: true
+  href: Nebula.NativeBridge.GetGlobalPosition.html#Nebula_NativeBridge_GetGlobalPosition_Godot_Node3D_
+  name: GetGlobalPosition
+  nameWithType: NativeBridge.GetGlobalPosition
+  fullName: Nebula.NativeBridge.GetGlobalPosition
+- uid: Nebula.NativeBridge.GetRotation*
+  commentId: Overload:Nebula.NativeBridge.GetRotation
+  isExternal: true
+  href: Nebula.NativeBridge.GetRotation.html#Nebula_NativeBridge_GetRotation_Godot_Node3D_
+  name: GetRotation
+  nameWithType: NativeBridge.GetRotation
+  fullName: Nebula.NativeBridge.GetRotation
+- uid: Nebula.NativeBridge.GetGlobalTransform*
+  commentId: Overload:Nebula.NativeBridge.GetGlobalTransform
+  isExternal: true
+  href: Nebula.NativeBridge.GetGlobalTransform.html#Nebula_NativeBridge_GetGlobalTransform_Godot_Node3D_
+  name: GetGlobalTransform
+  nameWithType: NativeBridge.GetGlobalTransform
+  fullName: Nebula.NativeBridge.GetGlobalTransform
+- uid: Godot.Transform3D
+  commentId: T:Godot.Transform3D
+  parent: Godot
+  isExternal: true
+  name: Transform3D
+  nameWithType: Transform3D
+  fullName: Godot.Transform3D
+- uid: Nebula.NativeBridge.GetGlobalBasis*
+  commentId: Overload:Nebula.NativeBridge.GetGlobalBasis
+  isExternal: true
+  href: Nebula.NativeBridge.GetGlobalBasis.html#Nebula_NativeBridge_GetGlobalBasis_Godot_Node3D_
+  name: GetGlobalBasis
+  nameWithType: NativeBridge.GetGlobalBasis
+  fullName: Nebula.NativeBridge.GetGlobalBasis
+- uid: Godot.Basis
+  commentId: T:Godot.Basis
+  parent: Godot
+  isExternal: true
+  name: Basis
+  nameWithType: Basis
+  fullName: Godot.Basis
+- uid: Nebula.NativeBridge.GetVisible*
+  commentId: Overload:Nebula.NativeBridge.GetVisible
+  isExternal: true
+  href: Nebula.NativeBridge.GetVisible.html#Nebula_NativeBridge_GetVisible_Godot_Node3D_
+  name: GetVisible
+  nameWithType: NativeBridge.GetVisible
+  fullName: Nebula.NativeBridge.GetVisible
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.NativeBridge.GetProcessMode*
+  commentId: Overload:Nebula.NativeBridge.GetProcessMode
+  isExternal: true
+  href: Nebula.NativeBridge.GetProcessMode.html#Nebula_NativeBridge_GetProcessMode_Godot_Node_
+  name: GetProcessMode
+  nameWithType: NativeBridge.GetProcessMode
+  fullName: Nebula.NativeBridge.GetProcessMode
+- uid: Godot.Node.ProcessModeEnum
+  commentId: T:Godot.Node.ProcessModeEnum
+  parent: Godot
+  isExternal: true
+  name: Node.ProcessModeEnum
+  nameWithType: Node.ProcessModeEnum
+  fullName: Godot.Node.ProcessModeEnum
+  spec.csharp:
+  - uid: Godot.Node
+    name: Node
+    isExternal: true
+  - name: .
+  - uid: Godot.Node.ProcessModeEnum
+    name: ProcessModeEnum
+    isExternal: true
+  spec.vb:
+  - uid: Godot.Node
+    name: Node
+    isExternal: true
+  - name: .
+  - uid: Godot.Node.ProcessModeEnum
+    name: ProcessModeEnum
+    isExternal: true
+- uid: Nebula.NativeBridge.GetLinearVelocity*
+  commentId: Overload:Nebula.NativeBridge.GetLinearVelocity
+  isExternal: true
+  href: Nebula.NativeBridge.GetLinearVelocity.html#Nebula_NativeBridge_GetLinearVelocity_Godot_RigidBody3D_
+  name: GetLinearVelocity
+  nameWithType: NativeBridge.GetLinearVelocity
+  fullName: Nebula.NativeBridge.GetLinearVelocity
+- uid: Godot.RigidBody3D
+  commentId: T:Godot.RigidBody3D
+  parent: Godot
+  isExternal: true
+  name: RigidBody3D
+  nameWithType: RigidBody3D
+  fullName: Godot.RigidBody3D
+- uid: Nebula.NativeBridge.GetAngularVelocity*
+  commentId: Overload:Nebula.NativeBridge.GetAngularVelocity
+  isExternal: true
+  href: Nebula.NativeBridge.GetAngularVelocity.html#Nebula_NativeBridge_GetAngularVelocity_Godot_RigidBody3D_
+  name: GetAngularVelocity
+  nameWithType: NativeBridge.GetAngularVelocity
+  fullName: Nebula.NativeBridge.GetAngularVelocity
+- uid: Nebula.NativeBridge.GetMass*
+  commentId: Overload:Nebula.NativeBridge.GetMass
+  isExternal: true
+  href: Nebula.NativeBridge.GetMass.html#Nebula_NativeBridge_GetMass_Godot_RigidBody3D_
+  name: GetMass
+  nameWithType: NativeBridge.GetMass
+  fullName: Nebula.NativeBridge.GetMass
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: Nebula.NativeBridge.GetVelocity*
+  commentId: Overload:Nebula.NativeBridge.GetVelocity
+  isExternal: true
+  href: Nebula.NativeBridge.GetVelocity.html#Nebula_NativeBridge_GetVelocity_Godot_CharacterBody3D_
+  name: GetVelocity
+  nameWithType: NativeBridge.GetVelocity
+  fullName: Nebula.NativeBridge.GetVelocity
+- uid: Godot.CharacterBody3D
+  commentId: T:Godot.CharacterBody3D
+  parent: Godot
+  isExternal: true
+  name: CharacterBody3D
+  nameWithType: CharacterBody3D
+  fullName: Godot.CharacterBody3D
+- uid: Nebula.NativeBridge.IsOnFloor*
+  commentId: Overload:Nebula.NativeBridge.IsOnFloor
+  isExternal: true
+  href: Nebula.NativeBridge.IsOnFloor.html#Nebula_NativeBridge_IsOnFloor_Godot_CharacterBody3D_
+  name: IsOnFloor
+  nameWithType: NativeBridge.IsOnFloor
+  fullName: Nebula.NativeBridge.IsOnFloor
+- uid: Nebula.NativeBridge.IsColliding*
+  commentId: Overload:Nebula.NativeBridge.IsColliding
+  isExternal: true
+  href: Nebula.NativeBridge.IsColliding.html#Nebula_NativeBridge_IsColliding_Godot_RayCast3D_
+  name: IsColliding
+  nameWithType: NativeBridge.IsColliding
+  fullName: Nebula.NativeBridge.IsColliding
+- uid: Godot.RayCast3D
+  commentId: T:Godot.RayCast3D
+  parent: Godot
+  isExternal: true
+  name: RayCast3D
+  nameWithType: RayCast3D
+  fullName: Godot.RayCast3D
+- uid: Nebula.NativeBridge.GetCollisionPoint*
+  commentId: Overload:Nebula.NativeBridge.GetCollisionPoint
+  isExternal: true
+  href: Nebula.NativeBridge.GetCollisionPoint.html#Nebula_NativeBridge_GetCollisionPoint_Godot_RayCast3D_
+  name: GetCollisionPoint
+  nameWithType: NativeBridge.GetCollisionPoint
+  fullName: Nebula.NativeBridge.GetCollisionPoint
+- uid: Nebula.NativeBridge.GetCollisionNormal*
+  commentId: Overload:Nebula.NativeBridge.GetCollisionNormal
+  isExternal: true
+  href: Nebula.NativeBridge.GetCollisionNormal.html#Nebula_NativeBridge_GetCollisionNormal_Godot_RayCast3D_
+  name: GetCollisionNormal
+  nameWithType: NativeBridge.GetCollisionNormal
+  fullName: Nebula.NativeBridge.GetCollisionNormal
+- uid: Nebula.NativeBridge.GetColliderId*
+  commentId: Overload:Nebula.NativeBridge.GetColliderId
+  isExternal: true
+  href: Nebula.NativeBridge.GetColliderId.html#Nebula_NativeBridge_GetColliderId_Godot_RayCast3D_
+  name: GetColliderId
+  nameWithType: NativeBridge.GetColliderId
+  fullName: Nebula.NativeBridge.GetColliderId
+- uid: System.UInt64
+  commentId: T:System.UInt64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint64
+  name: ulong
+  nameWithType: ulong
+  fullName: ulong
+  nameWithType.vb: ULong
+  fullName.vb: ULong
+  name.vb: ULong
+- uid: Nebula.NativeBridge.SetVisible*
+  commentId: Overload:Nebula.NativeBridge.SetVisible
+  isExternal: true
+  href: Nebula.NativeBridge.SetVisible.html#Nebula_NativeBridge_SetVisible_Godot_Node3D_System_Boolean_
+  name: SetVisible
+  nameWithType: NativeBridge.SetVisible
+  fullName: Nebula.NativeBridge.SetVisible
+- uid: Nebula.NativeBridge.SetProcessMode*
+  commentId: Overload:Nebula.NativeBridge.SetProcessMode
+  isExternal: true
+  href: Nebula.NativeBridge.SetProcessMode.html#Nebula_NativeBridge_SetProcessMode_Godot_Node_Godot_Node_ProcessModeEnum_
+  name: SetProcessMode
+  nameWithType: NativeBridge.SetProcessMode
+  fullName: Nebula.NativeBridge.SetProcessMode
+- uid: Nebula.NativeBridge.DistanceTo*
+  commentId: Overload:Nebula.NativeBridge.DistanceTo
+  isExternal: true
+  href: Nebula.NativeBridge.DistanceTo.html#Nebula_NativeBridge_DistanceTo_Godot_Node3D_Godot_Node3D_
+  name: DistanceTo
+  nameWithType: NativeBridge.DistanceTo
+  fullName: Nebula.NativeBridge.DistanceTo
+- uid: Nebula.NativeBridge.DistanceSquaredTo*
+  commentId: Overload:Nebula.NativeBridge.DistanceSquaredTo
+  isExternal: true
+  href: Nebula.NativeBridge.DistanceSquaredTo.html#Nebula_NativeBridge_DistanceSquaredTo_Godot_Node3D_Godot_Node3D_
+  name: DistanceSquaredTo
+  nameWithType: NativeBridge.DistanceSquaredTo
+  fullName: Nebula.NativeBridge.DistanceSquaredTo
+- uid: Nebula.NativeBridge.IsAvailable*
+  commentId: Overload:Nebula.NativeBridge.IsAvailable
+  isExternal: true
+  href: Nebula.NativeBridge.IsAvailable.html#Nebula_NativeBridge_IsAvailable
+  name: IsAvailable
+  nameWithType: NativeBridge.IsAvailable
+  fullName: Nebula.NativeBridge.IsAvailable
+memberLayout: SeparatePages

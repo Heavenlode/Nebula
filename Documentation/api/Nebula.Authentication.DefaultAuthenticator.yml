@@ -7,7 +7,7 @@ items:
   children:
   - Nebula.Authentication.DefaultAuthenticator.#ctor
   - Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer
-  - Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  - Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(ENet.Peer)
   langs:
   - csharp
   - vb
@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Authentication.DefaultAuthenticator
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
   assemblies:
   - Nebula
   namespace: Nebula.Authentication
@@ -47,7 +47,7 @@ items:
   fullName: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
   assemblies:
   - Nebula
   namespace: Nebula.Authentication
@@ -58,32 +58,32 @@ items:
   overload: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer*
   implements:
   - Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
-- uid: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
-  commentId: M:Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
-  id: ServerAuthenticateClient(Godot.ENetPacketPeer)
+- uid: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(ENet.Peer)
+  commentId: M:Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(ENet.Peer)
+  id: ServerAuthenticateClient(ENet.Peer)
   parent: Nebula.Authentication.DefaultAuthenticator
   langs:
   - csharp
   - vb
-  name: ServerAuthenticateClient(ENetPacketPeer)
-  nameWithType: DefaultAuthenticator.ServerAuthenticateClient(ENetPacketPeer)
-  fullName: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  name: ServerAuthenticateClient(Peer)
+  nameWithType: DefaultAuthenticator.ServerAuthenticateClient(Peer)
+  fullName: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
   assemblies:
   - Nebula
   namespace: Nebula.Authentication
   example: []
   syntax:
-    content: public void ServerAuthenticateClient(ENetPacketPeer peer)
+    content: public void ServerAuthenticateClient(Peer peer)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
-    content.vb: Public Sub ServerAuthenticateClient(peer As ENetPacketPeer)
+      type: ENet.Peer
+    content.vb: Public Sub ServerAuthenticateClient(peer As Peer)
   overload: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient*
   implements:
-  - Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  - Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(ENet.Peer)
 - uid: Nebula.Authentication.DefaultAuthenticator.#ctor
   commentId: M:Nebula.Authentication.DefaultAuthenticator.#ctor
   id: '#ctor'
@@ -96,7 +96,7 @@ items:
   fullName: Nebula.Authentication.DefaultAuthenticator.DefaultAuthenticator()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Authentication/DefaultAuthenticator.cs
   assemblies:
   - Nebula
   namespace: Nebula.Authentication
@@ -383,7 +383,7 @@ references:
 - uid: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer*
   commentId: Overload:Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer
   isExternal: true
-  href: Nebula.Authentication.DefaultAuthenticator.html#Nebula_Authentication_DefaultAuthenticator_ClientAuthenticateWithServer
+  href: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer.html#Nebula_Authentication_DefaultAuthenticator_ClientAuthenticateWithServer
   name: ClientAuthenticateWithServer
   nameWithType: DefaultAuthenticator.ClientAuthenticateWithServer
   fullName: Nebula.Authentication.DefaultAuthenticator.ClientAuthenticateWithServer
@@ -391,7 +391,7 @@ references:
   commentId: M:Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
   parent: Nebula.Authentication.IAuthenticator
   isExternal: true
-  href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
+  href: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
   name: ClientAuthenticateWithServer()
   nameWithType: IAuthenticator.ClientAuthenticateWithServer()
   fullName: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer()
@@ -399,71 +399,72 @@ references:
   - uid: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
     name: ClientAuthenticateWithServer
     isExternal: true
-    href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
+    href: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
   - name: (
   - name: )
   spec.vb:
   - uid: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer
     name: ClientAuthenticateWithServer
     isExternal: true
-    href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
+    href: Nebula.Authentication.IAuthenticator.ClientAuthenticateWithServer.html#Nebula_Authentication_IAuthenticator_ClientAuthenticateWithServer
   - name: (
   - name: )
 - uid: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient*
   commentId: Overload:Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient
   isExternal: true
-  href: Nebula.Authentication.DefaultAuthenticator.html#Nebula_Authentication_DefaultAuthenticator_ServerAuthenticateClient_Godot_ENetPacketPeer_
+  href: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient.html#Nebula_Authentication_DefaultAuthenticator_ServerAuthenticateClient_ENet_Peer_
   name: ServerAuthenticateClient
   nameWithType: DefaultAuthenticator.ServerAuthenticateClient
   fullName: Nebula.Authentication.DefaultAuthenticator.ServerAuthenticateClient
-- uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
-  commentId: M:Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+- uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(ENet.Peer)
+  commentId: M:Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(ENet.Peer)
   parent: Nebula.Authentication.IAuthenticator
   isExternal: true
-  href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_Godot_ENetPacketPeer_
-  name: ServerAuthenticateClient(ENetPacketPeer)
-  nameWithType: IAuthenticator.ServerAuthenticateClient(ENetPacketPeer)
-  fullName: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  href: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_ENet_Peer_
+  name: ServerAuthenticateClient(Peer)
+  nameWithType: IAuthenticator.ServerAuthenticateClient(Peer)
+  fullName: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(ENet.Peer)
   spec.csharp:
-  - uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  - uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(ENet.Peer)
     name: ServerAuthenticateClient
     isExternal: true
-    href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_Godot_ENetPacketPeer_
+    href: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_ENet_Peer_
   - name: (
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: )
   spec.vb:
-  - uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(Godot.ENetPacketPeer)
+  - uid: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient(ENet.Peer)
     name: ServerAuthenticateClient
     isExternal: true
-    href: Nebula.Authentication.IAuthenticator.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_Godot_ENetPacketPeer_
+    href: Nebula.Authentication.IAuthenticator.ServerAuthenticateClient.html#Nebula_Authentication_IAuthenticator_ServerAuthenticateClient_ENet_Peer_
   - name: (
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: )
-- uid: Godot.ENetPacketPeer
-  commentId: T:Godot.ENetPacketPeer
-  parent: Godot
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
   isExternal: true
-  name: ENetPacketPeer
-  nameWithType: ENetPacketPeer
-  fullName: Godot.ENetPacketPeer
-- uid: Godot
-  commentId: N:Godot
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: ENet
+  commentId: N:ENet
   isExternal: true
-  name: Godot
-  nameWithType: Godot
-  fullName: Godot
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
 - uid: Nebula.Authentication.DefaultAuthenticator.#ctor*
   commentId: Overload:Nebula.Authentication.DefaultAuthenticator.#ctor
   isExternal: true
-  href: Nebula.Authentication.DefaultAuthenticator.html#Nebula_Authentication_DefaultAuthenticator__ctor
+  href: Nebula.Authentication.DefaultAuthenticator.-ctor.html#Nebula_Authentication_DefaultAuthenticator__ctor
   name: DefaultAuthenticator
   nameWithType: DefaultAuthenticator.DefaultAuthenticator
   fullName: Nebula.Authentication.DefaultAuthenticator.DefaultAuthenticator
   nameWithType.vb: DefaultAuthenticator.New
   fullName.vb: Nebula.Authentication.DefaultAuthenticator.New
   name.vb: New
+memberLayout: SeparatePages

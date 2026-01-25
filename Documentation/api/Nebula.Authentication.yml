@@ -58,3 +58,4 @@ references:
     name: Authentication
     isExternal: true
     href: Nebula.Authentication.html
+memberLayout: SeparatePages

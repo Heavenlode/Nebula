@@ -9,7 +9,7 @@ items:
   - Nebula.Utility.Nodes.NetTransform2D.MethodName.GetParent2D
   - Nebula.Utility.Nodes.NetTransform2D.MethodName.NetworkLerpNetPosition
   - Nebula.Utility.Nodes.NetTransform2D.MethodName.NetworkLerpNetRotation
-  - Nebula.Utility.Nodes.NetTransform2D.MethodName.OnNetworkChangeIsTeleporting
+  - Nebula.Utility.Nodes.NetTransform2D.MethodName.OnNetChangeIsTeleporting
   - Nebula.Utility.Nodes.NetTransform2D.MethodName.Teleport
   - Nebula.Utility.Nodes.NetTransform2D.MethodName._NetworkProcess
   - Nebula.Utility.Nodes.NetTransform2D.MethodName._PhysicsProcess
@@ -22,7 +22,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -39,11 +39,14 @@ items:
   - Godot.Node2D.MethodName
   - Nebula.NetNode2D.MethodName
   inheritedMembers:
+  - Nebula.NetNode2D.MethodName._Notification
   - Nebula.NetNode2D.MethodName.SetupSerializers
-  - Nebula.NetNode2D.MethodName.NetworkSerialize
-  - Nebula.NetNode2D.MethodName.GetDeserializeContext
-  - Nebula.NetNode2D.MethodName.NetworkDeserialize
-  - Nebula.NetNode2D.MethodName.BsonDeserialize
+  - Nebula.NetNode2D.MethodName.ProcessInterpolation
+  - Nebula.NetNode2D.MethodName.StorePredictedState
+  - Nebula.NetNode2D.MethodName.StoreConfirmedState
+  - Nebula.NetNode2D.MethodName.Reconcile
+  - Nebula.NetNode2D.MethodName.RestoreToPredictedState
+  - Nebula.NetNode2D.MethodName._Process
   - Nebula.NetNode2D.MethodName.NodePathFromNetScene
   - Godot.Node2D.MethodName.SetPosition
   - Godot.Node2D.MethodName.SetRotation
@@ -175,7 +178,6 @@ items:
   - Godot.Node.MethodName._GetConfigurationWarnings
   - Godot.Node.MethodName._GetFocusedAccessibilityElement
   - Godot.Node.MethodName._Input
-  - Godot.Node.MethodName._Process
   - Godot.Node.MethodName._Ready
   - Godot.Node.MethodName._ShortcutInput
   - Godot.Node.MethodName._UnhandledInput
@@ -320,7 +322,6 @@ items:
   - Godot.GodotObject.MethodName._IterGet
   - Godot.GodotObject.MethodName._IterInit
   - Godot.GodotObject.MethodName._IterNext
-  - Godot.GodotObject.MethodName._Notification
   - Godot.GodotObject.MethodName._PropertyCanRevert
   - Godot.GodotObject.MethodName._PropertyGetRevert
   - Godot.GodotObject.MethodName._Set
@@ -381,29 +382,29 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
-- uid: Nebula.Utility.Nodes.NetTransform2D.MethodName.OnNetworkChangeIsTeleporting
-  commentId: F:Nebula.Utility.Nodes.NetTransform2D.MethodName.OnNetworkChangeIsTeleporting
-  id: OnNetworkChangeIsTeleporting
+- uid: Nebula.Utility.Nodes.NetTransform2D.MethodName.OnNetChangeIsTeleporting
+  commentId: F:Nebula.Utility.Nodes.NetTransform2D.MethodName.OnNetChangeIsTeleporting
+  id: OnNetChangeIsTeleporting
   parent: Nebula.Utility.Nodes.NetTransform2D.MethodName
   langs:
   - csharp
   - vb
-  name: OnNetworkChangeIsTeleporting
-  nameWithType: NetTransform2D.MethodName.OnNetworkChangeIsTeleporting
-  fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName.OnNetworkChangeIsTeleporting
+  name: OnNetChangeIsTeleporting
+  nameWithType: NetTransform2D.MethodName.OnNetChangeIsTeleporting
+  fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName.OnNetChangeIsTeleporting
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
-  summary: Cached name for the 'OnNetworkChangeIsTeleporting' method.
+  summary: Cached name for the 'OnNetChangeIsTeleporting' method.
   example: []
   syntax:
-    content: public static readonly StringName OnNetworkChangeIsTeleporting
+    content: public static readonly StringName OnNetChangeIsTeleporting
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnNetworkChangeIsTeleporting As StringName
+    content.vb: Public Shared ReadOnly OnNetChangeIsTeleporting As StringName
 - uid: Nebula.Utility.Nodes.NetTransform2D.MethodName._WorldReady
   commentId: F:Nebula.Utility.Nodes.NetTransform2D.MethodName._WorldReady
   id: _WorldReady
@@ -416,7 +417,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName._WorldReady
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -439,7 +440,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName.GetParent2D
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -462,7 +463,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName._NetworkProcess
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -485,7 +486,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName.NetworkLerpNetPosition
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -508,7 +509,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName.NetworkLerpNetRotation
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -531,7 +532,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName._PhysicsProcess
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -554,7 +555,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName.Teleport
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -577,7 +578,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -757,51 +758,75 @@ references:
     name: MethodName
     isExternal: true
     href: Nebula.NetNode2D.MethodName.html
+- uid: Nebula.NetNode2D.MethodName._Notification
+  commentId: F:Nebula.NetNode2D.MethodName._Notification
+  parent: Nebula.NetNode2D.MethodName
+  isExternal: true
+  href: Nebula.NetNode2D.MethodName._Notification.html#Nebula_NetNode2D_MethodName__Notification
+  name: _Notification
+  nameWithType: NetNode2D.MethodName._Notification
+  fullName: Nebula.NetNode2D.MethodName._Notification
 - uid: Nebula.NetNode2D.MethodName.SetupSerializers
   commentId: F:Nebula.NetNode2D.MethodName.SetupSerializers
   parent: Nebula.NetNode2D.MethodName
   isExternal: true
-  href: Nebula.NetNode2D.MethodName.html#Nebula_NetNode2D_MethodName_SetupSerializers
+  href: Nebula.NetNode2D.MethodName.SetupSerializers.html#Nebula_NetNode2D_MethodName_SetupSerializers
   name: SetupSerializers
   nameWithType: NetNode2D.MethodName.SetupSerializers
   fullName: Nebula.NetNode2D.MethodName.SetupSerializers
-- uid: Nebula.NetNode2D.MethodName.NetworkSerialize
-  commentId: F:Nebula.NetNode2D.MethodName.NetworkSerialize
+- uid: Nebula.NetNode2D.MethodName.ProcessInterpolation
+  commentId: F:Nebula.NetNode2D.MethodName.ProcessInterpolation
   parent: Nebula.NetNode2D.MethodName
   isExternal: true
-  href: Nebula.NetNode2D.MethodName.html#Nebula_NetNode2D_MethodName_NetworkSerialize
-  name: NetworkSerialize
-  nameWithType: NetNode2D.MethodName.NetworkSerialize
-  fullName: Nebula.NetNode2D.MethodName.NetworkSerialize
-- uid: Nebula.NetNode2D.MethodName.GetDeserializeContext
-  commentId: F:Nebula.NetNode2D.MethodName.GetDeserializeContext
+  href: Nebula.NetNode2D.MethodName.ProcessInterpolation.html#Nebula_NetNode2D_MethodName_ProcessInterpolation
+  name: ProcessInterpolation
+  nameWithType: NetNode2D.MethodName.ProcessInterpolation
+  fullName: Nebula.NetNode2D.MethodName.ProcessInterpolation
+- uid: Nebula.NetNode2D.MethodName.StorePredictedState
+  commentId: F:Nebula.NetNode2D.MethodName.StorePredictedState
   parent: Nebula.NetNode2D.MethodName
   isExternal: true
-  href: Nebula.NetNode2D.MethodName.html#Nebula_NetNode2D_MethodName_GetDeserializeContext
-  name: GetDeserializeContext
-  nameWithType: NetNode2D.MethodName.GetDeserializeContext
-  fullName: Nebula.NetNode2D.MethodName.GetDeserializeContext
-- uid: Nebula.NetNode2D.MethodName.NetworkDeserialize
-  commentId: F:Nebula.NetNode2D.MethodName.NetworkDeserialize
+  href: Nebula.NetNode2D.MethodName.StorePredictedState.html#Nebula_NetNode2D_MethodName_StorePredictedState
+  name: StorePredictedState
+  nameWithType: NetNode2D.MethodName.StorePredictedState
+  fullName: Nebula.NetNode2D.MethodName.StorePredictedState
+- uid: Nebula.NetNode2D.MethodName.StoreConfirmedState
+  commentId: F:Nebula.NetNode2D.MethodName.StoreConfirmedState
   parent: Nebula.NetNode2D.MethodName
   isExternal: true
-  href: Nebula.NetNode2D.MethodName.html#Nebula_NetNode2D_MethodName_NetworkDeserialize
-  name: NetworkDeserialize
-  nameWithType: NetNode2D.MethodName.NetworkDeserialize
-  fullName: Nebula.NetNode2D.MethodName.NetworkDeserialize
-- uid: Nebula.NetNode2D.MethodName.BsonDeserialize
-  commentId: F:Nebula.NetNode2D.MethodName.BsonDeserialize
+  href: Nebula.NetNode2D.MethodName.StoreConfirmedState.html#Nebula_NetNode2D_MethodName_StoreConfirmedState
+  name: StoreConfirmedState
+  nameWithType: NetNode2D.MethodName.StoreConfirmedState
+  fullName: Nebula.NetNode2D.MethodName.StoreConfirmedState
+- uid: Nebula.NetNode2D.MethodName.Reconcile
+  commentId: F:Nebula.NetNode2D.MethodName.Reconcile
   parent: Nebula.NetNode2D.MethodName
   isExternal: true
-  href: Nebula.NetNode2D.MethodName.html#Nebula_NetNode2D_MethodName_BsonDeserialize
-  name: BsonDeserialize
-  nameWithType: NetNode2D.MethodName.BsonDeserialize
-  fullName: Nebula.NetNode2D.MethodName.BsonDeserialize
+  href: Nebula.NetNode2D.MethodName.Reconcile.html#Nebula_NetNode2D_MethodName_Reconcile
+  name: Reconcile
+  nameWithType: NetNode2D.MethodName.Reconcile
+  fullName: Nebula.NetNode2D.MethodName.Reconcile
+- uid: Nebula.NetNode2D.MethodName.RestoreToPredictedState
+  commentId: F:Nebula.NetNode2D.MethodName.RestoreToPredictedState
+  parent: Nebula.NetNode2D.MethodName
+  isExternal: true
+  href: Nebula.NetNode2D.MethodName.RestoreToPredictedState.html#Nebula_NetNode2D_MethodName_RestoreToPredictedState
+  name: RestoreToPredictedState
+  nameWithType: NetNode2D.MethodName.RestoreToPredictedState
+  fullName: Nebula.NetNode2D.MethodName.RestoreToPredictedState
+- uid: Nebula.NetNode2D.MethodName._Process
+  commentId: F:Nebula.NetNode2D.MethodName._Process
+  parent: Nebula.NetNode2D.MethodName
+  isExternal: true
+  href: Nebula.NetNode2D.MethodName._Process.html#Nebula_NetNode2D_MethodName__Process
+  name: _Process
+  nameWithType: NetNode2D.MethodName._Process
+  fullName: Nebula.NetNode2D.MethodName._Process
 - uid: Nebula.NetNode2D.MethodName.NodePathFromNetScene
   commentId: F:Nebula.NetNode2D.MethodName.NodePathFromNetScene
   parent: Nebula.NetNode2D.MethodName
   isExternal: true
-  href: Nebula.NetNode2D.MethodName.html#Nebula_NetNode2D_MethodName_NodePathFromNetScene
+  href: Nebula.NetNode2D.MethodName.NodePathFromNetScene.html#Nebula_NetNode2D_MethodName_NodePathFromNetScene
   name: NodePathFromNetScene
   nameWithType: NetNode2D.MethodName.NodePathFromNetScene
   fullName: Nebula.NetNode2D.MethodName.NodePathFromNetScene
@@ -1715,13 +1740,6 @@ references:
   name: _Input
   nameWithType: Node.MethodName._Input
   fullName: Godot.Node.MethodName._Input
-- uid: Godot.Node.MethodName._Process
-  commentId: F:Godot.Node.MethodName._Process
-  parent: Godot.Node.MethodName
-  isExternal: true
-  name: _Process
-  nameWithType: Node.MethodName._Process
-  fullName: Godot.Node.MethodName._Process
 - uid: Godot.Node.MethodName._Ready
   commentId: F:Godot.Node.MethodName._Ready
   parent: Godot.Node.MethodName
@@ -2730,13 +2748,6 @@ references:
   name: _IterNext
   nameWithType: GodotObject.MethodName._IterNext
   fullName: Godot.GodotObject.MethodName._IterNext
-- uid: Godot.GodotObject.MethodName._Notification
-  commentId: F:Godot.GodotObject.MethodName._Notification
-  parent: Godot.GodotObject.MethodName
-  isExternal: true
-  name: _Notification
-  nameWithType: GodotObject.MethodName._Notification
-  fullName: Godot.GodotObject.MethodName._Notification
 - uid: Godot.GodotObject.MethodName._PropertyCanRevert
   commentId: F:Godot.GodotObject.MethodName._PropertyCanRevert
   parent: Godot.GodotObject.MethodName
@@ -3357,10 +3368,11 @@ references:
 - uid: Nebula.Utility.Nodes.NetTransform2D.MethodName.#ctor*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform2D.MethodName.#ctor
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform2D.MethodName.html#Nebula_Utility_Nodes_NetTransform2D_MethodName__ctor
+  href: Nebula.Utility.Nodes.NetTransform2D.MethodName.-ctor.html#Nebula_Utility_Nodes_NetTransform2D_MethodName__ctor
   name: MethodName
   nameWithType: NetTransform2D.MethodName.MethodName
   fullName: Nebula.Utility.Nodes.NetTransform2D.MethodName.MethodName
   nameWithType.vb: NetTransform2D.MethodName.New
   fullName.vb: Nebula.Utility.Nodes.NetTransform2D.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

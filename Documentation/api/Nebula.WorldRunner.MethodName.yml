@@ -6,30 +6,20 @@ items:
   parent: Nebula
   children:
   - Nebula.WorldRunner.MethodName.#ctor
-  - Nebula.WorldRunner.MethodName.AllocateNetId
   - Nebula.WorldRunner.MethodName.ChangeScene
   - Nebula.WorldRunner.MethodName.CheckStaticInitialization
-  - Nebula.WorldRunner.MethodName.CleanupPlayer
-  - Nebula.WorldRunner.MethodName.ClientHandleTick
-  - Nebula.WorldRunner.MethodName.DeregisterPeerNode
-  - Nebula.WorldRunner.MethodName.ExitPeer
+  - Nebula.WorldRunner.MethodName.ClientProcessTick
   - Nebula.WorldRunner.MethodName.GetAvailablePort
-  - Nebula.WorldRunner.MethodName.GetNetId
-  - Nebula.WorldRunner.MethodName.GetNetIdFromPeerId
   - Nebula.WorldRunner.MethodName.GetNodeFromNetId
-  - Nebula.WorldRunner.MethodName.GetPeerNode
-  - Nebula.WorldRunner.MethodName.GetPeerNodeId
-  - Nebula.WorldRunner.MethodName.HasSpawnedForClient
-  - Nebula.WorldRunner.MethodName.ImportState
-  - Nebula.WorldRunner.MethodName.JoinPeer
+  - Nebula.WorldRunner.MethodName.InitializeClientPrediction
   - Nebula.WorldRunner.MethodName.Log
-  - Nebula.WorldRunner.MethodName.PeerAcknowledge
-  - Nebula.WorldRunner.MethodName.ReceiveInput
-  - Nebula.WorldRunner.MethodName.ReceiveNetFunction
+  - Nebula.WorldRunner.MethodName.MarkOwnedEntitiesDirty
+  - Nebula.WorldRunner.MethodName.QueueDespawn
+  - Nebula.WorldRunner.MethodName.RebuildOwnedEntitiesCache
+  - Nebula.WorldRunner.MethodName.ReconcileOwnedEntity
   - Nebula.WorldRunner.MethodName.SendInput
+  - Nebula.WorldRunner.MethodName.SendToDebugClients
   - Nebula.WorldRunner.MethodName.ServerProcessTick
-  - Nebula.WorldRunner.MethodName.SetSpawnedForClient
-  - Nebula.WorldRunner.MethodName.TryRegisterPeerNode
   - Nebula.WorldRunner.MethodName._ExitTree
   - Nebula.WorldRunner.MethodName._PhysicsProcess
   - Nebula.WorldRunner.MethodName._Ready
@@ -41,7 +31,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -266,6 +256,29 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
+- uid: Nebula.WorldRunner.MethodName.SendToDebugClients
+  commentId: F:Nebula.WorldRunner.MethodName.SendToDebugClients
+  id: SendToDebugClients
+  parent: Nebula.WorldRunner.MethodName
+  langs:
+  - csharp
+  - vb
+  name: SendToDebugClients
+  nameWithType: WorldRunner.MethodName.SendToDebugClients
+  fullName: Nebula.WorldRunner.MethodName.SendToDebugClients
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'SendToDebugClients' method.
+  example: []
+  syntax:
+    content: public static readonly StringName SendToDebugClients
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly SendToDebugClients As StringName
 - uid: Nebula.WorldRunner.MethodName.Log
   commentId: F:Nebula.WorldRunner.MethodName.Log
   id: Log
@@ -278,7 +291,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName.Log
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -301,7 +314,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName.GetAvailablePort
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -324,7 +337,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName._Ready
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -347,7 +360,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName._ExitTree
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -358,6 +371,98 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _ExitTree As StringName
+- uid: Nebula.WorldRunner.MethodName.InitializeClientPrediction
+  commentId: F:Nebula.WorldRunner.MethodName.InitializeClientPrediction
+  id: InitializeClientPrediction
+  parent: Nebula.WorldRunner.MethodName
+  langs:
+  - csharp
+  - vb
+  name: InitializeClientPrediction
+  nameWithType: WorldRunner.MethodName.InitializeClientPrediction
+  fullName: Nebula.WorldRunner.MethodName.InitializeClientPrediction
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'InitializeClientPrediction' method.
+  example: []
+  syntax:
+    content: public static readonly StringName InitializeClientPrediction
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly InitializeClientPrediction As StringName
+- uid: Nebula.WorldRunner.MethodName.RebuildOwnedEntitiesCache
+  commentId: F:Nebula.WorldRunner.MethodName.RebuildOwnedEntitiesCache
+  id: RebuildOwnedEntitiesCache
+  parent: Nebula.WorldRunner.MethodName
+  langs:
+  - csharp
+  - vb
+  name: RebuildOwnedEntitiesCache
+  nameWithType: WorldRunner.MethodName.RebuildOwnedEntitiesCache
+  fullName: Nebula.WorldRunner.MethodName.RebuildOwnedEntitiesCache
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'RebuildOwnedEntitiesCache' method.
+  example: []
+  syntax:
+    content: public static readonly StringName RebuildOwnedEntitiesCache
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly RebuildOwnedEntitiesCache As StringName
+- uid: Nebula.WorldRunner.MethodName.MarkOwnedEntitiesDirty
+  commentId: F:Nebula.WorldRunner.MethodName.MarkOwnedEntitiesDirty
+  id: MarkOwnedEntitiesDirty
+  parent: Nebula.WorldRunner.MethodName
+  langs:
+  - csharp
+  - vb
+  name: MarkOwnedEntitiesDirty
+  nameWithType: WorldRunner.MethodName.MarkOwnedEntitiesDirty
+  fullName: Nebula.WorldRunner.MethodName.MarkOwnedEntitiesDirty
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'MarkOwnedEntitiesDirty' method.
+  example: []
+  syntax:
+    content: public static readonly StringName MarkOwnedEntitiesDirty
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly MarkOwnedEntitiesDirty As StringName
+- uid: Nebula.WorldRunner.MethodName.ReconcileOwnedEntity
+  commentId: F:Nebula.WorldRunner.MethodName.ReconcileOwnedEntity
+  id: ReconcileOwnedEntity
+  parent: Nebula.WorldRunner.MethodName
+  langs:
+  - csharp
+  - vb
+  name: ReconcileOwnedEntity
+  nameWithType: WorldRunner.MethodName.ReconcileOwnedEntity
+  fullName: Nebula.WorldRunner.MethodName.ReconcileOwnedEntity
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'ReconcileOwnedEntity' method.
+  example: []
+  syntax:
+    content: public static readonly StringName ReconcileOwnedEntity
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly ReconcileOwnedEntity As StringName
 - uid: Nebula.WorldRunner.MethodName.GetNodeFromNetId
   commentId: F:Nebula.WorldRunner.MethodName.GetNodeFromNetId
   id: GetNodeFromNetId
@@ -370,7 +475,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName.GetNodeFromNetId
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -381,98 +486,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly GetNodeFromNetId As StringName
-- uid: Nebula.WorldRunner.MethodName.AllocateNetId
-  commentId: F:Nebula.WorldRunner.MethodName.AllocateNetId
-  id: AllocateNetId
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: AllocateNetId
-  nameWithType: WorldRunner.MethodName.AllocateNetId
-  fullName: Nebula.WorldRunner.MethodName.AllocateNetId
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'AllocateNetId' method.
-  example: []
-  syntax:
-    content: public static readonly StringName AllocateNetId
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly AllocateNetId As StringName
-- uid: Nebula.WorldRunner.MethodName.GetNetId
-  commentId: F:Nebula.WorldRunner.MethodName.GetNetId
-  id: GetNetId
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: GetNetId
-  nameWithType: WorldRunner.MethodName.GetNetId
-  fullName: Nebula.WorldRunner.MethodName.GetNetId
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'GetNetId' method.
-  example: []
-  syntax:
-    content: public static readonly StringName GetNetId
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly GetNetId As StringName
-- uid: Nebula.WorldRunner.MethodName.GetNetIdFromPeerId
-  commentId: F:Nebula.WorldRunner.MethodName.GetNetIdFromPeerId
-  id: GetNetIdFromPeerId
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: GetNetIdFromPeerId
-  nameWithType: WorldRunner.MethodName.GetNetIdFromPeerId
-  fullName: Nebula.WorldRunner.MethodName.GetNetIdFromPeerId
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'GetNetIdFromPeerId' method.
-  example: []
-  syntax:
-    content: public static readonly StringName GetNetIdFromPeerId
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly GetNetIdFromPeerId As StringName
-- uid: Nebula.WorldRunner.MethodName.CleanupPlayer
-  commentId: F:Nebula.WorldRunner.MethodName.CleanupPlayer
-  id: CleanupPlayer
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: CleanupPlayer
-  nameWithType: WorldRunner.MethodName.CleanupPlayer
-  fullName: Nebula.WorldRunner.MethodName.CleanupPlayer
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'CleanupPlayer' method.
-  example: []
-  syntax:
-    content: public static readonly StringName CleanupPlayer
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly CleanupPlayer As StringName
 - uid: Nebula.WorldRunner.MethodName.ServerProcessTick
   commentId: F:Nebula.WorldRunner.MethodName.ServerProcessTick
   id: ServerProcessTick
@@ -485,7 +498,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName.ServerProcessTick
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -496,6 +509,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly ServerProcessTick As StringName
+- uid: Nebula.WorldRunner.MethodName.QueueDespawn
+  commentId: F:Nebula.WorldRunner.MethodName.QueueDespawn
+  id: QueueDespawn
+  parent: Nebula.WorldRunner.MethodName
+  langs:
+  - csharp
+  - vb
+  name: QueueDespawn
+  nameWithType: WorldRunner.MethodName.QueueDespawn
+  fullName: Nebula.WorldRunner.MethodName.QueueDespawn
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'QueueDespawn' method.
+  example: []
+  syntax:
+    content: public static readonly StringName QueueDespawn
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly QueueDespawn As StringName
 - uid: Nebula.WorldRunner.MethodName._PhysicsProcess
   commentId: F:Nebula.WorldRunner.MethodName._PhysicsProcess
   id: _PhysicsProcess
@@ -508,7 +544,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName._PhysicsProcess
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -519,52 +555,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _PhysicsProcess As StringName
-- uid: Nebula.WorldRunner.MethodName.HasSpawnedForClient
-  commentId: F:Nebula.WorldRunner.MethodName.HasSpawnedForClient
-  id: HasSpawnedForClient
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: HasSpawnedForClient
-  nameWithType: WorldRunner.MethodName.HasSpawnedForClient
-  fullName: Nebula.WorldRunner.MethodName.HasSpawnedForClient
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'HasSpawnedForClient' method.
-  example: []
-  syntax:
-    content: public static readonly StringName HasSpawnedForClient
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly HasSpawnedForClient As StringName
-- uid: Nebula.WorldRunner.MethodName.SetSpawnedForClient
-  commentId: F:Nebula.WorldRunner.MethodName.SetSpawnedForClient
-  id: SetSpawnedForClient
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: SetSpawnedForClient
-  nameWithType: WorldRunner.MethodName.SetSpawnedForClient
-  fullName: Nebula.WorldRunner.MethodName.SetSpawnedForClient
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'SetSpawnedForClient' method.
-  example: []
-  syntax:
-    content: public static readonly StringName SetSpawnedForClient
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly SetSpawnedForClient As StringName
 - uid: Nebula.WorldRunner.MethodName.ChangeScene
   commentId: F:Nebula.WorldRunner.MethodName.ChangeScene
   id: ChangeScene
@@ -577,7 +567,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName.ChangeScene
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -588,213 +578,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly ChangeScene As StringName
-- uid: Nebula.WorldRunner.MethodName.GetPeerNodeId
-  commentId: F:Nebula.WorldRunner.MethodName.GetPeerNodeId
-  id: GetPeerNodeId
+- uid: Nebula.WorldRunner.MethodName.ClientProcessTick
+  commentId: F:Nebula.WorldRunner.MethodName.ClientProcessTick
+  id: ClientProcessTick
   parent: Nebula.WorldRunner.MethodName
   langs:
   - csharp
   - vb
-  name: GetPeerNodeId
-  nameWithType: WorldRunner.MethodName.GetPeerNodeId
-  fullName: Nebula.WorldRunner.MethodName.GetPeerNodeId
+  name: ClientProcessTick
+  nameWithType: WorldRunner.MethodName.ClientProcessTick
+  fullName: Nebula.WorldRunner.MethodName.ClientProcessTick
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'GetPeerNodeId' method.
+  summary: Cached name for the 'ClientProcessTick' method.
   example: []
   syntax:
-    content: public static readonly StringName GetPeerNodeId
+    content: public static readonly StringName ClientProcessTick
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly GetPeerNodeId As StringName
-- uid: Nebula.WorldRunner.MethodName.GetPeerNode
-  commentId: F:Nebula.WorldRunner.MethodName.GetPeerNode
-  id: GetPeerNode
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: GetPeerNode
-  nameWithType: WorldRunner.MethodName.GetPeerNode
-  fullName: Nebula.WorldRunner.MethodName.GetPeerNode
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'GetPeerNode' method.
-  example: []
-  syntax:
-    content: public static readonly StringName GetPeerNode
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly GetPeerNode As StringName
-- uid: Nebula.WorldRunner.MethodName.DeregisterPeerNode
-  commentId: F:Nebula.WorldRunner.MethodName.DeregisterPeerNode
-  id: DeregisterPeerNode
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: DeregisterPeerNode
-  nameWithType: WorldRunner.MethodName.DeregisterPeerNode
-  fullName: Nebula.WorldRunner.MethodName.DeregisterPeerNode
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'DeregisterPeerNode' method.
-  example: []
-  syntax:
-    content: public static readonly StringName DeregisterPeerNode
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly DeregisterPeerNode As StringName
-- uid: Nebula.WorldRunner.MethodName.TryRegisterPeerNode
-  commentId: F:Nebula.WorldRunner.MethodName.TryRegisterPeerNode
-  id: TryRegisterPeerNode
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: TryRegisterPeerNode
-  nameWithType: WorldRunner.MethodName.TryRegisterPeerNode
-  fullName: Nebula.WorldRunner.MethodName.TryRegisterPeerNode
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'TryRegisterPeerNode' method.
-  example: []
-  syntax:
-    content: public static readonly StringName TryRegisterPeerNode
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly TryRegisterPeerNode As StringName
-- uid: Nebula.WorldRunner.MethodName.JoinPeer
-  commentId: F:Nebula.WorldRunner.MethodName.JoinPeer
-  id: JoinPeer
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: JoinPeer
-  nameWithType: WorldRunner.MethodName.JoinPeer
-  fullName: Nebula.WorldRunner.MethodName.JoinPeer
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'JoinPeer' method.
-  example: []
-  syntax:
-    content: public static readonly StringName JoinPeer
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly JoinPeer As StringName
-- uid: Nebula.WorldRunner.MethodName.ExitPeer
-  commentId: F:Nebula.WorldRunner.MethodName.ExitPeer
-  id: ExitPeer
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: ExitPeer
-  nameWithType: WorldRunner.MethodName.ExitPeer
-  fullName: Nebula.WorldRunner.MethodName.ExitPeer
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'ExitPeer' method.
-  example: []
-  syntax:
-    content: public static readonly StringName ExitPeer
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly ExitPeer As StringName
-- uid: Nebula.WorldRunner.MethodName.ImportState
-  commentId: F:Nebula.WorldRunner.MethodName.ImportState
-  id: ImportState
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: ImportState
-  nameWithType: WorldRunner.MethodName.ImportState
-  fullName: Nebula.WorldRunner.MethodName.ImportState
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'ImportState' method.
-  example: []
-  syntax:
-    content: public static readonly StringName ImportState
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly ImportState As StringName
-- uid: Nebula.WorldRunner.MethodName.PeerAcknowledge
-  commentId: F:Nebula.WorldRunner.MethodName.PeerAcknowledge
-  id: PeerAcknowledge
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: PeerAcknowledge
-  nameWithType: WorldRunner.MethodName.PeerAcknowledge
-  fullName: Nebula.WorldRunner.MethodName.PeerAcknowledge
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'PeerAcknowledge' method.
-  example: []
-  syntax:
-    content: public static readonly StringName PeerAcknowledge
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly PeerAcknowledge As StringName
-- uid: Nebula.WorldRunner.MethodName.ClientHandleTick
-  commentId: F:Nebula.WorldRunner.MethodName.ClientHandleTick
-  id: ClientHandleTick
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: ClientHandleTick
-  nameWithType: WorldRunner.MethodName.ClientHandleTick
-  fullName: Nebula.WorldRunner.MethodName.ClientHandleTick
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'ClientHandleTick' method.
-  example: []
-  syntax:
-    content: public static readonly StringName ClientHandleTick
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly ClientHandleTick As StringName
+    content.vb: Public Shared ReadOnly ClientProcessTick As StringName
 - uid: Nebula.WorldRunner.MethodName.CheckStaticInitialization
   commentId: F:Nebula.WorldRunner.MethodName.CheckStaticInitialization
   id: CheckStaticInitialization
@@ -807,7 +613,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName.CheckStaticInitialization
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -830,7 +636,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName.SendInput
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -841,52 +647,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly SendInput As StringName
-- uid: Nebula.WorldRunner.MethodName.ReceiveInput
-  commentId: F:Nebula.WorldRunner.MethodName.ReceiveInput
-  id: ReceiveInput
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: ReceiveInput
-  nameWithType: WorldRunner.MethodName.ReceiveInput
-  fullName: Nebula.WorldRunner.MethodName.ReceiveInput
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'ReceiveInput' method.
-  example: []
-  syntax:
-    content: public static readonly StringName ReceiveInput
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly ReceiveInput As StringName
-- uid: Nebula.WorldRunner.MethodName.ReceiveNetFunction
-  commentId: F:Nebula.WorldRunner.MethodName.ReceiveNetFunction
-  id: ReceiveNetFunction
-  parent: Nebula.WorldRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: ReceiveNetFunction
-  nameWithType: WorldRunner.MethodName.ReceiveNetFunction
-  fullName: Nebula.WorldRunner.MethodName.ReceiveNetFunction
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'ReceiveNetFunction' method.
-  example: []
-  syntax:
-    content: public static readonly StringName ReceiveNetFunction
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly ReceiveNetFunction As StringName
 - uid: Nebula.WorldRunner.MethodName.#ctor
   commentId: M:Nebula.WorldRunner.MethodName.#ctor
   id: '#ctor'
@@ -899,7 +659,7 @@ items:
   fullName: Nebula.WorldRunner.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -2645,10 +2405,11 @@ references:
 - uid: Nebula.WorldRunner.MethodName.#ctor*
   commentId: Overload:Nebula.WorldRunner.MethodName.#ctor
   isExternal: true
-  href: Nebula.WorldRunner.MethodName.html#Nebula_WorldRunner_MethodName__ctor
+  href: Nebula.WorldRunner.MethodName.-ctor.html#Nebula_WorldRunner_MethodName__ctor
   name: MethodName
   nameWithType: WorldRunner.MethodName.MethodName
   fullName: Nebula.WorldRunner.MethodName.MethodName
   nameWithType.vb: WorldRunner.MethodName.New
   fullName.vb: Nebula.WorldRunner.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

@@ -1,0 +1,1703 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.NetWriter
+  commentId: T:Nebula.Serialization.NetWriter
+  id: NetWriter
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.NetWriter.WriteBool(Nebula.Serialization.NetBuffer,System.Boolean)
+  - Nebula.Serialization.NetWriter.WriteBuffer(Nebula.Serialization.NetBuffer,Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetWriter.WriteBufferWithLength(Nebula.Serialization.NetBuffer,Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetWriter.WriteByType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.Object)
+  - Nebula.Serialization.NetWriter.WriteByte(Nebula.Serialization.NetBuffer,System.Byte)
+  - Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer,System.Byte[])
+  - Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer,System.Byte[],System.Int32,System.Int32)
+  - Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer,System.ReadOnlySpan{System.Byte})
+  - Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer,System.Byte[])
+  - Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer,System.ReadOnlySpan{System.Byte})
+  - Nebula.Serialization.NetWriter.WriteDouble(Nebula.Serialization.NetBuffer,System.Double)
+  - Nebula.Serialization.NetWriter.WriteFloat(Nebula.Serialization.NetBuffer,System.Single)
+  - Nebula.Serialization.NetWriter.WriteHalf(Nebula.Serialization.NetBuffer,System.Half)
+  - Nebula.Serialization.NetWriter.WriteHalfFloat(Nebula.Serialization.NetBuffer,System.Single)
+  - Nebula.Serialization.NetWriter.WriteInt16(Nebula.Serialization.NetBuffer,System.Int16)
+  - Nebula.Serialization.NetWriter.WriteInt32(Nebula.Serialization.NetBuffer,System.Int32)
+  - Nebula.Serialization.NetWriter.WriteInt32Array(Nebula.Serialization.NetBuffer,System.Int32[])
+  - Nebula.Serialization.NetWriter.WriteInt64(Nebula.Serialization.NetBuffer,System.Int64)
+  - Nebula.Serialization.NetWriter.WriteInt64Array(Nebula.Serialization.NetBuffer,System.Int64[])
+  - Nebula.Serialization.NetWriter.WriteQuatSmallestThree(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  - Nebula.Serialization.NetWriter.WriteQuaternion(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  - Nebula.Serialization.NetWriter.WriteQuaternionFull(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  - Nebula.Serialization.NetWriter.WriteString(Nebula.Serialization.NetBuffer,System.String)
+  - Nebula.Serialization.NetWriter.WriteUInt16(Nebula.Serialization.NetBuffer,System.UInt16)
+  - Nebula.Serialization.NetWriter.WriteUInt32(Nebula.Serialization.NetBuffer,System.UInt32)
+  - Nebula.Serialization.NetWriter.WriteUInt64(Nebula.Serialization.NetBuffer,System.UInt64)
+  - Nebula.Serialization.NetWriter.WriteVector2(Nebula.Serialization.NetBuffer,Godot.Vector2)
+  - Nebula.Serialization.NetWriter.WriteVector2Full(Nebula.Serialization.NetBuffer,Godot.Vector2)
+  - Nebula.Serialization.NetWriter.WriteVector3(Nebula.Serialization.NetBuffer,Godot.Vector3)
+  - Nebula.Serialization.NetWriter.WriteVector3Half(Nebula.Serialization.NetBuffer,Godot.Vector3)
+  - Nebula.Serialization.NetWriter.WriteWithType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.Object)
+  langs:
+  - csharp
+  - vb
+  name: NetWriter
+  nameWithType: NetWriter
+  fullName: Nebula.Serialization.NetWriter
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    High-performance binary writer using BinaryPrimitives for zero-allocation serialization.
+
+    Replaces the old HLBytes.Pack* methods.
+  example: []
+  syntax:
+    content: public static class NetWriter
+    content.vb: Public Module NetWriter
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Serialization.NetWriter.WriteByte(Nebula.Serialization.NetBuffer,System.Byte)
+  commentId: M:Nebula.Serialization.NetWriter.WriteByte(Nebula.Serialization.NetBuffer,System.Byte)
+  id: WriteByte(Nebula.Serialization.NetBuffer,System.Byte)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteByte(NetBuffer, byte)
+  nameWithType: NetWriter.WriteByte(NetBuffer, byte)
+  fullName: Nebula.Serialization.NetWriter.WriteByte(Nebula.Serialization.NetBuffer, byte)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteByte(NetBuffer buffer, byte value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.Byte
+    content.vb: Public Shared Sub WriteByte(buffer As NetBuffer, value As Byte)
+  overload: Nebula.Serialization.NetWriter.WriteByte*
+  nameWithType.vb: NetWriter.WriteByte(NetBuffer, Byte)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteByte(Nebula.Serialization.NetBuffer, Byte)
+  name.vb: WriteByte(NetBuffer, Byte)
+- uid: Nebula.Serialization.NetWriter.WriteBool(Nebula.Serialization.NetBuffer,System.Boolean)
+  commentId: M:Nebula.Serialization.NetWriter.WriteBool(Nebula.Serialization.NetBuffer,System.Boolean)
+  id: WriteBool(Nebula.Serialization.NetBuffer,System.Boolean)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteBool(NetBuffer, bool)
+  nameWithType: NetWriter.WriteBool(NetBuffer, bool)
+  fullName: Nebula.Serialization.NetWriter.WriteBool(Nebula.Serialization.NetBuffer, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteBool(NetBuffer buffer, bool value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.Boolean
+    content.vb: Public Shared Sub WriteBool(buffer As NetBuffer, value As Boolean)
+  overload: Nebula.Serialization.NetWriter.WriteBool*
+  nameWithType.vb: NetWriter.WriteBool(NetBuffer, Boolean)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteBool(Nebula.Serialization.NetBuffer, Boolean)
+  name.vb: WriteBool(NetBuffer, Boolean)
+- uid: Nebula.Serialization.NetWriter.WriteInt16(Nebula.Serialization.NetBuffer,System.Int16)
+  commentId: M:Nebula.Serialization.NetWriter.WriteInt16(Nebula.Serialization.NetBuffer,System.Int16)
+  id: WriteInt16(Nebula.Serialization.NetBuffer,System.Int16)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteInt16(NetBuffer, short)
+  nameWithType: NetWriter.WriteInt16(NetBuffer, short)
+  fullName: Nebula.Serialization.NetWriter.WriteInt16(Nebula.Serialization.NetBuffer, short)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteInt16(NetBuffer buffer, short value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.Int16
+    content.vb: Public Shared Sub WriteInt16(buffer As NetBuffer, value As Short)
+  overload: Nebula.Serialization.NetWriter.WriteInt16*
+  nameWithType.vb: NetWriter.WriteInt16(NetBuffer, Short)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteInt16(Nebula.Serialization.NetBuffer, Short)
+  name.vb: WriteInt16(NetBuffer, Short)
+- uid: Nebula.Serialization.NetWriter.WriteUInt16(Nebula.Serialization.NetBuffer,System.UInt16)
+  commentId: M:Nebula.Serialization.NetWriter.WriteUInt16(Nebula.Serialization.NetBuffer,System.UInt16)
+  id: WriteUInt16(Nebula.Serialization.NetBuffer,System.UInt16)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteUInt16(NetBuffer, ushort)
+  nameWithType: NetWriter.WriteUInt16(NetBuffer, ushort)
+  fullName: Nebula.Serialization.NetWriter.WriteUInt16(Nebula.Serialization.NetBuffer, ushort)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteUInt16(NetBuffer buffer, ushort value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.UInt16
+    content.vb: Public Shared Sub WriteUInt16(buffer As NetBuffer, value As UShort)
+  overload: Nebula.Serialization.NetWriter.WriteUInt16*
+  nameWithType.vb: NetWriter.WriteUInt16(NetBuffer, UShort)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteUInt16(Nebula.Serialization.NetBuffer, UShort)
+  name.vb: WriteUInt16(NetBuffer, UShort)
+- uid: Nebula.Serialization.NetWriter.WriteInt32(Nebula.Serialization.NetBuffer,System.Int32)
+  commentId: M:Nebula.Serialization.NetWriter.WriteInt32(Nebula.Serialization.NetBuffer,System.Int32)
+  id: WriteInt32(Nebula.Serialization.NetBuffer,System.Int32)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteInt32(NetBuffer, int)
+  nameWithType: NetWriter.WriteInt32(NetBuffer, int)
+  fullName: Nebula.Serialization.NetWriter.WriteInt32(Nebula.Serialization.NetBuffer, int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteInt32(NetBuffer buffer, int value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.Int32
+    content.vb: Public Shared Sub WriteInt32(buffer As NetBuffer, value As Integer)
+  overload: Nebula.Serialization.NetWriter.WriteInt32*
+  nameWithType.vb: NetWriter.WriteInt32(NetBuffer, Integer)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteInt32(Nebula.Serialization.NetBuffer, Integer)
+  name.vb: WriteInt32(NetBuffer, Integer)
+- uid: Nebula.Serialization.NetWriter.WriteUInt32(Nebula.Serialization.NetBuffer,System.UInt32)
+  commentId: M:Nebula.Serialization.NetWriter.WriteUInt32(Nebula.Serialization.NetBuffer,System.UInt32)
+  id: WriteUInt32(Nebula.Serialization.NetBuffer,System.UInt32)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteUInt32(NetBuffer, uint)
+  nameWithType: NetWriter.WriteUInt32(NetBuffer, uint)
+  fullName: Nebula.Serialization.NetWriter.WriteUInt32(Nebula.Serialization.NetBuffer, uint)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteUInt32(NetBuffer buffer, uint value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.UInt32
+    content.vb: Public Shared Sub WriteUInt32(buffer As NetBuffer, value As UInteger)
+  overload: Nebula.Serialization.NetWriter.WriteUInt32*
+  nameWithType.vb: NetWriter.WriteUInt32(NetBuffer, UInteger)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteUInt32(Nebula.Serialization.NetBuffer, UInteger)
+  name.vb: WriteUInt32(NetBuffer, UInteger)
+- uid: Nebula.Serialization.NetWriter.WriteInt64(Nebula.Serialization.NetBuffer,System.Int64)
+  commentId: M:Nebula.Serialization.NetWriter.WriteInt64(Nebula.Serialization.NetBuffer,System.Int64)
+  id: WriteInt64(Nebula.Serialization.NetBuffer,System.Int64)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteInt64(NetBuffer, long)
+  nameWithType: NetWriter.WriteInt64(NetBuffer, long)
+  fullName: Nebula.Serialization.NetWriter.WriteInt64(Nebula.Serialization.NetBuffer, long)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteInt64(NetBuffer buffer, long value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.Int64
+    content.vb: Public Shared Sub WriteInt64(buffer As NetBuffer, value As Long)
+  overload: Nebula.Serialization.NetWriter.WriteInt64*
+  nameWithType.vb: NetWriter.WriteInt64(NetBuffer, Long)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteInt64(Nebula.Serialization.NetBuffer, Long)
+  name.vb: WriteInt64(NetBuffer, Long)
+- uid: Nebula.Serialization.NetWriter.WriteUInt64(Nebula.Serialization.NetBuffer,System.UInt64)
+  commentId: M:Nebula.Serialization.NetWriter.WriteUInt64(Nebula.Serialization.NetBuffer,System.UInt64)
+  id: WriteUInt64(Nebula.Serialization.NetBuffer,System.UInt64)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteUInt64(NetBuffer, ulong)
+  nameWithType: NetWriter.WriteUInt64(NetBuffer, ulong)
+  fullName: Nebula.Serialization.NetWriter.WriteUInt64(Nebula.Serialization.NetBuffer, ulong)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteUInt64(NetBuffer buffer, ulong value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.UInt64
+    content.vb: Public Shared Sub WriteUInt64(buffer As NetBuffer, value As ULong)
+  overload: Nebula.Serialization.NetWriter.WriteUInt64*
+  nameWithType.vb: NetWriter.WriteUInt64(NetBuffer, ULong)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteUInt64(Nebula.Serialization.NetBuffer, ULong)
+  name.vb: WriteUInt64(NetBuffer, ULong)
+- uid: Nebula.Serialization.NetWriter.WriteFloat(Nebula.Serialization.NetBuffer,System.Single)
+  commentId: M:Nebula.Serialization.NetWriter.WriteFloat(Nebula.Serialization.NetBuffer,System.Single)
+  id: WriteFloat(Nebula.Serialization.NetBuffer,System.Single)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteFloat(NetBuffer, float)
+  nameWithType: NetWriter.WriteFloat(NetBuffer, float)
+  fullName: Nebula.Serialization.NetWriter.WriteFloat(Nebula.Serialization.NetBuffer, float)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteFloat(NetBuffer buffer, float value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.Single
+    content.vb: Public Shared Sub WriteFloat(buffer As NetBuffer, value As Single)
+  overload: Nebula.Serialization.NetWriter.WriteFloat*
+  nameWithType.vb: NetWriter.WriteFloat(NetBuffer, Single)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteFloat(Nebula.Serialization.NetBuffer, Single)
+  name.vb: WriteFloat(NetBuffer, Single)
+- uid: Nebula.Serialization.NetWriter.WriteDouble(Nebula.Serialization.NetBuffer,System.Double)
+  commentId: M:Nebula.Serialization.NetWriter.WriteDouble(Nebula.Serialization.NetBuffer,System.Double)
+  id: WriteDouble(Nebula.Serialization.NetBuffer,System.Double)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteDouble(NetBuffer, double)
+  nameWithType: NetWriter.WriteDouble(NetBuffer, double)
+  fullName: Nebula.Serialization.NetWriter.WriteDouble(Nebula.Serialization.NetBuffer, double)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteDouble(NetBuffer buffer, double value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.Double
+    content.vb: Public Shared Sub WriteDouble(buffer As NetBuffer, value As Double)
+  overload: Nebula.Serialization.NetWriter.WriteDouble*
+  nameWithType.vb: NetWriter.WriteDouble(NetBuffer, Double)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteDouble(Nebula.Serialization.NetBuffer, Double)
+  name.vb: WriteDouble(NetBuffer, Double)
+- uid: Nebula.Serialization.NetWriter.WriteHalf(Nebula.Serialization.NetBuffer,System.Half)
+  commentId: M:Nebula.Serialization.NetWriter.WriteHalf(Nebula.Serialization.NetBuffer,System.Half)
+  id: WriteHalf(Nebula.Serialization.NetBuffer,System.Half)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteHalf(NetBuffer, Half)
+  nameWithType: NetWriter.WriteHalf(NetBuffer, Half)
+  fullName: Nebula.Serialization.NetWriter.WriteHalf(Nebula.Serialization.NetBuffer, System.Half)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteHalf(NetBuffer buffer, Half value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.Half
+    content.vb: Public Shared Sub WriteHalf(buffer As NetBuffer, value As Half)
+  overload: Nebula.Serialization.NetWriter.WriteHalf*
+- uid: Nebula.Serialization.NetWriter.WriteHalfFloat(Nebula.Serialization.NetBuffer,System.Single)
+  commentId: M:Nebula.Serialization.NetWriter.WriteHalfFloat(Nebula.Serialization.NetBuffer,System.Single)
+  id: WriteHalfFloat(Nebula.Serialization.NetBuffer,System.Single)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteHalfFloat(NetBuffer, float)
+  nameWithType: NetWriter.WriteHalfFloat(NetBuffer, float)
+  fullName: Nebula.Serialization.NetWriter.WriteHalfFloat(Nebula.Serialization.NetBuffer, float)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Writes a float value as a half-precision float (2 bytes).
+
+    Convenience method that performs the float-to-half conversion.
+  example: []
+  syntax:
+    content: public static void WriteHalfFloat(NetBuffer buffer, float value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.Single
+    content.vb: Public Shared Sub WriteHalfFloat(buffer As NetBuffer, value As Single)
+  overload: Nebula.Serialization.NetWriter.WriteHalfFloat*
+  nameWithType.vb: NetWriter.WriteHalfFloat(NetBuffer, Single)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteHalfFloat(Nebula.Serialization.NetBuffer, Single)
+  name.vb: WriteHalfFloat(NetBuffer, Single)
+- uid: Nebula.Serialization.NetWriter.WriteVector2(Nebula.Serialization.NetBuffer,Godot.Vector2)
+  commentId: M:Nebula.Serialization.NetWriter.WriteVector2(Nebula.Serialization.NetBuffer,Godot.Vector2)
+  id: WriteVector2(Nebula.Serialization.NetBuffer,Godot.Vector2)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteVector2(NetBuffer, Vector2)
+  nameWithType: NetWriter.WriteVector2(NetBuffer, Vector2)
+  fullName: Nebula.Serialization.NetWriter.WriteVector2(Nebula.Serialization.NetBuffer, Godot.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteVector2(NetBuffer buffer, Vector2 value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: Godot.Vector2
+    content.vb: Public Shared Sub WriteVector2(buffer As NetBuffer, value As Vector2)
+  overload: Nebula.Serialization.NetWriter.WriteVector2*
+- uid: Nebula.Serialization.NetWriter.WriteVector2Full(Nebula.Serialization.NetBuffer,Godot.Vector2)
+  commentId: M:Nebula.Serialization.NetWriter.WriteVector2Full(Nebula.Serialization.NetBuffer,Godot.Vector2)
+  id: WriteVector2Full(Nebula.Serialization.NetBuffer,Godot.Vector2)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteVector2Full(NetBuffer, Vector2)
+  nameWithType: NetWriter.WriteVector2Full(NetBuffer, Vector2)
+  fullName: Nebula.Serialization.NetWriter.WriteVector2Full(Nebula.Serialization.NetBuffer, Godot.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteVector2Full(NetBuffer buffer, Vector2 value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: Godot.Vector2
+    content.vb: Public Shared Sub WriteVector2Full(buffer As NetBuffer, value As Vector2)
+  overload: Nebula.Serialization.NetWriter.WriteVector2Full*
+- uid: Nebula.Serialization.NetWriter.WriteVector3(Nebula.Serialization.NetBuffer,Godot.Vector3)
+  commentId: M:Nebula.Serialization.NetWriter.WriteVector3(Nebula.Serialization.NetBuffer,Godot.Vector3)
+  id: WriteVector3(Nebula.Serialization.NetBuffer,Godot.Vector3)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteVector3(NetBuffer, Vector3)
+  nameWithType: NetWriter.WriteVector3(NetBuffer, Vector3)
+  fullName: Nebula.Serialization.NetWriter.WriteVector3(Nebula.Serialization.NetBuffer, Godot.Vector3)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteVector3(NetBuffer buffer, Vector3 value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: Godot.Vector3
+    content.vb: Public Shared Sub WriteVector3(buffer As NetBuffer, value As Vector3)
+  overload: Nebula.Serialization.NetWriter.WriteVector3*
+- uid: Nebula.Serialization.NetWriter.WriteVector3Half(Nebula.Serialization.NetBuffer,Godot.Vector3)
+  commentId: M:Nebula.Serialization.NetWriter.WriteVector3Half(Nebula.Serialization.NetBuffer,Godot.Vector3)
+  id: WriteVector3Half(Nebula.Serialization.NetBuffer,Godot.Vector3)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteVector3Half(NetBuffer, Vector3)
+  nameWithType: NetWriter.WriteVector3Half(NetBuffer, Vector3)
+  fullName: Nebula.Serialization.NetWriter.WriteVector3Half(Nebula.Serialization.NetBuffer, Godot.Vector3)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteVector3Half(NetBuffer buffer, Vector3 value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: Godot.Vector3
+    content.vb: Public Shared Sub WriteVector3Half(buffer As NetBuffer, value As Vector3)
+  overload: Nebula.Serialization.NetWriter.WriteVector3Half*
+- uid: Nebula.Serialization.NetWriter.WriteQuaternion(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  commentId: M:Nebula.Serialization.NetWriter.WriteQuaternion(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  id: WriteQuaternion(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteQuaternion(NetBuffer, Quaternion)
+  nameWithType: NetWriter.WriteQuaternion(NetBuffer, Quaternion)
+  fullName: Nebula.Serialization.NetWriter.WriteQuaternion(Nebula.Serialization.NetBuffer, Godot.Quaternion)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteQuaternion(NetBuffer buffer, Quaternion value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: Godot.Quaternion
+    content.vb: Public Shared Sub WriteQuaternion(buffer As NetBuffer, value As Quaternion)
+  overload: Nebula.Serialization.NetWriter.WriteQuaternion*
+- uid: Nebula.Serialization.NetWriter.WriteQuaternionFull(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  commentId: M:Nebula.Serialization.NetWriter.WriteQuaternionFull(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  id: WriteQuaternionFull(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteQuaternionFull(NetBuffer, Quaternion)
+  nameWithType: NetWriter.WriteQuaternionFull(NetBuffer, Quaternion)
+  fullName: Nebula.Serialization.NetWriter.WriteQuaternionFull(Nebula.Serialization.NetBuffer, Godot.Quaternion)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteQuaternionFull(NetBuffer buffer, Quaternion value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: Godot.Quaternion
+    content.vb: Public Shared Sub WriteQuaternionFull(buffer As NetBuffer, value As Quaternion)
+  overload: Nebula.Serialization.NetWriter.WriteQuaternionFull*
+- uid: Nebula.Serialization.NetWriter.WriteQuatSmallestThree(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  commentId: M:Nebula.Serialization.NetWriter.WriteQuatSmallestThree(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  id: WriteQuatSmallestThree(Nebula.Serialization.NetBuffer,Godot.Quaternion)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteQuatSmallestThree(NetBuffer, Quaternion)
+  nameWithType: NetWriter.WriteQuatSmallestThree(NetBuffer, Quaternion)
+  fullName: Nebula.Serialization.NetWriter.WriteQuatSmallestThree(Nebula.Serialization.NetBuffer, Godot.Quaternion)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Writes a quaternion using smallest-three compression (6 bytes total).
+
+    The largest component is omitted and reconstructed on read.
+
+    Format: [2 bits: largest index][3 x 14-bit fixed-point components]
+  example: []
+  syntax:
+    content: public static void WriteQuatSmallestThree(NetBuffer buffer, Quaternion q)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: q
+      type: Godot.Quaternion
+    content.vb: Public Shared Sub WriteQuatSmallestThree(buffer As NetBuffer, q As Quaternion)
+  overload: Nebula.Serialization.NetWriter.WriteQuatSmallestThree*
+- uid: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer,System.Byte[])
+  commentId: M:Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer,System.Byte[])
+  id: WriteBytes(Nebula.Serialization.NetBuffer,System.Byte[])
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteBytes(NetBuffer, byte[])
+  nameWithType: NetWriter.WriteBytes(NetBuffer, byte[])
+  fullName: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer, byte[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteBytes(NetBuffer buffer, byte[] data)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: data
+      type: System.Byte[]
+    content.vb: Public Shared Sub WriteBytes(buffer As NetBuffer, data As Byte())
+  overload: Nebula.Serialization.NetWriter.WriteBytes*
+  nameWithType.vb: NetWriter.WriteBytes(NetBuffer, Byte())
+  fullName.vb: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer, Byte())
+  name.vb: WriteBytes(NetBuffer, Byte())
+- uid: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer,System.Byte[],System.Int32,System.Int32)
+  commentId: M:Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer,System.Byte[],System.Int32,System.Int32)
+  id: WriteBytes(Nebula.Serialization.NetBuffer,System.Byte[],System.Int32,System.Int32)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteBytes(NetBuffer, byte[], int, int)
+  nameWithType: NetWriter.WriteBytes(NetBuffer, byte[], int, int)
+  fullName: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer, byte[], int, int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteBytes(NetBuffer buffer, byte[] data, int offset, int count)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: data
+      type: System.Byte[]
+    - id: offset
+      type: System.Int32
+    - id: count
+      type: System.Int32
+    content.vb: Public Shared Sub WriteBytes(buffer As NetBuffer, data As Byte(), offset As Integer, count As Integer)
+  overload: Nebula.Serialization.NetWriter.WriteBytes*
+  nameWithType.vb: NetWriter.WriteBytes(NetBuffer, Byte(), Integer, Integer)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer, Byte(), Integer, Integer)
+  name.vb: WriteBytes(NetBuffer, Byte(), Integer, Integer)
+- uid: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer,System.ReadOnlySpan{System.Byte})
+  commentId: M:Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer,System.ReadOnlySpan{System.Byte})
+  id: WriteBytes(Nebula.Serialization.NetBuffer,System.ReadOnlySpan{System.Byte})
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteBytes(NetBuffer, ReadOnlySpan<byte>)
+  nameWithType: NetWriter.WriteBytes(NetBuffer, ReadOnlySpan<byte>)
+  fullName: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer, System.ReadOnlySpan<byte>)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteBytes(NetBuffer buffer, ReadOnlySpan<byte> data)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: data
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public Shared Sub WriteBytes(buffer As NetBuffer, data As ReadOnlySpan(Of Byte))
+  overload: Nebula.Serialization.NetWriter.WriteBytes*
+  nameWithType.vb: NetWriter.WriteBytes(NetBuffer, ReadOnlySpan(Of Byte))
+  fullName.vb: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer, System.ReadOnlySpan(Of Byte))
+  name.vb: WriteBytes(NetBuffer, ReadOnlySpan(Of Byte))
+- uid: Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer,System.Byte[])
+  commentId: M:Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer,System.Byte[])
+  id: WriteBytesWithLength(Nebula.Serialization.NetBuffer,System.Byte[])
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteBytesWithLength(NetBuffer, byte[])
+  nameWithType: NetWriter.WriteBytesWithLength(NetBuffer, byte[])
+  fullName: Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer, byte[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteBytesWithLength(NetBuffer buffer, byte[] data)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: data
+      type: System.Byte[]
+    content.vb: Public Shared Sub WriteBytesWithLength(buffer As NetBuffer, data As Byte())
+  overload: Nebula.Serialization.NetWriter.WriteBytesWithLength*
+  nameWithType.vb: NetWriter.WriteBytesWithLength(NetBuffer, Byte())
+  fullName.vb: Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer, Byte())
+  name.vb: WriteBytesWithLength(NetBuffer, Byte())
+- uid: Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer,System.ReadOnlySpan{System.Byte})
+  commentId: M:Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer,System.ReadOnlySpan{System.Byte})
+  id: WriteBytesWithLength(Nebula.Serialization.NetBuffer,System.ReadOnlySpan{System.Byte})
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteBytesWithLength(NetBuffer, ReadOnlySpan<byte>)
+  nameWithType: NetWriter.WriteBytesWithLength(NetBuffer, ReadOnlySpan<byte>)
+  fullName: Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer, System.ReadOnlySpan<byte>)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteBytesWithLength(NetBuffer buffer, ReadOnlySpan<byte> data)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: data
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public Shared Sub WriteBytesWithLength(buffer As NetBuffer, data As ReadOnlySpan(Of Byte))
+  overload: Nebula.Serialization.NetWriter.WriteBytesWithLength*
+  nameWithType.vb: NetWriter.WriteBytesWithLength(NetBuffer, ReadOnlySpan(Of Byte))
+  fullName.vb: Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer, System.ReadOnlySpan(Of Byte))
+  name.vb: WriteBytesWithLength(NetBuffer, ReadOnlySpan(Of Byte))
+- uid: Nebula.Serialization.NetWriter.WriteString(Nebula.Serialization.NetBuffer,System.String)
+  commentId: M:Nebula.Serialization.NetWriter.WriteString(Nebula.Serialization.NetBuffer,System.String)
+  id: WriteString(Nebula.Serialization.NetBuffer,System.String)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteString(NetBuffer, string)
+  nameWithType: NetWriter.WriteString(NetBuffer, string)
+  fullName: Nebula.Serialization.NetWriter.WriteString(Nebula.Serialization.NetBuffer, string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteString(NetBuffer buffer, string value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: value
+      type: System.String
+    content.vb: Public Shared Sub WriteString(buffer As NetBuffer, value As String)
+  overload: Nebula.Serialization.NetWriter.WriteString*
+  nameWithType.vb: NetWriter.WriteString(NetBuffer, String)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteString(Nebula.Serialization.NetBuffer, String)
+  name.vb: WriteString(NetBuffer, String)
+- uid: Nebula.Serialization.NetWriter.WriteInt32Array(Nebula.Serialization.NetBuffer,System.Int32[])
+  commentId: M:Nebula.Serialization.NetWriter.WriteInt32Array(Nebula.Serialization.NetBuffer,System.Int32[])
+  id: WriteInt32Array(Nebula.Serialization.NetBuffer,System.Int32[])
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteInt32Array(NetBuffer, int[])
+  nameWithType: NetWriter.WriteInt32Array(NetBuffer, int[])
+  fullName: Nebula.Serialization.NetWriter.WriteInt32Array(Nebula.Serialization.NetBuffer, int[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteInt32Array(NetBuffer buffer, int[] values)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: values
+      type: System.Int32[]
+    content.vb: Public Shared Sub WriteInt32Array(buffer As NetBuffer, values As Integer())
+  overload: Nebula.Serialization.NetWriter.WriteInt32Array*
+  nameWithType.vb: NetWriter.WriteInt32Array(NetBuffer, Integer())
+  fullName.vb: Nebula.Serialization.NetWriter.WriteInt32Array(Nebula.Serialization.NetBuffer, Integer())
+  name.vb: WriteInt32Array(NetBuffer, Integer())
+- uid: Nebula.Serialization.NetWriter.WriteInt64Array(Nebula.Serialization.NetBuffer,System.Int64[])
+  commentId: M:Nebula.Serialization.NetWriter.WriteInt64Array(Nebula.Serialization.NetBuffer,System.Int64[])
+  id: WriteInt64Array(Nebula.Serialization.NetBuffer,System.Int64[])
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteInt64Array(NetBuffer, long[])
+  nameWithType: NetWriter.WriteInt64Array(NetBuffer, long[])
+  fullName: Nebula.Serialization.NetWriter.WriteInt64Array(Nebula.Serialization.NetBuffer, long[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static void WriteInt64Array(NetBuffer buffer, long[] values)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: values
+      type: System.Int64[]
+    content.vb: Public Shared Sub WriteInt64Array(buffer As NetBuffer, values As Long())
+  overload: Nebula.Serialization.NetWriter.WriteInt64Array*
+  nameWithType.vb: NetWriter.WriteInt64Array(NetBuffer, Long())
+  fullName.vb: Nebula.Serialization.NetWriter.WriteInt64Array(Nebula.Serialization.NetBuffer, Long())
+  name.vb: WriteInt64Array(NetBuffer, Long())
+- uid: Nebula.Serialization.NetWriter.WriteBuffer(Nebula.Serialization.NetBuffer,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetWriter.WriteBuffer(Nebula.Serialization.NetBuffer,Nebula.Serialization.NetBuffer)
+  id: WriteBuffer(Nebula.Serialization.NetBuffer,Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteBuffer(NetBuffer, NetBuffer)
+  nameWithType: NetWriter.WriteBuffer(NetBuffer, NetBuffer)
+  fullName: Nebula.Serialization.NetWriter.WriteBuffer(Nebula.Serialization.NetBuffer, Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Writes the contents of another NetBuffer to this buffer.
+  example: []
+  syntax:
+    content: public static void WriteBuffer(NetBuffer buffer, NetBuffer source)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: source
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Shared Sub WriteBuffer(buffer As NetBuffer, source As NetBuffer)
+  overload: Nebula.Serialization.NetWriter.WriteBuffer*
+- uid: Nebula.Serialization.NetWriter.WriteBufferWithLength(Nebula.Serialization.NetBuffer,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetWriter.WriteBufferWithLength(Nebula.Serialization.NetBuffer,Nebula.Serialization.NetBuffer)
+  id: WriteBufferWithLength(Nebula.Serialization.NetBuffer,Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteBufferWithLength(NetBuffer, NetBuffer)
+  nameWithType: NetWriter.WriteBufferWithLength(NetBuffer, NetBuffer)
+  fullName: Nebula.Serialization.NetWriter.WriteBufferWithLength(Nebula.Serialization.NetBuffer, Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Writes the contents of another NetBuffer with a length prefix.
+  example: []
+  syntax:
+    content: public static void WriteBufferWithLength(NetBuffer buffer, NetBuffer source)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: source
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Shared Sub WriteBufferWithLength(buffer As NetBuffer, source As NetBuffer)
+  overload: Nebula.Serialization.NetWriter.WriteBufferWithLength*
+- uid: Nebula.Serialization.NetWriter.WriteWithType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.Object)
+  commentId: M:Nebula.Serialization.NetWriter.WriteWithType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.Object)
+  id: WriteWithType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.Object)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteWithType(NetBuffer, SerialVariantType, object)
+  nameWithType: NetWriter.WriteWithType(NetBuffer, SerialVariantType, object)
+  fullName: Nebula.Serialization.NetWriter.WriteWithType(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Writes a type tag followed by the value. Used for polymorphic serialization
+
+    where the type isn't known at compile time.
+  example: []
+  syntax:
+    content: public static void WriteWithType(NetBuffer buffer, SerialVariantType type, object value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: type
+      type: Nebula.Serialization.SerialVariantType
+    - id: value
+      type: System.Object
+    content.vb: Public Shared Sub WriteWithType(buffer As NetBuffer, type As SerialVariantType, value As Object)
+  overload: Nebula.Serialization.NetWriter.WriteWithType*
+  nameWithType.vb: NetWriter.WriteWithType(NetBuffer, SerialVariantType, Object)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteWithType(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType, Object)
+  name.vb: WriteWithType(NetBuffer, SerialVariantType, Object)
+- uid: Nebula.Serialization.NetWriter.WriteByType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.Object)
+  commentId: M:Nebula.Serialization.NetWriter.WriteByType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.Object)
+  id: WriteByType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.Object)
+  parent: Nebula.Serialization.NetWriter
+  langs:
+  - csharp
+  - vb
+  name: WriteByType(NetBuffer, SerialVariantType, object)
+  nameWithType: NetWriter.WriteByType(NetBuffer, SerialVariantType, object)
+  fullName: Nebula.Serialization.NetWriter.WriteByType(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Writes a value based on its SerialVariantType without writing the type tag.
+  example: []
+  syntax:
+    content: public static void WriteByType(NetBuffer buffer, SerialVariantType type, object value)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: type
+      type: Nebula.Serialization.SerialVariantType
+    - id: value
+      type: System.Object
+    content.vb: Public Shared Sub WriteByType(buffer As NetBuffer, type As SerialVariantType, value As Object)
+  overload: Nebula.Serialization.NetWriter.WriteByType*
+  nameWithType.vb: NetWriter.WriteByType(NetBuffer, SerialVariantType, Object)
+  fullName.vb: Nebula.Serialization.NetWriter.WriteByType(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType, Object)
+  name.vb: WriteByType(NetBuffer, SerialVariantType, Object)
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Serialization.NetWriter.WriteByte*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteByte
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteByte.html#Nebula_Serialization_NetWriter_WriteByte_Nebula_Serialization_NetBuffer_System_Byte_
+  name: WriteByte
+  nameWithType: NetWriter.WriteByte
+  fullName: Nebula.Serialization.NetWriter.WriteByte
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: Nebula.Serialization.NetWriter.WriteBool*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteBool
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteBool.html#Nebula_Serialization_NetWriter_WriteBool_Nebula_Serialization_NetBuffer_System_Boolean_
+  name: WriteBool
+  nameWithType: NetWriter.WriteBool
+  fullName: Nebula.Serialization.NetWriter.WriteBool
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.Serialization.NetWriter.WriteInt16*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteInt16
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteInt16.html#Nebula_Serialization_NetWriter_WriteInt16_Nebula_Serialization_NetBuffer_System_Int16_
+  name: WriteInt16
+  nameWithType: NetWriter.WriteInt16
+  fullName: Nebula.Serialization.NetWriter.WriteInt16
+- uid: System.Int16
+  commentId: T:System.Int16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: short
+  nameWithType: short
+  fullName: short
+  nameWithType.vb: Short
+  fullName.vb: Short
+  name.vb: Short
+- uid: Nebula.Serialization.NetWriter.WriteUInt16*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteUInt16
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteUInt16.html#Nebula_Serialization_NetWriter_WriteUInt16_Nebula_Serialization_NetBuffer_System_UInt16_
+  name: WriteUInt16
+  nameWithType: NetWriter.WriteUInt16
+  fullName: Nebula.Serialization.NetWriter.WriteUInt16
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: Nebula.Serialization.NetWriter.WriteInt32*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteInt32
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteInt32.html#Nebula_Serialization_NetWriter_WriteInt32_Nebula_Serialization_NetBuffer_System_Int32_
+  name: WriteInt32
+  nameWithType: NetWriter.WriteInt32
+  fullName: Nebula.Serialization.NetWriter.WriteInt32
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.Serialization.NetWriter.WriteUInt32*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteUInt32
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteUInt32.html#Nebula_Serialization_NetWriter_WriteUInt32_Nebula_Serialization_NetBuffer_System_UInt32_
+  name: WriteUInt32
+  nameWithType: NetWriter.WriteUInt32
+  fullName: Nebula.Serialization.NetWriter.WriteUInt32
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: Nebula.Serialization.NetWriter.WriteInt64*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteInt64
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteInt64.html#Nebula_Serialization_NetWriter_WriteInt64_Nebula_Serialization_NetBuffer_System_Int64_
+  name: WriteInt64
+  nameWithType: NetWriter.WriteInt64
+  fullName: Nebula.Serialization.NetWriter.WriteInt64
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: Nebula.Serialization.NetWriter.WriteUInt64*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteUInt64
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteUInt64.html#Nebula_Serialization_NetWriter_WriteUInt64_Nebula_Serialization_NetBuffer_System_UInt64_
+  name: WriteUInt64
+  nameWithType: NetWriter.WriteUInt64
+  fullName: Nebula.Serialization.NetWriter.WriteUInt64
+- uid: System.UInt64
+  commentId: T:System.UInt64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint64
+  name: ulong
+  nameWithType: ulong
+  fullName: ulong
+  nameWithType.vb: ULong
+  fullName.vb: ULong
+  name.vb: ULong
+- uid: Nebula.Serialization.NetWriter.WriteFloat*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteFloat
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteFloat.html#Nebula_Serialization_NetWriter_WriteFloat_Nebula_Serialization_NetBuffer_System_Single_
+  name: WriteFloat
+  nameWithType: NetWriter.WriteFloat
+  fullName: Nebula.Serialization.NetWriter.WriteFloat
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: Nebula.Serialization.NetWriter.WriteDouble*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteDouble
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteDouble.html#Nebula_Serialization_NetWriter_WriteDouble_Nebula_Serialization_NetBuffer_System_Double_
+  name: WriteDouble
+  nameWithType: NetWriter.WriteDouble
+  fullName: Nebula.Serialization.NetWriter.WriteDouble
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: Nebula.Serialization.NetWriter.WriteHalf*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteHalf
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteHalf.html#Nebula_Serialization_NetWriter_WriteHalf_Nebula_Serialization_NetBuffer_System_Half_
+  name: WriteHalf
+  nameWithType: NetWriter.WriteHalf
+  fullName: Nebula.Serialization.NetWriter.WriteHalf
+- uid: System.Half
+  commentId: T:System.Half
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.half
+  name: Half
+  nameWithType: Half
+  fullName: System.Half
+- uid: Nebula.Serialization.NetWriter.WriteHalfFloat*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteHalfFloat
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteHalfFloat.html#Nebula_Serialization_NetWriter_WriteHalfFloat_Nebula_Serialization_NetBuffer_System_Single_
+  name: WriteHalfFloat
+  nameWithType: NetWriter.WriteHalfFloat
+  fullName: Nebula.Serialization.NetWriter.WriteHalfFloat
+- uid: Nebula.Serialization.NetWriter.WriteVector2*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteVector2
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteVector2.html#Nebula_Serialization_NetWriter_WriteVector2_Nebula_Serialization_NetBuffer_Godot_Vector2_
+  name: WriteVector2
+  nameWithType: NetWriter.WriteVector2
+  fullName: Nebula.Serialization.NetWriter.WriteVector2
+- uid: Godot.Vector2
+  commentId: T:Godot.Vector2
+  parent: Godot
+  isExternal: true
+  name: Vector2
+  nameWithType: Vector2
+  fullName: Godot.Vector2
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.Serialization.NetWriter.WriteVector2Full*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteVector2Full
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteVector2Full.html#Nebula_Serialization_NetWriter_WriteVector2Full_Nebula_Serialization_NetBuffer_Godot_Vector2_
+  name: WriteVector2Full
+  nameWithType: NetWriter.WriteVector2Full
+  fullName: Nebula.Serialization.NetWriter.WriteVector2Full
+- uid: Nebula.Serialization.NetWriter.WriteVector3*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteVector3
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteVector3.html#Nebula_Serialization_NetWriter_WriteVector3_Nebula_Serialization_NetBuffer_Godot_Vector3_
+  name: WriteVector3
+  nameWithType: NetWriter.WriteVector3
+  fullName: Nebula.Serialization.NetWriter.WriteVector3
+- uid: Godot.Vector3
+  commentId: T:Godot.Vector3
+  parent: Godot
+  isExternal: true
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Godot.Vector3
+- uid: Nebula.Serialization.NetWriter.WriteVector3Half*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteVector3Half
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteVector3Half.html#Nebula_Serialization_NetWriter_WriteVector3Half_Nebula_Serialization_NetBuffer_Godot_Vector3_
+  name: WriteVector3Half
+  nameWithType: NetWriter.WriteVector3Half
+  fullName: Nebula.Serialization.NetWriter.WriteVector3Half
+- uid: Nebula.Serialization.NetWriter.WriteQuaternion*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteQuaternion
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteQuaternion.html#Nebula_Serialization_NetWriter_WriteQuaternion_Nebula_Serialization_NetBuffer_Godot_Quaternion_
+  name: WriteQuaternion
+  nameWithType: NetWriter.WriteQuaternion
+  fullName: Nebula.Serialization.NetWriter.WriteQuaternion
+- uid: Godot.Quaternion
+  commentId: T:Godot.Quaternion
+  parent: Godot
+  isExternal: true
+  name: Quaternion
+  nameWithType: Quaternion
+  fullName: Godot.Quaternion
+- uid: Nebula.Serialization.NetWriter.WriteQuaternionFull*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteQuaternionFull
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteQuaternionFull.html#Nebula_Serialization_NetWriter_WriteQuaternionFull_Nebula_Serialization_NetBuffer_Godot_Quaternion_
+  name: WriteQuaternionFull
+  nameWithType: NetWriter.WriteQuaternionFull
+  fullName: Nebula.Serialization.NetWriter.WriteQuaternionFull
+- uid: Nebula.Serialization.NetWriter.WriteQuatSmallestThree*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteQuatSmallestThree
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteQuatSmallestThree.html#Nebula_Serialization_NetWriter_WriteQuatSmallestThree_Nebula_Serialization_NetBuffer_Godot_Quaternion_
+  name: WriteQuatSmallestThree
+  nameWithType: NetWriter.WriteQuatSmallestThree
+  fullName: Nebula.Serialization.NetWriter.WriteQuatSmallestThree
+- uid: Nebula.Serialization.NetWriter.WriteBytes*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteBytes
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteBytes.html#Nebula_Serialization_NetWriter_WriteBytes_Nebula_Serialization_NetBuffer_System_Byte___
+  name: WriteBytes
+  nameWithType: NetWriter.WriteBytes
+  fullName: Nebula.Serialization.NetWriter.WriteBytes
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: System.ReadOnlySpan{System.Byte}
+  commentId: T:System.ReadOnlySpan{System.Byte}
+  parent: System
+  definition: System.ReadOnlySpan`1
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<byte>
+  nameWithType: ReadOnlySpan<byte>
+  fullName: System.ReadOnlySpan<byte>
+  nameWithType.vb: ReadOnlySpan(Of Byte)
+  fullName.vb: System.ReadOnlySpan(Of Byte)
+  name.vb: ReadOnlySpan(Of Byte)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.ReadOnlySpan`1
+  commentId: T:System.ReadOnlySpan`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<T>
+  nameWithType: ReadOnlySpan<T>
+  fullName: System.ReadOnlySpan<T>
+  nameWithType.vb: ReadOnlySpan(Of T)
+  fullName.vb: System.ReadOnlySpan(Of T)
+  name.vb: ReadOnlySpan(Of T)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.NetWriter.WriteBytesWithLength*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteBytesWithLength
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteBytesWithLength.html#Nebula_Serialization_NetWriter_WriteBytesWithLength_Nebula_Serialization_NetBuffer_System_Byte___
+  name: WriteBytesWithLength
+  nameWithType: NetWriter.WriteBytesWithLength
+  fullName: Nebula.Serialization.NetWriter.WriteBytesWithLength
+- uid: Nebula.Serialization.NetWriter.WriteString*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteString
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteString.html#Nebula_Serialization_NetWriter_WriteString_Nebula_Serialization_NetBuffer_System_String_
+  name: WriteString
+  nameWithType: NetWriter.WriteString
+  fullName: Nebula.Serialization.NetWriter.WriteString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.Serialization.NetWriter.WriteInt32Array*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteInt32Array
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteInt32Array.html#Nebula_Serialization_NetWriter_WriteInt32Array_Nebula_Serialization_NetBuffer_System_Int32___
+  name: WriteInt32Array
+  nameWithType: NetWriter.WriteInt32Array
+  fullName: Nebula.Serialization.NetWriter.WriteInt32Array
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.NetWriter.WriteInt64Array*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteInt64Array
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteInt64Array.html#Nebula_Serialization_NetWriter_WriteInt64Array_Nebula_Serialization_NetBuffer_System_Int64___
+  name: WriteInt64Array
+  nameWithType: NetWriter.WriteInt64Array
+  fullName: Nebula.Serialization.NetWriter.WriteInt64Array
+- uid: System.Int64[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long[]
+  nameWithType: long[]
+  fullName: long[]
+  nameWithType.vb: Long()
+  fullName.vb: Long()
+  name.vb: Long()
+  spec.csharp:
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.NetWriter.WriteBuffer*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteBuffer
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteBuffer.html#Nebula_Serialization_NetWriter_WriteBuffer_Nebula_Serialization_NetBuffer_Nebula_Serialization_NetBuffer_
+  name: WriteBuffer
+  nameWithType: NetWriter.WriteBuffer
+  fullName: Nebula.Serialization.NetWriter.WriteBuffer
+- uid: Nebula.Serialization.NetWriter.WriteBufferWithLength*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteBufferWithLength
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteBufferWithLength.html#Nebula_Serialization_NetWriter_WriteBufferWithLength_Nebula_Serialization_NetBuffer_Nebula_Serialization_NetBuffer_
+  name: WriteBufferWithLength
+  nameWithType: NetWriter.WriteBufferWithLength
+  fullName: Nebula.Serialization.NetWriter.WriteBufferWithLength
+- uid: Nebula.Serialization.NetWriter.WriteWithType*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteWithType
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteWithType.html#Nebula_Serialization_NetWriter_WriteWithType_Nebula_Serialization_NetBuffer_Nebula_Serialization_SerialVariantType_System_Object_
+  name: WriteWithType
+  nameWithType: NetWriter.WriteWithType
+  fullName: Nebula.Serialization.NetWriter.WriteWithType
+- uid: Nebula.Serialization.SerialVariantType
+  commentId: T:Nebula.Serialization.SerialVariantType
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.SerialVariantType.html
+  name: SerialVariantType
+  nameWithType: SerialVariantType
+  fullName: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.NetWriter.WriteByType*
+  commentId: Overload:Nebula.Serialization.NetWriter.WriteByType
+  isExternal: true
+  href: Nebula.Serialization.NetWriter.WriteByType.html#Nebula_Serialization_NetWriter_WriteByType_Nebula_Serialization_NetBuffer_Nebula_Serialization_SerialVariantType_System_Object_
+  name: WriteByType
+  nameWithType: NetWriter.WriteByType
+  fullName: Nebula.Serialization.NetWriter.WriteByType
+memberLayout: SeparatePages

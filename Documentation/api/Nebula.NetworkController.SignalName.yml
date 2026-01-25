@@ -6,8 +6,6 @@ items:
   parent: Nebula
   children:
   - Nebula.NetworkController.SignalName.#ctor
-  - Nebula.NetworkController.SignalName.InterestChanged
-  - Nebula.NetworkController.SignalName.NetPropertyChanged
   langs:
   - csharp
   - vb
@@ -16,7 +14,7 @@ items:
   fullName: Nebula.NetworkController.SignalName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -39,52 +37,6 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
-- uid: Nebula.NetworkController.SignalName.InterestChanged
-  commentId: F:Nebula.NetworkController.SignalName.InterestChanged
-  id: InterestChanged
-  parent: Nebula.NetworkController.SignalName
-  langs:
-  - csharp
-  - vb
-  name: InterestChanged
-  nameWithType: NetworkController.SignalName.InterestChanged
-  fullName: Nebula.NetworkController.SignalName.InterestChanged
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'InterestChanged' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName InterestChanged
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly InterestChanged As StringName
-- uid: Nebula.NetworkController.SignalName.NetPropertyChanged
-  commentId: F:Nebula.NetworkController.SignalName.NetPropertyChanged
-  id: NetPropertyChanged
-  parent: Nebula.NetworkController.SignalName
-  langs:
-  - csharp
-  - vb
-  name: NetPropertyChanged
-  nameWithType: NetworkController.SignalName.NetPropertyChanged
-  fullName: Nebula.NetworkController.SignalName.NetPropertyChanged
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'NetPropertyChanged' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName NetPropertyChanged
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly NetPropertyChanged As StringName
 - uid: Nebula.NetworkController.SignalName.#ctor
   commentId: M:Nebula.NetworkController.SignalName.#ctor
   id: '#ctor'
@@ -97,7 +49,7 @@ items:
   fullName: Nebula.NetworkController.SignalName.SignalName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -419,20 +371,14 @@ references:
   name: Godot
   nameWithType: Godot
   fullName: Godot
-- uid: Godot.StringName
-  commentId: T:Godot.StringName
-  parent: Godot
-  isExternal: true
-  name: StringName
-  nameWithType: StringName
-  fullName: Godot.StringName
 - uid: Nebula.NetworkController.SignalName.#ctor*
   commentId: Overload:Nebula.NetworkController.SignalName.#ctor
   isExternal: true
-  href: Nebula.NetworkController.SignalName.html#Nebula_NetworkController_SignalName__ctor
+  href: Nebula.NetworkController.SignalName.-ctor.html#Nebula_NetworkController_SignalName__ctor
   name: SignalName
   nameWithType: NetworkController.SignalName.SignalName
   fullName: Nebula.NetworkController.SignalName.SignalName
   nameWithType.vb: NetworkController.SignalName.New
   fullName.vb: Nebula.NetworkController.SignalName.New
   name.vb: New
+memberLayout: SeparatePages

@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetworkVisibility
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -408,7 +408,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetworkVisibility.nodes
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -443,7 +443,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetworkVisibility._EnterTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetworkVisibility/NetworkVisibility.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetworkVisibility/NetworkVisibility.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -465,7 +465,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetworkVisibility.NetworkVisibility()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetworkVisibility/NetworkVisibility.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetworkVisibility/NetworkVisibility.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -8475,17 +8475,18 @@ references:
 - uid: Nebula.Utility.Nodes.NetworkVisibility._EnterTree*
   commentId: Overload:Nebula.Utility.Nodes.NetworkVisibility._EnterTree
   isExternal: true
-  href: Nebula.Utility.Nodes.NetworkVisibility.html#Nebula_Utility_Nodes_NetworkVisibility__EnterTree
+  href: Nebula.Utility.Nodes.NetworkVisibility._EnterTree.html#Nebula_Utility_Nodes_NetworkVisibility__EnterTree
   name: _EnterTree
   nameWithType: NetworkVisibility._EnterTree
   fullName: Nebula.Utility.Nodes.NetworkVisibility._EnterTree
 - uid: Nebula.Utility.Nodes.NetworkVisibility.#ctor*
   commentId: Overload:Nebula.Utility.Nodes.NetworkVisibility.#ctor
   isExternal: true
-  href: Nebula.Utility.Nodes.NetworkVisibility.html#Nebula_Utility_Nodes_NetworkVisibility__ctor
+  href: Nebula.Utility.Nodes.NetworkVisibility.-ctor.html#Nebula_Utility_Nodes_NetworkVisibility__ctor
   name: NetworkVisibility
   nameWithType: NetworkVisibility.NetworkVisibility
   fullName: Nebula.Utility.Nodes.NetworkVisibility.NetworkVisibility
   nameWithType.vb: NetworkVisibility.New
   fullName.vb: Nebula.Utility.Nodes.NetworkVisibility.New
   name.vb: New
+memberLayout: SeparatePages

@@ -14,31 +14,20 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer.SignalName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.SpawnSerializer_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.SpawnSerializer_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
   summary: Cached StringNames for the signals contained in this class, for fast lookup.
   example: []
   syntax:
-    content: 'public class SpawnSerializer.SignalName : Node.SignalName'
-    content.vb: Public Class SpawnSerializer.SignalName Inherits Node.SignalName
+    content: 'public class SpawnSerializer.SignalName : RefCounted.SignalName'
+    content.vb: Public Class SpawnSerializer.SignalName Inherits RefCounted.SignalName
   inheritance:
   - System.Object
   - Godot.GodotObject.SignalName
-  - Godot.Node.SignalName
+  - Godot.RefCounted.SignalName
   inheritedMembers:
-  - Godot.Node.SignalName.Ready
-  - Godot.Node.SignalName.Renamed
-  - Godot.Node.SignalName.TreeEntered
-  - Godot.Node.SignalName.TreeExiting
-  - Godot.Node.SignalName.TreeExited
-  - Godot.Node.SignalName.ChildEnteredTree
-  - Godot.Node.SignalName.ChildExitingTree
-  - Godot.Node.SignalName.ChildOrderChanged
-  - Godot.Node.SignalName.ReplacingBy
-  - Godot.Node.SignalName.EditorDescriptionChanged
-  - Godot.Node.SignalName.EditorStateChanged
   - Godot.GodotObject.SignalName.ScriptChanged
   - Godot.GodotObject.SignalName.PropertyListChanged
   - System.Object.GetType
@@ -60,7 +49,7 @@ items:
   fullName: Nebula.Serialization.Serializers.SpawnSerializer.SignalName.SignalName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.SpawnSerializer_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.SpawnSerializer_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -143,106 +132,29 @@ references:
   - uid: Godot.GodotObject.SignalName
     name: SignalName
     isExternal: true
-- uid: Godot.Node.SignalName
-  commentId: T:Godot.Node.SignalName
+- uid: Godot.RefCounted.SignalName
+  commentId: T:Godot.RefCounted.SignalName
   parent: Godot
   isExternal: true
-  name: Node.SignalName
-  nameWithType: Node.SignalName
-  fullName: Godot.Node.SignalName
+  name: RefCounted.SignalName
+  nameWithType: RefCounted.SignalName
+  fullName: Godot.RefCounted.SignalName
   spec.csharp:
-  - uid: Godot.Node
-    name: Node
+  - uid: Godot.RefCounted
+    name: RefCounted
     isExternal: true
   - name: .
-  - uid: Godot.Node.SignalName
+  - uid: Godot.RefCounted.SignalName
     name: SignalName
     isExternal: true
   spec.vb:
-  - uid: Godot.Node
-    name: Node
+  - uid: Godot.RefCounted
+    name: RefCounted
     isExternal: true
   - name: .
-  - uid: Godot.Node.SignalName
+  - uid: Godot.RefCounted.SignalName
     name: SignalName
     isExternal: true
-- uid: Godot.Node.SignalName.Ready
-  commentId: F:Godot.Node.SignalName.Ready
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: Ready
-  nameWithType: Node.SignalName.Ready
-  fullName: Godot.Node.SignalName.Ready
-- uid: Godot.Node.SignalName.Renamed
-  commentId: F:Godot.Node.SignalName.Renamed
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: Renamed
-  nameWithType: Node.SignalName.Renamed
-  fullName: Godot.Node.SignalName.Renamed
-- uid: Godot.Node.SignalName.TreeEntered
-  commentId: F:Godot.Node.SignalName.TreeEntered
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: TreeEntered
-  nameWithType: Node.SignalName.TreeEntered
-  fullName: Godot.Node.SignalName.TreeEntered
-- uid: Godot.Node.SignalName.TreeExiting
-  commentId: F:Godot.Node.SignalName.TreeExiting
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: TreeExiting
-  nameWithType: Node.SignalName.TreeExiting
-  fullName: Godot.Node.SignalName.TreeExiting
-- uid: Godot.Node.SignalName.TreeExited
-  commentId: F:Godot.Node.SignalName.TreeExited
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: TreeExited
-  nameWithType: Node.SignalName.TreeExited
-  fullName: Godot.Node.SignalName.TreeExited
-- uid: Godot.Node.SignalName.ChildEnteredTree
-  commentId: F:Godot.Node.SignalName.ChildEnteredTree
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: ChildEnteredTree
-  nameWithType: Node.SignalName.ChildEnteredTree
-  fullName: Godot.Node.SignalName.ChildEnteredTree
-- uid: Godot.Node.SignalName.ChildExitingTree
-  commentId: F:Godot.Node.SignalName.ChildExitingTree
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: ChildExitingTree
-  nameWithType: Node.SignalName.ChildExitingTree
-  fullName: Godot.Node.SignalName.ChildExitingTree
-- uid: Godot.Node.SignalName.ChildOrderChanged
-  commentId: F:Godot.Node.SignalName.ChildOrderChanged
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: ChildOrderChanged
-  nameWithType: Node.SignalName.ChildOrderChanged
-  fullName: Godot.Node.SignalName.ChildOrderChanged
-- uid: Godot.Node.SignalName.ReplacingBy
-  commentId: F:Godot.Node.SignalName.ReplacingBy
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: ReplacingBy
-  nameWithType: Node.SignalName.ReplacingBy
-  fullName: Godot.Node.SignalName.ReplacingBy
-- uid: Godot.Node.SignalName.EditorDescriptionChanged
-  commentId: F:Godot.Node.SignalName.EditorDescriptionChanged
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: EditorDescriptionChanged
-  nameWithType: Node.SignalName.EditorDescriptionChanged
-  fullName: Godot.Node.SignalName.EditorDescriptionChanged
-- uid: Godot.Node.SignalName.EditorStateChanged
-  commentId: F:Godot.Node.SignalName.EditorStateChanged
-  parent: Godot.Node.SignalName
-  isExternal: true
-  name: EditorStateChanged
-  nameWithType: Node.SignalName.EditorStateChanged
-  fullName: Godot.Node.SignalName.EditorStateChanged
 - uid: Godot.GodotObject.SignalName.ScriptChanged
   commentId: F:Godot.GodotObject.SignalName.ScriptChanged
   parent: Godot.GodotObject.SignalName
@@ -492,10 +404,11 @@ references:
 - uid: Nebula.Serialization.Serializers.SpawnSerializer.SignalName.#ctor*
   commentId: Overload:Nebula.Serialization.Serializers.SpawnSerializer.SignalName.#ctor
   isExternal: true
-  href: Nebula.Serialization.Serializers.SpawnSerializer.SignalName.html#Nebula_Serialization_Serializers_SpawnSerializer_SignalName__ctor
+  href: Nebula.Serialization.Serializers.SpawnSerializer.SignalName.-ctor.html#Nebula_Serialization_Serializers_SpawnSerializer_SignalName__ctor
   name: SignalName
   nameWithType: SpawnSerializer.SignalName.SignalName
   fullName: Nebula.Serialization.Serializers.SpawnSerializer.SignalName.SignalName
   nameWithType.vb: SpawnSerializer.SignalName.New
   fullName.vb: Nebula.Serialization.Serializers.SpawnSerializer.SignalName.New
   name.vb: New
+memberLayout: SeparatePages

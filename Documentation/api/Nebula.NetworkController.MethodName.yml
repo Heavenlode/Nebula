@@ -6,19 +6,27 @@ items:
   parent: Nebula
   children:
   - Nebula.NetworkController.MethodName.#ctor
+  - Nebula.NetworkController.MethodName.ClearDirtyMask
+  - Nebula.NetworkController.MethodName.ClearInputChanged
   - Nebula.NetworkController.MethodName.Despawn
-  - Nebula.NetworkController.MethodName.GetInput
-  - Nebula.NetworkController.MethodName.GetNetworkInput
+  - Nebula.NetworkController.MethodName.DiscoverDynamicChildrenRecursive
+  - Nebula.NetworkController.MethodName.FireInterestChanged
+  - Nebula.NetworkController.MethodName.GetBufferedInput
+  - Nebula.NetworkController.MethodName.InitializeDynamicChildren
+  - Nebula.NetworkController.MethodName.InitializeStaticChildren
   - Nebula.NetworkController.MethodName.IsNetScene
   - Nebula.NetworkController.MethodName.NodePathFromNetScene
-  - Nebula.NetworkController.MethodName.PrepareSpawn
-  - Nebula.NetworkController.MethodName.SetInputAuthority
-  - Nebula.NetworkController.MethodName.SetNetworkInput
-  - Nebula.NetworkController.MethodName.SetPeerInterest
+  - Nebula.NetworkController.MethodName.QueueNodeForDeletion
+  - Nebula.NetworkController.MethodName.Reconcile
+  - Nebula.NetworkController.MethodName.RestoreToPredictedState
+  - Nebula.NetworkController.MethodName.Setup
+  - Nebula.NetworkController.MethodName.StoreConfirmedState
+  - Nebula.NetworkController.MethodName.StorePredictedState
   - Nebula.NetworkController.MethodName._NetworkPrepare
   - Nebula.NetworkController.MethodName._NetworkProcess
   - Nebula.NetworkController.MethodName._Notification
   - Nebula.NetworkController.MethodName._WorldReady
+  - Nebula.NetworkController.MethodName.handleDespawn
   langs:
   - csharp
   - vb
@@ -27,7 +35,7 @@ items:
   fullName: Nebula.NetworkController.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -110,6 +118,29 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
+- uid: Nebula.NetworkController.MethodName.QueueNodeForDeletion
+  commentId: F:Nebula.NetworkController.MethodName.QueueNodeForDeletion
+  id: QueueNodeForDeletion
+  parent: Nebula.NetworkController.MethodName
+  langs:
+  - csharp
+  - vb
+  name: QueueNodeForDeletion
+  nameWithType: NetworkController.MethodName.QueueNodeForDeletion
+  fullName: Nebula.NetworkController.MethodName.QueueNodeForDeletion
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'QueueNodeForDeletion' method.
+  example: []
+  syntax:
+    content: public static readonly StringName QueueNodeForDeletion
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly QueueNodeForDeletion As StringName
 - uid: Nebula.NetworkController.MethodName.IsNetScene
   commentId: F:Nebula.NetworkController.MethodName.IsNetScene
   id: IsNetScene
@@ -122,7 +153,7 @@ items:
   fullName: Nebula.NetworkController.MethodName.IsNetScene
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -133,29 +164,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly IsNetScene As StringName
-- uid: Nebula.NetworkController.MethodName.SetPeerInterest
-  commentId: F:Nebula.NetworkController.MethodName.SetPeerInterest
-  id: SetPeerInterest
+- uid: Nebula.NetworkController.MethodName.FireInterestChanged
+  commentId: F:Nebula.NetworkController.MethodName.FireInterestChanged
+  id: FireInterestChanged
   parent: Nebula.NetworkController.MethodName
   langs:
   - csharp
   - vb
-  name: SetPeerInterest
-  nameWithType: NetworkController.MethodName.SetPeerInterest
-  fullName: Nebula.NetworkController.MethodName.SetPeerInterest
+  name: FireInterestChanged
+  nameWithType: NetworkController.MethodName.FireInterestChanged
+  fullName: Nebula.NetworkController.MethodName.FireInterestChanged
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'SetPeerInterest' method.
+  summary: Cached name for the 'FireInterestChanged' method.
   example: []
   syntax:
-    content: public static readonly StringName SetPeerInterest
+    content: public static readonly StringName FireInterestChanged
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly SetPeerInterest As StringName
+    content.vb: Public Shared ReadOnly FireInterestChanged As StringName
 - uid: Nebula.NetworkController.MethodName._Notification
   commentId: F:Nebula.NetworkController.MethodName._Notification
   id: _Notification
@@ -168,7 +199,7 @@ items:
   fullName: Nebula.NetworkController.MethodName._Notification
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -179,98 +210,259 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _Notification As StringName
-- uid: Nebula.NetworkController.MethodName.SetNetworkInput
-  commentId: F:Nebula.NetworkController.MethodName.SetNetworkInput
-  id: SetNetworkInput
+- uid: Nebula.NetworkController.MethodName.Setup
+  commentId: F:Nebula.NetworkController.MethodName.Setup
+  id: Setup
   parent: Nebula.NetworkController.MethodName
   langs:
   - csharp
   - vb
-  name: SetNetworkInput
-  nameWithType: NetworkController.MethodName.SetNetworkInput
-  fullName: Nebula.NetworkController.MethodName.SetNetworkInput
+  name: Setup
+  nameWithType: NetworkController.MethodName.Setup
+  fullName: Nebula.NetworkController.MethodName.Setup
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'SetNetworkInput' method.
+  summary: Cached name for the 'Setup' method.
   example: []
   syntax:
-    content: public static readonly StringName SetNetworkInput
+    content: public static readonly StringName Setup
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly SetNetworkInput As StringName
-- uid: Nebula.NetworkController.MethodName.GetNetworkInput
-  commentId: F:Nebula.NetworkController.MethodName.GetNetworkInput
-  id: GetNetworkInput
+    content.vb: Public Shared ReadOnly Setup As StringName
+- uid: Nebula.NetworkController.MethodName.InitializeDynamicChildren
+  commentId: F:Nebula.NetworkController.MethodName.InitializeDynamicChildren
+  id: InitializeDynamicChildren
   parent: Nebula.NetworkController.MethodName
   langs:
   - csharp
   - vb
-  name: GetNetworkInput
-  nameWithType: NetworkController.MethodName.GetNetworkInput
-  fullName: Nebula.NetworkController.MethodName.GetNetworkInput
+  name: InitializeDynamicChildren
+  nameWithType: NetworkController.MethodName.InitializeDynamicChildren
+  fullName: Nebula.NetworkController.MethodName.InitializeDynamicChildren
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'GetNetworkInput' method.
+  summary: Cached name for the 'InitializeDynamicChildren' method.
   example: []
   syntax:
-    content: public static readonly StringName GetNetworkInput
+    content: public static readonly StringName InitializeDynamicChildren
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly GetNetworkInput As StringName
-- uid: Nebula.NetworkController.MethodName.SetInputAuthority
-  commentId: F:Nebula.NetworkController.MethodName.SetInputAuthority
-  id: SetInputAuthority
+    content.vb: Public Shared ReadOnly InitializeDynamicChildren As StringName
+- uid: Nebula.NetworkController.MethodName.DiscoverDynamicChildrenRecursive
+  commentId: F:Nebula.NetworkController.MethodName.DiscoverDynamicChildrenRecursive
+  id: DiscoverDynamicChildrenRecursive
   parent: Nebula.NetworkController.MethodName
   langs:
   - csharp
   - vb
-  name: SetInputAuthority
-  nameWithType: NetworkController.MethodName.SetInputAuthority
-  fullName: Nebula.NetworkController.MethodName.SetInputAuthority
+  name: DiscoverDynamicChildrenRecursive
+  nameWithType: NetworkController.MethodName.DiscoverDynamicChildrenRecursive
+  fullName: Nebula.NetworkController.MethodName.DiscoverDynamicChildrenRecursive
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'SetInputAuthority' method.
+  summary: Cached name for the 'DiscoverDynamicChildrenRecursive' method.
   example: []
   syntax:
-    content: public static readonly StringName SetInputAuthority
+    content: public static readonly StringName DiscoverDynamicChildrenRecursive
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly SetInputAuthority As StringName
-- uid: Nebula.NetworkController.MethodName.Despawn
-  commentId: F:Nebula.NetworkController.MethodName.Despawn
-  id: Despawn
+    content.vb: Public Shared ReadOnly DiscoverDynamicChildrenRecursive As StringName
+- uid: Nebula.NetworkController.MethodName.InitializeStaticChildren
+  commentId: F:Nebula.NetworkController.MethodName.InitializeStaticChildren
+  id: InitializeStaticChildren
   parent: Nebula.NetworkController.MethodName
   langs:
   - csharp
   - vb
-  name: Despawn
-  nameWithType: NetworkController.MethodName.Despawn
-  fullName: Nebula.NetworkController.MethodName.Despawn
+  name: InitializeStaticChildren
+  nameWithType: NetworkController.MethodName.InitializeStaticChildren
+  fullName: Nebula.NetworkController.MethodName.InitializeStaticChildren
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'Despawn' method.
+  summary: Cached name for the 'InitializeStaticChildren' method.
   example: []
   syntax:
-    content: public static readonly StringName Despawn
+    content: public static readonly StringName InitializeStaticChildren
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly Despawn As StringName
+    content.vb: Public Shared ReadOnly InitializeStaticChildren As StringName
+- uid: Nebula.NetworkController.MethodName.ClearDirtyMask
+  commentId: F:Nebula.NetworkController.MethodName.ClearDirtyMask
+  id: ClearDirtyMask
+  parent: Nebula.NetworkController.MethodName
+  langs:
+  - csharp
+  - vb
+  name: ClearDirtyMask
+  nameWithType: NetworkController.MethodName.ClearDirtyMask
+  fullName: Nebula.NetworkController.MethodName.ClearDirtyMask
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'ClearDirtyMask' method.
+  example: []
+  syntax:
+    content: public static readonly StringName ClearDirtyMask
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly ClearDirtyMask As StringName
+- uid: Nebula.NetworkController.MethodName.ClearInputChanged
+  commentId: F:Nebula.NetworkController.MethodName.ClearInputChanged
+  id: ClearInputChanged
+  parent: Nebula.NetworkController.MethodName
+  langs:
+  - csharp
+  - vb
+  name: ClearInputChanged
+  nameWithType: NetworkController.MethodName.ClearInputChanged
+  fullName: Nebula.NetworkController.MethodName.ClearInputChanged
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'ClearInputChanged' method.
+  example: []
+  syntax:
+    content: public static readonly StringName ClearInputChanged
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly ClearInputChanged As StringName
+- uid: Nebula.NetworkController.MethodName.GetBufferedInput
+  commentId: F:Nebula.NetworkController.MethodName.GetBufferedInput
+  id: GetBufferedInput
+  parent: Nebula.NetworkController.MethodName
+  langs:
+  - csharp
+  - vb
+  name: GetBufferedInput
+  nameWithType: NetworkController.MethodName.GetBufferedInput
+  fullName: Nebula.NetworkController.MethodName.GetBufferedInput
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'GetBufferedInput' method.
+  example: []
+  syntax:
+    content: public static readonly StringName GetBufferedInput
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly GetBufferedInput As StringName
+- uid: Nebula.NetworkController.MethodName.StorePredictedState
+  commentId: F:Nebula.NetworkController.MethodName.StorePredictedState
+  id: StorePredictedState
+  parent: Nebula.NetworkController.MethodName
+  langs:
+  - csharp
+  - vb
+  name: StorePredictedState
+  nameWithType: NetworkController.MethodName.StorePredictedState
+  fullName: Nebula.NetworkController.MethodName.StorePredictedState
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'StorePredictedState' method.
+  example: []
+  syntax:
+    content: public static readonly StringName StorePredictedState
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly StorePredictedState As StringName
+- uid: Nebula.NetworkController.MethodName.StoreConfirmedState
+  commentId: F:Nebula.NetworkController.MethodName.StoreConfirmedState
+  id: StoreConfirmedState
+  parent: Nebula.NetworkController.MethodName
+  langs:
+  - csharp
+  - vb
+  name: StoreConfirmedState
+  nameWithType: NetworkController.MethodName.StoreConfirmedState
+  fullName: Nebula.NetworkController.MethodName.StoreConfirmedState
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'StoreConfirmedState' method.
+  example: []
+  syntax:
+    content: public static readonly StringName StoreConfirmedState
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly StoreConfirmedState As StringName
+- uid: Nebula.NetworkController.MethodName.Reconcile
+  commentId: F:Nebula.NetworkController.MethodName.Reconcile
+  id: Reconcile
+  parent: Nebula.NetworkController.MethodName
+  langs:
+  - csharp
+  - vb
+  name: Reconcile
+  nameWithType: NetworkController.MethodName.Reconcile
+  fullName: Nebula.NetworkController.MethodName.Reconcile
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'Reconcile' method.
+  example: []
+  syntax:
+    content: public static readonly StringName Reconcile
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly Reconcile As StringName
+- uid: Nebula.NetworkController.MethodName.RestoreToPredictedState
+  commentId: F:Nebula.NetworkController.MethodName.RestoreToPredictedState
+  id: RestoreToPredictedState
+  parent: Nebula.NetworkController.MethodName
+  langs:
+  - csharp
+  - vb
+  name: RestoreToPredictedState
+  nameWithType: NetworkController.MethodName.RestoreToPredictedState
+  fullName: Nebula.NetworkController.MethodName.RestoreToPredictedState
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'RestoreToPredictedState' method.
+  example: []
+  syntax:
+    content: public static readonly StringName RestoreToPredictedState
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly RestoreToPredictedState As StringName
 - uid: Nebula.NetworkController.MethodName._NetworkPrepare
   commentId: F:Nebula.NetworkController.MethodName._NetworkPrepare
   id: _NetworkPrepare
@@ -283,7 +475,7 @@ items:
   fullName: Nebula.NetworkController.MethodName._NetworkPrepare
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -294,29 +486,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _NetworkPrepare As StringName
-- uid: Nebula.NetworkController.MethodName.PrepareSpawn
-  commentId: F:Nebula.NetworkController.MethodName.PrepareSpawn
-  id: PrepareSpawn
-  parent: Nebula.NetworkController.MethodName
-  langs:
-  - csharp
-  - vb
-  name: PrepareSpawn
-  nameWithType: NetworkController.MethodName.PrepareSpawn
-  fullName: Nebula.NetworkController.MethodName.PrepareSpawn
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'PrepareSpawn' method.
-  example: []
-  syntax:
-    content: public static readonly StringName PrepareSpawn
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly PrepareSpawn As StringName
 - uid: Nebula.NetworkController.MethodName._WorldReady
   commentId: F:Nebula.NetworkController.MethodName._WorldReady
   id: _WorldReady
@@ -329,7 +498,7 @@ items:
   fullName: Nebula.NetworkController.MethodName._WorldReady
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -352,7 +521,7 @@ items:
   fullName: Nebula.NetworkController.MethodName._NetworkProcess
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -363,29 +532,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _NetworkProcess As StringName
-- uid: Nebula.NetworkController.MethodName.GetInput
-  commentId: F:Nebula.NetworkController.MethodName.GetInput
-  id: GetInput
-  parent: Nebula.NetworkController.MethodName
-  langs:
-  - csharp
-  - vb
-  name: GetInput
-  nameWithType: NetworkController.MethodName.GetInput
-  fullName: Nebula.NetworkController.MethodName.GetInput
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'GetInput' method.
-  example: []
-  syntax:
-    content: public static readonly StringName GetInput
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly GetInput As StringName
 - uid: Nebula.NetworkController.MethodName.NodePathFromNetScene
   commentId: F:Nebula.NetworkController.MethodName.NodePathFromNetScene
   id: NodePathFromNetScene
@@ -398,7 +544,7 @@ items:
   fullName: Nebula.NetworkController.MethodName.NodePathFromNetScene
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -409,6 +555,52 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly NodePathFromNetScene As StringName
+- uid: Nebula.NetworkController.MethodName.Despawn
+  commentId: F:Nebula.NetworkController.MethodName.Despawn
+  id: Despawn
+  parent: Nebula.NetworkController.MethodName
+  langs:
+  - csharp
+  - vb
+  name: Despawn
+  nameWithType: NetworkController.MethodName.Despawn
+  fullName: Nebula.NetworkController.MethodName.Despawn
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'Despawn' method.
+  example: []
+  syntax:
+    content: public static readonly StringName Despawn
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly Despawn As StringName
+- uid: Nebula.NetworkController.MethodName.handleDespawn
+  commentId: F:Nebula.NetworkController.MethodName.handleDespawn
+  id: handleDespawn
+  parent: Nebula.NetworkController.MethodName
+  langs:
+  - csharp
+  - vb
+  name: handleDespawn
+  nameWithType: NetworkController.MethodName.handleDespawn
+  fullName: Nebula.NetworkController.MethodName.handleDespawn
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'handleDespawn' method.
+  example: []
+  syntax:
+    content: public static readonly StringName handleDespawn
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly handleDespawn As StringName
 - uid: Nebula.NetworkController.MethodName.#ctor
   commentId: M:Nebula.NetworkController.MethodName.#ctor
   id: '#ctor'
@@ -421,7 +613,7 @@ items:
   fullName: Nebula.NetworkController.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1173,10 +1365,11 @@ references:
 - uid: Nebula.NetworkController.MethodName.#ctor*
   commentId: Overload:Nebula.NetworkController.MethodName.#ctor
   isExternal: true
-  href: Nebula.NetworkController.MethodName.html#Nebula_NetworkController_MethodName__ctor
+  href: Nebula.NetworkController.MethodName.-ctor.html#Nebula_NetworkController_MethodName__ctor
   name: MethodName
   nameWithType: NetworkController.MethodName.MethodName
   fullName: Nebula.NetworkController.MethodName.MethodName
   nameWithType.vb: NetworkController.MethodName.New
   fullName.vb: Nebula.NetworkController.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

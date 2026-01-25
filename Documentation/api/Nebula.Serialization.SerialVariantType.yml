@@ -1,0 +1,762 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.SerialVariantType
+  commentId: T:Nebula.Serialization.SerialVariantType
+  id: SerialVariantType
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.SerialVariantType.Aabb
+  - Nebula.Serialization.SerialVariantType.Array
+  - Nebula.Serialization.SerialVariantType.Basis
+  - Nebula.Serialization.SerialVariantType.Bool
+  - Nebula.Serialization.SerialVariantType.Color
+  - Nebula.Serialization.SerialVariantType.Dictionary
+  - Nebula.Serialization.SerialVariantType.Float
+  - Nebula.Serialization.SerialVariantType.Int
+  - Nebula.Serialization.SerialVariantType.Nil
+  - Nebula.Serialization.SerialVariantType.NodePath
+  - Nebula.Serialization.SerialVariantType.Object
+  - Nebula.Serialization.SerialVariantType.PackedByteArray
+  - Nebula.Serialization.SerialVariantType.PackedColorArray
+  - Nebula.Serialization.SerialVariantType.PackedFloat32Array
+  - Nebula.Serialization.SerialVariantType.PackedFloat64Array
+  - Nebula.Serialization.SerialVariantType.PackedInt32Array
+  - Nebula.Serialization.SerialVariantType.PackedInt64Array
+  - Nebula.Serialization.SerialVariantType.PackedStringArray
+  - Nebula.Serialization.SerialVariantType.PackedVector2Array
+  - Nebula.Serialization.SerialVariantType.PackedVector3Array
+  - Nebula.Serialization.SerialVariantType.PackedVector4Array
+  - Nebula.Serialization.SerialVariantType.Plane
+  - Nebula.Serialization.SerialVariantType.Projection
+  - Nebula.Serialization.SerialVariantType.Quaternion
+  - Nebula.Serialization.SerialVariantType.Rect2
+  - Nebula.Serialization.SerialVariantType.Rect2I
+  - Nebula.Serialization.SerialVariantType.Rid
+  - Nebula.Serialization.SerialVariantType.String
+  - Nebula.Serialization.SerialVariantType.StringName
+  - Nebula.Serialization.SerialVariantType.Transform2D
+  - Nebula.Serialization.SerialVariantType.Transform3D
+  - Nebula.Serialization.SerialVariantType.Vector2
+  - Nebula.Serialization.SerialVariantType.Vector2I
+  - Nebula.Serialization.SerialVariantType.Vector3
+  - Nebula.Serialization.SerialVariantType.Vector3I
+  - Nebula.Serialization.SerialVariantType.Vector4
+  - Nebula.Serialization.SerialVariantType.Vector4I
+  langs:
+  - csharp
+  - vb
+  name: SerialVariantType
+  nameWithType: SerialVariantType
+  fullName: Nebula.Serialization.SerialVariantType
+  type: Enum
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: C# mirror of Godot's Variant.Type for network serialization.
+  example: []
+  syntax:
+    content: public enum SerialVariantType
+    content.vb: Public Enum SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Nil
+  commentId: F:Nebula.Serialization.SerialVariantType.Nil
+  id: Nil
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Nil
+  nameWithType: SerialVariantType.Nil
+  fullName: Nebula.Serialization.SerialVariantType.Nil
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Nil = 0
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Bool
+  commentId: F:Nebula.Serialization.SerialVariantType.Bool
+  id: Bool
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Bool
+  nameWithType: SerialVariantType.Bool
+  fullName: Nebula.Serialization.SerialVariantType.Bool
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Bool = 1
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Int
+  commentId: F:Nebula.Serialization.SerialVariantType.Int
+  id: Int
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Int
+  nameWithType: SerialVariantType.Int
+  fullName: Nebula.Serialization.SerialVariantType.Int
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Int = 2
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Float
+  commentId: F:Nebula.Serialization.SerialVariantType.Float
+  id: Float
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Float
+  nameWithType: SerialVariantType.Float
+  fullName: Nebula.Serialization.SerialVariantType.Float
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Float = 3
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.String
+  commentId: F:Nebula.Serialization.SerialVariantType.String
+  id: String
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: String
+  nameWithType: SerialVariantType.String
+  fullName: Nebula.Serialization.SerialVariantType.String
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: String = 4
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Vector2
+  commentId: F:Nebula.Serialization.SerialVariantType.Vector2
+  id: Vector2
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Vector2
+  nameWithType: SerialVariantType.Vector2
+  fullName: Nebula.Serialization.SerialVariantType.Vector2
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Vector2 = 5
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Vector2I
+  commentId: F:Nebula.Serialization.SerialVariantType.Vector2I
+  id: Vector2I
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Vector2I
+  nameWithType: SerialVariantType.Vector2I
+  fullName: Nebula.Serialization.SerialVariantType.Vector2I
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Vector2I = 6
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Rect2
+  commentId: F:Nebula.Serialization.SerialVariantType.Rect2
+  id: Rect2
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Rect2
+  nameWithType: SerialVariantType.Rect2
+  fullName: Nebula.Serialization.SerialVariantType.Rect2
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Rect2 = 7
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Rect2I
+  commentId: F:Nebula.Serialization.SerialVariantType.Rect2I
+  id: Rect2I
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Rect2I
+  nameWithType: SerialVariantType.Rect2I
+  fullName: Nebula.Serialization.SerialVariantType.Rect2I
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Rect2I = 8
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Vector3
+  commentId: F:Nebula.Serialization.SerialVariantType.Vector3
+  id: Vector3
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Vector3
+  nameWithType: SerialVariantType.Vector3
+  fullName: Nebula.Serialization.SerialVariantType.Vector3
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Vector3 = 9
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Vector3I
+  commentId: F:Nebula.Serialization.SerialVariantType.Vector3I
+  id: Vector3I
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Vector3I
+  nameWithType: SerialVariantType.Vector3I
+  fullName: Nebula.Serialization.SerialVariantType.Vector3I
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Vector3I = 10
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Transform2D
+  commentId: F:Nebula.Serialization.SerialVariantType.Transform2D
+  id: Transform2D
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Transform2D
+  nameWithType: SerialVariantType.Transform2D
+  fullName: Nebula.Serialization.SerialVariantType.Transform2D
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Transform2D = 11
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Vector4
+  commentId: F:Nebula.Serialization.SerialVariantType.Vector4
+  id: Vector4
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Vector4
+  nameWithType: SerialVariantType.Vector4
+  fullName: Nebula.Serialization.SerialVariantType.Vector4
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Vector4 = 12
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Vector4I
+  commentId: F:Nebula.Serialization.SerialVariantType.Vector4I
+  id: Vector4I
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Vector4I
+  nameWithType: SerialVariantType.Vector4I
+  fullName: Nebula.Serialization.SerialVariantType.Vector4I
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Vector4I = 13
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Plane
+  commentId: F:Nebula.Serialization.SerialVariantType.Plane
+  id: Plane
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Plane
+  nameWithType: SerialVariantType.Plane
+  fullName: Nebula.Serialization.SerialVariantType.Plane
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Plane = 14
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Quaternion
+  commentId: F:Nebula.Serialization.SerialVariantType.Quaternion
+  id: Quaternion
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Quaternion
+  nameWithType: SerialVariantType.Quaternion
+  fullName: Nebula.Serialization.SerialVariantType.Quaternion
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Quaternion = 15
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Aabb
+  commentId: F:Nebula.Serialization.SerialVariantType.Aabb
+  id: Aabb
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Aabb
+  nameWithType: SerialVariantType.Aabb
+  fullName: Nebula.Serialization.SerialVariantType.Aabb
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Aabb = 16
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Basis
+  commentId: F:Nebula.Serialization.SerialVariantType.Basis
+  id: Basis
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Basis
+  nameWithType: SerialVariantType.Basis
+  fullName: Nebula.Serialization.SerialVariantType.Basis
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Basis = 17
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Transform3D
+  commentId: F:Nebula.Serialization.SerialVariantType.Transform3D
+  id: Transform3D
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Transform3D
+  nameWithType: SerialVariantType.Transform3D
+  fullName: Nebula.Serialization.SerialVariantType.Transform3D
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Transform3D = 18
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Projection
+  commentId: F:Nebula.Serialization.SerialVariantType.Projection
+  id: Projection
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Projection
+  nameWithType: SerialVariantType.Projection
+  fullName: Nebula.Serialization.SerialVariantType.Projection
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Projection = 19
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Color
+  commentId: F:Nebula.Serialization.SerialVariantType.Color
+  id: Color
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Color
+  nameWithType: SerialVariantType.Color
+  fullName: Nebula.Serialization.SerialVariantType.Color
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Color = 20
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.StringName
+  commentId: F:Nebula.Serialization.SerialVariantType.StringName
+  id: StringName
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: StringName
+  nameWithType: SerialVariantType.StringName
+  fullName: Nebula.Serialization.SerialVariantType.StringName
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: StringName = 21
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.NodePath
+  commentId: F:Nebula.Serialization.SerialVariantType.NodePath
+  id: NodePath
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: NodePath
+  nameWithType: SerialVariantType.NodePath
+  fullName: Nebula.Serialization.SerialVariantType.NodePath
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: NodePath = 22
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Rid
+  commentId: F:Nebula.Serialization.SerialVariantType.Rid
+  id: Rid
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Rid
+  nameWithType: SerialVariantType.Rid
+  fullName: Nebula.Serialization.SerialVariantType.Rid
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Rid = 23
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Object
+  commentId: F:Nebula.Serialization.SerialVariantType.Object
+  id: Object
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Object
+  nameWithType: SerialVariantType.Object
+  fullName: Nebula.Serialization.SerialVariantType.Object
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Object = 24
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Dictionary
+  commentId: F:Nebula.Serialization.SerialVariantType.Dictionary
+  id: Dictionary
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Dictionary
+  nameWithType: SerialVariantType.Dictionary
+  fullName: Nebula.Serialization.SerialVariantType.Dictionary
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Dictionary = 27
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.Array
+  commentId: F:Nebula.Serialization.SerialVariantType.Array
+  id: Array
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: Array
+  nameWithType: SerialVariantType.Array
+  fullName: Nebula.Serialization.SerialVariantType.Array
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Array = 28
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.PackedByteArray
+  commentId: F:Nebula.Serialization.SerialVariantType.PackedByteArray
+  id: PackedByteArray
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: PackedByteArray
+  nameWithType: SerialVariantType.PackedByteArray
+  fullName: Nebula.Serialization.SerialVariantType.PackedByteArray
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: PackedByteArray = 29
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.PackedInt32Array
+  commentId: F:Nebula.Serialization.SerialVariantType.PackedInt32Array
+  id: PackedInt32Array
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: PackedInt32Array
+  nameWithType: SerialVariantType.PackedInt32Array
+  fullName: Nebula.Serialization.SerialVariantType.PackedInt32Array
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: PackedInt32Array = 30
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.PackedInt64Array
+  commentId: F:Nebula.Serialization.SerialVariantType.PackedInt64Array
+  id: PackedInt64Array
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: PackedInt64Array
+  nameWithType: SerialVariantType.PackedInt64Array
+  fullName: Nebula.Serialization.SerialVariantType.PackedInt64Array
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: PackedInt64Array = 31
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.PackedFloat32Array
+  commentId: F:Nebula.Serialization.SerialVariantType.PackedFloat32Array
+  id: PackedFloat32Array
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: PackedFloat32Array
+  nameWithType: SerialVariantType.PackedFloat32Array
+  fullName: Nebula.Serialization.SerialVariantType.PackedFloat32Array
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: PackedFloat32Array = 32
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.PackedFloat64Array
+  commentId: F:Nebula.Serialization.SerialVariantType.PackedFloat64Array
+  id: PackedFloat64Array
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: PackedFloat64Array
+  nameWithType: SerialVariantType.PackedFloat64Array
+  fullName: Nebula.Serialization.SerialVariantType.PackedFloat64Array
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: PackedFloat64Array = 33
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.PackedStringArray
+  commentId: F:Nebula.Serialization.SerialVariantType.PackedStringArray
+  id: PackedStringArray
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: PackedStringArray
+  nameWithType: SerialVariantType.PackedStringArray
+  fullName: Nebula.Serialization.SerialVariantType.PackedStringArray
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: PackedStringArray = 34
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.PackedVector2Array
+  commentId: F:Nebula.Serialization.SerialVariantType.PackedVector2Array
+  id: PackedVector2Array
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: PackedVector2Array
+  nameWithType: SerialVariantType.PackedVector2Array
+  fullName: Nebula.Serialization.SerialVariantType.PackedVector2Array
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: PackedVector2Array = 35
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.PackedVector3Array
+  commentId: F:Nebula.Serialization.SerialVariantType.PackedVector3Array
+  id: PackedVector3Array
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: PackedVector3Array
+  nameWithType: SerialVariantType.PackedVector3Array
+  fullName: Nebula.Serialization.SerialVariantType.PackedVector3Array
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: PackedVector3Array = 36
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.PackedColorArray
+  commentId: F:Nebula.Serialization.SerialVariantType.PackedColorArray
+  id: PackedColorArray
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: PackedColorArray
+  nameWithType: SerialVariantType.PackedColorArray
+  fullName: Nebula.Serialization.SerialVariantType.PackedColorArray
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: PackedColorArray = 37
+    return:
+      type: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.SerialVariantType.PackedVector4Array
+  commentId: F:Nebula.Serialization.SerialVariantType.PackedVector4Array
+  id: PackedVector4Array
+  parent: Nebula.Serialization.SerialVariantType
+  langs:
+  - csharp
+  - vb
+  name: PackedVector4Array
+  nameWithType: SerialVariantType.PackedVector4Array
+  fullName: Nebula.Serialization.SerialVariantType.PackedVector4Array
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: PackedVector4Array = 38
+    return:
+      type: Nebula.Serialization.SerialVariantType
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.SerialVariantType
+  commentId: T:Nebula.Serialization.SerialVariantType
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.SerialVariantType.html
+  name: SerialVariantType
+  nameWithType: SerialVariantType
+  fullName: Nebula.Serialization.SerialVariantType
+memberLayout: SeparatePages

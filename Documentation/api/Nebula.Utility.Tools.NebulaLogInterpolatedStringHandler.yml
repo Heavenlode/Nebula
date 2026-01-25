@@ -1,0 +1,685 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  commentId: T:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  id: NebulaLogInterpolatedStringHandler
+  parent: Nebula.Utility.Tools
+  children:
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.#ctor(System.Int32,System.Int32,Nebula.Utility.Tools.Debugger.DebugLevel,System.Boolean@)
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(System.String)
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(System.String,System.Int32,System.String)
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0)
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0,System.Int32)
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0,System.Int32,System.String)
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0,System.String)
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral(System.String)
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.Enabled
+  - Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.ToStringAndClear
+  langs:
+  - csharp
+  - vb
+  name: NebulaLogInterpolatedStringHandler
+  nameWithType: NebulaLogInterpolatedStringHandler
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  type: Struct
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  summary: Interpolated string handler for Nebula logging. Avoids string formatting/allocation when the log level is disabled.
+  example: []
+  syntax:
+    content: public ref struct NebulaLogInterpolatedStringHandler
+    content.vb: Public Structure NebulaLogInterpolatedStringHandler
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.GetType
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.#ctor(System.Int32,System.Int32,Nebula.Utility.Tools.Debugger.DebugLevel,System.Boolean@)
+  commentId: M:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.#ctor(System.Int32,System.Int32,Nebula.Utility.Tools.Debugger.DebugLevel,System.Boolean@)
+  id: '#ctor(System.Int32,System.Int32,Nebula.Utility.Tools.Debugger.DebugLevel,System.Boolean@)'
+  parent: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  langs:
+  - csharp
+  - vb
+  name: NebulaLogInterpolatedStringHandler(int, int, DebugLevel, out bool)
+  nameWithType: NebulaLogInterpolatedStringHandler.NebulaLogInterpolatedStringHandler(int, int, Debugger.DebugLevel, out bool)
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.NebulaLogInterpolatedStringHandler(int, int, Nebula.Utility.Tools.Debugger.DebugLevel, out bool)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public NebulaLogInterpolatedStringHandler(int literalLength, int formattedCount, Debugger.DebugLevel level, out bool shouldAppend)
+    parameters:
+    - id: literalLength
+      type: System.Int32
+    - id: formattedCount
+      type: System.Int32
+    - id: level
+      type: Nebula.Utility.Tools.Debugger.DebugLevel
+    - id: shouldAppend
+      type: System.Boolean
+    content.vb: Public Sub New(literalLength As Integer, formattedCount As Integer, level As Debugger.DebugLevel, shouldAppend As Boolean)
+  overload: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.#ctor*
+  nameWithType.vb: NebulaLogInterpolatedStringHandler.New(Integer, Integer, Debugger.DebugLevel, Boolean)
+  fullName.vb: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.New(Integer, Integer, Nebula.Utility.Tools.Debugger.DebugLevel, Boolean)
+  name.vb: New(Integer, Integer, DebugLevel, Boolean)
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral(System.String)
+  commentId: M:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral(System.String)
+  id: AppendLiteral(System.String)
+  parent: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  langs:
+  - csharp
+  - vb
+  name: AppendLiteral(string)
+  nameWithType: NebulaLogInterpolatedStringHandler.AppendLiteral(string)
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public void AppendLiteral(string value)
+    parameters:
+    - id: value
+      type: System.String
+    content.vb: Public Sub AppendLiteral(value As String)
+  overload: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral*
+  nameWithType.vb: NebulaLogInterpolatedStringHandler.AppendLiteral(String)
+  fullName.vb: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral(String)
+  name.vb: AppendLiteral(String)
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0)
+  commentId: M:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0)
+  id: AppendFormatted``1(``0)
+  parent: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  langs:
+  - csharp
+  - vb
+  name: AppendFormatted<T>(T)
+  nameWithType: NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T)
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public void AppendFormatted<T>(T value)
+    parameters:
+    - id: value
+      type: '{T}'
+    typeParameters:
+    - id: T
+    content.vb: Public Sub AppendFormatted(Of T)(value As T)
+  overload: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted*
+  nameWithType.vb: NebulaLogInterpolatedStringHandler.AppendFormatted(Of T)(T)
+  fullName.vb: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(Of T)(T)
+  name.vb: AppendFormatted(Of T)(T)
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0,System.String)
+  commentId: M:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0,System.String)
+  id: AppendFormatted``1(``0,System.String)
+  parent: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  langs:
+  - csharp
+  - vb
+  name: AppendFormatted<T>(T, string)
+  nameWithType: NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T, string)
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T, string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public void AppendFormatted<T>(T value, string format)
+    parameters:
+    - id: value
+      type: '{T}'
+    - id: format
+      type: System.String
+    typeParameters:
+    - id: T
+    content.vb: Public Sub AppendFormatted(Of T)(value As T, format As String)
+  overload: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted*
+  nameWithType.vb: NebulaLogInterpolatedStringHandler.AppendFormatted(Of T)(T, String)
+  fullName.vb: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(Of T)(T, String)
+  name.vb: AppendFormatted(Of T)(T, String)
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0,System.Int32)
+  commentId: M:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0,System.Int32)
+  id: AppendFormatted``1(``0,System.Int32)
+  parent: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  langs:
+  - csharp
+  - vb
+  name: AppendFormatted<T>(T, int)
+  nameWithType: NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T, int)
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T, int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public void AppendFormatted<T>(T value, int alignment)
+    parameters:
+    - id: value
+      type: '{T}'
+    - id: alignment
+      type: System.Int32
+    typeParameters:
+    - id: T
+    content.vb: Public Sub AppendFormatted(Of T)(value As T, alignment As Integer)
+  overload: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted*
+  nameWithType.vb: NebulaLogInterpolatedStringHandler.AppendFormatted(Of T)(T, Integer)
+  fullName.vb: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(Of T)(T, Integer)
+  name.vb: AppendFormatted(Of T)(T, Integer)
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0,System.Int32,System.String)
+  commentId: M:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted``1(``0,System.Int32,System.String)
+  id: AppendFormatted``1(``0,System.Int32,System.String)
+  parent: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  langs:
+  - csharp
+  - vb
+  name: AppendFormatted<T>(T, int, string)
+  nameWithType: NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T, int, string)
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted<T>(T, int, string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public void AppendFormatted<T>(T value, int alignment, string format)
+    parameters:
+    - id: value
+      type: '{T}'
+    - id: alignment
+      type: System.Int32
+    - id: format
+      type: System.String
+    typeParameters:
+    - id: T
+    content.vb: Public Sub AppendFormatted(Of T)(value As T, alignment As Integer, format As String)
+  overload: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted*
+  nameWithType.vb: NebulaLogInterpolatedStringHandler.AppendFormatted(Of T)(T, Integer, String)
+  fullName.vb: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(Of T)(T, Integer, String)
+  name.vb: AppendFormatted(Of T)(T, Integer, String)
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(System.String)
+  commentId: M:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(System.String)
+  id: AppendFormatted(System.String)
+  parent: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  langs:
+  - csharp
+  - vb
+  name: AppendFormatted(string)
+  nameWithType: NebulaLogInterpolatedStringHandler.AppendFormatted(string)
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public void AppendFormatted(string value)
+    parameters:
+    - id: value
+      type: System.String
+    content.vb: Public Sub AppendFormatted(value As String)
+  overload: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted*
+  nameWithType.vb: NebulaLogInterpolatedStringHandler.AppendFormatted(String)
+  fullName.vb: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(String)
+  name.vb: AppendFormatted(String)
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(System.String,System.Int32,System.String)
+  commentId: M:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(System.String,System.Int32,System.String)
+  id: AppendFormatted(System.String,System.Int32,System.String)
+  parent: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  langs:
+  - csharp
+  - vb
+  name: AppendFormatted(string, int, string)
+  nameWithType: NebulaLogInterpolatedStringHandler.AppendFormatted(string, int, string)
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(string, int, string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public void AppendFormatted(string value, int alignment = 0, string format = null)
+    parameters:
+    - id: value
+      type: System.String
+    - id: alignment
+      type: System.Int32
+    - id: format
+      type: System.String
+    content.vb: Public Sub AppendFormatted(value As String, alignment As Integer = 0, format As String = Nothing)
+  overload: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted*
+  nameWithType.vb: NebulaLogInterpolatedStringHandler.AppendFormatted(String, Integer, String)
+  fullName.vb: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted(String, Integer, String)
+  name.vb: AppendFormatted(String, Integer, String)
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.ToStringAndClear
+  commentId: M:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.ToStringAndClear
+  id: ToStringAndClear
+  parent: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  langs:
+  - csharp
+  - vb
+  name: ToStringAndClear()
+  nameWithType: NebulaLogInterpolatedStringHandler.ToStringAndClear()
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.ToStringAndClear()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public string ToStringAndClear()
+    return:
+      type: System.String
+    content.vb: Public Function ToStringAndClear() As String
+  overload: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.ToStringAndClear*
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.Enabled
+  commentId: P:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.Enabled
+  id: Enabled
+  parent: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+  langs:
+  - csharp
+  - vb
+  name: Enabled
+  nameWithType: NebulaLogInterpolatedStringHandler.Enabled
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.Enabled
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Tools
+  syntax:
+    content: public bool Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property Enabled As Boolean
+  overload: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.Enabled*
+references:
+- uid: Nebula.Utility.Tools
+  commentId: N:Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Utility.Tools
+  nameWithType: Nebula.Utility.Tools
+  fullName: Nebula.Utility.Tools
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Utility.Tools.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Utility.Tools.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.#ctor*
+  commentId: Overload:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.#ctor
+  isExternal: true
+  href: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.-ctor.html#Nebula_Utility_Tools_NebulaLogInterpolatedStringHandler__ctor_System_Int32_System_Int32_Nebula_Utility_Tools_Debugger_DebugLevel_System_Boolean__
+  name: NebulaLogInterpolatedStringHandler
+  nameWithType: NebulaLogInterpolatedStringHandler.NebulaLogInterpolatedStringHandler
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.NebulaLogInterpolatedStringHandler
+  nameWithType.vb: NebulaLogInterpolatedStringHandler.New
+  fullName.vb: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.New
+  name.vb: New
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.Utility.Tools.Debugger.DebugLevel
+  commentId: T:Nebula.Utility.Tools.Debugger.DebugLevel
+  parent: Nebula.Utility.Tools
+  isExternal: true
+  href: Nebula.Utility.Tools.Debugger.html
+  name: Debugger.DebugLevel
+  nameWithType: Debugger.DebugLevel
+  fullName: Nebula.Utility.Tools.Debugger.DebugLevel
+  spec.csharp:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.DebugLevel
+    name: DebugLevel
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.DebugLevel.html
+  spec.vb:
+  - uid: Nebula.Utility.Tools.Debugger
+    name: Debugger
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.html
+  - name: .
+  - uid: Nebula.Utility.Tools.Debugger.DebugLevel
+    name: DebugLevel
+    isExternal: true
+    href: Nebula.Utility.Tools.Debugger.DebugLevel.html
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral*
+  commentId: Overload:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral
+  isExternal: true
+  href: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral.html#Nebula_Utility_Tools_NebulaLogInterpolatedStringHandler_AppendLiteral_System_String_
+  name: AppendLiteral
+  nameWithType: NebulaLogInterpolatedStringHandler.AppendLiteral
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendLiteral
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted*
+  commentId: Overload:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted
+  isExternal: true
+  href: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted.html#Nebula_Utility_Tools_NebulaLogInterpolatedStringHandler_AppendFormatted__1___0_
+  name: AppendFormatted
+  nameWithType: NebulaLogInterpolatedStringHandler.AppendFormatted
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.AppendFormatted
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.ToStringAndClear*
+  commentId: Overload:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.ToStringAndClear
+  isExternal: true
+  href: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.ToStringAndClear.html#Nebula_Utility_Tools_NebulaLogInterpolatedStringHandler_ToStringAndClear
+  name: ToStringAndClear
+  nameWithType: NebulaLogInterpolatedStringHandler.ToStringAndClear
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.ToStringAndClear
+- uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.Enabled*
+  commentId: Overload:Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.Enabled
+  isExternal: true
+  href: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.Enabled.html#Nebula_Utility_Tools_NebulaLogInterpolatedStringHandler_Enabled
+  name: Enabled
+  nameWithType: NebulaLogInterpolatedStringHandler.Enabled
+  fullName: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler.Enabled
+memberLayout: SeparatePages

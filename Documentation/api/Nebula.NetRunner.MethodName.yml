@@ -6,17 +6,11 @@ items:
   parent: Nebula
   children:
   - Nebula.NetRunner.MethodName.#ctor
-  - Nebula.NetRunner.MethodName.CreateWorld
-  - Nebula.NetRunner.MethodName.GetPeer
-  - Nebula.NetRunner.MethodName.GetPeerId
   - Nebula.NetRunner.MethodName.OverridePort
-  - Nebula.NetRunner.MethodName.PeerJoinWorld
-  - Nebula.NetRunner.MethodName.ReserveChannel
-  - Nebula.NetRunner.MethodName.SetupWorldInstance
   - Nebula.NetRunner.MethodName.StartClient
   - Nebula.NetRunner.MethodName.StartServer
   - Nebula.NetRunner.MethodName._EnterTree
-  - Nebula.NetRunner.MethodName._OnPeerDisconnected
+  - Nebula.NetRunner.MethodName._ExitTree
   - Nebula.NetRunner.MethodName._PhysicsProcess
   - Nebula.NetRunner.MethodName._Ready
   - Nebula.NetRunner.MethodName._debugService
@@ -28,7 +22,7 @@ items:
   fullName: Nebula.NetRunner.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -42,7 +36,6 @@ items:
   - Godot.GodotObject.MethodName
   - Godot.Node.MethodName
   inheritedMembers:
-  - Godot.Node.MethodName._ExitTree
   - Godot.Node.MethodName._GetAccessibilityConfigurationWarnings
   - Godot.Node.MethodName._GetAccessibilityContainerName
   - Godot.Node.MethodName._GetConfigurationWarnings
@@ -265,7 +258,7 @@ items:
   fullName: Nebula.NetRunner.MethodName.OverridePort
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -276,75 +269,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly OverridePort As StringName
-- uid: Nebula.NetRunner.MethodName.GetPeer
-  commentId: F:Nebula.NetRunner.MethodName.GetPeer
-  id: GetPeer
-  parent: Nebula.NetRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: GetPeer
-  nameWithType: NetRunner.MethodName.GetPeer
-  fullName: Nebula.NetRunner.MethodName.GetPeer
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'GetPeer' method.
-  example: []
-  syntax:
-    content: public static readonly StringName GetPeer
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly GetPeer As StringName
-- uid: Nebula.NetRunner.MethodName.GetPeerId
-  commentId: F:Nebula.NetRunner.MethodName.GetPeerId
-  id: GetPeerId
-  parent: Nebula.NetRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: GetPeerId
-  nameWithType: NetRunner.MethodName.GetPeerId
-  fullName: Nebula.NetRunner.MethodName.GetPeerId
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'GetPeerId' method.
-  example: []
-  syntax:
-    content: public static readonly StringName GetPeerId
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly GetPeerId As StringName
-- uid: Nebula.NetRunner.MethodName.ReserveChannel
-  commentId: F:Nebula.NetRunner.MethodName.ReserveChannel
-  id: ReserveChannel
-  parent: Nebula.NetRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: ReserveChannel
-  nameWithType: NetRunner.MethodName.ReserveChannel
-  fullName: Nebula.NetRunner.MethodName.ReserveChannel
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'ReserveChannel' method.
-  example: []
-  syntax:
-    content: public static readonly StringName ReserveChannel
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly ReserveChannel As StringName
 - uid: Nebula.NetRunner.MethodName._EnterTree
   commentId: F:Nebula.NetRunner.MethodName._EnterTree
   id: _EnterTree
@@ -357,7 +281,7 @@ items:
   fullName: Nebula.NetRunner.MethodName._EnterTree
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -380,7 +304,7 @@ items:
   fullName: Nebula.NetRunner.MethodName._Ready
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -391,6 +315,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _Ready As StringName
+- uid: Nebula.NetRunner.MethodName._ExitTree
+  commentId: F:Nebula.NetRunner.MethodName._ExitTree
+  id: _ExitTree
+  parent: Nebula.NetRunner.MethodName
+  langs:
+  - csharp
+  - vb
+  name: _ExitTree
+  nameWithType: NetRunner.MethodName._ExitTree
+  fullName: Nebula.NetRunner.MethodName._ExitTree
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_ExitTree' method.
+  example: []
+  syntax:
+    content: public static readonly StringName _ExitTree
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _ExitTree As StringName
 - uid: Nebula.NetRunner.MethodName.StartServer
   commentId: F:Nebula.NetRunner.MethodName.StartServer
   id: StartServer
@@ -403,7 +350,7 @@ items:
   fullName: Nebula.NetRunner.MethodName.StartServer
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -426,7 +373,7 @@ items:
   fullName: Nebula.NetRunner.MethodName.StartClient
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -449,7 +396,7 @@ items:
   fullName: Nebula.NetRunner.MethodName._debugService
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -472,7 +419,7 @@ items:
   fullName: Nebula.NetRunner.MethodName._PhysicsProcess
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -483,98 +430,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _PhysicsProcess As StringName
-- uid: Nebula.NetRunner.MethodName.PeerJoinWorld
-  commentId: F:Nebula.NetRunner.MethodName.PeerJoinWorld
-  id: PeerJoinWorld
-  parent: Nebula.NetRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: PeerJoinWorld
-  nameWithType: NetRunner.MethodName.PeerJoinWorld
-  fullName: Nebula.NetRunner.MethodName.PeerJoinWorld
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'PeerJoinWorld' method.
-  example: []
-  syntax:
-    content: public static readonly StringName PeerJoinWorld
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly PeerJoinWorld As StringName
-- uid: Nebula.NetRunner.MethodName.CreateWorld
-  commentId: F:Nebula.NetRunner.MethodName.CreateWorld
-  id: CreateWorld
-  parent: Nebula.NetRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: CreateWorld
-  nameWithType: NetRunner.MethodName.CreateWorld
-  fullName: Nebula.NetRunner.MethodName.CreateWorld
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'CreateWorld' method.
-  example: []
-  syntax:
-    content: public static readonly StringName CreateWorld
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly CreateWorld As StringName
-- uid: Nebula.NetRunner.MethodName.SetupWorldInstance
-  commentId: F:Nebula.NetRunner.MethodName.SetupWorldInstance
-  id: SetupWorldInstance
-  parent: Nebula.NetRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: SetupWorldInstance
-  nameWithType: NetRunner.MethodName.SetupWorldInstance
-  fullName: Nebula.NetRunner.MethodName.SetupWorldInstance
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'SetupWorldInstance' method.
-  example: []
-  syntax:
-    content: public static readonly StringName SetupWorldInstance
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly SetupWorldInstance As StringName
-- uid: Nebula.NetRunner.MethodName._OnPeerDisconnected
-  commentId: F:Nebula.NetRunner.MethodName._OnPeerDisconnected
-  id: _OnPeerDisconnected
-  parent: Nebula.NetRunner.MethodName
-  langs:
-  - csharp
-  - vb
-  name: _OnPeerDisconnected
-  nameWithType: NetRunner.MethodName._OnPeerDisconnected
-  fullName: Nebula.NetRunner.MethodName._OnPeerDisconnected
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the '_OnPeerDisconnected' method.
-  example: []
-  syntax:
-    content: public static readonly StringName _OnPeerDisconnected
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly _OnPeerDisconnected As StringName
 - uid: Nebula.NetRunner.MethodName.#ctor
   commentId: M:Nebula.NetRunner.MethodName.#ctor
   id: '#ctor'
@@ -587,7 +442,7 @@ items:
   fullName: Nebula.NetRunner.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -663,13 +518,6 @@ references:
   - uid: Godot.Node.MethodName
     name: MethodName
     isExternal: true
-- uid: Godot.Node.MethodName._ExitTree
-  commentId: F:Godot.Node.MethodName._ExitTree
-  parent: Godot.Node.MethodName
-  isExternal: true
-  name: _ExitTree
-  nameWithType: Node.MethodName._ExitTree
-  fullName: Godot.Node.MethodName._ExitTree
 - uid: Godot.Node.MethodName._GetAccessibilityConfigurationWarnings
   commentId: F:Godot.Node.MethodName._GetAccessibilityConfigurationWarnings
   parent: Godot.Node.MethodName
@@ -2333,10 +2181,11 @@ references:
 - uid: Nebula.NetRunner.MethodName.#ctor*
   commentId: Overload:Nebula.NetRunner.MethodName.#ctor
   isExternal: true
-  href: Nebula.NetRunner.MethodName.html#Nebula_NetRunner_MethodName__ctor
+  href: Nebula.NetRunner.MethodName.-ctor.html#Nebula_NetRunner_MethodName__ctor
   name: MethodName
   nameWithType: NetRunner.MethodName.MethodName
   fullName: Nebula.NetRunner.MethodName.MethodName
   nameWithType.vb: NetRunner.MethodName.New
   fullName.vb: Nebula.NetRunner.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

@@ -1,0 +1,163 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.Serializers.DeltaEncodingFlags
+  commentId: T:Nebula.Serialization.Serializers.DeltaEncodingFlags
+  id: DeltaEncodingFlags
+  parent: Nebula.Serialization.Serializers
+  children:
+  - Nebula.Serialization.Serializers.DeltaEncodingFlags.Absolute
+  - Nebula.Serialization.Serializers.DeltaEncodingFlags.DeltaFull
+  - Nebula.Serialization.Serializers.DeltaEncodingFlags.DeltaSmall
+  - Nebula.Serialization.Serializers.DeltaEncodingFlags.QuatCompressed
+  langs:
+  - csharp
+  - vb
+  name: DeltaEncodingFlags
+  nameWithType: DeltaEncodingFlags
+  fullName: Nebula.Serialization.Serializers.DeltaEncodingFlags
+  type: Enum
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: Delta encoding flags for property serialization.
+  example: []
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum DeltaEncodingFlags : byte
+    content.vb: >-
+      <Flags>
+
+      Public Enum DeltaEncodingFlags As Byte
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: Nebula.Serialization.Serializers.DeltaEncodingFlags.Absolute
+  commentId: F:Nebula.Serialization.Serializers.DeltaEncodingFlags.Absolute
+  id: Absolute
+  parent: Nebula.Serialization.Serializers.DeltaEncodingFlags
+  langs:
+  - csharp
+  - vb
+  name: Absolute
+  nameWithType: DeltaEncodingFlags.Absolute
+  fullName: Nebula.Serialization.Serializers.DeltaEncodingFlags.Absolute
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: Full value (initial sync, non-delta types, teleport)
+  example: []
+  syntax:
+    content: Absolute = 0
+    return:
+      type: Nebula.Serialization.Serializers.DeltaEncodingFlags
+- uid: Nebula.Serialization.Serializers.DeltaEncodingFlags.DeltaSmall
+  commentId: F:Nebula.Serialization.Serializers.DeltaEncodingFlags.DeltaSmall
+  id: DeltaSmall
+  parent: Nebula.Serialization.Serializers.DeltaEncodingFlags
+  langs:
+  - csharp
+  - vb
+  name: DeltaSmall
+  nameWithType: DeltaEncodingFlags.DeltaSmall
+  fullName: Nebula.Serialization.Serializers.DeltaEncodingFlags.DeltaSmall
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: 'Small delta: half-float/short encoding'
+  example: []
+  syntax:
+    content: DeltaSmall = 1
+    return:
+      type: Nebula.Serialization.Serializers.DeltaEncodingFlags
+- uid: Nebula.Serialization.Serializers.DeltaEncodingFlags.DeltaFull
+  commentId: F:Nebula.Serialization.Serializers.DeltaEncodingFlags.DeltaFull
+  id: DeltaFull
+  parent: Nebula.Serialization.Serializers.DeltaEncodingFlags
+  langs:
+  - csharp
+  - vb
+  name: DeltaFull
+  nameWithType: DeltaEncodingFlags.DeltaFull
+  fullName: Nebula.Serialization.Serializers.DeltaEncodingFlags.DeltaFull
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: 'Full delta: same type as property'
+  example: []
+  syntax:
+    content: DeltaFull = 2
+    return:
+      type: Nebula.Serialization.Serializers.DeltaEncodingFlags
+- uid: Nebula.Serialization.Serializers.DeltaEncodingFlags.QuatCompressed
+  commentId: F:Nebula.Serialization.Serializers.DeltaEncodingFlags.QuatCompressed
+  id: QuatCompressed
+  parent: Nebula.Serialization.Serializers.DeltaEncodingFlags
+  langs:
+  - csharp
+  - vb
+  name: QuatCompressed
+  nameWithType: DeltaEncodingFlags.QuatCompressed
+  fullName: Nebula.Serialization.Serializers.DeltaEncodingFlags.QuatCompressed
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: Quaternion uses smallest-three encoding (6 bytes)
+  example: []
+  syntax:
+    content: QuatCompressed = 128
+    return:
+      type: Nebula.Serialization.Serializers.DeltaEncodingFlags
+references:
+- uid: Nebula.Serialization.Serializers
+  commentId: N:Nebula.Serialization.Serializers
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization.Serializers
+  nameWithType: Nebula.Serialization.Serializers
+  fullName: Nebula.Serialization.Serializers
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers
+    name: Serializers
+    isExternal: true
+    href: Nebula.Serialization.Serializers.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  - name: .
+  - uid: Nebula.Serialization.Serializers
+    name: Serializers
+    isExternal: true
+    href: Nebula.Serialization.Serializers.html
+- uid: Nebula.Serialization.Serializers.DeltaEncodingFlags
+  commentId: T:Nebula.Serialization.Serializers.DeltaEncodingFlags
+  parent: Nebula.Serialization.Serializers
+  isExternal: true
+  href: Nebula.Serialization.Serializers.DeltaEncodingFlags.html
+  name: DeltaEncodingFlags
+  nameWithType: DeltaEncodingFlags
+  fullName: Nebula.Serialization.Serializers.DeltaEncodingFlags
+memberLayout: SeparatePages

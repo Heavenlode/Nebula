@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.SignalName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -76,7 +76,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.SignalName.InspectNode
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -99,7 +99,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.SignalName.SignalName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -675,10 +675,11 @@ references:
 - uid: Nebula.Internal.Editor.DockNetScenes.SignalName.#ctor*
   commentId: Overload:Nebula.Internal.Editor.DockNetScenes.SignalName.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.DockNetScenes.SignalName.html#Nebula_Internal_Editor_DockNetScenes_SignalName__ctor
+  href: Nebula.Internal.Editor.DockNetScenes.SignalName.-ctor.html#Nebula_Internal_Editor_DockNetScenes_SignalName__ctor
   name: SignalName
   nameWithType: DockNetScenes.SignalName.SignalName
   fullName: Nebula.Internal.Editor.DockNetScenes.SignalName.SignalName
   nameWithType.vb: DockNetScenes.SignalName.New
   fullName.vb: Nebula.Internal.Editor.DockNetScenes.SignalName.New
   name.vb: New
+memberLayout: SeparatePages

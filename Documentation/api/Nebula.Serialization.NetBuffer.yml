@@ -1,0 +1,1344 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
+  id: NetBuffer
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.NetBuffer.#ctor
+  - Nebula.Serialization.NetBuffer.#ctor(System.Byte[])
+  - Nebula.Serialization.NetBuffer.#ctor(System.Int32,System.Boolean)
+  - Nebula.Serialization.NetBuffer.#ctor(System.ReadOnlySpan{System.Byte},System.Boolean)
+  - Nebula.Serialization.NetBuffer.AdvanceRead(System.Int32)
+  - Nebula.Serialization.NetBuffer.AdvanceWrite(System.Int32)
+  - Nebula.Serialization.NetBuffer.Capacity
+  - Nebula.Serialization.NetBuffer.Clear
+  - Nebula.Serialization.NetBuffer.CopyFrom(Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.NetBuffer.CopyFrom(System.Byte[],System.Int32,System.Int32)
+  - Nebula.Serialization.NetBuffer.CopyFrom(System.ReadOnlySpan{System.Byte})
+  - Nebula.Serialization.NetBuffer.DefaultCapacity
+  - Nebula.Serialization.NetBuffer.Dispose
+  - Nebula.Serialization.NetBuffer.GetReadSpan(System.Int32)
+  - Nebula.Serialization.NetBuffer.GetWriteSpan(System.Int32)
+  - Nebula.Serialization.NetBuffer.IsReadComplete
+  - Nebula.Serialization.NetBuffer.Length
+  - Nebula.Serialization.NetBuffer.RawBuffer
+  - Nebula.Serialization.NetBuffer.ReadPosition
+  - Nebula.Serialization.NetBuffer.Remaining
+  - Nebula.Serialization.NetBuffer.Reset
+  - Nebula.Serialization.NetBuffer.ResetRead
+  - Nebula.Serialization.NetBuffer.ToArray
+  - Nebula.Serialization.NetBuffer.UnreadSpan
+  - Nebula.Serialization.NetBuffer.WritePosition
+  - Nebula.Serialization.NetBuffer.WrittenSpan
+  langs:
+  - csharp
+  - vb
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    High-performance network buffer using ArrayPool for zero-allocation serialization.
+
+    Replaces the old HLBuffer that extended Godot's RefCounted.
+  example: []
+  syntax:
+    content: 'public sealed class NetBuffer : IDisposable'
+    content.vb: Public NotInheritable Class NetBuffer Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Serialization.NetBuffer.DefaultCapacity
+  commentId: F:Nebula.Serialization.NetBuffer.DefaultCapacity
+  id: DefaultCapacity
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: DefaultCapacity
+  nameWithType: NetBuffer.DefaultCapacity
+  fullName: Nebula.Serialization.NetBuffer.DefaultCapacity
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Default capacity based on network MTU (1500) plus some headroom for headers.
+  example: []
+  syntax:
+    content: public const int DefaultCapacity = 1536
+    return:
+      type: System.Int32
+    content.vb: Public Const DefaultCapacity As Integer = 1536
+- uid: Nebula.Serialization.NetBuffer.GetWriteSpan(System.Int32)
+  commentId: M:Nebula.Serialization.NetBuffer.GetWriteSpan(System.Int32)
+  id: GetWriteSpan(System.Int32)
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: GetWriteSpan(int)
+  nameWithType: NetBuffer.GetWriteSpan(int)
+  fullName: Nebula.Serialization.NetBuffer.GetWriteSpan(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Gets a span for writing at the current write position.
+  example: []
+  syntax:
+    content: public Span<byte> GetWriteSpan(int length)
+    parameters:
+    - id: length
+      type: System.Int32
+    return:
+      type: System.Span{System.Byte}
+    content.vb: Public Function GetWriteSpan(length As Integer) As Span(Of Byte)
+  overload: Nebula.Serialization.NetBuffer.GetWriteSpan*
+  nameWithType.vb: NetBuffer.GetWriteSpan(Integer)
+  fullName.vb: Nebula.Serialization.NetBuffer.GetWriteSpan(Integer)
+  name.vb: GetWriteSpan(Integer)
+- uid: Nebula.Serialization.NetBuffer.GetReadSpan(System.Int32)
+  commentId: M:Nebula.Serialization.NetBuffer.GetReadSpan(System.Int32)
+  id: GetReadSpan(System.Int32)
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: GetReadSpan(int)
+  nameWithType: NetBuffer.GetReadSpan(int)
+  fullName: Nebula.Serialization.NetBuffer.GetReadSpan(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Gets a span for reading at the current read position.
+  example: []
+  syntax:
+    content: public ReadOnlySpan<byte> GetReadSpan(int length)
+    parameters:
+    - id: length
+      type: System.Int32
+    return:
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public Function GetReadSpan(length As Integer) As ReadOnlySpan(Of Byte)
+  overload: Nebula.Serialization.NetBuffer.GetReadSpan*
+  nameWithType.vb: NetBuffer.GetReadSpan(Integer)
+  fullName.vb: Nebula.Serialization.NetBuffer.GetReadSpan(Integer)
+  name.vb: GetReadSpan(Integer)
+- uid: Nebula.Serialization.NetBuffer.#ctor
+  commentId: M:Nebula.Serialization.NetBuffer.#ctor
+  id: '#ctor'
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: NetBuffer()
+  nameWithType: NetBuffer.NetBuffer()
+  fullName: Nebula.Serialization.NetBuffer.NetBuffer()
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Creates a new NetBuffer with default capacity from the pool.
+  example: []
+  syntax:
+    content: public NetBuffer()
+    content.vb: Public Sub New()
+  overload: Nebula.Serialization.NetBuffer.#ctor*
+  nameWithType.vb: NetBuffer.New()
+  fullName.vb: Nebula.Serialization.NetBuffer.New()
+  name.vb: New()
+- uid: Nebula.Serialization.NetBuffer.#ctor(System.Int32,System.Boolean)
+  commentId: M:Nebula.Serialization.NetBuffer.#ctor(System.Int32,System.Boolean)
+  id: '#ctor(System.Int32,System.Boolean)'
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: NetBuffer(int, bool)
+  nameWithType: NetBuffer.NetBuffer(int, bool)
+  fullName: Nebula.Serialization.NetBuffer.NetBuffer(int, bool)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Creates a new NetBuffer with specified capacity.
+  example: []
+  syntax:
+    content: public NetBuffer(int capacity, bool usePool = true)
+    parameters:
+    - id: capacity
+      type: System.Int32
+      description: Buffer capacity in bytes
+    - id: usePool
+      type: System.Boolean
+      description: Whether to rent from ArrayPool (true) or allocate directly (false)
+    content.vb: Public Sub New(capacity As Integer, usePool As Boolean = True)
+  overload: Nebula.Serialization.NetBuffer.#ctor*
+  nameWithType.vb: NetBuffer.New(Integer, Boolean)
+  fullName.vb: Nebula.Serialization.NetBuffer.New(Integer, Boolean)
+  name.vb: New(Integer, Boolean)
+- uid: Nebula.Serialization.NetBuffer.#ctor(System.Byte[])
+  commentId: M:Nebula.Serialization.NetBuffer.#ctor(System.Byte[])
+  id: '#ctor(System.Byte[])'
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: NetBuffer(byte[])
+  nameWithType: NetBuffer.NetBuffer(byte[])
+  fullName: Nebula.Serialization.NetBuffer.NetBuffer(byte[])
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Creates a NetBuffer wrapping existing data for reading.
+
+    The buffer is NOT pooled and will not be returned to ArrayPool.
+  example: []
+  syntax:
+    content: public NetBuffer(byte[] data)
+    parameters:
+    - id: data
+      type: System.Byte[]
+      description: Existing byte array to wrap
+    content.vb: Public Sub New(data As Byte())
+  overload: Nebula.Serialization.NetBuffer.#ctor*
+  nameWithType.vb: NetBuffer.New(Byte())
+  fullName.vb: Nebula.Serialization.NetBuffer.New(Byte())
+  name.vb: New(Byte())
+- uid: Nebula.Serialization.NetBuffer.#ctor(System.ReadOnlySpan{System.Byte},System.Boolean)
+  commentId: M:Nebula.Serialization.NetBuffer.#ctor(System.ReadOnlySpan{System.Byte},System.Boolean)
+  id: '#ctor(System.ReadOnlySpan{System.Byte},System.Boolean)'
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: NetBuffer(ReadOnlySpan<byte>, bool)
+  nameWithType: NetBuffer.NetBuffer(ReadOnlySpan<byte>, bool)
+  fullName: Nebula.Serialization.NetBuffer.NetBuffer(System.ReadOnlySpan<byte>, bool)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Creates a NetBuffer by copying data from a span.
+  example: []
+  syntax:
+    content: public NetBuffer(ReadOnlySpan<byte> data, bool usePool = true)
+    parameters:
+    - id: data
+      type: System.ReadOnlySpan{System.Byte}
+      description: Data to copy into the buffer
+    - id: usePool
+      type: System.Boolean
+      description: Whether to rent from ArrayPool
+    content.vb: Public Sub New(data As ReadOnlySpan(Of Byte), usePool As Boolean = True)
+  overload: Nebula.Serialization.NetBuffer.#ctor*
+  nameWithType.vb: NetBuffer.New(ReadOnlySpan(Of Byte), Boolean)
+  fullName.vb: Nebula.Serialization.NetBuffer.New(System.ReadOnlySpan(Of Byte), Boolean)
+  name.vb: New(ReadOnlySpan(Of Byte), Boolean)
+- uid: Nebula.Serialization.NetBuffer.AdvanceWrite(System.Int32)
+  commentId: M:Nebula.Serialization.NetBuffer.AdvanceWrite(System.Int32)
+  id: AdvanceWrite(System.Int32)
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: AdvanceWrite(int)
+  nameWithType: NetBuffer.AdvanceWrite(int)
+  fullName: Nebula.Serialization.NetBuffer.AdvanceWrite(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Advances the write position after writing.
+  example: []
+  syntax:
+    content: public void AdvanceWrite(int count)
+    parameters:
+    - id: count
+      type: System.Int32
+    content.vb: Public Sub AdvanceWrite(count As Integer)
+  overload: Nebula.Serialization.NetBuffer.AdvanceWrite*
+  nameWithType.vb: NetBuffer.AdvanceWrite(Integer)
+  fullName.vb: Nebula.Serialization.NetBuffer.AdvanceWrite(Integer)
+  name.vb: AdvanceWrite(Integer)
+- uid: Nebula.Serialization.NetBuffer.AdvanceRead(System.Int32)
+  commentId: M:Nebula.Serialization.NetBuffer.AdvanceRead(System.Int32)
+  id: AdvanceRead(System.Int32)
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: AdvanceRead(int)
+  nameWithType: NetBuffer.AdvanceRead(int)
+  fullName: Nebula.Serialization.NetBuffer.AdvanceRead(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Advances the read position after reading.
+  example: []
+  syntax:
+    content: public void AdvanceRead(int count)
+    parameters:
+    - id: count
+      type: System.Int32
+    content.vb: Public Sub AdvanceRead(count As Integer)
+  overload: Nebula.Serialization.NetBuffer.AdvanceRead*
+  nameWithType.vb: NetBuffer.AdvanceRead(Integer)
+  fullName.vb: Nebula.Serialization.NetBuffer.AdvanceRead(Integer)
+  name.vb: AdvanceRead(Integer)
+- uid: Nebula.Serialization.NetBuffer.Reset
+  commentId: M:Nebula.Serialization.NetBuffer.Reset
+  id: Reset
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Reset()
+  nameWithType: NetBuffer.Reset()
+  fullName: Nebula.Serialization.NetBuffer.Reset()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Resets both read and write positions to 0, allowing buffer reuse.
+
+    Does NOT clear the buffer contents.
+  example: []
+  syntax:
+    content: public void Reset()
+    content.vb: Public Sub Reset()
+  overload: Nebula.Serialization.NetBuffer.Reset*
+- uid: Nebula.Serialization.NetBuffer.Clear
+  commentId: M:Nebula.Serialization.NetBuffer.Clear
+  id: Clear
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: NetBuffer.Clear()
+  fullName: Nebula.Serialization.NetBuffer.Clear()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Resets write position to 0 and clears the buffer contents.
+  example: []
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: Nebula.Serialization.NetBuffer.Clear*
+- uid: Nebula.Serialization.NetBuffer.ResetRead
+  commentId: M:Nebula.Serialization.NetBuffer.ResetRead
+  id: ResetRead
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ResetRead()
+  nameWithType: NetBuffer.ResetRead()
+  fullName: Nebula.Serialization.NetBuffer.ResetRead()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Resets only the read position to 0, allowing re-reading of written data.
+  example: []
+  syntax:
+    content: public void ResetRead()
+    content.vb: Public Sub ResetRead()
+  overload: Nebula.Serialization.NetBuffer.ResetRead*
+- uid: Nebula.Serialization.NetBuffer.ToArray
+  commentId: M:Nebula.Serialization.NetBuffer.ToArray
+  id: ToArray
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ToArray()
+  nameWithType: NetBuffer.ToArray()
+  fullName: Nebula.Serialization.NetBuffer.ToArray()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Copies the written portion of the buffer to a new byte array.
+  example: []
+  syntax:
+    content: public byte[] ToArray()
+    return:
+      type: System.Byte[]
+    content.vb: Public Function ToArray() As Byte()
+  overload: Nebula.Serialization.NetBuffer.ToArray*
+- uid: Nebula.Serialization.NetBuffer.CopyFrom(Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.NetBuffer.CopyFrom(Nebula.Serialization.NetBuffer)
+  id: CopyFrom(Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: CopyFrom(NetBuffer)
+  nameWithType: NetBuffer.CopyFrom(NetBuffer)
+  fullName: Nebula.Serialization.NetBuffer.CopyFrom(Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Copies data from another buffer into this one at the current write position.
+  example: []
+  syntax:
+    content: public void CopyFrom(NetBuffer source)
+    parameters:
+    - id: source
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Sub CopyFrom(source As NetBuffer)
+  overload: Nebula.Serialization.NetBuffer.CopyFrom*
+- uid: Nebula.Serialization.NetBuffer.CopyFrom(System.ReadOnlySpan{System.Byte})
+  commentId: M:Nebula.Serialization.NetBuffer.CopyFrom(System.ReadOnlySpan{System.Byte})
+  id: CopyFrom(System.ReadOnlySpan{System.Byte})
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: CopyFrom(ReadOnlySpan<byte>)
+  nameWithType: NetBuffer.CopyFrom(ReadOnlySpan<byte>)
+  fullName: Nebula.Serialization.NetBuffer.CopyFrom(System.ReadOnlySpan<byte>)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Copies data from a span into this buffer at the current write position.
+  example: []
+  syntax:
+    content: public void CopyFrom(ReadOnlySpan<byte> source)
+    parameters:
+    - id: source
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public Sub CopyFrom(source As ReadOnlySpan(Of Byte))
+  overload: Nebula.Serialization.NetBuffer.CopyFrom*
+  nameWithType.vb: NetBuffer.CopyFrom(ReadOnlySpan(Of Byte))
+  fullName.vb: Nebula.Serialization.NetBuffer.CopyFrom(System.ReadOnlySpan(Of Byte))
+  name.vb: CopyFrom(ReadOnlySpan(Of Byte))
+- uid: Nebula.Serialization.NetBuffer.CopyFrom(System.Byte[],System.Int32,System.Int32)
+  commentId: M:Nebula.Serialization.NetBuffer.CopyFrom(System.Byte[],System.Int32,System.Int32)
+  id: CopyFrom(System.Byte[],System.Int32,System.Int32)
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: CopyFrom(byte[], int, int)
+  nameWithType: NetBuffer.CopyFrom(byte[], int, int)
+  fullName: Nebula.Serialization.NetBuffer.CopyFrom(byte[], int, int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Copies data from a byte array into this buffer at the current write position.
+  example: []
+  syntax:
+    content: public void CopyFrom(byte[] source, int offset, int count)
+    parameters:
+    - id: source
+      type: System.Byte[]
+    - id: offset
+      type: System.Int32
+    - id: count
+      type: System.Int32
+    content.vb: Public Sub CopyFrom(source As Byte(), offset As Integer, count As Integer)
+  overload: Nebula.Serialization.NetBuffer.CopyFrom*
+  nameWithType.vb: NetBuffer.CopyFrom(Byte(), Integer, Integer)
+  fullName.vb: Nebula.Serialization.NetBuffer.CopyFrom(Byte(), Integer, Integer)
+  name.vb: CopyFrom(Byte(), Integer, Integer)
+- uid: Nebula.Serialization.NetBuffer.Dispose
+  commentId: M:Nebula.Serialization.NetBuffer.Dispose
+  id: Dispose
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: NetBuffer.Dispose()
+  fullName: Nebula.Serialization.NetBuffer.Dispose()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: Nebula.Serialization.NetBuffer.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+- uid: Nebula.Serialization.NetBuffer.WritePosition
+  commentId: P:Nebula.Serialization.NetBuffer.WritePosition
+  id: WritePosition
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: WritePosition
+  nameWithType: NetBuffer.WritePosition
+  fullName: Nebula.Serialization.NetBuffer.WritePosition
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Current write position in the buffer.
+  example: []
+  syntax:
+    content: public int WritePosition { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property WritePosition As Integer
+  overload: Nebula.Serialization.NetBuffer.WritePosition*
+- uid: Nebula.Serialization.NetBuffer.ReadPosition
+  commentId: P:Nebula.Serialization.NetBuffer.ReadPosition
+  id: ReadPosition
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: ReadPosition
+  nameWithType: NetBuffer.ReadPosition
+  fullName: Nebula.Serialization.NetBuffer.ReadPosition
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Current read position in the buffer.
+  example: []
+  syntax:
+    content: public int ReadPosition { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property ReadPosition As Integer
+  overload: Nebula.Serialization.NetBuffer.ReadPosition*
+- uid: Nebula.Serialization.NetBuffer.Length
+  commentId: P:Nebula.Serialization.NetBuffer.Length
+  id: Length
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Length
+  nameWithType: NetBuffer.Length
+  fullName: Nebula.Serialization.NetBuffer.Length
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Number of bytes written to the buffer.
+  example: []
+  syntax:
+    content: public int Length { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Length As Integer
+  overload: Nebula.Serialization.NetBuffer.Length*
+- uid: Nebula.Serialization.NetBuffer.Capacity
+  commentId: P:Nebula.Serialization.NetBuffer.Capacity
+  id: Capacity
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Capacity
+  nameWithType: NetBuffer.Capacity
+  fullName: Nebula.Serialization.NetBuffer.Capacity
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Total capacity of the buffer.
+  example: []
+  syntax:
+    content: public int Capacity { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Capacity As Integer
+  overload: Nebula.Serialization.NetBuffer.Capacity*
+- uid: Nebula.Serialization.NetBuffer.IsReadComplete
+  commentId: P:Nebula.Serialization.NetBuffer.IsReadComplete
+  id: IsReadComplete
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: IsReadComplete
+  nameWithType: NetBuffer.IsReadComplete
+  fullName: Nebula.Serialization.NetBuffer.IsReadComplete
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Whether all data has been read (read position &gt;= write position).
+  example: []
+  syntax:
+    content: public bool IsReadComplete { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsReadComplete As Boolean
+  overload: Nebula.Serialization.NetBuffer.IsReadComplete*
+- uid: Nebula.Serialization.NetBuffer.Remaining
+  commentId: P:Nebula.Serialization.NetBuffer.Remaining
+  id: Remaining
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: Remaining
+  nameWithType: NetBuffer.Remaining
+  fullName: Nebula.Serialization.NetBuffer.Remaining
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Number of bytes remaining to be read.
+  example: []
+  syntax:
+    content: public int Remaining { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Remaining As Integer
+  overload: Nebula.Serialization.NetBuffer.Remaining*
+- uid: Nebula.Serialization.NetBuffer.WrittenSpan
+  commentId: P:Nebula.Serialization.NetBuffer.WrittenSpan
+  id: WrittenSpan
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: WrittenSpan
+  nameWithType: NetBuffer.WrittenSpan
+  fullName: Nebula.Serialization.NetBuffer.WrittenSpan
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Gets a span over the written portion of the buffer.
+  example: []
+  syntax:
+    content: public ReadOnlySpan<byte> WrittenSpan { get; }
+    parameters: []
+    return:
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public ReadOnly Property WrittenSpan As ReadOnlySpan(Of Byte)
+  overload: Nebula.Serialization.NetBuffer.WrittenSpan*
+- uid: Nebula.Serialization.NetBuffer.UnreadSpan
+  commentId: P:Nebula.Serialization.NetBuffer.UnreadSpan
+  id: UnreadSpan
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: UnreadSpan
+  nameWithType: NetBuffer.UnreadSpan
+  fullName: Nebula.Serialization.NetBuffer.UnreadSpan
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Gets a span over the unread portion of the buffer.
+  example: []
+  syntax:
+    content: public ReadOnlySpan<byte> UnreadSpan { get; }
+    parameters: []
+    return:
+      type: System.ReadOnlySpan{System.Byte}
+    content.vb: Public ReadOnly Property UnreadSpan As ReadOnlySpan(Of Byte)
+  overload: Nebula.Serialization.NetBuffer.UnreadSpan*
+- uid: Nebula.Serialization.NetBuffer.RawBuffer
+  commentId: P:Nebula.Serialization.NetBuffer.RawBuffer
+  id: RawBuffer
+  parent: Nebula.Serialization.NetBuffer
+  langs:
+  - csharp
+  - vb
+  name: RawBuffer
+  nameWithType: NetBuffer.RawBuffer
+  fullName: Nebula.Serialization.NetBuffer.RawBuffer
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetBuffer.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Direct access to the underlying buffer. Use with caution.
+  example: []
+  syntax:
+    content: public byte[] RawBuffer { get; }
+    parameters: []
+    return:
+      type: System.Byte[]
+    content.vb: Public ReadOnly Property RawBuffer As Byte()
+  overload: Nebula.Serialization.NetBuffer.RawBuffer*
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.Serialization.NetBuffer.GetWriteSpan*
+  commentId: Overload:Nebula.Serialization.NetBuffer.GetWriteSpan
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.GetWriteSpan.html#Nebula_Serialization_NetBuffer_GetWriteSpan_System_Int32_
+  name: GetWriteSpan
+  nameWithType: NetBuffer.GetWriteSpan
+  fullName: Nebula.Serialization.NetBuffer.GetWriteSpan
+- uid: System.Span{System.Byte}
+  commentId: T:System.Span{System.Byte}
+  parent: System
+  definition: System.Span`1
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<byte>
+  nameWithType: Span<byte>
+  fullName: System.Span<byte>
+  nameWithType.vb: Span(Of Byte)
+  fullName.vb: System.Span(Of Byte)
+  name.vb: Span(Of Byte)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.Span`1
+  commentId: T:System.Span`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<T>
+  nameWithType: Span<T>
+  fullName: System.Span<T>
+  nameWithType.vb: Span(Of T)
+  fullName.vb: System.Span(Of T)
+  name.vb: Span(Of T)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.NetBuffer.GetReadSpan*
+  commentId: Overload:Nebula.Serialization.NetBuffer.GetReadSpan
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.GetReadSpan.html#Nebula_Serialization_NetBuffer_GetReadSpan_System_Int32_
+  name: GetReadSpan
+  nameWithType: NetBuffer.GetReadSpan
+  fullName: Nebula.Serialization.NetBuffer.GetReadSpan
+- uid: System.ReadOnlySpan{System.Byte}
+  commentId: T:System.ReadOnlySpan{System.Byte}
+  parent: System
+  definition: System.ReadOnlySpan`1
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<byte>
+  nameWithType: ReadOnlySpan<byte>
+  fullName: System.ReadOnlySpan<byte>
+  nameWithType.vb: ReadOnlySpan(Of Byte)
+  fullName.vb: System.ReadOnlySpan(Of Byte)
+  name.vb: ReadOnlySpan(Of Byte)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.ReadOnlySpan`1
+  commentId: T:System.ReadOnlySpan`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<T>
+  nameWithType: ReadOnlySpan<T>
+  fullName: System.ReadOnlySpan<T>
+  nameWithType.vb: ReadOnlySpan(Of T)
+  fullName.vb: System.ReadOnlySpan(Of T)
+  name.vb: ReadOnlySpan(Of T)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.NetBuffer.#ctor*
+  commentId: Overload:Nebula.Serialization.NetBuffer.#ctor
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.-ctor.html#Nebula_Serialization_NetBuffer__ctor
+  name: NetBuffer
+  nameWithType: NetBuffer.NetBuffer
+  fullName: Nebula.Serialization.NetBuffer.NetBuffer
+  nameWithType.vb: NetBuffer.New
+  fullName.vb: Nebula.Serialization.NetBuffer.New
+  name.vb: New
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.NetBuffer.AdvanceWrite*
+  commentId: Overload:Nebula.Serialization.NetBuffer.AdvanceWrite
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.AdvanceWrite.html#Nebula_Serialization_NetBuffer_AdvanceWrite_System_Int32_
+  name: AdvanceWrite
+  nameWithType: NetBuffer.AdvanceWrite
+  fullName: Nebula.Serialization.NetBuffer.AdvanceWrite
+- uid: Nebula.Serialization.NetBuffer.AdvanceRead*
+  commentId: Overload:Nebula.Serialization.NetBuffer.AdvanceRead
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.AdvanceRead.html#Nebula_Serialization_NetBuffer_AdvanceRead_System_Int32_
+  name: AdvanceRead
+  nameWithType: NetBuffer.AdvanceRead
+  fullName: Nebula.Serialization.NetBuffer.AdvanceRead
+- uid: Nebula.Serialization.NetBuffer.Reset*
+  commentId: Overload:Nebula.Serialization.NetBuffer.Reset
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.Reset.html#Nebula_Serialization_NetBuffer_Reset
+  name: Reset
+  nameWithType: NetBuffer.Reset
+  fullName: Nebula.Serialization.NetBuffer.Reset
+- uid: Nebula.Serialization.NetBuffer.Clear*
+  commentId: Overload:Nebula.Serialization.NetBuffer.Clear
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.Clear.html#Nebula_Serialization_NetBuffer_Clear
+  name: Clear
+  nameWithType: NetBuffer.Clear
+  fullName: Nebula.Serialization.NetBuffer.Clear
+- uid: Nebula.Serialization.NetBuffer.ResetRead*
+  commentId: Overload:Nebula.Serialization.NetBuffer.ResetRead
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.ResetRead.html#Nebula_Serialization_NetBuffer_ResetRead
+  name: ResetRead
+  nameWithType: NetBuffer.ResetRead
+  fullName: Nebula.Serialization.NetBuffer.ResetRead
+- uid: Nebula.Serialization.NetBuffer.ToArray*
+  commentId: Overload:Nebula.Serialization.NetBuffer.ToArray
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.ToArray.html#Nebula_Serialization_NetBuffer_ToArray
+  name: ToArray
+  nameWithType: NetBuffer.ToArray
+  fullName: Nebula.Serialization.NetBuffer.ToArray
+- uid: Nebula.Serialization.NetBuffer.CopyFrom*
+  commentId: Overload:Nebula.Serialization.NetBuffer.CopyFrom
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.CopyFrom.html#Nebula_Serialization_NetBuffer_CopyFrom_Nebula_Serialization_NetBuffer_
+  name: CopyFrom
+  nameWithType: NetBuffer.CopyFrom
+  fullName: Nebula.Serialization.NetBuffer.CopyFrom
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: Nebula.Serialization.NetBuffer.Dispose*
+  commentId: Overload:Nebula.Serialization.NetBuffer.Dispose
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.Dispose.html#Nebula_Serialization_NetBuffer_Dispose
+  name: Dispose
+  nameWithType: NetBuffer.Dispose
+  fullName: Nebula.Serialization.NetBuffer.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.NetBuffer.WritePosition*
+  commentId: Overload:Nebula.Serialization.NetBuffer.WritePosition
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.WritePosition.html#Nebula_Serialization_NetBuffer_WritePosition
+  name: WritePosition
+  nameWithType: NetBuffer.WritePosition
+  fullName: Nebula.Serialization.NetBuffer.WritePosition
+- uid: Nebula.Serialization.NetBuffer.ReadPosition*
+  commentId: Overload:Nebula.Serialization.NetBuffer.ReadPosition
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.ReadPosition.html#Nebula_Serialization_NetBuffer_ReadPosition
+  name: ReadPosition
+  nameWithType: NetBuffer.ReadPosition
+  fullName: Nebula.Serialization.NetBuffer.ReadPosition
+- uid: Nebula.Serialization.NetBuffer.Length*
+  commentId: Overload:Nebula.Serialization.NetBuffer.Length
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.Length.html#Nebula_Serialization_NetBuffer_Length
+  name: Length
+  nameWithType: NetBuffer.Length
+  fullName: Nebula.Serialization.NetBuffer.Length
+- uid: Nebula.Serialization.NetBuffer.Capacity*
+  commentId: Overload:Nebula.Serialization.NetBuffer.Capacity
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.Capacity.html#Nebula_Serialization_NetBuffer_Capacity
+  name: Capacity
+  nameWithType: NetBuffer.Capacity
+  fullName: Nebula.Serialization.NetBuffer.Capacity
+- uid: Nebula.Serialization.NetBuffer.IsReadComplete*
+  commentId: Overload:Nebula.Serialization.NetBuffer.IsReadComplete
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.IsReadComplete.html#Nebula_Serialization_NetBuffer_IsReadComplete
+  name: IsReadComplete
+  nameWithType: NetBuffer.IsReadComplete
+  fullName: Nebula.Serialization.NetBuffer.IsReadComplete
+- uid: Nebula.Serialization.NetBuffer.Remaining*
+  commentId: Overload:Nebula.Serialization.NetBuffer.Remaining
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.Remaining.html#Nebula_Serialization_NetBuffer_Remaining
+  name: Remaining
+  nameWithType: NetBuffer.Remaining
+  fullName: Nebula.Serialization.NetBuffer.Remaining
+- uid: Nebula.Serialization.NetBuffer.WrittenSpan*
+  commentId: Overload:Nebula.Serialization.NetBuffer.WrittenSpan
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.WrittenSpan.html#Nebula_Serialization_NetBuffer_WrittenSpan
+  name: WrittenSpan
+  nameWithType: NetBuffer.WrittenSpan
+  fullName: Nebula.Serialization.NetBuffer.WrittenSpan
+- uid: Nebula.Serialization.NetBuffer.UnreadSpan*
+  commentId: Overload:Nebula.Serialization.NetBuffer.UnreadSpan
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.UnreadSpan.html#Nebula_Serialization_NetBuffer_UnreadSpan
+  name: UnreadSpan
+  nameWithType: NetBuffer.UnreadSpan
+  fullName: Nebula.Serialization.NetBuffer.UnreadSpan
+- uid: Nebula.Serialization.NetBuffer.RawBuffer*
+  commentId: Overload:Nebula.Serialization.NetBuffer.RawBuffer
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.RawBuffer.html#Nebula_Serialization_NetBuffer_RawBuffer
+  name: RawBuffer
+  nameWithType: NetBuffer.RawBuffer
+  fullName: Nebula.Serialization.NetBuffer.RawBuffer
+memberLayout: SeparatePages

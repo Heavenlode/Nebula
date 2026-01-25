@@ -6,21 +6,24 @@ items:
   parent: Nebula
   children:
   - Nebula.NetNode2D.#ctor
-  - Nebula.NetNode2D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode2D)
-  - Nebula.NetNode2D.BsonSerialize(Godot.Variant)
-  - Nebula.NetNode2D.GetDeserializeContext(Nebula.NetNode2D)
+  - Nebula.NetNode2D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  - Nebula.NetNode2D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode2D)
+  - Nebula.NetNode2D.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  - Nebula.NetNode2D.InitializeInterest(ENet.Peer)
   - Nebula.NetNode2D.Network
-  - Nebula.NetNode2D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  - Nebula.NetNode2D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode2D)
-  - Nebula.NetNode2D.Node
+  - Nebula.NetNode2D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode2D)
+  - Nebula.NetNode2D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode2D,Nebula.Serialization.NetBuffer)
   - Nebula.NetNode2D.NodePathFromNetScene
+  - Nebula.NetNode2D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
   - Nebula.NetNode2D.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)
   - Nebula.NetNode2D.OnPropertyChanged(System.String)
   - Nebula.NetNode2D.PropertyChanged
   - Nebula.NetNode2D.Serializers
   - Nebula.NetNode2D.SetupSerializers
   - Nebula.NetNode2D._NetworkProcess(System.Int32)
+  - Nebula.NetNode2D._Notification(System.Int32)
   - Nebula.NetNode2D._PhysicsProcess(System.Double)
+  - Nebula.NetNode2D._Process(System.Double)
   - Nebula.NetNode2D._WorldReady
   langs:
   - csharp
@@ -30,7 +33,7 @@ items:
   fullName: Nebula.NetNode2D
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode2D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -41,21 +44,17 @@ items:
   example: []
   syntax:
     content: >-
-      [SerialTypeIdentifier("NetNode")]
-
       [Icon("res://addons/Nebula/Core/NetNode2D.png")]
 
       [ScriptPath("res://addons/Nebula/Core/NetNode2D.cs")]
 
-      public class NetNode2D : Node2D, IDisposable, INetNode, INotifyPropertyChanged, INetSerializable<NetNode2D>, IBsonSerializable<NetNode2D>, IBsonSerializableBase
+      public class NetNode2D : Node2D, IDisposable, INetNode<NetNode2D>, INetNodeBase, INetSerializable<NetNode2D>, IBsonSerializable<NetNode2D>, IBsonSerializableBase, INotifyPropertyChanged
     content.vb: >-
-      <SerialTypeIdentifier("NetNode")>
-
       <Icon("res://addons/Nebula/Core/NetNode2D.png")>
 
       <ScriptPath("res://addons/Nebula/Core/NetNode2D.cs")>
 
-      Public Class NetNode2D Inherits Node2D Implements IDisposable, INetNode, INotifyPropertyChanged, INetSerializable(Of NetNode2D), IBsonSerializable(Of NetNode2D), IBsonSerializableBase
+      Public Class NetNode2D Inherits Node2D Implements IDisposable, INetNode(Of NetNode2D), INetNodeBase, INetSerializable(Of NetNode2D), IBsonSerializable(Of NetNode2D), IBsonSerializableBase, INotifyPropertyChanged
   inheritance:
   - System.Object
   - Godot.GodotObject
@@ -66,11 +65,12 @@ items:
   - Nebula.Utility.Nodes.NetTransform2D
   implements:
   - System.IDisposable
-  - Nebula.INetNode
-  - System.ComponentModel.INotifyPropertyChanged
+  - Nebula.INetNode{Nebula.NetNode2D}
+  - Nebula.INetNodeBase
   - Nebula.Serialization.INetSerializable{Nebula.NetNode2D}
   - Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}
   - Nebula.Serialization.IBsonSerializableBase
+  - System.ComponentModel.INotifyPropertyChanged
   inheritedMembers:
   - Godot.Node2D.Rotate(System.Single)
   - Godot.Node2D.MoveLocalX(System.Single,System.Boolean)
@@ -256,7 +256,6 @@ items:
   - Godot.Node._GetConfigurationWarnings
   - Godot.Node._GetFocusedAccessibilityElement
   - Godot.Node._Input(Godot.InputEvent)
-  - Godot.Node._Process(System.Double)
   - Godot.Node._Ready
   - Godot.Node._ShortcutInput(Godot.InputEvent)
   - Godot.Node._UnhandledInput(Godot.InputEvent)
@@ -416,7 +415,6 @@ items:
   - Godot.GodotObject._IterGet(Godot.Variant)
   - Godot.GodotObject._IterInit(Godot.Collections.Array)
   - Godot.GodotObject._IterNext(Godot.Collections.Array)
-  - Godot.GodotObject._Notification(System.Int32)
   - Godot.GodotObject._PropertyCanRevert(Godot.StringName)
   - Godot.GodotObject._PropertyGetRevert(Godot.StringName)
   - Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
@@ -485,11 +483,6 @@ items:
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
   attributes:
-  - type: Nebula.Serialization.SerialTypeIdentifier
-    ctor: Nebula.Serialization.SerialTypeIdentifier.#ctor(System.String)
-    arguments:
-    - type: System.String
-      value: NetNode
   - type: Godot.IconAttribute
     ctor: Godot.IconAttribute.#ctor(System.String)
     arguments:
@@ -512,7 +505,7 @@ items:
   fullName: Nebula.NetNode2D.NetNode2D()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -523,6 +516,64 @@ items:
   nameWithType.vb: NetNode2D.New()
   fullName.vb: Nebula.NetNode2D.New()
   name.vb: New()
+- uid: Nebula.NetNode2D._Notification(System.Int32)
+  commentId: M:Nebula.NetNode2D._Notification(System.Int32)
+  id: _Notification(System.Int32)
+  parent: Nebula.NetNode2D
+  langs:
+  - csharp
+  - vb
+  name: _Notification(int)
+  nameWithType: NetNode2D._Notification(int)
+  fullName: Nebula.NetNode2D._Notification(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public override void _Notification(int what)
+    parameters:
+    - id: what
+      type: System.Int32
+    content.vb: Public Overrides Sub _Notification(what As Integer)
+  overridden: Godot.GodotObject._Notification(System.Int32)
+  overload: Nebula.NetNode2D._Notification*
+  nameWithType.vb: NetNode2D._Notification(Integer)
+  fullName.vb: Nebula.NetNode2D._Notification(Integer)
+  name.vb: _Notification(Integer)
+- uid: Nebula.NetNode2D.InitializeInterest(ENet.Peer)
+  commentId: M:Nebula.NetNode2D.InitializeInterest(ENet.Peer)
+  id: InitializeInterest(ENet.Peer)
+  parent: Nebula.NetNode2D
+  langs:
+  - csharp
+  - vb
+  name: InitializeInterest(Peer)
+  nameWithType: NetNode2D.InitializeInterest(Peer)
+  fullName: Nebula.NetNode2D.InitializeInterest(ENet.Peer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: When the node is first spawned, and when players first connect to the world, this method is called to determine the initial interest layers for the node.
+  example: []
+  syntax:
+    content: public virtual long InitializeInterest(Peer peer)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    return:
+      type: System.Int64
+      description: The initial interest layers for the node.
+    content.vb: Public Overridable Function InitializeInterest(peer As Peer) As Long
+  overload: Nebula.NetNode2D.InitializeInterest*
+  implements:
+  - Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
 - uid: Nebula.NetNode2D.SetupSerializers
   commentId: M:Nebula.NetNode2D.SetupSerializers
   id: SetupSerializers
@@ -535,7 +586,7 @@ items:
   fullName: Nebula.NetNode2D.SetupSerializers()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -545,7 +596,7 @@ items:
     content.vb: Public Sub SetupSerializers()
   overload: Nebula.NetNode2D.SetupSerializers*
   implements:
-  - Nebula.INetNode.SetupSerializers
+  - Nebula.INetNodeBase.SetupSerializers
 - uid: Nebula.NetNode2D._WorldReady
   commentId: M:Nebula.NetNode2D._WorldReady
   id: _WorldReady
@@ -558,14 +609,18 @@ items:
   fullName: Nebula.NetNode2D._WorldReady()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Called once when the world is ready for this node.
+  example: []
   syntax:
     content: public virtual void _WorldReady()
     content.vb: Public Overridable Sub _WorldReady()
   overload: Nebula.NetNode2D._WorldReady*
+  implements:
+  - Nebula.INetNodeBase._WorldReady
 - uid: Nebula.NetNode2D._NetworkProcess(System.Int32)
   commentId: M:Nebula.NetNode2D._NetworkProcess(System.Int32)
   id: _NetworkProcess(System.Int32)
@@ -578,10 +633,12 @@ items:
   fullName: Nebula.NetNode2D._NetworkProcess(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Called each network tick. Override to handle per-tick game logic.
+  example: []
   syntax:
     content: public virtual void _NetworkProcess(int _tick)
     parameters:
@@ -589,9 +646,39 @@ items:
       type: System.Int32
     content.vb: Public Overridable Sub _NetworkProcess(_tick As Integer)
   overload: Nebula.NetNode2D._NetworkProcess*
+  implements:
+  - Nebula.INetNodeBase._NetworkProcess(System.Int32)
   nameWithType.vb: NetNode2D._NetworkProcess(Integer)
   fullName.vb: Nebula.NetNode2D._NetworkProcess(Integer)
   name.vb: _NetworkProcess(Integer)
+- uid: Nebula.NetNode2D._Process(System.Double)
+  commentId: M:Nebula.NetNode2D._Process(System.Double)
+  id: _Process(System.Double)
+  parent: Nebula.NetNode2D
+  langs:
+  - csharp
+  - vb
+  name: _Process(double)
+  nameWithType: NetNode2D._Process(double)
+  fullName: Nebula.NetNode2D._Process(double)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public override void _Process(double delta)
+    parameters:
+    - id: delta
+      type: System.Double
+    content.vb: Public Overrides Sub _Process(delta As Double)
+  overridden: Godot.Node._Process(System.Double)
+  overload: Nebula.NetNode2D._Process*
+  nameWithType.vb: NetNode2D._Process(Double)
+  fullName.vb: Nebula.NetNode2D._Process(Double)
+  name.vb: _Process(Double)
 - uid: Nebula.NetNode2D._PhysicsProcess(System.Double)
   commentId: M:Nebula.NetNode2D._PhysicsProcess(System.Double)
   id: _PhysicsProcess(System.Double)
@@ -604,7 +691,7 @@ items:
   fullName: Nebula.NetNode2D._PhysicsProcess(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -620,167 +707,223 @@ items:
   nameWithType.vb: NetNode2D._PhysicsProcess(Double)
   fullName.vb: Nebula.NetNode2D._PhysicsProcess(Double)
   name.vb: _PhysicsProcess(Double)
-- uid: Nebula.NetNode2D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode2D)
-  commentId: M:Nebula.NetNode2D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode2D)
-  id: NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode2D)
+- uid: Nebula.NetNode2D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode2D,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.NetNode2D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode2D,Nebula.Serialization.NetBuffer)
+  id: NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode2D,Nebula.Serialization.NetBuffer)
   isEii: true
   parent: Nebula.NetNode2D
   langs:
   - csharp
   - vb
-  name: NetworkSerialize(WorldRunner, ENetPacketPeer, NetNode2D)
-  nameWithType: NetNode2D.NetworkSerialize(WorldRunner, ENetPacketPeer, NetNode2D)
-  fullName: Nebula.NetNode2D.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.NetNode2D)
+  name: NetworkSerialize(WorldRunner, Peer, NetNode2D, NetBuffer)
+  nameWithType: NetNode2D.NetworkSerialize(WorldRunner, Peer, NetNode2D, NetBuffer)
+  fullName: Nebula.NetNode2D.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.NetNode2D, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Serialize the object to the network buffer.
   example: []
   syntax:
-    content: static HLBuffer NetworkSerialize(WorldRunner currentWorld, ENetPacketPeer peer, NetNode2D obj)
+    content: static void NetworkSerialize(WorldRunner currentWorld, Peer peer, NetNode2D obj, NetBuffer buffer)
     parameters:
     - id: currentWorld
       type: Nebula.WorldRunner
+      description: The current world runner
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
+      description: The target peer
     - id: obj
       type: Nebula.NetNode2D
-    return:
-      type: Nebula.Serialization.HLBuffer
-    content.vb: Shared Function NetworkSerialize(currentWorld As WorldRunner, peer As ENetPacketPeer, obj As NetNode2D) As HLBuffer
+      description: The object to serialize
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+      description: The buffer to write to
+    content.vb: Shared Sub NetworkSerialize(currentWorld As WorldRunner, peer As Peer, obj As NetNode2D, buffer As NetBuffer)
   overload: Nebula.NetNode2D.NetworkSerialize*
   implements:
-  - Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode2D)
-- uid: Nebula.NetNode2D.GetDeserializeContext(Nebula.NetNode2D)
-  commentId: M:Nebula.NetNode2D.GetDeserializeContext(Nebula.NetNode2D)
-  id: GetDeserializeContext(Nebula.NetNode2D)
+  - Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode2D,Nebula.Serialization.NetBuffer)
+- uid: Nebula.NetNode2D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode2D)
+  commentId: M:Nebula.NetNode2D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode2D)
+  id: NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode2D)
   isEii: true
   parent: Nebula.NetNode2D
   langs:
   - csharp
   - vb
-  name: GetDeserializeContext(NetNode2D)
-  nameWithType: NetNode2D.GetDeserializeContext(NetNode2D)
-  fullName: Nebula.NetNode2D.GetDeserializeContext(Nebula.NetNode2D)
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetNode2D)
+  nameWithType: NetNode2D.NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetNode2D)
+  fullName: Nebula.NetNode2D.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.NetNode2D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Deserialize an object from the network buffer.
   example: []
   syntax:
-    content: static Variant GetDeserializeContext(NetNode2D obj)
-    parameters:
-    - id: obj
-      type: Nebula.NetNode2D
-    return:
-      type: Godot.Variant
-    content.vb: Shared Function GetDeserializeContext(obj As NetNode2D) As [Variant]
-  overload: Nebula.NetNode2D.GetDeserializeContext*
-  implements:
-  - Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.GetDeserializeContext(Nebula.NetNode2D)
-- uid: Nebula.NetNode2D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  commentId: M:Nebula.NetNode2D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  id: NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  isEii: true
-  parent: Nebula.NetNode2D
-  langs:
-  - csharp
-  - vb
-  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  nameWithType: NetNode2D.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName: Nebula.NetNode2D.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  example: []
-  syntax:
-    content: static NetNode2D NetworkDeserialize(WorldRunner currentWorld, ENetPacketPeer peer, HLBuffer buffer, Variant ctx)
+    content: static NetNode2D NetworkDeserialize(WorldRunner currentWorld, Peer peer, NetBuffer buffer, NetNode2D existing = null)
     parameters:
     - id: currentWorld
       type: Nebula.WorldRunner
+      description: The current world runner
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
+      description: The source peer
     - id: buffer
-      type: Nebula.Serialization.HLBuffer
-    - id: ctx
-      type: Godot.Variant
+      type: Nebula.Serialization.NetBuffer
+      description: The buffer to read from
+    - id: existing
+      type: Nebula.NetNode2D
+      description: Optional existing instance to update (for delta encoding support)
     return:
       type: Nebula.NetNode2D
-    content.vb: Shared Function NetworkDeserialize(currentWorld As WorldRunner, peer As ENetPacketPeer, buffer As HLBuffer, ctx As [Variant]) As NetNode2D
+      description: The deserialized object (may be the updated existing instance or a new one)
+    content.vb: Shared Function NetworkDeserialize(currentWorld As WorldRunner, peer As Peer, buffer As NetBuffer, existing As NetNode2D = Nothing) As NetNode2D
   overload: Nebula.NetNode2D.NetworkDeserialize*
   implements:
-  - Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-- uid: Nebula.NetNode2D.BsonSerialize(Godot.Variant)
-  commentId: M:Nebula.NetNode2D.BsonSerialize(Godot.Variant)
-  id: BsonSerialize(Godot.Variant)
+  - Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode2D)
+- uid: Nebula.NetNode2D.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  commentId: M:Nebula.NetNode2D.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  id: BsonSerialize(Nebula.Serialization.NetBsonContext)
   parent: Nebula.NetNode2D
   langs:
   - csharp
   - vb
-  name: BsonSerialize(Variant)
-  nameWithType: NetNode2D.BsonSerialize(Variant)
-  fullName: Nebula.NetNode2D.BsonSerialize(Godot.Variant)
+  name: BsonSerialize(NetBsonContext)
+  nameWithType: NetNode2D.BsonSerialize(NetBsonContext)
+  fullName: Nebula.NetNode2D.BsonSerialize(Nebula.Serialization.NetBsonContext)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
   example: []
   syntax:
-    content: public BsonValue BsonSerialize(Variant context)
+    content: public BsonValue BsonSerialize(NetBsonContext context)
     parameters:
     - id: context
-      type: Godot.Variant
+      type: Nebula.Serialization.NetBsonContext
     return:
       type: MongoDB.Bson.BsonValue
-    content.vb: Public Function BsonSerialize(context As [Variant]) As BsonValue
+    content.vb: Public Function BsonSerialize(context As NetBsonContext) As BsonValue
   overload: Nebula.NetNode2D.BsonSerialize*
   implements:
-  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-- uid: Nebula.NetNode2D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode2D)
-  commentId: M:Nebula.NetNode2D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode2D)
-  id: BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode2D)
+  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+- uid: Nebula.NetNode2D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  commentId: M:Nebula.NetNode2D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  id: OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  parent: Nebula.NetNode2D
+  langs:
+  - csharp
+  - vb
+  name: OnBsonDeserialize(NetBsonContext, BsonDocument)
+  nameWithType: NetNode2D.OnBsonDeserialize(NetBsonContext, BsonDocument)
+  fullName: Nebula.NetNode2D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext, MongoDB.Bson.BsonDocument)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode2D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Virtual method called during BSON deserialization to allow custom deserialization logic.
+
+    Override this in derived classes to handle type-specific deserialization.
+  example: []
+  syntax:
+    content: public virtual Task OnBsonDeserialize(NetBsonContext context, BsonDocument doc)
+    parameters:
+    - id: context
+      type: Nebula.Serialization.NetBsonContext
+      description: The deserialization context
+    - id: doc
+      type: MongoDB.Bson.BsonDocument
+      description: The BSON document being deserialized
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Overridable Function OnBsonDeserialize(context As NetBsonContext, doc As BsonDocument) As Task
+  overload: Nebula.NetNode2D.OnBsonDeserialize*
+  implements:
+  - Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+- uid: Nebula.NetNode2D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  commentId: M:Nebula.NetNode2D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  id: BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  parent: Nebula.NetNode2D
+  langs:
+  - csharp
+  - vb
+  name: BsonDeserialize(NetBsonContext, byte[])
+  nameWithType: NetNode2D.BsonDeserialize(NetBsonContext, byte[])
+  fullName: Nebula.NetNode2D.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode2D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Instance method for BSON deserialization convenience.
+  example: []
+  syntax:
+    content: public Task<NetNode2D> BsonDeserialize(NetBsonContext context, byte[] bson)
+    parameters:
+    - id: context
+      type: Nebula.Serialization.NetBsonContext
+    - id: bson
+      type: System.Byte[]
+    return:
+      type: System.Threading.Tasks.Task{Nebula.NetNode2D}
+    content.vb: Public Function BsonDeserialize(context As NetBsonContext, bson As Byte()) As Task(Of NetNode2D)
+  overload: Nebula.NetNode2D.BsonDeserialize*
+  implements:
+  - Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  nameWithType.vb: NetNode2D.BsonDeserialize(NetBsonContext, Byte())
+  fullName.vb: Nebula.NetNode2D.BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte())
+  name.vb: BsonDeserialize(NetBsonContext, Byte())
+- uid: Nebula.NetNode2D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode2D)
+  commentId: M:Nebula.NetNode2D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode2D)
+  id: BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode2D)
   isEii: true
   parent: Nebula.NetNode2D
   langs:
   - csharp
   - vb
-  name: BsonDeserialize(Variant, byte[], NetNode2D)
-  nameWithType: NetNode2D.BsonDeserialize(Variant, byte[], NetNode2D)
-  fullName: Nebula.NetNode2D.BsonDeserialize(Godot.Variant, byte[], Nebula.NetNode2D)
+  name: BsonDeserialize(NetBsonContext, byte[], NetNode2D)
+  nameWithType: NetNode2D.BsonDeserialize(NetBsonContext, byte[], NetNode2D)
+  fullName: Nebula.NetNode2D.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[], Nebula.NetNode2D)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode2D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: >-
+    Static method for BSON deserialization. This handles the base deserialization
+
+    and then calls the virtual OnBsonDeserialize method for custom logic.
   example: []
   syntax:
-    content: static NetNode2D BsonDeserialize(Variant context, byte[] bson, NetNode2D obj)
+    content: static Task<NetNode2D> BsonDeserialize(NetBsonContext context, byte[] bson, NetNode2D obj)
     parameters:
     - id: context
-      type: Godot.Variant
+      type: Nebula.Serialization.NetBsonContext
     - id: bson
       type: System.Byte[]
     - id: obj
       type: Nebula.NetNode2D
     return:
-      type: Nebula.NetNode2D
-    content.vb: Shared Function BsonDeserialize(context As [Variant], bson As Byte(), obj As NetNode2D) As NetNode2D
+      type: System.Threading.Tasks.Task{Nebula.NetNode2D}
+    content.vb: Shared Function BsonDeserialize(context As NetBsonContext, bson As Byte(), obj As NetNode2D) As Task(Of NetNode2D)
   overload: Nebula.NetNode2D.BsonDeserialize*
   implements:
-  - Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode2D)
-  nameWithType.vb: NetNode2D.BsonDeserialize(Variant, Byte(), NetNode2D)
-  fullName.vb: Nebula.NetNode2D.BsonDeserialize(Godot.Variant, Byte(), Nebula.NetNode2D)
-  name.vb: BsonDeserialize(Variant, Byte(), NetNode2D)
+  - Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode2D)
+  nameWithType.vb: NetNode2D.BsonDeserialize(NetBsonContext, Byte(), NetNode2D)
+  fullName.vb: Nebula.NetNode2D.BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte(), Nebula.NetNode2D)
+  name.vb: BsonDeserialize(NetBsonContext, Byte(), NetNode2D)
 - uid: Nebula.NetNode2D.NodePathFromNetScene
   commentId: M:Nebula.NetNode2D.NodePathFromNetScene
   id: NodePathFromNetScene
@@ -793,7 +936,7 @@ items:
   fullName: Nebula.NetNode2D.NodePathFromNetScene()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -815,7 +958,7 @@ items:
   fullName: Nebula.NetNode2D.OnPropertyChanged(string?)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/PropertyChanged.Fody.Analyzer/SourceGenerator/PropertyChanged.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/PropertyChanged.Fody.Analyzer/SourceGenerator/PropertyChanged.g.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -841,7 +984,7 @@ items:
   fullName: Nebula.NetNode2D.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/PropertyChanged.Fody.Analyzer/SourceGenerator/PropertyChanged.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/PropertyChanged.Fody.Analyzer/SourceGenerator/PropertyChanged.g.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -852,33 +995,6 @@ items:
       type: System.ComponentModel.PropertyChangedEventArgs
     content.vb: Protected Overridable Sub OnPropertyChanged(eventArgs As PropertyChangedEventArgs)
   overload: Nebula.NetNode2D.OnPropertyChanged*
-- uid: Nebula.NetNode2D.Node
-  commentId: P:Nebula.NetNode2D.Node
-  id: Node
-  parent: Nebula.NetNode2D
-  langs:
-  - csharp
-  - vb
-  name: Node
-  nameWithType: NetNode2D.Node
-  fullName: Nebula.NetNode2D.Node
-  type: Property
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: This allows us to access the Node without having to manually cast it every time we want to access it.
-  example: []
-  syntax:
-    content: public Node Node { get; }
-    parameters: []
-    return:
-      type: Godot.Node
-    content.vb: Public ReadOnly Property Node As Node
-  overload: Nebula.NetNode2D.Node*
-  implements:
-  - Nebula.INetNode.Node
 - uid: Nebula.NetNode2D.Network
   commentId: P:Nebula.NetNode2D.Network
   id: Network
@@ -891,7 +1007,7 @@ items:
   fullName: Nebula.NetNode2D.Network
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -904,7 +1020,7 @@ items:
     content.vb: Public ReadOnly Property Network As NetworkController
   overload: Nebula.NetNode2D.Network*
   implements:
-  - Nebula.INetNode.Network
+  - Nebula.INetNodeBase.Network
 - uid: Nebula.NetNode2D.Serializers
   commentId: P:Nebula.NetNode2D.Serializers
   id: Serializers
@@ -917,7 +1033,7 @@ items:
   fullName: Nebula.NetNode2D.Serializers
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetNode2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetNode2D.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -930,7 +1046,7 @@ items:
     content.vb: Public ReadOnly Property Serializers As IStateSerializer()
   overload: Nebula.NetNode2D.Serializers*
   implements:
-  - Nebula.INetNode.Serializers
+  - Nebula.INetNodeBase.Serializers
 - uid: Nebula.NetNode2D.PropertyChanged
   commentId: E:Nebula.NetNode2D.PropertyChanged
   id: PropertyChanged
@@ -943,7 +1059,7 @@ items:
   fullName: Nebula.NetNode2D.PropertyChanged
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode2D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode2D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1018,22 +1134,49 @@ references:
   name: IDisposable
   nameWithType: IDisposable
   fullName: System.IDisposable
-- uid: Nebula.INetNode
-  commentId: T:Nebula.INetNode
+- uid: Nebula.INetNode{Nebula.NetNode2D}
+  commentId: T:Nebula.INetNode{Nebula.NetNode2D}
+  parent: Nebula
+  definition: Nebula.INetNode`1
+  href: Nebula.INetNode-1.html
+  name: INetNode<NetNode2D>
+  nameWithType: INetNode<NetNode2D>
+  fullName: Nebula.INetNode<Nebula.NetNode2D>
+  nameWithType.vb: INetNode(Of NetNode2D)
+  fullName.vb: Nebula.INetNode(Of Nebula.NetNode2D)
+  name.vb: INetNode(Of NetNode2D)
+  spec.csharp:
+  - uid: Nebula.INetNode`1
+    name: INetNode
+    isExternal: true
+    href: Nebula.INetNode-1.html
+  - name: <
+  - uid: Nebula.NetNode2D
+    name: NetNode2D
+    isExternal: true
+    href: Nebula.NetNode2D.html
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.INetNode`1
+    name: INetNode
+    isExternal: true
+    href: Nebula.INetNode-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.NetNode2D
+    name: NetNode2D
+    isExternal: true
+    href: Nebula.NetNode2D.html
+  - name: )
+- uid: Nebula.INetNodeBase
+  commentId: T:Nebula.INetNodeBase
   parent: Nebula
   isExternal: true
-  href: Nebula.INetNode.html
-  name: INetNode
-  nameWithType: INetNode
-  fullName: Nebula.INetNode
-- uid: System.ComponentModel.INotifyPropertyChanged
-  commentId: T:System.ComponentModel.INotifyPropertyChanged
-  parent: System.ComponentModel
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged
-  name: INotifyPropertyChanged
-  nameWithType: INotifyPropertyChanged
-  fullName: System.ComponentModel.INotifyPropertyChanged
+  href: Nebula.INetNodeBase.html
+  name: INetNodeBase
+  nameWithType: INetNodeBase
+  fullName: Nebula.INetNodeBase
 - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}
   commentId: T:Nebula.Serialization.INetSerializable{Nebula.NetNode2D}
   parent: Nebula.Serialization
@@ -1112,6 +1255,14 @@ references:
   name: IBsonSerializableBase
   nameWithType: IBsonSerializableBase
   fullName: Nebula.Serialization.IBsonSerializableBase
+- uid: System.ComponentModel.INotifyPropertyChanged
+  commentId: T:System.ComponentModel.INotifyPropertyChanged
+  parent: System.ComponentModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged
+  name: INotifyPropertyChanged
+  nameWithType: INotifyPropertyChanged
+  fullName: System.ComponentModel.INotifyPropertyChanged
 - uid: Godot.Node2D.Rotate(System.Single)
   commentId: M:Godot.Node2D.Rotate(System.Single)
   parent: Godot.Node2D
@@ -6322,37 +6473,6 @@ references:
     name: InputEvent
     isExternal: true
   - name: )
-- uid: Godot.Node._Process(System.Double)
-  commentId: M:Godot.Node._Process(System.Double)
-  parent: Godot.Node
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.double
-  name: _Process(double)
-  nameWithType: Node._Process(double)
-  fullName: Godot.Node._Process(double)
-  nameWithType.vb: Node._Process(Double)
-  fullName.vb: Godot.Node._Process(Double)
-  name.vb: _Process(Double)
-  spec.csharp:
-  - uid: Godot.Node._Process(System.Double)
-    name: _Process
-    isExternal: true
-  - name: (
-  - uid: System.Double
-    name: double
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.double
-  - name: )
-  spec.vb:
-  - uid: Godot.Node._Process(System.Double)
-    name: _Process
-    isExternal: true
-  - name: (
-  - uid: System.Double
-    name: Double
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.double
-  - name: )
 - uid: Godot.Node._Ready
   commentId: M:Godot.Node._Ready
   parent: Godot.Node
@@ -10099,37 +10219,6 @@ references:
     name: Array
     isExternal: true
   - name: )
-- uid: Godot.GodotObject._Notification(System.Int32)
-  commentId: M:Godot.GodotObject._Notification(System.Int32)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: _Notification(int)
-  nameWithType: GodotObject._Notification(int)
-  fullName: Godot.GodotObject._Notification(int)
-  nameWithType.vb: GodotObject._Notification(Integer)
-  fullName.vb: Godot.GodotObject._Notification(Integer)
-  name.vb: _Notification(Integer)
-  spec.csharp:
-  - uid: Godot.GodotObject._Notification(System.Int32)
-    name: _Notification
-    isExternal: true
-  - name: (
-  - uid: System.Int32
-    name: int
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._Notification(System.Int32)
-    name: _Notification
-    isExternal: true
-  - name: (
-  - uid: System.Int32
-    name: Integer
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: )
 - uid: Godot.GodotObject._PropertyCanRevert(Godot.StringName)
   commentId: M:Godot.GodotObject._PropertyCanRevert(Godot.StringName)
   parent: Godot.GodotObject
@@ -12068,33 +12157,34 @@ references:
   name: System
   nameWithType: System
   fullName: System
-- uid: System.ComponentModel
-  commentId: N:System.ComponentModel
+- uid: Nebula.INetNode`1
+  commentId: T:Nebula.INetNode`1
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system
-  name: System.ComponentModel
-  nameWithType: System.ComponentModel
-  fullName: System.ComponentModel
+  href: Nebula.INetNode-1.html
+  name: INetNode<T>
+  nameWithType: INetNode<T>
+  fullName: Nebula.INetNode<T>
+  nameWithType.vb: INetNode(Of T)
+  fullName.vb: Nebula.INetNode(Of T)
+  name.vb: INetNode(Of T)
   spec.csharp:
-  - uid: System
-    name: System
+  - uid: Nebula.INetNode`1
+    name: INetNode
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system
-  - name: .
-  - uid: System.ComponentModel
-    name: ComponentModel
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
+    href: Nebula.INetNode-1.html
+  - name: <
+  - name: T
+  - name: '>'
   spec.vb:
-  - uid: System
-    name: System
+  - uid: Nebula.INetNode`1
+    name: INetNode
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system
-  - name: .
-  - uid: System.ComponentModel
-    name: ComponentModel
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
+    href: Nebula.INetNode-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
 - uid: Nebula.Serialization.INetSerializable`1
   commentId: T:Nebula.Serialization.INetSerializable`1
   isExternal: true
@@ -12178,59 +12268,81 @@ references:
   - name: " "
   - name: T
   - name: )
+- uid: System.ComponentModel
+  commentId: N:System.ComponentModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.ComponentModel
+  nameWithType: System.ComponentModel
+  fullName: System.ComponentModel
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.ComponentModel
+    name: ComponentModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.ComponentModel
+    name: ComponentModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
 - uid: Nebula.NetNode2D.#ctor*
   commentId: Overload:Nebula.NetNode2D.#ctor
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D__ctor
+  href: Nebula.NetNode2D.-ctor.html#Nebula_NetNode2D__ctor
   name: NetNode2D
   nameWithType: NetNode2D.NetNode2D
   fullName: Nebula.NetNode2D.NetNode2D
   nameWithType.vb: NetNode2D.New
   fullName.vb: Nebula.NetNode2D.New
   name.vb: New
-- uid: Nebula.NetNode2D.SetupSerializers*
-  commentId: Overload:Nebula.NetNode2D.SetupSerializers
+- uid: Godot.GodotObject._Notification(System.Int32)
+  commentId: M:Godot.GodotObject._Notification(System.Int32)
+  parent: Godot.GodotObject
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_SetupSerializers
-  name: SetupSerializers
-  nameWithType: NetNode2D.SetupSerializers
-  fullName: Nebula.NetNode2D.SetupSerializers
-- uid: Nebula.INetNode.SetupSerializers
-  commentId: M:Nebula.INetNode.SetupSerializers
-  parent: Nebula.INetNode
-  isExternal: true
-  href: Nebula.INetNode.html#Nebula_INetNode_SetupSerializers
-  name: SetupSerializers()
-  nameWithType: INetNode.SetupSerializers()
-  fullName: Nebula.INetNode.SetupSerializers()
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: _Notification(int)
+  nameWithType: GodotObject._Notification(int)
+  fullName: Godot.GodotObject._Notification(int)
+  nameWithType.vb: GodotObject._Notification(Integer)
+  fullName.vb: Godot.GodotObject._Notification(Integer)
+  name.vb: _Notification(Integer)
   spec.csharp:
-  - uid: Nebula.INetNode.SetupSerializers
-    name: SetupSerializers
+  - uid: Godot.GodotObject._Notification(System.Int32)
+    name: _Notification
     isExternal: true
-    href: Nebula.INetNode.html#Nebula_INetNode_SetupSerializers
   - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
   - name: )
   spec.vb:
-  - uid: Nebula.INetNode.SetupSerializers
-    name: SetupSerializers
+  - uid: Godot.GodotObject._Notification(System.Int32)
+    name: _Notification
     isExternal: true
-    href: Nebula.INetNode.html#Nebula_INetNode_SetupSerializers
   - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
   - name: )
-- uid: Nebula.NetNode2D._WorldReady*
-  commentId: Overload:Nebula.NetNode2D._WorldReady
+- uid: Nebula.NetNode2D._Notification*
+  commentId: Overload:Nebula.NetNode2D._Notification
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D__WorldReady
-  name: _WorldReady
-  nameWithType: NetNode2D._WorldReady
-  fullName: Nebula.NetNode2D._WorldReady
-- uid: Nebula.NetNode2D._NetworkProcess*
-  commentId: Overload:Nebula.NetNode2D._NetworkProcess
-  isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D__NetworkProcess_System_Int32_
-  name: _NetworkProcess
-  nameWithType: NetNode2D._NetworkProcess
-  fullName: Nebula.NetNode2D._NetworkProcess
+  href: Nebula.NetNode2D._Notification.html#Nebula_NetNode2D__Notification_System_Int32_
+  name: _Notification
+  nameWithType: NetNode2D._Notification
+  fullName: Nebula.NetNode2D._Notification
 - uid: System.Int32
   commentId: T:System.Int32
   parent: System
@@ -12242,6 +12354,212 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
+- uid: Nebula.NetNode2D.InitializeInterest*
+  commentId: Overload:Nebula.NetNode2D.InitializeInterest
+  isExternal: true
+  href: Nebula.NetNode2D.InitializeInterest.html#Nebula_NetNode2D_InitializeInterest_ENet_Peer_
+  name: InitializeInterest
+  nameWithType: NetNode2D.InitializeInterest
+  fullName: Nebula.NetNode2D.InitializeInterest
+- uid: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  commentId: M:Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.InitializeInterest.html#Nebula_INetNodeBase_InitializeInterest_ENet_Peer_
+  name: InitializeInterest(Peer)
+  nameWithType: INetNodeBase.InitializeInterest(Peer)
+  fullName: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+    name: InitializeInterest
+    isExternal: true
+    href: Nebula.INetNodeBase.InitializeInterest.html#Nebula_INetNodeBase_InitializeInterest_ENet_Peer_
+  - name: (
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+    name: InitializeInterest
+    isExternal: true
+    href: Nebula.INetNodeBase.InitializeInterest.html#Nebula_INetNodeBase_InitializeInterest_ENet_Peer_
+  - name: (
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: )
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
+  isExternal: true
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: ENet
+  commentId: N:ENet
+  isExternal: true
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
+- uid: Nebula.NetNode2D.SetupSerializers*
+  commentId: Overload:Nebula.NetNode2D.SetupSerializers
+  isExternal: true
+  href: Nebula.NetNode2D.SetupSerializers.html#Nebula_NetNode2D_SetupSerializers
+  name: SetupSerializers
+  nameWithType: NetNode2D.SetupSerializers
+  fullName: Nebula.NetNode2D.SetupSerializers
+- uid: Nebula.INetNodeBase.SetupSerializers
+  commentId: M:Nebula.INetNodeBase.SetupSerializers
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.SetupSerializers.html#Nebula_INetNodeBase_SetupSerializers
+  name: SetupSerializers()
+  nameWithType: INetNodeBase.SetupSerializers()
+  fullName: Nebula.INetNodeBase.SetupSerializers()
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.SetupSerializers
+    name: SetupSerializers
+    isExternal: true
+    href: Nebula.INetNodeBase.SetupSerializers.html#Nebula_INetNodeBase_SetupSerializers
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.SetupSerializers
+    name: SetupSerializers
+    isExternal: true
+    href: Nebula.INetNodeBase.SetupSerializers.html#Nebula_INetNodeBase_SetupSerializers
+  - name: (
+  - name: )
+- uid: Nebula.NetNode2D._WorldReady*
+  commentId: Overload:Nebula.NetNode2D._WorldReady
+  isExternal: true
+  href: Nebula.NetNode2D._WorldReady.html#Nebula_NetNode2D__WorldReady
+  name: _WorldReady
+  nameWithType: NetNode2D._WorldReady
+  fullName: Nebula.NetNode2D._WorldReady
+- uid: Nebula.INetNodeBase._WorldReady
+  commentId: M:Nebula.INetNodeBase._WorldReady
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase._WorldReady.html#Nebula_INetNodeBase__WorldReady
+  name: _WorldReady()
+  nameWithType: INetNodeBase._WorldReady()
+  fullName: Nebula.INetNodeBase._WorldReady()
+  spec.csharp:
+  - uid: Nebula.INetNodeBase._WorldReady
+    name: _WorldReady
+    isExternal: true
+    href: Nebula.INetNodeBase._WorldReady.html#Nebula_INetNodeBase__WorldReady
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase._WorldReady
+    name: _WorldReady
+    isExternal: true
+    href: Nebula.INetNodeBase._WorldReady.html#Nebula_INetNodeBase__WorldReady
+  - name: (
+  - name: )
+- uid: Nebula.NetNode2D._NetworkProcess*
+  commentId: Overload:Nebula.NetNode2D._NetworkProcess
+  isExternal: true
+  href: Nebula.NetNode2D._NetworkProcess.html#Nebula_NetNode2D__NetworkProcess_System_Int32_
+  name: _NetworkProcess
+  nameWithType: NetNode2D._NetworkProcess
+  fullName: Nebula.NetNode2D._NetworkProcess
+- uid: Nebula.INetNodeBase._NetworkProcess(System.Int32)
+  commentId: M:Nebula.INetNodeBase._NetworkProcess(System.Int32)
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase._NetworkProcess.html#Nebula_INetNodeBase__NetworkProcess_System_Int32_
+  name: _NetworkProcess(int)
+  nameWithType: INetNodeBase._NetworkProcess(int)
+  fullName: Nebula.INetNodeBase._NetworkProcess(int)
+  nameWithType.vb: INetNodeBase._NetworkProcess(Integer)
+  fullName.vb: Nebula.INetNodeBase._NetworkProcess(Integer)
+  name.vb: _NetworkProcess(Integer)
+  spec.csharp:
+  - uid: Nebula.INetNodeBase._NetworkProcess(System.Int32)
+    name: _NetworkProcess
+    isExternal: true
+    href: Nebula.INetNodeBase._NetworkProcess.html#Nebula_INetNodeBase__NetworkProcess_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase._NetworkProcess(System.Int32)
+    name: _NetworkProcess
+    isExternal: true
+    href: Nebula.INetNodeBase._NetworkProcess.html#Nebula_INetNodeBase__NetworkProcess_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Godot.Node._Process(System.Double)
+  commentId: M:Godot.Node._Process(System.Double)
+  parent: Godot.Node
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: _Process(double)
+  nameWithType: Node._Process(double)
+  fullName: Godot.Node._Process(double)
+  nameWithType.vb: Node._Process(Double)
+  fullName.vb: Godot.Node._Process(Double)
+  name.vb: _Process(Double)
+  spec.csharp:
+  - uid: Godot.Node._Process(System.Double)
+    name: _Process
+    isExternal: true
+  - name: (
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: )
+  spec.vb:
+  - uid: Godot.Node._Process(System.Double)
+    name: _Process
+    isExternal: true
+  - name: (
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: )
+- uid: Nebula.NetNode2D._Process*
+  commentId: Overload:Nebula.NetNode2D._Process
+  isExternal: true
+  href: Nebula.NetNode2D._Process.html#Nebula_NetNode2D__Process_System_Double_
+  name: _Process
+  nameWithType: NetNode2D._Process
+  fullName: Nebula.NetNode2D._Process
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
 - uid: Godot.Node._PhysicsProcess(System.Double)
   commentId: M:Godot.Node._PhysicsProcess(System.Double)
   parent: Godot.Node
@@ -12276,43 +12594,32 @@ references:
 - uid: Nebula.NetNode2D._PhysicsProcess*
   commentId: Overload:Nebula.NetNode2D._PhysicsProcess
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D__PhysicsProcess_System_Double_
+  href: Nebula.NetNode2D._PhysicsProcess.html#Nebula_NetNode2D__PhysicsProcess_System_Double_
   name: _PhysicsProcess
   nameWithType: NetNode2D._PhysicsProcess
   fullName: Nebula.NetNode2D._PhysicsProcess
-- uid: System.Double
-  commentId: T:System.Double
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.double
-  name: double
-  nameWithType: double
-  fullName: double
-  nameWithType.vb: Double
-  fullName.vb: Double
-  name.vb: Double
 - uid: Nebula.NetNode2D.NetworkSerialize*
   commentId: Overload:Nebula.NetNode2D.NetworkSerialize
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_NetNode2D_
+  href: Nebula.NetNode2D.NetworkSerialize.html#Nebula_NetNode2D_NetworkSerialize_Nebula_WorldRunner_ENet_Peer_Nebula_NetNode2D_Nebula_Serialization_NetBuffer_
   name: NetworkSerialize
   nameWithType: NetNode2D.NetworkSerialize
   fullName: Nebula.NetNode2D.NetworkSerialize
-- uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode2D)
-  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode2D)
+- uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode2D,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode2D,Nebula.Serialization.NetBuffer)
   parent: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}
-  definition: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
-  name: NetworkSerialize(WorldRunner, ENetPacketPeer, NetNode2D)
-  nameWithType: INetSerializable<NetNode2D>.NetworkSerialize(WorldRunner, ENetPacketPeer, NetNode2D)
-  fullName: Nebula.Serialization.INetSerializable<Nebula.NetNode2D>.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.NetNode2D)
-  nameWithType.vb: INetSerializable(Of NetNode2D).NetworkSerialize(WorldRunner, ENetPacketPeer, NetNode2D)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetNode2D).NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.NetNode2D)
+  definition: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+  href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  name: NetworkSerialize(WorldRunner, Peer, NetNode2D, NetBuffer)
+  nameWithType: INetSerializable<NetNode2D>.NetworkSerialize(WorldRunner, Peer, NetNode2D, NetBuffer)
+  fullName: Nebula.Serialization.INetSerializable<Nebula.NetNode2D>.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.NetNode2D, Nebula.Serialization.NetBuffer)
+  nameWithType.vb: INetSerializable(Of NetNode2D).NetworkSerialize(WorldRunner, Peer, NetNode2D, NetBuffer)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetNode2D).NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.NetNode2D, Nebula.Serialization.NetBuffer)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode2D)
+  - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode2D,Nebula.Serialization.NetBuffer)
     name: NetworkSerialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -12320,8 +12627,8 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
@@ -12329,12 +12636,18 @@ references:
     name: NetNode2D
     isExternal: true
     href: Nebula.NetNode2D.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode2D)
+  - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode2D,Nebula.Serialization.NetBuffer)
     name: NetworkSerialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -12342,8 +12655,8 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
@@ -12351,6 +12664,12 @@ references:
     name: NetNode2D
     isExternal: true
     href: Nebula.NetNode2D.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
 - uid: Nebula.WorldRunner
   commentId: T:Nebula.WorldRunner
@@ -12360,13 +12679,6 @@ references:
   name: WorldRunner
   nameWithType: WorldRunner
   fullName: Nebula.WorldRunner
-- uid: Godot.ENetPacketPeer
-  commentId: T:Godot.ENetPacketPeer
-  parent: Godot
-  isExternal: true
-  name: ENetPacketPeer
-  nameWithType: ENetPacketPeer
-  fullName: Godot.ENetPacketPeer
 - uid: Nebula.NetNode2D
   commentId: T:Nebula.NetNode2D
   parent: Nebula
@@ -12375,28 +12687,28 @@ references:
   name: NetNode2D
   nameWithType: NetNode2D
   fullName: Nebula.NetNode2D
-- uid: Nebula.Serialization.HLBuffer
-  commentId: T:Nebula.Serialization.HLBuffer
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
   parent: Nebula.Serialization
   isExternal: true
-  href: Nebula.Serialization.HLBuffer.html
-  name: HLBuffer
-  nameWithType: HLBuffer
-  fullName: Nebula.Serialization.HLBuffer
-- uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
-  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
   isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
-  name: NetworkSerialize(WorldRunner, ENetPacketPeer, T)
-  nameWithType: INetSerializable<T>.NetworkSerialize(WorldRunner, ENetPacketPeer, T)
-  fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, T)
-  nameWithType.vb: INetSerializable(Of T).NetworkSerialize(WorldRunner, ENetPacketPeer, T)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, T)
+  href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  name: NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  nameWithType: INetSerializable<T>.NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer)
+  nameWithType.vb: INetSerializable(Of T).NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
     name: NetworkSerialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -12404,18 +12716,24 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
   - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
     name: NetworkSerialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -12423,106 +12741,41 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
   - name: T
-  - name: )
-- uid: Nebula.NetNode2D.GetDeserializeContext*
-  commentId: Overload:Nebula.NetNode2D.GetDeserializeContext
-  isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_GetDeserializeContext_Nebula_NetNode2D_
-  name: GetDeserializeContext
-  nameWithType: NetNode2D.GetDeserializeContext
-  fullName: Nebula.NetNode2D.GetDeserializeContext
-- uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.GetDeserializeContext(Nebula.NetNode2D)
-  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.GetDeserializeContext(Nebula.NetNode2D)
-  parent: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}
-  definition: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  name: GetDeserializeContext(NetNode2D)
-  nameWithType: INetSerializable<NetNode2D>.GetDeserializeContext(NetNode2D)
-  fullName: Nebula.Serialization.INetSerializable<Nebula.NetNode2D>.GetDeserializeContext(Nebula.NetNode2D)
-  nameWithType.vb: INetSerializable(Of NetNode2D).GetDeserializeContext(NetNode2D)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetNode2D).GetDeserializeContext(Nebula.NetNode2D)
-  spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.GetDeserializeContext(Nebula.NetNode2D)
-    name: GetDeserializeContext
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - uid: Nebula.NetNode2D
-    name: NetNode2D
-    isExternal: true
-    href: Nebula.NetNode2D.html
-  - name: )
-  spec.vb:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.GetDeserializeContext(Nebula.NetNode2D)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - uid: Nebula.NetNode2D
-    name: NetNode2D
-    isExternal: true
-    href: Nebula.NetNode2D.html
-  - name: )
-- uid: Godot.Variant
-  commentId: T:Godot.Variant
-  parent: Godot
-  isExternal: true
-  name: Variant
-  nameWithType: Variant
-  fullName: Godot.Variant
-- uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-  commentId: M:Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-  isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  name: GetDeserializeContext(T)
-  nameWithType: INetSerializable<T>.GetDeserializeContext(T)
-  fullName: Nebula.Serialization.INetSerializable<T>.GetDeserializeContext(T)
-  nameWithType.vb: INetSerializable(Of T).GetDeserializeContext(T)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of T).GetDeserializeContext(T)
-  spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - name: T
-  - name: )
-  spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - name: T
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
 - uid: Nebula.NetNode2D.NetworkDeserialize*
   commentId: Overload:Nebula.NetNode2D.NetworkDeserialize
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+  href: Nebula.NetNode2D.NetworkDeserialize.html#Nebula_NetNode2D_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_Nebula_NetNode2D_
   name: NetworkDeserialize
   nameWithType: NetNode2D.NetworkDeserialize
   fullName: Nebula.NetNode2D.NetworkDeserialize
-- uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+- uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode2D)
+  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode2D)
   parent: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}
-  definition: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
-  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  nameWithType: INetSerializable<NetNode2D>.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName: Nebula.Serialization.INetSerializable<Nebula.NetNode2D>.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  nameWithType.vb: INetSerializable(Of NetNode2D).NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetNode2D).NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
+  definition: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetNode2D)
+  nameWithType: INetSerializable<NetNode2D>.NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetNode2D)
+  fullName: Nebula.Serialization.INetSerializable<Nebula.NetNode2D>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.NetNode2D)
+  nameWithType.vb: INetSerializable(Of NetNode2D).NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetNode2D)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetNode2D).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.NetNode2D)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode2D)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -12530,26 +12783,27 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
+    href: Nebula.Serialization.NetBuffer.html
   - name: ','
   - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.NetNode2D
+    name: NetNode2D
     isExternal: true
+    href: Nebula.NetNode2D.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode2D}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode2D)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -12557,35 +12811,36 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
+    href: Nebula.Serialization.NetBuffer.html
   - name: ','
   - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.NetNode2D
+    name: NetNode2D
     isExternal: true
+    href: Nebula.NetNode2D.html
   - name: )
-- uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+- uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
   isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
-  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  nameWithType: INetSerializable<T>.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  nameWithType.vb: INetSerializable(Of T).NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
+  href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  nameWithType: INetSerializable<T>.NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, T)
+  nameWithType.vb: INetSerializable(Of T).NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, T)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -12593,26 +12848,24 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
+    href: Nebula.Serialization.NetBuffer.html
   - name: ','
   - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
+  - name: T
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -12620,56 +12873,64 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
+    href: Nebula.Serialization.NetBuffer.html
   - name: ','
   - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
+  - name: T
   - name: )
 - uid: Nebula.NetNode2D.BsonSerialize*
   commentId: Overload:Nebula.NetNode2D.BsonSerialize
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_BsonSerialize_Godot_Variant_
+  href: Nebula.NetNode2D.BsonSerialize.html#Nebula_NetNode2D_BsonSerialize_Nebula_Serialization_NetBsonContext_
   name: BsonSerialize
   nameWithType: NetNode2D.BsonSerialize
   fullName: Nebula.NetNode2D.BsonSerialize
-- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
   parent: Nebula.Serialization.IBsonSerializableBase
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
-  name: BsonSerialize(Variant)
-  nameWithType: IBsonSerializableBase.BsonSerialize(Variant)
-  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  name: BsonSerialize(NetBsonContext)
+  nameWithType: IBsonSerializableBase.BsonSerialize(NetBsonContext)
+  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
   spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
     name: BsonSerialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+    href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
     name: BsonSerialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+    href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: )
+- uid: Nebula.Serialization.NetBsonContext
+  commentId: T:Nebula.Serialization.NetBsonContext
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBsonContext.html
+  name: NetBsonContext
+  nameWithType: NetBsonContext
+  fullName: Nebula.Serialization.NetBsonContext
 - uid: MongoDB.Bson.BsonValue
   commentId: T:MongoDB.Bson.BsonValue
   parent: MongoDB.Bson
@@ -12699,33 +12960,133 @@ references:
   - uid: MongoDB.Bson
     name: Bson
     isExternal: true
+- uid: Nebula.NetNode2D.OnBsonDeserialize*
+  commentId: Overload:Nebula.NetNode2D.OnBsonDeserialize
+  isExternal: true
+  href: Nebula.NetNode2D.OnBsonDeserialize.html#Nebula_NetNode2D_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  name: OnBsonDeserialize
+  nameWithType: NetNode2D.OnBsonDeserialize
+  fullName: Nebula.NetNode2D.OnBsonDeserialize
+- uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  parent: Nebula.Serialization.IBsonSerializableBase
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  name: OnBsonDeserialize(NetBsonContext, BsonDocument)
+  nameWithType: IBsonSerializableBase.OnBsonDeserialize(NetBsonContext, BsonDocument)
+  fullName: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext, MongoDB.Bson.BsonDocument)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+    name: OnBsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: MongoDB.Bson.BsonDocument
+    name: BsonDocument
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+    name: OnBsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: MongoDB.Bson.BsonDocument
+    name: BsonDocument
+    isExternal: true
+  - name: )
+- uid: MongoDB.Bson.BsonDocument
+  commentId: T:MongoDB.Bson.BsonDocument
+  parent: MongoDB.Bson
+  isExternal: true
+  name: BsonDocument
+  nameWithType: BsonDocument
+  fullName: MongoDB.Bson.BsonDocument
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
 - uid: Nebula.NetNode2D.BsonDeserialize*
   commentId: Overload:Nebula.NetNode2D.BsonDeserialize
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_BsonDeserialize_Godot_Variant_System_Byte___Nebula_NetNode2D_
+  href: Nebula.NetNode2D.BsonDeserialize.html#Nebula_NetNode2D_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
   name: BsonDeserialize
   nameWithType: NetNode2D.BsonDeserialize
   fullName: Nebula.NetNode2D.BsonDeserialize
-- uid: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode2D)
-  commentId: M:Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode2D)
+- uid: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  commentId: M:Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
   parent: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}
-  definition: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-  href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
-  name: BsonDeserialize(Variant, byte[], NetNode2D)
-  nameWithType: IBsonSerializable<NetNode2D>.BsonDeserialize(Variant, byte[], NetNode2D)
-  fullName: Nebula.Serialization.IBsonSerializable<Nebula.NetNode2D>.BsonDeserialize(Godot.Variant, byte[], Nebula.NetNode2D)
-  nameWithType.vb: IBsonSerializable(Of NetNode2D).BsonDeserialize(Variant, Byte(), NetNode2D)
-  fullName.vb: Nebula.Serialization.IBsonSerializable(Of Nebula.NetNode2D).BsonDeserialize(Godot.Variant, Byte(), Nebula.NetNode2D)
-  name.vb: BsonDeserialize(Variant, Byte(), NetNode2D)
+  definition: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  name: BsonDeserialize(NetBsonContext, byte[])
+  nameWithType: IBsonSerializable<NetNode2D>.BsonDeserialize(NetBsonContext, byte[])
+  fullName: Nebula.Serialization.IBsonSerializable<Nebula.NetNode2D>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[])
+  nameWithType.vb: IBsonSerializable(Of NetNode2D).BsonDeserialize(NetBsonContext, Byte())
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of Nebula.NetNode2D).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte())
+  name.vb: BsonDeserialize(NetBsonContext, Byte())
   spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode2D)
+  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
   - uid: System.Byte
@@ -12734,22 +13095,17 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.byte
   - name: '['
   - name: ']'
-  - name: ','
-  - name: " "
-  - uid: Nebula.NetNode2D
-    name: NetNode2D
-    isExternal: true
-    href: Nebula.NetNode2D.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode2D)
+  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
   - uid: System.Byte
@@ -12758,12 +13114,6 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.byte
   - name: (
   - name: )
-  - name: ','
-  - name: " "
-  - uid: Nebula.NetNode2D
-    name: NetNode2D
-    isExternal: true
-    href: Nebula.NetNode2D.html
   - name: )
 - uid: System.Byte[]
   isExternal: true
@@ -12788,25 +13138,198 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.byte
   - name: (
   - name: )
-- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-  isExternal: true
-  href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
-  name: BsonDeserialize(Variant, byte[], T)
-  nameWithType: IBsonSerializable<T>.BsonDeserialize(Variant, byte[], T)
-  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Godot.Variant, byte[], T)
-  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(Variant, Byte(), T)
-  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Godot.Variant, Byte(), T)
-  name.vb: BsonDeserialize(Variant, Byte(), T)
+- uid: System.Threading.Tasks.Task{Nebula.NetNode2D}
+  commentId: T:System.Threading.Tasks.Task{Nebula.NetNode2D}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<NetNode2D>
+  nameWithType: Task<NetNode2D>
+  fullName: System.Threading.Tasks.Task<Nebula.NetNode2D>
+  nameWithType.vb: Task(Of NetNode2D)
+  fullName.vb: System.Threading.Tasks.Task(Of Nebula.NetNode2D)
+  name.vb: Task(Of NetNode2D)
   spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Nebula.NetNode2D
+    name: NetNode2D
+    isExternal: true
+    href: Nebula.NetNode2D.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.NetNode2D
+    name: NetNode2D
+    isExternal: true
+    href: Nebula.NetNode2D.html
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  name: BsonDeserialize(NetBsonContext, byte[])
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(NetBsonContext, byte[])
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[])
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(NetBsonContext, Byte())
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte())
+  name.vb: BsonDeserialize(NetBsonContext, Byte())
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode2D)
+  commentId: M:Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode2D)
+  parent: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}
+  definition: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  name: BsonDeserialize(NetBsonContext, byte[], NetNode2D)
+  nameWithType: IBsonSerializable<NetNode2D>.BsonDeserialize(NetBsonContext, byte[], NetNode2D)
+  fullName: Nebula.Serialization.IBsonSerializable<Nebula.NetNode2D>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[], Nebula.NetNode2D)
+  nameWithType.vb: IBsonSerializable(Of NetNode2D).BsonDeserialize(NetBsonContext, Byte(), NetNode2D)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of Nebula.NetNode2D).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte(), Nebula.NetNode2D)
+  name.vb: BsonDeserialize(NetBsonContext, Byte(), NetNode2D)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode2D)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: Nebula.NetNode2D
+    name: NetNode2D
+    isExternal: true
+    href: Nebula.NetNode2D.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetNode2D}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode2D)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: Nebula.NetNode2D
+    name: NetNode2D
+    isExternal: true
+    href: Nebula.NetNode2D.html
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  name: BsonDeserialize(NetBsonContext, byte[], T)
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(NetBsonContext, byte[], T)
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[], T)
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(NetBsonContext, Byte(), T)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte(), T)
+  name.vb: BsonDeserialize(NetBsonContext, Byte(), T)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
   - uid: System.Byte
@@ -12820,14 +13343,15 @@ references:
   - name: T
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
   - uid: System.Byte
@@ -12843,7 +13367,7 @@ references:
 - uid: Nebula.NetNode2D.NodePathFromNetScene*
   commentId: Overload:Nebula.NetNode2D.NodePathFromNetScene
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_NodePathFromNetScene
+  href: Nebula.NetNode2D.NodePathFromNetScene.html#Nebula_NetNode2D_NodePathFromNetScene
   name: NodePathFromNetScene
   nameWithType: NetNode2D.NodePathFromNetScene
   fullName: Nebula.NetNode2D.NodePathFromNetScene
@@ -12861,7 +13385,7 @@ references:
 - uid: Nebula.NetNode2D.OnPropertyChanged*
   commentId: Overload:Nebula.NetNode2D.OnPropertyChanged
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_OnPropertyChanged_System_String_
+  href: Nebula.NetNode2D.OnPropertyChanged.html#Nebula_NetNode2D_OnPropertyChanged_System_String_
   name: OnPropertyChanged
   nameWithType: NetNode2D.OnPropertyChanged
   fullName: Nebula.NetNode2D.OnPropertyChanged
@@ -12873,36 +13397,21 @@ references:
   name: PropertyChangedEventArgs
   nameWithType: PropertyChangedEventArgs
   fullName: System.ComponentModel.PropertyChangedEventArgs
-- uid: Nebula.NetNode2D.Node*
-  commentId: Overload:Nebula.NetNode2D.Node
-  isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_Node
-  name: Node
-  nameWithType: NetNode2D.Node
-  fullName: Nebula.NetNode2D.Node
-- uid: Nebula.INetNode.Node
-  commentId: P:Nebula.INetNode.Node
-  parent: Nebula.INetNode
-  isExternal: true
-  href: Nebula.INetNode.html#Nebula_INetNode_Node
-  name: Node
-  nameWithType: INetNode.Node
-  fullName: Nebula.INetNode.Node
 - uid: Nebula.NetNode2D.Network*
   commentId: Overload:Nebula.NetNode2D.Network
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_Network
+  href: Nebula.NetNode2D.Network.html#Nebula_NetNode2D_Network
   name: Network
   nameWithType: NetNode2D.Network
   fullName: Nebula.NetNode2D.Network
-- uid: Nebula.INetNode.Network
-  commentId: P:Nebula.INetNode.Network
-  parent: Nebula.INetNode
+- uid: Nebula.INetNodeBase.Network
+  commentId: P:Nebula.INetNodeBase.Network
+  parent: Nebula.INetNodeBase
   isExternal: true
-  href: Nebula.INetNode.html#Nebula_INetNode_Network
+  href: Nebula.INetNodeBase.Network.html#Nebula_INetNodeBase_Network
   name: Network
-  nameWithType: INetNode.Network
-  fullName: Nebula.INetNode.Network
+  nameWithType: INetNodeBase.Network
+  fullName: Nebula.INetNodeBase.Network
 - uid: Nebula.NetworkController
   commentId: T:Nebula.NetworkController
   parent: Nebula
@@ -12914,18 +13423,18 @@ references:
 - uid: Nebula.NetNode2D.Serializers*
   commentId: Overload:Nebula.NetNode2D.Serializers
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_Serializers
+  href: Nebula.NetNode2D.Serializers.html#Nebula_NetNode2D_Serializers
   name: Serializers
   nameWithType: NetNode2D.Serializers
   fullName: Nebula.NetNode2D.Serializers
-- uid: Nebula.INetNode.Serializers
-  commentId: P:Nebula.INetNode.Serializers
-  parent: Nebula.INetNode
+- uid: Nebula.INetNodeBase.Serializers
+  commentId: P:Nebula.INetNodeBase.Serializers
+  parent: Nebula.INetNodeBase
   isExternal: true
-  href: Nebula.INetNode.html#Nebula_INetNode_Serializers
+  href: Nebula.INetNodeBase.Serializers.html#Nebula_INetNodeBase_Serializers
   name: Serializers
-  nameWithType: INetNode.Serializers
-  fullName: Nebula.INetNode.Serializers
+  nameWithType: INetNodeBase.Serializers
+  fullName: Nebula.INetNodeBase.Serializers
 - uid: Nebula.Serialization.Serializers.IStateSerializer[]
   isExternal: true
   href: Nebula.Serialization.Serializers.IStateSerializer.html
@@ -12965,3 +13474,4 @@ references:
   name: PropertyChangedEventHandler
   nameWithType: PropertyChangedEventHandler
   fullName: System.ComponentModel.PropertyChangedEventHandler
+memberLayout: SeparatePages

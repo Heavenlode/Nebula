@@ -8,6 +8,7 @@ items:
   - Nebula.Serialization.StaticMethodType.BsonDeserialize
   - Nebula.Serialization.StaticMethodType.NetworkDeserialize
   - Nebula.Serialization.StaticMethodType.NetworkSerialize
+  - Nebula.Serialization.StaticMethodType.None
   langs:
   - csharp
   - vb
@@ -19,8 +20,36 @@ items:
   - Nebula
   namespace: Nebula.Serialization
   syntax:
-    content: public enum StaticMethodType
-    content.vb: Public Enum StaticMethodType
+    content: >-
+      [Flags]
+
+      public enum StaticMethodType
+    content.vb: >-
+      <Flags>
+
+      Public Enum StaticMethodType
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: Nebula.Serialization.StaticMethodType.None
+  commentId: F:Nebula.Serialization.StaticMethodType.None
+  id: None
+  parent: Nebula.Serialization.StaticMethodType
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: StaticMethodType.None
+  fullName: Nebula.Serialization.StaticMethodType.None
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: None = 0
+    return:
+      type: Nebula.Serialization.StaticMethodType
 - uid: Nebula.Serialization.StaticMethodType.NetworkSerialize
   commentId: F:Nebula.Serialization.StaticMethodType.NetworkSerialize
   id: NetworkSerialize
@@ -111,3 +140,4 @@ references:
   name: StaticMethodType
   nameWithType: StaticMethodType
   fullName: Nebula.Serialization.StaticMethodType
+memberLayout: SeparatePages

@@ -6,7 +6,11 @@ items:
   parent: Nebula.Serialization.Serializers
   children:
   - Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.#ctor
-  - Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.wrapper
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._cachedSceneFilePath
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._propertiesUpdated
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._propertyCount
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.network
+  - Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.processingDirtyMask
   langs:
   - csharp
   - vb
@@ -15,42 +19,20 @@ items:
   fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
   summary: Cached StringNames for the properties and fields contained in this class, for fast lookup.
   example: []
   syntax:
-    content: 'public class NetPropertiesSerializer.PropertyName : Node.PropertyName'
-    content.vb: Public Class NetPropertiesSerializer.PropertyName Inherits Node.PropertyName
+    content: 'public class NetPropertiesSerializer.PropertyName : RefCounted.PropertyName'
+    content.vb: Public Class NetPropertiesSerializer.PropertyName Inherits RefCounted.PropertyName
   inheritance:
   - System.Object
   - Godot.GodotObject.PropertyName
-  - Godot.Node.PropertyName
+  - Godot.RefCounted.PropertyName
   inheritedMembers:
-  - Godot.Node.PropertyName._ImportPath
-  - Godot.Node.PropertyName.Name
-  - Godot.Node.PropertyName.UniqueNameInOwner
-  - Godot.Node.PropertyName.SceneFilePath
-  - Godot.Node.PropertyName.Owner
-  - Godot.Node.PropertyName.Multiplayer
-  - Godot.Node.PropertyName.ProcessMode
-  - Godot.Node.PropertyName.ProcessPriority
-  - Godot.Node.PropertyName.ProcessPhysicsPriority
-  - Godot.Node.PropertyName.ProcessThreadGroup
-  - Godot.Node.PropertyName.ProcessThreadGroupOrder
-  - Godot.Node.PropertyName.ProcessThreadMessages
-  - Godot.Node.PropertyName.PhysicsInterpolationMode
-  - Godot.Node.PropertyName.AutoTranslateMode
-  - Godot.Node.PropertyName.EditorDescription
-  - Godot.Node.PropertyName.AccessibilityName
-  - Godot.Node.PropertyName.AccessibilityDescription
-  - Godot.Node.PropertyName.AccessibilityLive
-  - Godot.Node.PropertyName.AccessibilityControlsNodes
-  - Godot.Node.PropertyName.AccessibilityDescribedByNodes
-  - Godot.Node.PropertyName.AccessibilityLabeledByNodes
-  - Godot.Node.PropertyName.AccessibilityFlowToNodes
   - System.Object.GetType
   - System.Object.MemberwiseClone
   - System.Object.ToString
@@ -58,29 +40,121 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
-- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.wrapper
-  commentId: F:Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.wrapper
-  id: wrapper
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.network
+  commentId: F:Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.network
+  id: network
   parent: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
   langs:
   - csharp
   - vb
-  name: wrapper
-  nameWithType: NetPropertiesSerializer.PropertyName.wrapper
-  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.wrapper
+  name: network
+  nameWithType: NetPropertiesSerializer.PropertyName.network
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.network
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
-  summary: Cached name for the 'wrapper' field.
+  summary: Cached name for the 'network' field.
   example: []
   syntax:
-    content: public static readonly StringName wrapper
+    content: public static readonly StringName network
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly wrapper As StringName
+    content.vb: Public Shared ReadOnly network As StringName
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.processingDirtyMask
+  commentId: F:Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.processingDirtyMask
+  id: processingDirtyMask
+  parent: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: processingDirtyMask
+  nameWithType: NetPropertiesSerializer.PropertyName.processingDirtyMask
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.processingDirtyMask
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: Cached name for the 'processingDirtyMask' field.
+  example: []
+  syntax:
+    content: public static readonly StringName processingDirtyMask
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly processingDirtyMask As StringName
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._cachedSceneFilePath
+  commentId: F:Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._cachedSceneFilePath
+  id: _cachedSceneFilePath
+  parent: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _cachedSceneFilePath
+  nameWithType: NetPropertiesSerializer.PropertyName._cachedSceneFilePath
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._cachedSceneFilePath
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: Cached name for the '_cachedSceneFilePath' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _cachedSceneFilePath
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _cachedSceneFilePath As StringName
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._propertyCount
+  commentId: F:Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._propertyCount
+  id: _propertyCount
+  parent: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _propertyCount
+  nameWithType: NetPropertiesSerializer.PropertyName._propertyCount
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._propertyCount
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: Cached name for the '_propertyCount' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _propertyCount
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _propertyCount As StringName
+- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._propertiesUpdated
+  commentId: F:Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._propertiesUpdated
+  id: _propertiesUpdated
+  parent: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _propertiesUpdated
+  nameWithType: NetPropertiesSerializer.PropertyName._propertiesUpdated
+  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName._propertiesUpdated
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: Cached name for the '_propertiesUpdated' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _propertiesUpdated
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _propertiesUpdated As StringName
 - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.#ctor
   commentId: M:Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.#ctor
   id: '#ctor'
@@ -93,7 +167,7 @@ items:
   fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Serialization.Serializers.NetPropertiesSerializer_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -176,183 +250,29 @@ references:
   - uid: Godot.GodotObject.PropertyName
     name: PropertyName
     isExternal: true
-- uid: Godot.Node.PropertyName
-  commentId: T:Godot.Node.PropertyName
+- uid: Godot.RefCounted.PropertyName
+  commentId: T:Godot.RefCounted.PropertyName
   parent: Godot
   isExternal: true
-  name: Node.PropertyName
-  nameWithType: Node.PropertyName
-  fullName: Godot.Node.PropertyName
+  name: RefCounted.PropertyName
+  nameWithType: RefCounted.PropertyName
+  fullName: Godot.RefCounted.PropertyName
   spec.csharp:
-  - uid: Godot.Node
-    name: Node
+  - uid: Godot.RefCounted
+    name: RefCounted
     isExternal: true
   - name: .
-  - uid: Godot.Node.PropertyName
+  - uid: Godot.RefCounted.PropertyName
     name: PropertyName
     isExternal: true
   spec.vb:
-  - uid: Godot.Node
-    name: Node
+  - uid: Godot.RefCounted
+    name: RefCounted
     isExternal: true
   - name: .
-  - uid: Godot.Node.PropertyName
+  - uid: Godot.RefCounted.PropertyName
     name: PropertyName
     isExternal: true
-- uid: Godot.Node.PropertyName._ImportPath
-  commentId: F:Godot.Node.PropertyName._ImportPath
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: _ImportPath
-  nameWithType: Node.PropertyName._ImportPath
-  fullName: Godot.Node.PropertyName._ImportPath
-- uid: Godot.Node.PropertyName.Name
-  commentId: F:Godot.Node.PropertyName.Name
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: Name
-  nameWithType: Node.PropertyName.Name
-  fullName: Godot.Node.PropertyName.Name
-- uid: Godot.Node.PropertyName.UniqueNameInOwner
-  commentId: F:Godot.Node.PropertyName.UniqueNameInOwner
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: UniqueNameInOwner
-  nameWithType: Node.PropertyName.UniqueNameInOwner
-  fullName: Godot.Node.PropertyName.UniqueNameInOwner
-- uid: Godot.Node.PropertyName.SceneFilePath
-  commentId: F:Godot.Node.PropertyName.SceneFilePath
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: SceneFilePath
-  nameWithType: Node.PropertyName.SceneFilePath
-  fullName: Godot.Node.PropertyName.SceneFilePath
-- uid: Godot.Node.PropertyName.Owner
-  commentId: F:Godot.Node.PropertyName.Owner
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: Owner
-  nameWithType: Node.PropertyName.Owner
-  fullName: Godot.Node.PropertyName.Owner
-- uid: Godot.Node.PropertyName.Multiplayer
-  commentId: F:Godot.Node.PropertyName.Multiplayer
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: Multiplayer
-  nameWithType: Node.PropertyName.Multiplayer
-  fullName: Godot.Node.PropertyName.Multiplayer
-- uid: Godot.Node.PropertyName.ProcessMode
-  commentId: F:Godot.Node.PropertyName.ProcessMode
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: ProcessMode
-  nameWithType: Node.PropertyName.ProcessMode
-  fullName: Godot.Node.PropertyName.ProcessMode
-- uid: Godot.Node.PropertyName.ProcessPriority
-  commentId: F:Godot.Node.PropertyName.ProcessPriority
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: ProcessPriority
-  nameWithType: Node.PropertyName.ProcessPriority
-  fullName: Godot.Node.PropertyName.ProcessPriority
-- uid: Godot.Node.PropertyName.ProcessPhysicsPriority
-  commentId: F:Godot.Node.PropertyName.ProcessPhysicsPriority
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: ProcessPhysicsPriority
-  nameWithType: Node.PropertyName.ProcessPhysicsPriority
-  fullName: Godot.Node.PropertyName.ProcessPhysicsPriority
-- uid: Godot.Node.PropertyName.ProcessThreadGroup
-  commentId: F:Godot.Node.PropertyName.ProcessThreadGroup
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: ProcessThreadGroup
-  nameWithType: Node.PropertyName.ProcessThreadGroup
-  fullName: Godot.Node.PropertyName.ProcessThreadGroup
-- uid: Godot.Node.PropertyName.ProcessThreadGroupOrder
-  commentId: F:Godot.Node.PropertyName.ProcessThreadGroupOrder
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: ProcessThreadGroupOrder
-  nameWithType: Node.PropertyName.ProcessThreadGroupOrder
-  fullName: Godot.Node.PropertyName.ProcessThreadGroupOrder
-- uid: Godot.Node.PropertyName.ProcessThreadMessages
-  commentId: F:Godot.Node.PropertyName.ProcessThreadMessages
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: ProcessThreadMessages
-  nameWithType: Node.PropertyName.ProcessThreadMessages
-  fullName: Godot.Node.PropertyName.ProcessThreadMessages
-- uid: Godot.Node.PropertyName.PhysicsInterpolationMode
-  commentId: F:Godot.Node.PropertyName.PhysicsInterpolationMode
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: PhysicsInterpolationMode
-  nameWithType: Node.PropertyName.PhysicsInterpolationMode
-  fullName: Godot.Node.PropertyName.PhysicsInterpolationMode
-- uid: Godot.Node.PropertyName.AutoTranslateMode
-  commentId: F:Godot.Node.PropertyName.AutoTranslateMode
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: AutoTranslateMode
-  nameWithType: Node.PropertyName.AutoTranslateMode
-  fullName: Godot.Node.PropertyName.AutoTranslateMode
-- uid: Godot.Node.PropertyName.EditorDescription
-  commentId: F:Godot.Node.PropertyName.EditorDescription
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: EditorDescription
-  nameWithType: Node.PropertyName.EditorDescription
-  fullName: Godot.Node.PropertyName.EditorDescription
-- uid: Godot.Node.PropertyName.AccessibilityName
-  commentId: F:Godot.Node.PropertyName.AccessibilityName
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: AccessibilityName
-  nameWithType: Node.PropertyName.AccessibilityName
-  fullName: Godot.Node.PropertyName.AccessibilityName
-- uid: Godot.Node.PropertyName.AccessibilityDescription
-  commentId: F:Godot.Node.PropertyName.AccessibilityDescription
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: AccessibilityDescription
-  nameWithType: Node.PropertyName.AccessibilityDescription
-  fullName: Godot.Node.PropertyName.AccessibilityDescription
-- uid: Godot.Node.PropertyName.AccessibilityLive
-  commentId: F:Godot.Node.PropertyName.AccessibilityLive
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: AccessibilityLive
-  nameWithType: Node.PropertyName.AccessibilityLive
-  fullName: Godot.Node.PropertyName.AccessibilityLive
-- uid: Godot.Node.PropertyName.AccessibilityControlsNodes
-  commentId: F:Godot.Node.PropertyName.AccessibilityControlsNodes
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: AccessibilityControlsNodes
-  nameWithType: Node.PropertyName.AccessibilityControlsNodes
-  fullName: Godot.Node.PropertyName.AccessibilityControlsNodes
-- uid: Godot.Node.PropertyName.AccessibilityDescribedByNodes
-  commentId: F:Godot.Node.PropertyName.AccessibilityDescribedByNodes
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: AccessibilityDescribedByNodes
-  nameWithType: Node.PropertyName.AccessibilityDescribedByNodes
-  fullName: Godot.Node.PropertyName.AccessibilityDescribedByNodes
-- uid: Godot.Node.PropertyName.AccessibilityLabeledByNodes
-  commentId: F:Godot.Node.PropertyName.AccessibilityLabeledByNodes
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: AccessibilityLabeledByNodes
-  nameWithType: Node.PropertyName.AccessibilityLabeledByNodes
-  fullName: Godot.Node.PropertyName.AccessibilityLabeledByNodes
-- uid: Godot.Node.PropertyName.AccessibilityFlowToNodes
-  commentId: F:Godot.Node.PropertyName.AccessibilityFlowToNodes
-  parent: Godot.Node.PropertyName
-  isExternal: true
-  name: AccessibilityFlowToNodes
-  nameWithType: Node.PropertyName.AccessibilityFlowToNodes
-  fullName: Godot.Node.PropertyName.AccessibilityFlowToNodes
 - uid: System.Object.GetType
   commentId: M:System.Object.GetType
   parent: System.Object
@@ -595,10 +515,11 @@ references:
 - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.#ctor*
   commentId: Overload:Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.#ctor
   isExternal: true
-  href: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.html#Nebula_Serialization_Serializers_NetPropertiesSerializer_PropertyName__ctor
+  href: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.-ctor.html#Nebula_Serialization_Serializers_NetPropertiesSerializer_PropertyName__ctor
   name: PropertyName
   nameWithType: NetPropertiesSerializer.PropertyName.PropertyName
   fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.PropertyName
   nameWithType.vb: NetPropertiesSerializer.PropertyName.New
   fullName.vb: Nebula.Serialization.Serializers.NetPropertiesSerializer.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

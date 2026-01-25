@@ -1,0 +1,240 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Testing.Integration
+  commentId: N:Nebula.Testing.Integration
+  id: Nebula.Testing.Integration
+  children:
+  - Nebula.Testing.Integration.ClientConfig
+  - Nebula.Testing.Integration.CustomCommand
+  - Nebula.Testing.Integration.DebugEvent
+  - Nebula.Testing.Integration.GodotProcess
+  - Nebula.Testing.Integration.InputCommand
+  - Nebula.Testing.Integration.IntegrationTestBase
+  - Nebula.Testing.Integration.OrderAttribute
+  - Nebula.Testing.Integration.PriorityOrderer
+  - Nebula.Testing.Integration.ServerCommandBuilder
+  - Nebula.Testing.Integration.ServerConfig
+  - Nebula.Testing.Integration.SpawnCommand
+  - Nebula.Testing.Integration.StdinCommandHandler
+  - Nebula.Testing.Integration.StdinCommandHandler.MethodName
+  - Nebula.Testing.Integration.StdinCommandHandler.PropertyName
+  - Nebula.Testing.Integration.StdinCommandHandler.SignalName
+  langs:
+  - csharp
+  - vb
+  name: Nebula.Testing.Integration
+  nameWithType: Nebula.Testing.Integration
+  fullName: Nebula.Testing.Integration
+  type: Namespace
+  assemblies:
+  - Nebula
+references:
+- uid: Nebula.Testing.Integration.DebugEvent
+  commentId: T:Nebula.Testing.Integration.DebugEvent
+  isExternal: true
+  href: Nebula.Testing.Integration.DebugEvent.html
+  name: DebugEvent
+  nameWithType: DebugEvent
+  fullName: Nebula.Testing.Integration.DebugEvent
+- uid: Nebula.Testing.Integration.GodotProcess
+  commentId: T:Nebula.Testing.Integration.GodotProcess
+  parent: Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.html
+  name: GodotProcess
+  nameWithType: GodotProcess
+  fullName: Nebula.Testing.Integration.GodotProcess
+- uid: Nebula.Testing.Integration.ServerConfig
+  commentId: T:Nebula.Testing.Integration.ServerConfig
+  parent: Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.Testing.Integration.ServerConfig.html
+  name: ServerConfig
+  nameWithType: ServerConfig
+  fullName: Nebula.Testing.Integration.ServerConfig
+- uid: Nebula.Testing.Integration.ClientConfig
+  commentId: T:Nebula.Testing.Integration.ClientConfig
+  parent: Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.Testing.Integration.ClientConfig.html
+  name: ClientConfig
+  nameWithType: ClientConfig
+  fullName: Nebula.Testing.Integration.ClientConfig
+- uid: Nebula.Testing.Integration.IntegrationTestBase
+  commentId: T:Nebula.Testing.Integration.IntegrationTestBase
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.html
+  name: IntegrationTestBase
+  nameWithType: IntegrationTestBase
+  fullName: Nebula.Testing.Integration.IntegrationTestBase
+- uid: Nebula.Testing.Integration.OrderAttribute
+  commentId: T:Nebula.Testing.Integration.OrderAttribute
+  isExternal: true
+  href: Nebula.Testing.Integration.OrderAttribute.html
+  name: OrderAttribute
+  nameWithType: OrderAttribute
+  fullName: Nebula.Testing.Integration.OrderAttribute
+- uid: Nebula.Testing.Integration.PriorityOrderer
+  commentId: T:Nebula.Testing.Integration.PriorityOrderer
+  isExternal: true
+  href: Nebula.Testing.Integration.PriorityOrderer.html
+  name: PriorityOrderer
+  nameWithType: PriorityOrderer
+  fullName: Nebula.Testing.Integration.PriorityOrderer
+- uid: Nebula.Testing.Integration.ServerCommandBuilder
+  commentId: T:Nebula.Testing.Integration.ServerCommandBuilder
+  isExternal: true
+  href: Nebula.Testing.Integration.ServerCommandBuilder.html
+  name: ServerCommandBuilder
+  nameWithType: ServerCommandBuilder
+  fullName: Nebula.Testing.Integration.ServerCommandBuilder
+- uid: Nebula.Testing.Integration.SpawnCommand
+  commentId: T:Nebula.Testing.Integration.SpawnCommand
+  parent: Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.Testing.Integration.SpawnCommand.html
+  name: SpawnCommand
+  nameWithType: SpawnCommand
+  fullName: Nebula.Testing.Integration.SpawnCommand
+- uid: Nebula.Testing.Integration.CustomCommand
+  commentId: T:Nebula.Testing.Integration.CustomCommand
+  parent: Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.Testing.Integration.CustomCommand.html
+  name: CustomCommand
+  nameWithType: CustomCommand
+  fullName: Nebula.Testing.Integration.CustomCommand
+- uid: Nebula.Testing.Integration.InputCommand
+  commentId: T:Nebula.Testing.Integration.InputCommand
+  parent: Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.Testing.Integration.InputCommand.html
+  name: InputCommand
+  nameWithType: InputCommand
+  fullName: Nebula.Testing.Integration.InputCommand
+- uid: Nebula.Testing.Integration.StdinCommandHandler
+  commentId: T:Nebula.Testing.Integration.StdinCommandHandler
+  isExternal: true
+  href: Nebula.Testing.Integration.StdinCommandHandler.html
+  name: StdinCommandHandler
+  nameWithType: StdinCommandHandler
+  fullName: Nebula.Testing.Integration.StdinCommandHandler
+- uid: Nebula.Testing.Integration.StdinCommandHandler.MethodName
+  commentId: T:Nebula.Testing.Integration.StdinCommandHandler.MethodName
+  isExternal: true
+  href: Nebula.Testing.Integration.StdinCommandHandler.html
+  name: StdinCommandHandler.MethodName
+  nameWithType: StdinCommandHandler.MethodName
+  fullName: Nebula.Testing.Integration.StdinCommandHandler.MethodName
+  spec.csharp:
+  - uid: Nebula.Testing.Integration.StdinCommandHandler
+    name: StdinCommandHandler
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.html
+  - name: .
+  - uid: Nebula.Testing.Integration.StdinCommandHandler.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.MethodName.html
+  spec.vb:
+  - uid: Nebula.Testing.Integration.StdinCommandHandler
+    name: StdinCommandHandler
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.html
+  - name: .
+  - uid: Nebula.Testing.Integration.StdinCommandHandler.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.MethodName.html
+- uid: Nebula.Testing.Integration.StdinCommandHandler.PropertyName
+  commentId: T:Nebula.Testing.Integration.StdinCommandHandler.PropertyName
+  isExternal: true
+  href: Nebula.Testing.Integration.StdinCommandHandler.html
+  name: StdinCommandHandler.PropertyName
+  nameWithType: StdinCommandHandler.PropertyName
+  fullName: Nebula.Testing.Integration.StdinCommandHandler.PropertyName
+  spec.csharp:
+  - uid: Nebula.Testing.Integration.StdinCommandHandler
+    name: StdinCommandHandler
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.html
+  - name: .
+  - uid: Nebula.Testing.Integration.StdinCommandHandler.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Testing.Integration.StdinCommandHandler
+    name: StdinCommandHandler
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.html
+  - name: .
+  - uid: Nebula.Testing.Integration.StdinCommandHandler.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.PropertyName.html
+- uid: Nebula.Testing.Integration.StdinCommandHandler.SignalName
+  commentId: T:Nebula.Testing.Integration.StdinCommandHandler.SignalName
+  isExternal: true
+  href: Nebula.Testing.Integration.StdinCommandHandler.html
+  name: StdinCommandHandler.SignalName
+  nameWithType: StdinCommandHandler.SignalName
+  fullName: Nebula.Testing.Integration.StdinCommandHandler.SignalName
+  spec.csharp:
+  - uid: Nebula.Testing.Integration.StdinCommandHandler
+    name: StdinCommandHandler
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.html
+  - name: .
+  - uid: Nebula.Testing.Integration.StdinCommandHandler.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.SignalName.html
+  spec.vb:
+  - uid: Nebula.Testing.Integration.StdinCommandHandler
+    name: StdinCommandHandler
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.html
+  - name: .
+  - uid: Nebula.Testing.Integration.StdinCommandHandler.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Testing.Integration.StdinCommandHandler.SignalName.html
+- uid: Nebula.Testing.Integration
+  commentId: N:Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Testing.Integration
+  nameWithType: Nebula.Testing.Integration
+  fullName: Nebula.Testing.Integration
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Testing
+    name: Testing
+    isExternal: true
+    href: Nebula.Testing.html
+  - name: .
+  - uid: Nebula.Testing.Integration
+    name: Integration
+    isExternal: true
+    href: Nebula.Testing.Integration.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Testing
+    name: Testing
+    isExternal: true
+    href: Nebula.Testing.html
+  - name: .
+  - uid: Nebula.Testing.Integration
+    name: Integration
+    isExternal: true
+    href: Nebula.Testing.Integration.html
+memberLayout: SeparatePages

@@ -1,0 +1,125 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Testing.Unit
+  commentId: N:Nebula.Testing.Unit
+  id: Nebula.Testing.Unit
+  children:
+  - Nebula.Testing.Unit.NebulaUnitTestAttribute
+  - Nebula.Testing.Unit.NebulaUnitTests
+  - Nebula.Testing.Unit.TestRunnerNode
+  - Nebula.Testing.Unit.TestRunnerNode.MethodName
+  - Nebula.Testing.Unit.TestRunnerNode.PropertyName
+  - Nebula.Testing.Unit.TestRunnerNode.SignalName
+  langs:
+  - csharp
+  - vb
+  name: Nebula.Testing.Unit
+  nameWithType: Nebula.Testing.Unit
+  fullName: Nebula.Testing.Unit
+  type: Namespace
+  assemblies:
+  - Nebula
+references:
+- uid: Nebula.Testing.Unit.NebulaUnitTestAttribute
+  commentId: T:Nebula.Testing.Unit.NebulaUnitTestAttribute
+  isExternal: true
+  href: Nebula.Testing.Unit.NebulaUnitTestAttribute.html
+  name: NebulaUnitTestAttribute
+  nameWithType: NebulaUnitTestAttribute
+  fullName: Nebula.Testing.Unit.NebulaUnitTestAttribute
+- uid: Nebula.Testing.Unit.NebulaUnitTests
+  commentId: T:Nebula.Testing.Unit.NebulaUnitTests
+  isExternal: true
+  href: Nebula.Testing.Unit.NebulaUnitTests.html
+  name: NebulaUnitTests
+  nameWithType: NebulaUnitTests
+  fullName: Nebula.Testing.Unit.NebulaUnitTests
+- uid: Nebula.Testing.Unit.TestRunnerNode
+  commentId: T:Nebula.Testing.Unit.TestRunnerNode
+  isExternal: true
+  href: Nebula.Testing.Unit.TestRunnerNode.html
+  name: TestRunnerNode
+  nameWithType: TestRunnerNode
+  fullName: Nebula.Testing.Unit.TestRunnerNode
+- uid: Nebula.Testing.Unit.TestRunnerNode.MethodName
+  commentId: T:Nebula.Testing.Unit.TestRunnerNode.MethodName
+  isExternal: true
+  href: Nebula.Testing.Unit.TestRunnerNode.html
+  name: TestRunnerNode.MethodName
+  nameWithType: TestRunnerNode.MethodName
+  fullName: Nebula.Testing.Unit.TestRunnerNode.MethodName
+  spec.csharp:
+  - uid: Nebula.Testing.Unit.TestRunnerNode
+    name: TestRunnerNode
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.html
+  - name: .
+  - uid: Nebula.Testing.Unit.TestRunnerNode.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.MethodName.html
+  spec.vb:
+  - uid: Nebula.Testing.Unit.TestRunnerNode
+    name: TestRunnerNode
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.html
+  - name: .
+  - uid: Nebula.Testing.Unit.TestRunnerNode.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.MethodName.html
+- uid: Nebula.Testing.Unit.TestRunnerNode.PropertyName
+  commentId: T:Nebula.Testing.Unit.TestRunnerNode.PropertyName
+  isExternal: true
+  href: Nebula.Testing.Unit.TestRunnerNode.html
+  name: TestRunnerNode.PropertyName
+  nameWithType: TestRunnerNode.PropertyName
+  fullName: Nebula.Testing.Unit.TestRunnerNode.PropertyName
+  spec.csharp:
+  - uid: Nebula.Testing.Unit.TestRunnerNode
+    name: TestRunnerNode
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.html
+  - name: .
+  - uid: Nebula.Testing.Unit.TestRunnerNode.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Testing.Unit.TestRunnerNode
+    name: TestRunnerNode
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.html
+  - name: .
+  - uid: Nebula.Testing.Unit.TestRunnerNode.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.PropertyName.html
+- uid: Nebula.Testing.Unit.TestRunnerNode.SignalName
+  commentId: T:Nebula.Testing.Unit.TestRunnerNode.SignalName
+  isExternal: true
+  href: Nebula.Testing.Unit.TestRunnerNode.html
+  name: TestRunnerNode.SignalName
+  nameWithType: TestRunnerNode.SignalName
+  fullName: Nebula.Testing.Unit.TestRunnerNode.SignalName
+  spec.csharp:
+  - uid: Nebula.Testing.Unit.TestRunnerNode
+    name: TestRunnerNode
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.html
+  - name: .
+  - uid: Nebula.Testing.Unit.TestRunnerNode.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.SignalName.html
+  spec.vb:
+  - uid: Nebula.Testing.Unit.TestRunnerNode
+    name: TestRunnerNode
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.html
+  - name: .
+  - uid: Nebula.Testing.Unit.TestRunnerNode.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Testing.Unit.TestRunnerNode.SignalName.html
+memberLayout: SeparatePages

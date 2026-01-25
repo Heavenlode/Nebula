@@ -1,0 +1,79 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.ITransformable
+  commentId: T:Nebula.ITransformable
+  id: ITransformable
+  parent: Nebula
+  children:
+  - Nebula.ITransformable.GetNetworkTransform
+  langs:
+  - csharp
+  - vb
+  name: ITransformable
+  nameWithType: ITransformable
+  fullName: Nebula.ITransformable
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Interface for networked nodes that need to expose their authoritative transform.
+
+    Useful when the node's actual position differs from its Node3D.GlobalTransform
+
+    (e.g., Player uses a physics body for movement).
+  example: []
+  syntax:
+    content: public interface ITransformable
+    content.vb: Public Interface ITransformable
+- uid: Nebula.ITransformable.GetNetworkTransform
+  commentId: M:Nebula.ITransformable.GetNetworkTransform
+  id: GetNetworkTransform
+  parent: Nebula.ITransformable
+  langs:
+  - csharp
+  - vb
+  name: GetNetworkTransform()
+  nameWithType: ITransformable.GetNetworkTransform()
+  fullName: Nebula.ITransformable.GetNetworkTransform()
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Returns the authoritative global transform for this networked object.
+  example: []
+  syntax:
+    content: Transform3D GetNetworkTransform()
+    return:
+      type: Godot.Transform3D
+    content.vb: Function GetNetworkTransform() As Transform3D
+  overload: Nebula.ITransformable.GetNetworkTransform*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.ITransformable.GetNetworkTransform*
+  commentId: Overload:Nebula.ITransformable.GetNetworkTransform
+  isExternal: true
+  href: Nebula.ITransformable.GetNetworkTransform.html#Nebula_ITransformable_GetNetworkTransform
+  name: GetNetworkTransform
+  nameWithType: ITransformable.GetNetworkTransform
+  fullName: Nebula.ITransformable.GetNetworkTransform
+- uid: Godot.Transform3D
+  commentId: T:Godot.Transform3D
+  parent: Godot
+  isExternal: true
+  name: Transform3D
+  nameWithType: Transform3D
+  fullName: Godot.Transform3D
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+memberLayout: SeparatePages

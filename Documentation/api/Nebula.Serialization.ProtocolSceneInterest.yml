@@ -1,0 +1,375 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.ProtocolSceneInterest
+  commentId: T:Nebula.Serialization.ProtocolSceneInterest
+  id: ProtocolSceneInterest
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.ProtocolSceneInterest.#ctor(System.Int64,System.Int64)
+  - Nebula.Serialization.ProtocolSceneInterest.InterestAny
+  - Nebula.Serialization.ProtocolSceneInterest.InterestRequired
+  langs:
+  - csharp
+  - vb
+  name: ProtocolSceneInterest
+  nameWithType: ProtocolSceneInterest
+  fullName: Nebula.Serialization.ProtocolSceneInterest
+  type: Struct
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Scene-level interest requirements for spawn visibility.
+  example: []
+  syntax:
+    content: public readonly struct ProtocolSceneInterest
+    content.vb: Public Structure ProtocolSceneInterest
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.GetType
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: Nebula.Serialization.ProtocolSceneInterest.InterestAny
+  commentId: F:Nebula.Serialization.ProtocolSceneInterest.InterestAny
+  id: InterestAny
+  parent: Nebula.Serialization.ProtocolSceneInterest
+  langs:
+  - csharp
+  - vb
+  name: InterestAny
+  nameWithType: ProtocolSceneInterest.InterestAny
+  fullName: Nebula.Serialization.ProtocolSceneInterest.InterestAny
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Peer must have ANY of these interest layers (OR logic). 0 = no check.
+  example: []
+  syntax:
+    content: public readonly long InterestAny
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly InterestAny As Long
+- uid: Nebula.Serialization.ProtocolSceneInterest.InterestRequired
+  commentId: F:Nebula.Serialization.ProtocolSceneInterest.InterestRequired
+  id: InterestRequired
+  parent: Nebula.Serialization.ProtocolSceneInterest
+  langs:
+  - csharp
+  - vb
+  name: InterestRequired
+  nameWithType: ProtocolSceneInterest.InterestRequired
+  fullName: Nebula.Serialization.ProtocolSceneInterest.InterestRequired
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Peer must have ALL of these interest layers (AND logic). 0 = no check.
+  example: []
+  syntax:
+    content: public readonly long InterestRequired
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly InterestRequired As Long
+- uid: Nebula.Serialization.ProtocolSceneInterest.#ctor(System.Int64,System.Int64)
+  commentId: M:Nebula.Serialization.ProtocolSceneInterest.#ctor(System.Int64,System.Int64)
+  id: '#ctor(System.Int64,System.Int64)'
+  parent: Nebula.Serialization.ProtocolSceneInterest
+  langs:
+  - csharp
+  - vb
+  name: ProtocolSceneInterest(long, long)
+  nameWithType: ProtocolSceneInterest.ProtocolSceneInterest(long, long)
+  fullName: Nebula.Serialization.ProtocolSceneInterest.ProtocolSceneInterest(long, long)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public ProtocolSceneInterest(long interestAny, long interestRequired)
+    parameters:
+    - id: interestAny
+      type: System.Int64
+    - id: interestRequired
+      type: System.Int64
+    content.vb: Public Sub New(interestAny As Long, interestRequired As Long)
+  overload: Nebula.Serialization.ProtocolSceneInterest.#ctor*
+  nameWithType.vb: ProtocolSceneInterest.New(Long, Long)
+  fullName.vb: Nebula.Serialization.ProtocolSceneInterest.New(Long, Long)
+  name.vb: New(Long, Long)
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: Nebula.Serialization.ProtocolSceneInterest.#ctor*
+  commentId: Overload:Nebula.Serialization.ProtocolSceneInterest.#ctor
+  isExternal: true
+  href: Nebula.Serialization.ProtocolSceneInterest.-ctor.html#Nebula_Serialization_ProtocolSceneInterest__ctor_System_Int64_System_Int64_
+  name: ProtocolSceneInterest
+  nameWithType: ProtocolSceneInterest.ProtocolSceneInterest
+  fullName: Nebula.Serialization.ProtocolSceneInterest.ProtocolSceneInterest
+  nameWithType.vb: ProtocolSceneInterest.New
+  fullName.vb: Nebula.Serialization.ProtocolSceneInterest.New
+  name.vb: New
+memberLayout: SeparatePages

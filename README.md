@@ -4,6 +4,31 @@
 
 Nebula is a tick-based, server-authoritative networking framework that makes building responsive online games in Godot straightforward. It handles the hard parts—client-side prediction, rollback, interpolation, and state synchronization—so you can focus on your game.
 
+## Table of Contents
+
+- [Why Nebula?](#why-nebula)
+- [Quick Example](#quick-example)
+- [Features](#features)
+  - [Core Networking](#core-networking)
+  - [Client-Side Prediction](#client-side-prediction)
+  - [Visual Smoothing](#visual-smoothing)
+  - [Developer Experience](#developer-experience)
+  - [Performance](#performance)
+  - [Architecture](#architecture)
+- [Installation](#installation)
+  - [Requirements](#requirements)
+  - [Setup](#setup)
+- [Core Concepts](#core-concepts)
+  - [Network Nodes](#network-nodes)
+  - [Network Properties](#network-properties)
+  - [Input Handling](#input-handling)
+  - [Spawning Entities](#spawning-entities)
+- [Comparison](#comparison)
+- [Documentation](#documentation)
+- [Roadmap](#roadmap)
+- [Community](#community)
+- [Contributing](#contributing)
+
 ## Why Nebula?
 
 Building multiplayer games is hard. Building multiplayer games that *feel good* in Godot is even harder. Nebula solves the core challenges:
@@ -246,10 +271,6 @@ Contributions are welcome! Whether it's bug reports, feature requests, documenta
 1. **Questions or ideas?** Drop by the [Discord](https://discord.gg/AUjzVA4sEK) or [open an issue](https://github.com/Heavenlode/Nebula/issues/new)
 2. **Want to contribute code?** Please open an issue first to discuss your proposal
 3. **Found a bug?** Bug reports with reproduction steps are incredibly helpful
-
-## License
-
-MIT
 
 ---
 

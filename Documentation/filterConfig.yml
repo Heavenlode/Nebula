@@ -1,0 +1,9 @@
+apiRules:
+  # Exclude Godot's auto-generated helper classes
+  # These are generated for every Node-derived class and clutter the API docs
+  - exclude:
+      uidRegex: '^.*\.MethodName$'
+  - exclude:
+      uidRegex: '^.*\.PropertyName$'
+  - exclude:
+      uidRegex: '^.*\.SignalName$'

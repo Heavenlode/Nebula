@@ -18,7 +18,7 @@ items:
   fullName: Nebula.Tools.Main
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -444,7 +444,7 @@ items:
   fullName: Nebula.Tools.Main._GetPluginName()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Main.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Main.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -469,7 +469,7 @@ items:
   fullName: Nebula.Tools.Main._EnterTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Main.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Main.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -495,7 +495,7 @@ items:
   fullName: Nebula.Tools.Main._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Main.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Main.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -521,7 +521,7 @@ items:
   fullName: Nebula.Tools.Main.RegisterMenuItem(string, System.Action)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Main.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Main.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -553,7 +553,7 @@ items:
   fullName: Nebula.Tools.Main.Main()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Main.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Main.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -9412,7 +9412,7 @@ references:
 - uid: Nebula.Tools.Main._GetPluginName*
   commentId: Overload:Nebula.Tools.Main._GetPluginName
   isExternal: true
-  href: Nebula.Tools.Main._GetPluginName.html#Nebula_Tools_Main__GetPluginName
+  href: Nebula.Tools.Main.html#Nebula_Tools_Main__GetPluginName
   name: _GetPluginName
   nameWithType: Main._GetPluginName
   fullName: Nebula.Tools.Main._GetPluginName
@@ -9449,7 +9449,7 @@ references:
 - uid: Nebula.Tools.Main._EnterTree*
   commentId: Overload:Nebula.Tools.Main._EnterTree
   isExternal: true
-  href: Nebula.Tools.Main._EnterTree.html#Nebula_Tools_Main__EnterTree
+  href: Nebula.Tools.Main.html#Nebula_Tools_Main__EnterTree
   name: _EnterTree
   nameWithType: Main._EnterTree
   fullName: Nebula.Tools.Main._EnterTree
@@ -9475,14 +9475,14 @@ references:
 - uid: Nebula.Tools.Main._ExitTree*
   commentId: Overload:Nebula.Tools.Main._ExitTree
   isExternal: true
-  href: Nebula.Tools.Main._ExitTree.html#Nebula_Tools_Main__ExitTree
+  href: Nebula.Tools.Main.html#Nebula_Tools_Main__ExitTree
   name: _ExitTree
   nameWithType: Main._ExitTree
   fullName: Nebula.Tools.Main._ExitTree
 - uid: Nebula.Tools.Main.RegisterMenuItem*
   commentId: Overload:Nebula.Tools.Main.RegisterMenuItem
   isExternal: true
-  href: Nebula.Tools.Main.RegisterMenuItem.html#Nebula_Tools_Main_RegisterMenuItem_System_String_System_Action_
+  href: Nebula.Tools.Main.html#Nebula_Tools_Main_RegisterMenuItem_System_String_System_Action_
   name: RegisterMenuItem
   nameWithType: Main.RegisterMenuItem
   fullName: Nebula.Tools.Main.RegisterMenuItem
@@ -9497,11 +9497,10 @@ references:
 - uid: Nebula.Tools.Main.#ctor*
   commentId: Overload:Nebula.Tools.Main.#ctor
   isExternal: true
-  href: Nebula.Tools.Main.-ctor.html#Nebula_Tools_Main__ctor
+  href: Nebula.Tools.Main.html#Nebula_Tools_Main__ctor
   name: Main
   nameWithType: Main.Main
   fullName: Nebula.Tools.Main.Main
   nameWithType.vb: Main.New
   fullName.vb: Nebula.Tools.Main.New
   name.vb: New
-memberLayout: SeparatePages

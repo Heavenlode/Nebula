@@ -19,7 +19,7 @@ items:
   fullName: Nebula.Serialization.Serializers.IStateSerializer
   type: Interface
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -43,7 +43,7 @@ items:
   fullName: Nebula.Serialization.Serializers.IStateSerializer.Begin()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -63,7 +63,7 @@ items:
   fullName: Nebula.Serialization.Serializers.IStateSerializer.Import(Nebula.WorldRunner, Nebula.Serialization.NetBuffer, out Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -98,7 +98,7 @@ items:
   fullName: Nebula.Serialization.Serializers.IStateSerializer.Export(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -133,7 +133,7 @@ items:
   fullName: Nebula.Serialization.Serializers.IStateSerializer.Acknowledge(Nebula.WorldRunner, ENet.Peer, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -163,7 +163,7 @@ items:
   fullName: Nebula.Serialization.Serializers.IStateSerializer.Cleanup()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -183,7 +183,7 @@ items:
   fullName: Nebula.Serialization.Serializers.IStateSerializer.CleanupPeer(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/Serializers/IStateSerializer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization.Serializers
@@ -241,14 +241,14 @@ references:
 - uid: Nebula.Serialization.Serializers.IStateSerializer.Begin*
   commentId: Overload:Nebula.Serialization.Serializers.IStateSerializer.Begin
   isExternal: true
-  href: Nebula.Serialization.Serializers.IStateSerializer.Begin.html#Nebula_Serialization_Serializers_IStateSerializer_Begin
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Begin
   name: Begin
   nameWithType: IStateSerializer.Begin
   fullName: Nebula.Serialization.Serializers.IStateSerializer.Begin
 - uid: Nebula.Serialization.Serializers.IStateSerializer.Import*
   commentId: Overload:Nebula.Serialization.Serializers.IStateSerializer.Import
   isExternal: true
-  href: Nebula.Serialization.Serializers.IStateSerializer.Import.html#Nebula_Serialization_Serializers_IStateSerializer_Import_Nebula_WorldRunner_Nebula_Serialization_NetBuffer_Nebula_NetworkController__
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Import_Nebula_WorldRunner_Nebula_Serialization_NetBuffer_Nebula_NetworkController__
   name: Import
   nameWithType: IStateSerializer.Import
   fullName: Nebula.Serialization.Serializers.IStateSerializer.Import
@@ -313,7 +313,7 @@ references:
 - uid: Nebula.Serialization.Serializers.IStateSerializer.Export*
   commentId: Overload:Nebula.Serialization.Serializers.IStateSerializer.Export
   isExternal: true
-  href: Nebula.Serialization.Serializers.IStateSerializer.Export.html#Nebula_Serialization_Serializers_IStateSerializer_Export_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Export_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
   name: Export
   nameWithType: IStateSerializer.Export
   fullName: Nebula.Serialization.Serializers.IStateSerializer.Export
@@ -333,7 +333,7 @@ references:
 - uid: Nebula.Serialization.Serializers.IStateSerializer.Acknowledge*
   commentId: Overload:Nebula.Serialization.Serializers.IStateSerializer.Acknowledge
   isExternal: true
-  href: Nebula.Serialization.Serializers.IStateSerializer.Acknowledge.html#Nebula_Serialization_Serializers_IStateSerializer_Acknowledge_Nebula_WorldRunner_ENet_Peer_System_Int32_
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Acknowledge_Nebula_WorldRunner_ENet_Peer_System_Int32_
   name: Acknowledge
   nameWithType: IStateSerializer.Acknowledge
   fullName: Nebula.Serialization.Serializers.IStateSerializer.Acknowledge
@@ -358,14 +358,14 @@ references:
 - uid: Nebula.Serialization.Serializers.IStateSerializer.Cleanup*
   commentId: Overload:Nebula.Serialization.Serializers.IStateSerializer.Cleanup
   isExternal: true
-  href: Nebula.Serialization.Serializers.IStateSerializer.Cleanup.html#Nebula_Serialization_Serializers_IStateSerializer_Cleanup
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_Cleanup
   name: Cleanup
   nameWithType: IStateSerializer.Cleanup
   fullName: Nebula.Serialization.Serializers.IStateSerializer.Cleanup
 - uid: Nebula.Serialization.Serializers.IStateSerializer.CleanupPeer*
   commentId: Overload:Nebula.Serialization.Serializers.IStateSerializer.CleanupPeer
   isExternal: true
-  href: Nebula.Serialization.Serializers.IStateSerializer.CleanupPeer.html#Nebula_Serialization_Serializers_IStateSerializer_CleanupPeer_Nebula_UUID_
+  href: Nebula.Serialization.Serializers.IStateSerializer.html#Nebula_Serialization_Serializers_IStateSerializer_CleanupPeer_Nebula_UUID_
   name: CleanupPeer
   nameWithType: IStateSerializer.CleanupPeer
   fullName: Nebula.Serialization.Serializers.IStateSerializer.CleanupPeer
@@ -377,4 +377,3 @@ references:
   name: UUID
   nameWithType: UUID
   fullName: Nebula.UUID
-memberLayout: SeparatePages

@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Serialization.ProtocolSceneInterest
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -44,7 +44,7 @@ items:
   fullName: Nebula.Serialization.ProtocolSceneInterest.InterestAny
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -67,7 +67,7 @@ items:
   fullName: Nebula.Serialization.ProtocolSceneInterest.InterestRequired
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -90,7 +90,7 @@ items:
   fullName: Nebula.Serialization.ProtocolSceneInterest.ProtocolSceneInterest(long, long)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -365,11 +365,10 @@ references:
 - uid: Nebula.Serialization.ProtocolSceneInterest.#ctor*
   commentId: Overload:Nebula.Serialization.ProtocolSceneInterest.#ctor
   isExternal: true
-  href: Nebula.Serialization.ProtocolSceneInterest.-ctor.html#Nebula_Serialization_ProtocolSceneInterest__ctor_System_Int64_System_Int64_
+  href: Nebula.Serialization.ProtocolSceneInterest.html#Nebula_Serialization_ProtocolSceneInterest__ctor_System_Int64_System_Int64_
   name: ProtocolSceneInterest
   nameWithType: ProtocolSceneInterest.ProtocolSceneInterest
   fullName: Nebula.Serialization.ProtocolSceneInterest.ProtocolSceneInterest
   nameWithType.vb: ProtocolSceneInterest.New
   fullName.vb: Nebula.Serialization.ProtocolSceneInterest.New
   name.vb: New
-memberLayout: SeparatePages

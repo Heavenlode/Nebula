@@ -20,7 +20,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -357,7 +357,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger._EnterTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -379,7 +379,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.IsEnabled(Nebula.Utility.Tools.Debugger.DebugLevel)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -404,7 +404,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.Log(string, Nebula.Utility.Tools.Debugger.DebugLevel)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -432,7 +432,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.Log(Nebula.Utility.Tools.Debugger.DebugLevel, ref Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -460,7 +460,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.Debugger()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -483,7 +483,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.Instance
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -506,7 +506,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.EditorInstance
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Utils/Debugger/Debugger.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Utils/Debugger/Debugger.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -7241,14 +7241,14 @@ references:
 - uid: Nebula.Utility.Tools.Debugger._EnterTree*
   commentId: Overload:Nebula.Utility.Tools.Debugger._EnterTree
   isExternal: true
-  href: Nebula.Utility.Tools.Debugger._EnterTree.html#Nebula_Utility_Tools_Debugger__EnterTree
+  href: Nebula.Utility.Tools.Debugger.html#Nebula_Utility_Tools_Debugger__EnterTree
   name: _EnterTree
   nameWithType: Debugger._EnterTree
   fullName: Nebula.Utility.Tools.Debugger._EnterTree
 - uid: Nebula.Utility.Tools.Debugger.IsEnabled*
   commentId: Overload:Nebula.Utility.Tools.Debugger.IsEnabled
   isExternal: true
-  href: Nebula.Utility.Tools.Debugger.IsEnabled.html#Nebula_Utility_Tools_Debugger_IsEnabled_Nebula_Utility_Tools_Debugger_DebugLevel_
+  href: Nebula.Utility.Tools.Debugger.html#Nebula_Utility_Tools_Debugger_IsEnabled_Nebula_Utility_Tools_Debugger_DebugLevel_
   name: IsEnabled
   nameWithType: Debugger.IsEnabled
   fullName: Nebula.Utility.Tools.Debugger.IsEnabled
@@ -7294,7 +7294,7 @@ references:
 - uid: Nebula.Utility.Tools.Debugger.Log*
   commentId: Overload:Nebula.Utility.Tools.Debugger.Log
   isExternal: true
-  href: Nebula.Utility.Tools.Debugger.Log.html#Nebula_Utility_Tools_Debugger_Log_System_String_Nebula_Utility_Tools_Debugger_DebugLevel_
+  href: Nebula.Utility.Tools.Debugger.html#Nebula_Utility_Tools_Debugger_Log_System_String_Nebula_Utility_Tools_Debugger_DebugLevel_
   name: Log
   nameWithType: Debugger.Log
   fullName: Nebula.Utility.Tools.Debugger.Log
@@ -7320,7 +7320,7 @@ references:
 - uid: Nebula.Utility.Tools.Debugger.#ctor*
   commentId: Overload:Nebula.Utility.Tools.Debugger.#ctor
   isExternal: true
-  href: Nebula.Utility.Tools.Debugger.-ctor.html#Nebula_Utility_Tools_Debugger__ctor
+  href: Nebula.Utility.Tools.Debugger.html#Nebula_Utility_Tools_Debugger__ctor
   name: Debugger
   nameWithType: Debugger.Debugger
   fullName: Nebula.Utility.Tools.Debugger.Debugger
@@ -7330,7 +7330,7 @@ references:
 - uid: Nebula.Utility.Tools.Debugger.Instance*
   commentId: Overload:Nebula.Utility.Tools.Debugger.Instance
   isExternal: true
-  href: Nebula.Utility.Tools.Debugger.Instance.html#Nebula_Utility_Tools_Debugger_Instance
+  href: Nebula.Utility.Tools.Debugger.html#Nebula_Utility_Tools_Debugger_Instance
   name: Instance
   nameWithType: Debugger.Instance
   fullName: Nebula.Utility.Tools.Debugger.Instance
@@ -7345,8 +7345,7 @@ references:
 - uid: Nebula.Utility.Tools.Debugger.EditorInstance*
   commentId: Overload:Nebula.Utility.Tools.Debugger.EditorInstance
   isExternal: true
-  href: Nebula.Utility.Tools.Debugger.EditorInstance.html#Nebula_Utility_Tools_Debugger_EditorInstance
+  href: Nebula.Utility.Tools.Debugger.html#Nebula_Utility_Tools_Debugger_EditorInstance
   name: EditorInstance
   nameWithType: Debugger.EditorInstance
   fullName: Nebula.Utility.Tools.Debugger.EditorInstance
-memberLayout: SeparatePages

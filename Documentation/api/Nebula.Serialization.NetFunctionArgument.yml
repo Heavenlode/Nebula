@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Serialization.NetFunctionArgument
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -44,7 +44,7 @@ items:
   fullName: Nebula.Serialization.NetFunctionArgument.VariantType
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -65,7 +65,7 @@ items:
   fullName: Nebula.Serialization.NetFunctionArgument.Metadata
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -86,7 +86,7 @@ items:
   fullName: Nebula.Serialization.NetFunctionArgument.NetFunctionArgument(Nebula.Serialization.SerialVariantType, Nebula.Serialization.SerialMetadata)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -366,11 +366,10 @@ references:
 - uid: Nebula.Serialization.NetFunctionArgument.#ctor*
   commentId: Overload:Nebula.Serialization.NetFunctionArgument.#ctor
   isExternal: true
-  href: Nebula.Serialization.NetFunctionArgument.-ctor.html#Nebula_Serialization_NetFunctionArgument__ctor_Nebula_Serialization_SerialVariantType_Nebula_Serialization_SerialMetadata_
+  href: Nebula.Serialization.NetFunctionArgument.html#Nebula_Serialization_NetFunctionArgument__ctor_Nebula_Serialization_SerialVariantType_Nebula_Serialization_SerialMetadata_
   name: NetFunctionArgument
   nameWithType: NetFunctionArgument.NetFunctionArgument
   fullName: Nebula.Serialization.NetFunctionArgument.NetFunctionArgument
   nameWithType.vb: NetFunctionArgument.New
   fullName.vb: Nebula.Serialization.NetFunctionArgument.New
   name.vb: New
-memberLayout: SeparatePages

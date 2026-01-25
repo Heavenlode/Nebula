@@ -16,7 +16,7 @@ items:
   fullName: Nebula.NetInterest
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetInterest.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetInterest.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -102,7 +102,7 @@ items:
   fullName: Nebula.NetInterest.Any
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetInterest.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetInterest.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -128,7 +128,7 @@ items:
   fullName: Nebula.NetInterest.Required
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetInterest.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetInterest.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -154,7 +154,7 @@ items:
   fullName: Nebula.NetInterest.NetInterest()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetInterest.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetInterest.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1981,11 +1981,10 @@ references:
 - uid: Nebula.NetInterest.#ctor*
   commentId: Overload:Nebula.NetInterest.#ctor
   isExternal: true
-  href: Nebula.NetInterest.-ctor.html#Nebula_NetInterest__ctor
+  href: Nebula.NetInterest.html#Nebula_NetInterest__ctor
   name: NetInterest
   nameWithType: NetInterest.NetInterest
   fullName: Nebula.NetInterest.NetInterest
   nameWithType.vb: NetInterest.New
   fullName.vb: Nebula.NetInterest.New
   name.vb: New
-memberLayout: SeparatePages

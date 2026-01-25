@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Utility.Nodes.TickTimer
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -45,7 +45,7 @@ items:
   fullName: Nebula.Utility.Nodes.TickTimer.TickTimer(int, int)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -73,7 +73,7 @@ items:
   fullName: Nebula.Utility.Nodes.TickTimer.CreateFromSeconds(int, float)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -103,7 +103,7 @@ items:
   fullName: Nebula.Utility.Nodes.TickTimer.IsDone(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Nodes/TickTimer/TickTimer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -397,7 +397,7 @@ references:
 - uid: Nebula.Utility.Nodes.TickTimer.#ctor*
   commentId: Overload:Nebula.Utility.Nodes.TickTimer.#ctor
   isExternal: true
-  href: Nebula.Utility.Nodes.TickTimer.-ctor.html#Nebula_Utility_Nodes_TickTimer__ctor_System_Int32_System_Int32_
+  href: Nebula.Utility.Nodes.TickTimer.html#Nebula_Utility_Nodes_TickTimer__ctor_System_Int32_System_Int32_
   name: TickTimer
   nameWithType: TickTimer.TickTimer
   fullName: Nebula.Utility.Nodes.TickTimer.TickTimer
@@ -418,7 +418,7 @@ references:
 - uid: Nebula.Utility.Nodes.TickTimer.CreateFromSeconds*
   commentId: Overload:Nebula.Utility.Nodes.TickTimer.CreateFromSeconds
   isExternal: true
-  href: Nebula.Utility.Nodes.TickTimer.CreateFromSeconds.html#Nebula_Utility_Nodes_TickTimer_CreateFromSeconds_System_Int32_System_Single_
+  href: Nebula.Utility.Nodes.TickTimer.html#Nebula_Utility_Nodes_TickTimer_CreateFromSeconds_System_Int32_System_Single_
   name: CreateFromSeconds
   nameWithType: TickTimer.CreateFromSeconds
   fullName: Nebula.Utility.Nodes.TickTimer.CreateFromSeconds
@@ -444,7 +444,7 @@ references:
 - uid: Nebula.Utility.Nodes.TickTimer.IsDone*
   commentId: Overload:Nebula.Utility.Nodes.TickTimer.IsDone
   isExternal: true
-  href: Nebula.Utility.Nodes.TickTimer.IsDone.html#Nebula_Utility_Nodes_TickTimer_IsDone_System_Int32_
+  href: Nebula.Utility.Nodes.TickTimer.html#Nebula_Utility_Nodes_TickTimer_IsDone_System_Int32_
   name: IsDone
   nameWithType: TickTimer.IsDone
   fullName: Nebula.Utility.Nodes.TickTimer.IsDone
@@ -459,4 +459,3 @@ references:
   nameWithType.vb: Boolean
   fullName.vb: Boolean
   name.vb: Boolean
-memberLayout: SeparatePages

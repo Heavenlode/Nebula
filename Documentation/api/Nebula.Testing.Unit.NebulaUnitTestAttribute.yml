@@ -1942,11 +1942,10 @@ references:
 - uid: Nebula.Testing.Unit.NebulaUnitTestAttribute.#ctor*
   commentId: Overload:Nebula.Testing.Unit.NebulaUnitTestAttribute.#ctor
   isExternal: true
-  href: Nebula.Testing.Unit.NebulaUnitTestAttribute.-ctor.html#Nebula_Testing_Unit_NebulaUnitTestAttribute__ctor
+  href: Nebula.Testing.Unit.NebulaUnitTestAttribute.html#Nebula_Testing_Unit_NebulaUnitTestAttribute__ctor
   name: NebulaUnitTestAttribute
   nameWithType: NebulaUnitTestAttribute.NebulaUnitTestAttribute
   fullName: Nebula.Testing.Unit.NebulaUnitTestAttribute.NebulaUnitTestAttribute
   nameWithType.vb: NebulaUnitTestAttribute.New
   fullName.vb: Nebula.Testing.Unit.NebulaUnitTestAttribute.New
   name.vb: New
-memberLayout: SeparatePages

@@ -130,7 +130,7 @@ references:
   commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
   parent: Nebula.Serialization.IBsonSerializableBase
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
   name: BsonSerialize(NetBsonContext)
   nameWithType: IBsonSerializableBase.BsonSerialize(NetBsonContext)
   fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
@@ -138,7 +138,7 @@ references:
   - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
     name: BsonSerialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
   - name: (
   - uid: Nebula.Serialization.NetBsonContext
     name: NetBsonContext
@@ -149,7 +149,7 @@ references:
   - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
     name: BsonSerialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
   - name: (
   - uid: Nebula.Serialization.NetBsonContext
     name: NetBsonContext
@@ -160,7 +160,7 @@ references:
   commentId: M:Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
   parent: Nebula.Serialization.IBsonSerializableBase
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
   name: OnBsonDeserialize(NetBsonContext, BsonDocument)
   nameWithType: IBsonSerializableBase.OnBsonDeserialize(NetBsonContext, BsonDocument)
   fullName: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext, MongoDB.Bson.BsonDocument)
@@ -168,7 +168,7 @@ references:
   - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
     name: OnBsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
   - name: (
   - uid: Nebula.Serialization.NetBsonContext
     name: NetBsonContext
@@ -184,7 +184,7 @@ references:
   - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
     name: OnBsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
   - name: (
   - uid: Nebula.Serialization.NetBsonContext
     name: NetBsonContext
@@ -207,7 +207,7 @@ references:
 - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize*
   commentId: Overload:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
   name: BsonDeserialize
   nameWithType: IBsonSerializable<T>.BsonDeserialize
   fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize
@@ -348,4 +348,3 @@ references:
     name: Tasks
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
-memberLayout: SeparatePages

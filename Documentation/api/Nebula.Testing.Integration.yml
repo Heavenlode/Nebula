@@ -16,9 +16,6 @@ items:
   - Nebula.Testing.Integration.ServerConfig
   - Nebula.Testing.Integration.SpawnCommand
   - Nebula.Testing.Integration.StdinCommandHandler
-  - Nebula.Testing.Integration.StdinCommandHandler.MethodName
-  - Nebula.Testing.Integration.StdinCommandHandler.PropertyName
-  - Nebula.Testing.Integration.StdinCommandHandler.SignalName
   langs:
   - csharp
   - vb
@@ -119,87 +116,6 @@ references:
   name: StdinCommandHandler
   nameWithType: StdinCommandHandler
   fullName: Nebula.Testing.Integration.StdinCommandHandler
-- uid: Nebula.Testing.Integration.StdinCommandHandler.MethodName
-  commentId: T:Nebula.Testing.Integration.StdinCommandHandler.MethodName
-  isExternal: true
-  href: Nebula.Testing.Integration.StdinCommandHandler.html
-  name: StdinCommandHandler.MethodName
-  nameWithType: StdinCommandHandler.MethodName
-  fullName: Nebula.Testing.Integration.StdinCommandHandler.MethodName
-  spec.csharp:
-  - uid: Nebula.Testing.Integration.StdinCommandHandler
-    name: StdinCommandHandler
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.html
-  - name: .
-  - uid: Nebula.Testing.Integration.StdinCommandHandler.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.MethodName.html
-  spec.vb:
-  - uid: Nebula.Testing.Integration.StdinCommandHandler
-    name: StdinCommandHandler
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.html
-  - name: .
-  - uid: Nebula.Testing.Integration.StdinCommandHandler.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.MethodName.html
-- uid: Nebula.Testing.Integration.StdinCommandHandler.PropertyName
-  commentId: T:Nebula.Testing.Integration.StdinCommandHandler.PropertyName
-  isExternal: true
-  href: Nebula.Testing.Integration.StdinCommandHandler.html
-  name: StdinCommandHandler.PropertyName
-  nameWithType: StdinCommandHandler.PropertyName
-  fullName: Nebula.Testing.Integration.StdinCommandHandler.PropertyName
-  spec.csharp:
-  - uid: Nebula.Testing.Integration.StdinCommandHandler
-    name: StdinCommandHandler
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.html
-  - name: .
-  - uid: Nebula.Testing.Integration.StdinCommandHandler.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Testing.Integration.StdinCommandHandler
-    name: StdinCommandHandler
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.html
-  - name: .
-  - uid: Nebula.Testing.Integration.StdinCommandHandler.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.PropertyName.html
-- uid: Nebula.Testing.Integration.StdinCommandHandler.SignalName
-  commentId: T:Nebula.Testing.Integration.StdinCommandHandler.SignalName
-  isExternal: true
-  href: Nebula.Testing.Integration.StdinCommandHandler.html
-  name: StdinCommandHandler.SignalName
-  nameWithType: StdinCommandHandler.SignalName
-  fullName: Nebula.Testing.Integration.StdinCommandHandler.SignalName
-  spec.csharp:
-  - uid: Nebula.Testing.Integration.StdinCommandHandler
-    name: StdinCommandHandler
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.html
-  - name: .
-  - uid: Nebula.Testing.Integration.StdinCommandHandler.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.SignalName.html
-  spec.vb:
-  - uid: Nebula.Testing.Integration.StdinCommandHandler
-    name: StdinCommandHandler
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.html
-  - name: .
-  - uid: Nebula.Testing.Integration.StdinCommandHandler.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Testing.Integration.StdinCommandHandler.SignalName.html
 - uid: Nebula.Testing.Integration
   commentId: N:Nebula.Testing.Integration
   isExternal: true
@@ -237,4 +153,3 @@ references:
     name: Integration
     isExternal: true
     href: Nebula.Testing.Integration.html
-memberLayout: SeparatePages

@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Testing.NebulaTestFixture
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/NebulaTestFixture.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/NebulaTestFixture.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing
@@ -53,7 +53,7 @@ items:
   fullName: Nebula.Testing.NebulaTestFixture.NebulaTestFixture()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/NebulaTestFixture.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/NebulaTestFixture.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing
@@ -76,7 +76,7 @@ items:
   fullName: Nebula.Testing.NebulaTestFixture.Dispose()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/NebulaTestFixture.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/NebulaTestFixture.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing
@@ -363,7 +363,7 @@ references:
 - uid: Nebula.Testing.NebulaTestFixture.#ctor*
   commentId: Overload:Nebula.Testing.NebulaTestFixture.#ctor
   isExternal: true
-  href: Nebula.Testing.NebulaTestFixture.-ctor.html#Nebula_Testing_NebulaTestFixture__ctor
+  href: Nebula.Testing.NebulaTestFixture.html#Nebula_Testing_NebulaTestFixture__ctor
   name: NebulaTestFixture
   nameWithType: NebulaTestFixture.NebulaTestFixture
   fullName: Nebula.Testing.NebulaTestFixture.NebulaTestFixture
@@ -373,7 +373,7 @@ references:
 - uid: Nebula.Testing.NebulaTestFixture.Dispose*
   commentId: Overload:Nebula.Testing.NebulaTestFixture.Dispose
   isExternal: true
-  href: Nebula.Testing.NebulaTestFixture.Dispose.html#Nebula_Testing_NebulaTestFixture_Dispose
+  href: Nebula.Testing.NebulaTestFixture.html#Nebula_Testing_NebulaTestFixture_Dispose
   name: Dispose
   nameWithType: NebulaTestFixture.Dispose
   fullName: Nebula.Testing.NebulaTestFixture.Dispose
@@ -399,4 +399,3 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
   - name: (
   - name: )
-memberLayout: SeparatePages

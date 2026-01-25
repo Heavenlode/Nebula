@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Testing.Unit.NebulaUnitTests
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Unit/NebulaUnitTests.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Unit/NebulaUnitTests.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Unit
@@ -62,7 +62,7 @@ items:
   fullName: Nebula.Testing.Unit.NebulaUnitTests.RunTest(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Unit/NebulaUnitTests.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Unit/NebulaUnitTests.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Unit
@@ -102,7 +102,7 @@ items:
   fullName: Nebula.Testing.Unit.NebulaUnitTests.NebulaUnitTests()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Unit/NebulaUnitTests.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Unit/NebulaUnitTests.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Unit
@@ -125,7 +125,7 @@ items:
   fullName: Nebula.Testing.Unit.NebulaUnitTests.TestCases
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Unit/NebulaUnitTests.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Unit/NebulaUnitTests.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Unit
@@ -416,7 +416,7 @@ references:
 - uid: Nebula.Testing.Unit.NebulaUnitTests.RunTest*
   commentId: Overload:Nebula.Testing.Unit.NebulaUnitTests.RunTest
   isExternal: true
-  href: Nebula.Testing.Unit.NebulaUnitTests.RunTest.html#Nebula_Testing_Unit_NebulaUnitTests_RunTest_System_String_
+  href: Nebula.Testing.Unit.NebulaUnitTests.html#Nebula_Testing_Unit_NebulaUnitTests_RunTest_System_String_
   name: RunTest
   nameWithType: NebulaUnitTests.RunTest
   fullName: Nebula.Testing.Unit.NebulaUnitTests.RunTest
@@ -434,7 +434,7 @@ references:
 - uid: Nebula.Testing.Unit.NebulaUnitTests.#ctor*
   commentId: Overload:Nebula.Testing.Unit.NebulaUnitTests.#ctor
   isExternal: true
-  href: Nebula.Testing.Unit.NebulaUnitTests.-ctor.html#Nebula_Testing_Unit_NebulaUnitTests__ctor
+  href: Nebula.Testing.Unit.NebulaUnitTests.html#Nebula_Testing_Unit_NebulaUnitTests__ctor
   name: NebulaUnitTests
   nameWithType: NebulaUnitTests.NebulaUnitTests
   fullName: Nebula.Testing.Unit.NebulaUnitTests.NebulaUnitTests
@@ -444,7 +444,7 @@ references:
 - uid: Nebula.Testing.Unit.NebulaUnitTests.TestCases*
   commentId: Overload:Nebula.Testing.Unit.NebulaUnitTests.TestCases
   isExternal: true
-  href: Nebula.Testing.Unit.NebulaUnitTests.TestCases.html#Nebula_Testing_Unit_NebulaUnitTests_TestCases
+  href: Nebula.Testing.Unit.NebulaUnitTests.html#Nebula_Testing_Unit_NebulaUnitTests_TestCases
   name: TestCases
   nameWithType: NebulaUnitTests.TestCases
   fullName: Nebula.Testing.Unit.NebulaUnitTests.TestCases
@@ -552,4 +552,3 @@ references:
     name: Generic
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.collections.generic
-memberLayout: SeparatePages

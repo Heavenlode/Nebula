@@ -15,7 +15,7 @@ items:
   fullName: Nebula.WorldRunner.DebugMessenger
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -49,7 +49,7 @@ items:
   fullName: Nebula.WorldRunner.DebugMessenger.DebugMessenger(Nebula.WorldRunner)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -75,7 +75,7 @@ items:
   fullName: Nebula.WorldRunner.DebugMessenger.Send(string, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -346,7 +346,7 @@ references:
 - uid: Nebula.WorldRunner.DebugMessenger.#ctor*
   commentId: Overload:Nebula.WorldRunner.DebugMessenger.#ctor
   isExternal: true
-  href: Nebula.WorldRunner.DebugMessenger.-ctor.html#Nebula_WorldRunner_DebugMessenger__ctor_Nebula_WorldRunner_
+  href: Nebula.WorldRunner.DebugMessenger.html#Nebula_WorldRunner_DebugMessenger__ctor_Nebula_WorldRunner_
   name: DebugMessenger
   nameWithType: WorldRunner.DebugMessenger.DebugMessenger
   fullName: Nebula.WorldRunner.DebugMessenger.DebugMessenger
@@ -364,7 +364,7 @@ references:
 - uid: Nebula.WorldRunner.DebugMessenger.Send*
   commentId: Overload:Nebula.WorldRunner.DebugMessenger.Send
   isExternal: true
-  href: Nebula.WorldRunner.DebugMessenger.Send.html#Nebula_WorldRunner_DebugMessenger_Send_System_String_System_String_
+  href: Nebula.WorldRunner.DebugMessenger.html#Nebula_WorldRunner_DebugMessenger_Send_System_String_System_String_
   name: Send
   nameWithType: WorldRunner.DebugMessenger.Send
   fullName: Nebula.WorldRunner.DebugMessenger.Send
@@ -379,4 +379,3 @@ references:
   nameWithType.vb: String
   fullName.vb: String
   name.vb: String
-memberLayout: SeparatePages

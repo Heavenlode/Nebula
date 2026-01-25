@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Testing.Integration.PriorityOrderer
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -46,7 +46,7 @@ items:
   fullName: Nebula.Testing.Integration.PriorityOrderer.OrderTestCases<TTestCase>(System.Collections.Generic.IEnumerable<TTestCase>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -79,7 +79,7 @@ items:
   fullName: Nebula.Testing.Integration.PriorityOrderer.PriorityOrderer()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/PriorityOrderer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/PriorityOrderer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -397,7 +397,7 @@ references:
 - uid: Nebula.Testing.Integration.PriorityOrderer.OrderTestCases*
   commentId: Overload:Nebula.Testing.Integration.PriorityOrderer.OrderTestCases
   isExternal: true
-  href: Nebula.Testing.Integration.PriorityOrderer.OrderTestCases.html#Nebula_Testing_Integration_PriorityOrderer_OrderTestCases__1_System_Collections_Generic_IEnumerable___0__
+  href: Nebula.Testing.Integration.PriorityOrderer.html#Nebula_Testing_Integration_PriorityOrderer_OrderTestCases__1_System_Collections_Generic_IEnumerable___0__
   name: OrderTestCases
   nameWithType: PriorityOrderer.OrderTestCases
   fullName: Nebula.Testing.Integration.PriorityOrderer.OrderTestCases
@@ -591,11 +591,10 @@ references:
 - uid: Nebula.Testing.Integration.PriorityOrderer.#ctor*
   commentId: Overload:Nebula.Testing.Integration.PriorityOrderer.#ctor
   isExternal: true
-  href: Nebula.Testing.Integration.PriorityOrderer.-ctor.html#Nebula_Testing_Integration_PriorityOrderer__ctor
+  href: Nebula.Testing.Integration.PriorityOrderer.html#Nebula_Testing_Integration_PriorityOrderer__ctor
   name: PriorityOrderer
   nameWithType: PriorityOrderer.PriorityOrderer
   fullName: Nebula.Testing.Integration.PriorityOrderer.PriorityOrderer
   nameWithType.vb: PriorityOrderer.New
   fullName.vb: Nebula.Testing.Integration.PriorityOrderer.New
   name.vb: New
-memberLayout: SeparatePages

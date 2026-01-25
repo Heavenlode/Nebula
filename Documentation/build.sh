@@ -39,23 +39,28 @@ done
 # Step 1: Build the Nebula project (to get fresh DLL + XML docs)
 if [ "$SKIP_BUILD" = false ]; then
     echo ""
-    echo "[1/3] Building Nebula project..."
+    echo "[1/4] Building Nebula project..."
     cd "$PROJECT_ROOT"
     dotnet build Nebula.csproj -c Debug
     cd "$SCRIPT_DIR"
 else
     echo ""
-    echo "[1/3] Skipping Nebula build (--skip-build)"
+    echo "[1/4] Skipping Nebula build (--skip-build)"
 fi
 
 # Step 2: Generate API metadata from DLL
 echo ""
-echo "[2/3] Generating API documentation from Nebula.dll..."
+echo "[2/4] Generating API documentation from Nebula.dll..."
 docfx metadata docfx.json
 
-# Step 3: Build the documentation site
+# Step 3: Post-process TOC to nest child types
 echo ""
-echo "[3/3] Building documentation site..."
+echo "[3/4] Restructuring API table of contents..."
+python3 "$SCRIPT_DIR/scripts/nest-toc.py"
+
+# Step 4: Build the documentation site
+echo ""
+echo "[4/4] Building documentation site..."
 rm -rf _site
 docfx build docfx.json
 

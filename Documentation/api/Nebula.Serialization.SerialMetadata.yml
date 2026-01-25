@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Serialization.SerialMetadata
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -44,7 +44,7 @@ items:
   fullName: Nebula.Serialization.SerialMetadata.TypeIdentifier
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -65,7 +65,7 @@ items:
   fullName: Nebula.Serialization.SerialMetadata.SerialMetadata(string)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -91,7 +91,7 @@ items:
   fullName: Nebula.Serialization.SerialMetadata.None
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -361,7 +361,7 @@ references:
 - uid: Nebula.Serialization.SerialMetadata.#ctor*
   commentId: Overload:Nebula.Serialization.SerialMetadata.#ctor
   isExternal: true
-  href: Nebula.Serialization.SerialMetadata.-ctor.html#Nebula_Serialization_SerialMetadata__ctor_System_String_
+  href: Nebula.Serialization.SerialMetadata.html#Nebula_Serialization_SerialMetadata__ctor_System_String_
   name: SerialMetadata
   nameWithType: SerialMetadata.SerialMetadata
   fullName: Nebula.Serialization.SerialMetadata.SerialMetadata
@@ -371,7 +371,7 @@ references:
 - uid: Nebula.Serialization.SerialMetadata.None*
   commentId: Overload:Nebula.Serialization.SerialMetadata.None
   isExternal: true
-  href: Nebula.Serialization.SerialMetadata.None.html#Nebula_Serialization_SerialMetadata_None
+  href: Nebula.Serialization.SerialMetadata.html#Nebula_Serialization_SerialMetadata_None
   name: None
   nameWithType: SerialMetadata.None
   fullName: Nebula.Serialization.SerialMetadata.None
@@ -383,4 +383,3 @@ references:
   name: SerialMetadata
   nameWithType: SerialMetadata
   fullName: Nebula.Serialization.SerialMetadata
-memberLayout: SeparatePages

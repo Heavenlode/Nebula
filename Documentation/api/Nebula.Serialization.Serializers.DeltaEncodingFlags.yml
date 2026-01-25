@@ -160,4 +160,3 @@ references:
   name: DeltaEncodingFlags
   nameWithType: DeltaEncodingFlags
   fullName: Nebula.Serialization.Serializers.DeltaEncodingFlags
-memberLayout: SeparatePages

@@ -18,7 +18,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -49,7 +49,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig.ServerConfig()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -72,7 +72,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig.InitialWorldScene
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -95,7 +95,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig.WorldId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -118,7 +118,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig.DebugPort
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -143,7 +143,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig.ExtraArgs
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -432,7 +432,7 @@ references:
 - uid: Nebula.Testing.Integration.ServerConfig.#ctor*
   commentId: Overload:Nebula.Testing.Integration.ServerConfig.#ctor
   isExternal: true
-  href: Nebula.Testing.Integration.ServerConfig.-ctor.html#Nebula_Testing_Integration_ServerConfig__ctor
+  href: Nebula.Testing.Integration.ServerConfig.html#Nebula_Testing_Integration_ServerConfig__ctor
   name: ServerConfig
   nameWithType: ServerConfig.ServerConfig
   fullName: Nebula.Testing.Integration.ServerConfig.ServerConfig
@@ -442,7 +442,7 @@ references:
 - uid: Nebula.Testing.Integration.ServerConfig.InitialWorldScene*
   commentId: Overload:Nebula.Testing.Integration.ServerConfig.InitialWorldScene
   isExternal: true
-  href: Nebula.Testing.Integration.ServerConfig.InitialWorldScene.html#Nebula_Testing_Integration_ServerConfig_InitialWorldScene
+  href: Nebula.Testing.Integration.ServerConfig.html#Nebula_Testing_Integration_ServerConfig_InitialWorldScene
   name: InitialWorldScene
   nameWithType: ServerConfig.InitialWorldScene
   fullName: Nebula.Testing.Integration.ServerConfig.InitialWorldScene
@@ -460,14 +460,14 @@ references:
 - uid: Nebula.Testing.Integration.ServerConfig.WorldId*
   commentId: Overload:Nebula.Testing.Integration.ServerConfig.WorldId
   isExternal: true
-  href: Nebula.Testing.Integration.ServerConfig.WorldId.html#Nebula_Testing_Integration_ServerConfig_WorldId
+  href: Nebula.Testing.Integration.ServerConfig.html#Nebula_Testing_Integration_ServerConfig_WorldId
   name: WorldId
   nameWithType: ServerConfig.WorldId
   fullName: Nebula.Testing.Integration.ServerConfig.WorldId
 - uid: Nebula.Testing.Integration.ServerConfig.DebugPort*
   commentId: Overload:Nebula.Testing.Integration.ServerConfig.DebugPort
   isExternal: true
-  href: Nebula.Testing.Integration.ServerConfig.DebugPort.html#Nebula_Testing_Integration_ServerConfig_DebugPort
+  href: Nebula.Testing.Integration.ServerConfig.html#Nebula_Testing_Integration_ServerConfig_DebugPort
   name: DebugPort
   nameWithType: ServerConfig.DebugPort
   fullName: Nebula.Testing.Integration.ServerConfig.DebugPort
@@ -485,7 +485,7 @@ references:
 - uid: Nebula.Testing.Integration.ServerConfig.ExtraArgs*
   commentId: Overload:Nebula.Testing.Integration.ServerConfig.ExtraArgs
   isExternal: true
-  href: Nebula.Testing.Integration.ServerConfig.ExtraArgs.html#Nebula_Testing_Integration_ServerConfig_ExtraArgs
+  href: Nebula.Testing.Integration.ServerConfig.html#Nebula_Testing_Integration_ServerConfig_ExtraArgs
   name: ExtraArgs
   nameWithType: ServerConfig.ExtraArgs
   fullName: Nebula.Testing.Integration.ServerConfig.ExtraArgs
@@ -607,4 +607,3 @@ references:
     name: Generic
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.collections.generic
-memberLayout: SeparatePages

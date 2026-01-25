@@ -108,7 +108,7 @@ references:
 - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize*
   commentId: Overload:Nebula.Serialization.IBsonSerializableBase.BsonSerialize
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
   name: BsonSerialize
   nameWithType: IBsonSerializableBase.BsonSerialize
   fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize
@@ -152,7 +152,7 @@ references:
 - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize*
   commentId: Overload:Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
   name: OnBsonDeserialize
   nameWithType: IBsonSerializableBase.OnBsonDeserialize
   fullName: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize
@@ -208,4 +208,3 @@ references:
     name: Tasks
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
-memberLayout: SeparatePages

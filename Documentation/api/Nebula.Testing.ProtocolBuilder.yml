@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Testing.ProtocolBuilder
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Testing.ProtocolBuilder_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Testing.ProtocolBuilder_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing
@@ -350,7 +350,7 @@ items:
   fullName: Nebula.Testing.ProtocolBuilder._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/ProtocolBuilder/ProtocolBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/ProtocolBuilder/ProtocolBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing
@@ -372,7 +372,7 @@ items:
   fullName: Nebula.Testing.ProtocolBuilder.ProtocolBuilder()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Testing.ProtocolBuilder_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Testing.ProtocolBuilder_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing
@@ -7097,18 +7097,17 @@ references:
 - uid: Nebula.Testing.ProtocolBuilder._Ready*
   commentId: Overload:Nebula.Testing.ProtocolBuilder._Ready
   isExternal: true
-  href: Nebula.Testing.ProtocolBuilder._Ready.html#Nebula_Testing_ProtocolBuilder__Ready
+  href: Nebula.Testing.ProtocolBuilder.html#Nebula_Testing_ProtocolBuilder__Ready
   name: _Ready
   nameWithType: ProtocolBuilder._Ready
   fullName: Nebula.Testing.ProtocolBuilder._Ready
 - uid: Nebula.Testing.ProtocolBuilder.#ctor*
   commentId: Overload:Nebula.Testing.ProtocolBuilder.#ctor
   isExternal: true
-  href: Nebula.Testing.ProtocolBuilder.-ctor.html#Nebula_Testing_ProtocolBuilder__ctor
+  href: Nebula.Testing.ProtocolBuilder.html#Nebula_Testing_ProtocolBuilder__ctor
   name: ProtocolBuilder
   nameWithType: ProtocolBuilder.ProtocolBuilder
   fullName: Nebula.Testing.ProtocolBuilder.ProtocolBuilder
   nameWithType.vb: ProtocolBuilder.New
   fullName.vb: Nebula.Testing.ProtocolBuilder.New
   name.vb: New
-memberLayout: SeparatePages

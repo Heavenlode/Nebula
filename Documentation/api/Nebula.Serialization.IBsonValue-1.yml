@@ -117,7 +117,7 @@ references:
 - uid: Nebula.Serialization.IBsonValue`1.BsonSerialize*
   commentId: Overload:Nebula.Serialization.IBsonValue`1.BsonSerialize
   isExternal: true
-  href: Nebula.Serialization.IBsonValue-1.BsonSerialize.html#Nebula_Serialization_IBsonValue_1_BsonSerialize__0__
+  href: Nebula.Serialization.IBsonValue-1.html#Nebula_Serialization_IBsonValue_1_BsonSerialize__0__
   name: BsonSerialize
   nameWithType: IBsonValue<T>.BsonSerialize
   fullName: Nebula.Serialization.IBsonValue<T>.BsonSerialize
@@ -165,10 +165,9 @@ references:
 - uid: Nebula.Serialization.IBsonValue`1.BsonDeserialize*
   commentId: Overload:Nebula.Serialization.IBsonValue`1.BsonDeserialize
   isExternal: true
-  href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
+  href: Nebula.Serialization.IBsonValue-1.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   name: BsonDeserialize
   nameWithType: IBsonValue<T>.BsonDeserialize
   fullName: Nebula.Serialization.IBsonValue<T>.BsonDeserialize
   nameWithType.vb: IBsonValue(Of T).BsonDeserialize
   fullName.vb: Nebula.Serialization.IBsonValue(Of T).BsonDeserialize
-memberLayout: SeparatePages

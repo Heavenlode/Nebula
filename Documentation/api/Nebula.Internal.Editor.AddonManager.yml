@@ -19,7 +19,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -594,7 +594,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.AddonList
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -631,7 +631,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.AddonDescription
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -668,7 +668,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/AddonManager/AddonManager.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/AddonManager/AddonManager.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -691,7 +691,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.SetPluginRoot(Nebula.Tools.Main)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/AddonManager/AddonManager.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/AddonManager/AddonManager.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -716,7 +716,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager._OnCloseRequested()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/AddonManager/AddonManager.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/AddonManager/AddonManager.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -738,7 +738,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.AddonManager()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/AddonManager/AddonManager.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/AddonManager/AddonManager.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -11350,14 +11350,14 @@ references:
 - uid: Nebula.Internal.Editor.AddonManager._Ready*
   commentId: Overload:Nebula.Internal.Editor.AddonManager._Ready
   isExternal: true
-  href: Nebula.Internal.Editor.AddonManager._Ready.html#Nebula_Internal_Editor_AddonManager__Ready
+  href: Nebula.Internal.Editor.AddonManager.html#Nebula_Internal_Editor_AddonManager__Ready
   name: _Ready
   nameWithType: AddonManager._Ready
   fullName: Nebula.Internal.Editor.AddonManager._Ready
 - uid: Nebula.Internal.Editor.AddonManager.SetPluginRoot*
   commentId: Overload:Nebula.Internal.Editor.AddonManager.SetPluginRoot
   isExternal: true
-  href: Nebula.Internal.Editor.AddonManager.SetPluginRoot.html#Nebula_Internal_Editor_AddonManager_SetPluginRoot_Nebula_Tools_Main_
+  href: Nebula.Internal.Editor.AddonManager.html#Nebula_Internal_Editor_AddonManager_SetPluginRoot_Nebula_Tools_Main_
   name: SetPluginRoot
   nameWithType: AddonManager.SetPluginRoot
   fullName: Nebula.Internal.Editor.AddonManager.SetPluginRoot
@@ -11399,18 +11399,17 @@ references:
 - uid: Nebula.Internal.Editor.AddonManager._OnCloseRequested*
   commentId: Overload:Nebula.Internal.Editor.AddonManager._OnCloseRequested
   isExternal: true
-  href: Nebula.Internal.Editor.AddonManager._OnCloseRequested.html#Nebula_Internal_Editor_AddonManager__OnCloseRequested
+  href: Nebula.Internal.Editor.AddonManager.html#Nebula_Internal_Editor_AddonManager__OnCloseRequested
   name: _OnCloseRequested
   nameWithType: AddonManager._OnCloseRequested
   fullName: Nebula.Internal.Editor.AddonManager._OnCloseRequested
 - uid: Nebula.Internal.Editor.AddonManager.#ctor*
   commentId: Overload:Nebula.Internal.Editor.AddonManager.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.AddonManager.-ctor.html#Nebula_Internal_Editor_AddonManager__ctor
+  href: Nebula.Internal.Editor.AddonManager.html#Nebula_Internal_Editor_AddonManager__ctor
   name: AddonManager
   nameWithType: AddonManager.AddonManager
   fullName: Nebula.Internal.Editor.AddonManager.AddonManager
   nameWithType.vb: AddonManager.New
   fullName.vb: Nebula.Internal.Editor.AddonManager.New
   name.vb: New
-memberLayout: SeparatePages

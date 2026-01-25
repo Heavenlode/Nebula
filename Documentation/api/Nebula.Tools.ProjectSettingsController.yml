@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -358,7 +358,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController._EnterTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/ProjectSettingsController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/ProjectSettingsController.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -384,7 +384,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/ProjectSettingsController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/ProjectSettingsController.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -410,7 +410,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController.Build()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/ProjectSettingsController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/ProjectSettingsController.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -435,7 +435,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController.ProjectSettingsController()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -7141,7 +7141,7 @@ references:
 - uid: Nebula.Tools.ProjectSettingsController._EnterTree*
   commentId: Overload:Nebula.Tools.ProjectSettingsController._EnterTree
   isExternal: true
-  href: Nebula.Tools.ProjectSettingsController._EnterTree.html#Nebula_Tools_ProjectSettingsController__EnterTree
+  href: Nebula.Tools.ProjectSettingsController.html#Nebula_Tools_ProjectSettingsController__EnterTree
   name: _EnterTree
   nameWithType: ProjectSettingsController._EnterTree
   fullName: Nebula.Tools.ProjectSettingsController._EnterTree
@@ -7167,14 +7167,14 @@ references:
 - uid: Nebula.Tools.ProjectSettingsController._ExitTree*
   commentId: Overload:Nebula.Tools.ProjectSettingsController._ExitTree
   isExternal: true
-  href: Nebula.Tools.ProjectSettingsController._ExitTree.html#Nebula_Tools_ProjectSettingsController__ExitTree
+  href: Nebula.Tools.ProjectSettingsController.html#Nebula_Tools_ProjectSettingsController__ExitTree
   name: _ExitTree
   nameWithType: ProjectSettingsController._ExitTree
   fullName: Nebula.Tools.ProjectSettingsController._ExitTree
 - uid: Nebula.Tools.ProjectSettingsController.Build*
   commentId: Overload:Nebula.Tools.ProjectSettingsController.Build
   isExternal: true
-  href: Nebula.Tools.ProjectSettingsController.Build.html#Nebula_Tools_ProjectSettingsController_Build
+  href: Nebula.Tools.ProjectSettingsController.html#Nebula_Tools_ProjectSettingsController_Build
   name: Build
   nameWithType: ProjectSettingsController.Build
   fullName: Nebula.Tools.ProjectSettingsController.Build
@@ -7192,11 +7192,10 @@ references:
 - uid: Nebula.Tools.ProjectSettingsController.#ctor*
   commentId: Overload:Nebula.Tools.ProjectSettingsController.#ctor
   isExternal: true
-  href: Nebula.Tools.ProjectSettingsController.-ctor.html#Nebula_Tools_ProjectSettingsController__ctor
+  href: Nebula.Tools.ProjectSettingsController.html#Nebula_Tools_ProjectSettingsController__ctor
   name: ProjectSettingsController
   nameWithType: ProjectSettingsController.ProjectSettingsController
   fullName: Nebula.Tools.ProjectSettingsController.ProjectSettingsController
   nameWithType.vb: ProjectSettingsController.New
   fullName.vb: Nebula.Tools.ProjectSettingsController.New
   name.vb: New
-memberLayout: SeparatePages

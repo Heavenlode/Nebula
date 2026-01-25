@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Testing.Integration.InputCommand
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -48,7 +48,7 @@ items:
   fullName: Nebula.Testing.Integration.InputCommand.InputCommand(Nebula.Testing.Integration.GodotProcess, Nebula.Testing.Integration.GodotProcess, byte, string)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -80,7 +80,7 @@ items:
   fullName: Nebula.Testing.Integration.InputCommand.VerifyServer()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -104,7 +104,7 @@ items:
   fullName: Nebula.Testing.Integration.InputCommand.VerifyClient()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -128,7 +128,7 @@ items:
   fullName: Nebula.Testing.Integration.InputCommand.VerifyBoth()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -418,7 +418,7 @@ references:
 - uid: Nebula.Testing.Integration.InputCommand.#ctor*
   commentId: Overload:Nebula.Testing.Integration.InputCommand.#ctor
   isExternal: true
-  href: Nebula.Testing.Integration.InputCommand.-ctor.html#Nebula_Testing_Integration_InputCommand__ctor_Nebula_Testing_Integration_GodotProcess_Nebula_Testing_Integration_GodotProcess_System_Byte_System_String_
+  href: Nebula.Testing.Integration.InputCommand.html#Nebula_Testing_Integration_InputCommand__ctor_Nebula_Testing_Integration_GodotProcess_Nebula_Testing_Integration_GodotProcess_System_Byte_System_String_
   name: InputCommand
   nameWithType: InputCommand.InputCommand
   fullName: Nebula.Testing.Integration.InputCommand.InputCommand
@@ -458,7 +458,7 @@ references:
 - uid: Nebula.Testing.Integration.InputCommand.VerifyServer*
   commentId: Overload:Nebula.Testing.Integration.InputCommand.VerifyServer
   isExternal: true
-  href: Nebula.Testing.Integration.InputCommand.VerifyServer.html#Nebula_Testing_Integration_InputCommand_VerifyServer
+  href: Nebula.Testing.Integration.InputCommand.html#Nebula_Testing_Integration_InputCommand_VerifyServer
   name: VerifyServer
   nameWithType: InputCommand.VerifyServer
   fullName: Nebula.Testing.Integration.InputCommand.VerifyServer
@@ -510,15 +510,14 @@ references:
 - uid: Nebula.Testing.Integration.InputCommand.VerifyClient*
   commentId: Overload:Nebula.Testing.Integration.InputCommand.VerifyClient
   isExternal: true
-  href: Nebula.Testing.Integration.InputCommand.VerifyClient.html#Nebula_Testing_Integration_InputCommand_VerifyClient
+  href: Nebula.Testing.Integration.InputCommand.html#Nebula_Testing_Integration_InputCommand_VerifyClient
   name: VerifyClient
   nameWithType: InputCommand.VerifyClient
   fullName: Nebula.Testing.Integration.InputCommand.VerifyClient
 - uid: Nebula.Testing.Integration.InputCommand.VerifyBoth*
   commentId: Overload:Nebula.Testing.Integration.InputCommand.VerifyBoth
   isExternal: true
-  href: Nebula.Testing.Integration.InputCommand.VerifyBoth.html#Nebula_Testing_Integration_InputCommand_VerifyBoth
+  href: Nebula.Testing.Integration.InputCommand.html#Nebula_Testing_Integration_InputCommand_VerifyBoth
   name: VerifyBoth
   nameWithType: InputCommand.VerifyBoth
   fullName: Nebula.Testing.Integration.InputCommand.VerifyBoth
-memberLayout: SeparatePages

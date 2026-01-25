@@ -15,7 +15,8 @@
       "disableDefaultFilter": false,
       "noRestore": false,
       "namespaceLayout": "flattened",
-      "memberLayout": "separatePages",
+      "memberLayout": "samePage",
+      "filter": "filterConfig.yml",
       "allowCompilationErrors": false
     }
   ],

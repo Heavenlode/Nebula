@@ -19,7 +19,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -584,7 +584,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient._OnCloseRequested()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -604,7 +604,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -626,7 +626,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -648,7 +648,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient._Process(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -676,7 +676,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.Dispose(bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -704,7 +704,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.ServerDebugClient()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -11202,7 +11202,7 @@ references:
 - uid: Nebula.Internal.Editor.ServerDebugClient._OnCloseRequested*
   commentId: Overload:Nebula.Internal.Editor.ServerDebugClient._OnCloseRequested
   isExternal: true
-  href: Nebula.Internal.Editor.ServerDebugClient._OnCloseRequested.html#Nebula_Internal_Editor_ServerDebugClient__OnCloseRequested
+  href: Nebula.Internal.Editor.ServerDebugClient.html#Nebula_Internal_Editor_ServerDebugClient__OnCloseRequested
   name: _OnCloseRequested
   nameWithType: ServerDebugClient._OnCloseRequested
   fullName: Nebula.Internal.Editor.ServerDebugClient._OnCloseRequested
@@ -11228,7 +11228,7 @@ references:
 - uid: Nebula.Internal.Editor.ServerDebugClient._Ready*
   commentId: Overload:Nebula.Internal.Editor.ServerDebugClient._Ready
   isExternal: true
-  href: Nebula.Internal.Editor.ServerDebugClient._Ready.html#Nebula_Internal_Editor_ServerDebugClient__Ready
+  href: Nebula.Internal.Editor.ServerDebugClient.html#Nebula_Internal_Editor_ServerDebugClient__Ready
   name: _Ready
   nameWithType: ServerDebugClient._Ready
   fullName: Nebula.Internal.Editor.ServerDebugClient._Ready
@@ -11254,7 +11254,7 @@ references:
 - uid: Nebula.Internal.Editor.ServerDebugClient._ExitTree*
   commentId: Overload:Nebula.Internal.Editor.ServerDebugClient._ExitTree
   isExternal: true
-  href: Nebula.Internal.Editor.ServerDebugClient._ExitTree.html#Nebula_Internal_Editor_ServerDebugClient__ExitTree
+  href: Nebula.Internal.Editor.ServerDebugClient.html#Nebula_Internal_Editor_ServerDebugClient__ExitTree
   name: _ExitTree
   nameWithType: ServerDebugClient._ExitTree
   fullName: Nebula.Internal.Editor.ServerDebugClient._ExitTree
@@ -11292,7 +11292,7 @@ references:
 - uid: Nebula.Internal.Editor.ServerDebugClient._Process*
   commentId: Overload:Nebula.Internal.Editor.ServerDebugClient._Process
   isExternal: true
-  href: Nebula.Internal.Editor.ServerDebugClient._Process.html#Nebula_Internal_Editor_ServerDebugClient__Process_System_Double_
+  href: Nebula.Internal.Editor.ServerDebugClient.html#Nebula_Internal_Editor_ServerDebugClient__Process_System_Double_
   name: _Process
   nameWithType: ServerDebugClient._Process
   fullName: Nebula.Internal.Editor.ServerDebugClient._Process
@@ -11341,7 +11341,7 @@ references:
 - uid: Nebula.Internal.Editor.ServerDebugClient.Dispose*
   commentId: Overload:Nebula.Internal.Editor.ServerDebugClient.Dispose
   isExternal: true
-  href: Nebula.Internal.Editor.ServerDebugClient.Dispose.html#Nebula_Internal_Editor_ServerDebugClient_Dispose_System_Boolean_
+  href: Nebula.Internal.Editor.ServerDebugClient.html#Nebula_Internal_Editor_ServerDebugClient_Dispose_System_Boolean_
   name: Dispose
   nameWithType: ServerDebugClient.Dispose
   fullName: Nebula.Internal.Editor.ServerDebugClient.Dispose
@@ -11359,11 +11359,10 @@ references:
 - uid: Nebula.Internal.Editor.ServerDebugClient.#ctor*
   commentId: Overload:Nebula.Internal.Editor.ServerDebugClient.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.ServerDebugClient.-ctor.html#Nebula_Internal_Editor_ServerDebugClient__ctor
+  href: Nebula.Internal.Editor.ServerDebugClient.html#Nebula_Internal_Editor_ServerDebugClient__ctor
   name: ServerDebugClient
   nameWithType: ServerDebugClient.ServerDebugClient
   fullName: Nebula.Internal.Editor.ServerDebugClient.ServerDebugClient
   nameWithType.vb: ServerDebugClient.New
   fullName.vb: Nebula.Internal.Editor.ServerDebugClient.New
   name.vb: New
-memberLayout: SeparatePages

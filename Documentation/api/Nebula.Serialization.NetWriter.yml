@@ -44,7 +44,7 @@ items:
   fullName: Nebula.Serialization.NetWriter
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -78,7 +78,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteByte(Nebula.Serialization.NetBuffer, byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -106,7 +106,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteBool(Nebula.Serialization.NetBuffer, bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -134,7 +134,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteInt16(Nebula.Serialization.NetBuffer, short)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -162,7 +162,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteUInt16(Nebula.Serialization.NetBuffer, ushort)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -190,7 +190,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteInt32(Nebula.Serialization.NetBuffer, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -218,7 +218,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteUInt32(Nebula.Serialization.NetBuffer, uint)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -246,7 +246,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteInt64(Nebula.Serialization.NetBuffer, long)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -274,7 +274,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteUInt64(Nebula.Serialization.NetBuffer, ulong)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -302,7 +302,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteFloat(Nebula.Serialization.NetBuffer, float)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -330,7 +330,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteDouble(Nebula.Serialization.NetBuffer, double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -358,7 +358,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteHalf(Nebula.Serialization.NetBuffer, System.Half)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -383,7 +383,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteHalfFloat(Nebula.Serialization.NetBuffer, float)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -416,7 +416,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteVector2(Nebula.Serialization.NetBuffer, Godot.Vector2)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -441,7 +441,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteVector2Full(Nebula.Serialization.NetBuffer, Godot.Vector2)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -466,7 +466,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteVector3(Nebula.Serialization.NetBuffer, Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -491,7 +491,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteVector3Half(Nebula.Serialization.NetBuffer, Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -516,7 +516,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteQuaternion(Nebula.Serialization.NetBuffer, Godot.Quaternion)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -541,7 +541,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteQuaternionFull(Nebula.Serialization.NetBuffer, Godot.Quaternion)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -566,7 +566,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteQuatSmallestThree(Nebula.Serialization.NetBuffer, Godot.Quaternion)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -598,7 +598,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer, byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -626,7 +626,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer, byte[], int, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -658,7 +658,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteBytes(Nebula.Serialization.NetBuffer, System.ReadOnlySpan<byte>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -686,7 +686,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer, byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -714,7 +714,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteBytesWithLength(Nebula.Serialization.NetBuffer, System.ReadOnlySpan<byte>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -742,7 +742,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteString(Nebula.Serialization.NetBuffer, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -770,7 +770,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteInt32Array(Nebula.Serialization.NetBuffer, int[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -798,7 +798,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteInt64Array(Nebula.Serialization.NetBuffer, long[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -826,7 +826,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteBuffer(Nebula.Serialization.NetBuffer, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -853,7 +853,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteBufferWithLength(Nebula.Serialization.NetBuffer, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -880,7 +880,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteWithType(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -915,7 +915,7 @@ items:
   fullName: Nebula.Serialization.NetWriter.WriteByType(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/NetWriter.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/Serialization/NetWriter.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1203,7 +1203,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteByte*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteByte
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteByte.html#Nebula_Serialization_NetWriter_WriteByte_Nebula_Serialization_NetBuffer_System_Byte_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteByte_Nebula_Serialization_NetBuffer_System_Byte_
   name: WriteByte
   nameWithType: NetWriter.WriteByte
   fullName: Nebula.Serialization.NetWriter.WriteByte
@@ -1229,7 +1229,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteBool*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteBool
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteBool.html#Nebula_Serialization_NetWriter_WriteBool_Nebula_Serialization_NetBuffer_System_Boolean_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteBool_Nebula_Serialization_NetBuffer_System_Boolean_
   name: WriteBool
   nameWithType: NetWriter.WriteBool
   fullName: Nebula.Serialization.NetWriter.WriteBool
@@ -1247,7 +1247,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteInt16*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteInt16
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteInt16.html#Nebula_Serialization_NetWriter_WriteInt16_Nebula_Serialization_NetBuffer_System_Int16_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteInt16_Nebula_Serialization_NetBuffer_System_Int16_
   name: WriteInt16
   nameWithType: NetWriter.WriteInt16
   fullName: Nebula.Serialization.NetWriter.WriteInt16
@@ -1265,7 +1265,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteUInt16*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteUInt16
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteUInt16.html#Nebula_Serialization_NetWriter_WriteUInt16_Nebula_Serialization_NetBuffer_System_UInt16_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteUInt16_Nebula_Serialization_NetBuffer_System_UInt16_
   name: WriteUInt16
   nameWithType: NetWriter.WriteUInt16
   fullName: Nebula.Serialization.NetWriter.WriteUInt16
@@ -1283,7 +1283,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteInt32*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteInt32
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteInt32.html#Nebula_Serialization_NetWriter_WriteInt32_Nebula_Serialization_NetBuffer_System_Int32_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteInt32_Nebula_Serialization_NetBuffer_System_Int32_
   name: WriteInt32
   nameWithType: NetWriter.WriteInt32
   fullName: Nebula.Serialization.NetWriter.WriteInt32
@@ -1301,7 +1301,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteUInt32*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteUInt32
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteUInt32.html#Nebula_Serialization_NetWriter_WriteUInt32_Nebula_Serialization_NetBuffer_System_UInt32_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteUInt32_Nebula_Serialization_NetBuffer_System_UInt32_
   name: WriteUInt32
   nameWithType: NetWriter.WriteUInt32
   fullName: Nebula.Serialization.NetWriter.WriteUInt32
@@ -1319,7 +1319,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteInt64*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteInt64
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteInt64.html#Nebula_Serialization_NetWriter_WriteInt64_Nebula_Serialization_NetBuffer_System_Int64_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteInt64_Nebula_Serialization_NetBuffer_System_Int64_
   name: WriteInt64
   nameWithType: NetWriter.WriteInt64
   fullName: Nebula.Serialization.NetWriter.WriteInt64
@@ -1337,7 +1337,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteUInt64*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteUInt64
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteUInt64.html#Nebula_Serialization_NetWriter_WriteUInt64_Nebula_Serialization_NetBuffer_System_UInt64_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteUInt64_Nebula_Serialization_NetBuffer_System_UInt64_
   name: WriteUInt64
   nameWithType: NetWriter.WriteUInt64
   fullName: Nebula.Serialization.NetWriter.WriteUInt64
@@ -1355,7 +1355,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteFloat*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteFloat
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteFloat.html#Nebula_Serialization_NetWriter_WriteFloat_Nebula_Serialization_NetBuffer_System_Single_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteFloat_Nebula_Serialization_NetBuffer_System_Single_
   name: WriteFloat
   nameWithType: NetWriter.WriteFloat
   fullName: Nebula.Serialization.NetWriter.WriteFloat
@@ -1373,7 +1373,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteDouble*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteDouble
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteDouble.html#Nebula_Serialization_NetWriter_WriteDouble_Nebula_Serialization_NetBuffer_System_Double_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteDouble_Nebula_Serialization_NetBuffer_System_Double_
   name: WriteDouble
   nameWithType: NetWriter.WriteDouble
   fullName: Nebula.Serialization.NetWriter.WriteDouble
@@ -1391,7 +1391,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteHalf*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteHalf
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteHalf.html#Nebula_Serialization_NetWriter_WriteHalf_Nebula_Serialization_NetBuffer_System_Half_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteHalf_Nebula_Serialization_NetBuffer_System_Half_
   name: WriteHalf
   nameWithType: NetWriter.WriteHalf
   fullName: Nebula.Serialization.NetWriter.WriteHalf
@@ -1406,14 +1406,14 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteHalfFloat*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteHalfFloat
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteHalfFloat.html#Nebula_Serialization_NetWriter_WriteHalfFloat_Nebula_Serialization_NetBuffer_System_Single_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteHalfFloat_Nebula_Serialization_NetBuffer_System_Single_
   name: WriteHalfFloat
   nameWithType: NetWriter.WriteHalfFloat
   fullName: Nebula.Serialization.NetWriter.WriteHalfFloat
 - uid: Nebula.Serialization.NetWriter.WriteVector2*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteVector2
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteVector2.html#Nebula_Serialization_NetWriter_WriteVector2_Nebula_Serialization_NetBuffer_Godot_Vector2_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteVector2_Nebula_Serialization_NetBuffer_Godot_Vector2_
   name: WriteVector2
   nameWithType: NetWriter.WriteVector2
   fullName: Nebula.Serialization.NetWriter.WriteVector2
@@ -1433,14 +1433,14 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteVector2Full*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteVector2Full
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteVector2Full.html#Nebula_Serialization_NetWriter_WriteVector2Full_Nebula_Serialization_NetBuffer_Godot_Vector2_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteVector2Full_Nebula_Serialization_NetBuffer_Godot_Vector2_
   name: WriteVector2Full
   nameWithType: NetWriter.WriteVector2Full
   fullName: Nebula.Serialization.NetWriter.WriteVector2Full
 - uid: Nebula.Serialization.NetWriter.WriteVector3*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteVector3
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteVector3.html#Nebula_Serialization_NetWriter_WriteVector3_Nebula_Serialization_NetBuffer_Godot_Vector3_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteVector3_Nebula_Serialization_NetBuffer_Godot_Vector3_
   name: WriteVector3
   nameWithType: NetWriter.WriteVector3
   fullName: Nebula.Serialization.NetWriter.WriteVector3
@@ -1454,14 +1454,14 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteVector3Half*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteVector3Half
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteVector3Half.html#Nebula_Serialization_NetWriter_WriteVector3Half_Nebula_Serialization_NetBuffer_Godot_Vector3_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteVector3Half_Nebula_Serialization_NetBuffer_Godot_Vector3_
   name: WriteVector3Half
   nameWithType: NetWriter.WriteVector3Half
   fullName: Nebula.Serialization.NetWriter.WriteVector3Half
 - uid: Nebula.Serialization.NetWriter.WriteQuaternion*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteQuaternion
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteQuaternion.html#Nebula_Serialization_NetWriter_WriteQuaternion_Nebula_Serialization_NetBuffer_Godot_Quaternion_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteQuaternion_Nebula_Serialization_NetBuffer_Godot_Quaternion_
   name: WriteQuaternion
   nameWithType: NetWriter.WriteQuaternion
   fullName: Nebula.Serialization.NetWriter.WriteQuaternion
@@ -1475,21 +1475,21 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteQuaternionFull*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteQuaternionFull
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteQuaternionFull.html#Nebula_Serialization_NetWriter_WriteQuaternionFull_Nebula_Serialization_NetBuffer_Godot_Quaternion_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteQuaternionFull_Nebula_Serialization_NetBuffer_Godot_Quaternion_
   name: WriteQuaternionFull
   nameWithType: NetWriter.WriteQuaternionFull
   fullName: Nebula.Serialization.NetWriter.WriteQuaternionFull
 - uid: Nebula.Serialization.NetWriter.WriteQuatSmallestThree*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteQuatSmallestThree
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteQuatSmallestThree.html#Nebula_Serialization_NetWriter_WriteQuatSmallestThree_Nebula_Serialization_NetBuffer_Godot_Quaternion_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteQuatSmallestThree_Nebula_Serialization_NetBuffer_Godot_Quaternion_
   name: WriteQuatSmallestThree
   nameWithType: NetWriter.WriteQuatSmallestThree
   fullName: Nebula.Serialization.NetWriter.WriteQuatSmallestThree
 - uid: Nebula.Serialization.NetWriter.WriteBytes*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteBytes
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteBytes.html#Nebula_Serialization_NetWriter_WriteBytes_Nebula_Serialization_NetBuffer_System_Byte___
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteBytes_Nebula_Serialization_NetBuffer_System_Byte___
   name: WriteBytes
   nameWithType: NetWriter.WriteBytes
   fullName: Nebula.Serialization.NetWriter.WriteBytes
@@ -1582,14 +1582,14 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteBytesWithLength*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteBytesWithLength
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteBytesWithLength.html#Nebula_Serialization_NetWriter_WriteBytesWithLength_Nebula_Serialization_NetBuffer_System_Byte___
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteBytesWithLength_Nebula_Serialization_NetBuffer_System_Byte___
   name: WriteBytesWithLength
   nameWithType: NetWriter.WriteBytesWithLength
   fullName: Nebula.Serialization.NetWriter.WriteBytesWithLength
 - uid: Nebula.Serialization.NetWriter.WriteString*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteString
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteString.html#Nebula_Serialization_NetWriter_WriteString_Nebula_Serialization_NetBuffer_System_String_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteString_Nebula_Serialization_NetBuffer_System_String_
   name: WriteString
   nameWithType: NetWriter.WriteString
   fullName: Nebula.Serialization.NetWriter.WriteString
@@ -1607,7 +1607,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteInt32Array*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteInt32Array
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteInt32Array.html#Nebula_Serialization_NetWriter_WriteInt32Array_Nebula_Serialization_NetBuffer_System_Int32___
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteInt32Array_Nebula_Serialization_NetBuffer_System_Int32___
   name: WriteInt32Array
   nameWithType: NetWriter.WriteInt32Array
   fullName: Nebula.Serialization.NetWriter.WriteInt32Array
@@ -1637,7 +1637,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteInt64Array*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteInt64Array
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteInt64Array.html#Nebula_Serialization_NetWriter_WriteInt64Array_Nebula_Serialization_NetBuffer_System_Int64___
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteInt64Array_Nebula_Serialization_NetBuffer_System_Int64___
   name: WriteInt64Array
   nameWithType: NetWriter.WriteInt64Array
   fullName: Nebula.Serialization.NetWriter.WriteInt64Array
@@ -1667,21 +1667,21 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteBuffer*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteBuffer
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteBuffer.html#Nebula_Serialization_NetWriter_WriteBuffer_Nebula_Serialization_NetBuffer_Nebula_Serialization_NetBuffer_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteBuffer_Nebula_Serialization_NetBuffer_Nebula_Serialization_NetBuffer_
   name: WriteBuffer
   nameWithType: NetWriter.WriteBuffer
   fullName: Nebula.Serialization.NetWriter.WriteBuffer
 - uid: Nebula.Serialization.NetWriter.WriteBufferWithLength*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteBufferWithLength
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteBufferWithLength.html#Nebula_Serialization_NetWriter_WriteBufferWithLength_Nebula_Serialization_NetBuffer_Nebula_Serialization_NetBuffer_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteBufferWithLength_Nebula_Serialization_NetBuffer_Nebula_Serialization_NetBuffer_
   name: WriteBufferWithLength
   nameWithType: NetWriter.WriteBufferWithLength
   fullName: Nebula.Serialization.NetWriter.WriteBufferWithLength
 - uid: Nebula.Serialization.NetWriter.WriteWithType*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteWithType
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteWithType.html#Nebula_Serialization_NetWriter_WriteWithType_Nebula_Serialization_NetBuffer_Nebula_Serialization_SerialVariantType_System_Object_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteWithType_Nebula_Serialization_NetBuffer_Nebula_Serialization_SerialVariantType_System_Object_
   name: WriteWithType
   nameWithType: NetWriter.WriteWithType
   fullName: Nebula.Serialization.NetWriter.WriteWithType
@@ -1696,8 +1696,7 @@ references:
 - uid: Nebula.Serialization.NetWriter.WriteByType*
   commentId: Overload:Nebula.Serialization.NetWriter.WriteByType
   isExternal: true
-  href: Nebula.Serialization.NetWriter.WriteByType.html#Nebula_Serialization_NetWriter_WriteByType_Nebula_Serialization_NetBuffer_Nebula_Serialization_SerialVariantType_System_Object_
+  href: Nebula.Serialization.NetWriter.html#Nebula_Serialization_NetWriter_WriteByType_Nebula_Serialization_NetBuffer_Nebula_Serialization_SerialVariantType_System_Object_
   name: WriteByType
   nameWithType: NetWriter.WriteByType
   fullName: Nebula.Serialization.NetWriter.WriteByType
-memberLayout: SeparatePages

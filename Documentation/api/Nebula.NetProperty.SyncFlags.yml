@@ -15,7 +15,7 @@ items:
   fullName: Nebula.NetProperty.SyncFlags
   type: Enum
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -34,7 +34,7 @@ items:
   fullName: Nebula.NetProperty.SyncFlags.LinearInterpolation
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -54,7 +54,7 @@ items:
   fullName: Nebula.NetProperty.SyncFlags.LossyConsistency
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/cd5949df23d06e4897c963dccdb24083945ce86b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -98,4 +98,3 @@ references:
     name: SyncFlags
     isExternal: true
     href: Nebula.NetProperty.SyncFlags.html
-memberLayout: SeparatePages

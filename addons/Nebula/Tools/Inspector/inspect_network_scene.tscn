@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://d0q0xyjdl1fbd"]
+[gd_scene format=3 uid="uid://d0q0xyjdl1fbd"]
 
 [ext_resource type="Script" uid="uid://c07s03h6h0g6y" path="res://addons/Nebula/Tools/Inspector/inspect_network_scene.gd" id="1_u8610"]
 [ext_resource type="PackedScene" uid="uid://ywhp3yi0fvpa" path="res://addons/Nebula/Tools/Inspector/accordion.tscn" id="2_w37so"]

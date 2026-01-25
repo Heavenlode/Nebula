@@ -34,5 +34,14 @@ namespace Nebula
         /// Typical values: 10-20 for responsive feel, 5-10 for smooth feel.
         /// </summary>
         public float InterpolateSpeed = 15f;
+
+        /// <summary>
+        /// When true, this property participates in client-side prediction.
+        /// The generator will emit snapshot/restore methods for rollback.
+        /// You MUST define a {PropertyName}PredictionTolerance property (float) to specify
+        /// the tolerance for misprediction detection, or a compile error (NEBULA002) will occur.
+        /// Only meaningful on client for owned entities.
+        /// </summary>
+        public bool Predicted = false;
     }
 }

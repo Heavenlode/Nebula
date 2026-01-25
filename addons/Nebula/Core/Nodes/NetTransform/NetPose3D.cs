@@ -64,7 +64,7 @@ namespace Nebula
 
         public NetPose3D()
         {
-            _keyframeOffset = (int)(GD.Randi() % KeyframeFrequency);
+            _keyframeOffset = new Random().Next() % KeyframeFrequency;
         }
 
         /// <summary>

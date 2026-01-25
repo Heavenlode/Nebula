@@ -3,6 +3,7 @@ namespace NebulaTests.Unit.Core;
 using Nebula.Testing.Unit;
 using Xunit;
 using Nebula;
+using Nebula.Serialization;
 using System;
 
 [NebulaUnitTest]
@@ -12,7 +13,6 @@ public class UUIDTests
     public void TestDefaultConstructor()
     {
         var uuid = new UUID();
-        Assert.NotNull(uuid);
         Assert.NotEqual(Guid.Empty, uuid.Guid);
     }
 
@@ -36,11 +36,45 @@ public class UUIDTests
     }
 
     [NebulaUnitTest]
+    public void TestGuidConstructor()
+    {
+        var guid = Guid.NewGuid();
+        var uuid = new UUID(guid);
+        
+        Assert.Equal(guid, uuid.Guid);
+    }
+
+    [NebulaUnitTest]
     public void TestEmptyProperty()
     {
         var empty = UUID.Empty;
-        Assert.NotNull(empty);
+        Assert.True(empty.IsEmpty);
         Assert.Equal("00000000-0000-0000-0000-000000000000", empty.ToString());
+    }
+
+    [NebulaUnitTest]
+    public void TestIsEmpty_NewUUID()
+    {
+        var uuid = new UUID();
+        Assert.False(uuid.IsEmpty);
+    }
+
+    [NebulaUnitTest]
+    public void TestIsEmpty_DefaultStruct()
+    {
+        UUID uuid = default;
+        Assert.True(uuid.IsEmpty);
+    }
+
+    [NebulaUnitTest]
+    public void TestNewUUID()
+    {
+        var uuid1 = UUID.NewUUID();
+        var uuid2 = UUID.NewUUID();
+        
+        Assert.False(uuid1.IsEmpty);
+        Assert.False(uuid2.IsEmpty);
+        Assert.NotEqual(uuid1, uuid2);
     }
 
     [NebulaUnitTest]
@@ -72,17 +106,20 @@ public class UUIDTests
     }
 
     [NebulaUnitTest]
-    public void TestEquals_NullObject()
-    {
-        var uuid = new UUID();
-        Assert.False(uuid.Equals(null));
-    }
-
-    [NebulaUnitTest]
     public void TestEquals_NonUUIDObject()
     {
         var uuid = new UUID();
         Assert.False(uuid.Equals("not a uuid"));
+    }
+
+    [NebulaUnitTest]
+    public void TestEquals_BoxedUUID()
+    {
+        var guidString = "12345678-1234-1234-1234-123456789abc";
+        var uuid1 = new UUID(guidString);
+        object boxed = new UUID(guidString);
+        
+        Assert.True(uuid1.Equals(boxed));
     }
 
     [NebulaUnitTest]
@@ -115,21 +152,12 @@ public class UUIDTests
     }
 
     [NebulaUnitTest]
-    public void TestEqualityOperator_BothNull()
+    public void TestEqualityOperator_BothEmpty()
     {
-        UUID uuid1 = null;
-        UUID uuid2 = null;
+        UUID uuid1 = default;
+        UUID uuid2 = default;
         
         Assert.True(uuid1 == uuid2);
-    }
-
-    [NebulaUnitTest]
-    public void TestEqualityOperator_OneNull()
-    {
-        var uuid1 = new UUID();
-        UUID uuid2 = null;
-        
-        Assert.False(uuid1 == uuid2);
     }
 
     [NebulaUnitTest]
@@ -163,60 +191,82 @@ public class UUIDTests
     }
 
     [NebulaUnitTest]
-    public void TestNetworkSerialize_NonNull()
+    public void TestNetworkSerialize_NonEmpty()
     {
         var uuid = new UUID("12345678-1234-1234-1234-123456789abc");
-        var buffer = UUID.NetworkSerialize(null, null, uuid);
+        using var buffer = new NetBuffer();
         
-        Assert.NotNull(buffer);
-        Assert.True(buffer.Pointer > 0);
+        // Use default for WorldRunner and NetPeer (they're not used for UUID serialization)
+        UUID.NetworkSerialize(null, default, in uuid, buffer);
+        
+        Assert.True(buffer.WritePosition > 0);
+        // First byte is 1 (not empty), then 16 bytes for the GUID
+        Assert.Equal(17, buffer.WritePosition);
     }
 
     [NebulaUnitTest]
-    public void TestNetworkSerialize_Null()
+    public void TestNetworkSerialize_Empty()
     {
-        var buffer = UUID.NetworkSerialize(null, null, null);
+        UUID uuid = default;
+        using var buffer = new NetBuffer();
         
-        Assert.NotNull(buffer);
-        Assert.Equal(1, buffer.Pointer);
+        UUID.NetworkSerialize(null, default, in uuid, buffer);
+        
+        // Only 1 byte (the null flag)
+        Assert.Equal(1, buffer.WritePosition);
     }
 
     [NebulaUnitTest]
-    public void TestNetworkDeserialize_NonNull()
+    public void TestNetworkDeserialize_NonEmpty()
     {
         var original = new UUID("12345678-1234-1234-1234-123456789abc");
-        var buffer = UUID.NetworkSerialize(null, null, original);
+        using var buffer = new NetBuffer();
         
-        buffer.ResetPointer();
+        UUID.NetworkSerialize(null, default, in original, buffer);
+        buffer.ResetRead();
         
-        var deserialized = UUID.NetworkDeserialize(null, null, buffer, new Godot.Variant());
+        var deserialized = UUID.NetworkDeserialize(null, default, buffer);
         
-        Assert.NotNull(deserialized);
+        Assert.False(deserialized.IsEmpty);
         Assert.Equal(original.ToString(), deserialized.ToString());
     }
 
     [NebulaUnitTest]
-    public void TestNetworkDeserialize_Null()
+    public void TestNetworkDeserialize_Empty()
     {
-        var buffer = UUID.NetworkSerialize(null, null, null);
+        UUID uuid = default;
+        using var buffer = new NetBuffer();
         
-        buffer.ResetPointer();
+        UUID.NetworkSerialize(null, default, in uuid, buffer);
+        buffer.ResetRead();
         
-        var deserialized = UUID.NetworkDeserialize(null, null, buffer, new Godot.Variant());
+        var deserialized = UUID.NetworkDeserialize(null, default, buffer);
         
-        Assert.Null(deserialized);
+        Assert.True(deserialized.IsEmpty);
     }
 
     [NebulaUnitTest]
     public void TestNetworkSerializeDeserialize_RoundTrip()
     {
         var original = new UUID();
-        var buffer = UUID.NetworkSerialize(null, null, original);
+        using var buffer = new NetBuffer();
         
-        buffer.ResetPointer();
+        UUID.NetworkSerialize(null, default, in original, buffer);
+        buffer.ResetRead();
         
-        var deserialized = UUID.NetworkDeserialize(null, null, buffer, new Godot.Variant());
+        var deserialized = UUID.NetworkDeserialize(null, default, buffer);
         
         Assert.Equal(original.ToString(), deserialized.ToString());
+        Assert.Equal(original, deserialized);
+    }
+
+    [NebulaUnitTest]
+    public void TestIEquatable()
+    {
+        var guidString = "12345678-1234-1234-1234-123456789abc";
+        IEquatable<UUID> uuid1 = new UUID(guidString);
+        var uuid2 = new UUID(guidString);
+        
+        Assert.True(uuid1.Equals(uuid2));
     }
 }

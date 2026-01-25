@@ -8,30 +8,18 @@ using MongoDB.Bson;
 using System;
 
 [NebulaUnitTest]
-public class BsonTransformerTests : IDisposable
+public class BsonTransformerTests
 {
-    private BsonTransformer _transformer;
-
-    public BsonTransformerTests()
-    {
-        _transformer = new BsonTransformer();
-    }
-
-    public void Dispose()
-    {
-            _transformer = null;
-    }
-
     [NebulaUnitTest]
     public void TestSerializeDeserialize_String()
     {
         var value = new BsonString("test string");
         
-        var bytes = _transformer.SerializeBsonValue(value);
+        var bytes = BsonTransformer.SerializeBsonValue(value);
         Assert.NotNull(bytes);
         Assert.True(bytes.Length > 0);
         
-        var result = _transformer.DeserializeBsonValue<BsonString>(bytes);
+        var result = BsonTransformer.DeserializeBsonValue<BsonString>(bytes);
         Assert.Equal("test string", result.AsString);
     }
 
@@ -40,8 +28,8 @@ public class BsonTransformerTests : IDisposable
     {
         var value = new BsonInt32(42);
         
-        var bytes = _transformer.SerializeBsonValue(value);
-        var result = _transformer.DeserializeBsonValue<BsonInt32>(bytes);
+        var bytes = BsonTransformer.SerializeBsonValue(value);
+        var result = BsonTransformer.DeserializeBsonValue<BsonInt32>(bytes);
         
         Assert.Equal(42, result.AsInt32);
     }
@@ -51,8 +39,8 @@ public class BsonTransformerTests : IDisposable
     {
         var value = new BsonInt64(9876543210L);
         
-        var bytes = _transformer.SerializeBsonValue(value);
-        var result = _transformer.DeserializeBsonValue<BsonInt64>(bytes);
+        var bytes = BsonTransformer.SerializeBsonValue(value);
+        var result = BsonTransformer.DeserializeBsonValue<BsonInt64>(bytes);
         
         Assert.Equal(9876543210L, result.AsInt64);
     }
@@ -62,8 +50,8 @@ public class BsonTransformerTests : IDisposable
     {
         var value = new BsonDouble(3.14159);
         
-        var bytes = _transformer.SerializeBsonValue(value);
-        var result = _transformer.DeserializeBsonValue<BsonDouble>(bytes);
+        var bytes = BsonTransformer.SerializeBsonValue(value);
+        var result = BsonTransformer.DeserializeBsonValue<BsonDouble>(bytes);
         
         Assert.True(Math.Abs(result.AsDouble - 3.14159) < 0.00001);
     }
@@ -73,8 +61,8 @@ public class BsonTransformerTests : IDisposable
     {
         var value = new BsonBoolean(true);
         
-        var bytes = _transformer.SerializeBsonValue(value);
-        var result = _transformer.DeserializeBsonValue<BsonBoolean>(bytes);
+        var bytes = BsonTransformer.SerializeBsonValue(value);
+        var result = BsonTransformer.DeserializeBsonValue<BsonBoolean>(bytes);
         
         Assert.True(result.AsBoolean);
     }
@@ -84,8 +72,8 @@ public class BsonTransformerTests : IDisposable
     {
         var value = new BsonArray { 1, 2, 3, 4, 5 };
         
-        var bytes = _transformer.SerializeBsonValue(value);
-        var result = _transformer.DeserializeBsonValue<BsonArray>(bytes);
+        var bytes = BsonTransformer.SerializeBsonValue(value);
+        var result = BsonTransformer.DeserializeBsonValue<BsonArray>(bytes);
         
         Assert.Equal(5, result.Count);
         Assert.Equal(1, result[0].AsInt32);
@@ -102,8 +90,8 @@ public class BsonTransformerTests : IDisposable
             { "active", true }
         };
         
-        var bytes = _transformer.SerializeBsonValue(value);
-        var result = _transformer.DeserializeBsonValue<BsonDocument>(bytes);
+        var bytes = BsonTransformer.SerializeBsonValue(value);
+        var result = BsonTransformer.DeserializeBsonValue<BsonDocument>(bytes);
         
         Assert.Equal("Test", result["name"].AsString);
         Assert.Equal(42, result["value"].AsInt32);
@@ -116,8 +104,8 @@ public class BsonTransformerTests : IDisposable
         var data = new byte[] { 1, 2, 3, 4, 5 };
         var value = new BsonBinaryData(data);
         
-        var bytes = _transformer.SerializeBsonValue(value);
-        var result = _transformer.DeserializeBsonValue<BsonBinaryData>(bytes);
+        var bytes = BsonTransformer.SerializeBsonValue(value);
+        var result = BsonTransformer.DeserializeBsonValue<BsonBinaryData>(bytes);
         
         var resultData = result.AsByteArray;
         Assert.Equal(5, resultData.Length);
@@ -130,164 +118,10 @@ public class BsonTransformerTests : IDisposable
     {
         var value = BsonNull.Value;
         
-        var bytes = _transformer.SerializeBsonValue(value);
-        var result = _transformer.DeserializeBsonValue<BsonNull>(bytes);
+        var bytes = BsonTransformer.SerializeBsonValue(value);
+        var result = BsonTransformer.DeserializeBsonValue<BsonNull>(bytes);
         
         Assert.True(result.IsBsonNull);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_String()
-    {
-        Variant variant = "test string";
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.Equal("test string", result.AsString);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_Int()
-    {
-        Variant variant = 42;
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.Equal(42L, result.AsInt64);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_IntWithSubtype_Byte()
-    {
-        Variant variant = 255;
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant, "Byte");
-        
-        Assert.NotNull(result);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_IntWithSubtype_Int()
-    {
-        Variant variant = 12345;
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant, "Int");
-        
-        Assert.Equal(12345, result.AsInt32);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_Float()
-    {
-        Variant variant = 3.14f;
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.True(Math.Abs(result.AsDouble - 3.14) < 0.01);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_Bool()
-    {
-        Variant variant = true;
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.True(result.AsBoolean);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_Vector2()
-    {
-        Variant variant = new Vector2(1.5f, 2.5f);
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.True(result.IsBsonArray);
-        var array = result.AsBsonArray;
-        Assert.Equal(2, array.Count);
-        Assert.True(Math.Abs(array[0].AsDouble - 1.5) < 0.01);
-        Assert.True(Math.Abs(array[1].AsDouble - 2.5) < 0.01);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_Vector3()
-    {
-        Variant variant = new Vector3(1.0f, 2.0f, 3.0f);
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.True(result.IsBsonArray);
-        var array = result.AsBsonArray;
-        Assert.Equal(3, array.Count);
-        Assert.True(Math.Abs(array[0].AsDouble - 1.0) < 0.01);
-        Assert.True(Math.Abs(array[1].AsDouble - 2.0) < 0.01);
-        Assert.True(Math.Abs(array[2].AsDouble - 3.0) < 0.01);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_Nil()
-    {
-        Variant variant = new Variant();
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.True(result.IsBsonNull);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_PackedByteArray()
-    {
-        var bytes = new byte[] { 1, 2, 3, 4, 5 };
-        Variant variant = bytes;
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.True(result.IsBsonBinaryData);
-        var binaryData = result.AsBsonBinaryData.AsByteArray;
-        Assert.Equal(5, binaryData.Length);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_PackedInt32Array()
-    {
-        var ints = new int[] { 10, 20, 30 };
-        Variant variant = ints;
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.True(result.IsBsonArray);
-        Assert.Equal(3, result.AsBsonArray.Count);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_PackedInt64Array()
-    {
-        var longs = new long[] { 100L, 200L, 300L };
-        Variant variant = longs;
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.True(result.IsBsonArray);
-        Assert.Equal(3, result.AsBsonArray.Count);
-    }
-
-    [NebulaUnitTest]
-    public void TestSerializeVariant_Dictionary()
-    {
-        var dict = new Godot.Collections.Dictionary
-        {
-            { "name", "Test" },
-            { "value", 42 }
-        };
-        Variant variant = dict;
-        
-        var result = _transformer.SerializeVariant(new Variant(), variant);
-        
-        Assert.True(result.IsBsonDocument);
-        var doc = result.AsBsonDocument;
-        Assert.Equal("Test", doc["name"].AsString);
-        Assert.Equal(42L, doc["value"].AsInt64);
     }
 
     [NebulaUnitTest]
@@ -303,8 +137,8 @@ public class BsonTransformerTests : IDisposable
             { "nested", new BsonDocument { { "key", "value" } } }
         };
         
-        var bytes = _transformer.SerializeBsonValue(value);
-        var result = _transformer.DeserializeBsonValue<BsonDocument>(bytes);
+        var bytes = BsonTransformer.SerializeBsonValue(value);
+        var result = BsonTransformer.DeserializeBsonValue<BsonDocument>(bytes);
         
         Assert.Equal("test", result["string"].AsString);
         Assert.Equal(42, result["int"].AsInt32);
@@ -312,5 +146,230 @@ public class BsonTransformerTests : IDisposable
         Assert.True(result["bool"].AsBoolean);
         Assert.Equal(3, result["array"].AsBsonArray.Count);
         Assert.Equal("value", result["nested"].AsBsonDocument["key"].AsString);
+    }
+
+    // BsonTypeHelper tests (replacing the old Variant-based SerializeVariant tests)
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_String()
+    {
+        var value = "test string";
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.Equal("test string", result.AsString);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_Int()
+    {
+        var value = 42;
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.Equal(42, result.AsInt32);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_Long()
+    {
+        var value = 9876543210L;
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.Equal(9876543210L, result.AsInt64);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_Float()
+    {
+        var value = 3.14f;
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.True(Math.Abs(result.AsDouble - 3.14) < 0.01);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_Bool()
+    {
+        var value = true;
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.True(result.AsBoolean);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_Vector2()
+    {
+        var value = new Vector2(1.5f, 2.5f);
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.True(result.IsBsonArray);
+        var array = result.AsBsonArray;
+        Assert.Equal(2, array.Count);
+        Assert.True(Math.Abs(array[0].AsDouble - 1.5) < 0.01);
+        Assert.True(Math.Abs(array[1].AsDouble - 2.5) < 0.01);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_Vector3()
+    {
+        var value = new Vector3(1.0f, 2.0f, 3.0f);
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.True(result.IsBsonArray);
+        var array = result.AsBsonArray;
+        Assert.Equal(3, array.Count);
+        Assert.True(Math.Abs(array[0].AsDouble - 1.0) < 0.01);
+        Assert.True(Math.Abs(array[1].AsDouble - 2.0) < 0.01);
+        Assert.True(Math.Abs(array[2].AsDouble - 3.0) < 0.01);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_NullString()
+    {
+        string value = null;
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.True(result.IsBsonNull);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_ByteArray()
+    {
+        var value = new byte[] { 1, 2, 3, 4, 5 };
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.True(result.IsBsonBinaryData);
+        var binaryData = result.AsBsonBinaryData.AsByteArray;
+        Assert.Equal(5, binaryData.Length);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_Int32Array()
+    {
+        var value = new int[] { 10, 20, 30 };
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.True(result.IsBsonArray);
+        Assert.Equal(3, result.AsBsonArray.Count);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_Int64Array()
+    {
+        var value = new long[] { 100L, 200L, 300L };
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.True(result.IsBsonArray);
+        Assert.Equal(3, result.AsBsonArray.Count);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_Quaternion()
+    {
+        var value = new Quaternion(0.5f, 0.5f, 0.5f, 0.5f);
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.True(result.IsBsonArray);
+        var array = result.AsBsonArray;
+        Assert.Equal(4, array.Count);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_Color()
+    {
+        var value = new Color(1.0f, 0.5f, 0.25f, 1.0f);
+        var result = BsonTypeHelper.ToBson(value);
+        
+        Assert.True(result.IsBsonArray);
+        var array = result.AsBsonArray;
+        Assert.Equal(4, array.Count);
+    }
+
+    // Deserialization tests for BsonTypeHelper
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_ToString()
+    {
+        var bson = new BsonString("hello");
+        var result = BsonTypeHelper.ToString(bson);
+        
+        Assert.Equal("hello", result);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_ToInt()
+    {
+        var bson = new BsonInt32(42);
+        var result = BsonTypeHelper.ToInt(bson);
+        
+        Assert.Equal(42, result);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_ToVector2()
+    {
+        var bson = new BsonArray { 1.5, 2.5 };
+        var result = BsonTypeHelper.ToVector2(bson);
+        
+        Assert.True(Math.Abs(result.X - 1.5f) < 0.01);
+        Assert.True(Math.Abs(result.Y - 2.5f) < 0.01);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_ToVector3()
+    {
+        var bson = new BsonArray { 1.0, 2.0, 3.0 };
+        var result = BsonTypeHelper.ToVector3(bson);
+        
+        Assert.True(Math.Abs(result.X - 1.0f) < 0.01);
+        Assert.True(Math.Abs(result.Y - 2.0f) < 0.01);
+        Assert.True(Math.Abs(result.Z - 3.0f) < 0.01);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_ToQuaternion()
+    {
+        var bson = new BsonArray { 0.5, 0.5, 0.5, 0.5 };
+        var result = BsonTypeHelper.ToQuaternion(bson);
+        
+        Assert.True(Math.Abs(result.X - 0.5f) < 0.01);
+        Assert.True(Math.Abs(result.Y - 0.5f) < 0.01);
+        Assert.True(Math.Abs(result.Z - 0.5f) < 0.01);
+        Assert.True(Math.Abs(result.W - 0.5f) < 0.01);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_ToByteArray()
+    {
+        var bson = new BsonBinaryData(new byte[] { 1, 2, 3 });
+        var result = BsonTypeHelper.ToByteArray(bson);
+        
+        Assert.Equal(3, result.Length);
+        Assert.Equal(1, result[0]);
+        Assert.Equal(2, result[1]);
+        Assert.Equal(3, result[2]);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_ToInt32Array()
+    {
+        var bson = new BsonArray { 10, 20, 30 };
+        var result = BsonTypeHelper.ToInt32Array(bson);
+        
+        Assert.Equal(3, result.Length);
+        Assert.Equal(10, result[0]);
+        Assert.Equal(20, result[1]);
+        Assert.Equal(30, result[2]);
+    }
+
+    [NebulaUnitTest]
+    public void TestBsonTypeHelper_ToInt64Array()
+    {
+        var bson = new BsonArray { 100L, 200L, 300L };
+        var result = BsonTypeHelper.ToInt64Array(bson);
+        
+        Assert.Equal(3, result.Length);
+        Assert.Equal(100L, result[0]);
+        Assert.Equal(200L, result[1]);
+        Assert.Equal(300L, result[2]);
     }
 }

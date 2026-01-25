@@ -82,15 +82,15 @@ namespace Nebula
 			RawNode.QueueFree();
 		}
 
-		bool? _isNetScene = null;
-		public bool IsNetScene()
+	bool? _isNetScene = null;
+	public bool IsNetScene()
+	{
+		if (_isNetScene == null)
 		{
-			if (_isNetScene == null)
-			{
-				_isNetScene = Protocol.IsNetScene(RawNode.SceneFilePath);
-			}
-			return _isNetScene.Value;
+			_isNetScene = Protocol.IsNetScene(RawNode.SceneFilePath);
 		}
+		return _isNetScene.Value;
+	}
 
 		internal List<Tuple<string, string>> InitialSetNetProperties = [];
 		public WorldRunner CurrentWorld { get; internal set; }
@@ -103,6 +103,13 @@ namespace Nebula
 		/// Root NetScene nodes use their own ID (typically 0 for ".").
 		/// </summary>
 		public byte StaticChildId { get; internal set; } = 0;
+
+		/// <summary>
+		/// Cached node path ID within parent NetScene for spawn serialization.
+		/// Set during scene instantiation or WorldRunner.Spawn().
+		/// 255 = direct child of parent root.
+		/// </summary>
+		internal byte CachedNodePathIdInParent = 255;
 
 		/// <summary>
 		/// Bitmask of dirty properties. Bit N is set if property index N has changed since last export.
@@ -256,8 +263,55 @@ namespace Nebula
 			{
 				NetNode.SetupSerializers();
 				InitializeStaticChildren();
+				InitializeDynamicChildren();
 			}
 		}
+
+	/// <summary>
+	/// Discovers nested NetScenes in the scene tree and populates DynamicNetworkChildren.
+	/// Also sets CachedNodePathIdInParent for spawn serialization.
+	/// Called on server during Setup().
+	/// </summary>
+	private void InitializeDynamicChildren()
+	{
+		DynamicNetworkChildren.Clear();
+		DiscoverDynamicChildrenRecursive(RawNode, RawNode);
+	}
+
+	private void DiscoverDynamicChildrenRecursive(Node treeRoot, Node node)
+	{
+		for (int i = 0; i < node.GetChildCount(); i++)
+		{
+			var child = node.GetChild(i);
+
+			if (child is INetNodeBase netNode && netNode.Network != null && netNode.Network.IsNetScene())
+			{
+				DynamicNetworkChildren.Add(netNode.Network);
+
+				// Compute and cache the node path ID for spawn serialization
+				var relativePath = treeRoot.GetPathTo(child);
+				if (relativePath == "." || relativePath.IsEmpty)
+				{
+					netNode.Network.CachedNodePathIdInParent = 255;
+				}
+				else if (Protocol.PackNode(NetSceneFilePath, relativePath, out var pathId))
+				{
+					netNode.Network.CachedNodePathIdInParent = pathId;
+				}
+				else
+				{
+					netNode.Network.CachedNodePathIdInParent = 255;
+				}
+
+				// Recurse into nested NetScene to discover its children
+				netNode.Network.InitializeDynamicChildren();
+				continue;
+			}
+
+			// Continue traversing non-NetScene nodes
+			DiscoverDynamicChildrenRecursive(treeRoot, child);
+		}
+	}
 
 		/// <summary>
 		/// Initializes StaticNetworkChildren array and assigns StaticChildId to each child.
@@ -819,15 +873,15 @@ namespace Nebula
 				{
 					return;
 				}
-				for (var i = DynamicNetworkChildren.Count - 1; i >= 1; i--)
-				{
-					var networkChild = DynamicNetworkChildren.ElementAt(i);
-					networkChild.InterestLayers = InterestLayers;
-					networkChild.InputAuthority = InputAuthority;
-					networkChild.CurrentWorld = world;
-					networkChild.NetParentId = NetId;
-					networkChild._NetworkPrepare(world);
-				}
+			for (var i = DynamicNetworkChildren.Count - 1; i >= 0; i--)
+			{
+				var networkChild = DynamicNetworkChildren.ElementAt(i);
+				networkChild.InterestLayers = InterestLayers;
+				networkChild.InputAuthority = InputAuthority;
+				networkChild.CurrentWorld = world;
+				networkChild.NetParentId = NetId;
+				networkChild._NetworkPrepare(world);
+			}
 				for (var i = StaticNetworkChildren.Length - 1; i >= 1; i--)
 				{
 					var networkChild = StaticNetworkChildren[i];
@@ -902,7 +956,7 @@ namespace Nebula
 		{
 			if (IsNetScene())
 			{
-				for (var i = DynamicNetworkChildren.Count - 1; i >= 1; i--)
+				for (var i = DynamicNetworkChildren.Count - 1; i >= 0; i--)
 				{
 					DynamicNetworkChildren.ElementAt(i)._WorldReady();
 				}
@@ -956,6 +1010,12 @@ namespace Nebula
 		internal void handleDespawn()
 		{
 			Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"Despawning node {RawNode.GetPath()}");
+			if (CurrentWorld == null)
+			{
+				// Node was never fully initialized (e.g., placeholder node) - just queue free
+				RawNode.QueueFree();
+				return;
+			}
 			CurrentWorld.QueueDespawn(this);
 		}
 	}

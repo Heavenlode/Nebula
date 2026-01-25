@@ -1,15 +1,22 @@
 <Project Sdk="Godot.NET.Sdk/4.5.1">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <NoWarn>NU1605</NoWarn>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
     <PackageReference Include="Poser" Version="2.1.2" />
-    <PackageReference Include="xunit" Version="2.9.0" />
+    <!-- xunit is already included via Nebula.props -->
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+  <!-- Exclude ENet-CSharp submodule from parent directory (we use the NuGet package instead) -->
+  <ItemGroup>
+    <Compile Remove="..\ENet-CSharp\**" />
+    <Content Remove="..\ENet-CSharp\**" />
+    <EmbeddedResource Remove="..\ENet-CSharp\**" />
+    <None Remove="..\ENet-CSharp\**" />
   </ItemGroup>
   <Import Project="addons\Nebula\Nebula.props" />
 </Project>

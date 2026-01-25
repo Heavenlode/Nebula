@@ -1167,7 +1167,7 @@ namespace Nebula
                 double elapsedMs = (System.Diagnostics.Stopwatch.GetTimestamp() - startTs) * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
                 if (elapsedMs > 15)
                 {
-                    Log(Debugger.DebugLevel.VERBOSE, $"ServerProcessTick2 took {elapsedMs:F2} ms");
+                    Log(Debugger.DebugLevel.WARN, $"ServerProcessTick took {elapsedMs:F2} ms");
                 }
 #if DEBUG
                 // stopwatch.Stop();
@@ -1765,7 +1765,7 @@ namespace Nebula
             CurrentTick = incomingTick;
             try
             {
-                Log(Debugger.DebugLevel.VERBOSE, $"Importing state bytes of size {stateBytes.Length}");
+                // Log(Debugger.DebugLevel.VERBOSE, $"Importing state bytes of size {stateBytes.Length}");
                 using var stateBuffer = new NetBuffer(stateBytes);
                 ImportState(stateBuffer);
             }

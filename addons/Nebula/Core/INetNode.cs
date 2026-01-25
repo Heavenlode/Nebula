@@ -57,6 +57,40 @@ namespace Nebula {
         /// </summary>
         /// <param name="delta">Frame delta time in seconds</param>
         public void ProcessInterpolation(float delta) { }
+
+        #region Client-Side Prediction
+
+        /// <summary>
+        /// Stores current predicted state for rollback comparison.
+        /// Generated implementation stores each [NetProperty(Predicted=true)] property
+        /// in a circular buffer indexed by tick.
+        /// </summary>
+        /// <param name="tick">The tick to associate with this predicted state</param>
+        public void StorePredictedState(int tick) { }
+
+        /// <summary>
+        /// Stores confirmed server state for reconciliation.
+        /// Called when authoritative server state is received.
+        /// </summary>
+        public void StoreConfirmedState() { }
+
+        /// <summary>
+        /// Compares predicted state with confirmed server state and restores mispredicted properties.
+        /// Combines comparison and selective restoration in a single call.
+        /// If forceRestoreAll is true, skips comparison and restores all properties to confirmed state.
+        /// </summary>
+        /// <param name="tick">The tick whose predicted state to compare</param>
+        /// <param name="forceRestoreAll">If true, restores all properties without comparing</param>
+        /// <returns>True if any misprediction was detected (rollback needed), false if all predictions correct</returns>
+        public bool Reconcile(int tick, bool forceRestoreAll = false) => false;
+
+        /// <summary>
+        /// Restores properties from the prediction buffer for a given tick.
+        /// Used when prediction was correct and we need to continue with predicted values after server state import.
+        /// </summary>
+        public void RestoreToPredictedState(int tick) { }
+
+        #endregion
     }
 
     public interface INetNode<T> : INetNodeBase, INetSerializable<T>, IBsonSerializable<T> where T : Godot.Node { }

@@ -100,6 +100,18 @@ namespace Nebula.Serialization
             buffer.AdvanceWrite(2);
         }
 
+        /// <summary>
+        /// Writes a float value as a half-precision float (2 bytes).
+        /// Convenience method that performs the float-to-half conversion.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteHalfFloat(NetBuffer buffer, float value)
+        {
+            var span = buffer.GetWriteSpan(2);
+            BinaryPrimitives.WriteHalfLittleEndian(span, (Half)value);
+            buffer.AdvanceWrite(2);
+        }
+
         #endregion
 
         #region Godot Vectors
@@ -168,6 +180,64 @@ namespace Nebula.Serialization
             BinaryPrimitives.WriteSingleLittleEndian(span.Slice(8), value.Z);
             BinaryPrimitives.WriteSingleLittleEndian(span.Slice(12), value.W);
             buffer.AdvanceWrite(16);
+        }
+
+        /// <summary>
+        /// Writes a quaternion using smallest-three compression (6 bytes total).
+        /// The largest component is omitted and reconstructed on read.
+        /// Format: [2 bits: largest index][3 x 14-bit fixed-point components]
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteQuatSmallestThree(NetBuffer buffer, Quaternion q)
+        {
+            // Find largest component by absolute value
+            float absX = MathF.Abs(q.X), absY = MathF.Abs(q.Y);
+            float absZ = MathF.Abs(q.Z), absW = MathF.Abs(q.W);
+            
+            int maxIndex = 0;
+            float maxVal = absX;
+            if (absY > maxVal) { maxIndex = 1; maxVal = absY; }
+            if (absZ > maxVal) { maxIndex = 2; maxVal = absZ; }
+            if (absW > maxVal) { maxIndex = 3; }
+            
+            // Ensure the largest component is positive (for consistent reconstruction)
+            float sign = maxIndex switch
+            {
+                0 => q.X >= 0 ? 1f : -1f,
+                1 => q.Y >= 0 ? 1f : -1f,
+                2 => q.Z >= 0 ? 1f : -1f,
+                _ => q.W >= 0 ? 1f : -1f
+            };
+            
+            // Get the three smallest components (normalized by sign)
+            float a, b, c;
+            switch (maxIndex)
+            {
+                case 0: a = q.Y * sign; b = q.Z * sign; c = q.W * sign; break;
+                case 1: a = q.X * sign; b = q.Z * sign; c = q.W * sign; break;
+                case 2: a = q.X * sign; b = q.Y * sign; c = q.W * sign; break;
+                default: a = q.X * sign; b = q.Y * sign; c = q.Z * sign; break;
+            }
+            
+            // Convert to 14-bit fixed point: range [-1, 1] -> [0, 16383]
+            // Using 14 bits gives ~0.00012 precision which is plenty for quaternions
+            const float scale = 8191.5f; // (16383 / 2)
+            ushort ua = (ushort)Math.Clamp((int)((a + 1f) * scale), 0, 16383);
+            ushort ub = (ushort)Math.Clamp((int)((b + 1f) * scale), 0, 16383);
+            ushort uc = (ushort)Math.Clamp((int)((c + 1f) * scale), 0, 16383);
+            
+            // Pack: 2 bits index + 14 bits a + 14 bits b + 14 bits c = 44 bits = 6 bytes
+            // Byte 0: [index:2][a_high:6]
+            // Byte 1: [a_low:8]
+            // Byte 2: [b_high:6][a_remainder:2] -> actually let's use simpler packing
+            // Simpler: 3 x 16-bit values, first 2 bits of first value is index
+            // Pack index into high 2 bits of first component
+            var span = buffer.GetWriteSpan(6);
+            ushort packed0 = (ushort)((maxIndex << 14) | ua);
+            BinaryPrimitives.WriteUInt16LittleEndian(span, packed0);
+            BinaryPrimitives.WriteUInt16LittleEndian(span.Slice(2), ub);
+            BinaryPrimitives.WriteUInt16LittleEndian(span.Slice(4), uc);
+            buffer.AdvanceWrite(6);
         }
 
         #endregion

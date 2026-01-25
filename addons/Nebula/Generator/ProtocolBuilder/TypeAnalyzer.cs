@@ -1,3 +1,4 @@
+#nullable enable
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -21,9 +22,18 @@ namespace Nebula.Generators
             public float InterpolateSpeed { get; init; } = 15f;
             public bool IsEnum { get; init; } = false;
             /// <summary>
+            /// The underlying type name of the enum (e.g., "System.Int32", "System.Byte").
+            /// Null if not an enum.
+            /// </summary>
+            public string? EnumUnderlyingTypeName { get; init; }
+            /// <summary>
             /// Index of this property within its declaring class (used for SetNetPropertyByIndex).
             /// </summary>
             public byte ClassLocalIndex { get; init; }
+            /// <summary>
+            /// When true, this property participates in client-side prediction.
+            /// </summary>
+            public bool Predicted { get; init; } = false;
         }
 
         public sealed class NetFunctionInfo
@@ -310,6 +320,14 @@ namespace Nebula.Generators
                     var classLocalIndex = classPropertyCounts[current]++;
                     var cumulativeIndex = classBaseOffsets[current] + classLocalIndex;
 
+                    // Get enum underlying type if this is an enum
+                    var isEnum = prop.Type.TypeKind == TypeKind.Enum;
+                    string? enumUnderlyingType = null;
+                    if (isEnum && prop.Type is INamedTypeSymbol enumType)
+                    {
+                        enumUnderlyingType = enumType.EnumUnderlyingType?.ToDisplayString();
+                    }
+
                     yield return new NetPropertyInfo
                     {
                         Name = prop.Name,
@@ -319,8 +337,10 @@ namespace Nebula.Generators
                         NotifyOnChange = GetNamedArgument(netPropAttr, "NotifyOnChange", false),
                         Interpolate = GetNamedArgument(netPropAttr, "Interpolate", false),
                         InterpolateSpeed = GetNamedArgument(netPropAttr, "InterpolateSpeed", 15f),
-                        IsEnum = prop.Type.TypeKind == TypeKind.Enum,
+                        IsEnum = isEnum,
+                        EnumUnderlyingTypeName = enumUnderlyingType,
                         ClassLocalIndex = (byte)cumulativeIndex,
+                        Predicted = GetNamedArgument(netPropAttr, "Predicted", false),
                     };
                 }
 

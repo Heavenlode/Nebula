@@ -128,6 +128,9 @@ namespace Nebula.Serialization.Serializers
             NetWriter.WriteByte(buffer, hasInputAuth);
 
             currentWorld.Debug?.Send("Spawn", $"Exported:{netController.RawNode.SceneFilePath}");
+
+            // Mark spawned immediately so NetPropertiesSerializer can export in the same tick
+            currentWorld.SetSpawnedForClient(netController.NetId, peer);
         }
 
         public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick)
@@ -209,6 +212,8 @@ namespace Nebula.Serialization.Serializers
             if (data.hasInputAuthority == 1)
             {
                 controllerOut.InputAuthority = NetRunner.Instance.ServerPeer;
+                // Mark owned entities cache dirty so prediction loop picks up this entity
+                currentWorld.MarkOwnedEntitiesDirty();
             }
 
             // 255 means direct child of parent's root node
@@ -222,7 +227,6 @@ namespace Nebula.Serialization.Serializers
             }
 
             controllerOut._NetworkPrepare(currentWorld);
-            controllerOut._WorldReady();
 
             currentWorld.Debug?.Send("Spawn", $"Imported:{controllerOut.RawNode.SceneFilePath}");
         }

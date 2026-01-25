@@ -1,3 +1,4 @@
+#nullable enable
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
@@ -309,7 +310,8 @@ namespace Nebula.Generators
                             NotifyOnChange = prop.Value.NotifyOnChange,
                             Interpolate = prop.Value.Interpolate,
                             InterpolateSpeed = prop.Value.InterpolateSpeed,
-                            IsEnum = prop.Value.IsEnum
+                            IsEnum = prop.Value.IsEnum,
+                            Predicted = prop.Value.Predicted
                         };
                         }
                     }
@@ -365,6 +367,7 @@ namespace Nebula.Generators
                             NodePath = nodePath,
                             Name = prop.Name,
                             TypeFullName = prop.TypeFullName,
+                            SubtypeIdentifier = prop.IsEnum ? prop.EnumUnderlyingTypeName : null,
                             Index = (byte)propertyCount++,
                             LocalIndex = prop.ClassLocalIndex, // Use class-local index from analyzer
                             InterestMask = prop.InterestMask,
@@ -373,7 +376,8 @@ namespace Nebula.Generators
                             NotifyOnChange = prop.NotifyOnChange,
                             Interpolate = prop.Interpolate,
                             InterpolateSpeed = prop.InterpolateSpeed,
-                            IsEnum = prop.IsEnum
+                            IsEnum = prop.IsEnum,
+                            Predicted = prop.Predicted
                         };
                     }
                 }

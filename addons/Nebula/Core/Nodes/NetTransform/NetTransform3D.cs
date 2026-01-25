@@ -1,55 +1,138 @@
 using Godot;
+using System;
 using Nebula.Utility.Tools;
 
 namespace Nebula.Utility.Nodes
 {
+    /// <summary>
+    /// Synchronizes a Node3D's transform over the network with support for:
+    /// - Server authoritative state
+    /// - Client-side prediction for owned entities
+    /// - Smooth visual interpolation for ALL clients (owned and non-owned)
+    /// </summary>
     [GlobalClass]
     public partial class NetTransform3D : NetNode3D
     {
+        /// <summary>
+        /// The physics/simulation node to read authoritative transform from.
+        /// This node runs at tick rate. Defaults to parent if not set.
+        /// </summary>
         [Export]
         public Node3D SourceNode { get; set; }
 
+        /// <summary>
+        /// The visual node to write interpolated transform to.
+        /// If null, defaults to SourceNode (legacy behavior).
+        /// For owned clients, this interpolates toward SourceNode at frame rate.
+        /// For non-owned clients, this interpolates toward NetPosition/NetRotation.
+        /// </summary>
         [Export]
         public Node3D TargetNode { get; set; }
 
-        [NetProperty]
+        /// <summary>
+        /// How fast the TargetNode interpolates toward the source transform.
+        /// Higher values = faster/tighter follow, lower = smoother but more lag.
+        /// </summary>
+        [Export]
+        public float VisualInterpolateSpeed { get; set; } = 20f;
+
+        [NetProperty(NotifyOnChange = true)]
         public bool IsTeleporting { get; set; }
 
-        [NetProperty(Interpolate = true, InterpolateSpeed = 15f)]
+        /// <summary>
+        /// Networked position with interpolation for non-owned and prediction for owned entities.
+        /// </summary>
+        [NetProperty(Interpolate = true, InterpolateSpeed = 10f, Predicted = true, NotifyOnChange = true)]
         public Vector3 NetPosition { get; set; }
 
-        [NetProperty(Interpolate = true, InterpolateSpeed = 15f)]
+        /// <summary>
+        /// Tolerance for position misprediction detection.
+        /// Set this from parent nodes that use NetTransform3D via composition.
+        /// </summary>
+        [Export]
+        public float NetPositionPredictionTolerance { get; set; } = 2f;
+
+        /// <summary>
+        /// Networked rotation with interpolation for non-owned and prediction for owned entities.
+        /// </summary>
+        [NetProperty(Interpolate = true, InterpolateSpeed = 15f, Predicted = true, NotifyOnChange = true)]
         public Quaternion NetRotation { get; set; } = Quaternion.Identity;
 
-        private bool _isTeleporting = false;
-        private bool _smoothInitialized = false;
+        /// <summary>
+        /// Tolerance for rotation misprediction detection.
+        /// Set this from parent nodes that use NetTransform3D via composition.
+        /// </summary>
+        [Export]
+        public float NetRotationPredictionTolerance { get; set; } = 0.05f;
 
-        public void OnNetworkChangeIsTeleporting(Tick tick, bool from, bool to)
+        /// <summary>
+        /// Called when NetPosition changes during network import.
+        /// During initial spawn, sync to SourceNode so physics starts at correct position.
+        /// </summary>
+        partial void OnNetChangeNetPosition(int tick, Vector3 oldVal, Vector3 newVal)
+        {
+            // During spawn (before world ready), sync imported position to SourceNode
+            if (!Network.IsWorldReady && NetRunner.Instance.IsClient)
+            {
+                SourceNode ??= GetParent3D();
+                if (SourceNode != null)
+                {
+                    SourceNode.Position = newVal;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when NetRotation changes during network import.
+        /// During initial spawn, sync to SourceNode so physics starts at correct rotation.
+        /// </summary>
+        partial void OnNetChangeNetRotation(int tick, Quaternion oldVal, Quaternion newVal)
+        {
+            // Ensure the rotation is normalized for interpolation
+            NetRotation = SafeNormalize(newVal);
+            
+            // During spawn (before world ready), sync imported rotation to SourceNode
+            if (!Network.IsWorldReady && NetRunner.Instance.IsClient)
+            {
+                SourceNode ??= GetParent3D();
+                if (SourceNode != null)
+                {
+                    SourceNode.Quaternion = NetRotation;
+                }
+            }
+        }
+
+        private bool _isTeleporting = false;
+        private bool _visualInitialized = false;
+        private bool teleportExported = false;
+
+        partial void OnNetChangeIsTeleporting(Tick tick, bool from, bool to)
         {
             _isTeleporting = true;
-            _smoothInitialized = false; // Reset so next position snaps
+            _visualInitialized = false; // Reset so next position snaps
         }
 
         /// <inheritdoc/>
         public override void _WorldReady()
         {
             base._WorldReady();
-            TargetNode ??= GetParent3D();
             SourceNode ??= GetParent3D();
-            
-            // Register SourceNode for zero-alloc property access on server
+
             if (NetRunner.Instance.IsServer && SourceNode != null)
             {
-                NativeBridge.Register(SourceNode);
+                // Server: initialize NetPosition from SourceNode so first state export is correct
+                NetPosition = SourceNode.Position;
+                NetRotation = SafeNormalize(SourceNode.Quaternion);
             }
-
-            if (GetMeta("import_from_external", false).AsBool())
+            
+            // Ensure TargetNode has a valid initial quaternion
+            if (NetRunner.Instance.IsClient && TargetNode != null)
             {
-                SourceNode.Position = NetPosition;
-                SourceNode.Quaternion = NetRotation;
-                TargetNode.Position = NetPosition;
-                TargetNode.Quaternion = NetRotation;
+                TargetNode.Quaternion = SafeNormalize(TargetNode.Quaternion);
             }
+            
+            // Ensure NetRotation is normalized (for interpolation)
+            NetRotation = SafeNormalize(NetRotation);
         }
 
         public Node3D GetParent3D()
@@ -69,28 +152,79 @@ namespace Nebula.Utility.Nodes
             {
                 return;
             }
-            var parent = GetParent3D();
-            if (parent == null)
+            if (SourceNode == null)
             {
                 return;
             }
-            parent.LookAt(direction, Vector3.Up, true);
+            SourceNode.LookAt(direction, Vector3.Up, true);
         }
 
-        bool teleportExported = false;
+        /// <summary>
+        /// Called after mispredicted properties are restored during rollback.
+        /// Syncs the restored properties to SourceNode so physics can continue from confirmed state.
+        /// </summary>
+        partial void OnConfirmedStateRestored()
+        {
+            if (SourceNode != null)
+            {
+                // Sync position from the (just restored) property
+                SourceNode.Position = NetPosition;
+                
+                // Sync rotation with normalization and hemisphere check
+                var confirmedRot = SafeNormalize(NetRotation);
+                var currentRot = SafeNormalize(SourceNode.Quaternion);
+                SourceNode.Quaternion = EnsureSameHemisphere(confirmedRot, currentRot);
+            }
+        }
+
+        /// <summary>
+        /// Called after predicted properties are restored from prediction buffer.
+        /// Syncs restored NetPosition/NetRotation to SourceNode so physics can continue.
+        /// </summary>
+        partial void OnPredictedStateRestored()
+        {
+            // Ensure restored rotation is normalized
+            NetRotation = SafeNormalize(NetRotation);
+            
+            if (SourceNode != null)
+            {
+                SourceNode.Position = NetPosition;
+                // Ensure same hemisphere as current SourceNode to avoid "long way around" rotation
+                var currentRot = SafeNormalize(SourceNode.Quaternion);
+                SourceNode.Quaternion = EnsureSameHemisphere(NetRotation, currentRot);
+            }
+        }
+
+        private static Quaternion SafeNormalize(Quaternion value)
+        {
+            return value.LengthSquared() < 0.0001f ? Quaternion.Identity : value.Normalized();
+        }
+
+        /// <summary>
+        /// Ensures quaternions are on the same hemisphere for proper Slerp interpolation.
+        /// If quaternions are on opposite hemispheres, Slerp takes the "long way" around.
+        /// </summary>
+        private static Quaternion EnsureSameHemisphere(Quaternion from, Quaternion to)
+        {
+            if (from.Dot(to) < 0)
+                return new Quaternion(-from.X, -from.Y, -from.Z, -from.W);
+            return from;
+        }
 
         /// <inheritdoc/>
         public override void _NetworkProcess(int tick)
         {
             base._NetworkProcess(tick);
-            if (NetRunner.Instance.IsClient)
-            {
-                return;
-            }
+            
+            // Non-owned clients don't run simulation - interpolation handles them
+            if (NetRunner.Instance.IsClient && !Network.IsCurrentOwner) return;
 
-            // Use NativeBridge for zero-alloc property access (synced in NetRunner._PhysicsProcess)
-            NetPosition = NativeBridge.GetPosition(SourceNode);
-            NetRotation = Quaternion.FromEuler(NativeBridge.GetRotation(SourceNode));
+            // Server AND owned client: read from SourceNode (physics simulation node)
+            if (SourceNode != null)
+            {
+                NetPosition = SourceNode.Position;
+                NetRotation = SafeNormalize(SourceNode.Quaternion);
+            }
 
             if (IsTeleporting)
             {
@@ -106,19 +240,122 @@ namespace Nebula.Utility.Nodes
             }
         }
 
-        public void Teleport(Vector3 incoming_position)
+        /// <summary>
+        /// Angle threshold (in radians) above which we snap rotation instead of interpolating.
+        /// This prevents the "long way around" rotation when there's a large discrepancy.
+        /// </summary>
+        private const float RotationSnapThreshold = Mathf.Pi / 2f; // 90 degrees
+
+        /// <inheritdoc/>
+        public override void _Process(double delta)
         {
-            TargetNode.Position = incoming_position;
-            IsTeleporting = true;
-            _smoothInitialized = false;
+            base._Process(delta);
+            if (!Network.IsWorldReady) return;
+            if (!NetRunner.Instance.IsClient) return;
+
+            // Determine the target node to interpolate (TargetNode if set, otherwise SourceNode)
+            var target = TargetNode ?? SourceNode;
+            if (target == null) return;
+
+            // For owned entities: smoothly lerp visual toward physics using exponential smoothing
+            if (Network.IsCurrentOwner && SourceNode != null)
+            {
+                // Frame-rate independent smoothing factor
+                float t = 1f - Mathf.Exp(-VisualInterpolateSpeed * (float)delta);
+                
+                // Smooth position
+                target.Position = target.Position.Lerp(SourceNode.Position, t);
+                
+                // Smooth rotation with hemisphere check for shortest path
+                var sourceRot = SafeNormalize(SourceNode.Quaternion);
+                var visualRot = SafeNormalize(target.Quaternion);
+                visualRot = EnsureSameHemisphere(visualRot, sourceRot);
+                
+                // Check for large rotation error - snap instead of slerp to avoid visual artifacts
+                float angleDiff = visualRot.AngleTo(sourceRot);
+                if (angleDiff > RotationSnapThreshold)
+                {
+                    target.Quaternion = sourceRot;
+                }
+                else
+                {
+                    target.Quaternion = visualRot.Slerp(sourceRot, t);
+                }
+                return;
+            }
+
+            // Non-owned client: interpolate toward NetPosition/NetRotation
+            Vector3 targetPos = NetPosition;
+            Quaternion targetRot = SafeNormalize(NetRotation);
+
+            // Initialize on first frame or after teleport
+            if (!_visualInitialized)
+            {
+                target.Position = targetPos;
+                target.Quaternion = targetRot;
+                _visualInitialized = true;
+                return;
+            }
+
+            // Smooth interpolation using exponential decay
+            float t2 = (float)(1.0 - Math.Exp(-VisualInterpolateSpeed * delta));
+            target.Position = target.Position.Lerp(targetPos, t2);
+            
+            // Ensure quaternions are normalized and on same hemisphere before Slerp
+            var currentRot = SafeNormalize(target.Quaternion);
+            currentRot = EnsureSameHemisphere(currentRot, targetRot);
+            
+            // Check for large rotation error - snap instead of slerp
+            float angleDiff2 = currentRot.AngleTo(targetRot);
+            if (angleDiff2 > RotationSnapThreshold)
+            {
+                target.Quaternion = targetRot;
+            }
+            else
+            {
+                target.Quaternion = currentRot.Slerp(targetRot, t2);
+            }
         }
 
+        /// <summary>
+        /// Teleports to a position, skipping interpolation.
+        /// </summary>
+        public void Teleport(Vector3 incoming_position)
+        {
+            if (SourceNode != null)
+            {
+                SourceNode.Position = incoming_position;
+            }
+            if (TargetNode != null)
+            {
+                TargetNode.Position = incoming_position;
+            }
+            NetPosition = incoming_position;
+            IsTeleporting = true;
+            _visualInitialized = false;
+        }
+
+        /// <summary>
+        /// Teleports to a position and rotation, skipping interpolation.
+        /// </summary>
         public void Teleport(Vector3 incoming_position, Quaternion incoming_rotation)
         {
-            TargetNode.Position = incoming_position;
-            TargetNode.Quaternion = incoming_rotation;
+            var normalizedRotation = SafeNormalize(incoming_rotation);
+            
+            if (SourceNode != null)
+            {
+                SourceNode.Position = incoming_position;
+                SourceNode.Quaternion = normalizedRotation;
+            }
+            if (TargetNode != null)
+            {
+                TargetNode.Position = incoming_position;
+                TargetNode.Quaternion = normalizedRotation;
+            }
+            NetPosition = incoming_position;
+            NetRotation = normalizedRotation;
             IsTeleporting = true;
-            _smoothInitialized = false;
+            _visualInitialized = false;
         }
     }
 }

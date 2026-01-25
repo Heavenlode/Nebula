@@ -110,6 +110,19 @@ namespace Nebula.Serialization
             return value;
         }
 
+        /// <summary>
+        /// Reads a half-precision float and returns it as a full float.
+        /// Convenience method for delta decoding.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float ReadHalfFloat(NetBuffer buffer)
+        {
+            var span = buffer.GetReadSpan(2);
+            var value = (float)BinaryPrimitives.ReadHalfLittleEndian(span);
+            buffer.AdvanceRead(2);
+            return value;
+        }
+
         #endregion
 
         #region Godot Vectors
@@ -183,6 +196,49 @@ namespace Nebula.Serialization
             var z = BinaryPrimitives.ReadSingleLittleEndian(span.Slice(8));
             var w = BinaryPrimitives.ReadSingleLittleEndian(span.Slice(12));
             buffer.AdvanceRead(16);
+            return new Quaternion(x, y, z, w);
+        }
+
+        /// <summary>
+        /// Reads a quaternion encoded with smallest-three compression (6 bytes).
+        /// Reconstructs the largest component from the other three.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Quaternion ReadQuatSmallestThree(NetBuffer buffer)
+        {
+            var span = buffer.GetReadSpan(6);
+            ushort packed0 = BinaryPrimitives.ReadUInt16LittleEndian(span);
+            ushort packed1 = BinaryPrimitives.ReadUInt16LittleEndian(span.Slice(2));
+            ushort packed2 = BinaryPrimitives.ReadUInt16LittleEndian(span.Slice(4));
+            buffer.AdvanceRead(6);
+            
+            // Extract largest index from high 2 bits of first value
+            int maxIndex = packed0 >> 14;
+            ushort ua = (ushort)(packed0 & 0x3FFF);
+            ushort ub = packed1;
+            ushort uc = packed2;
+            
+            // Convert from 14-bit fixed point back to float: [0, 16383] -> [-1, 1]
+            const float invScale = 1f / 8191.5f;
+            float a = ua * invScale - 1f;
+            float b = ub * invScale - 1f;
+            float c = uc * invScale - 1f;
+            
+            // Reconstruct the largest component using unit quaternion property
+            // |q|^2 = x^2 + y^2 + z^2 + w^2 = 1
+            float sumSq = a * a + b * b + c * c;
+            float largest = MathF.Sqrt(MathF.Max(0f, 1f - sumSq));
+            
+            // Reconstruct quaternion based on which component was largest
+            float x, y, z, w;
+            switch (maxIndex)
+            {
+                case 0: x = largest; y = a; z = b; w = c; break;
+                case 1: x = a; y = largest; z = b; w = c; break;
+                case 2: x = a; y = b; z = largest; w = c; break;
+                default: x = a; y = b; z = c; w = largest; break;
+            }
+            
             return new Quaternion(x, y, z, w);
         }
 

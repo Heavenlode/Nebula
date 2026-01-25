@@ -30,3 +30,4 @@ references:
   name: TickLog
   nameWithType: TickLog
   fullName: Nebula.Internal.Editor.DTO.TickLog
+memberLayout: SeparatePages

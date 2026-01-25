@@ -20,7 +20,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldInspector
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldInspector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldInspector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -613,7 +613,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldInspector.debugPanel
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldInspector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldInspector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -648,7 +648,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldInspector.inspectorContainer
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldInspector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldInspector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -683,7 +683,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldInspector.tickDataContainer
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldInspector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldInspector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -718,7 +718,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldInspector._OnNetNodeInspected(Godot.Collections.Dictionary)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldInspector.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldInspector.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -741,7 +741,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldInspector._OnTickFrameSelected(Godot.Control)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldInspector.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldInspector.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -764,7 +764,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldInspector.Dispose(bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldInspector.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldInspector.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -792,7 +792,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldInspector.WorldInspector()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Debugger/WorldInspector.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Debugger/WorldInspector.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -14500,7 +14500,7 @@ references:
 - uid: Nebula.Internal.Editor.WorldInspector._OnNetNodeInspected*
   commentId: Overload:Nebula.Internal.Editor.WorldInspector._OnNetNodeInspected
   isExternal: true
-  href: Nebula.Internal.Editor.WorldInspector.html#Nebula_Internal_Editor_WorldInspector__OnNetNodeInspected_Godot_Collections_Dictionary_
+  href: Nebula.Internal.Editor.WorldInspector._OnNetNodeInspected.html#Nebula_Internal_Editor_WorldInspector__OnNetNodeInspected_Godot_Collections_Dictionary_
   name: _OnNetNodeInspected
   nameWithType: WorldInspector._OnNetNodeInspected
   fullName: Nebula.Internal.Editor.WorldInspector._OnNetNodeInspected
@@ -14536,7 +14536,7 @@ references:
 - uid: Nebula.Internal.Editor.WorldInspector._OnTickFrameSelected*
   commentId: Overload:Nebula.Internal.Editor.WorldInspector._OnTickFrameSelected
   isExternal: true
-  href: Nebula.Internal.Editor.WorldInspector.html#Nebula_Internal_Editor_WorldInspector__OnTickFrameSelected_Godot_Control_
+  href: Nebula.Internal.Editor.WorldInspector._OnTickFrameSelected.html#Nebula_Internal_Editor_WorldInspector__OnTickFrameSelected_Godot_Control_
   name: _OnTickFrameSelected
   nameWithType: WorldInspector._OnTickFrameSelected
   fullName: Nebula.Internal.Editor.WorldInspector._OnTickFrameSelected
@@ -14574,7 +14574,7 @@ references:
 - uid: Nebula.Internal.Editor.WorldInspector.Dispose*
   commentId: Overload:Nebula.Internal.Editor.WorldInspector.Dispose
   isExternal: true
-  href: Nebula.Internal.Editor.WorldInspector.html#Nebula_Internal_Editor_WorldInspector_Dispose_System_Boolean_
+  href: Nebula.Internal.Editor.WorldInspector.Dispose.html#Nebula_Internal_Editor_WorldInspector_Dispose_System_Boolean_
   name: Dispose
   nameWithType: WorldInspector.Dispose
   fullName: Nebula.Internal.Editor.WorldInspector.Dispose
@@ -14592,10 +14592,11 @@ references:
 - uid: Nebula.Internal.Editor.WorldInspector.#ctor*
   commentId: Overload:Nebula.Internal.Editor.WorldInspector.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.WorldInspector.html#Nebula_Internal_Editor_WorldInspector__ctor
+  href: Nebula.Internal.Editor.WorldInspector.-ctor.html#Nebula_Internal_Editor_WorldInspector__ctor
   name: WorldInspector
   nameWithType: WorldInspector.WorldInspector
   fullName: Nebula.Internal.Editor.WorldInspector.WorldInspector
   nameWithType.vb: WorldInspector.New
   fullName.vb: Nebula.Internal.Editor.WorldInspector.New
   name.vb: New
+memberLayout: SeparatePages

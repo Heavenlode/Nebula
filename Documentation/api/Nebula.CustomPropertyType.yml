@@ -1,0 +1,96 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.CustomPropertyType
+  commentId: T:Nebula.CustomPropertyType
+  id: CustomPropertyType
+  parent: Nebula
+  children:
+  - Nebula.CustomPropertyType.NetId
+  - Nebula.CustomPropertyType.None
+  - Nebula.CustomPropertyType.UUID
+  langs:
+  - csharp
+  - vb
+  name: CustomPropertyType
+  nameWithType: CustomPropertyType
+  fullName: Nebula.CustomPropertyType
+  type: Enum
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Extended type identifiers for custom INetValue types.
+  example: []
+  syntax:
+    content: 'public enum CustomPropertyType : byte'
+    content.vb: Public Enum CustomPropertyType As Byte
+- uid: Nebula.CustomPropertyType.None
+  commentId: F:Nebula.CustomPropertyType.None
+  id: None
+  parent: Nebula.CustomPropertyType
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: CustomPropertyType.None
+  fullName: Nebula.CustomPropertyType.None
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: None = 0
+    return:
+      type: Nebula.CustomPropertyType
+- uid: Nebula.CustomPropertyType.NetId
+  commentId: F:Nebula.CustomPropertyType.NetId
+  id: NetId
+  parent: Nebula.CustomPropertyType
+  langs:
+  - csharp
+  - vb
+  name: NetId
+  nameWithType: CustomPropertyType.NetId
+  fullName: Nebula.CustomPropertyType.NetId
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: NetId = 1
+    return:
+      type: Nebula.CustomPropertyType
+- uid: Nebula.CustomPropertyType.UUID
+  commentId: F:Nebula.CustomPropertyType.UUID
+  id: UUID
+  parent: Nebula.CustomPropertyType
+  langs:
+  - csharp
+  - vb
+  name: UUID
+  nameWithType: CustomPropertyType.UUID
+  fullName: Nebula.CustomPropertyType.UUID
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: UUID = 2
+    return:
+      type: Nebula.CustomPropertyType
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.CustomPropertyType
+  commentId: T:Nebula.CustomPropertyType
+  parent: Nebula
+  isExternal: true
+  href: Nebula.CustomPropertyType.html
+  name: CustomPropertyType
+  nameWithType: CustomPropertyType
+  fullName: Nebula.CustomPropertyType
+memberLayout: SeparatePages

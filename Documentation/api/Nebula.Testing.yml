@@ -1,0 +1,125 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Testing
+  commentId: N:Nebula.Testing
+  id: Nebula.Testing
+  children:
+  - Nebula.Testing.NebulaTestCollection
+  - Nebula.Testing.NebulaTestFixture
+  - Nebula.Testing.ProtocolBuilder
+  - Nebula.Testing.ProtocolBuilder.MethodName
+  - Nebula.Testing.ProtocolBuilder.PropertyName
+  - Nebula.Testing.ProtocolBuilder.SignalName
+  langs:
+  - csharp
+  - vb
+  name: Nebula.Testing
+  nameWithType: Nebula.Testing
+  fullName: Nebula.Testing
+  type: Namespace
+  assemblies:
+  - Nebula
+references:
+- uid: Nebula.Testing.NebulaTestFixture
+  commentId: T:Nebula.Testing.NebulaTestFixture
+  isExternal: true
+  href: Nebula.Testing.NebulaTestFixture.html
+  name: NebulaTestFixture
+  nameWithType: NebulaTestFixture
+  fullName: Nebula.Testing.NebulaTestFixture
+- uid: Nebula.Testing.NebulaTestCollection
+  commentId: T:Nebula.Testing.NebulaTestCollection
+  isExternal: true
+  href: Nebula.Testing.NebulaTestCollection.html
+  name: NebulaTestCollection
+  nameWithType: NebulaTestCollection
+  fullName: Nebula.Testing.NebulaTestCollection
+- uid: Nebula.Testing.ProtocolBuilder
+  commentId: T:Nebula.Testing.ProtocolBuilder
+  isExternal: true
+  href: Nebula.Testing.ProtocolBuilder.html
+  name: ProtocolBuilder
+  nameWithType: ProtocolBuilder
+  fullName: Nebula.Testing.ProtocolBuilder
+- uid: Nebula.Testing.ProtocolBuilder.MethodName
+  commentId: T:Nebula.Testing.ProtocolBuilder.MethodName
+  isExternal: true
+  href: Nebula.Testing.ProtocolBuilder.html
+  name: ProtocolBuilder.MethodName
+  nameWithType: ProtocolBuilder.MethodName
+  fullName: Nebula.Testing.ProtocolBuilder.MethodName
+  spec.csharp:
+  - uid: Nebula.Testing.ProtocolBuilder
+    name: ProtocolBuilder
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.html
+  - name: .
+  - uid: Nebula.Testing.ProtocolBuilder.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.MethodName.html
+  spec.vb:
+  - uid: Nebula.Testing.ProtocolBuilder
+    name: ProtocolBuilder
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.html
+  - name: .
+  - uid: Nebula.Testing.ProtocolBuilder.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.MethodName.html
+- uid: Nebula.Testing.ProtocolBuilder.PropertyName
+  commentId: T:Nebula.Testing.ProtocolBuilder.PropertyName
+  isExternal: true
+  href: Nebula.Testing.ProtocolBuilder.html
+  name: ProtocolBuilder.PropertyName
+  nameWithType: ProtocolBuilder.PropertyName
+  fullName: Nebula.Testing.ProtocolBuilder.PropertyName
+  spec.csharp:
+  - uid: Nebula.Testing.ProtocolBuilder
+    name: ProtocolBuilder
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.html
+  - name: .
+  - uid: Nebula.Testing.ProtocolBuilder.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Testing.ProtocolBuilder
+    name: ProtocolBuilder
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.html
+  - name: .
+  - uid: Nebula.Testing.ProtocolBuilder.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.PropertyName.html
+- uid: Nebula.Testing.ProtocolBuilder.SignalName
+  commentId: T:Nebula.Testing.ProtocolBuilder.SignalName
+  isExternal: true
+  href: Nebula.Testing.ProtocolBuilder.html
+  name: ProtocolBuilder.SignalName
+  nameWithType: ProtocolBuilder.SignalName
+  fullName: Nebula.Testing.ProtocolBuilder.SignalName
+  spec.csharp:
+  - uid: Nebula.Testing.ProtocolBuilder
+    name: ProtocolBuilder
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.html
+  - name: .
+  - uid: Nebula.Testing.ProtocolBuilder.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.SignalName.html
+  spec.vb:
+  - uid: Nebula.Testing.ProtocolBuilder
+    name: ProtocolBuilder
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.html
+  - name: .
+  - uid: Nebula.Testing.ProtocolBuilder.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Testing.ProtocolBuilder.SignalName.html
+memberLayout: SeparatePages

@@ -8,7 +8,7 @@ items:
   - Nebula.Internal.Editor.AddonManager.#ctor
   - Nebula.Internal.Editor.AddonManager.AddonDescription
   - Nebula.Internal.Editor.AddonManager.AddonList
-  - Nebula.Internal.Editor.AddonManager.SetPluginRoot(Godot.Node)
+  - Nebula.Internal.Editor.AddonManager.SetPluginRoot(Nebula.Tools.Main)
   - Nebula.Internal.Editor.AddonManager._OnCloseRequested
   - Nebula.Internal.Editor.AddonManager._Ready
   langs:
@@ -19,10 +19,17 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
+  summary: >-
+    Addon Manager window for Nebula. Allows browsing, downloading,
+
+    and installing addons from the central Nebula.Addons repository.
+
+    Integrates with the Godot editor and updates .csproj if necessary.
+  example: []
   syntax:
     content: >-
       [Tool]
@@ -587,10 +594,12 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.AddonList
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
+  summary: UI element that lists available addons fetched from the repository.
+  example: []
   syntax:
     content: >-
       [Export(PropertyHint.None, "")]
@@ -622,10 +631,12 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.AddonDescription
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
+  summary: UI element that displays details or README content for the selected addon.
+  example: []
   syntax:
     content: >-
       [Export(PropertyHint.None, "")]
@@ -657,38 +668,41 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/AddonManager/AddonManager.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/AddonManager/AddonManager.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
+  summary: Initializes HTTP requests and downloader when the window is ready.
   example: []
   syntax:
     content: public override void _Ready()
     content.vb: Public Overrides Sub _Ready()
   overridden: Godot.Node._Ready
   overload: Nebula.Internal.Editor.AddonManager._Ready*
-- uid: Nebula.Internal.Editor.AddonManager.SetPluginRoot(Godot.Node)
-  commentId: M:Nebula.Internal.Editor.AddonManager.SetPluginRoot(Godot.Node)
-  id: SetPluginRoot(Godot.Node)
+- uid: Nebula.Internal.Editor.AddonManager.SetPluginRoot(Nebula.Tools.Main)
+  commentId: M:Nebula.Internal.Editor.AddonManager.SetPluginRoot(Nebula.Tools.Main)
+  id: SetPluginRoot(Nebula.Tools.Main)
   parent: Nebula.Internal.Editor.AddonManager
   langs:
   - csharp
   - vb
-  name: SetPluginRoot(Node)
-  nameWithType: AddonManager.SetPluginRoot(Node)
-  fullName: Nebula.Internal.Editor.AddonManager.SetPluginRoot(Godot.Node)
+  name: SetPluginRoot(Main)
+  nameWithType: AddonManager.SetPluginRoot(Main)
+  fullName: Nebula.Internal.Editor.AddonManager.SetPluginRoot(Nebula.Tools.Main)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/AddonManager/AddonManager.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/AddonManager/AddonManager.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
+  summary: Registers the Addons menu item in the Nebula tool submenu.
+  example: []
   syntax:
-    content: public void SetPluginRoot(Node pluginRoot)
+    content: public void SetPluginRoot(Main pluginRoot)
     parameters:
     - id: pluginRoot
-      type: Godot.Node
-    content.vb: Public Sub SetPluginRoot(pluginRoot As Node)
+      type: Nebula.Tools.Main
+    content.vb: Public Sub SetPluginRoot(pluginRoot As Main)
   overload: Nebula.Internal.Editor.AddonManager.SetPluginRoot*
 - uid: Nebula.Internal.Editor.AddonManager._OnCloseRequested
   commentId: M:Nebula.Internal.Editor.AddonManager._OnCloseRequested
@@ -702,10 +716,12 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager._OnCloseRequested()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/AddonManager/AddonManager.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/AddonManager/AddonManager.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
+  summary: Closes the Addon Manager window.
+  example: []
   syntax:
     content: public void _OnCloseRequested()
     content.vb: Public Sub _OnCloseRequested()
@@ -722,7 +738,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.AddonManager()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/AddonManager/AddonManager.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/AddonManager/AddonManager.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -11334,31 +11350,67 @@ references:
 - uid: Nebula.Internal.Editor.AddonManager._Ready*
   commentId: Overload:Nebula.Internal.Editor.AddonManager._Ready
   isExternal: true
-  href: Nebula.Internal.Editor.AddonManager.html#Nebula_Internal_Editor_AddonManager__Ready
+  href: Nebula.Internal.Editor.AddonManager._Ready.html#Nebula_Internal_Editor_AddonManager__Ready
   name: _Ready
   nameWithType: AddonManager._Ready
   fullName: Nebula.Internal.Editor.AddonManager._Ready
 - uid: Nebula.Internal.Editor.AddonManager.SetPluginRoot*
   commentId: Overload:Nebula.Internal.Editor.AddonManager.SetPluginRoot
   isExternal: true
-  href: Nebula.Internal.Editor.AddonManager.html#Nebula_Internal_Editor_AddonManager_SetPluginRoot_Godot_Node_
+  href: Nebula.Internal.Editor.AddonManager.SetPluginRoot.html#Nebula_Internal_Editor_AddonManager_SetPluginRoot_Nebula_Tools_Main_
   name: SetPluginRoot
   nameWithType: AddonManager.SetPluginRoot
   fullName: Nebula.Internal.Editor.AddonManager.SetPluginRoot
+- uid: Nebula.Tools.Main
+  commentId: T:Nebula.Tools.Main
+  parent: Nebula.Tools
+  isExternal: true
+  href: Nebula.Tools.Main.html
+  name: Main
+  nameWithType: Main
+  fullName: Nebula.Tools.Main
+- uid: Nebula.Tools
+  commentId: N:Nebula.Tools
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Tools
+  nameWithType: Nebula.Tools
+  fullName: Nebula.Tools
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Tools.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Tools.html
 - uid: Nebula.Internal.Editor.AddonManager._OnCloseRequested*
   commentId: Overload:Nebula.Internal.Editor.AddonManager._OnCloseRequested
   isExternal: true
-  href: Nebula.Internal.Editor.AddonManager.html#Nebula_Internal_Editor_AddonManager__OnCloseRequested
+  href: Nebula.Internal.Editor.AddonManager._OnCloseRequested.html#Nebula_Internal_Editor_AddonManager__OnCloseRequested
   name: _OnCloseRequested
   nameWithType: AddonManager._OnCloseRequested
   fullName: Nebula.Internal.Editor.AddonManager._OnCloseRequested
 - uid: Nebula.Internal.Editor.AddonManager.#ctor*
   commentId: Overload:Nebula.Internal.Editor.AddonManager.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.AddonManager.html#Nebula_Internal_Editor_AddonManager__ctor
+  href: Nebula.Internal.Editor.AddonManager.-ctor.html#Nebula_Internal_Editor_AddonManager__ctor
   name: AddonManager
   nameWithType: AddonManager.AddonManager
   fullName: Nebula.Internal.Editor.AddonManager.AddonManager
   nameWithType.vb: AddonManager.New
   fullName.vb: Nebula.Internal.Editor.AddonManager.New
   name.vb: New
+memberLayout: SeparatePages

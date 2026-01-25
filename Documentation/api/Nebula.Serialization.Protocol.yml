@@ -1,0 +1,1627 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.Protocol
+  commentId: T:Nebula.Serialization.Protocol
+  id: Protocol
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.Protocol.FromGodotVariantType(Godot.Variant.Type)
+  - Nebula.Serialization.Protocol.GetDeserializer(System.Int32)
+  - Nebula.Serialization.Protocol.GetFunctionCount(System.String)
+  - Nebula.Serialization.Protocol.GetPropertyCount(System.String)
+  - Nebula.Serialization.Protocol.GetSceneInterest(System.String)
+  - Nebula.Serialization.Protocol.GetScenePath(System.Byte)
+  - Nebula.Serialization.Protocol.GetSerializer(System.Int32)
+  - Nebula.Serialization.Protocol.GetStaticMethod(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType)
+  - Nebula.Serialization.Protocol.GetStaticMethodCallable(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType)
+  - Nebula.Serialization.Protocol.GetStaticNodePath(System.String,System.Byte)
+  - Nebula.Serialization.Protocol.InvokeStaticMethod(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType,System.Object[])
+  - Nebula.Serialization.Protocol.IsNetScene(System.String)
+  - Nebula.Serialization.Protocol.LookupFunction(System.String,System.String,System.String,Nebula.Serialization.ProtocolNetFunction@)
+  - Nebula.Serialization.Protocol.LookupProperty(System.String,System.String,System.String,Nebula.Serialization.ProtocolNetProperty@)
+  - Nebula.Serialization.Protocol.LookupPropertyByStaticChildId(System.String,System.Byte,System.String,Nebula.Serialization.ProtocolNetProperty@)
+  - Nebula.Serialization.Protocol.PackNode(System.String,System.String,System.Byte@)
+  - Nebula.Serialization.Protocol.PackScene(System.String)
+  - Nebula.Serialization.Protocol.ToGodotVariantType(Nebula.Serialization.SerialVariantType)
+  - Nebula.Serialization.Protocol.TryGetSceneId(System.String,System.Byte@)
+  - Nebula.Serialization.Protocol.TryGetSceneInterest(System.String,Nebula.Serialization.ProtocolSceneInterest@)
+  - Nebula.Serialization.Protocol.TryGetStaticNodeId(System.String,System.String,System.Byte@)
+  - Nebula.Serialization.Protocol.TryUnpackProperty(System.String,System.Int32,Nebula.Serialization.ProtocolNetProperty@)
+  - Nebula.Serialization.Protocol.UnpackFunction(System.String,System.Int32)
+  - Nebula.Serialization.Protocol.UnpackNode(System.String,System.Byte)
+  - Nebula.Serialization.Protocol.UnpackProperty(System.String,System.Int32)
+  - Nebula.Serialization.Protocol.UnpackScene(System.Byte)
+  langs:
+  - csharp
+  - vb
+  name: Protocol
+  nameWithType: Protocol
+  fullName: Nebula.Serialization.Protocol
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Runtime helper that wraps the generated Protocol data and provides convenience methods.
+
+    This bridges the generated pure-C# data with Godot runtime operations.
+  example: []
+  syntax:
+    content: public static class Protocol
+    content.vb: Public Module Protocol
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Serialization.Protocol.LookupProperty(System.String,System.String,System.String,Nebula.Serialization.ProtocolNetProperty@)
+  commentId: M:Nebula.Serialization.Protocol.LookupProperty(System.String,System.String,System.String,Nebula.Serialization.ProtocolNetProperty@)
+  id: LookupProperty(System.String,System.String,System.String,Nebula.Serialization.ProtocolNetProperty@)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: LookupProperty(string, string, string, out ProtocolNetProperty)
+  nameWithType: Protocol.LookupProperty(string, string, string, out ProtocolNetProperty)
+  fullName: Nebula.Serialization.Protocol.LookupProperty(string, string, string, out Nebula.Serialization.ProtocolNetProperty)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Look up a property by scene path, node path, and property name.
+  example: []
+  syntax:
+    content: public static bool LookupProperty(string scenePath, string nodePath, string propertyName, out ProtocolNetProperty property)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: nodePath
+      type: System.String
+    - id: propertyName
+      type: System.String
+    - id: property
+      type: Nebula.Serialization.ProtocolNetProperty
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function LookupProperty(scenePath As String, nodePath As String, propertyName As String, [property] As ProtocolNetProperty) As Boolean
+  overload: Nebula.Serialization.Protocol.LookupProperty*
+  nameWithType.vb: Protocol.LookupProperty(String, String, String, ProtocolNetProperty)
+  fullName.vb: Nebula.Serialization.Protocol.LookupProperty(String, String, String, Nebula.Serialization.ProtocolNetProperty)
+  name.vb: LookupProperty(String, String, String, ProtocolNetProperty)
+- uid: Nebula.Serialization.Protocol.UnpackProperty(System.String,System.Int32)
+  commentId: M:Nebula.Serialization.Protocol.UnpackProperty(System.String,System.Int32)
+  id: UnpackProperty(System.String,System.Int32)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: UnpackProperty(string, int)
+  nameWithType: Protocol.UnpackProperty(string, int)
+  fullName: Nebula.Serialization.Protocol.UnpackProperty(string, int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Get a property by scene path and index.
+  example: []
+  syntax:
+    content: public static ProtocolNetProperty UnpackProperty(string scenePath, int propertyIndex)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: propertyIndex
+      type: System.Int32
+    return:
+      type: Nebula.Serialization.ProtocolNetProperty
+    content.vb: Public Shared Function UnpackProperty(scenePath As String, propertyIndex As Integer) As ProtocolNetProperty
+  overload: Nebula.Serialization.Protocol.UnpackProperty*
+  nameWithType.vb: Protocol.UnpackProperty(String, Integer)
+  fullName.vb: Nebula.Serialization.Protocol.UnpackProperty(String, Integer)
+  name.vb: UnpackProperty(String, Integer)
+- uid: Nebula.Serialization.Protocol.TryUnpackProperty(System.String,System.Int32,Nebula.Serialization.ProtocolNetProperty@)
+  commentId: M:Nebula.Serialization.Protocol.TryUnpackProperty(System.String,System.Int32,Nebula.Serialization.ProtocolNetProperty@)
+  id: TryUnpackProperty(System.String,System.Int32,Nebula.Serialization.ProtocolNetProperty@)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: TryUnpackProperty(string, int, out ProtocolNetProperty)
+  nameWithType: Protocol.TryUnpackProperty(string, int, out ProtocolNetProperty)
+  fullName: Nebula.Serialization.Protocol.TryUnpackProperty(string, int, out Nebula.Serialization.ProtocolNetProperty)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Try to get a property by scene path and index.
+  example: []
+  syntax:
+    content: public static bool TryUnpackProperty(string scenePath, int propertyIndex, out ProtocolNetProperty property)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: propertyIndex
+      type: System.Int32
+    - id: property
+      type: Nebula.Serialization.ProtocolNetProperty
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function TryUnpackProperty(scenePath As String, propertyIndex As Integer, [property] As ProtocolNetProperty) As Boolean
+  overload: Nebula.Serialization.Protocol.TryUnpackProperty*
+  nameWithType.vb: Protocol.TryUnpackProperty(String, Integer, ProtocolNetProperty)
+  fullName.vb: Nebula.Serialization.Protocol.TryUnpackProperty(String, Integer, Nebula.Serialization.ProtocolNetProperty)
+  name.vb: TryUnpackProperty(String, Integer, ProtocolNetProperty)
+- uid: Nebula.Serialization.Protocol.GetPropertyCount(System.String)
+  commentId: M:Nebula.Serialization.Protocol.GetPropertyCount(System.String)
+  id: GetPropertyCount(System.String)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetPropertyCount(string)
+  nameWithType: Protocol.GetPropertyCount(string)
+  fullName: Nebula.Serialization.Protocol.GetPropertyCount(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Get the total number of properties for a scene.
+  example: []
+  syntax:
+    content: public static int GetPropertyCount(string scenePath)
+    parameters:
+    - id: scenePath
+      type: System.String
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function GetPropertyCount(scenePath As String) As Integer
+  overload: Nebula.Serialization.Protocol.GetPropertyCount*
+  nameWithType.vb: Protocol.GetPropertyCount(String)
+  fullName.vb: Nebula.Serialization.Protocol.GetPropertyCount(String)
+  name.vb: GetPropertyCount(String)
+- uid: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId(System.String,System.Byte,System.String,Nebula.Serialization.ProtocolNetProperty@)
+  commentId: M:Nebula.Serialization.Protocol.LookupPropertyByStaticChildId(System.String,System.Byte,System.String,Nebula.Serialization.ProtocolNetProperty@)
+  id: LookupPropertyByStaticChildId(System.String,System.Byte,System.String,Nebula.Serialization.ProtocolNetProperty@)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: LookupPropertyByStaticChildId(string, byte, string, out ProtocolNetProperty)
+  nameWithType: Protocol.LookupPropertyByStaticChildId(string, byte, string, out ProtocolNetProperty)
+  fullName: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId(string, byte, string, out Nebula.Serialization.ProtocolNetProperty)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Look up a property by scene path, static child ID, and property name.
+
+    This is the preferred method for runtime lookups as it avoids string-based node path computation.
+  example: []
+  syntax:
+    content: public static bool LookupPropertyByStaticChildId(string scenePath, byte staticChildId, string propertyName, out ProtocolNetProperty property)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: staticChildId
+      type: System.Byte
+    - id: propertyName
+      type: System.String
+    - id: property
+      type: Nebula.Serialization.ProtocolNetProperty
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function LookupPropertyByStaticChildId(scenePath As String, staticChildId As Byte, propertyName As String, [property] As ProtocolNetProperty) As Boolean
+  overload: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId*
+  nameWithType.vb: Protocol.LookupPropertyByStaticChildId(String, Byte, String, ProtocolNetProperty)
+  fullName.vb: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId(String, Byte, String, Nebula.Serialization.ProtocolNetProperty)
+  name.vb: LookupPropertyByStaticChildId(String, Byte, String, ProtocolNetProperty)
+- uid: Nebula.Serialization.Protocol.LookupFunction(System.String,System.String,System.String,Nebula.Serialization.ProtocolNetFunction@)
+  commentId: M:Nebula.Serialization.Protocol.LookupFunction(System.String,System.String,System.String,Nebula.Serialization.ProtocolNetFunction@)
+  id: LookupFunction(System.String,System.String,System.String,Nebula.Serialization.ProtocolNetFunction@)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: LookupFunction(string, string, string, out ProtocolNetFunction)
+  nameWithType: Protocol.LookupFunction(string, string, string, out ProtocolNetFunction)
+  fullName: Nebula.Serialization.Protocol.LookupFunction(string, string, string, out Nebula.Serialization.ProtocolNetFunction)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Look up a function by scene path, node path, and function name.
+  example: []
+  syntax:
+    content: public static bool LookupFunction(string scenePath, string nodePath, string functionName, out ProtocolNetFunction function)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: nodePath
+      type: System.String
+    - id: functionName
+      type: System.String
+    - id: function
+      type: Nebula.Serialization.ProtocolNetFunction
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function LookupFunction(scenePath As String, nodePath As String, functionName As String, [function] As ProtocolNetFunction) As Boolean
+  overload: Nebula.Serialization.Protocol.LookupFunction*
+  nameWithType.vb: Protocol.LookupFunction(String, String, String, ProtocolNetFunction)
+  fullName.vb: Nebula.Serialization.Protocol.LookupFunction(String, String, String, Nebula.Serialization.ProtocolNetFunction)
+  name.vb: LookupFunction(String, String, String, ProtocolNetFunction)
+- uid: Nebula.Serialization.Protocol.UnpackFunction(System.String,System.Int32)
+  commentId: M:Nebula.Serialization.Protocol.UnpackFunction(System.String,System.Int32)
+  id: UnpackFunction(System.String,System.Int32)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: UnpackFunction(string, int)
+  nameWithType: Protocol.UnpackFunction(string, int)
+  fullName: Nebula.Serialization.Protocol.UnpackFunction(string, int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Get a function by scene path and index.
+  example: []
+  syntax:
+    content: public static ProtocolNetFunction UnpackFunction(string scenePath, int functionIndex)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: functionIndex
+      type: System.Int32
+    return:
+      type: Nebula.Serialization.ProtocolNetFunction
+    content.vb: Public Shared Function UnpackFunction(scenePath As String, functionIndex As Integer) As ProtocolNetFunction
+  overload: Nebula.Serialization.Protocol.UnpackFunction*
+  nameWithType.vb: Protocol.UnpackFunction(String, Integer)
+  fullName.vb: Nebula.Serialization.Protocol.UnpackFunction(String, Integer)
+  name.vb: UnpackFunction(String, Integer)
+- uid: Nebula.Serialization.Protocol.GetFunctionCount(System.String)
+  commentId: M:Nebula.Serialization.Protocol.GetFunctionCount(System.String)
+  id: GetFunctionCount(System.String)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetFunctionCount(string)
+  nameWithType: Protocol.GetFunctionCount(string)
+  fullName: Nebula.Serialization.Protocol.GetFunctionCount(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Get the total number of functions for a scene.
+  example: []
+  syntax:
+    content: public static int GetFunctionCount(string scenePath)
+    parameters:
+    - id: scenePath
+      type: System.String
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function GetFunctionCount(scenePath As String) As Integer
+  overload: Nebula.Serialization.Protocol.GetFunctionCount*
+  nameWithType.vb: Protocol.GetFunctionCount(String)
+  fullName.vb: Nebula.Serialization.Protocol.GetFunctionCount(String)
+  name.vb: GetFunctionCount(String)
+- uid: Nebula.Serialization.Protocol.GetScenePath(System.Byte)
+  commentId: M:Nebula.Serialization.Protocol.GetScenePath(System.Byte)
+  id: GetScenePath(System.Byte)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetScenePath(byte)
+  nameWithType: Protocol.GetScenePath(byte)
+  fullName: Nebula.Serialization.Protocol.GetScenePath(byte)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Get scene path by ID.
+  example: []
+  syntax:
+    content: public static string GetScenePath(byte sceneId)
+    parameters:
+    - id: sceneId
+      type: System.Byte
+    return:
+      type: System.String
+    content.vb: Public Shared Function GetScenePath(sceneId As Byte) As String
+  overload: Nebula.Serialization.Protocol.GetScenePath*
+  nameWithType.vb: Protocol.GetScenePath(Byte)
+  fullName.vb: Nebula.Serialization.Protocol.GetScenePath(Byte)
+  name.vb: GetScenePath(Byte)
+- uid: Nebula.Serialization.Protocol.TryGetSceneId(System.String,System.Byte@)
+  commentId: M:Nebula.Serialization.Protocol.TryGetSceneId(System.String,System.Byte@)
+  id: TryGetSceneId(System.String,System.Byte@)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: TryGetSceneId(string, out byte)
+  nameWithType: Protocol.TryGetSceneId(string, out byte)
+  fullName: Nebula.Serialization.Protocol.TryGetSceneId(string, out byte)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Get scene ID by path.
+  example: []
+  syntax:
+    content: public static bool TryGetSceneId(string scenePath, out byte sceneId)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: sceneId
+      type: System.Byte
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function TryGetSceneId(scenePath As String, sceneId As Byte) As Boolean
+  overload: Nebula.Serialization.Protocol.TryGetSceneId*
+  nameWithType.vb: Protocol.TryGetSceneId(String, Byte)
+  fullName.vb: Nebula.Serialization.Protocol.TryGetSceneId(String, Byte)
+  name.vb: TryGetSceneId(String, Byte)
+- uid: Nebula.Serialization.Protocol.IsNetScene(System.String)
+  commentId: M:Nebula.Serialization.Protocol.IsNetScene(System.String)
+  id: IsNetScene(System.String)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: IsNetScene(string)
+  nameWithType: Protocol.IsNetScene(string)
+  fullName: Nebula.Serialization.Protocol.IsNetScene(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Check if a scene path is registered as a network scene.
+  example: []
+  syntax:
+    content: public static bool IsNetScene(string scenePath)
+    parameters:
+    - id: scenePath
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function IsNetScene(scenePath As String) As Boolean
+  overload: Nebula.Serialization.Protocol.IsNetScene*
+  nameWithType.vb: Protocol.IsNetScene(String)
+  fullName.vb: Nebula.Serialization.Protocol.IsNetScene(String)
+  name.vb: IsNetScene(String)
+- uid: Nebula.Serialization.Protocol.GetSceneInterest(System.String)
+  commentId: M:Nebula.Serialization.Protocol.GetSceneInterest(System.String)
+  id: GetSceneInterest(System.String)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetSceneInterest(string)
+  nameWithType: Protocol.GetSceneInterest(string)
+  fullName: Nebula.Serialization.Protocol.GetSceneInterest(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Get scene-level interest requirements for a network scene.
+  example: []
+  syntax:
+    content: public static ProtocolSceneInterest GetSceneInterest(string scenePath)
+    parameters:
+    - id: scenePath
+      type: System.String
+    return:
+      type: Nebula.Serialization.ProtocolSceneInterest
+    content.vb: Public Shared Function GetSceneInterest(scenePath As String) As ProtocolSceneInterest
+  overload: Nebula.Serialization.Protocol.GetSceneInterest*
+  nameWithType.vb: Protocol.GetSceneInterest(String)
+  fullName.vb: Nebula.Serialization.Protocol.GetSceneInterest(String)
+  name.vb: GetSceneInterest(String)
+- uid: Nebula.Serialization.Protocol.TryGetSceneInterest(System.String,Nebula.Serialization.ProtocolSceneInterest@)
+  commentId: M:Nebula.Serialization.Protocol.TryGetSceneInterest(System.String,Nebula.Serialization.ProtocolSceneInterest@)
+  id: TryGetSceneInterest(System.String,Nebula.Serialization.ProtocolSceneInterest@)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: TryGetSceneInterest(string, out ProtocolSceneInterest)
+  nameWithType: Protocol.TryGetSceneInterest(string, out ProtocolSceneInterest)
+  fullName: Nebula.Serialization.Protocol.TryGetSceneInterest(string, out Nebula.Serialization.ProtocolSceneInterest)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Try to get scene-level interest requirements for a network scene.
+  example: []
+  syntax:
+    content: public static bool TryGetSceneInterest(string scenePath, out ProtocolSceneInterest interest)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: interest
+      type: Nebula.Serialization.ProtocolSceneInterest
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function TryGetSceneInterest(scenePath As String, interest As ProtocolSceneInterest) As Boolean
+  overload: Nebula.Serialization.Protocol.TryGetSceneInterest*
+  nameWithType.vb: Protocol.TryGetSceneInterest(String, ProtocolSceneInterest)
+  fullName.vb: Nebula.Serialization.Protocol.TryGetSceneInterest(String, Nebula.Serialization.ProtocolSceneInterest)
+  name.vb: TryGetSceneInterest(String, ProtocolSceneInterest)
+- uid: Nebula.Serialization.Protocol.PackScene(System.String)
+  commentId: M:Nebula.Serialization.Protocol.PackScene(System.String)
+  id: PackScene(System.String)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: PackScene(string)
+  nameWithType: Protocol.PackScene(string)
+  fullName: Nebula.Serialization.Protocol.PackScene(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Pack a scene path to its byte ID.
+  example: []
+  syntax:
+    content: public static byte PackScene(string scenePath)
+    parameters:
+    - id: scenePath
+      type: System.String
+    return:
+      type: System.Byte
+    content.vb: Public Shared Function PackScene(scenePath As String) As Byte
+  overload: Nebula.Serialization.Protocol.PackScene*
+  nameWithType.vb: Protocol.PackScene(String)
+  fullName.vb: Nebula.Serialization.Protocol.PackScene(String)
+  name.vb: PackScene(String)
+- uid: Nebula.Serialization.Protocol.UnpackScene(System.Byte)
+  commentId: M:Nebula.Serialization.Protocol.UnpackScene(System.Byte)
+  id: UnpackScene(System.Byte)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: UnpackScene(byte)
+  nameWithType: Protocol.UnpackScene(byte)
+  fullName: Nebula.Serialization.Protocol.UnpackScene(byte)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Unpack a scene ID to its PackedScene.
+  example: []
+  syntax:
+    content: public static PackedScene UnpackScene(byte sceneId)
+    parameters:
+    - id: sceneId
+      type: System.Byte
+    return:
+      type: Godot.PackedScene
+    content.vb: Public Shared Function UnpackScene(sceneId As Byte) As PackedScene
+  overload: Nebula.Serialization.Protocol.UnpackScene*
+  nameWithType.vb: Protocol.UnpackScene(Byte)
+  fullName.vb: Nebula.Serialization.Protocol.UnpackScene(Byte)
+  name.vb: UnpackScene(Byte)
+- uid: Nebula.Serialization.Protocol.GetStaticNodePath(System.String,System.Byte)
+  commentId: M:Nebula.Serialization.Protocol.GetStaticNodePath(System.String,System.Byte)
+  id: GetStaticNodePath(System.String,System.Byte)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetStaticNodePath(string, byte)
+  nameWithType: Protocol.GetStaticNodePath(string, byte)
+  fullName: Nebula.Serialization.Protocol.GetStaticNodePath(string, byte)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Get static network node path by scene and node ID.
+  example: []
+  syntax:
+    content: public static string GetStaticNodePath(string scenePath, byte nodeId)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: nodeId
+      type: System.Byte
+    return:
+      type: System.String
+    content.vb: Public Shared Function GetStaticNodePath(scenePath As String, nodeId As Byte) As String
+  overload: Nebula.Serialization.Protocol.GetStaticNodePath*
+  nameWithType.vb: Protocol.GetStaticNodePath(String, Byte)
+  fullName.vb: Nebula.Serialization.Protocol.GetStaticNodePath(String, Byte)
+  name.vb: GetStaticNodePath(String, Byte)
+- uid: Nebula.Serialization.Protocol.TryGetStaticNodeId(System.String,System.String,System.Byte@)
+  commentId: M:Nebula.Serialization.Protocol.TryGetStaticNodeId(System.String,System.String,System.Byte@)
+  id: TryGetStaticNodeId(System.String,System.String,System.Byte@)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: TryGetStaticNodeId(string, string, out byte)
+  nameWithType: Protocol.TryGetStaticNodeId(string, string, out byte)
+  fullName: Nebula.Serialization.Protocol.TryGetStaticNodeId(string, string, out byte)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Get static network node ID by scene and path.
+  example: []
+  syntax:
+    content: public static bool TryGetStaticNodeId(string scenePath, string nodePath, out byte nodeId)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: nodePath
+      type: System.String
+    - id: nodeId
+      type: System.Byte
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function TryGetStaticNodeId(scenePath As String, nodePath As String, nodeId As Byte) As Boolean
+  overload: Nebula.Serialization.Protocol.TryGetStaticNodeId*
+  nameWithType.vb: Protocol.TryGetStaticNodeId(String, String, Byte)
+  fullName.vb: Nebula.Serialization.Protocol.TryGetStaticNodeId(String, String, Byte)
+  name.vb: TryGetStaticNodeId(String, String, Byte)
+- uid: Nebula.Serialization.Protocol.PackNode(System.String,System.String,System.Byte@)
+  commentId: M:Nebula.Serialization.Protocol.PackNode(System.String,System.String,System.Byte@)
+  id: PackNode(System.String,System.String,System.Byte@)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: PackNode(string, string, out byte)
+  nameWithType: Protocol.PackNode(string, string, out byte)
+  fullName: Nebula.Serialization.Protocol.PackNode(string, string, out byte)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Pack a node path to its byte ID within a scene.
+  example: []
+  syntax:
+    content: public static bool PackNode(string scenePath, string nodePath, out byte nodeId)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: nodePath
+      type: System.String
+    - id: nodeId
+      type: System.Byte
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function PackNode(scenePath As String, nodePath As String, nodeId As Byte) As Boolean
+  overload: Nebula.Serialization.Protocol.PackNode*
+  nameWithType.vb: Protocol.PackNode(String, String, Byte)
+  fullName.vb: Nebula.Serialization.Protocol.PackNode(String, String, Byte)
+  name.vb: PackNode(String, String, Byte)
+- uid: Nebula.Serialization.Protocol.UnpackNode(System.String,System.Byte)
+  commentId: M:Nebula.Serialization.Protocol.UnpackNode(System.String,System.Byte)
+  id: UnpackNode(System.String,System.Byte)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: UnpackNode(string, byte)
+  nameWithType: Protocol.UnpackNode(string, byte)
+  fullName: Nebula.Serialization.Protocol.UnpackNode(string, byte)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Unpack a node ID to its path within a scene.
+  example: []
+  syntax:
+    content: public static string UnpackNode(string scenePath, byte nodeId)
+    parameters:
+    - id: scenePath
+      type: System.String
+    - id: nodeId
+      type: System.Byte
+    return:
+      type: System.String
+    content.vb: Public Shared Function UnpackNode(scenePath As String, nodeId As Byte) As String
+  overload: Nebula.Serialization.Protocol.UnpackNode*
+  nameWithType.vb: Protocol.UnpackNode(String, Byte)
+  fullName.vb: Nebula.Serialization.Protocol.UnpackNode(String, Byte)
+  name.vb: UnpackNode(String, Byte)
+- uid: Nebula.Serialization.Protocol.InvokeStaticMethod(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType,System.Object[])
+  commentId: M:Nebula.Serialization.Protocol.InvokeStaticMethod(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType,System.Object[])
+  id: InvokeStaticMethod(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType,System.Object[])
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: InvokeStaticMethod(ProtocolNetProperty, StaticMethodType, params object[])
+  nameWithType: Protocol.InvokeStaticMethod(ProtocolNetProperty, StaticMethodType, params object[])
+  fullName: Nebula.Serialization.Protocol.InvokeStaticMethod(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType, params object[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Invoke a static serialization method (NetworkSerialize, NetworkDeserialize, BsonDeserialize).
+
+    Returns null if the method doesn't exist.
+  example: []
+  syntax:
+    content: public static object InvokeStaticMethod(ProtocolNetProperty prop, StaticMethodType methodType, params object[] args)
+    parameters:
+    - id: prop
+      type: Nebula.Serialization.ProtocolNetProperty
+    - id: methodType
+      type: Nebula.Serialization.StaticMethodType
+    - id: args
+      type: System.Object[]
+    return:
+      type: System.Object
+    content.vb: Public Shared Function InvokeStaticMethod(prop As ProtocolNetProperty, methodType As StaticMethodType, ParamArray args As Object()) As Object
+  overload: Nebula.Serialization.Protocol.InvokeStaticMethod*
+  nameWithType.vb: Protocol.InvokeStaticMethod(ProtocolNetProperty, StaticMethodType, ParamArray Object())
+  fullName.vb: Nebula.Serialization.Protocol.InvokeStaticMethod(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType, ParamArray Object())
+  name.vb: InvokeStaticMethod(ProtocolNetProperty, StaticMethodType, ParamArray Object())
+- uid: Nebula.Serialization.Protocol.GetStaticMethodCallable(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType)
+  commentId: M:Nebula.Serialization.Protocol.GetStaticMethodCallable(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType)
+  id: GetStaticMethodCallable(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetStaticMethodCallable(ProtocolNetProperty, StaticMethodType)
+  nameWithType: Protocol.GetStaticMethodCallable(ProtocolNetProperty, StaticMethodType)
+  fullName: Nebula.Serialization.Protocol.GetStaticMethodCallable(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Get a Callable for a static method. For backwards compatibility with existing code.
+
+    Returns null if the method doesn't exist.
+  example: []
+  syntax:
+    content: public static Callable? GetStaticMethodCallable(ProtocolNetProperty prop, StaticMethodType methodType)
+    parameters:
+    - id: prop
+      type: Nebula.Serialization.ProtocolNetProperty
+    - id: methodType
+      type: Nebula.Serialization.StaticMethodType
+    return:
+      type: System.Nullable{Godot.Callable}
+    content.vb: Public Shared Function GetStaticMethodCallable(prop As ProtocolNetProperty, methodType As StaticMethodType) As Callable?
+  overload: Nebula.Serialization.Protocol.GetStaticMethodCallable*
+- uid: Nebula.Serialization.Protocol.GetStaticMethod(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType)
+  commentId: M:Nebula.Serialization.Protocol.GetStaticMethod(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType)
+  id: GetStaticMethod(Nebula.Serialization.ProtocolNetProperty,Nebula.Serialization.StaticMethodType)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetStaticMethod(ProtocolNetProperty, StaticMethodType)
+  nameWithType: Protocol.GetStaticMethod(ProtocolNetProperty, StaticMethodType)
+  fullName: Nebula.Serialization.Protocol.GetStaticMethod(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Get a delegate for a static method. More efficient than Callable for hot paths.
+  example: []
+  syntax:
+    content: public static MethodInfo GetStaticMethod(ProtocolNetProperty prop, StaticMethodType methodType)
+    parameters:
+    - id: prop
+      type: Nebula.Serialization.ProtocolNetProperty
+    - id: methodType
+      type: Nebula.Serialization.StaticMethodType
+    return:
+      type: System.Reflection.MethodInfo
+    content.vb: Public Shared Function GetStaticMethod(prop As ProtocolNetProperty, methodType As StaticMethodType) As MethodInfo
+  overload: Nebula.Serialization.Protocol.GetStaticMethod*
+- uid: Nebula.Serialization.Protocol.GetDeserializer(System.Int32)
+  commentId: M:Nebula.Serialization.Protocol.GetDeserializer(System.Int32)
+  id: GetDeserializer(System.Int32)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetDeserializer(int)
+  nameWithType: Protocol.GetDeserializer(int)
+  fullName: Nebula.Serialization.Protocol.GetDeserializer(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Get a generated deserializer delegate for a property's type.
+
+    This is the preferred method for deserialization - no reflection or boxing.
+  example: []
+  syntax:
+    content: public static GeneratedProtocol.NetworkDeserializeFunc GetDeserializer(int classIndex)
+    parameters:
+    - id: classIndex
+      type: System.Int32
+      description: The class index from ProtocolNetProperty.ClassIndex
+    return:
+      type: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+      description: The deserializer delegate, or null if not found
+    content.vb: Public Shared Function GetDeserializer(classIndex As Integer) As GeneratedProtocol.NetworkDeserializeFunc
+  overload: Nebula.Serialization.Protocol.GetDeserializer*
+  nameWithType.vb: Protocol.GetDeserializer(Integer)
+  fullName.vb: Nebula.Serialization.Protocol.GetDeserializer(Integer)
+  name.vb: GetDeserializer(Integer)
+- uid: Nebula.Serialization.Protocol.GetSerializer(System.Int32)
+  commentId: M:Nebula.Serialization.Protocol.GetSerializer(System.Int32)
+  id: GetSerializer(System.Int32)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetSerializer(int)
+  nameWithType: Protocol.GetSerializer(int)
+  fullName: Nebula.Serialization.Protocol.GetSerializer(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Get a generated serializer delegate for a property's type.
+
+    This is the preferred method for serialization - no reflection or boxing.
+  example: []
+  syntax:
+    content: public static GeneratedProtocol.NetworkSerializeFunc GetSerializer(int classIndex)
+    parameters:
+    - id: classIndex
+      type: System.Int32
+      description: The class index from ProtocolNetProperty.ClassIndex
+    return:
+      type: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+      description: The serializer delegate, or null if not found
+    content.vb: Public Shared Function GetSerializer(classIndex As Integer) As GeneratedProtocol.NetworkSerializeFunc
+  overload: Nebula.Serialization.Protocol.GetSerializer*
+  nameWithType.vb: Protocol.GetSerializer(Integer)
+  fullName.vb: Nebula.Serialization.Protocol.GetSerializer(Integer)
+  name.vb: GetSerializer(Integer)
+- uid: Nebula.Serialization.Protocol.ToGodotVariantType(Nebula.Serialization.SerialVariantType)
+  commentId: M:Nebula.Serialization.Protocol.ToGodotVariantType(Nebula.Serialization.SerialVariantType)
+  id: ToGodotVariantType(Nebula.Serialization.SerialVariantType)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: ToGodotVariantType(SerialVariantType)
+  nameWithType: Protocol.ToGodotVariantType(SerialVariantType)
+  fullName: Nebula.Serialization.Protocol.ToGodotVariantType(Nebula.Serialization.SerialVariantType)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Convert SerialVariantType to Godot Variant.Type.
+  example: []
+  syntax:
+    content: public static Variant.Type ToGodotVariantType(SerialVariantType serialType)
+    parameters:
+    - id: serialType
+      type: Nebula.Serialization.SerialVariantType
+    return:
+      type: Godot.Variant.Type
+    content.vb: Public Shared Function ToGodotVariantType(serialType As SerialVariantType) As [Variant].Type
+  overload: Nebula.Serialization.Protocol.ToGodotVariantType*
+- uid: Nebula.Serialization.Protocol.FromGodotVariantType(Godot.Variant.Type)
+  commentId: M:Nebula.Serialization.Protocol.FromGodotVariantType(Godot.Variant.Type)
+  id: FromGodotVariantType(Godot.Variant.Type)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: FromGodotVariantType(Type)
+  nameWithType: Protocol.FromGodotVariantType(Variant.Type)
+  fullName: Nebula.Serialization.Protocol.FromGodotVariantType(Godot.Variant.Type)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Convert Godot Variant.Type to SerialVariantType.
+  example: []
+  syntax:
+    content: public static SerialVariantType FromGodotVariantType(Variant.Type godotType)
+    parameters:
+    - id: godotType
+      type: Godot.Variant.Type
+    return:
+      type: Nebula.Serialization.SerialVariantType
+    content.vb: Public Shared Function FromGodotVariantType(godotType As [Variant].Type) As SerialVariantType
+  overload: Nebula.Serialization.Protocol.FromGodotVariantType*
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Serialization.Protocol.LookupProperty*
+  commentId: Overload:Nebula.Serialization.Protocol.LookupProperty
+  isExternal: true
+  href: Nebula.Serialization.Protocol.LookupProperty.html#Nebula_Serialization_Protocol_LookupProperty_System_String_System_String_System_String_Nebula_Serialization_ProtocolNetProperty__
+  name: LookupProperty
+  nameWithType: Protocol.LookupProperty
+  fullName: Nebula.Serialization.Protocol.LookupProperty
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.Serialization.ProtocolNetProperty
+  commentId: T:Nebula.Serialization.ProtocolNetProperty
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.ProtocolNetProperty.html
+  name: ProtocolNetProperty
+  nameWithType: ProtocolNetProperty
+  fullName: Nebula.Serialization.ProtocolNetProperty
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.Serialization.Protocol.UnpackProperty*
+  commentId: Overload:Nebula.Serialization.Protocol.UnpackProperty
+  isExternal: true
+  href: Nebula.Serialization.Protocol.UnpackProperty.html#Nebula_Serialization_Protocol_UnpackProperty_System_String_System_Int32_
+  name: UnpackProperty
+  nameWithType: Protocol.UnpackProperty
+  fullName: Nebula.Serialization.Protocol.UnpackProperty
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.Serialization.Protocol.TryUnpackProperty*
+  commentId: Overload:Nebula.Serialization.Protocol.TryUnpackProperty
+  isExternal: true
+  href: Nebula.Serialization.Protocol.TryUnpackProperty.html#Nebula_Serialization_Protocol_TryUnpackProperty_System_String_System_Int32_Nebula_Serialization_ProtocolNetProperty__
+  name: TryUnpackProperty
+  nameWithType: Protocol.TryUnpackProperty
+  fullName: Nebula.Serialization.Protocol.TryUnpackProperty
+- uid: Nebula.Serialization.Protocol.GetPropertyCount*
+  commentId: Overload:Nebula.Serialization.Protocol.GetPropertyCount
+  isExternal: true
+  href: Nebula.Serialization.Protocol.GetPropertyCount.html#Nebula_Serialization_Protocol_GetPropertyCount_System_String_
+  name: GetPropertyCount
+  nameWithType: Protocol.GetPropertyCount
+  fullName: Nebula.Serialization.Protocol.GetPropertyCount
+- uid: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId*
+  commentId: Overload:Nebula.Serialization.Protocol.LookupPropertyByStaticChildId
+  isExternal: true
+  href: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId.html#Nebula_Serialization_Protocol_LookupPropertyByStaticChildId_System_String_System_Byte_System_String_Nebula_Serialization_ProtocolNetProperty__
+  name: LookupPropertyByStaticChildId
+  nameWithType: Protocol.LookupPropertyByStaticChildId
+  fullName: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: Nebula.Serialization.Protocol.LookupFunction*
+  commentId: Overload:Nebula.Serialization.Protocol.LookupFunction
+  isExternal: true
+  href: Nebula.Serialization.Protocol.LookupFunction.html#Nebula_Serialization_Protocol_LookupFunction_System_String_System_String_System_String_Nebula_Serialization_ProtocolNetFunction__
+  name: LookupFunction
+  nameWithType: Protocol.LookupFunction
+  fullName: Nebula.Serialization.Protocol.LookupFunction
+- uid: Nebula.Serialization.ProtocolNetFunction
+  commentId: T:Nebula.Serialization.ProtocolNetFunction
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.ProtocolNetFunction.html
+  name: ProtocolNetFunction
+  nameWithType: ProtocolNetFunction
+  fullName: Nebula.Serialization.ProtocolNetFunction
+- uid: Nebula.Serialization.Protocol.UnpackFunction*
+  commentId: Overload:Nebula.Serialization.Protocol.UnpackFunction
+  isExternal: true
+  href: Nebula.Serialization.Protocol.UnpackFunction.html#Nebula_Serialization_Protocol_UnpackFunction_System_String_System_Int32_
+  name: UnpackFunction
+  nameWithType: Protocol.UnpackFunction
+  fullName: Nebula.Serialization.Protocol.UnpackFunction
+- uid: Nebula.Serialization.Protocol.GetFunctionCount*
+  commentId: Overload:Nebula.Serialization.Protocol.GetFunctionCount
+  isExternal: true
+  href: Nebula.Serialization.Protocol.GetFunctionCount.html#Nebula_Serialization_Protocol_GetFunctionCount_System_String_
+  name: GetFunctionCount
+  nameWithType: Protocol.GetFunctionCount
+  fullName: Nebula.Serialization.Protocol.GetFunctionCount
+- uid: Nebula.Serialization.Protocol.GetScenePath*
+  commentId: Overload:Nebula.Serialization.Protocol.GetScenePath
+  isExternal: true
+  href: Nebula.Serialization.Protocol.GetScenePath.html#Nebula_Serialization_Protocol_GetScenePath_System_Byte_
+  name: GetScenePath
+  nameWithType: Protocol.GetScenePath
+  fullName: Nebula.Serialization.Protocol.GetScenePath
+- uid: Nebula.Serialization.Protocol.TryGetSceneId*
+  commentId: Overload:Nebula.Serialization.Protocol.TryGetSceneId
+  isExternal: true
+  href: Nebula.Serialization.Protocol.TryGetSceneId.html#Nebula_Serialization_Protocol_TryGetSceneId_System_String_System_Byte__
+  name: TryGetSceneId
+  nameWithType: Protocol.TryGetSceneId
+  fullName: Nebula.Serialization.Protocol.TryGetSceneId
+- uid: Nebula.Serialization.Protocol.IsNetScene*
+  commentId: Overload:Nebula.Serialization.Protocol.IsNetScene
+  isExternal: true
+  href: Nebula.Serialization.Protocol.IsNetScene.html#Nebula_Serialization_Protocol_IsNetScene_System_String_
+  name: IsNetScene
+  nameWithType: Protocol.IsNetScene
+  fullName: Nebula.Serialization.Protocol.IsNetScene
+- uid: Nebula.Serialization.Protocol.GetSceneInterest*
+  commentId: Overload:Nebula.Serialization.Protocol.GetSceneInterest
+  isExternal: true
+  href: Nebula.Serialization.Protocol.GetSceneInterest.html#Nebula_Serialization_Protocol_GetSceneInterest_System_String_
+  name: GetSceneInterest
+  nameWithType: Protocol.GetSceneInterest
+  fullName: Nebula.Serialization.Protocol.GetSceneInterest
+- uid: Nebula.Serialization.ProtocolSceneInterest
+  commentId: T:Nebula.Serialization.ProtocolSceneInterest
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.ProtocolSceneInterest.html
+  name: ProtocolSceneInterest
+  nameWithType: ProtocolSceneInterest
+  fullName: Nebula.Serialization.ProtocolSceneInterest
+- uid: Nebula.Serialization.Protocol.TryGetSceneInterest*
+  commentId: Overload:Nebula.Serialization.Protocol.TryGetSceneInterest
+  isExternal: true
+  href: Nebula.Serialization.Protocol.TryGetSceneInterest.html#Nebula_Serialization_Protocol_TryGetSceneInterest_System_String_Nebula_Serialization_ProtocolSceneInterest__
+  name: TryGetSceneInterest
+  nameWithType: Protocol.TryGetSceneInterest
+  fullName: Nebula.Serialization.Protocol.TryGetSceneInterest
+- uid: Nebula.Serialization.Protocol.PackScene*
+  commentId: Overload:Nebula.Serialization.Protocol.PackScene
+  isExternal: true
+  href: Nebula.Serialization.Protocol.PackScene.html#Nebula_Serialization_Protocol_PackScene_System_String_
+  name: PackScene
+  nameWithType: Protocol.PackScene
+  fullName: Nebula.Serialization.Protocol.PackScene
+- uid: Nebula.Serialization.Protocol.UnpackScene*
+  commentId: Overload:Nebula.Serialization.Protocol.UnpackScene
+  isExternal: true
+  href: Nebula.Serialization.Protocol.UnpackScene.html#Nebula_Serialization_Protocol_UnpackScene_System_Byte_
+  name: UnpackScene
+  nameWithType: Protocol.UnpackScene
+  fullName: Nebula.Serialization.Protocol.UnpackScene
+- uid: Godot.PackedScene
+  commentId: T:Godot.PackedScene
+  parent: Godot
+  isExternal: true
+  name: PackedScene
+  nameWithType: PackedScene
+  fullName: Godot.PackedScene
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Nebula.Serialization.Protocol.GetStaticNodePath*
+  commentId: Overload:Nebula.Serialization.Protocol.GetStaticNodePath
+  isExternal: true
+  href: Nebula.Serialization.Protocol.GetStaticNodePath.html#Nebula_Serialization_Protocol_GetStaticNodePath_System_String_System_Byte_
+  name: GetStaticNodePath
+  nameWithType: Protocol.GetStaticNodePath
+  fullName: Nebula.Serialization.Protocol.GetStaticNodePath
+- uid: Nebula.Serialization.Protocol.TryGetStaticNodeId*
+  commentId: Overload:Nebula.Serialization.Protocol.TryGetStaticNodeId
+  isExternal: true
+  href: Nebula.Serialization.Protocol.TryGetStaticNodeId.html#Nebula_Serialization_Protocol_TryGetStaticNodeId_System_String_System_String_System_Byte__
+  name: TryGetStaticNodeId
+  nameWithType: Protocol.TryGetStaticNodeId
+  fullName: Nebula.Serialization.Protocol.TryGetStaticNodeId
+- uid: Nebula.Serialization.Protocol.PackNode*
+  commentId: Overload:Nebula.Serialization.Protocol.PackNode
+  isExternal: true
+  href: Nebula.Serialization.Protocol.PackNode.html#Nebula_Serialization_Protocol_PackNode_System_String_System_String_System_Byte__
+  name: PackNode
+  nameWithType: Protocol.PackNode
+  fullName: Nebula.Serialization.Protocol.PackNode
+- uid: Nebula.Serialization.Protocol.UnpackNode*
+  commentId: Overload:Nebula.Serialization.Protocol.UnpackNode
+  isExternal: true
+  href: Nebula.Serialization.Protocol.UnpackNode.html#Nebula_Serialization_Protocol_UnpackNode_System_String_System_Byte_
+  name: UnpackNode
+  nameWithType: Protocol.UnpackNode
+  fullName: Nebula.Serialization.Protocol.UnpackNode
+- uid: Nebula.Serialization.Protocol.InvokeStaticMethod*
+  commentId: Overload:Nebula.Serialization.Protocol.InvokeStaticMethod
+  isExternal: true
+  href: Nebula.Serialization.Protocol.InvokeStaticMethod.html#Nebula_Serialization_Protocol_InvokeStaticMethod_Nebula_Serialization_ProtocolNetProperty_Nebula_Serialization_StaticMethodType_System_Object___
+  name: InvokeStaticMethod
+  nameWithType: Protocol.InvokeStaticMethod
+  fullName: Nebula.Serialization.Protocol.InvokeStaticMethod
+- uid: Nebula.Serialization.StaticMethodType
+  commentId: T:Nebula.Serialization.StaticMethodType
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.StaticMethodType.html
+  name: StaticMethodType
+  nameWithType: StaticMethodType
+  fullName: Nebula.Serialization.StaticMethodType
+- uid: System.Object[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object[]
+  nameWithType: object[]
+  fullName: object[]
+  nameWithType.vb: Object()
+  fullName.vb: Object()
+  name.vb: Object()
+  spec.csharp:
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.Protocol.GetStaticMethodCallable*
+  commentId: Overload:Nebula.Serialization.Protocol.GetStaticMethodCallable
+  isExternal: true
+  href: Nebula.Serialization.Protocol.GetStaticMethodCallable.html#Nebula_Serialization_Protocol_GetStaticMethodCallable_Nebula_Serialization_ProtocolNetProperty_Nebula_Serialization_StaticMethodType_
+  name: GetStaticMethodCallable
+  nameWithType: Protocol.GetStaticMethodCallable
+  fullName: Nebula.Serialization.Protocol.GetStaticMethodCallable
+- uid: System.Nullable{Godot.Callable}
+  commentId: T:System.Nullable{Godot.Callable}
+  parent: System
+  definition: System.Nullable`1
+  name: Callable?
+  nameWithType: Callable?
+  fullName: Godot.Callable?
+  spec.csharp:
+  - uid: Godot.Callable
+    name: Callable
+    isExternal: true
+  - name: '?'
+  spec.vb:
+  - uid: Godot.Callable
+    name: Callable
+    isExternal: true
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.Protocol.GetStaticMethod*
+  commentId: Overload:Nebula.Serialization.Protocol.GetStaticMethod
+  isExternal: true
+  href: Nebula.Serialization.Protocol.GetStaticMethod.html#Nebula_Serialization_Protocol_GetStaticMethod_Nebula_Serialization_ProtocolNetProperty_Nebula_Serialization_StaticMethodType_
+  name: GetStaticMethod
+  nameWithType: Protocol.GetStaticMethod
+  fullName: Nebula.Serialization.Protocol.GetStaticMethod
+- uid: System.Reflection.MethodInfo
+  commentId: T:System.Reflection.MethodInfo
+  parent: System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  name: MethodInfo
+  nameWithType: MethodInfo
+  fullName: System.Reflection.MethodInfo
+- uid: System.Reflection
+  commentId: N:System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Reflection
+  nameWithType: System.Reflection
+  fullName: System.Reflection
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+- uid: Nebula.Serialization.Protocol.GetDeserializer*
+  commentId: Overload:Nebula.Serialization.Protocol.GetDeserializer
+  isExternal: true
+  href: Nebula.Serialization.Protocol.GetDeserializer.html#Nebula_Serialization_Protocol_GetDeserializer_System_Int32_
+  name: GetDeserializer
+  nameWithType: Protocol.GetDeserializer
+  fullName: Nebula.Serialization.Protocol.GetDeserializer
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+  commentId: T:Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.html
+  name: GeneratedProtocol.NetworkDeserializeFunc
+  nameWithType: GeneratedProtocol.NetworkDeserializeFunc
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+  spec.csharp:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+    name: NetworkDeserializeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc.html
+  spec.vb:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+    name: NetworkDeserializeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc.html
+- uid: Nebula.Serialization.Protocol.GetSerializer*
+  commentId: Overload:Nebula.Serialization.Protocol.GetSerializer
+  isExternal: true
+  href: Nebula.Serialization.Protocol.GetSerializer.html#Nebula_Serialization_Protocol_GetSerializer_System_Int32_
+  name: GetSerializer
+  nameWithType: Protocol.GetSerializer
+  fullName: Nebula.Serialization.Protocol.GetSerializer
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  commentId: T:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.html
+  name: GeneratedProtocol.NetworkSerializeFunc
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  spec.csharp:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+    name: NetworkSerializeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html
+  spec.vb:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+    name: NetworkSerializeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html
+- uid: Nebula.Serialization.Protocol.ToGodotVariantType*
+  commentId: Overload:Nebula.Serialization.Protocol.ToGodotVariantType
+  isExternal: true
+  href: Nebula.Serialization.Protocol.ToGodotVariantType.html#Nebula_Serialization_Protocol_ToGodotVariantType_Nebula_Serialization_SerialVariantType_
+  name: ToGodotVariantType
+  nameWithType: Protocol.ToGodotVariantType
+  fullName: Nebula.Serialization.Protocol.ToGodotVariantType
+- uid: Nebula.Serialization.SerialVariantType
+  commentId: T:Nebula.Serialization.SerialVariantType
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.SerialVariantType.html
+  name: SerialVariantType
+  nameWithType: SerialVariantType
+  fullName: Nebula.Serialization.SerialVariantType
+- uid: Godot.Variant.Type
+  commentId: T:Godot.Variant.Type
+  parent: Godot
+  isExternal: true
+  name: Variant.Type
+  nameWithType: Variant.Type
+  fullName: Godot.Variant.Type
+  spec.csharp:
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: .
+  - uid: Godot.Variant.Type
+    name: Type
+    isExternal: true
+  spec.vb:
+  - uid: Godot.Variant
+    name: Variant
+    isExternal: true
+  - name: .
+  - uid: Godot.Variant.Type
+    name: Type
+    isExternal: true
+- uid: Nebula.Serialization.Protocol.FromGodotVariantType*
+  commentId: Overload:Nebula.Serialization.Protocol.FromGodotVariantType
+  isExternal: true
+  href: Nebula.Serialization.Protocol.FromGodotVariantType.html#Nebula_Serialization_Protocol_FromGodotVariantType_Godot_Variant_Type_
+  name: FromGodotVariantType
+  nameWithType: Protocol.FromGodotVariantType
+  fullName: Nebula.Serialization.Protocol.FromGodotVariantType
+memberLayout: SeparatePages

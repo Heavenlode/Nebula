@@ -20,7 +20,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -510,7 +510,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.MethodName._OnCloseRequested
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -533,7 +533,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.MethodName._Ready
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -556,7 +556,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.MethodName._ExitTree
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -579,7 +579,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.MethodName.OnDebugConnect
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -602,7 +602,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.MethodName._Process
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -625,7 +625,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.MethodName.Dispose
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -648,7 +648,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -4227,10 +4227,11 @@ references:
 - uid: Nebula.Internal.Editor.ServerDebugClient.MethodName.#ctor*
   commentId: Overload:Nebula.Internal.Editor.ServerDebugClient.MethodName.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.ServerDebugClient.MethodName.html#Nebula_Internal_Editor_ServerDebugClient_MethodName__ctor
+  href: Nebula.Internal.Editor.ServerDebugClient.MethodName.-ctor.html#Nebula_Internal_Editor_ServerDebugClient_MethodName__ctor
   name: MethodName
   nameWithType: ServerDebugClient.MethodName.MethodName
   fullName: Nebula.Internal.Editor.ServerDebugClient.MethodName.MethodName
   nameWithType.vb: ServerDebugClient.MethodName.New
   fullName.vb: Nebula.Internal.Editor.ServerDebugClient.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

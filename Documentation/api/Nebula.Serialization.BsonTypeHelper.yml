@@ -1,0 +1,1935 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.BsonTypeHelper
+  commentId: T:Nebula.Serialization.BsonTypeHelper
+  id: BsonTypeHelper
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.BsonTypeHelper.FromBsonValue``1(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToBool(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Color)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Quaternion)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector2)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector2I)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector3)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector3I)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector4)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(Nebula.Serialization.IBsonSerializableBase,Nebula.Serialization.NetBsonContext)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.Boolean)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.Byte)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.Byte[])
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.Double)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.Int16)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.Int32)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.Int32[])
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.Int64)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.Int64[])
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.Single)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.String)
+  - Nebula.Serialization.BsonTypeHelper.ToBson(System.UInt64)
+  - Nebula.Serialization.BsonTypeHelper.ToBsonEnum``1(``0)
+  - Nebula.Serialization.BsonTypeHelper.ToBsonValue``1(``0@)
+  - Nebula.Serialization.BsonTypeHelper.ToByte(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToByteArray(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToColor(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToDouble(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToEnum``1(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToFloat(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToInt(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToInt32Array(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToInt64Array(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToLong(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToQuaternion(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToShort(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToString(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToULong(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToVector2(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToVector2I(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToVector3(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToVector3I(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.BsonTypeHelper.ToVector4(MongoDB.Bson.BsonValue)
+  langs:
+  - csharp
+  - vb
+  name: BsonTypeHelper
+  nameWithType: BsonTypeHelper
+  fullName: Nebula.Serialization.BsonTypeHelper
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Static helper for converting C# types to/from BSON values.
+
+    Replaces the Godot Variant-based SerializeVariant approach with direct type handling.
+  example: []
+  syntax:
+    content: public static class BsonTypeHelper
+    content.vb: Public Module BsonTypeHelper
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.String)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.String)
+  id: ToBson(System.String)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(string)
+  nameWithType: BsonTypeHelper.ToBson(string)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(string value)
+    parameters:
+    - id: value
+      type: System.String
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As String) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(String)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(String)
+  name.vb: ToBson(String)
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.Boolean)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.Boolean)
+  id: ToBson(System.Boolean)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(bool)
+  nameWithType: BsonTypeHelper.ToBson(bool)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(bool value)
+    parameters:
+    - id: value
+      type: System.Boolean
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Boolean) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(Boolean)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(Boolean)
+  name.vb: ToBson(Boolean)
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.Byte)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.Byte)
+  id: ToBson(System.Byte)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(byte)
+  nameWithType: BsonTypeHelper.ToBson(byte)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(byte)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(byte value)
+    parameters:
+    - id: value
+      type: System.Byte
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Byte) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(Byte)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(Byte)
+  name.vb: ToBson(Byte)
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.Int16)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.Int16)
+  id: ToBson(System.Int16)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(short)
+  nameWithType: BsonTypeHelper.ToBson(short)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(short)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(short value)
+    parameters:
+    - id: value
+      type: System.Int16
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Short) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(Short)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(Short)
+  name.vb: ToBson(Short)
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.Int32)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.Int32)
+  id: ToBson(System.Int32)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(int)
+  nameWithType: BsonTypeHelper.ToBson(int)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(int value)
+    parameters:
+    - id: value
+      type: System.Int32
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Integer) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(Integer)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(Integer)
+  name.vb: ToBson(Integer)
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.Int64)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.Int64)
+  id: ToBson(System.Int64)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(long)
+  nameWithType: BsonTypeHelper.ToBson(long)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(long)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(long value)
+    parameters:
+    - id: value
+      type: System.Int64
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Long) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(Long)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(Long)
+  name.vb: ToBson(Long)
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.UInt64)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.UInt64)
+  id: ToBson(System.UInt64)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(ulong)
+  nameWithType: BsonTypeHelper.ToBson(ulong)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(ulong)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(ulong value)
+    parameters:
+    - id: value
+      type: System.UInt64
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As ULong) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(ULong)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(ULong)
+  name.vb: ToBson(ULong)
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.Single)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.Single)
+  id: ToBson(System.Single)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(float)
+  nameWithType: BsonTypeHelper.ToBson(float)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(float)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(float value)
+    parameters:
+    - id: value
+      type: System.Single
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Single) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(Single)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(Single)
+  name.vb: ToBson(Single)
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.Double)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.Double)
+  id: ToBson(System.Double)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(double)
+  nameWithType: BsonTypeHelper.ToBson(double)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(double)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(double value)
+    parameters:
+    - id: value
+      type: System.Double
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Double) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(Double)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(Double)
+  name.vb: ToBson(Double)
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector2)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector2)
+  id: ToBson(Godot.Vector2)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(Vector2)
+  nameWithType: BsonTypeHelper.ToBson(Vector2)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(Vector2 value)
+    parameters:
+    - id: value
+      type: Godot.Vector2
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Vector2) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector2I)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector2I)
+  id: ToBson(Godot.Vector2I)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(Vector2I)
+  nameWithType: BsonTypeHelper.ToBson(Vector2I)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector2I)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(Vector2I value)
+    parameters:
+    - id: value
+      type: Godot.Vector2I
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Vector2I) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector3)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector3)
+  id: ToBson(Godot.Vector3)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(Vector3)
+  nameWithType: BsonTypeHelper.ToBson(Vector3)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector3)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(Vector3 value)
+    parameters:
+    - id: value
+      type: Godot.Vector3
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Vector3) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector3I)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector3I)
+  id: ToBson(Godot.Vector3I)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(Vector3I)
+  nameWithType: BsonTypeHelper.ToBson(Vector3I)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector3I)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(Vector3I value)
+    parameters:
+    - id: value
+      type: Godot.Vector3I
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Vector3I) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector4)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector4)
+  id: ToBson(Godot.Vector4)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(Vector4)
+  nameWithType: BsonTypeHelper.ToBson(Vector4)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Vector4)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(Vector4 value)
+    parameters:
+    - id: value
+      type: Godot.Vector4
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Vector4) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Quaternion)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Quaternion)
+  id: ToBson(Godot.Quaternion)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(Quaternion)
+  nameWithType: BsonTypeHelper.ToBson(Quaternion)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Quaternion)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(Quaternion value)
+    parameters:
+    - id: value
+      type: Godot.Quaternion
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Quaternion) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Color)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Color)
+  id: ToBson(Godot.Color)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(Color)
+  nameWithType: BsonTypeHelper.ToBson(Color)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Godot.Color)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(Color value)
+    parameters:
+    - id: value
+      type: Godot.Color
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Color) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.Byte[])
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.Byte[])
+  id: ToBson(System.Byte[])
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(byte[])
+  nameWithType: BsonTypeHelper.ToBson(byte[])
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(byte[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(byte[] value)
+    parameters:
+    - id: value
+      type: System.Byte[]
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Byte()) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(Byte())
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(Byte())
+  name.vb: ToBson(Byte())
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.Int32[])
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.Int32[])
+  id: ToBson(System.Int32[])
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(int[])
+  nameWithType: BsonTypeHelper.ToBson(int[])
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(int[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(int[] value)
+    parameters:
+    - id: value
+      type: System.Int32[]
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Integer()) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(Integer())
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(Integer())
+  name.vb: ToBson(Integer())
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(System.Int64[])
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(System.Int64[])
+  id: ToBson(System.Int64[])
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(long[])
+  nameWithType: BsonTypeHelper.ToBson(long[])
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(long[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static BsonValue ToBson(long[] value)
+    parameters:
+    - id: value
+      type: System.Int64[]
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As Long()) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+  nameWithType.vb: BsonTypeHelper.ToBson(Long())
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBson(Long())
+  name.vb: ToBson(Long())
+- uid: Nebula.Serialization.BsonTypeHelper.ToBsonEnum``1(``0)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBsonEnum``1(``0)
+  id: ToBsonEnum``1(``0)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBsonEnum<T>(T)
+  nameWithType: BsonTypeHelper.ToBsonEnum<T>(T)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBsonEnum<T>(T)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Serializes an enum value to BSON as its underlying integer value.
+  example: []
+  syntax:
+    content: 'public static BsonValue ToBsonEnum<T>(T value) where T : struct, Enum'
+    parameters:
+    - id: value
+      type: '{T}'
+    typeParameters:
+    - id: T
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBsonEnum(Of T As {Structure, [Enum]})(value As T) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBsonEnum*
+  nameWithType.vb: BsonTypeHelper.ToBsonEnum(Of T)(T)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBsonEnum(Of T)(T)
+  name.vb: ToBsonEnum(Of T)(T)
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson(Nebula.Serialization.IBsonSerializableBase,Nebula.Serialization.NetBsonContext)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBson(Nebula.Serialization.IBsonSerializableBase,Nebula.Serialization.NetBsonContext)
+  id: ToBson(Nebula.Serialization.IBsonSerializableBase,Nebula.Serialization.NetBsonContext)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBson(IBsonSerializableBase, NetBsonContext)
+  nameWithType: BsonTypeHelper.ToBson(IBsonSerializableBase, NetBsonContext)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson(Nebula.Serialization.IBsonSerializableBase, Nebula.Serialization.NetBsonContext)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Serializes an IBsonSerializableBase object to BSON.
+  example: []
+  syntax:
+    content: public static BsonValue ToBson(IBsonSerializableBase value, NetBsonContext context = default)
+    parameters:
+    - id: value
+      type: Nebula.Serialization.IBsonSerializableBase
+    - id: context
+      type: Nebula.Serialization.NetBsonContext
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBson(value As IBsonSerializableBase, context As NetBsonContext = Nothing) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBson*
+- uid: Nebula.Serialization.BsonTypeHelper.ToBsonValue``1(``0@)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBsonValue``1(``0@)
+  id: ToBsonValue``1(``0@)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBsonValue<T>(in T)
+  nameWithType: BsonTypeHelper.ToBsonValue<T>(in T)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBsonValue<T>(in T)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Serializes an IBsonValue struct to BSON.
+  example: []
+  syntax:
+    content: 'public static BsonValue ToBsonValue<T>(in T value) where T : struct, IBsonValue<T>'
+    parameters:
+    - id: value
+      type: '{T}'
+    typeParameters:
+    - id: T
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function ToBsonValue(Of T As {Structure, IBsonValue(Of T)})(value As T) As BsonValue
+  overload: Nebula.Serialization.BsonTypeHelper.ToBsonValue*
+  nameWithType.vb: BsonTypeHelper.ToBsonValue(Of T)(T)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToBsonValue(Of T)(T)
+  name.vb: ToBsonValue(Of T)(T)
+- uid: Nebula.Serialization.BsonTypeHelper.ToString(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToString(MongoDB.Bson.BsonValue)
+  id: ToString(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToString(BsonValue)
+  nameWithType: BsonTypeHelper.ToString(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToString(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static string ToString(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.String
+    content.vb: Public Shared Function ToString(value As BsonValue) As String
+  overload: Nebula.Serialization.BsonTypeHelper.ToString*
+- uid: Nebula.Serialization.BsonTypeHelper.ToBool(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToBool(MongoDB.Bson.BsonValue)
+  id: ToBool(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToBool(BsonValue)
+  nameWithType: BsonTypeHelper.ToBool(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBool(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static bool ToBool(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function ToBool(value As BsonValue) As Boolean
+  overload: Nebula.Serialization.BsonTypeHelper.ToBool*
+- uid: Nebula.Serialization.BsonTypeHelper.ToByte(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToByte(MongoDB.Bson.BsonValue)
+  id: ToByte(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToByte(BsonValue)
+  nameWithType: BsonTypeHelper.ToByte(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToByte(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static byte ToByte(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.Byte
+    content.vb: Public Shared Function ToByte(value As BsonValue) As Byte
+  overload: Nebula.Serialization.BsonTypeHelper.ToByte*
+- uid: Nebula.Serialization.BsonTypeHelper.ToShort(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToShort(MongoDB.Bson.BsonValue)
+  id: ToShort(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToShort(BsonValue)
+  nameWithType: BsonTypeHelper.ToShort(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToShort(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static short ToShort(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.Int16
+    content.vb: Public Shared Function ToShort(value As BsonValue) As Short
+  overload: Nebula.Serialization.BsonTypeHelper.ToShort*
+- uid: Nebula.Serialization.BsonTypeHelper.ToInt(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToInt(MongoDB.Bson.BsonValue)
+  id: ToInt(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToInt(BsonValue)
+  nameWithType: BsonTypeHelper.ToInt(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToInt(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static int ToInt(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function ToInt(value As BsonValue) As Integer
+  overload: Nebula.Serialization.BsonTypeHelper.ToInt*
+- uid: Nebula.Serialization.BsonTypeHelper.ToLong(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToLong(MongoDB.Bson.BsonValue)
+  id: ToLong(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToLong(BsonValue)
+  nameWithType: BsonTypeHelper.ToLong(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToLong(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static long ToLong(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.Int64
+    content.vb: Public Shared Function ToLong(value As BsonValue) As Long
+  overload: Nebula.Serialization.BsonTypeHelper.ToLong*
+- uid: Nebula.Serialization.BsonTypeHelper.ToULong(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToULong(MongoDB.Bson.BsonValue)
+  id: ToULong(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToULong(BsonValue)
+  nameWithType: BsonTypeHelper.ToULong(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToULong(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static ulong ToULong(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.UInt64
+    content.vb: Public Shared Function ToULong(value As BsonValue) As ULong
+  overload: Nebula.Serialization.BsonTypeHelper.ToULong*
+- uid: Nebula.Serialization.BsonTypeHelper.ToFloat(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToFloat(MongoDB.Bson.BsonValue)
+  id: ToFloat(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToFloat(BsonValue)
+  nameWithType: BsonTypeHelper.ToFloat(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToFloat(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static float ToFloat(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.Single
+    content.vb: Public Shared Function ToFloat(value As BsonValue) As Single
+  overload: Nebula.Serialization.BsonTypeHelper.ToFloat*
+- uid: Nebula.Serialization.BsonTypeHelper.ToDouble(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToDouble(MongoDB.Bson.BsonValue)
+  id: ToDouble(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToDouble(BsonValue)
+  nameWithType: BsonTypeHelper.ToDouble(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToDouble(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static double ToDouble(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.Double
+    content.vb: Public Shared Function ToDouble(value As BsonValue) As Double
+  overload: Nebula.Serialization.BsonTypeHelper.ToDouble*
+- uid: Nebula.Serialization.BsonTypeHelper.ToVector2(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToVector2(MongoDB.Bson.BsonValue)
+  id: ToVector2(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToVector2(BsonValue)
+  nameWithType: BsonTypeHelper.ToVector2(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToVector2(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector2 ToVector2(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: Godot.Vector2
+    content.vb: Public Shared Function ToVector2(value As BsonValue) As Vector2
+  overload: Nebula.Serialization.BsonTypeHelper.ToVector2*
+- uid: Nebula.Serialization.BsonTypeHelper.ToVector2I(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToVector2I(MongoDB.Bson.BsonValue)
+  id: ToVector2I(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToVector2I(BsonValue)
+  nameWithType: BsonTypeHelper.ToVector2I(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToVector2I(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector2I ToVector2I(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: Godot.Vector2I
+    content.vb: Public Shared Function ToVector2I(value As BsonValue) As Vector2I
+  overload: Nebula.Serialization.BsonTypeHelper.ToVector2I*
+- uid: Nebula.Serialization.BsonTypeHelper.ToVector3(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToVector3(MongoDB.Bson.BsonValue)
+  id: ToVector3(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToVector3(BsonValue)
+  nameWithType: BsonTypeHelper.ToVector3(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToVector3(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector3 ToVector3(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: Godot.Vector3
+    content.vb: Public Shared Function ToVector3(value As BsonValue) As Vector3
+  overload: Nebula.Serialization.BsonTypeHelper.ToVector3*
+- uid: Nebula.Serialization.BsonTypeHelper.ToVector3I(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToVector3I(MongoDB.Bson.BsonValue)
+  id: ToVector3I(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToVector3I(BsonValue)
+  nameWithType: BsonTypeHelper.ToVector3I(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToVector3I(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector3I ToVector3I(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: Godot.Vector3I
+    content.vb: Public Shared Function ToVector3I(value As BsonValue) As Vector3I
+  overload: Nebula.Serialization.BsonTypeHelper.ToVector3I*
+- uid: Nebula.Serialization.BsonTypeHelper.ToVector4(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToVector4(MongoDB.Bson.BsonValue)
+  id: ToVector4(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToVector4(BsonValue)
+  nameWithType: BsonTypeHelper.ToVector4(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToVector4(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Vector4 ToVector4(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: Godot.Vector4
+    content.vb: Public Shared Function ToVector4(value As BsonValue) As Vector4
+  overload: Nebula.Serialization.BsonTypeHelper.ToVector4*
+- uid: Nebula.Serialization.BsonTypeHelper.ToQuaternion(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToQuaternion(MongoDB.Bson.BsonValue)
+  id: ToQuaternion(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToQuaternion(BsonValue)
+  nameWithType: BsonTypeHelper.ToQuaternion(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToQuaternion(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Quaternion ToQuaternion(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: Godot.Quaternion
+    content.vb: Public Shared Function ToQuaternion(value As BsonValue) As Quaternion
+  overload: Nebula.Serialization.BsonTypeHelper.ToQuaternion*
+- uid: Nebula.Serialization.BsonTypeHelper.ToColor(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToColor(MongoDB.Bson.BsonValue)
+  id: ToColor(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToColor(BsonValue)
+  nameWithType: BsonTypeHelper.ToColor(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToColor(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static Color ToColor(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: Godot.Color
+    content.vb: Public Shared Function ToColor(value As BsonValue) As Color
+  overload: Nebula.Serialization.BsonTypeHelper.ToColor*
+- uid: Nebula.Serialization.BsonTypeHelper.ToByteArray(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToByteArray(MongoDB.Bson.BsonValue)
+  id: ToByteArray(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToByteArray(BsonValue)
+  nameWithType: BsonTypeHelper.ToByteArray(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToByteArray(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static byte[] ToByteArray(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.Byte[]
+    content.vb: Public Shared Function ToByteArray(value As BsonValue) As Byte()
+  overload: Nebula.Serialization.BsonTypeHelper.ToByteArray*
+- uid: Nebula.Serialization.BsonTypeHelper.ToInt32Array(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToInt32Array(MongoDB.Bson.BsonValue)
+  id: ToInt32Array(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToInt32Array(BsonValue)
+  nameWithType: BsonTypeHelper.ToInt32Array(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToInt32Array(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static int[] ToInt32Array(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.Int32[]
+    content.vb: Public Shared Function ToInt32Array(value As BsonValue) As Integer()
+  overload: Nebula.Serialization.BsonTypeHelper.ToInt32Array*
+- uid: Nebula.Serialization.BsonTypeHelper.ToInt64Array(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToInt64Array(MongoDB.Bson.BsonValue)
+  id: ToInt64Array(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToInt64Array(BsonValue)
+  nameWithType: BsonTypeHelper.ToInt64Array(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToInt64Array(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static long[] ToInt64Array(BsonValue value)
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: System.Int64[]
+    content.vb: Public Shared Function ToInt64Array(value As BsonValue) As Long()
+  overload: Nebula.Serialization.BsonTypeHelper.ToInt64Array*
+- uid: Nebula.Serialization.BsonTypeHelper.ToEnum``1(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.ToEnum``1(MongoDB.Bson.BsonValue)
+  id: ToEnum``1(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: ToEnum<T>(BsonValue)
+  nameWithType: BsonTypeHelper.ToEnum<T>(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.ToEnum<T>(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Deserializes a BSON value to an enum.
+  example: []
+  syntax:
+    content: 'public static T ToEnum<T>(BsonValue value) where T : struct, Enum'
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Shared Function ToEnum(Of T As {Structure, [Enum]})(value As BsonValue) As T
+  overload: Nebula.Serialization.BsonTypeHelper.ToEnum*
+  nameWithType.vb: BsonTypeHelper.ToEnum(Of T)(BsonValue)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.ToEnum(Of T)(MongoDB.Bson.BsonValue)
+  name.vb: ToEnum(Of T)(BsonValue)
+- uid: Nebula.Serialization.BsonTypeHelper.FromBsonValue``1(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.BsonTypeHelper.FromBsonValue``1(MongoDB.Bson.BsonValue)
+  id: FromBsonValue``1(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.BsonTypeHelper
+  langs:
+  - csharp
+  - vb
+  name: FromBsonValue<T>(BsonValue)
+  nameWithType: BsonTypeHelper.FromBsonValue<T>(BsonValue)
+  fullName: Nebula.Serialization.BsonTypeHelper.FromBsonValue<T>(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Serialization/BsonTypeHelper.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Deserializes a BSON value using IBsonValue static method.
+  example: []
+  syntax:
+    content: 'public static T FromBsonValue<T>(BsonValue value) where T : struct, IBsonValue<T>'
+    parameters:
+    - id: value
+      type: MongoDB.Bson.BsonValue
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Shared Function FromBsonValue(Of T As {Structure, IBsonValue(Of T)})(value As BsonValue) As T
+  overload: Nebula.Serialization.BsonTypeHelper.FromBsonValue*
+  nameWithType.vb: BsonTypeHelper.FromBsonValue(Of T)(BsonValue)
+  fullName.vb: Nebula.Serialization.BsonTypeHelper.FromBsonValue(Of T)(MongoDB.Bson.BsonValue)
+  name.vb: FromBsonValue(Of T)(BsonValue)
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Serialization.BsonTypeHelper.ToBson*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToBson
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToBson.html#Nebula_Serialization_BsonTypeHelper_ToBson_System_String_
+  name: ToBson
+  nameWithType: BsonTypeHelper.ToBson
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBson
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: MongoDB.Bson.BsonValue
+  commentId: T:MongoDB.Bson.BsonValue
+  parent: MongoDB.Bson
+  isExternal: true
+  name: BsonValue
+  nameWithType: BsonValue
+  fullName: MongoDB.Bson.BsonValue
+- uid: MongoDB.Bson
+  commentId: N:MongoDB.Bson
+  isExternal: true
+  name: MongoDB.Bson
+  nameWithType: MongoDB.Bson
+  fullName: MongoDB.Bson
+  spec.csharp:
+  - uid: MongoDB
+    name: MongoDB
+    isExternal: true
+  - name: .
+  - uid: MongoDB.Bson
+    name: Bson
+    isExternal: true
+  spec.vb:
+  - uid: MongoDB
+    name: MongoDB
+    isExternal: true
+  - name: .
+  - uid: MongoDB.Bson
+    name: Bson
+    isExternal: true
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: System.Int16
+  commentId: T:System.Int16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: short
+  nameWithType: short
+  fullName: short
+  nameWithType.vb: Short
+  fullName.vb: Short
+  name.vb: Short
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: System.UInt64
+  commentId: T:System.UInt64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint64
+  name: ulong
+  nameWithType: ulong
+  fullName: ulong
+  nameWithType.vb: ULong
+  fullName.vb: ULong
+  name.vb: ULong
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: Godot.Vector2
+  commentId: T:Godot.Vector2
+  parent: Godot
+  isExternal: true
+  name: Vector2
+  nameWithType: Vector2
+  fullName: Godot.Vector2
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Godot.Vector2I
+  commentId: T:Godot.Vector2I
+  parent: Godot
+  isExternal: true
+  name: Vector2I
+  nameWithType: Vector2I
+  fullName: Godot.Vector2I
+- uid: Godot.Vector3
+  commentId: T:Godot.Vector3
+  parent: Godot
+  isExternal: true
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Godot.Vector3
+- uid: Godot.Vector3I
+  commentId: T:Godot.Vector3I
+  parent: Godot
+  isExternal: true
+  name: Vector3I
+  nameWithType: Vector3I
+  fullName: Godot.Vector3I
+- uid: Godot.Vector4
+  commentId: T:Godot.Vector4
+  parent: Godot
+  isExternal: true
+  name: Vector4
+  nameWithType: Vector4
+  fullName: Godot.Vector4
+- uid: Godot.Quaternion
+  commentId: T:Godot.Quaternion
+  parent: Godot
+  isExternal: true
+  name: Quaternion
+  nameWithType: Quaternion
+  fullName: Godot.Quaternion
+- uid: Godot.Color
+  commentId: T:Godot.Color
+  parent: Godot
+  isExternal: true
+  name: Color
+  nameWithType: Color
+  fullName: Godot.Color
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: System.Int64[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long[]
+  nameWithType: long[]
+  fullName: long[]
+  nameWithType.vb: Long()
+  fullName.vb: Long()
+  name.vb: Long()
+  spec.csharp:
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.BsonTypeHelper.ToBsonEnum*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToBsonEnum
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToBsonEnum.html#Nebula_Serialization_BsonTypeHelper_ToBsonEnum__1___0_
+  name: ToBsonEnum
+  nameWithType: BsonTypeHelper.ToBsonEnum
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBsonEnum
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Nebula.Serialization.IBsonSerializableBase
+  commentId: T:Nebula.Serialization.IBsonSerializableBase
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.html
+  name: IBsonSerializableBase
+  nameWithType: IBsonSerializableBase
+  fullName: Nebula.Serialization.IBsonSerializableBase
+- uid: Nebula.Serialization.NetBsonContext
+  commentId: T:Nebula.Serialization.NetBsonContext
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBsonContext.html
+  name: NetBsonContext
+  nameWithType: NetBsonContext
+  fullName: Nebula.Serialization.NetBsonContext
+- uid: Nebula.Serialization.BsonTypeHelper.ToBsonValue*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToBsonValue
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToBsonValue.html#Nebula_Serialization_BsonTypeHelper_ToBsonValue__1___0__
+  name: ToBsonValue
+  nameWithType: BsonTypeHelper.ToBsonValue
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBsonValue
+- uid: Nebula.Serialization.BsonTypeHelper.ToString*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToString
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToString.html#Nebula_Serialization_BsonTypeHelper_ToString_MongoDB_Bson_BsonValue_
+  name: ToString
+  nameWithType: BsonTypeHelper.ToString
+  fullName: Nebula.Serialization.BsonTypeHelper.ToString
+- uid: Nebula.Serialization.BsonTypeHelper.ToBool*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToBool
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToBool.html#Nebula_Serialization_BsonTypeHelper_ToBool_MongoDB_Bson_BsonValue_
+  name: ToBool
+  nameWithType: BsonTypeHelper.ToBool
+  fullName: Nebula.Serialization.BsonTypeHelper.ToBool
+- uid: Nebula.Serialization.BsonTypeHelper.ToByte*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToByte
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToByte.html#Nebula_Serialization_BsonTypeHelper_ToByte_MongoDB_Bson_BsonValue_
+  name: ToByte
+  nameWithType: BsonTypeHelper.ToByte
+  fullName: Nebula.Serialization.BsonTypeHelper.ToByte
+- uid: Nebula.Serialization.BsonTypeHelper.ToShort*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToShort
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToShort.html#Nebula_Serialization_BsonTypeHelper_ToShort_MongoDB_Bson_BsonValue_
+  name: ToShort
+  nameWithType: BsonTypeHelper.ToShort
+  fullName: Nebula.Serialization.BsonTypeHelper.ToShort
+- uid: Nebula.Serialization.BsonTypeHelper.ToInt*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToInt
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToInt.html#Nebula_Serialization_BsonTypeHelper_ToInt_MongoDB_Bson_BsonValue_
+  name: ToInt
+  nameWithType: BsonTypeHelper.ToInt
+  fullName: Nebula.Serialization.BsonTypeHelper.ToInt
+- uid: Nebula.Serialization.BsonTypeHelper.ToLong*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToLong
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToLong.html#Nebula_Serialization_BsonTypeHelper_ToLong_MongoDB_Bson_BsonValue_
+  name: ToLong
+  nameWithType: BsonTypeHelper.ToLong
+  fullName: Nebula.Serialization.BsonTypeHelper.ToLong
+- uid: Nebula.Serialization.BsonTypeHelper.ToULong*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToULong
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToULong.html#Nebula_Serialization_BsonTypeHelper_ToULong_MongoDB_Bson_BsonValue_
+  name: ToULong
+  nameWithType: BsonTypeHelper.ToULong
+  fullName: Nebula.Serialization.BsonTypeHelper.ToULong
+- uid: Nebula.Serialization.BsonTypeHelper.ToFloat*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToFloat
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToFloat.html#Nebula_Serialization_BsonTypeHelper_ToFloat_MongoDB_Bson_BsonValue_
+  name: ToFloat
+  nameWithType: BsonTypeHelper.ToFloat
+  fullName: Nebula.Serialization.BsonTypeHelper.ToFloat
+- uid: Nebula.Serialization.BsonTypeHelper.ToDouble*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToDouble
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToDouble.html#Nebula_Serialization_BsonTypeHelper_ToDouble_MongoDB_Bson_BsonValue_
+  name: ToDouble
+  nameWithType: BsonTypeHelper.ToDouble
+  fullName: Nebula.Serialization.BsonTypeHelper.ToDouble
+- uid: Nebula.Serialization.BsonTypeHelper.ToVector2*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToVector2
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToVector2.html#Nebula_Serialization_BsonTypeHelper_ToVector2_MongoDB_Bson_BsonValue_
+  name: ToVector2
+  nameWithType: BsonTypeHelper.ToVector2
+  fullName: Nebula.Serialization.BsonTypeHelper.ToVector2
+- uid: Nebula.Serialization.BsonTypeHelper.ToVector2I*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToVector2I
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToVector2I.html#Nebula_Serialization_BsonTypeHelper_ToVector2I_MongoDB_Bson_BsonValue_
+  name: ToVector2I
+  nameWithType: BsonTypeHelper.ToVector2I
+  fullName: Nebula.Serialization.BsonTypeHelper.ToVector2I
+- uid: Nebula.Serialization.BsonTypeHelper.ToVector3*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToVector3
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToVector3.html#Nebula_Serialization_BsonTypeHelper_ToVector3_MongoDB_Bson_BsonValue_
+  name: ToVector3
+  nameWithType: BsonTypeHelper.ToVector3
+  fullName: Nebula.Serialization.BsonTypeHelper.ToVector3
+- uid: Nebula.Serialization.BsonTypeHelper.ToVector3I*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToVector3I
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToVector3I.html#Nebula_Serialization_BsonTypeHelper_ToVector3I_MongoDB_Bson_BsonValue_
+  name: ToVector3I
+  nameWithType: BsonTypeHelper.ToVector3I
+  fullName: Nebula.Serialization.BsonTypeHelper.ToVector3I
+- uid: Nebula.Serialization.BsonTypeHelper.ToVector4*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToVector4
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToVector4.html#Nebula_Serialization_BsonTypeHelper_ToVector4_MongoDB_Bson_BsonValue_
+  name: ToVector4
+  nameWithType: BsonTypeHelper.ToVector4
+  fullName: Nebula.Serialization.BsonTypeHelper.ToVector4
+- uid: Nebula.Serialization.BsonTypeHelper.ToQuaternion*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToQuaternion
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToQuaternion.html#Nebula_Serialization_BsonTypeHelper_ToQuaternion_MongoDB_Bson_BsonValue_
+  name: ToQuaternion
+  nameWithType: BsonTypeHelper.ToQuaternion
+  fullName: Nebula.Serialization.BsonTypeHelper.ToQuaternion
+- uid: Nebula.Serialization.BsonTypeHelper.ToColor*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToColor
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToColor.html#Nebula_Serialization_BsonTypeHelper_ToColor_MongoDB_Bson_BsonValue_
+  name: ToColor
+  nameWithType: BsonTypeHelper.ToColor
+  fullName: Nebula.Serialization.BsonTypeHelper.ToColor
+- uid: Nebula.Serialization.BsonTypeHelper.ToByteArray*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToByteArray
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToByteArray.html#Nebula_Serialization_BsonTypeHelper_ToByteArray_MongoDB_Bson_BsonValue_
+  name: ToByteArray
+  nameWithType: BsonTypeHelper.ToByteArray
+  fullName: Nebula.Serialization.BsonTypeHelper.ToByteArray
+- uid: Nebula.Serialization.BsonTypeHelper.ToInt32Array*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToInt32Array
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToInt32Array.html#Nebula_Serialization_BsonTypeHelper_ToInt32Array_MongoDB_Bson_BsonValue_
+  name: ToInt32Array
+  nameWithType: BsonTypeHelper.ToInt32Array
+  fullName: Nebula.Serialization.BsonTypeHelper.ToInt32Array
+- uid: Nebula.Serialization.BsonTypeHelper.ToInt64Array*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToInt64Array
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToInt64Array.html#Nebula_Serialization_BsonTypeHelper_ToInt64Array_MongoDB_Bson_BsonValue_
+  name: ToInt64Array
+  nameWithType: BsonTypeHelper.ToInt64Array
+  fullName: Nebula.Serialization.BsonTypeHelper.ToInt64Array
+- uid: Nebula.Serialization.BsonTypeHelper.ToEnum*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.ToEnum
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.ToEnum.html#Nebula_Serialization_BsonTypeHelper_ToEnum__1_MongoDB_Bson_BsonValue_
+  name: ToEnum
+  nameWithType: BsonTypeHelper.ToEnum
+  fullName: Nebula.Serialization.BsonTypeHelper.ToEnum
+- uid: Nebula.Serialization.BsonTypeHelper.FromBsonValue*
+  commentId: Overload:Nebula.Serialization.BsonTypeHelper.FromBsonValue
+  isExternal: true
+  href: Nebula.Serialization.BsonTypeHelper.FromBsonValue.html#Nebula_Serialization_BsonTypeHelper_FromBsonValue__1_MongoDB_Bson_BsonValue_
+  name: FromBsonValue
+  nameWithType: BsonTypeHelper.FromBsonValue
+  fullName: Nebula.Serialization.BsonTypeHelper.FromBsonValue
+memberLayout: SeparatePages

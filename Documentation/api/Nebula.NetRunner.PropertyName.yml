@@ -6,15 +6,13 @@ items:
   parent: Nebula
   children:
   - Nebula.NetRunner.PropertyName.#ctor
-  - Nebula.NetRunner.PropertyName.ENet
-  - Nebula.NetRunner.PropertyName.ENetHost
+  - Nebula.NetRunner.PropertyName.DefaultServerAddress
   - Nebula.NetRunner.PropertyName.IsClient
   - Nebula.NetRunner.PropertyName.IsServer
   - Nebula.NetRunner.PropertyName.MaxPeers
   - Nebula.NetRunner.PropertyName.NetStarted
   - Nebula.NetRunner.PropertyName.Port
   - Nebula.NetRunner.PropertyName.ServerAddress
-  - Nebula.NetRunner.PropertyName.debugEnet
   langs:
   - csharp
   - vb
@@ -23,7 +21,7 @@ items:
   fullName: Nebula.NetRunner.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -66,6 +64,29 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
+- uid: Nebula.NetRunner.PropertyName.ServerAddress
+  commentId: F:Nebula.NetRunner.PropertyName.ServerAddress
+  id: ServerAddress
+  parent: Nebula.NetRunner.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: ServerAddress
+  nameWithType: NetRunner.PropertyName.ServerAddress
+  fullName: Nebula.NetRunner.PropertyName.ServerAddress
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'ServerAddress' property.
+  example: []
+  syntax:
+    content: public static readonly StringName ServerAddress
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly ServerAddress As StringName
 - uid: Nebula.NetRunner.PropertyName.Port
   commentId: F:Nebula.NetRunner.PropertyName.Port
   id: Port
@@ -78,7 +99,7 @@ items:
   fullName: Nebula.NetRunner.PropertyName.Port
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -101,7 +122,7 @@ items:
   fullName: Nebula.NetRunner.PropertyName.IsServer
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -124,7 +145,7 @@ items:
   fullName: Nebula.NetRunner.PropertyName.IsClient
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -147,7 +168,7 @@ items:
   fullName: Nebula.NetRunner.PropertyName.NetStarted
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -158,29 +179,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly NetStarted As StringName
-- uid: Nebula.NetRunner.PropertyName.ServerAddress
-  commentId: F:Nebula.NetRunner.PropertyName.ServerAddress
-  id: ServerAddress
+- uid: Nebula.NetRunner.PropertyName.DefaultServerAddress
+  commentId: F:Nebula.NetRunner.PropertyName.DefaultServerAddress
+  id: DefaultServerAddress
   parent: Nebula.NetRunner.PropertyName
   langs:
   - csharp
   - vb
-  name: ServerAddress
-  nameWithType: NetRunner.PropertyName.ServerAddress
-  fullName: Nebula.NetRunner.PropertyName.ServerAddress
+  name: DefaultServerAddress
+  nameWithType: NetRunner.PropertyName.DefaultServerAddress
+  fullName: Nebula.NetRunner.PropertyName.DefaultServerAddress
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'ServerAddress' field.
+  summary: Cached name for the 'DefaultServerAddress' field.
   example: []
   syntax:
-    content: public static readonly StringName ServerAddress
+    content: public static readonly StringName DefaultServerAddress
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly ServerAddress As StringName
+    content.vb: Public Shared ReadOnly DefaultServerAddress As StringName
 - uid: Nebula.NetRunner.PropertyName.MaxPeers
   commentId: F:Nebula.NetRunner.PropertyName.MaxPeers
   id: MaxPeers
@@ -193,7 +214,7 @@ items:
   fullName: Nebula.NetRunner.PropertyName.MaxPeers
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -204,75 +225,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly MaxPeers As StringName
-- uid: Nebula.NetRunner.PropertyName.ENet
-  commentId: F:Nebula.NetRunner.PropertyName.ENet
-  id: ENet
-  parent: Nebula.NetRunner.PropertyName
-  langs:
-  - csharp
-  - vb
-  name: ENet
-  nameWithType: NetRunner.PropertyName.ENet
-  fullName: Nebula.NetRunner.PropertyName.ENet
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'ENet' field.
-  example: []
-  syntax:
-    content: public static readonly StringName ENet
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly ENet As StringName
-- uid: Nebula.NetRunner.PropertyName.ENetHost
-  commentId: F:Nebula.NetRunner.PropertyName.ENetHost
-  id: ENetHost
-  parent: Nebula.NetRunner.PropertyName
-  langs:
-  - csharp
-  - vb
-  name: ENetHost
-  nameWithType: NetRunner.PropertyName.ENetHost
-  fullName: Nebula.NetRunner.PropertyName.ENetHost
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'ENetHost' field.
-  example: []
-  syntax:
-    content: public static readonly StringName ENetHost
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly ENetHost As StringName
-- uid: Nebula.NetRunner.PropertyName.debugEnet
-  commentId: F:Nebula.NetRunner.PropertyName.debugEnet
-  id: debugEnet
-  parent: Nebula.NetRunner.PropertyName
-  langs:
-  - csharp
-  - vb
-  name: debugEnet
-  nameWithType: NetRunner.PropertyName.debugEnet
-  fullName: Nebula.NetRunner.PropertyName.debugEnet
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'debugEnet' field.
-  example: []
-  syntax:
-    content: public static readonly StringName debugEnet
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly debugEnet As StringName
 - uid: Nebula.NetRunner.PropertyName.#ctor
   commentId: M:Nebula.NetRunner.PropertyName.#ctor
   id: '#ctor'
@@ -285,7 +237,7 @@ items:
   fullName: Nebula.NetRunner.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -757,10 +709,11 @@ references:
 - uid: Nebula.NetRunner.PropertyName.#ctor*
   commentId: Overload:Nebula.NetRunner.PropertyName.#ctor
   isExternal: true
-  href: Nebula.NetRunner.PropertyName.html#Nebula_NetRunner_PropertyName__ctor
+  href: Nebula.NetRunner.PropertyName.-ctor.html#Nebula_NetRunner_PropertyName__ctor
   name: PropertyName
   nameWithType: NetRunner.PropertyName.PropertyName
   fullName: Nebula.NetRunner.PropertyName.PropertyName
   nameWithType.vb: NetRunner.PropertyName.New
   fullName.vb: Nebula.NetRunner.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

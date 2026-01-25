@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.DebugLevel
   type: Enum
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -36,7 +36,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.DebugLevel.ERROR
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -56,7 +56,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.DebugLevel.WARN
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -76,7 +76,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.DebugLevel.INFO
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -96,7 +96,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.DebugLevel.VERBOSE
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -170,3 +170,4 @@ references:
     name: DebugLevel
     isExternal: true
     href: Nebula.Utility.Tools.Debugger.DebugLevel.html
+memberLayout: SeparatePages

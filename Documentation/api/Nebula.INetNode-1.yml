@@ -1,0 +1,1132 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.INetNode`1
+  commentId: T:Nebula.INetNode`1
+  id: INetNode`1
+  parent: Nebula
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: INetNode<T>
+  nameWithType: INetNode<T>
+  fullName: Nebula.INetNode<T>
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: 'public interface INetNode<T> : INetNodeBase, INetSerializable<T>, IBsonSerializable<T>, IBsonSerializableBase where T : Node'
+    typeParameters:
+    - id: T
+    content.vb: Public Interface INetNode(Of T As Node) Inherits INetNodeBase, INetSerializable(Of T), IBsonSerializable(Of T), IBsonSerializableBase
+  inheritedMembers:
+  - Nebula.INetNodeBase.SetupSerializers
+  - Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  - Nebula.INetNodeBase._WorldReady
+  - Nebula.INetNodeBase._NetworkProcess(System.Int32)
+  - Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
+  - Nebula.INetNodeBase.SetNetPropertyByIndex(System.Int32,Nebula.PropertyCache@)
+  - Nebula.INetNodeBase.ProcessInterpolation(System.Single)
+  - Nebula.INetNodeBase.StorePredictedState(System.Int32)
+  - Nebula.INetNodeBase.StoreConfirmedState
+  - Nebula.INetNodeBase.Reconcile(System.Int32,System.Boolean)
+  - Nebula.INetNodeBase.RestoreToPredictedState(System.Int32)
+  - Nebula.INetNodeBase.Network
+  - Nebula.INetNodeBase.Serializers
+  - Nebula.Serialization.INetSerializable{{T}}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,{T},Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.INetSerializable{{T}}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,{T})
+  - Nebula.Serialization.IBsonSerializable{{T}}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],{T})
+  - Nebula.Serialization.IBsonSerializable{{T}}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  - Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  nameWithType.vb: INetNode(Of T)
+  fullName.vb: Nebula.INetNode(Of T)
+  name.vb: INetNode(Of T)
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.INetNodeBase.SetupSerializers
+  commentId: M:Nebula.INetNodeBase.SetupSerializers
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.SetupSerializers.html#Nebula_INetNodeBase_SetupSerializers
+  name: SetupSerializers()
+  nameWithType: INetNodeBase.SetupSerializers()
+  fullName: Nebula.INetNodeBase.SetupSerializers()
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.SetupSerializers
+    name: SetupSerializers
+    isExternal: true
+    href: Nebula.INetNodeBase.SetupSerializers.html#Nebula_INetNodeBase_SetupSerializers
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.SetupSerializers
+    name: SetupSerializers
+    isExternal: true
+    href: Nebula.INetNodeBase.SetupSerializers.html#Nebula_INetNodeBase_SetupSerializers
+  - name: (
+  - name: )
+- uid: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  commentId: M:Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.InitializeInterest.html#Nebula_INetNodeBase_InitializeInterest_ENet_Peer_
+  name: InitializeInterest(Peer)
+  nameWithType: INetNodeBase.InitializeInterest(Peer)
+  fullName: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+    name: InitializeInterest
+    isExternal: true
+    href: Nebula.INetNodeBase.InitializeInterest.html#Nebula_INetNodeBase_InitializeInterest_ENet_Peer_
+  - name: (
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+    name: InitializeInterest
+    isExternal: true
+    href: Nebula.INetNodeBase.InitializeInterest.html#Nebula_INetNodeBase_InitializeInterest_ENet_Peer_
+  - name: (
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: )
+- uid: Nebula.INetNodeBase._WorldReady
+  commentId: M:Nebula.INetNodeBase._WorldReady
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase._WorldReady.html#Nebula_INetNodeBase__WorldReady
+  name: _WorldReady()
+  nameWithType: INetNodeBase._WorldReady()
+  fullName: Nebula.INetNodeBase._WorldReady()
+  spec.csharp:
+  - uid: Nebula.INetNodeBase._WorldReady
+    name: _WorldReady
+    isExternal: true
+    href: Nebula.INetNodeBase._WorldReady.html#Nebula_INetNodeBase__WorldReady
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase._WorldReady
+    name: _WorldReady
+    isExternal: true
+    href: Nebula.INetNodeBase._WorldReady.html#Nebula_INetNodeBase__WorldReady
+  - name: (
+  - name: )
+- uid: Nebula.INetNodeBase._NetworkProcess(System.Int32)
+  commentId: M:Nebula.INetNodeBase._NetworkProcess(System.Int32)
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase._NetworkProcess.html#Nebula_INetNodeBase__NetworkProcess_System_Int32_
+  name: _NetworkProcess(int)
+  nameWithType: INetNodeBase._NetworkProcess(int)
+  fullName: Nebula.INetNodeBase._NetworkProcess(int)
+  nameWithType.vb: INetNodeBase._NetworkProcess(Integer)
+  fullName.vb: Nebula.INetNodeBase._NetworkProcess(Integer)
+  name.vb: _NetworkProcess(Integer)
+  spec.csharp:
+  - uid: Nebula.INetNodeBase._NetworkProcess(System.Int32)
+    name: _NetworkProcess
+    isExternal: true
+    href: Nebula.INetNodeBase._NetworkProcess.html#Nebula_INetNodeBase__NetworkProcess_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase._NetworkProcess(System.Int32)
+    name: _NetworkProcess
+    isExternal: true
+    href: Nebula.INetNodeBase._NetworkProcess.html#Nebula_INetNodeBase__NetworkProcess_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
+  commentId: M:Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.InvokePropertyChangeHandler.html#Nebula_INetNodeBase_InvokePropertyChangeHandler_System_Int32_System_Int32_Nebula_PropertyCache__Nebula_PropertyCache__
+  name: InvokePropertyChangeHandler(int, int, ref PropertyCache, ref PropertyCache)
+  nameWithType: INetNodeBase.InvokePropertyChangeHandler(int, int, ref PropertyCache, ref PropertyCache)
+  fullName: Nebula.INetNodeBase.InvokePropertyChangeHandler(int, int, ref Nebula.PropertyCache, ref Nebula.PropertyCache)
+  nameWithType.vb: INetNodeBase.InvokePropertyChangeHandler(Integer, Integer, PropertyCache, PropertyCache)
+  fullName.vb: Nebula.INetNodeBase.InvokePropertyChangeHandler(Integer, Integer, Nebula.PropertyCache, Nebula.PropertyCache)
+  name.vb: InvokePropertyChangeHandler(Integer, Integer, PropertyCache, PropertyCache)
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
+    name: InvokePropertyChangeHandler
+    isExternal: true
+    href: Nebula.INetNodeBase.InvokePropertyChangeHandler.html#Nebula_INetNodeBase_InvokePropertyChangeHandler_System_Int32_System_Int32_Nebula_PropertyCache__Nebula_PropertyCache__
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - name: ref
+  - name: " "
+  - uid: Nebula.PropertyCache
+    name: PropertyCache
+    isExternal: true
+    href: Nebula.PropertyCache.html
+  - name: ','
+  - name: " "
+  - name: ref
+  - name: " "
+  - uid: Nebula.PropertyCache
+    name: PropertyCache
+    isExternal: true
+    href: Nebula.PropertyCache.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
+    name: InvokePropertyChangeHandler
+    isExternal: true
+    href: Nebula.INetNodeBase.InvokePropertyChangeHandler.html#Nebula_INetNodeBase_InvokePropertyChangeHandler_System_Int32_System_Int32_Nebula_PropertyCache__Nebula_PropertyCache__
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.PropertyCache
+    name: PropertyCache
+    isExternal: true
+    href: Nebula.PropertyCache.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.PropertyCache
+    name: PropertyCache
+    isExternal: true
+    href: Nebula.PropertyCache.html
+  - name: )
+- uid: Nebula.INetNodeBase.SetNetPropertyByIndex(System.Int32,Nebula.PropertyCache@)
+  commentId: M:Nebula.INetNodeBase.SetNetPropertyByIndex(System.Int32,Nebula.PropertyCache@)
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.SetNetPropertyByIndex.html#Nebula_INetNodeBase_SetNetPropertyByIndex_System_Int32_Nebula_PropertyCache__
+  name: SetNetPropertyByIndex(int, ref PropertyCache)
+  nameWithType: INetNodeBase.SetNetPropertyByIndex(int, ref PropertyCache)
+  fullName: Nebula.INetNodeBase.SetNetPropertyByIndex(int, ref Nebula.PropertyCache)
+  nameWithType.vb: INetNodeBase.SetNetPropertyByIndex(Integer, PropertyCache)
+  fullName.vb: Nebula.INetNodeBase.SetNetPropertyByIndex(Integer, Nebula.PropertyCache)
+  name.vb: SetNetPropertyByIndex(Integer, PropertyCache)
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.SetNetPropertyByIndex(System.Int32,Nebula.PropertyCache@)
+    name: SetNetPropertyByIndex
+    isExternal: true
+    href: Nebula.INetNodeBase.SetNetPropertyByIndex.html#Nebula_INetNodeBase_SetNetPropertyByIndex_System_Int32_Nebula_PropertyCache__
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - name: ref
+  - name: " "
+  - uid: Nebula.PropertyCache
+    name: PropertyCache
+    isExternal: true
+    href: Nebula.PropertyCache.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.SetNetPropertyByIndex(System.Int32,Nebula.PropertyCache@)
+    name: SetNetPropertyByIndex
+    isExternal: true
+    href: Nebula.INetNodeBase.SetNetPropertyByIndex.html#Nebula_INetNodeBase_SetNetPropertyByIndex_System_Int32_Nebula_PropertyCache__
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.PropertyCache
+    name: PropertyCache
+    isExternal: true
+    href: Nebula.PropertyCache.html
+  - name: )
+- uid: Nebula.INetNodeBase.ProcessInterpolation(System.Single)
+  commentId: M:Nebula.INetNodeBase.ProcessInterpolation(System.Single)
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.ProcessInterpolation.html#Nebula_INetNodeBase_ProcessInterpolation_System_Single_
+  name: ProcessInterpolation(float)
+  nameWithType: INetNodeBase.ProcessInterpolation(float)
+  fullName: Nebula.INetNodeBase.ProcessInterpolation(float)
+  nameWithType.vb: INetNodeBase.ProcessInterpolation(Single)
+  fullName.vb: Nebula.INetNodeBase.ProcessInterpolation(Single)
+  name.vb: ProcessInterpolation(Single)
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.ProcessInterpolation(System.Single)
+    name: ProcessInterpolation
+    isExternal: true
+    href: Nebula.INetNodeBase.ProcessInterpolation.html#Nebula_INetNodeBase_ProcessInterpolation_System_Single_
+  - name: (
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.ProcessInterpolation(System.Single)
+    name: ProcessInterpolation
+    isExternal: true
+    href: Nebula.INetNodeBase.ProcessInterpolation.html#Nebula_INetNodeBase_ProcessInterpolation_System_Single_
+  - name: (
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: )
+- uid: Nebula.INetNodeBase.StorePredictedState(System.Int32)
+  commentId: M:Nebula.INetNodeBase.StorePredictedState(System.Int32)
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.StorePredictedState.html#Nebula_INetNodeBase_StorePredictedState_System_Int32_
+  name: StorePredictedState(int)
+  nameWithType: INetNodeBase.StorePredictedState(int)
+  fullName: Nebula.INetNodeBase.StorePredictedState(int)
+  nameWithType.vb: INetNodeBase.StorePredictedState(Integer)
+  fullName.vb: Nebula.INetNodeBase.StorePredictedState(Integer)
+  name.vb: StorePredictedState(Integer)
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.StorePredictedState(System.Int32)
+    name: StorePredictedState
+    isExternal: true
+    href: Nebula.INetNodeBase.StorePredictedState.html#Nebula_INetNodeBase_StorePredictedState_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.StorePredictedState(System.Int32)
+    name: StorePredictedState
+    isExternal: true
+    href: Nebula.INetNodeBase.StorePredictedState.html#Nebula_INetNodeBase_StorePredictedState_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Nebula.INetNodeBase.StoreConfirmedState
+  commentId: M:Nebula.INetNodeBase.StoreConfirmedState
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.StoreConfirmedState.html#Nebula_INetNodeBase_StoreConfirmedState
+  name: StoreConfirmedState()
+  nameWithType: INetNodeBase.StoreConfirmedState()
+  fullName: Nebula.INetNodeBase.StoreConfirmedState()
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.StoreConfirmedState
+    name: StoreConfirmedState
+    isExternal: true
+    href: Nebula.INetNodeBase.StoreConfirmedState.html#Nebula_INetNodeBase_StoreConfirmedState
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.StoreConfirmedState
+    name: StoreConfirmedState
+    isExternal: true
+    href: Nebula.INetNodeBase.StoreConfirmedState.html#Nebula_INetNodeBase_StoreConfirmedState
+  - name: (
+  - name: )
+- uid: Nebula.INetNodeBase.Reconcile(System.Int32,System.Boolean)
+  commentId: M:Nebula.INetNodeBase.Reconcile(System.Int32,System.Boolean)
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.Reconcile.html#Nebula_INetNodeBase_Reconcile_System_Int32_System_Boolean_
+  name: Reconcile(int, bool)
+  nameWithType: INetNodeBase.Reconcile(int, bool)
+  fullName: Nebula.INetNodeBase.Reconcile(int, bool)
+  nameWithType.vb: INetNodeBase.Reconcile(Integer, Boolean)
+  fullName.vb: Nebula.INetNodeBase.Reconcile(Integer, Boolean)
+  name.vb: Reconcile(Integer, Boolean)
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.Reconcile(System.Int32,System.Boolean)
+    name: Reconcile
+    isExternal: true
+    href: Nebula.INetNodeBase.Reconcile.html#Nebula_INetNodeBase_Reconcile_System_Int32_System_Boolean_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.Reconcile(System.Int32,System.Boolean)
+    name: Reconcile
+    isExternal: true
+    href: Nebula.INetNodeBase.Reconcile.html#Nebula_INetNodeBase_Reconcile_System_Int32_System_Boolean_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Nebula.INetNodeBase.RestoreToPredictedState(System.Int32)
+  commentId: M:Nebula.INetNodeBase.RestoreToPredictedState(System.Int32)
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.RestoreToPredictedState.html#Nebula_INetNodeBase_RestoreToPredictedState_System_Int32_
+  name: RestoreToPredictedState(int)
+  nameWithType: INetNodeBase.RestoreToPredictedState(int)
+  fullName: Nebula.INetNodeBase.RestoreToPredictedState(int)
+  nameWithType.vb: INetNodeBase.RestoreToPredictedState(Integer)
+  fullName.vb: Nebula.INetNodeBase.RestoreToPredictedState(Integer)
+  name.vb: RestoreToPredictedState(Integer)
+  spec.csharp:
+  - uid: Nebula.INetNodeBase.RestoreToPredictedState(System.Int32)
+    name: RestoreToPredictedState
+    isExternal: true
+    href: Nebula.INetNodeBase.RestoreToPredictedState.html#Nebula_INetNodeBase_RestoreToPredictedState_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Nebula.INetNodeBase.RestoreToPredictedState(System.Int32)
+    name: RestoreToPredictedState
+    isExternal: true
+    href: Nebula.INetNodeBase.RestoreToPredictedState.html#Nebula_INetNodeBase_RestoreToPredictedState_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Nebula.INetNodeBase.Network
+  commentId: P:Nebula.INetNodeBase.Network
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.Network.html#Nebula_INetNodeBase_Network
+  name: Network
+  nameWithType: INetNodeBase.Network
+  fullName: Nebula.INetNodeBase.Network
+- uid: Nebula.INetNodeBase.Serializers
+  commentId: P:Nebula.INetNodeBase.Serializers
+  parent: Nebula.INetNodeBase
+  isExternal: true
+  href: Nebula.INetNodeBase.Serializers.html#Nebula_INetNodeBase_Serializers
+  name: Serializers
+  nameWithType: INetNodeBase.Serializers
+  fullName: Nebula.INetNodeBase.Serializers
+- uid: Nebula.Serialization.INetSerializable{{T}}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,{T},Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.INetSerializable{`0}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.INetSerializable{{T}}
+  definition: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+  href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  name: NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  nameWithType: INetSerializable<T>.NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer)
+  nameWithType.vb: INetSerializable(Of T).NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable{`0}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+    name: NetworkSerialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable{`0}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+    name: NetworkSerialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: )
+- uid: Nebula.Serialization.INetSerializable{{T}}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,{T})
+  commentId: M:Nebula.Serialization.INetSerializable{`0}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  parent: Nebula.Serialization.INetSerializable{{T}}
+  definition: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  nameWithType: INetSerializable<T>.NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, T)
+  nameWithType.vb: INetSerializable(Of T).NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, T)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable{`0}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable{`0}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable{{T}}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],{T})
+  commentId: M:Nebula.Serialization.IBsonSerializable{`0}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  parent: Nebula.Serialization.IBsonSerializable{{T}}
+  definition: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  name: BsonDeserialize(NetBsonContext, byte[], T)
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(NetBsonContext, byte[], T)
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[], T)
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(NetBsonContext, Byte(), T)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte(), T)
+  name.vb: BsonDeserialize(NetBsonContext, Byte(), T)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable{`0}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializable{`0}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable{{T}}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  commentId: M:Nebula.Serialization.IBsonSerializable{`0}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  parent: Nebula.Serialization.IBsonSerializable{{T}}
+  definition: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  name: BsonDeserialize(NetBsonContext, byte[])
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(NetBsonContext, byte[])
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[])
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(NetBsonContext, Byte())
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte())
+  name.vb: BsonDeserialize(NetBsonContext, Byte())
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable{`0}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializable{`0}.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  parent: Nebula.Serialization.IBsonSerializableBase
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  name: BsonSerialize(NetBsonContext)
+  nameWithType: IBsonSerializableBase.BsonSerialize(NetBsonContext)
+  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+    name: BsonSerialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+    name: BsonSerialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  parent: Nebula.Serialization.IBsonSerializableBase
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  name: OnBsonDeserialize(NetBsonContext, BsonDocument)
+  nameWithType: IBsonSerializableBase.OnBsonDeserialize(NetBsonContext, BsonDocument)
+  fullName: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext, MongoDB.Bson.BsonDocument)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+    name: OnBsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: MongoDB.Bson.BsonDocument
+    name: BsonDocument
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+    name: OnBsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: MongoDB.Bson.BsonDocument
+    name: BsonDocument
+    isExternal: true
+  - name: )
+- uid: Nebula.INetNodeBase
+  commentId: T:Nebula.INetNodeBase
+  parent: Nebula
+  isExternal: true
+  href: Nebula.INetNodeBase.html
+  name: INetNodeBase
+  nameWithType: INetNodeBase
+  fullName: Nebula.INetNodeBase
+- uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  name: NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  nameWithType: INetSerializable<T>.NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer)
+  nameWithType.vb: INetSerializable(Of T).NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+    name: NetworkSerialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer)
+    name: NetworkSerialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.NetworkSerialize.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: )
+- uid: Nebula.Serialization.INetSerializable{{T}}
+  commentId: T:Nebula.Serialization.INetSerializable{`0}
+  parent: Nebula.Serialization
+  definition: Nebula.Serialization.INetSerializable`1
+  href: Nebula.Serialization.INetSerializable-1.html
+  name: INetSerializable<T>
+  nameWithType: INetSerializable<T>
+  fullName: Nebula.Serialization.INetSerializable<T>
+  nameWithType.vb: INetSerializable(Of T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T)
+  name.vb: INetSerializable(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable`1
+    name: INetSerializable
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1
+    name: INetSerializable
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  nameWithType: INetSerializable<T>.NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, T)
+  nameWithType.vb: INetSerializable(Of T).NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, T)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.NetworkDeserialize.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  name: BsonDeserialize(NetBsonContext, byte[], T)
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(NetBsonContext, byte[], T)
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[], T)
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(NetBsonContext, Byte(), T)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte(), T)
+  name.vb: BsonDeserialize(NetBsonContext, Byte(), T)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable{{T}}
+  commentId: T:Nebula.Serialization.IBsonSerializable{`0}
+  parent: Nebula.Serialization
+  definition: Nebula.Serialization.IBsonSerializable`1
+  href: Nebula.Serialization.IBsonSerializable-1.html
+  name: IBsonSerializable<T>
+  nameWithType: IBsonSerializable<T>
+  fullName: Nebula.Serialization.IBsonSerializable<T>
+  nameWithType.vb: IBsonSerializable(Of T)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T)
+  name.vb: IBsonSerializable(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable`1
+    name: IBsonSerializable
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializable`1
+    name: IBsonSerializable
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  name: BsonDeserialize(NetBsonContext, byte[])
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(NetBsonContext, byte[])
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[])
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(NetBsonContext, Byte())
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte())
+  name.vb: BsonDeserialize(NetBsonContext, Byte())
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializableBase
+  commentId: T:Nebula.Serialization.IBsonSerializableBase
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.html
+  name: IBsonSerializableBase
+  nameWithType: IBsonSerializableBase
+  fullName: Nebula.Serialization.IBsonSerializableBase
+- uid: Nebula.Serialization.INetSerializable`1
+  commentId: T:Nebula.Serialization.INetSerializable`1
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.html
+  name: INetSerializable<T>
+  nameWithType: INetSerializable<T>
+  fullName: Nebula.Serialization.INetSerializable<T>
+  nameWithType.vb: INetSerializable(Of T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T)
+  name.vb: INetSerializable(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable`1
+    name: INetSerializable
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1
+    name: INetSerializable
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.IBsonSerializable`1
+  commentId: T:Nebula.Serialization.IBsonSerializable`1
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializable-1.html
+  name: IBsonSerializable<T>
+  nameWithType: IBsonSerializable<T>
+  fullName: Nebula.Serialization.IBsonSerializable<T>
+  nameWithType.vb: IBsonSerializable(Of T)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T)
+  name.vb: IBsonSerializable(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializable`1
+    name: IBsonSerializable
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializable`1
+    name: IBsonSerializable
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+memberLayout: SeparatePages

@@ -1,0 +1,1137 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Testing.Integration.GodotProcess
+  commentId: T:Nebula.Testing.Integration.GodotProcess
+  id: GodotProcess
+  parent: Nebula.Testing.Integration
+  children:
+  - Nebula.Testing.Integration.GodotProcess.AllOutput
+  - Nebula.Testing.Integration.GodotProcess.ConnectDebug(System.Int32)
+  - Nebula.Testing.Integration.GodotProcess.DebugPort
+  - Nebula.Testing.Integration.GodotProcess.Dispose
+  - Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent(System.String,System.String,System.Nullable{System.TimeSpan})
+  - Nebula.Testing.Integration.GodotProcess.ExitCode
+  - Nebula.Testing.Integration.GodotProcess.GetDebugBuffer
+  - Nebula.Testing.Integration.GodotProcess.HasExited
+  - Nebula.Testing.Integration.GodotProcess.Label
+  - Nebula.Testing.Integration.GodotProcess.RequestSceneTreeDump(System.Nullable{System.TimeSpan})
+  - Nebula.Testing.Integration.GodotProcess.SendCommand(System.String)
+  - Nebula.Testing.Integration.GodotProcess.Start(System.String[],System.String)
+  - Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent(System.String,System.String,System.Nullable{System.TimeSpan})
+  - Nebula.Testing.Integration.GodotProcess.WaitForExit(System.Nullable{System.TimeSpan})
+  - Nebula.Testing.Integration.GodotProcess.WaitForOutput(System.String,System.Nullable{System.TimeSpan})
+  langs:
+  - csharp
+  - vb
+  name: GodotProcess
+  nameWithType: GodotProcess
+  fullName: Nebula.Testing.Integration.GodotProcess
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: >-
+    Wrapper around a Godot process for integration testing.
+
+    Handles spawning, stdout capture, stdin commands, and cleanup.
+  example: []
+  syntax:
+    content: 'public sealed class GodotProcess : IDisposable'
+    content.vb: Public NotInheritable Class GodotProcess Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Testing.Integration.GodotProcess.Start(System.String[],System.String)
+  commentId: M:Nebula.Testing.Integration.GodotProcess.Start(System.String[],System.String)
+  id: Start(System.String[],System.String)
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: Start(string[], string?)
+  nameWithType: GodotProcess.Start(string[], string?)
+  fullName: Nebula.Testing.Integration.GodotProcess.Start(string[], string?)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Starts a new Godot process with the given arguments.
+  example: []
+  syntax:
+    content: public static GodotProcess Start(string[] args, string? workingDirectory = null)
+    parameters:
+    - id: args
+      type: System.String[]
+      description: Command line arguments for Godot
+    - id: workingDirectory
+      type: System.String
+      description: Working directory (defaults to current directory)
+    return:
+      type: Nebula.Testing.Integration.GodotProcess
+      description: A new GodotProcess instance
+    content.vb: Public Shared Function Start(args As String(), workingDirectory As String = Nothing) As GodotProcess
+  overload: Nebula.Testing.Integration.GodotProcess.Start*
+  nameWithType.vb: GodotProcess.Start(String(), String)
+  fullName.vb: Nebula.Testing.Integration.GodotProcess.Start(String(), String)
+  name.vb: Start(String(), String)
+- uid: Nebula.Testing.Integration.GodotProcess.WaitForOutput(System.String,System.Nullable{System.TimeSpan})
+  commentId: M:Nebula.Testing.Integration.GodotProcess.WaitForOutput(System.String,System.Nullable{System.TimeSpan})
+  id: WaitForOutput(System.String,System.Nullable{System.TimeSpan})
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: WaitForOutput(string, TimeSpan?)
+  nameWithType: GodotProcess.WaitForOutput(string, TimeSpan?)
+  fullName: Nebula.Testing.Integration.GodotProcess.WaitForOutput(string, System.TimeSpan?)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Waits for a specific string to appear in the stdout output.
+  example: []
+  syntax:
+    content: public Task<string> WaitForOutput(string pattern, TimeSpan? timeout = null)
+    parameters:
+    - id: pattern
+      type: System.String
+      description: The string to wait for
+    - id: timeout
+      type: System.Nullable{System.TimeSpan}
+      description: Maximum time to wait
+    return:
+      type: System.Threading.Tasks.Task{System.String}
+      description: The line containing the pattern
+    content.vb: Public Function WaitForOutput(pattern As String, timeout As TimeSpan? = Nothing) As Task(Of String)
+  overload: Nebula.Testing.Integration.GodotProcess.WaitForOutput*
+  nameWithType.vb: GodotProcess.WaitForOutput(String, TimeSpan?)
+  fullName.vb: Nebula.Testing.Integration.GodotProcess.WaitForOutput(String, System.TimeSpan?)
+  name.vb: WaitForOutput(String, TimeSpan?)
+- uid: Nebula.Testing.Integration.GodotProcess.SendCommand(System.String)
+  commentId: M:Nebula.Testing.Integration.GodotProcess.SendCommand(System.String)
+  id: SendCommand(System.String)
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: SendCommand(string)
+  nameWithType: GodotProcess.SendCommand(string)
+  fullName: Nebula.Testing.Integration.GodotProcess.SendCommand(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Sends a command to the process via stdin.
+  example: []
+  syntax:
+    content: public void SendCommand(string command)
+    parameters:
+    - id: command
+      type: System.String
+      description: The command to send
+    content.vb: Public Sub SendCommand(command As String)
+  overload: Nebula.Testing.Integration.GodotProcess.SendCommand*
+  nameWithType.vb: GodotProcess.SendCommand(String)
+  fullName.vb: Nebula.Testing.Integration.GodotProcess.SendCommand(String)
+  name.vb: SendCommand(String)
+- uid: Nebula.Testing.Integration.GodotProcess.RequestSceneTreeDump(System.Nullable{System.TimeSpan})
+  commentId: M:Nebula.Testing.Integration.GodotProcess.RequestSceneTreeDump(System.Nullable{System.TimeSpan})
+  id: RequestSceneTreeDump(System.Nullable{System.TimeSpan})
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: RequestSceneTreeDump(TimeSpan?)
+  nameWithType: GodotProcess.RequestSceneTreeDump(TimeSpan?)
+  fullName: Nebula.Testing.Integration.GodotProcess.RequestSceneTreeDump(System.TimeSpan?)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: >-
+    Requests a scene tree dump from the Godot process and returns it.
+
+    Requires the process to have a StdinCommandHandler that handles the dump_tree command.
+  example: []
+  syntax:
+    content: public Task<string?> RequestSceneTreeDump(TimeSpan? timeout = null)
+    parameters:
+    - id: timeout
+      type: System.Nullable{System.TimeSpan}
+      description: Maximum time to wait for the dump
+    return:
+      type: System.Threading.Tasks.Task{System.String}
+      description: The scene tree dump as a string, or null if the process has exited
+    content.vb: Public Function RequestSceneTreeDump(timeout As TimeSpan? = Nothing) As Task(Of String)
+  overload: Nebula.Testing.Integration.GodotProcess.RequestSceneTreeDump*
+- uid: Nebula.Testing.Integration.GodotProcess.WaitForExit(System.Nullable{System.TimeSpan})
+  commentId: M:Nebula.Testing.Integration.GodotProcess.WaitForExit(System.Nullable{System.TimeSpan})
+  id: WaitForExit(System.Nullable{System.TimeSpan})
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: WaitForExit(TimeSpan?)
+  nameWithType: GodotProcess.WaitForExit(TimeSpan?)
+  fullName: Nebula.Testing.Integration.GodotProcess.WaitForExit(System.TimeSpan?)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Waits for the process to exit.
+  example: []
+  syntax:
+    content: public Task WaitForExit(TimeSpan? timeout = null)
+    parameters:
+    - id: timeout
+      type: System.Nullable{System.TimeSpan}
+      description: Maximum time to wait
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function WaitForExit(timeout As TimeSpan? = Nothing) As Task
+  overload: Nebula.Testing.Integration.GodotProcess.WaitForExit*
+- uid: Nebula.Testing.Integration.GodotProcess.ConnectDebug(System.Int32)
+  commentId: M:Nebula.Testing.Integration.GodotProcess.ConnectDebug(System.Int32)
+  id: ConnectDebug(System.Int32)
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: ConnectDebug(int)
+  nameWithType: GodotProcess.ConnectDebug(int)
+  fullName: Nebula.Testing.Integration.GodotProcess.ConnectDebug(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Connects to the Godot process's debug TCP server.
+  example: []
+  syntax:
+    content: public Task ConnectDebug(int port = 0)
+    parameters:
+    - id: port
+      type: System.Int32
+      description: The debug port to connect to. If 0, uses DebugPort property.
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function ConnectDebug(port As Integer = 0) As Task
+  overload: Nebula.Testing.Integration.GodotProcess.ConnectDebug*
+  nameWithType.vb: GodotProcess.ConnectDebug(Integer)
+  fullName.vb: Nebula.Testing.Integration.GodotProcess.ConnectDebug(Integer)
+  name.vb: ConnectDebug(Integer)
+- uid: Nebula.Testing.Integration.GodotProcess.GetDebugBuffer
+  commentId: M:Nebula.Testing.Integration.GodotProcess.GetDebugBuffer
+  id: GetDebugBuffer
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: GetDebugBuffer()
+  nameWithType: GodotProcess.GetDebugBuffer()
+  fullName: Nebula.Testing.Integration.GodotProcess.GetDebugBuffer()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Gets all currently queued debug events as a formatted string without removing them.
+  example: []
+  syntax:
+    content: public string GetDebugBuffer()
+    return:
+      type: System.String
+      description: A formatted string of all debug events
+    content.vb: Public Function GetDebugBuffer() As String
+  overload: Nebula.Testing.Integration.GodotProcess.GetDebugBuffer*
+- uid: Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent(System.String,System.String,System.Nullable{System.TimeSpan})
+  commentId: M:Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent(System.String,System.String,System.Nullable{System.TimeSpan})
+  id: WaitForDebugEvent(System.String,System.String,System.Nullable{System.TimeSpan})
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: WaitForDebugEvent(string, string, TimeSpan?)
+  nameWithType: GodotProcess.WaitForDebugEvent(string, string, TimeSpan?)
+  fullName: Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent(string, string, System.TimeSpan?)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Waits for a debug event matching the specified category and message pattern.
+  example: []
+  syntax:
+    content: public Task<DebugEvent> WaitForDebugEvent(string category, string messagePattern = "", TimeSpan? timeout = null)
+    parameters:
+    - id: category
+      type: System.String
+      description: Event category to match
+    - id: messagePattern
+      type: System.String
+      description: Message pattern to match (uses Contains)
+    - id: timeout
+      type: System.Nullable{System.TimeSpan}
+      description: Maximum time to wait
+    return:
+      type: System.Threading.Tasks.Task{Nebula.Testing.Integration.DebugEvent}
+    content.vb: Public Function WaitForDebugEvent(category As String, messagePattern As String = "", timeout As TimeSpan? = Nothing) As Task(Of DebugEvent)
+  overload: Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent*
+  nameWithType.vb: GodotProcess.WaitForDebugEvent(String, String, TimeSpan?)
+  fullName.vb: Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent(String, String, System.TimeSpan?)
+  name.vb: WaitForDebugEvent(String, String, TimeSpan?)
+- uid: Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent(System.String,System.String,System.Nullable{System.TimeSpan})
+  commentId: M:Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent(System.String,System.String,System.Nullable{System.TimeSpan})
+  id: EnsureNoDebugEvent(System.String,System.String,System.Nullable{System.TimeSpan})
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: EnsureNoDebugEvent(string, string, TimeSpan?)
+  nameWithType: GodotProcess.EnsureNoDebugEvent(string, string, TimeSpan?)
+  fullName: Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent(string, string, System.TimeSpan?)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Ensures no debug event matching the specified category and message pattern occurs within the timeout.
+  example: []
+  syntax:
+    content: public Task EnsureNoDebugEvent(string category, string messagePattern, TimeSpan? timeout = null)
+    parameters:
+    - id: category
+      type: System.String
+      description: Event category to match
+    - id: messagePattern
+      type: System.String
+      description: Message pattern to match (uses Contains)
+    - id: timeout
+      type: System.Nullable{System.TimeSpan}
+      description: Time period during which the event must not occur
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function EnsureNoDebugEvent(category As String, messagePattern As String, timeout As TimeSpan? = Nothing) As Task
+  overload: Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent*
+  exceptions:
+  - type: System.InvalidOperationException
+    commentId: T:System.InvalidOperationException
+    description: Thrown if the event occurs within the timeout
+  nameWithType.vb: GodotProcess.EnsureNoDebugEvent(String, String, TimeSpan?)
+  fullName.vb: Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent(String, String, System.TimeSpan?)
+  name.vb: EnsureNoDebugEvent(String, String, TimeSpan?)
+- uid: Nebula.Testing.Integration.GodotProcess.Dispose
+  commentId: M:Nebula.Testing.Integration.GodotProcess.Dispose
+  id: Dispose
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: GodotProcess.Dispose()
+  fullName: Nebula.Testing.Integration.GodotProcess.Dispose()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: Nebula.Testing.Integration.GodotProcess.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+- uid: Nebula.Testing.Integration.GodotProcess.Label
+  commentId: P:Nebula.Testing.Integration.GodotProcess.Label
+  id: Label
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: Label
+  nameWithType: GodotProcess.Label
+  fullName: Nebula.Testing.Integration.GodotProcess.Label
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Optional label to identify this process in logs (e.g., "server", "client1").
+  example: []
+  syntax:
+    content: public string? Label { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Label As String
+  overload: Nebula.Testing.Integration.GodotProcess.Label*
+- uid: Nebula.Testing.Integration.GodotProcess.DebugPort
+  commentId: P:Nebula.Testing.Integration.GodotProcess.DebugPort
+  id: DebugPort
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: DebugPort
+  nameWithType: GodotProcess.DebugPort
+  fullName: Nebula.Testing.Integration.GodotProcess.DebugPort
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: The port used for debug TCP connection. Set by StartServer/StartClient.
+  example: []
+  syntax:
+    content: public int DebugPort { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property DebugPort As Integer
+  overload: Nebula.Testing.Integration.GodotProcess.DebugPort*
+- uid: Nebula.Testing.Integration.GodotProcess.AllOutput
+  commentId: P:Nebula.Testing.Integration.GodotProcess.AllOutput
+  id: AllOutput
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: AllOutput
+  nameWithType: GodotProcess.AllOutput
+  fullName: Nebula.Testing.Integration.GodotProcess.AllOutput
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  syntax:
+    content: public string AllOutput { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property AllOutput As String
+  overload: Nebula.Testing.Integration.GodotProcess.AllOutput*
+- uid: Nebula.Testing.Integration.GodotProcess.HasExited
+  commentId: P:Nebula.Testing.Integration.GodotProcess.HasExited
+  id: HasExited
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: HasExited
+  nameWithType: GodotProcess.HasExited
+  fullName: Nebula.Testing.Integration.GodotProcess.HasExited
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  syntax:
+    content: public bool HasExited { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property HasExited As Boolean
+  overload: Nebula.Testing.Integration.GodotProcess.HasExited*
+- uid: Nebula.Testing.Integration.GodotProcess.ExitCode
+  commentId: P:Nebula.Testing.Integration.GodotProcess.ExitCode
+  id: ExitCode
+  parent: Nebula.Testing.Integration.GodotProcess
+  langs:
+  - csharp
+  - vb
+  name: ExitCode
+  nameWithType: GodotProcess.ExitCode
+  fullName: Nebula.Testing.Integration.GodotProcess.ExitCode
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/GodotProcess.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  syntax:
+    content: public int ExitCode { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property ExitCode As Integer
+  overload: Nebula.Testing.Integration.GodotProcess.ExitCode*
+references:
+- uid: Nebula.Testing.Integration
+  commentId: N:Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Testing.Integration
+  nameWithType: Nebula.Testing.Integration
+  fullName: Nebula.Testing.Integration
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Testing
+    name: Testing
+    isExternal: true
+    href: Nebula.Testing.html
+  - name: .
+  - uid: Nebula.Testing.Integration
+    name: Integration
+    isExternal: true
+    href: Nebula.Testing.Integration.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Testing
+    name: Testing
+    isExternal: true
+    href: Nebula.Testing.html
+  - name: .
+  - uid: Nebula.Testing.Integration
+    name: Integration
+    isExternal: true
+    href: Nebula.Testing.Integration.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Testing.Integration.GodotProcess.Start*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.Start
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.Start.html#Nebula_Testing_Integration_GodotProcess_Start_System_String___System_String_
+  name: Start
+  nameWithType: GodotProcess.Start
+  fullName: Nebula.Testing.Integration.GodotProcess.Start
+- uid: System.String[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string[]
+  nameWithType: string[]
+  fullName: string[]
+  nameWithType.vb: String()
+  fullName.vb: String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: (
+  - name: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.Testing.Integration.GodotProcess
+  commentId: T:Nebula.Testing.Integration.GodotProcess
+  parent: Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.html
+  name: GodotProcess
+  nameWithType: GodotProcess
+  fullName: Nebula.Testing.Integration.GodotProcess
+- uid: Nebula.Testing.Integration.GodotProcess.WaitForOutput*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.WaitForOutput
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.WaitForOutput.html#Nebula_Testing_Integration_GodotProcess_WaitForOutput_System_String_System_Nullable_System_TimeSpan__
+  name: WaitForOutput
+  nameWithType: GodotProcess.WaitForOutput
+  fullName: Nebula.Testing.Integration.GodotProcess.WaitForOutput
+- uid: System.Nullable{System.TimeSpan}
+  commentId: T:System.Nullable{System.TimeSpan}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.timespan
+  name: TimeSpan?
+  nameWithType: TimeSpan?
+  fullName: System.TimeSpan?
+  spec.csharp:
+  - uid: System.TimeSpan
+    name: TimeSpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.timespan
+  - name: '?'
+  spec.vb:
+  - uid: System.TimeSpan
+    name: TimeSpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.timespan
+  - name: '?'
+- uid: System.Threading.Tasks.Task{System.String}
+  commentId: T:System.Threading.Tasks.Task{System.String}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<string>
+  nameWithType: Task<string>
+  fullName: System.Threading.Tasks.Task<string>
+  nameWithType.vb: Task(Of String)
+  fullName.vb: System.Threading.Tasks.Task(Of String)
+  name.vb: Task(Of String)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Nebula.Testing.Integration.GodotProcess.SendCommand*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.SendCommand
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.SendCommand.html#Nebula_Testing_Integration_GodotProcess_SendCommand_System_String_
+  name: SendCommand
+  nameWithType: GodotProcess.SendCommand
+  fullName: Nebula.Testing.Integration.GodotProcess.SendCommand
+- uid: Nebula.Testing.Integration.GodotProcess.RequestSceneTreeDump*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.RequestSceneTreeDump
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.RequestSceneTreeDump.html#Nebula_Testing_Integration_GodotProcess_RequestSceneTreeDump_System_Nullable_System_TimeSpan__
+  name: RequestSceneTreeDump
+  nameWithType: GodotProcess.RequestSceneTreeDump
+  fullName: Nebula.Testing.Integration.GodotProcess.RequestSceneTreeDump
+- uid: Nebula.Testing.Integration.GodotProcess.WaitForExit*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.WaitForExit
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.WaitForExit.html#Nebula_Testing_Integration_GodotProcess_WaitForExit_System_Nullable_System_TimeSpan__
+  name: WaitForExit
+  nameWithType: GodotProcess.WaitForExit
+  fullName: Nebula.Testing.Integration.GodotProcess.WaitForExit
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: Nebula.Testing.Integration.GodotProcess.ConnectDebug*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.ConnectDebug
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.ConnectDebug.html#Nebula_Testing_Integration_GodotProcess_ConnectDebug_System_Int32_
+  name: ConnectDebug
+  nameWithType: GodotProcess.ConnectDebug
+  fullName: Nebula.Testing.Integration.GodotProcess.ConnectDebug
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.Testing.Integration.GodotProcess.GetDebugBuffer*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.GetDebugBuffer
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.GetDebugBuffer.html#Nebula_Testing_Integration_GodotProcess_GetDebugBuffer
+  name: GetDebugBuffer
+  nameWithType: GodotProcess.GetDebugBuffer
+  fullName: Nebula.Testing.Integration.GodotProcess.GetDebugBuffer
+- uid: Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent.html#Nebula_Testing_Integration_GodotProcess_WaitForDebugEvent_System_String_System_String_System_Nullable_System_TimeSpan__
+  name: WaitForDebugEvent
+  nameWithType: GodotProcess.WaitForDebugEvent
+  fullName: Nebula.Testing.Integration.GodotProcess.WaitForDebugEvent
+- uid: System.Threading.Tasks.Task{Nebula.Testing.Integration.DebugEvent}
+  commentId: T:System.Threading.Tasks.Task{Nebula.Testing.Integration.DebugEvent}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<DebugEvent>
+  nameWithType: Task<DebugEvent>
+  fullName: System.Threading.Tasks.Task<Nebula.Testing.Integration.DebugEvent>
+  nameWithType.vb: Task(Of DebugEvent)
+  fullName.vb: System.Threading.Tasks.Task(Of Nebula.Testing.Integration.DebugEvent)
+  name.vb: Task(Of DebugEvent)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Nebula.Testing.Integration.DebugEvent
+    name: DebugEvent
+    isExternal: true
+    href: Nebula.Testing.Integration.DebugEvent.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.Testing.Integration.DebugEvent
+    name: DebugEvent
+    isExternal: true
+    href: Nebula.Testing.Integration.DebugEvent.html
+  - name: )
+- uid: System.InvalidOperationException
+  commentId: T:System.InvalidOperationException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.invalidoperationexception
+  name: InvalidOperationException
+  nameWithType: InvalidOperationException
+  fullName: System.InvalidOperationException
+- uid: Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent.html#Nebula_Testing_Integration_GodotProcess_EnsureNoDebugEvent_System_String_System_String_System_Nullable_System_TimeSpan__
+  name: EnsureNoDebugEvent
+  nameWithType: GodotProcess.EnsureNoDebugEvent
+  fullName: Nebula.Testing.Integration.GodotProcess.EnsureNoDebugEvent
+- uid: Nebula.Testing.Integration.GodotProcess.Dispose*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.Dispose
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.Dispose.html#Nebula_Testing_Integration_GodotProcess_Dispose
+  name: Dispose
+  nameWithType: GodotProcess.Dispose
+  fullName: Nebula.Testing.Integration.GodotProcess.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: Nebula.Testing.Integration.GodotProcess.Label*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.Label
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.Label.html#Nebula_Testing_Integration_GodotProcess_Label
+  name: Label
+  nameWithType: GodotProcess.Label
+  fullName: Nebula.Testing.Integration.GodotProcess.Label
+- uid: Nebula.Testing.Integration.GodotProcess.DebugPort*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.DebugPort
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.DebugPort.html#Nebula_Testing_Integration_GodotProcess_DebugPort
+  name: DebugPort
+  nameWithType: GodotProcess.DebugPort
+  fullName: Nebula.Testing.Integration.GodotProcess.DebugPort
+- uid: Nebula.Testing.Integration.GodotProcess.AllOutput*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.AllOutput
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.AllOutput.html#Nebula_Testing_Integration_GodotProcess_AllOutput
+  name: AllOutput
+  nameWithType: GodotProcess.AllOutput
+  fullName: Nebula.Testing.Integration.GodotProcess.AllOutput
+- uid: Nebula.Testing.Integration.GodotProcess.HasExited*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.HasExited
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.HasExited.html#Nebula_Testing_Integration_GodotProcess_HasExited
+  name: HasExited
+  nameWithType: GodotProcess.HasExited
+  fullName: Nebula.Testing.Integration.GodotProcess.HasExited
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.Testing.Integration.GodotProcess.ExitCode*
+  commentId: Overload:Nebula.Testing.Integration.GodotProcess.ExitCode
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.ExitCode.html#Nebula_Testing_Integration_GodotProcess_ExitCode
+  name: ExitCode
+  nameWithType: GodotProcess.ExitCode
+  fullName: Nebula.Testing.Integration.GodotProcess.ExitCode
+memberLayout: SeparatePages

@@ -1,0 +1,189 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.INetValue`1
+  commentId: T:Nebula.Serialization.INetValue`1
+  id: INetValue`1
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  - Nebula.Serialization.INetValue`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0@,Nebula.Serialization.NetBuffer)
+  langs:
+  - csharp
+  - vb
+  name: INetValue<T>
+  nameWithType: INetValue<T>
+  fullName: Nebula.Serialization.INetValue<T>
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Interface for value types (structs) that can be serialized/deserialized over the network.
+
+    Uses static-only methods to avoid boxing. Pass structs with 'in' to avoid copies.
+  example: []
+  syntax:
+    content: 'public interface INetValue<T> where T : struct'
+    typeParameters:
+    - id: T
+      description: The struct type being serialized
+    content.vb: Public Interface INetValue(Of T As Structure)
+  nameWithType.vb: INetValue(Of T)
+  fullName.vb: Nebula.Serialization.INetValue(Of T)
+  name.vb: INetValue(Of T)
+- uid: Nebula.Serialization.INetValue`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0@,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.INetValue`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0@,Nebula.Serialization.NetBuffer)
+  id: NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0@,Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.INetValue`1
+  langs:
+  - csharp
+  - vb
+  name: NetworkSerialize(WorldRunner, Peer, in T, NetBuffer)
+  nameWithType: INetValue<T>.NetworkSerialize(WorldRunner, Peer, in T, NetBuffer)
+  fullName: Nebula.Serialization.INetValue<T>.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, in T, Nebula.Serialization.NetBuffer)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Serialize the value to the network buffer.
+  example: []
+  syntax:
+    content: public static abstract void NetworkSerialize(WorldRunner currentWorld, Peer peer, in T value, NetBuffer buffer)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: peer
+      type: ENet.Peer
+    - id: value
+      type: '{T}'
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Shared MustInherit Sub NetworkSerialize(currentWorld As WorldRunner, peer As Peer, value As T, buffer As NetBuffer)
+  overload: Nebula.Serialization.INetValue`1.NetworkSerialize*
+  nameWithType.vb: INetValue(Of T).NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+  fullName.vb: Nebula.Serialization.INetValue(Of T).NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer)
+  name.vb: NetworkSerialize(WorldRunner, Peer, T, NetBuffer)
+- uid: Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  id: NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.INetValue`1
+  langs:
+  - csharp
+  - vb
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  nameWithType: INetValue<T>.NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  fullName: Nebula.Serialization.INetValue<T>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Deserialize a value from the network buffer.
+  example: []
+  syntax:
+    content: public static abstract T NetworkDeserialize(WorldRunner currentWorld, Peer peer, NetBuffer buffer)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: peer
+      type: ENet.Peer
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: '{T}'
+    content.vb: Public Shared MustInherit Function NetworkDeserialize(currentWorld As WorldRunner, peer As Peer, buffer As NetBuffer) As T
+  overload: Nebula.Serialization.INetValue`1.NetworkDeserialize*
+  nameWithType.vb: INetValue(Of T).NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  fullName.vb: Nebula.Serialization.INetValue(Of T).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.INetValue`1.NetworkSerialize*
+  commentId: Overload:Nebula.Serialization.INetValue`1.NetworkSerialize
+  isExternal: true
+  href: Nebula.Serialization.INetValue-1.NetworkSerialize.html#Nebula_Serialization_INetValue_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0__Nebula_Serialization_NetBuffer_
+  name: NetworkSerialize
+  nameWithType: INetValue<T>.NetworkSerialize
+  fullName: Nebula.Serialization.INetValue<T>.NetworkSerialize
+  nameWithType.vb: INetValue(Of T).NetworkSerialize
+  fullName.vb: Nebula.Serialization.INetValue(Of T).NetworkSerialize
+- uid: Nebula.WorldRunner
+  commentId: T:Nebula.WorldRunner
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner
+  nameWithType: WorldRunner
+  fullName: Nebula.WorldRunner
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
+  isExternal: true
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: ENet
+  commentId: N:ENet
+  isExternal: true
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Nebula.Serialization.INetValue`1.NetworkDeserialize*
+  commentId: Overload:Nebula.Serialization.INetValue`1.NetworkDeserialize
+  isExternal: true
+  href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+  name: NetworkDeserialize
+  nameWithType: INetValue<T>.NetworkDeserialize
+  fullName: Nebula.Serialization.INetValue<T>.NetworkDeserialize
+  nameWithType.vb: INetValue(Of T).NetworkDeserialize
+  fullName.vb: Nebula.Serialization.INetValue(Of T).NetworkDeserialize
+memberLayout: SeparatePages

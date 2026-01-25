@@ -6,17 +6,17 @@ items:
   parent: Nebula.Internal.Editor
   children:
   - Nebula.Internal.Editor.AddonManager.MethodName.#ctor
-  - Nebula.Internal.Editor.AddonManager.MethodName.LoadAddons
-  - Nebula.Internal.Editor.AddonManager.MethodName.OnDownloadCompleted
-  - Nebula.Internal.Editor.AddonManager.MethodName.OnDownloadFailed
-  - Nebula.Internal.Editor.AddonManager.MethodName.OnReadmeRequestCompleted
-  - Nebula.Internal.Editor.AddonManager.MethodName.OnRequestCompleted
   - Nebula.Internal.Editor.AddonManager.MethodName.SetPluginRoot
   - Nebula.Internal.Editor.AddonManager.MethodName._OnAddonsMenuClicked
   - Nebula.Internal.Editor.AddonManager.MethodName._OnCloseRequested
-  - Nebula.Internal.Editor.AddonManager.MethodName._OnInstall
-  - Nebula.Internal.Editor.AddonManager.MethodName._OnItemSelected
   - Nebula.Internal.Editor.AddonManager.MethodName._Ready
+  - Nebula.Internal.Editor.AddonManager.MethodName._loadAddons
+  - Nebula.Internal.Editor.AddonManager.MethodName._onDownloadCompleted
+  - Nebula.Internal.Editor.AddonManager.MethodName._onDownloadFailed
+  - Nebula.Internal.Editor.AddonManager.MethodName._onInstall
+  - Nebula.Internal.Editor.AddonManager.MethodName._onItemSelected
+  - Nebula.Internal.Editor.AddonManager.MethodName._onReadmeRequestCompleted
+  - Nebula.Internal.Editor.AddonManager.MethodName._onRequestCompleted
   langs:
   - csharp
   - vb
@@ -25,7 +25,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -517,7 +517,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.MethodName._Ready
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -540,7 +540,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.MethodName.SetPluginRoot
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -563,7 +563,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.MethodName._OnAddonsMenuClicked
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -574,167 +574,167 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _OnAddonsMenuClicked As StringName
-- uid: Nebula.Internal.Editor.AddonManager.MethodName._OnInstall
-  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName._OnInstall
-  id: _OnInstall
+- uid: Nebula.Internal.Editor.AddonManager.MethodName._onInstall
+  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName._onInstall
+  id: _onInstall
   parent: Nebula.Internal.Editor.AddonManager.MethodName
   langs:
   - csharp
   - vb
-  name: _OnInstall
-  nameWithType: AddonManager.MethodName._OnInstall
-  fullName: Nebula.Internal.Editor.AddonManager.MethodName._OnInstall
+  name: _onInstall
+  nameWithType: AddonManager.MethodName._onInstall
+  fullName: Nebula.Internal.Editor.AddonManager.MethodName._onInstall
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
-  summary: Cached name for the '_OnInstall' method.
+  summary: Cached name for the '_onInstall' method.
   example: []
   syntax:
-    content: public static readonly StringName _OnInstall
+    content: public static readonly StringName _onInstall
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly _OnInstall As StringName
-- uid: Nebula.Internal.Editor.AddonManager.MethodName.LoadAddons
-  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName.LoadAddons
-  id: LoadAddons
+    content.vb: Public Shared ReadOnly _onInstall As StringName
+- uid: Nebula.Internal.Editor.AddonManager.MethodName._loadAddons
+  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName._loadAddons
+  id: _loadAddons
   parent: Nebula.Internal.Editor.AddonManager.MethodName
   langs:
   - csharp
   - vb
-  name: LoadAddons
-  nameWithType: AddonManager.MethodName.LoadAddons
-  fullName: Nebula.Internal.Editor.AddonManager.MethodName.LoadAddons
+  name: _loadAddons
+  nameWithType: AddonManager.MethodName._loadAddons
+  fullName: Nebula.Internal.Editor.AddonManager.MethodName._loadAddons
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
-  summary: Cached name for the 'LoadAddons' method.
+  summary: Cached name for the '_loadAddons' method.
   example: []
   syntax:
-    content: public static readonly StringName LoadAddons
+    content: public static readonly StringName _loadAddons
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly LoadAddons As StringName
-- uid: Nebula.Internal.Editor.AddonManager.MethodName._OnItemSelected
-  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName._OnItemSelected
-  id: _OnItemSelected
+    content.vb: Public Shared ReadOnly _loadAddons As StringName
+- uid: Nebula.Internal.Editor.AddonManager.MethodName._onItemSelected
+  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName._onItemSelected
+  id: _onItemSelected
   parent: Nebula.Internal.Editor.AddonManager.MethodName
   langs:
   - csharp
   - vb
-  name: _OnItemSelected
-  nameWithType: AddonManager.MethodName._OnItemSelected
-  fullName: Nebula.Internal.Editor.AddonManager.MethodName._OnItemSelected
+  name: _onItemSelected
+  nameWithType: AddonManager.MethodName._onItemSelected
+  fullName: Nebula.Internal.Editor.AddonManager.MethodName._onItemSelected
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
-  summary: Cached name for the '_OnItemSelected' method.
+  summary: Cached name for the '_onItemSelected' method.
   example: []
   syntax:
-    content: public static readonly StringName _OnItemSelected
+    content: public static readonly StringName _onItemSelected
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly _OnItemSelected As StringName
-- uid: Nebula.Internal.Editor.AddonManager.MethodName.OnRequestCompleted
-  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName.OnRequestCompleted
-  id: OnRequestCompleted
+    content.vb: Public Shared ReadOnly _onItemSelected As StringName
+- uid: Nebula.Internal.Editor.AddonManager.MethodName._onRequestCompleted
+  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName._onRequestCompleted
+  id: _onRequestCompleted
   parent: Nebula.Internal.Editor.AddonManager.MethodName
   langs:
   - csharp
   - vb
-  name: OnRequestCompleted
-  nameWithType: AddonManager.MethodName.OnRequestCompleted
-  fullName: Nebula.Internal.Editor.AddonManager.MethodName.OnRequestCompleted
+  name: _onRequestCompleted
+  nameWithType: AddonManager.MethodName._onRequestCompleted
+  fullName: Nebula.Internal.Editor.AddonManager.MethodName._onRequestCompleted
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
-  summary: Cached name for the 'OnRequestCompleted' method.
+  summary: Cached name for the '_onRequestCompleted' method.
   example: []
   syntax:
-    content: public static readonly StringName OnRequestCompleted
+    content: public static readonly StringName _onRequestCompleted
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnRequestCompleted As StringName
-- uid: Nebula.Internal.Editor.AddonManager.MethodName.OnReadmeRequestCompleted
-  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName.OnReadmeRequestCompleted
-  id: OnReadmeRequestCompleted
+    content.vb: Public Shared ReadOnly _onRequestCompleted As StringName
+- uid: Nebula.Internal.Editor.AddonManager.MethodName._onReadmeRequestCompleted
+  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName._onReadmeRequestCompleted
+  id: _onReadmeRequestCompleted
   parent: Nebula.Internal.Editor.AddonManager.MethodName
   langs:
   - csharp
   - vb
-  name: OnReadmeRequestCompleted
-  nameWithType: AddonManager.MethodName.OnReadmeRequestCompleted
-  fullName: Nebula.Internal.Editor.AddonManager.MethodName.OnReadmeRequestCompleted
+  name: _onReadmeRequestCompleted
+  nameWithType: AddonManager.MethodName._onReadmeRequestCompleted
+  fullName: Nebula.Internal.Editor.AddonManager.MethodName._onReadmeRequestCompleted
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
-  summary: Cached name for the 'OnReadmeRequestCompleted' method.
+  summary: Cached name for the '_onReadmeRequestCompleted' method.
   example: []
   syntax:
-    content: public static readonly StringName OnReadmeRequestCompleted
+    content: public static readonly StringName _onReadmeRequestCompleted
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnReadmeRequestCompleted As StringName
-- uid: Nebula.Internal.Editor.AddonManager.MethodName.OnDownloadCompleted
-  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName.OnDownloadCompleted
-  id: OnDownloadCompleted
+    content.vb: Public Shared ReadOnly _onReadmeRequestCompleted As StringName
+- uid: Nebula.Internal.Editor.AddonManager.MethodName._onDownloadCompleted
+  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName._onDownloadCompleted
+  id: _onDownloadCompleted
   parent: Nebula.Internal.Editor.AddonManager.MethodName
   langs:
   - csharp
   - vb
-  name: OnDownloadCompleted
-  nameWithType: AddonManager.MethodName.OnDownloadCompleted
-  fullName: Nebula.Internal.Editor.AddonManager.MethodName.OnDownloadCompleted
+  name: _onDownloadCompleted
+  nameWithType: AddonManager.MethodName._onDownloadCompleted
+  fullName: Nebula.Internal.Editor.AddonManager.MethodName._onDownloadCompleted
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
-  summary: Cached name for the 'OnDownloadCompleted' method.
+  summary: Cached name for the '_onDownloadCompleted' method.
   example: []
   syntax:
-    content: public static readonly StringName OnDownloadCompleted
+    content: public static readonly StringName _onDownloadCompleted
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnDownloadCompleted As StringName
-- uid: Nebula.Internal.Editor.AddonManager.MethodName.OnDownloadFailed
-  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName.OnDownloadFailed
-  id: OnDownloadFailed
+    content.vb: Public Shared ReadOnly _onDownloadCompleted As StringName
+- uid: Nebula.Internal.Editor.AddonManager.MethodName._onDownloadFailed
+  commentId: F:Nebula.Internal.Editor.AddonManager.MethodName._onDownloadFailed
+  id: _onDownloadFailed
   parent: Nebula.Internal.Editor.AddonManager.MethodName
   langs:
   - csharp
   - vb
-  name: OnDownloadFailed
-  nameWithType: AddonManager.MethodName.OnDownloadFailed
-  fullName: Nebula.Internal.Editor.AddonManager.MethodName.OnDownloadFailed
+  name: _onDownloadFailed
+  nameWithType: AddonManager.MethodName._onDownloadFailed
+  fullName: Nebula.Internal.Editor.AddonManager.MethodName._onDownloadFailed
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
-  summary: Cached name for the 'OnDownloadFailed' method.
+  summary: Cached name for the '_onDownloadFailed' method.
   example: []
   syntax:
-    content: public static readonly StringName OnDownloadFailed
+    content: public static readonly StringName _onDownloadFailed
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnDownloadFailed As StringName
+    content.vb: Public Shared ReadOnly _onDownloadFailed As StringName
 - uid: Nebula.Internal.Editor.AddonManager.MethodName._OnCloseRequested
   commentId: F:Nebula.Internal.Editor.AddonManager.MethodName._OnCloseRequested
   id: _OnCloseRequested
@@ -747,7 +747,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.MethodName._OnCloseRequested
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -770,7 +770,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -4363,10 +4363,11 @@ references:
 - uid: Nebula.Internal.Editor.AddonManager.MethodName.#ctor*
   commentId: Overload:Nebula.Internal.Editor.AddonManager.MethodName.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.AddonManager.MethodName.html#Nebula_Internal_Editor_AddonManager_MethodName__ctor
+  href: Nebula.Internal.Editor.AddonManager.MethodName.-ctor.html#Nebula_Internal_Editor_AddonManager_MethodName__ctor
   name: MethodName
   nameWithType: AddonManager.MethodName.MethodName
   fullName: Nebula.Internal.Editor.AddonManager.MethodName.MethodName
   nameWithType.vb: AddonManager.MethodName.New
   fullName.vb: Nebula.Internal.Editor.AddonManager.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetworkVisibility.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -88,7 +88,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetworkVisibility.PropertyName.nodes
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -111,7 +111,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetworkVisibility.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetworkVisibility_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -755,10 +755,11 @@ references:
 - uid: Nebula.Utility.Nodes.NetworkVisibility.PropertyName.#ctor*
   commentId: Overload:Nebula.Utility.Nodes.NetworkVisibility.PropertyName.#ctor
   isExternal: true
-  href: Nebula.Utility.Nodes.NetworkVisibility.PropertyName.html#Nebula_Utility_Nodes_NetworkVisibility_PropertyName__ctor
+  href: Nebula.Utility.Nodes.NetworkVisibility.PropertyName.-ctor.html#Nebula_Utility_Nodes_NetworkVisibility_PropertyName__ctor
   name: PropertyName
   nameWithType: NetworkVisibility.PropertyName.PropertyName
   fullName: Nebula.Utility.Nodes.NetworkVisibility.PropertyName.PropertyName
   nameWithType.vb: NetworkVisibility.PropertyName.New
   fullName.vb: Nebula.Utility.Nodes.NetworkVisibility.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

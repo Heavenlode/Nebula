@@ -8,10 +8,14 @@ items:
   - Nebula.NetPose3D.PropertyName.#ctor
   - Nebula.NetPose3D.PropertyName.ClientState
   - Nebula.NetPose3D.PropertyName.KeyframeFrequency
-  - Nebula.NetPose3D.PropertyName.Owner
   - Nebula.NetPose3D.PropertyName.Position
   - Nebula.NetPose3D.PropertyName.Rotation
+  - Nebula.NetPose3D.PropertyName.RotationQuat
+  - Nebula.NetPose3D.PropertyName._cumulativeRotationDelta
   - Nebula.NetPose3D.PropertyName._keyframeOffset
+  - Nebula.NetPose3D.PropertyName._rotation
+  - Nebula.NetPose3D.PropertyName._rotationDelta
+  - Nebula.NetPose3D.PropertyName._rotationKeyframe
   - Nebula.NetPose3D.PropertyName._shouldSendKeyframe
   langs:
   - csharp
@@ -21,7 +25,7 @@ items:
   fullName: Nebula.NetPose3D.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -54,7 +58,7 @@ items:
   fullName: Nebula.NetPose3D.PropertyName.Position
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -77,7 +81,7 @@ items:
   fullName: Nebula.NetPose3D.PropertyName.Rotation
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -88,6 +92,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly Rotation As StringName
+- uid: Nebula.NetPose3D.PropertyName.RotationQuat
+  commentId: F:Nebula.NetPose3D.PropertyName.RotationQuat
+  id: RotationQuat
+  parent: Nebula.NetPose3D.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: RotationQuat
+  nameWithType: NetPose3D.PropertyName.RotationQuat
+  fullName: Nebula.NetPose3D.PropertyName.RotationQuat
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'RotationQuat' property.
+  example: []
+  syntax:
+    content: public static readonly StringName RotationQuat
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly RotationQuat As StringName
 - uid: Nebula.NetPose3D.PropertyName.ClientState
   commentId: F:Nebula.NetPose3D.PropertyName.ClientState
   id: ClientState
@@ -100,7 +127,7 @@ items:
   fullName: Nebula.NetPose3D.PropertyName.ClientState
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -111,6 +138,75 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly ClientState As StringName
+- uid: Nebula.NetPose3D.PropertyName._rotation
+  commentId: F:Nebula.NetPose3D.PropertyName._rotation
+  id: _rotation
+  parent: Nebula.NetPose3D.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _rotation
+  nameWithType: NetPose3D.PropertyName._rotation
+  fullName: Nebula.NetPose3D.PropertyName._rotation
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_rotation' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _rotation
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _rotation As StringName
+- uid: Nebula.NetPose3D.PropertyName._rotationDelta
+  commentId: F:Nebula.NetPose3D.PropertyName._rotationDelta
+  id: _rotationDelta
+  parent: Nebula.NetPose3D.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _rotationDelta
+  nameWithType: NetPose3D.PropertyName._rotationDelta
+  fullName: Nebula.NetPose3D.PropertyName._rotationDelta
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_rotationDelta' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _rotationDelta
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _rotationDelta As StringName
+- uid: Nebula.NetPose3D.PropertyName._rotationKeyframe
+  commentId: F:Nebula.NetPose3D.PropertyName._rotationKeyframe
+  id: _rotationKeyframe
+  parent: Nebula.NetPose3D.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: _rotationKeyframe
+  nameWithType: NetPose3D.PropertyName._rotationKeyframe
+  fullName: Nebula.NetPose3D.PropertyName._rotationKeyframe
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_rotationKeyframe' field.
+  example: []
+  syntax:
+    content: public static readonly StringName _rotationKeyframe
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _rotationKeyframe As StringName
 - uid: Nebula.NetPose3D.PropertyName.KeyframeFrequency
   commentId: F:Nebula.NetPose3D.PropertyName.KeyframeFrequency
   id: KeyframeFrequency
@@ -123,7 +219,7 @@ items:
   fullName: Nebula.NetPose3D.PropertyName.KeyframeFrequency
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -146,7 +242,7 @@ items:
   fullName: Nebula.NetPose3D.PropertyName._keyframeOffset
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -157,29 +253,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _keyframeOffset As StringName
-- uid: Nebula.NetPose3D.PropertyName.Owner
-  commentId: F:Nebula.NetPose3D.PropertyName.Owner
-  id: Owner
+- uid: Nebula.NetPose3D.PropertyName._cumulativeRotationDelta
+  commentId: F:Nebula.NetPose3D.PropertyName._cumulativeRotationDelta
+  id: _cumulativeRotationDelta
   parent: Nebula.NetPose3D.PropertyName
   langs:
   - csharp
   - vb
-  name: Owner
-  nameWithType: NetPose3D.PropertyName.Owner
-  fullName: Nebula.NetPose3D.PropertyName.Owner
+  name: _cumulativeRotationDelta
+  nameWithType: NetPose3D.PropertyName._cumulativeRotationDelta
+  fullName: Nebula.NetPose3D.PropertyName._cumulativeRotationDelta
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Cached name for the 'Owner' field.
+  summary: Cached name for the '_cumulativeRotationDelta' field.
   example: []
   syntax:
-    content: public static readonly StringName Owner
+    content: public static readonly StringName _cumulativeRotationDelta
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly Owner As StringName
+    content.vb: Public Shared ReadOnly _cumulativeRotationDelta As StringName
 - uid: Nebula.NetPose3D.PropertyName._shouldSendKeyframe
   commentId: F:Nebula.NetPose3D.PropertyName._shouldSendKeyframe
   id: _shouldSendKeyframe
@@ -192,7 +288,7 @@ items:
   fullName: Nebula.NetPose3D.PropertyName._shouldSendKeyframe
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -215,7 +311,7 @@ items:
   fullName: Nebula.NetPose3D.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -533,10 +629,11 @@ references:
 - uid: Nebula.NetPose3D.PropertyName.#ctor*
   commentId: Overload:Nebula.NetPose3D.PropertyName.#ctor
   isExternal: true
-  href: Nebula.NetPose3D.PropertyName.html#Nebula_NetPose3D_PropertyName__ctor
+  href: Nebula.NetPose3D.PropertyName.-ctor.html#Nebula_NetPose3D_PropertyName__ctor
   name: PropertyName
   nameWithType: NetPose3D.PropertyName.PropertyName
   fullName: Nebula.NetPose3D.PropertyName.PropertyName
   nameWithType.vb: NetPose3D.PropertyName.New
   fullName.vb: Nebula.NetPose3D.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

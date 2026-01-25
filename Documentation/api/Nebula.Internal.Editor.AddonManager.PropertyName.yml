@@ -8,11 +8,9 @@ items:
   - Nebula.Internal.Editor.AddonManager.PropertyName.#ctor
   - Nebula.Internal.Editor.AddonManager.PropertyName.AddonDescription
   - Nebula.Internal.Editor.AddonManager.PropertyName.AddonList
-  - Nebula.Internal.Editor.AddonManager.PropertyName.addonData
   - Nebula.Internal.Editor.AddonManager.PropertyName.downloader
   - Nebula.Internal.Editor.AddonManager.PropertyName.httpRequest
   - Nebula.Internal.Editor.AddonManager.PropertyName.loaded
-  - Nebula.Internal.Editor.AddonManager.PropertyName.readmeCache
   - Nebula.Internal.Editor.AddonManager.PropertyName.readmeRequest
   langs:
   - csharp
@@ -22,7 +20,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -165,7 +163,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.PropertyName.AddonList
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -188,7 +186,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.PropertyName.AddonDescription
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -211,7 +209,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.PropertyName.loaded
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -234,7 +232,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.PropertyName.httpRequest
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -257,7 +255,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.PropertyName.readmeRequest
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -268,52 +266,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly readmeRequest As StringName
-- uid: Nebula.Internal.Editor.AddonManager.PropertyName.readmeCache
-  commentId: F:Nebula.Internal.Editor.AddonManager.PropertyName.readmeCache
-  id: readmeCache
-  parent: Nebula.Internal.Editor.AddonManager.PropertyName
-  langs:
-  - csharp
-  - vb
-  name: readmeCache
-  nameWithType: AddonManager.PropertyName.readmeCache
-  fullName: Nebula.Internal.Editor.AddonManager.PropertyName.readmeCache
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Internal.Editor
-  summary: Cached name for the 'readmeCache' field.
-  example: []
-  syntax:
-    content: public static readonly StringName readmeCache
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly readmeCache As StringName
-- uid: Nebula.Internal.Editor.AddonManager.PropertyName.addonData
-  commentId: F:Nebula.Internal.Editor.AddonManager.PropertyName.addonData
-  id: addonData
-  parent: Nebula.Internal.Editor.AddonManager.PropertyName
-  langs:
-  - csharp
-  - vb
-  name: addonData
-  nameWithType: AddonManager.PropertyName.addonData
-  fullName: Nebula.Internal.Editor.AddonManager.PropertyName.addonData
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Internal.Editor
-  summary: Cached name for the 'addonData' field.
-  example: []
-  syntax:
-    content: public static readonly StringName addonData
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly addonData As StringName
 - uid: Nebula.Internal.Editor.AddonManager.PropertyName.downloader
   commentId: F:Nebula.Internal.Editor.AddonManager.PropertyName.downloader
   id: downloader
@@ -326,7 +278,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.PropertyName.downloader
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -349,7 +301,7 @@ items:
   fullName: Nebula.Internal.Editor.AddonManager.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.AddonManager_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1499,10 +1451,11 @@ references:
 - uid: Nebula.Internal.Editor.AddonManager.PropertyName.#ctor*
   commentId: Overload:Nebula.Internal.Editor.AddonManager.PropertyName.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.AddonManager.PropertyName.html#Nebula_Internal_Editor_AddonManager_PropertyName__ctor
+  href: Nebula.Internal.Editor.AddonManager.PropertyName.-ctor.html#Nebula_Internal_Editor_AddonManager_PropertyName__ctor
   name: PropertyName
   nameWithType: AddonManager.PropertyName.PropertyName
   fullName: Nebula.Internal.Editor.AddonManager.PropertyName.PropertyName
   nameWithType.vb: AddonManager.PropertyName.New
   fullName.vb: Nebula.Internal.Editor.AddonManager.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

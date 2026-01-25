@@ -9,12 +9,10 @@ items:
   - Nebula.NetRunner.Authentication
   - Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
   - Nebula.NetRunner.DebugPort
-  - Nebula.NetRunner.EmitSignalOnConnectedToServer
-  - Nebula.NetRunner.EmitSignalOnPeerConnected(Godot.ENetPacketPeer)
-  - Nebula.NetRunner.EmitSignalOnPeerDisconnected(Godot.ENetPacketPeer)
-  - Nebula.NetRunner.EmitSignalOnWorldCreated(Nebula.WorldRunner)
+  - Nebula.NetRunner.DefaultServerAddress
   - Nebula.NetRunner.GetPeer(Nebula.UUID)
-  - Nebula.NetRunner.GetPeerId(Godot.ENetPacketPeer)
+  - Nebula.NetRunner.GetPeerByNativeId(System.UInt32)
+  - Nebula.NetRunner.GetPeerId(ENet.Peer)
   - Nebula.NetRunner.Instance
   - Nebula.NetRunner.IsClient
   - Nebula.NetRunner.IsServer
@@ -26,19 +24,28 @@ items:
   - Nebula.NetRunner.OnPeerDisconnected
   - Nebula.NetRunner.OnWorldCreated
   - Nebula.NetRunner.OverridePort(System.Int32)
-  - Nebula.NetRunner.PeerJoinWorld(Godot.ENetPacketPeer,Nebula.UUID,System.String)
+  - Nebula.NetRunner.PeerJoinWorld(ENet.Peer,Nebula.UUID,System.String)
   - Nebula.NetRunner.PhysicsTicksPerNetworkTick
   - Nebula.NetRunner.Port
-  - Nebula.NetRunner.ReserveChannel(System.Int32,Godot.Callable)
+  - Nebula.NetRunner.ReserveChannel(System.Int32,System.Action{ENet.Peer,System.Byte[]})
+  - Nebula.NetRunner.SendPacket(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer,ENet.PacketFlags)
+  - Nebula.NetRunner.SendPacket(ENet.Peer,System.Byte,System.Byte[],ENet.PacketFlags)
+  - Nebula.NetRunner.SendReliable(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  - Nebula.NetRunner.SendReliable(ENet.Peer,System.Byte,System.Byte[])
+  - Nebula.NetRunner.SendUnreliable(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  - Nebula.NetRunner.SendUnreliable(ENet.Peer,System.Byte,System.Byte[])
+  - Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  - Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer,System.Byte,System.Byte[])
   - Nebula.NetRunner.ServerAddress
   - Nebula.NetRunner.SetAuthentication(Nebula.Authentication.IAuthenticator)
-  - Nebula.NetRunner.SetupWorldInstance(Nebula.UUID,Nebula.NetNodeWrapper)
+  - Nebula.NetRunner.SetupWorldInstance(Nebula.UUID,Nebula.NetworkController)
   - Nebula.NetRunner.StartClient
   - Nebula.NetRunner.StartServer
   - Nebula.NetRunner.TPS
   - Nebula.NetRunner.Worlds
   - Nebula.NetRunner._EnterTree
-  - Nebula.NetRunner._OnPeerDisconnected(Godot.ENetPacketPeer)
+  - Nebula.NetRunner._ExitTree
+  - Nebula.NetRunner._OnPeerDisconnected(ENet.Peer)
   - Nebula.NetRunner._PhysicsProcess(System.Double)
   - Nebula.NetRunner._Ready
   langs:
@@ -49,7 +56,7 @@ items:
   fullName: Nebula.NetRunner
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -125,7 +132,6 @@ items:
   - Godot.Node.GetOwnerOrNull``1
   - Godot.Node.GetParent``1
   - Godot.Node.GetParentOrNull``1
-  - Godot.Node._ExitTree
   - Godot.Node._GetAccessibilityConfigurationWarnings
   - Godot.Node._GetAccessibilityContainerName(Godot.Node)
   - Godot.Node._GetConfigurationWarnings
@@ -367,35 +373,38 @@ items:
     arguments:
     - type: System.String
       value: res://addons/Nebula/Core/NetRunner.cs
-- uid: Nebula.NetRunner.ServerAddress
-  commentId: F:Nebula.NetRunner.ServerAddress
-  id: ServerAddress
+- uid: Nebula.NetRunner.DefaultServerAddress
+  commentId: F:Nebula.NetRunner.DefaultServerAddress
+  id: DefaultServerAddress
   parent: Nebula.NetRunner
   langs:
   - csharp
   - vb
-  name: ServerAddress
-  nameWithType: NetRunner.ServerAddress
-  fullName: Nebula.NetRunner.ServerAddress
+  name: DefaultServerAddress
+  nameWithType: NetRunner.DefaultServerAddress
+  fullName: Nebula.NetRunner.DefaultServerAddress
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: A fully qualified domain (www.example.com) or IP address (192.168.1.1) of the host. Used for client connections.
+  summary: >-
+    A fully qualified domain (www.example.com) or IP address (192.168.1.1) of the host. Used for client connections.
+
+    Can be overridden via SERVER_ADDRESS environment variable or .env file.
   example: []
   syntax:
     content: >-
       [Export(PropertyHint.None, "")]
 
-      public string ServerAddress
+      public string DefaultServerAddress
     return:
       type: System.String
     content.vb: >-
       <Export(PropertyHint.None, "")>
 
-      Public ServerAddress As String
+      Public DefaultServerAddress As String
   attributes:
   - type: Godot.ExportAttribute
     ctor: Godot.ExportAttribute.#ctor(Godot.PropertyHint,System.String)
@@ -416,7 +425,7 @@ items:
   fullName: Nebula.NetRunner.DebugPort
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -439,7 +448,7 @@ items:
   fullName: Nebula.NetRunner.MaxPeers
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -476,7 +485,7 @@ items:
   fullName: Nebula.NetRunner.PhysicsTicksPerNetworkTick
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -487,29 +496,6 @@ items:
     return:
       type: System.Int32
     content.vb: Public Const PhysicsTicksPerNetworkTick As Integer = 2
-- uid: Nebula.NetRunner.TPS
-  commentId: F:Nebula.NetRunner.TPS
-  id: TPS
-  parent: Nebula.NetRunner
-  langs:
-  - csharp
-  - vb
-  name: TPS
-  nameWithType: NetRunner.TPS
-  fullName: Nebula.NetRunner.TPS
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Ticks Per Second. The number of Ticks which are expected to elapse every second.
-  example: []
-  syntax:
-    content: public static int TPS
-    return:
-      type: System.Int32
-    content.vb: Public Shared TPS As Integer
 - uid: Nebula.NetRunner.OverridePort(System.Int32)
   commentId: M:Nebula.NetRunner.OverridePort(System.Int32)
   id: OverridePort(System.Int32)
@@ -522,7 +508,7 @@ items:
   fullName: Nebula.NetRunner.OverridePort(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -533,7 +519,6 @@ items:
     parameters:
     - id: port
       type: System.Int32
-      description: ''
     content.vb: Public Sub OverridePort(port As Integer)
   overload: Nebula.NetRunner.OverridePort*
   nameWithType.vb: NetRunner.OverridePort(Integer)
@@ -551,79 +536,77 @@ items:
   fullName: Nebula.NetRunner.GetPeer(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public ENetPacketPeer GetPeer(UUID id)
+    content: public Peer GetPeer(UUID id)
     parameters:
     - id: id
       type: Nebula.UUID
     return:
-      type: Godot.ENetPacketPeer
-    content.vb: Public Function GetPeer(id As UUID) As ENetPacketPeer
+      type: ENet.Peer
+    content.vb: Public Function GetPeer(id As UUID) As Peer
   overload: Nebula.NetRunner.GetPeer*
-- uid: Nebula.NetRunner.GetPeerId(Godot.ENetPacketPeer)
-  commentId: M:Nebula.NetRunner.GetPeerId(Godot.ENetPacketPeer)
-  id: GetPeerId(Godot.ENetPacketPeer)
+- uid: Nebula.NetRunner.GetPeerId(ENet.Peer)
+  commentId: M:Nebula.NetRunner.GetPeerId(ENet.Peer)
+  id: GetPeerId(ENet.Peer)
   parent: Nebula.NetRunner
   langs:
   - csharp
   - vb
-  name: GetPeerId(ENetPacketPeer)
-  nameWithType: NetRunner.GetPeerId(ENetPacketPeer)
-  fullName: Nebula.NetRunner.GetPeerId(Godot.ENetPacketPeer)
+  name: GetPeerId(Peer)
+  nameWithType: NetRunner.GetPeerId(Peer)
+  fullName: Nebula.NetRunner.GetPeerId(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public UUID GetPeerId(ENetPacketPeer peer)
+    content: public UUID GetPeerId(Peer peer)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
     return:
       type: Nebula.UUID
-    content.vb: Public Function GetPeerId(peer As ENetPacketPeer) As UUID
+    content.vb: Public Function GetPeerId(peer As Peer) As UUID
   overload: Nebula.NetRunner.GetPeerId*
-- uid: Nebula.NetRunner.ReserveChannel(System.Int32,Godot.Callable)
-  commentId: M:Nebula.NetRunner.ReserveChannel(System.Int32,Godot.Callable)
-  id: ReserveChannel(System.Int32,Godot.Callable)
+- uid: Nebula.NetRunner.ReserveChannel(System.Int32,System.Action{ENet.Peer,System.Byte[]})
+  commentId: M:Nebula.NetRunner.ReserveChannel(System.Int32,System.Action{ENet.Peer,System.Byte[]})
+  id: ReserveChannel(System.Int32,System.Action{ENet.Peer,System.Byte[]})
   parent: Nebula.NetRunner
   langs:
   - csharp
   - vb
-  name: ReserveChannel(int, Callable)
-  nameWithType: NetRunner.ReserveChannel(int, Callable)
-  fullName: Nebula.NetRunner.ReserveChannel(int, Godot.Callable)
+  name: ReserveChannel(int, Action<Peer, byte[]>)
+  nameWithType: NetRunner.ReserveChannel(int, Action<Peer, byte[]>)
+  fullName: Nebula.NetRunner.ReserveChannel(int, System.Action<ENet.Peer, byte[]>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: Reserve a channel for custom use, e.g. within plugins. If the channel is already reserved, it will throw an exception.
+  summary: >-
+    Reserve a channel for custom use, e.g. within plugins. If the channel is already reserved, it will throw an exception.
+
+    The handler receives (NetPeer peer, byte[] packetData).
   example: []
   syntax:
-    content: public void ReserveChannel(int channel, Callable handler)
+    content: public void ReserveChannel(int channel, Action<Peer, byte[]> handler)
     parameters:
     - id: channel
       type: System.Int32
-      description: ''
     - id: handler
-      type: Godot.Callable
-    content.vb: Public Sub ReserveChannel(channel As Integer, handler As Callable)
+      type: System.Action{ENet.Peer,System.Byte[]}
+    content.vb: Public Sub ReserveChannel(channel As Integer, handler As Action(Of Peer, Byte()))
   overload: Nebula.NetRunner.ReserveChannel*
-  exceptions:
-  - type: System.Exception
-    commentId: T:System.Exception
-    description: ''
-  nameWithType.vb: NetRunner.ReserveChannel(Integer, Callable)
-  fullName.vb: Nebula.NetRunner.ReserveChannel(Integer, Godot.Callable)
-  name.vb: ReserveChannel(Integer, Callable)
+  nameWithType.vb: NetRunner.ReserveChannel(Integer, Action(Of Peer, Byte()))
+  fullName.vb: Nebula.NetRunner.ReserveChannel(Integer, System.Action(Of ENet.Peer, Byte()))
+  name.vb: ReserveChannel(Integer, Action(Of Peer, Byte()))
 - uid: Nebula.NetRunner._EnterTree
   commentId: M:Nebula.NetRunner._EnterTree
   id: _EnterTree
@@ -636,7 +619,7 @@ items:
   fullName: Nebula.NetRunner._EnterTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -658,7 +641,7 @@ items:
   fullName: Nebula.NetRunner._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -668,6 +651,28 @@ items:
     content.vb: Public Overrides Sub _Ready()
   overridden: Godot.Node._Ready
   overload: Nebula.NetRunner._Ready*
+- uid: Nebula.NetRunner._ExitTree
+  commentId: M:Nebula.NetRunner._ExitTree
+  id: _ExitTree
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: _ExitTree()
+  nameWithType: NetRunner._ExitTree()
+  fullName: Nebula.NetRunner._ExitTree()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public override void _ExitTree()
+    content.vb: Public Overrides Sub _ExitTree()
+  overridden: Godot.Node._ExitTree
+  overload: Nebula.NetRunner._ExitTree*
 - uid: Nebula.NetRunner.SetAuthentication(Nebula.Authentication.IAuthenticator)
   commentId: M:Nebula.NetRunner.SetAuthentication(Nebula.Authentication.IAuthenticator)
   id: SetAuthentication(Nebula.Authentication.IAuthenticator)
@@ -680,7 +685,7 @@ items:
   fullName: Nebula.NetRunner.SetAuthentication(Nebula.Authentication.IAuthenticator)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -703,7 +708,7 @@ items:
   fullName: Nebula.NetRunner.StartServer()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -723,7 +728,7 @@ items:
   fullName: Nebula.NetRunner.StartClient()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -731,6 +736,36 @@ items:
     content: public void StartClient()
     content.vb: Public Sub StartClient()
   overload: Nebula.NetRunner.StartClient*
+- uid: Nebula.NetRunner.GetPeerByNativeId(System.UInt32)
+  commentId: M:Nebula.NetRunner.GetPeerByNativeId(System.UInt32)
+  id: GetPeerByNativeId(System.UInt32)
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: GetPeerByNativeId(uint)
+  nameWithType: NetRunner.GetPeerByNativeId(uint)
+  fullName: Nebula.NetRunner.GetPeerByNativeId(uint)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get a peer by its native ENet ID (used for signal handling).
+  example: []
+  syntax:
+    content: public Peer GetPeerByNativeId(uint nativeId)
+    parameters:
+    - id: nativeId
+      type: System.UInt32
+    return:
+      type: ENet.Peer
+    content.vb: Public Function GetPeerByNativeId(nativeId As UInteger) As Peer
+  overload: Nebula.NetRunner.GetPeerByNativeId*
+  nameWithType.vb: NetRunner.GetPeerByNativeId(UInteger)
+  fullName.vb: Nebula.NetRunner.GetPeerByNativeId(UInteger)
+  name.vb: GetPeerByNativeId(UInteger)
 - uid: Nebula.NetRunner._PhysicsProcess(System.Double)
   commentId: M:Nebula.NetRunner._PhysicsProcess(System.Double)
   id: _PhysicsProcess(System.Double)
@@ -743,7 +778,7 @@ items:
   fullName: Nebula.NetRunner._PhysicsProcess(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -759,36 +794,299 @@ items:
   nameWithType.vb: NetRunner._PhysicsProcess(Double)
   fullName.vb: Nebula.NetRunner._PhysicsProcess(Double)
   name.vb: _PhysicsProcess(Double)
-- uid: Nebula.NetRunner.PeerJoinWorld(Godot.ENetPacketPeer,Nebula.UUID,System.String)
-  commentId: M:Nebula.NetRunner.PeerJoinWorld(Godot.ENetPacketPeer,Nebula.UUID,System.String)
-  id: PeerJoinWorld(Godot.ENetPacketPeer,Nebula.UUID,System.String)
+- uid: Nebula.NetRunner.SendPacket(ENet.Peer,System.Byte,System.Byte[],ENet.PacketFlags)
+  commentId: M:Nebula.NetRunner.SendPacket(ENet.Peer,System.Byte,System.Byte[],ENet.PacketFlags)
+  id: SendPacket(ENet.Peer,System.Byte,System.Byte[],ENet.PacketFlags)
   parent: Nebula.NetRunner
   langs:
   - csharp
   - vb
-  name: PeerJoinWorld(ENetPacketPeer, UUID, string)
-  nameWithType: NetRunner.PeerJoinWorld(ENetPacketPeer, UUID, string)
-  fullName: Nebula.NetRunner.PeerJoinWorld(Godot.ENetPacketPeer, Nebula.UUID, string)
+  name: SendPacket(Peer, byte, byte[], PacketFlags)
+  nameWithType: NetRunner.SendPacket(Peer, byte, byte[], PacketFlags)
+  fullName: Nebula.NetRunner.SendPacket(ENet.Peer, byte, byte[], ENet.PacketFlags)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Helper method to send a packet to a peer.
+  example: []
+  syntax:
+    content: public static void SendPacket(Peer peer, byte channelId, byte[] data, PacketFlags flags)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    - id: channelId
+      type: System.Byte
+    - id: data
+      type: System.Byte[]
+    - id: flags
+      type: ENet.PacketFlags
+    content.vb: Public Shared Sub SendPacket(peer As Peer, channelId As Byte, data As Byte(), flags As PacketFlags)
+  overload: Nebula.NetRunner.SendPacket*
+  nameWithType.vb: NetRunner.SendPacket(Peer, Byte, Byte(), PacketFlags)
+  fullName.vb: Nebula.NetRunner.SendPacket(ENet.Peer, Byte, Byte(), ENet.PacketFlags)
+  name.vb: SendPacket(Peer, Byte, Byte(), PacketFlags)
+- uid: Nebula.NetRunner.SendPacket(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer,ENet.PacketFlags)
+  commentId: M:Nebula.NetRunner.SendPacket(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer,ENet.PacketFlags)
+  id: SendPacket(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer,ENet.PacketFlags)
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: SendPacket(Peer, byte, NetBuffer, PacketFlags)
+  nameWithType: NetRunner.SendPacket(Peer, byte, NetBuffer, PacketFlags)
+  fullName: Nebula.NetRunner.SendPacket(ENet.Peer, byte, Nebula.Serialization.NetBuffer, ENet.PacketFlags)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Helper method to send a packet using a NetBuffer directly (zero-allocation).
+
+    Uses the buffer's internal array with proper length to avoid ToArray() allocation.
+  example: []
+  syntax:
+    content: public static void SendPacket(Peer peer, byte channelId, NetBuffer buffer, PacketFlags flags)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    - id: channelId
+      type: System.Byte
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: flags
+      type: ENet.PacketFlags
+    content.vb: Public Shared Sub SendPacket(peer As Peer, channelId As Byte, buffer As NetBuffer, flags As PacketFlags)
+  overload: Nebula.NetRunner.SendPacket*
+  nameWithType.vb: NetRunner.SendPacket(Peer, Byte, NetBuffer, PacketFlags)
+  fullName.vb: Nebula.NetRunner.SendPacket(ENet.Peer, Byte, Nebula.Serialization.NetBuffer, ENet.PacketFlags)
+  name.vb: SendPacket(Peer, Byte, NetBuffer, PacketFlags)
+- uid: Nebula.NetRunner.SendReliable(ENet.Peer,System.Byte,System.Byte[])
+  commentId: M:Nebula.NetRunner.SendReliable(ENet.Peer,System.Byte,System.Byte[])
+  id: SendReliable(ENet.Peer,System.Byte,System.Byte[])
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: SendReliable(Peer, byte, byte[])
+  nameWithType: NetRunner.SendReliable(Peer, byte, byte[])
+  fullName: Nebula.NetRunner.SendReliable(ENet.Peer, byte, byte[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Helper method to send a reliable packet.
+  example: []
+  syntax:
+    content: public static void SendReliable(Peer peer, byte channelId, byte[] data)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    - id: channelId
+      type: System.Byte
+    - id: data
+      type: System.Byte[]
+    content.vb: Public Shared Sub SendReliable(peer As Peer, channelId As Byte, data As Byte())
+  overload: Nebula.NetRunner.SendReliable*
+  nameWithType.vb: NetRunner.SendReliable(Peer, Byte, Byte())
+  fullName.vb: Nebula.NetRunner.SendReliable(ENet.Peer, Byte, Byte())
+  name.vb: SendReliable(Peer, Byte, Byte())
+- uid: Nebula.NetRunner.SendReliable(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.NetRunner.SendReliable(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  id: SendReliable(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: SendReliable(Peer, byte, NetBuffer)
+  nameWithType: NetRunner.SendReliable(Peer, byte, NetBuffer)
+  fullName: Nebula.NetRunner.SendReliable(ENet.Peer, byte, Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Helper method to send a reliable packet using a NetBuffer directly (zero-allocation).
+  example: []
+  syntax:
+    content: public static void SendReliable(Peer peer, byte channelId, NetBuffer buffer)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    - id: channelId
+      type: System.Byte
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Shared Sub SendReliable(peer As Peer, channelId As Byte, buffer As NetBuffer)
+  overload: Nebula.NetRunner.SendReliable*
+  nameWithType.vb: NetRunner.SendReliable(Peer, Byte, NetBuffer)
+  fullName.vb: Nebula.NetRunner.SendReliable(ENet.Peer, Byte, Nebula.Serialization.NetBuffer)
+  name.vb: SendReliable(Peer, Byte, NetBuffer)
+- uid: Nebula.NetRunner.SendUnreliable(ENet.Peer,System.Byte,System.Byte[])
+  commentId: M:Nebula.NetRunner.SendUnreliable(ENet.Peer,System.Byte,System.Byte[])
+  id: SendUnreliable(ENet.Peer,System.Byte,System.Byte[])
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: SendUnreliable(Peer, byte, byte[])
+  nameWithType: NetRunner.SendUnreliable(Peer, byte, byte[])
+  fullName: Nebula.NetRunner.SendUnreliable(ENet.Peer, byte, byte[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Helper method to send an unreliable packet.
+  example: []
+  syntax:
+    content: public static void SendUnreliable(Peer peer, byte channelId, byte[] data)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    - id: channelId
+      type: System.Byte
+    - id: data
+      type: System.Byte[]
+    content.vb: Public Shared Sub SendUnreliable(peer As Peer, channelId As Byte, data As Byte())
+  overload: Nebula.NetRunner.SendUnreliable*
+  nameWithType.vb: NetRunner.SendUnreliable(Peer, Byte, Byte())
+  fullName.vb: Nebula.NetRunner.SendUnreliable(ENet.Peer, Byte, Byte())
+  name.vb: SendUnreliable(Peer, Byte, Byte())
+- uid: Nebula.NetRunner.SendUnreliable(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.NetRunner.SendUnreliable(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  id: SendUnreliable(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: SendUnreliable(Peer, byte, NetBuffer)
+  nameWithType: NetRunner.SendUnreliable(Peer, byte, NetBuffer)
+  fullName: Nebula.NetRunner.SendUnreliable(ENet.Peer, byte, Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Helper method to send an unreliable packet using a NetBuffer directly (zero-allocation).
+  example: []
+  syntax:
+    content: public static void SendUnreliable(Peer peer, byte channelId, NetBuffer buffer)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    - id: channelId
+      type: System.Byte
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Shared Sub SendUnreliable(peer As Peer, channelId As Byte, buffer As NetBuffer)
+  overload: Nebula.NetRunner.SendUnreliable*
+  nameWithType.vb: NetRunner.SendUnreliable(Peer, Byte, NetBuffer)
+  fullName.vb: Nebula.NetRunner.SendUnreliable(ENet.Peer, Byte, Nebula.Serialization.NetBuffer)
+  name.vb: SendUnreliable(Peer, Byte, NetBuffer)
+- uid: Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer,System.Byte,System.Byte[])
+  commentId: M:Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer,System.Byte,System.Byte[])
+  id: SendUnreliableSequenced(ENet.Peer,System.Byte,System.Byte[])
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: SendUnreliableSequenced(Peer, byte, byte[])
+  nameWithType: NetRunner.SendUnreliableSequenced(Peer, byte, byte[])
+  fullName: Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer, byte, byte[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Helper method to send an unreliable sequenced packet (newer packets discard older ones).
+  example: []
+  syntax:
+    content: public static void SendUnreliableSequenced(Peer peer, byte channelId, byte[] data)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    - id: channelId
+      type: System.Byte
+    - id: data
+      type: System.Byte[]
+    content.vb: Public Shared Sub SendUnreliableSequenced(peer As Peer, channelId As Byte, data As Byte())
+  overload: Nebula.NetRunner.SendUnreliableSequenced*
+  nameWithType.vb: NetRunner.SendUnreliableSequenced(Peer, Byte, Byte())
+  fullName.vb: Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer, Byte, Byte())
+  name.vb: SendUnreliableSequenced(Peer, Byte, Byte())
+- uid: Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  id: SendUnreliableSequenced(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer)
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: SendUnreliableSequenced(Peer, byte, NetBuffer)
+  nameWithType: NetRunner.SendUnreliableSequenced(Peer, byte, NetBuffer)
+  fullName: Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer, byte, Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Helper method to send an unreliable sequenced packet using a NetBuffer directly (zero-allocation).
+  example: []
+  syntax:
+    content: public static void SendUnreliableSequenced(Peer peer, byte channelId, NetBuffer buffer)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    - id: channelId
+      type: System.Byte
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Shared Sub SendUnreliableSequenced(peer As Peer, channelId As Byte, buffer As NetBuffer)
+  overload: Nebula.NetRunner.SendUnreliableSequenced*
+  nameWithType.vb: NetRunner.SendUnreliableSequenced(Peer, Byte, NetBuffer)
+  fullName.vb: Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer, Byte, Nebula.Serialization.NetBuffer)
+  name.vb: SendUnreliableSequenced(Peer, Byte, NetBuffer)
+- uid: Nebula.NetRunner.PeerJoinWorld(ENet.Peer,Nebula.UUID,System.String)
+  commentId: M:Nebula.NetRunner.PeerJoinWorld(ENet.Peer,Nebula.UUID,System.String)
+  id: PeerJoinWorld(ENet.Peer,Nebula.UUID,System.String)
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: PeerJoinWorld(Peer, UUID, string)
+  nameWithType: NetRunner.PeerJoinWorld(Peer, UUID, string)
+  fullName: Nebula.NetRunner.PeerJoinWorld(ENet.Peer, Nebula.UUID, string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public void PeerJoinWorld(ENetPacketPeer peer, UUID worldId, string token = "")
+    content: public void PeerJoinWorld(Peer peer, UUID worldId, string token = "")
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
+      type: ENet.Peer
     - id: worldId
       type: Nebula.UUID
     - id: token
       type: System.String
-    content.vb: Public Sub PeerJoinWorld(peer As ENetPacketPeer, worldId As UUID, token As String = "")
+    content.vb: Public Sub PeerJoinWorld(peer As Peer, worldId As UUID, token As String = "")
   overload: Nebula.NetRunner.PeerJoinWorld*
-  nameWithType.vb: NetRunner.PeerJoinWorld(ENetPacketPeer, UUID, String)
-  fullName.vb: Nebula.NetRunner.PeerJoinWorld(Godot.ENetPacketPeer, Nebula.UUID, String)
-  name.vb: PeerJoinWorld(ENetPacketPeer, UUID, String)
+  nameWithType.vb: NetRunner.PeerJoinWorld(Peer, UUID, String)
+  fullName.vb: Nebula.NetRunner.PeerJoinWorld(ENet.Peer, Nebula.UUID, String)
+  name.vb: PeerJoinWorld(Peer, UUID, String)
 - uid: Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
   commentId: M:Nebula.NetRunner.CreateWorld(Nebula.UUID,Godot.PackedScene)
   id: CreateWorld(Nebula.UUID,Godot.PackedScene)
@@ -801,7 +1099,7 @@ items:
   fullName: Nebula.NetRunner.CreateWorld(Nebula.UUID, Godot.PackedScene)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -816,145 +1114,56 @@ items:
       type: Nebula.WorldRunner
     content.vb: Public Function CreateWorld(worldId As UUID, scene As PackedScene) As WorldRunner
   overload: Nebula.NetRunner.CreateWorld*
-- uid: Nebula.NetRunner.SetupWorldInstance(Nebula.UUID,Nebula.NetNodeWrapper)
-  commentId: M:Nebula.NetRunner.SetupWorldInstance(Nebula.UUID,Nebula.NetNodeWrapper)
-  id: SetupWorldInstance(Nebula.UUID,Nebula.NetNodeWrapper)
+- uid: Nebula.NetRunner.SetupWorldInstance(Nebula.UUID,Nebula.NetworkController)
+  commentId: M:Nebula.NetRunner.SetupWorldInstance(Nebula.UUID,Nebula.NetworkController)
+  id: SetupWorldInstance(Nebula.UUID,Nebula.NetworkController)
   parent: Nebula.NetRunner
   langs:
   - csharp
   - vb
-  name: SetupWorldInstance(UUID, NetNodeWrapper)
-  nameWithType: NetRunner.SetupWorldInstance(UUID, NetNodeWrapper)
-  fullName: Nebula.NetRunner.SetupWorldInstance(Nebula.UUID, Nebula.NetNodeWrapper)
+  name: SetupWorldInstance(UUID, NetworkController)
+  nameWithType: NetRunner.SetupWorldInstance(UUID, NetworkController)
+  fullName: Nebula.NetRunner.SetupWorldInstance(Nebula.UUID, Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public WorldRunner SetupWorldInstance(UUID worldId, NetNodeWrapper node)
+    content: public WorldRunner SetupWorldInstance(UUID worldId, NetworkController node)
     parameters:
     - id: worldId
       type: Nebula.UUID
     - id: node
-      type: Nebula.NetNodeWrapper
+      type: Nebula.NetworkController
     return:
       type: Nebula.WorldRunner
-    content.vb: Public Function SetupWorldInstance(worldId As UUID, node As NetNodeWrapper) As WorldRunner
+    content.vb: Public Function SetupWorldInstance(worldId As UUID, node As NetworkController) As WorldRunner
   overload: Nebula.NetRunner.SetupWorldInstance*
-- uid: Nebula.NetRunner._OnPeerDisconnected(Godot.ENetPacketPeer)
-  commentId: M:Nebula.NetRunner._OnPeerDisconnected(Godot.ENetPacketPeer)
-  id: _OnPeerDisconnected(Godot.ENetPacketPeer)
+- uid: Nebula.NetRunner._OnPeerDisconnected(ENet.Peer)
+  commentId: M:Nebula.NetRunner._OnPeerDisconnected(ENet.Peer)
+  id: _OnPeerDisconnected(ENet.Peer)
   parent: Nebula.NetRunner
   langs:
   - csharp
   - vb
-  name: _OnPeerDisconnected(ENetPacketPeer)
-  nameWithType: NetRunner._OnPeerDisconnected(ENetPacketPeer)
-  fullName: Nebula.NetRunner._OnPeerDisconnected(Godot.ENetPacketPeer)
+  name: _OnPeerDisconnected(Peer)
+  nameWithType: NetRunner._OnPeerDisconnected(Peer)
+  fullName: Nebula.NetRunner._OnPeerDisconnected(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public void _OnPeerDisconnected(ENetPacketPeer peer)
+    content: public void _OnPeerDisconnected(Peer peer)
     parameters:
     - id: peer
-      type: Godot.ENetPacketPeer
-    content.vb: Public Sub _OnPeerDisconnected(peer As ENetPacketPeer)
+      type: ENet.Peer
+    content.vb: Public Sub _OnPeerDisconnected(peer As Peer)
   overload: Nebula.NetRunner._OnPeerDisconnected*
-- uid: Nebula.NetRunner.EmitSignalOnPeerConnected(Godot.ENetPacketPeer)
-  commentId: M:Nebula.NetRunner.EmitSignalOnPeerConnected(Godot.ENetPacketPeer)
-  id: EmitSignalOnPeerConnected(Godot.ENetPacketPeer)
-  parent: Nebula.NetRunner
-  langs:
-  - csharp
-  - vb
-  name: EmitSignalOnPeerConnected(ENetPacketPeer)
-  nameWithType: NetRunner.EmitSignalOnPeerConnected(ENetPacketPeer)
-  fullName: Nebula.NetRunner.EmitSignalOnPeerConnected(Godot.ENetPacketPeer)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetRunner_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: protected void EmitSignalOnPeerConnected(ENetPacketPeer peer)
-    parameters:
-    - id: peer
-      type: Godot.ENetPacketPeer
-    content.vb: Protected Sub EmitSignalOnPeerConnected(peer As ENetPacketPeer)
-  overload: Nebula.NetRunner.EmitSignalOnPeerConnected*
-- uid: Nebula.NetRunner.EmitSignalOnPeerDisconnected(Godot.ENetPacketPeer)
-  commentId: M:Nebula.NetRunner.EmitSignalOnPeerDisconnected(Godot.ENetPacketPeer)
-  id: EmitSignalOnPeerDisconnected(Godot.ENetPacketPeer)
-  parent: Nebula.NetRunner
-  langs:
-  - csharp
-  - vb
-  name: EmitSignalOnPeerDisconnected(ENetPacketPeer)
-  nameWithType: NetRunner.EmitSignalOnPeerDisconnected(ENetPacketPeer)
-  fullName: Nebula.NetRunner.EmitSignalOnPeerDisconnected(Godot.ENetPacketPeer)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetRunner_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: protected void EmitSignalOnPeerDisconnected(ENetPacketPeer peer)
-    parameters:
-    - id: peer
-      type: Godot.ENetPacketPeer
-    content.vb: Protected Sub EmitSignalOnPeerDisconnected(peer As ENetPacketPeer)
-  overload: Nebula.NetRunner.EmitSignalOnPeerDisconnected*
-- uid: Nebula.NetRunner.EmitSignalOnConnectedToServer
-  commentId: M:Nebula.NetRunner.EmitSignalOnConnectedToServer
-  id: EmitSignalOnConnectedToServer
-  parent: Nebula.NetRunner
-  langs:
-  - csharp
-  - vb
-  name: EmitSignalOnConnectedToServer()
-  nameWithType: NetRunner.EmitSignalOnConnectedToServer()
-  fullName: Nebula.NetRunner.EmitSignalOnConnectedToServer()
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetRunner_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: protected void EmitSignalOnConnectedToServer()
-    content.vb: Protected Sub EmitSignalOnConnectedToServer()
-  overload: Nebula.NetRunner.EmitSignalOnConnectedToServer*
-- uid: Nebula.NetRunner.EmitSignalOnWorldCreated(Nebula.WorldRunner)
-  commentId: M:Nebula.NetRunner.EmitSignalOnWorldCreated(Nebula.WorldRunner)
-  id: EmitSignalOnWorldCreated(Nebula.WorldRunner)
-  parent: Nebula.NetRunner
-  langs:
-  - csharp
-  - vb
-  name: EmitSignalOnWorldCreated(WorldRunner)
-  nameWithType: NetRunner.EmitSignalOnWorldCreated(WorldRunner)
-  fullName: Nebula.NetRunner.EmitSignalOnWorldCreated(Nebula.WorldRunner)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetRunner_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: protected void EmitSignalOnWorldCreated(WorldRunner world)
-    parameters:
-    - id: world
-      type: Nebula.WorldRunner
-    content.vb: Protected Sub EmitSignalOnWorldCreated(world As WorldRunner)
-  overload: Nebula.NetRunner.EmitSignalOnWorldCreated*
 - uid: Nebula.NetRunner.#ctor
   commentId: M:Nebula.NetRunner.#ctor
   id: '#ctor'
@@ -967,7 +1176,7 @@ items:
   fullName: Nebula.NetRunner.NetRunner()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -978,6 +1187,31 @@ items:
   nameWithType.vb: NetRunner.New()
   fullName.vb: Nebula.NetRunner.New()
   name.vb: New()
+- uid: Nebula.NetRunner.ServerAddress
+  commentId: P:Nebula.NetRunner.ServerAddress
+  id: ServerAddress
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: ServerAddress
+  nameWithType: NetRunner.ServerAddress
+  fullName: Nebula.NetRunner.ServerAddress
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Gets the server address, checking environment variable first, then falling back to DefaultServerAddress.
+  example: []
+  syntax:
+    content: public string ServerAddress { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property ServerAddress As String
+  overload: Nebula.NetRunner.ServerAddress*
 - uid: Nebula.NetRunner.Port
   commentId: P:Nebula.NetRunner.Port
   id: Port
@@ -990,7 +1224,7 @@ items:
   fullName: Nebula.NetRunner.Port
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1029,7 +1263,7 @@ items:
   fullName: Nebula.NetRunner.Worlds
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1052,7 +1286,7 @@ items:
   fullName: Nebula.NetRunner.IsServer
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1077,7 +1311,7 @@ items:
   fullName: Nebula.NetRunner.IsClient
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1100,7 +1334,7 @@ items:
   fullName: Nebula.NetRunner.NetStarted
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1125,7 +1359,7 @@ items:
   fullName: Nebula.NetRunner.Instance
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1150,7 +1384,7 @@ items:
   fullName: Nebula.NetRunner.Authentication
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1161,6 +1395,29 @@ items:
       type: Nebula.Authentication.IAuthenticator
     content.vb: Public ReadOnly Property Authentication As IAuthenticator
   overload: Nebula.NetRunner.Authentication*
+- uid: Nebula.NetRunner.TPS
+  commentId: P:Nebula.NetRunner.TPS
+  id: TPS
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: TPS
+  nameWithType: NetRunner.TPS
+  fullName: Nebula.NetRunner.TPS
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public static int TPS { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Shared ReadOnly Property TPS As Integer
+  overload: Nebula.NetRunner.TPS*
 - uid: Nebula.NetRunner.MTU
   commentId: P:Nebula.NetRunner.MTU
   id: MTU
@@ -1173,7 +1430,7 @@ items:
   fullName: Nebula.NetRunner.MTU
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1201,16 +1458,15 @@ items:
   fullName: Nebula.NetRunner.OnPeerConnected
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetRunner_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  example: []
   syntax:
-    content: public event NetRunner.OnPeerConnectedEventHandler OnPeerConnected
+    content: public event Action<uint> OnPeerConnected
     return:
-      type: Nebula.NetRunner.OnPeerConnectedEventHandler
-    content.vb: Public Event OnPeerConnected As NetRunner.OnPeerConnectedEventHandler
+      type: System.Action{System.UInt32}
+    content.vb: Public Event OnPeerConnected As Action(Of UInteger)
 - uid: Nebula.NetRunner.OnPeerDisconnected
   commentId: E:Nebula.NetRunner.OnPeerDisconnected
   id: OnPeerDisconnected
@@ -1223,16 +1479,15 @@ items:
   fullName: Nebula.NetRunner.OnPeerDisconnected
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetRunner_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  example: []
   syntax:
-    content: public event NetRunner.OnPeerDisconnectedEventHandler OnPeerDisconnected
+    content: public event Action<uint> OnPeerDisconnected
     return:
-      type: Nebula.NetRunner.OnPeerDisconnectedEventHandler
-    content.vb: Public Event OnPeerDisconnected As NetRunner.OnPeerDisconnectedEventHandler
+      type: System.Action{System.UInt32}
+    content.vb: Public Event OnPeerDisconnected As Action(Of UInteger)
 - uid: Nebula.NetRunner.OnConnectedToServer
   commentId: E:Nebula.NetRunner.OnConnectedToServer
   id: OnConnectedToServer
@@ -1245,16 +1500,15 @@ items:
   fullName: Nebula.NetRunner.OnConnectedToServer
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetRunner_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  example: []
   syntax:
-    content: public event NetRunner.OnConnectedToServerEventHandler OnConnectedToServer
+    content: public event Action OnConnectedToServer
     return:
-      type: Nebula.NetRunner.OnConnectedToServerEventHandler
-    content.vb: Public Event OnConnectedToServer As NetRunner.OnConnectedToServerEventHandler
+      type: System.Action
+    content.vb: Public Event OnConnectedToServer As Action
 - uid: Nebula.NetRunner.OnWorldCreated
   commentId: E:Nebula.NetRunner.OnWorldCreated
   id: OnWorldCreated
@@ -1267,16 +1521,15 @@ items:
   fullName: Nebula.NetRunner.OnWorldCreated
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.NetRunner_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  example: []
   syntax:
-    content: public event NetRunner.OnWorldCreatedEventHandler OnWorldCreated
+    content: public event Action<WorldRunner> OnWorldCreated
     return:
-      type: Nebula.NetRunner.OnWorldCreatedEventHandler
-    content.vb: Public Event OnWorldCreated As NetRunner.OnWorldCreatedEventHandler
+      type: System.Action{Nebula.WorldRunner}
+    content.vb: Public Event OnWorldCreated As Action(Of WorldRunner)
 references:
 - uid: Nebula.NetRunner.ENetChannelId
   commentId: T:Nebula.NetRunner.ENetChannelId
@@ -1960,25 +2213,6 @@ references:
   - name: " "
   - name: T
   - name: )
-  - name: (
-  - name: )
-- uid: Godot.Node._ExitTree
-  commentId: M:Godot.Node._ExitTree
-  parent: Godot.Node
-  isExternal: true
-  name: _ExitTree()
-  nameWithType: Node._ExitTree()
-  fullName: Godot.Node._ExitTree()
-  spec.csharp:
-  - uid: Godot.Node._ExitTree
-    name: _ExitTree
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.Node._ExitTree
-    name: _ExitTree
-    isExternal: true
   - name: (
   - name: )
 - uid: Godot.Node._GetAccessibilityConfigurationWarnings
@@ -7952,14 +8186,14 @@ references:
 - uid: Nebula.NetRunner.OverridePort*
   commentId: Overload:Nebula.NetRunner.OverridePort
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_OverridePort_System_Int32_
+  href: Nebula.NetRunner.OverridePort.html#Nebula_NetRunner_OverridePort_System_Int32_
   name: OverridePort
   nameWithType: NetRunner.OverridePort
   fullName: Nebula.NetRunner.OverridePort
 - uid: Nebula.NetRunner.GetPeer*
   commentId: Overload:Nebula.NetRunner.GetPeer
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_GetPeer_Nebula_UUID_
+  href: Nebula.NetRunner.GetPeer.html#Nebula_NetRunner_GetPeer_Nebula_UUID_
   name: GetPeer
   nameWithType: NetRunner.GetPeer
   fullName: Nebula.NetRunner.GetPeer
@@ -7971,41 +8205,116 @@ references:
   name: UUID
   nameWithType: UUID
   fullName: Nebula.UUID
-- uid: Godot.ENetPacketPeer
-  commentId: T:Godot.ENetPacketPeer
-  parent: Godot
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
   isExternal: true
-  name: ENetPacketPeer
-  nameWithType: ENetPacketPeer
-  fullName: Godot.ENetPacketPeer
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: ENet
+  commentId: N:ENet
+  isExternal: true
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
 - uid: Nebula.NetRunner.GetPeerId*
   commentId: Overload:Nebula.NetRunner.GetPeerId
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_GetPeerId_Godot_ENetPacketPeer_
+  href: Nebula.NetRunner.GetPeerId.html#Nebula_NetRunner_GetPeerId_ENet_Peer_
   name: GetPeerId
   nameWithType: NetRunner.GetPeerId
   fullName: Nebula.NetRunner.GetPeerId
-- uid: System.Exception
-  commentId: T:System.Exception
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.exception
-  name: Exception
-  nameWithType: Exception
-  fullName: System.Exception
 - uid: Nebula.NetRunner.ReserveChannel*
   commentId: Overload:Nebula.NetRunner.ReserveChannel
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_ReserveChannel_System_Int32_Godot_Callable_
+  href: Nebula.NetRunner.ReserveChannel.html#Nebula_NetRunner_ReserveChannel_System_Int32_System_Action_ENet_Peer_System_Byte____
   name: ReserveChannel
   nameWithType: NetRunner.ReserveChannel
   fullName: Nebula.NetRunner.ReserveChannel
-- uid: Godot.Callable
-  commentId: T:Godot.Callable
-  parent: Godot
+- uid: System.Action{ENet.Peer,System.Byte[]}
+  commentId: T:System.Action{ENet.Peer,System.Byte[]}
+  parent: System
+  definition: System.Action`2
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<Peer, byte[]>
+  nameWithType: Action<Peer, byte[]>
+  fullName: System.Action<ENet.Peer, byte[]>
+  nameWithType.vb: Action(Of Peer, Byte())
+  fullName.vb: System.Action(Of ENet.Peer, Byte())
+  name.vb: Action(Of Peer, Byte())
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: System.Action`2
+  commentId: T:System.Action`2
   isExternal: true
-  name: Callable
-  nameWithType: Callable
-  fullName: Godot.Callable
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<T1, T2>
+  nameWithType: Action<T1, T2>
+  fullName: System.Action<T1, T2>
+  nameWithType.vb: Action(Of T1, T2)
+  fullName.vb: System.Action(Of T1, T2)
+  name.vb: Action(Of T1, T2)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: )
 - uid: Godot.Node._EnterTree
   commentId: M:Godot.Node._EnterTree
   parent: Godot.Node
@@ -8028,7 +8337,7 @@ references:
 - uid: Nebula.NetRunner._EnterTree*
   commentId: Overload:Nebula.NetRunner._EnterTree
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner__EnterTree
+  href: Nebula.NetRunner._EnterTree.html#Nebula_NetRunner__EnterTree
   name: _EnterTree
   nameWithType: NetRunner._EnterTree
   fullName: Nebula.NetRunner._EnterTree
@@ -8054,14 +8363,40 @@ references:
 - uid: Nebula.NetRunner._Ready*
   commentId: Overload:Nebula.NetRunner._Ready
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner__Ready
+  href: Nebula.NetRunner._Ready.html#Nebula_NetRunner__Ready
   name: _Ready
   nameWithType: NetRunner._Ready
   fullName: Nebula.NetRunner._Ready
+- uid: Godot.Node._ExitTree
+  commentId: M:Godot.Node._ExitTree
+  parent: Godot.Node
+  isExternal: true
+  name: _ExitTree()
+  nameWithType: Node._ExitTree()
+  fullName: Godot.Node._ExitTree()
+  spec.csharp:
+  - uid: Godot.Node._ExitTree
+    name: _ExitTree
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Godot.Node._ExitTree
+    name: _ExitTree
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Nebula.NetRunner._ExitTree*
+  commentId: Overload:Nebula.NetRunner._ExitTree
+  isExternal: true
+  href: Nebula.NetRunner._ExitTree.html#Nebula_NetRunner__ExitTree
+  name: _ExitTree
+  nameWithType: NetRunner._ExitTree
+  fullName: Nebula.NetRunner._ExitTree
 - uid: Nebula.NetRunner.SetAuthentication*
   commentId: Overload:Nebula.NetRunner.SetAuthentication
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_SetAuthentication_Nebula_Authentication_IAuthenticator_
+  href: Nebula.NetRunner.SetAuthentication.html#Nebula_NetRunner_SetAuthentication_Nebula_Authentication_IAuthenticator_
   name: SetAuthentication
   nameWithType: NetRunner.SetAuthentication
   fullName: Nebula.NetRunner.SetAuthentication
@@ -8103,17 +8438,35 @@ references:
 - uid: Nebula.NetRunner.StartServer*
   commentId: Overload:Nebula.NetRunner.StartServer
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_StartServer
+  href: Nebula.NetRunner.StartServer.html#Nebula_NetRunner_StartServer
   name: StartServer
   nameWithType: NetRunner.StartServer
   fullName: Nebula.NetRunner.StartServer
 - uid: Nebula.NetRunner.StartClient*
   commentId: Overload:Nebula.NetRunner.StartClient
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_StartClient
+  href: Nebula.NetRunner.StartClient.html#Nebula_NetRunner_StartClient
   name: StartClient
   nameWithType: NetRunner.StartClient
   fullName: Nebula.NetRunner.StartClient
+- uid: Nebula.NetRunner.GetPeerByNativeId*
+  commentId: Overload:Nebula.NetRunner.GetPeerByNativeId
+  isExternal: true
+  href: Nebula.NetRunner.GetPeerByNativeId.html#Nebula_NetRunner_GetPeerByNativeId_System_UInt32_
+  name: GetPeerByNativeId
+  nameWithType: NetRunner.GetPeerByNativeId
+  fullName: Nebula.NetRunner.GetPeerByNativeId
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
 - uid: Godot.Node._PhysicsProcess(System.Double)
   commentId: M:Godot.Node._PhysicsProcess(System.Double)
   parent: Godot.Node
@@ -8148,7 +8501,7 @@ references:
 - uid: Nebula.NetRunner._PhysicsProcess*
   commentId: Overload:Nebula.NetRunner._PhysicsProcess
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner__PhysicsProcess_System_Double_
+  href: Nebula.NetRunner._PhysicsProcess.html#Nebula_NetRunner__PhysicsProcess_System_Double_
   name: _PhysicsProcess
   nameWithType: NetRunner._PhysicsProcess
   fullName: Nebula.NetRunner._PhysicsProcess
@@ -8163,17 +8516,121 @@ references:
   nameWithType.vb: Double
   fullName.vb: Double
   name.vb: Double
+- uid: Nebula.NetRunner.SendPacket*
+  commentId: Overload:Nebula.NetRunner.SendPacket
+  isExternal: true
+  href: Nebula.NetRunner.SendPacket.html#Nebula_NetRunner_SendPacket_ENet_Peer_System_Byte_System_Byte___ENet_PacketFlags_
+  name: SendPacket
+  nameWithType: NetRunner.SendPacket
+  fullName: Nebula.NetRunner.SendPacket
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte
+  nameWithType: byte
+  fullName: byte
+  nameWithType.vb: Byte
+  fullName.vb: Byte
+  name.vb: Byte
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: ENet.PacketFlags
+  commentId: T:ENet.PacketFlags
+  parent: ENet
+  isExternal: true
+  name: PacketFlags
+  nameWithType: PacketFlags
+  fullName: ENet.PacketFlags
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.NetRunner.SendReliable*
+  commentId: Overload:Nebula.NetRunner.SendReliable
+  isExternal: true
+  href: Nebula.NetRunner.SendReliable.html#Nebula_NetRunner_SendReliable_ENet_Peer_System_Byte_System_Byte___
+  name: SendReliable
+  nameWithType: NetRunner.SendReliable
+  fullName: Nebula.NetRunner.SendReliable
+- uid: Nebula.NetRunner.SendUnreliable*
+  commentId: Overload:Nebula.NetRunner.SendUnreliable
+  isExternal: true
+  href: Nebula.NetRunner.SendUnreliable.html#Nebula_NetRunner_SendUnreliable_ENet_Peer_System_Byte_System_Byte___
+  name: SendUnreliable
+  nameWithType: NetRunner.SendUnreliable
+  fullName: Nebula.NetRunner.SendUnreliable
+- uid: Nebula.NetRunner.SendUnreliableSequenced*
+  commentId: Overload:Nebula.NetRunner.SendUnreliableSequenced
+  isExternal: true
+  href: Nebula.NetRunner.SendUnreliableSequenced.html#Nebula_NetRunner_SendUnreliableSequenced_ENet_Peer_System_Byte_System_Byte___
+  name: SendUnreliableSequenced
+  nameWithType: NetRunner.SendUnreliableSequenced
+  fullName: Nebula.NetRunner.SendUnreliableSequenced
 - uid: Nebula.NetRunner.PeerJoinWorld*
   commentId: Overload:Nebula.NetRunner.PeerJoinWorld
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_PeerJoinWorld_Godot_ENetPacketPeer_Nebula_UUID_System_String_
+  href: Nebula.NetRunner.PeerJoinWorld.html#Nebula_NetRunner_PeerJoinWorld_ENet_Peer_Nebula_UUID_System_String_
   name: PeerJoinWorld
   nameWithType: NetRunner.PeerJoinWorld
   fullName: Nebula.NetRunner.PeerJoinWorld
 - uid: Nebula.NetRunner.CreateWorld*
   commentId: Overload:Nebula.NetRunner.CreateWorld
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
+  href: Nebula.NetRunner.CreateWorld.html#Nebula_NetRunner_CreateWorld_Nebula_UUID_Godot_PackedScene_
   name: CreateWorld
   nameWithType: NetRunner.CreateWorld
   fullName: Nebula.NetRunner.CreateWorld
@@ -8195,74 +8652,53 @@ references:
 - uid: Nebula.NetRunner.SetupWorldInstance*
   commentId: Overload:Nebula.NetRunner.SetupWorldInstance
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_SetupWorldInstance_Nebula_UUID_Nebula_NetNodeWrapper_
+  href: Nebula.NetRunner.SetupWorldInstance.html#Nebula_NetRunner_SetupWorldInstance_Nebula_UUID_Nebula_NetworkController_
   name: SetupWorldInstance
   nameWithType: NetRunner.SetupWorldInstance
   fullName: Nebula.NetRunner.SetupWorldInstance
-- uid: Nebula.NetNodeWrapper
-  commentId: T:Nebula.NetNodeWrapper
+- uid: Nebula.NetworkController
+  commentId: T:Nebula.NetworkController
   parent: Nebula
   isExternal: true
-  href: Nebula.NetNodeWrapper.html
-  name: NetNodeWrapper
-  nameWithType: NetNodeWrapper
-  fullName: Nebula.NetNodeWrapper
+  href: Nebula.NetworkController.html
+  name: NetworkController
+  nameWithType: NetworkController
+  fullName: Nebula.NetworkController
 - uid: Nebula.NetRunner._OnPeerDisconnected*
   commentId: Overload:Nebula.NetRunner._OnPeerDisconnected
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner__OnPeerDisconnected_Godot_ENetPacketPeer_
+  href: Nebula.NetRunner._OnPeerDisconnected.html#Nebula_NetRunner__OnPeerDisconnected_ENet_Peer_
   name: _OnPeerDisconnected
   nameWithType: NetRunner._OnPeerDisconnected
   fullName: Nebula.NetRunner._OnPeerDisconnected
-- uid: Nebula.NetRunner.EmitSignalOnPeerConnected*
-  commentId: Overload:Nebula.NetRunner.EmitSignalOnPeerConnected
-  isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_EmitSignalOnPeerConnected_Godot_ENetPacketPeer_
-  name: EmitSignalOnPeerConnected
-  nameWithType: NetRunner.EmitSignalOnPeerConnected
-  fullName: Nebula.NetRunner.EmitSignalOnPeerConnected
-- uid: Nebula.NetRunner.EmitSignalOnPeerDisconnected*
-  commentId: Overload:Nebula.NetRunner.EmitSignalOnPeerDisconnected
-  isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_EmitSignalOnPeerDisconnected_Godot_ENetPacketPeer_
-  name: EmitSignalOnPeerDisconnected
-  nameWithType: NetRunner.EmitSignalOnPeerDisconnected
-  fullName: Nebula.NetRunner.EmitSignalOnPeerDisconnected
-- uid: Nebula.NetRunner.EmitSignalOnConnectedToServer*
-  commentId: Overload:Nebula.NetRunner.EmitSignalOnConnectedToServer
-  isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_EmitSignalOnConnectedToServer
-  name: EmitSignalOnConnectedToServer
-  nameWithType: NetRunner.EmitSignalOnConnectedToServer
-  fullName: Nebula.NetRunner.EmitSignalOnConnectedToServer
-- uid: Nebula.NetRunner.EmitSignalOnWorldCreated*
-  commentId: Overload:Nebula.NetRunner.EmitSignalOnWorldCreated
-  isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_EmitSignalOnWorldCreated_Nebula_WorldRunner_
-  name: EmitSignalOnWorldCreated
-  nameWithType: NetRunner.EmitSignalOnWorldCreated
-  fullName: Nebula.NetRunner.EmitSignalOnWorldCreated
 - uid: Nebula.NetRunner.#ctor*
   commentId: Overload:Nebula.NetRunner.#ctor
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner__ctor
+  href: Nebula.NetRunner.-ctor.html#Nebula_NetRunner__ctor
   name: NetRunner
   nameWithType: NetRunner.NetRunner
   fullName: Nebula.NetRunner.NetRunner
   nameWithType.vb: NetRunner.New
   fullName.vb: Nebula.NetRunner.New
   name.vb: New
+- uid: Nebula.NetRunner.ServerAddress*
+  commentId: Overload:Nebula.NetRunner.ServerAddress
+  isExternal: true
+  href: Nebula.NetRunner.ServerAddress.html#Nebula_NetRunner_ServerAddress
+  name: ServerAddress
+  nameWithType: NetRunner.ServerAddress
+  fullName: Nebula.NetRunner.ServerAddress
 - uid: Nebula.NetRunner.Port*
   commentId: Overload:Nebula.NetRunner.Port
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_Port
+  href: Nebula.NetRunner.Port.html#Nebula_NetRunner_Port
   name: Port
   nameWithType: NetRunner.Port
   fullName: Nebula.NetRunner.Port
 - uid: Nebula.NetRunner.Worlds*
   commentId: Overload:Nebula.NetRunner.Worlds
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_Worlds
+  href: Nebula.NetRunner.Worlds.html#Nebula_NetRunner_Worlds
   name: Worlds
   nameWithType: NetRunner.Worlds
   fullName: Nebula.NetRunner.Worlds
@@ -8387,7 +8823,7 @@ references:
 - uid: Nebula.NetRunner.StartClient
   commentId: M:Nebula.NetRunner.StartClient
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_StartClient
+  href: Nebula.NetRunner.StartClient.html#Nebula_NetRunner_StartClient
   name: StartClient()
   nameWithType: NetRunner.StartClient()
   fullName: Nebula.NetRunner.StartClient()
@@ -8395,20 +8831,20 @@ references:
   - uid: Nebula.NetRunner.StartClient
     name: StartClient
     isExternal: true
-    href: Nebula.NetRunner.html#Nebula_NetRunner_StartClient
+    href: Nebula.NetRunner.StartClient.html#Nebula_NetRunner_StartClient
   - name: (
   - name: )
   spec.vb:
   - uid: Nebula.NetRunner.StartClient
     name: StartClient
     isExternal: true
-    href: Nebula.NetRunner.html#Nebula_NetRunner_StartClient
+    href: Nebula.NetRunner.StartClient.html#Nebula_NetRunner_StartClient
   - name: (
   - name: )
 - uid: Nebula.NetRunner.StartServer
   commentId: M:Nebula.NetRunner.StartServer
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_StartServer
+  href: Nebula.NetRunner.StartServer.html#Nebula_NetRunner_StartServer
   name: StartServer()
   nameWithType: NetRunner.StartServer()
   fullName: Nebula.NetRunner.StartServer()
@@ -8416,27 +8852,27 @@ references:
   - uid: Nebula.NetRunner.StartServer
     name: StartServer
     isExternal: true
-    href: Nebula.NetRunner.html#Nebula_NetRunner_StartServer
+    href: Nebula.NetRunner.StartServer.html#Nebula_NetRunner_StartServer
   - name: (
   - name: )
   spec.vb:
   - uid: Nebula.NetRunner.StartServer
     name: StartServer
     isExternal: true
-    href: Nebula.NetRunner.html#Nebula_NetRunner_StartServer
+    href: Nebula.NetRunner.StartServer.html#Nebula_NetRunner_StartServer
   - name: (
   - name: )
 - uid: Nebula.NetRunner.NetStarted
   commentId: P:Nebula.NetRunner.NetStarted
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_NetStarted
+  href: Nebula.NetRunner.NetStarted.html#Nebula_NetRunner_NetStarted
   name: NetStarted
   nameWithType: NetRunner.NetStarted
   fullName: Nebula.NetRunner.NetStarted
 - uid: Nebula.NetRunner.IsServer*
   commentId: Overload:Nebula.NetRunner.IsServer
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_IsServer
+  href: Nebula.NetRunner.IsServer.html#Nebula_NetRunner_IsServer
   name: IsServer
   nameWithType: NetRunner.IsServer
   fullName: Nebula.NetRunner.IsServer
@@ -8454,21 +8890,21 @@ references:
 - uid: Nebula.NetRunner.IsClient*
   commentId: Overload:Nebula.NetRunner.IsClient
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_IsClient
+  href: Nebula.NetRunner.IsClient.html#Nebula_NetRunner_IsClient
   name: IsClient
   nameWithType: NetRunner.IsClient
   fullName: Nebula.NetRunner.IsClient
 - uid: Nebula.NetRunner.NetStarted*
   commentId: Overload:Nebula.NetRunner.NetStarted
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_NetStarted
+  href: Nebula.NetRunner.NetStarted.html#Nebula_NetRunner_NetStarted
   name: NetStarted
   nameWithType: NetRunner.NetStarted
   fullName: Nebula.NetRunner.NetStarted
 - uid: Nebula.NetRunner.Instance*
   commentId: Overload:Nebula.NetRunner.Instance
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_Instance
+  href: Nebula.NetRunner.Instance.html#Nebula_NetRunner_Instance
   name: Instance
   nameWithType: NetRunner.Instance
   fullName: Nebula.NetRunner.Instance
@@ -8483,126 +8919,128 @@ references:
 - uid: Nebula.NetRunner.Authentication*
   commentId: Overload:Nebula.NetRunner.Authentication
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_Authentication
+  href: Nebula.NetRunner.Authentication.html#Nebula_NetRunner_Authentication
   name: Authentication
   nameWithType: NetRunner.Authentication
   fullName: Nebula.NetRunner.Authentication
+- uid: Nebula.NetRunner.TPS*
+  commentId: Overload:Nebula.NetRunner.TPS
+  isExternal: true
+  href: Nebula.NetRunner.TPS.html#Nebula_NetRunner_TPS
+  name: TPS
+  nameWithType: NetRunner.TPS
+  fullName: Nebula.NetRunner.TPS
 - uid: Nebula.NetRunner.MTU*
   commentId: Overload:Nebula.NetRunner.MTU
   isExternal: true
-  href: Nebula.NetRunner.html#Nebula_NetRunner_MTU
+  href: Nebula.NetRunner.MTU.html#Nebula_NetRunner_MTU
   name: MTU
   nameWithType: NetRunner.MTU
   fullName: Nebula.NetRunner.MTU
-- uid: Nebula.NetRunner.OnPeerConnectedEventHandler
-  commentId: T:Nebula.NetRunner.OnPeerConnectedEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetRunner.html
-  name: NetRunner.OnPeerConnectedEventHandler
-  nameWithType: NetRunner.OnPeerConnectedEventHandler
-  fullName: Nebula.NetRunner.OnPeerConnectedEventHandler
+- uid: System.Action{System.UInt32}
+  commentId: T:System.Action{System.UInt32}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<uint>
+  nameWithType: Action<uint>
+  fullName: System.Action<uint>
+  nameWithType.vb: Action(Of UInteger)
+  fullName.vb: System.Action(Of UInteger)
+  name.vb: Action(Of UInteger)
   spec.csharp:
-  - uid: Nebula.NetRunner
-    name: NetRunner
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnPeerConnectedEventHandler
-    name: OnPeerConnectedEventHandler
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: System.UInt32
+    name: uint
     isExternal: true
-    href: Nebula.NetRunner.OnPeerConnectedEventHandler.html
+    href: https://learn.microsoft.com/dotnet/api/system.uint32
+  - name: '>'
   spec.vb:
-  - uid: Nebula.NetRunner
-    name: NetRunner
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnPeerConnectedEventHandler
-    name: OnPeerConnectedEventHandler
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.UInt32
+    name: UInteger
     isExternal: true
-    href: Nebula.NetRunner.OnPeerConnectedEventHandler.html
-- uid: Nebula.NetRunner.OnPeerDisconnectedEventHandler
-  commentId: T:Nebula.NetRunner.OnPeerDisconnectedEventHandler
-  parent: Nebula
+    href: https://learn.microsoft.com/dotnet/api/system.uint32
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
   isExternal: true
-  href: Nebula.NetRunner.html
-  name: NetRunner.OnPeerDisconnectedEventHandler
-  nameWithType: NetRunner.OnPeerDisconnectedEventHandler
-  fullName: Nebula.NetRunner.OnPeerDisconnectedEventHandler
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
   spec.csharp:
-  - uid: Nebula.NetRunner
-    name: NetRunner
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnPeerDisconnectedEventHandler
-    name: OnPeerDisconnectedEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnPeerDisconnectedEventHandler.html
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
   spec.vb:
-  - uid: Nebula.NetRunner
-    name: NetRunner
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnPeerDisconnectedEventHandler
-    name: OnPeerDisconnectedEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnPeerDisconnectedEventHandler.html
-- uid: Nebula.NetRunner.OnConnectedToServerEventHandler
-  commentId: T:Nebula.NetRunner.OnConnectedToServerEventHandler
-  parent: Nebula
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
   isExternal: true
-  href: Nebula.NetRunner.html
-  name: NetRunner.OnConnectedToServerEventHandler
-  nameWithType: NetRunner.OnConnectedToServerEventHandler
-  fullName: Nebula.NetRunner.OnConnectedToServerEventHandler
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: System.Action{Nebula.WorldRunner}
+  commentId: T:System.Action{Nebula.WorldRunner}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<WorldRunner>
+  nameWithType: Action<WorldRunner>
+  fullName: System.Action<Nebula.WorldRunner>
+  nameWithType.vb: Action(Of WorldRunner)
+  fullName.vb: System.Action(Of Nebula.WorldRunner)
+  name.vb: Action(Of WorldRunner)
   spec.csharp:
-  - uid: Nebula.NetRunner
-    name: NetRunner
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnConnectedToServerEventHandler
-    name: OnConnectedToServerEventHandler
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
     isExternal: true
-    href: Nebula.NetRunner.OnConnectedToServerEventHandler.html
+    href: Nebula.WorldRunner.html
+  - name: '>'
   spec.vb:
-  - uid: Nebula.NetRunner
-    name: NetRunner
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnConnectedToServerEventHandler
-    name: OnConnectedToServerEventHandler
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
     isExternal: true
-    href: Nebula.NetRunner.OnConnectedToServerEventHandler.html
-- uid: Nebula.NetRunner.OnWorldCreatedEventHandler
-  commentId: T:Nebula.NetRunner.OnWorldCreatedEventHandler
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetRunner.html
-  name: NetRunner.OnWorldCreatedEventHandler
-  nameWithType: NetRunner.OnWorldCreatedEventHandler
-  fullName: Nebula.NetRunner.OnWorldCreatedEventHandler
-  spec.csharp:
-  - uid: Nebula.NetRunner
-    name: NetRunner
-    isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnWorldCreatedEventHandler
-    name: OnWorldCreatedEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnWorldCreatedEventHandler.html
-  spec.vb:
-  - uid: Nebula.NetRunner
-    name: NetRunner
-    isExternal: true
-    href: Nebula.NetRunner.html
-  - name: .
-  - uid: Nebula.NetRunner.OnWorldCreatedEventHandler
-    name: OnWorldCreatedEventHandler
-    isExternal: true
-    href: Nebula.NetRunner.OnWorldCreatedEventHandler.html
+    href: Nebula.WorldRunner.html
+  - name: )
+memberLayout: SeparatePages

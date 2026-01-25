@@ -1,0 +1,996 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Testing.Integration.IntegrationTestBase
+  commentId: T:Nebula.Testing.Integration.IntegrationTestBase
+  id: IntegrationTestBase
+  parent: Nebula.Testing.Integration
+  children:
+  - Nebula.Testing.Integration.IntegrationTestBase.#ctor
+  - Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers
+  - Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps
+  - Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout
+  - Nebula.Testing.Integration.IntegrationTestBase.Dispose
+  - Nebula.Testing.Integration.IntegrationTestBase.NebulaTest(System.Func{System.Threading.Tasks.Task})
+  - Nebula.Testing.Integration.IntegrationTestBase.StartClient(Nebula.Testing.Integration.ClientConfig)
+  - Nebula.Testing.Integration.IntegrationTestBase.StartGodot(System.String[])
+  - Nebula.Testing.Integration.IntegrationTestBase.StartHeadless(System.String)
+  - Nebula.Testing.Integration.IntegrationTestBase.StartServer(Nebula.Testing.Integration.ServerConfig)
+  - Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath
+  langs:
+  - csharp
+  - vb
+  name: IntegrationTestBase
+  nameWithType: IntegrationTestBase
+  fullName: Nebula.Testing.Integration.IntegrationTestBase
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Base class for integration tests that spawn multiple Godot instances.
+  example: []
+  syntax:
+    content: >-
+      [Collection("Nebula")]
+
+      public abstract class IntegrationTestBase : IDisposable
+    content.vb: >-
+      <Collection("Nebula")>
+
+      Public MustInherit Class IntegrationTestBase Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  attributes:
+  - type: Xunit.CollectionAttribute
+    ctor: Xunit.CollectionAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Nebula
+- uid: Nebula.Testing.Integration.IntegrationTestBase.StartServer(Nebula.Testing.Integration.ServerConfig)
+  commentId: M:Nebula.Testing.Integration.IntegrationTestBase.StartServer(Nebula.Testing.Integration.ServerConfig)
+  id: StartServer(Nebula.Testing.Integration.ServerConfig)
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: StartServer(ServerConfig?)
+  nameWithType: IntegrationTestBase.StartServer(ServerConfig?)
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.StartServer(Nebula.Testing.Integration.ServerConfig?)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Starts a headless Godot server instance using ServerClientConnector.
+  example: []
+  syntax:
+    content: protected GodotProcess StartServer(ServerConfig? config = null)
+    parameters:
+    - id: config
+      type: Nebula.Testing.Integration.ServerConfig
+      description: Server configuration (optional)
+    return:
+      type: Nebula.Testing.Integration.GodotProcess
+      description: A GodotProcess instance
+    content.vb: Protected Function StartServer(config As ServerConfig = Nothing) As GodotProcess
+  overload: Nebula.Testing.Integration.IntegrationTestBase.StartServer*
+  nameWithType.vb: IntegrationTestBase.StartServer(ServerConfig)
+  fullName.vb: Nebula.Testing.Integration.IntegrationTestBase.StartServer(Nebula.Testing.Integration.ServerConfig)
+  name.vb: StartServer(ServerConfig)
+- uid: Nebula.Testing.Integration.IntegrationTestBase.StartClient(Nebula.Testing.Integration.ClientConfig)
+  commentId: M:Nebula.Testing.Integration.IntegrationTestBase.StartClient(Nebula.Testing.Integration.ClientConfig)
+  id: StartClient(Nebula.Testing.Integration.ClientConfig)
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: StartClient(ClientConfig?)
+  nameWithType: IntegrationTestBase.StartClient(ClientConfig?)
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.StartClient(Nebula.Testing.Integration.ClientConfig?)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Starts a headless Godot client instance using ServerClientConnector.
+  example: []
+  syntax:
+    content: protected GodotProcess StartClient(ClientConfig? config = null)
+    parameters:
+    - id: config
+      type: Nebula.Testing.Integration.ClientConfig
+      description: Client configuration (optional)
+    return:
+      type: Nebula.Testing.Integration.GodotProcess
+      description: A GodotProcess instance
+    content.vb: Protected Function StartClient(config As ClientConfig = Nothing) As GodotProcess
+  overload: Nebula.Testing.Integration.IntegrationTestBase.StartClient*
+  nameWithType.vb: IntegrationTestBase.StartClient(ClientConfig)
+  fullName.vb: Nebula.Testing.Integration.IntegrationTestBase.StartClient(Nebula.Testing.Integration.ClientConfig)
+  name.vb: StartClient(ClientConfig)
+- uid: Nebula.Testing.Integration.IntegrationTestBase.StartGodot(System.String[])
+  commentId: M:Nebula.Testing.Integration.IntegrationTestBase.StartGodot(System.String[])
+  id: StartGodot(System.String[])
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: StartGodot(params string[])
+  nameWithType: IntegrationTestBase.StartGodot(params string[])
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.StartGodot(params string[])
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: >-
+    Starts a Godot process with the given arguments.
+
+    Automatically adds --path to point to the test project.
+  example: []
+  syntax:
+    content: protected GodotProcess StartGodot(params string[] args)
+    parameters:
+    - id: args
+      type: System.String[]
+      description: Additional arguments for Godot
+    return:
+      type: Nebula.Testing.Integration.GodotProcess
+      description: A GodotProcess instance
+    content.vb: Protected Function StartGodot(ParamArray args As String()) As GodotProcess
+  overload: Nebula.Testing.Integration.IntegrationTestBase.StartGodot*
+  nameWithType.vb: IntegrationTestBase.StartGodot(ParamArray String())
+  fullName.vb: Nebula.Testing.Integration.IntegrationTestBase.StartGodot(ParamArray String())
+  name.vb: StartGodot(ParamArray String())
+- uid: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless(System.String)
+  commentId: M:Nebula.Testing.Integration.IntegrationTestBase.StartHeadless(System.String)
+  id: StartHeadless(System.String)
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: StartHeadless(string)
+  nameWithType: IntegrationTestBase.StartHeadless(string)
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: >-
+    Starts a headless Godot process with the given scene.
+
+    For custom scenes outside of the standard ServerClientConnector flow.
+  example: []
+  syntax:
+    content: protected GodotProcess StartHeadless(string scenePath)
+    parameters:
+    - id: scenePath
+      type: System.String
+      description: Resource path to the scene
+    return:
+      type: Nebula.Testing.Integration.GodotProcess
+      description: A GodotProcess instance
+    content.vb: Protected Function StartHeadless(scenePath As String) As GodotProcess
+  overload: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless*
+  nameWithType.vb: IntegrationTestBase.StartHeadless(String)
+  fullName.vb: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless(String)
+  name.vb: StartHeadless(String)
+- uid: Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps
+  commentId: M:Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps
+  id: CollectSceneTreeDumps
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: CollectSceneTreeDumps()
+  nameWithType: IntegrationTestBase.CollectSceneTreeDumps()
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Collects scene tree dumps from all active Godot processes and returns them as a string.
+  example: []
+  syntax:
+    content: protected Task<string> CollectSceneTreeDumps()
+    return:
+      type: System.Threading.Tasks.Task{System.String}
+      description: A formatted string containing all scene tree dumps
+    content.vb: Protected Function CollectSceneTreeDumps() As Task(Of String)
+  overload: Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps*
+- uid: Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers
+  commentId: M:Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers
+  id: CollectDebugBuffers
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: CollectDebugBuffers()
+  nameWithType: IntegrationTestBase.CollectDebugBuffers()
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Collects debug buffers from all active Godot processes and returns them as a string.
+  example: []
+  syntax:
+    content: protected string CollectDebugBuffers()
+    return:
+      type: System.String
+      description: A formatted string containing all debug buffers
+    content.vb: Protected Function CollectDebugBuffers() As String
+  overload: Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers*
+- uid: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest(System.Func{System.Threading.Tasks.Task})
+  commentId: M:Nebula.Testing.Integration.IntegrationTestBase.NebulaTest(System.Func{System.Threading.Tasks.Task})
+  id: NebulaTest(System.Func{System.Threading.Tasks.Task})
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: NebulaTest(Func<Task>)
+  nameWithType: IntegrationTestBase.NebulaTest(Func<Task>)
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest(System.Func<System.Threading.Tasks.Task>)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: >-
+    Wraps an async test action with automatic scene tree and debug buffer dumping on failure.
+
+    The dumps are included in the exception message for visibility in test output.
+  example: []
+  syntax:
+    content: protected Task NebulaTest(Func<Task> testAction)
+    parameters:
+    - id: testAction
+      type: System.Func{System.Threading.Tasks.Task}
+      description: The test action to execute
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Protected Function NebulaTest(testAction As Func(Of Task)) As Task
+  overload: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest*
+  nameWithType.vb: IntegrationTestBase.NebulaTest(Func(Of Task))
+  fullName.vb: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest(System.Func(Of System.Threading.Tasks.Task))
+  name.vb: NebulaTest(Func(Of Task))
+- uid: Nebula.Testing.Integration.IntegrationTestBase.Dispose
+  commentId: M:Nebula.Testing.Integration.IntegrationTestBase.Dispose
+  id: Dispose
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: IntegrationTestBase.Dispose()
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.Dispose()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  example: []
+  syntax:
+    content: public virtual void Dispose()
+    content.vb: Public Overridable Sub Dispose()
+  overload: Nebula.Testing.Integration.IntegrationTestBase.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+- uid: Nebula.Testing.Integration.IntegrationTestBase.#ctor
+  commentId: M:Nebula.Testing.Integration.IntegrationTestBase.#ctor
+  id: '#ctor'
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: IntegrationTestBase()
+  nameWithType: IntegrationTestBase.IntegrationTestBase()
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.IntegrationTestBase()
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  syntax:
+    content: protected IntegrationTestBase()
+    content.vb: Protected Sub New()
+  overload: Nebula.Testing.Integration.IntegrationTestBase.#ctor*
+  nameWithType.vb: IntegrationTestBase.New()
+  fullName.vb: Nebula.Testing.Integration.IntegrationTestBase.New()
+  name.vb: New()
+- uid: Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout
+  commentId: P:Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout
+  id: DefaultTimeout
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: DefaultTimeout
+  nameWithType: IntegrationTestBase.DefaultTimeout
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Default timeout for waiting on process output.
+  example: []
+  syntax:
+    content: protected virtual TimeSpan DefaultTimeout { get; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: Protected Overridable ReadOnly Property DefaultTimeout As TimeSpan
+  overload: Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout*
+- uid: Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath
+  commentId: P:Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath
+  id: TestProjectPath
+  parent: Nebula.Testing.Integration.IntegrationTestBase
+  langs:
+  - csharp
+  - vb
+  name: TestProjectPath
+  nameWithType: IntegrationTestBase.TestProjectPath
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Testing.Integration
+  summary: Path to the test project directory (where project.godot lives).
+  example: []
+  syntax:
+    content: protected virtual string TestProjectPath { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Protected Overridable ReadOnly Property TestProjectPath As String
+  overload: Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath*
+references:
+- uid: Nebula.Testing.Integration
+  commentId: N:Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Testing.Integration
+  nameWithType: Nebula.Testing.Integration
+  fullName: Nebula.Testing.Integration
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Testing
+    name: Testing
+    isExternal: true
+    href: Nebula.Testing.html
+  - name: .
+  - uid: Nebula.Testing.Integration
+    name: Integration
+    isExternal: true
+    href: Nebula.Testing.Integration.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Testing
+    name: Testing
+    isExternal: true
+    href: Nebula.Testing.html
+  - name: .
+  - uid: Nebula.Testing.Integration
+    name: Integration
+    isExternal: true
+    href: Nebula.Testing.Integration.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Testing.Integration.IntegrationTestBase.StartServer*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.StartServer
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.StartServer.html#Nebula_Testing_Integration_IntegrationTestBase_StartServer_Nebula_Testing_Integration_ServerConfig_
+  name: StartServer
+  nameWithType: IntegrationTestBase.StartServer
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.StartServer
+- uid: Nebula.Testing.Integration.ServerConfig
+  commentId: T:Nebula.Testing.Integration.ServerConfig
+  parent: Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.Testing.Integration.ServerConfig.html
+  name: ServerConfig
+  nameWithType: ServerConfig
+  fullName: Nebula.Testing.Integration.ServerConfig
+- uid: Nebula.Testing.Integration.GodotProcess
+  commentId: T:Nebula.Testing.Integration.GodotProcess
+  parent: Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.Testing.Integration.GodotProcess.html
+  name: GodotProcess
+  nameWithType: GodotProcess
+  fullName: Nebula.Testing.Integration.GodotProcess
+- uid: Nebula.Testing.Integration.IntegrationTestBase.StartClient*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.StartClient
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.StartClient.html#Nebula_Testing_Integration_IntegrationTestBase_StartClient_Nebula_Testing_Integration_ClientConfig_
+  name: StartClient
+  nameWithType: IntegrationTestBase.StartClient
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.StartClient
+- uid: Nebula.Testing.Integration.ClientConfig
+  commentId: T:Nebula.Testing.Integration.ClientConfig
+  parent: Nebula.Testing.Integration
+  isExternal: true
+  href: Nebula.Testing.Integration.ClientConfig.html
+  name: ClientConfig
+  nameWithType: ClientConfig
+  fullName: Nebula.Testing.Integration.ClientConfig
+- uid: Nebula.Testing.Integration.IntegrationTestBase.StartGodot*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.StartGodot
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.StartGodot.html#Nebula_Testing_Integration_IntegrationTestBase_StartGodot_System_String___
+  name: StartGodot
+  nameWithType: IntegrationTestBase.StartGodot
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.StartGodot
+- uid: System.String[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string[]
+  nameWithType: string[]
+  fullName: string[]
+  nameWithType.vb: String()
+  fullName.vb: String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: (
+  - name: )
+- uid: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.StartHeadless
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless.html#Nebula_Testing_Integration_IntegrationTestBase_StartHeadless_System_String_
+  name: StartHeadless
+  nameWithType: IntegrationTestBase.StartHeadless
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.StartHeadless
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps.html#Nebula_Testing_Integration_IntegrationTestBase_CollectSceneTreeDumps
+  name: CollectSceneTreeDumps
+  nameWithType: IntegrationTestBase.CollectSceneTreeDumps
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.CollectSceneTreeDumps
+- uid: System.Threading.Tasks.Task{System.String}
+  commentId: T:System.Threading.Tasks.Task{System.String}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<string>
+  nameWithType: Task<string>
+  fullName: System.Threading.Tasks.Task<string>
+  nameWithType.vb: Task(Of String)
+  fullName.vb: System.Threading.Tasks.Task(Of String)
+  name.vb: Task(Of String)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers.html#Nebula_Testing_Integration_IntegrationTestBase_CollectDebugBuffers
+  name: CollectDebugBuffers
+  nameWithType: IntegrationTestBase.CollectDebugBuffers
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.CollectDebugBuffers
+- uid: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.NebulaTest
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest.html#Nebula_Testing_Integration_IntegrationTestBase_NebulaTest_System_Func_System_Threading_Tasks_Task__
+  name: NebulaTest
+  nameWithType: IntegrationTestBase.NebulaTest
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.NebulaTest
+- uid: System.Func{System.Threading.Tasks.Task}
+  commentId: T:System.Func{System.Threading.Tasks.Task}
+  parent: System
+  definition: System.Func`1
+  href: https://learn.microsoft.com/dotnet/api/system.func-1
+  name: Func<Task>
+  nameWithType: Func<Task>
+  fullName: System.Func<System.Threading.Tasks.Task>
+  nameWithType.vb: Func(Of Task)
+  fullName.vb: System.Func(Of System.Threading.Tasks.Task)
+  name.vb: Func(Of Task)
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: )
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Func`1
+  commentId: T:System.Func`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-1
+  name: Func<TResult>
+  nameWithType: Func<TResult>
+  fullName: System.Func<TResult>
+  nameWithType.vb: Func(Of TResult)
+  fullName.vb: System.Func(Of TResult)
+  name.vb: Func(Of TResult)
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: Nebula.Testing.Integration.IntegrationTestBase.Dispose*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.Dispose
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.Dispose.html#Nebula_Testing_Integration_IntegrationTestBase_Dispose
+  name: Dispose
+  nameWithType: IntegrationTestBase.Dispose
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: Nebula.Testing.Integration.IntegrationTestBase.#ctor*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.#ctor
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.-ctor.html#Nebula_Testing_Integration_IntegrationTestBase__ctor
+  name: IntegrationTestBase
+  nameWithType: IntegrationTestBase.IntegrationTestBase
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.IntegrationTestBase
+  nameWithType.vb: IntegrationTestBase.New
+  fullName.vb: Nebula.Testing.Integration.IntegrationTestBase.New
+  name.vb: New
+- uid: Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout.html#Nebula_Testing_Integration_IntegrationTestBase_DefaultTimeout
+  name: DefaultTimeout
+  nameWithType: IntegrationTestBase.DefaultTimeout
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.DefaultTimeout
+- uid: System.TimeSpan
+  commentId: T:System.TimeSpan
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.timespan
+  name: TimeSpan
+  nameWithType: TimeSpan
+  fullName: System.TimeSpan
+- uid: Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath*
+  commentId: Overload:Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath
+  isExternal: true
+  href: Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath.html#Nebula_Testing_Integration_IntegrationTestBase_TestProjectPath
+  name: TestProjectPath
+  nameWithType: IntegrationTestBase.TestProjectPath
+  fullName: Nebula.Testing.Integration.IntegrationTestBase.TestProjectPath
+memberLayout: SeparatePages

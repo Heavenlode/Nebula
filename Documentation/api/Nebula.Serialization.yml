@@ -5,50 +5,29 @@ items:
   id: Nebula.Serialization
   children:
   - Nebula.Serialization.BsonTransformer
-  - Nebula.Serialization.BsonTransformer.MethodName
-  - Nebula.Serialization.BsonTransformer.PropertyName
-  - Nebula.Serialization.BsonTransformer.SignalName
-  - Nebula.Serialization.HLBuffer
-  - Nebula.Serialization.HLBuffer.MethodName
-  - Nebula.Serialization.HLBuffer.PropertyName
-  - Nebula.Serialization.HLBuffer.SignalName
-  - Nebula.Serialization.HLBytes
+  - Nebula.Serialization.BsonTypeHelper
+  - Nebula.Serialization.GeneratedProtocol
+  - Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+  - Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
   - Nebula.Serialization.IBsonSerializableBase
   - Nebula.Serialization.IBsonSerializable`1
+  - Nebula.Serialization.IBsonValue`1
   - Nebula.Serialization.INetSerializable`1
+  - Nebula.Serialization.INetValue`1
+  - Nebula.Serialization.NetBsonContext
+  - Nebula.Serialization.NetBuffer
   - Nebula.Serialization.NetFunctionArgument
-  - Nebula.Serialization.NetFunctionArgument.MethodName
-  - Nebula.Serialization.NetFunctionArgument.PropertyName
-  - Nebula.Serialization.NetFunctionArgument.SignalName
+  - Nebula.Serialization.NetReader
+  - Nebula.Serialization.NetValueLayoutAttribute
+  - Nebula.Serialization.NetWriter
+  - Nebula.Serialization.NetworkSources
+  - Nebula.Serialization.Protocol
   - Nebula.Serialization.ProtocolNetFunction
-  - Nebula.Serialization.ProtocolNetFunction.MethodName
-  - Nebula.Serialization.ProtocolNetFunction.PropertyName
-  - Nebula.Serialization.ProtocolNetFunction.SignalName
   - Nebula.Serialization.ProtocolNetProperty
-  - Nebula.Serialization.ProtocolNetProperty.MethodName
-  - Nebula.Serialization.ProtocolNetProperty.PropertyName
-  - Nebula.Serialization.ProtocolNetProperty.SignalName
-  - Nebula.Serialization.ProtocolRegistry
-  - Nebula.Serialization.ProtocolRegistry.MethodName
-  - Nebula.Serialization.ProtocolRegistry.PropertyName
-  - Nebula.Serialization.ProtocolRegistry.SignalName
-  - Nebula.Serialization.ProtocolRegistryBuilder
-  - Nebula.Serialization.ProtocolRegistryBuilder.MethodName
-  - Nebula.Serialization.ProtocolRegistryBuilder.PropertyName
-  - Nebula.Serialization.ProtocolRegistryBuilder.SignalName
-  - Nebula.Serialization.ProtocolResource
-  - Nebula.Serialization.ProtocolResource.MethodName
-  - Nebula.Serialization.ProtocolResource.PropertyName
-  - Nebula.Serialization.ProtocolResource.SignalName
+  - Nebula.Serialization.ProtocolSceneInterest
   - Nebula.Serialization.SerialMetadata
-  - Nebula.Serialization.SerialMetadata.MethodName
-  - Nebula.Serialization.SerialMetadata.PropertyName
-  - Nebula.Serialization.SerialMetadata.SignalName
-  - Nebula.Serialization.SerialTypeIdentifier
-  - Nebula.Serialization.StaticMethodResource
-  - Nebula.Serialization.StaticMethodResource.MethodName
-  - Nebula.Serialization.StaticMethodResource.PropertyName
-  - Nebula.Serialization.StaticMethodResource.SignalName
+  - Nebula.Serialization.SerialVariantType
+  - Nebula.Serialization.StaticMethodInfo
   - Nebula.Serialization.StaticMethodType
   langs:
   - csharp
@@ -60,191 +39,63 @@ items:
   assemblies:
   - Nebula
 references:
+- uid: Nebula.Serialization.Protocol
+  commentId: T:Nebula.Serialization.Protocol
+  isExternal: true
+  href: Nebula.Serialization.Protocol.html
+  name: Protocol
+  nameWithType: Protocol
+  fullName: Nebula.Serialization.Protocol
 - uid: Nebula.Serialization.BsonTransformer
   commentId: T:Nebula.Serialization.BsonTransformer
-  parent: Nebula.Serialization
   isExternal: true
   href: Nebula.Serialization.BsonTransformer.html
   name: BsonTransformer
   nameWithType: BsonTransformer
   fullName: Nebula.Serialization.BsonTransformer
-- uid: Nebula.Serialization.BsonTransformer.MethodName
-  commentId: T:Nebula.Serialization.BsonTransformer.MethodName
+- uid: Nebula.Serialization.BsonTypeHelper
+  commentId: T:Nebula.Serialization.BsonTypeHelper
   isExternal: true
-  href: Nebula.Serialization.BsonTransformer.html
-  name: BsonTransformer.MethodName
-  nameWithType: BsonTransformer.MethodName
-  fullName: Nebula.Serialization.BsonTransformer.MethodName
-  spec.csharp:
-  - uid: Nebula.Serialization.BsonTransformer
-    name: BsonTransformer
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.html
-  - name: .
-  - uid: Nebula.Serialization.BsonTransformer.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.MethodName.html
-  spec.vb:
-  - uid: Nebula.Serialization.BsonTransformer
-    name: BsonTransformer
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.html
-  - name: .
-  - uid: Nebula.Serialization.BsonTransformer.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.MethodName.html
-- uid: Nebula.Serialization.BsonTransformer.PropertyName
-  commentId: T:Nebula.Serialization.BsonTransformer.PropertyName
-  isExternal: true
-  href: Nebula.Serialization.BsonTransformer.html
-  name: BsonTransformer.PropertyName
-  nameWithType: BsonTransformer.PropertyName
-  fullName: Nebula.Serialization.BsonTransformer.PropertyName
-  spec.csharp:
-  - uid: Nebula.Serialization.BsonTransformer
-    name: BsonTransformer
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.html
-  - name: .
-  - uid: Nebula.Serialization.BsonTransformer.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Serialization.BsonTransformer
-    name: BsonTransformer
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.html
-  - name: .
-  - uid: Nebula.Serialization.BsonTransformer.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.PropertyName.html
-- uid: Nebula.Serialization.BsonTransformer.SignalName
-  commentId: T:Nebula.Serialization.BsonTransformer.SignalName
-  isExternal: true
-  href: Nebula.Serialization.BsonTransformer.html
-  name: BsonTransformer.SignalName
-  nameWithType: BsonTransformer.SignalName
-  fullName: Nebula.Serialization.BsonTransformer.SignalName
-  spec.csharp:
-  - uid: Nebula.Serialization.BsonTransformer
-    name: BsonTransformer
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.html
-  - name: .
-  - uid: Nebula.Serialization.BsonTransformer.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.SignalName.html
-  spec.vb:
-  - uid: Nebula.Serialization.BsonTransformer
-    name: BsonTransformer
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.html
-  - name: .
-  - uid: Nebula.Serialization.BsonTransformer.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.BsonTransformer.SignalName.html
-- uid: Nebula.Serialization.HLBuffer
-  commentId: T:Nebula.Serialization.HLBuffer
+  href: Nebula.Serialization.BsonTypeHelper.html
+  name: BsonTypeHelper
+  nameWithType: BsonTypeHelper
+  fullName: Nebula.Serialization.BsonTypeHelper
+- uid: Nebula.Serialization.NetBsonContext
+  commentId: T:Nebula.Serialization.NetBsonContext
   parent: Nebula.Serialization
   isExternal: true
-  href: Nebula.Serialization.HLBuffer.html
-  name: HLBuffer
-  nameWithType: HLBuffer
-  fullName: Nebula.Serialization.HLBuffer
-- uid: Nebula.Serialization.HLBuffer.MethodName
-  commentId: T:Nebula.Serialization.HLBuffer.MethodName
+  href: Nebula.Serialization.NetBsonContext.html
+  name: NetBsonContext
+  nameWithType: NetBsonContext
+  fullName: Nebula.Serialization.NetBsonContext
+- uid: Nebula.Serialization.IBsonValue`1
+  commentId: T:Nebula.Serialization.IBsonValue`1
   isExternal: true
-  href: Nebula.Serialization.HLBuffer.html
-  name: HLBuffer.MethodName
-  nameWithType: HLBuffer.MethodName
-  fullName: Nebula.Serialization.HLBuffer.MethodName
+  href: Nebula.Serialization.IBsonValue-1.html
+  name: IBsonValue<T>
+  nameWithType: IBsonValue<T>
+  fullName: Nebula.Serialization.IBsonValue<T>
+  nameWithType.vb: IBsonValue(Of T)
+  fullName.vb: Nebula.Serialization.IBsonValue(Of T)
+  name.vb: IBsonValue(Of T)
   spec.csharp:
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.IBsonValue`1
+    name: IBsonValue
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: .
-  - uid: Nebula.Serialization.HLBuffer.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.MethodName.html
+    href: Nebula.Serialization.IBsonValue-1.html
+  - name: <
+  - name: T
+  - name: '>'
   spec.vb:
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.IBsonValue`1
+    name: IBsonValue
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: .
-  - uid: Nebula.Serialization.HLBuffer.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.MethodName.html
-- uid: Nebula.Serialization.HLBuffer.PropertyName
-  commentId: T:Nebula.Serialization.HLBuffer.PropertyName
-  isExternal: true
-  href: Nebula.Serialization.HLBuffer.html
-  name: HLBuffer.PropertyName
-  nameWithType: HLBuffer.PropertyName
-  fullName: Nebula.Serialization.HLBuffer.PropertyName
-  spec.csharp:
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: .
-  - uid: Nebula.Serialization.HLBuffer.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: .
-  - uid: Nebula.Serialization.HLBuffer.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.PropertyName.html
-- uid: Nebula.Serialization.HLBuffer.SignalName
-  commentId: T:Nebula.Serialization.HLBuffer.SignalName
-  isExternal: true
-  href: Nebula.Serialization.HLBuffer.html
-  name: HLBuffer.SignalName
-  nameWithType: HLBuffer.SignalName
-  fullName: Nebula.Serialization.HLBuffer.SignalName
-  spec.csharp:
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: .
-  - uid: Nebula.Serialization.HLBuffer.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.SignalName.html
-  spec.vb:
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: .
-  - uid: Nebula.Serialization.HLBuffer.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.SignalName.html
-- uid: Nebula.Serialization.HLBytes
-  commentId: T:Nebula.Serialization.HLBytes
-  isExternal: true
-  href: Nebula.Serialization.HLBytes.html
-  name: HLBytes
-  nameWithType: HLBytes
-  fullName: Nebula.Serialization.HLBytes
+    href: Nebula.Serialization.IBsonValue-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
 - uid: Nebula.Serialization.IBsonSerializableBase
   commentId: T:Nebula.Serialization.IBsonSerializableBase
   parent: Nebula.Serialization
@@ -281,6 +132,34 @@ references:
   - name: " "
   - name: T
   - name: )
+- uid: Nebula.Serialization.INetValue`1
+  commentId: T:Nebula.Serialization.INetValue`1
+  isExternal: true
+  href: Nebula.Serialization.INetValue-1.html
+  name: INetValue<T>
+  nameWithType: INetValue<T>
+  fullName: Nebula.Serialization.INetValue<T>
+  nameWithType.vb: INetValue(Of T)
+  fullName.vb: Nebula.Serialization.INetValue(Of T)
+  name.vb: INetValue(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetValue`1
+    name: INetValue
+    isExternal: true
+    href: Nebula.Serialization.INetValue-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.INetValue`1
+    name: INetValue
+    isExternal: true
+    href: Nebula.Serialization.INetValue-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
 - uid: Nebula.Serialization.INetSerializable`1
   commentId: T:Nebula.Serialization.INetSerializable`1
   isExternal: true
@@ -309,634 +188,52 @@ references:
   - name: " "
   - name: T
   - name: )
-- uid: Nebula.Serialization.NetFunctionArgument
-  commentId: T:Nebula.Serialization.NetFunctionArgument
-  isExternal: true
-  href: Nebula.Serialization.NetFunctionArgument.html
-  name: NetFunctionArgument
-  nameWithType: NetFunctionArgument
-  fullName: Nebula.Serialization.NetFunctionArgument
-- uid: Nebula.Serialization.NetFunctionArgument.MethodName
-  commentId: T:Nebula.Serialization.NetFunctionArgument.MethodName
-  isExternal: true
-  href: Nebula.Serialization.NetFunctionArgument.html
-  name: NetFunctionArgument.MethodName
-  nameWithType: NetFunctionArgument.MethodName
-  fullName: Nebula.Serialization.NetFunctionArgument.MethodName
-  spec.csharp:
-  - uid: Nebula.Serialization.NetFunctionArgument
-    name: NetFunctionArgument
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.html
-  - name: .
-  - uid: Nebula.Serialization.NetFunctionArgument.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.MethodName.html
-  spec.vb:
-  - uid: Nebula.Serialization.NetFunctionArgument
-    name: NetFunctionArgument
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.html
-  - name: .
-  - uid: Nebula.Serialization.NetFunctionArgument.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.MethodName.html
-- uid: Nebula.Serialization.NetFunctionArgument.PropertyName
-  commentId: T:Nebula.Serialization.NetFunctionArgument.PropertyName
-  isExternal: true
-  href: Nebula.Serialization.NetFunctionArgument.html
-  name: NetFunctionArgument.PropertyName
-  nameWithType: NetFunctionArgument.PropertyName
-  fullName: Nebula.Serialization.NetFunctionArgument.PropertyName
-  spec.csharp:
-  - uid: Nebula.Serialization.NetFunctionArgument
-    name: NetFunctionArgument
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.html
-  - name: .
-  - uid: Nebula.Serialization.NetFunctionArgument.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Serialization.NetFunctionArgument
-    name: NetFunctionArgument
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.html
-  - name: .
-  - uid: Nebula.Serialization.NetFunctionArgument.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.PropertyName.html
-- uid: Nebula.Serialization.NetFunctionArgument.SignalName
-  commentId: T:Nebula.Serialization.NetFunctionArgument.SignalName
-  isExternal: true
-  href: Nebula.Serialization.NetFunctionArgument.html
-  name: NetFunctionArgument.SignalName
-  nameWithType: NetFunctionArgument.SignalName
-  fullName: Nebula.Serialization.NetFunctionArgument.SignalName
-  spec.csharp:
-  - uid: Nebula.Serialization.NetFunctionArgument
-    name: NetFunctionArgument
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.html
-  - name: .
-  - uid: Nebula.Serialization.NetFunctionArgument.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.SignalName.html
-  spec.vb:
-  - uid: Nebula.Serialization.NetFunctionArgument
-    name: NetFunctionArgument
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.html
-  - name: .
-  - uid: Nebula.Serialization.NetFunctionArgument.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.NetFunctionArgument.SignalName.html
-- uid: Nebula.Serialization.ProtocolNetFunction
-  commentId: T:Nebula.Serialization.ProtocolNetFunction
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
   parent: Nebula.Serialization
   isExternal: true
-  href: Nebula.Serialization.ProtocolNetFunction.html
-  name: ProtocolNetFunction
-  nameWithType: ProtocolNetFunction
-  fullName: Nebula.Serialization.ProtocolNetFunction
-- uid: Nebula.Serialization.ProtocolNetFunction.MethodName
-  commentId: T:Nebula.Serialization.ProtocolNetFunction.MethodName
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: Nebula.Serialization.NetReader
+  commentId: T:Nebula.Serialization.NetReader
   isExternal: true
-  href: Nebula.Serialization.ProtocolNetFunction.html
-  name: ProtocolNetFunction.MethodName
-  nameWithType: ProtocolNetFunction.MethodName
-  fullName: Nebula.Serialization.ProtocolNetFunction.MethodName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolNetFunction
-    name: ProtocolNetFunction
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetFunction.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.MethodName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolNetFunction
-    name: ProtocolNetFunction
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetFunction.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.MethodName.html
-- uid: Nebula.Serialization.ProtocolNetFunction.PropertyName
-  commentId: T:Nebula.Serialization.ProtocolNetFunction.PropertyName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolNetFunction.html
-  name: ProtocolNetFunction.PropertyName
-  nameWithType: ProtocolNetFunction.PropertyName
-  fullName: Nebula.Serialization.ProtocolNetFunction.PropertyName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolNetFunction
-    name: ProtocolNetFunction
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetFunction.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolNetFunction
-    name: ProtocolNetFunction
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetFunction.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.PropertyName.html
-- uid: Nebula.Serialization.ProtocolNetFunction.SignalName
-  commentId: T:Nebula.Serialization.ProtocolNetFunction.SignalName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolNetFunction.html
-  name: ProtocolNetFunction.SignalName
-  nameWithType: ProtocolNetFunction.SignalName
-  fullName: Nebula.Serialization.ProtocolNetFunction.SignalName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolNetFunction
-    name: ProtocolNetFunction
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetFunction.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.SignalName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolNetFunction
-    name: ProtocolNetFunction
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetFunction.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetFunction.SignalName.html
-- uid: Nebula.Serialization.ProtocolNetProperty
-  commentId: T:Nebula.Serialization.ProtocolNetProperty
+  href: Nebula.Serialization.NetReader.html
+  name: NetReader
+  nameWithType: NetReader
+  fullName: Nebula.Serialization.NetReader
+- uid: Nebula.Serialization.NetValueLayoutAttribute
+  commentId: T:Nebula.Serialization.NetValueLayoutAttribute
   parent: Nebula.Serialization
   isExternal: true
-  href: Nebula.Serialization.ProtocolNetProperty.html
-  name: ProtocolNetProperty
-  nameWithType: ProtocolNetProperty
-  fullName: Nebula.Serialization.ProtocolNetProperty
-- uid: Nebula.Serialization.ProtocolNetProperty.MethodName
-  commentId: T:Nebula.Serialization.ProtocolNetProperty.MethodName
+  href: Nebula.Serialization.NetValueLayoutAttribute.html
+  name: NetValueLayoutAttribute
+  nameWithType: NetValueLayoutAttribute
+  fullName: Nebula.Serialization.NetValueLayoutAttribute
+- uid: Nebula.Serialization.NetWriter
+  commentId: T:Nebula.Serialization.NetWriter
   isExternal: true
-  href: Nebula.Serialization.ProtocolNetProperty.html
-  name: ProtocolNetProperty.MethodName
-  nameWithType: ProtocolNetProperty.MethodName
-  fullName: Nebula.Serialization.ProtocolNetProperty.MethodName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolNetProperty
-    name: ProtocolNetProperty
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetProperty.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.MethodName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolNetProperty
-    name: ProtocolNetProperty
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetProperty.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.MethodName.html
-- uid: Nebula.Serialization.ProtocolNetProperty.PropertyName
-  commentId: T:Nebula.Serialization.ProtocolNetProperty.PropertyName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolNetProperty.html
-  name: ProtocolNetProperty.PropertyName
-  nameWithType: ProtocolNetProperty.PropertyName
-  fullName: Nebula.Serialization.ProtocolNetProperty.PropertyName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolNetProperty
-    name: ProtocolNetProperty
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetProperty.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolNetProperty
-    name: ProtocolNetProperty
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetProperty.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.PropertyName.html
-- uid: Nebula.Serialization.ProtocolNetProperty.SignalName
-  commentId: T:Nebula.Serialization.ProtocolNetProperty.SignalName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolNetProperty.html
-  name: ProtocolNetProperty.SignalName
-  nameWithType: ProtocolNetProperty.SignalName
-  fullName: Nebula.Serialization.ProtocolNetProperty.SignalName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolNetProperty
-    name: ProtocolNetProperty
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetProperty.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.SignalName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolNetProperty
-    name: ProtocolNetProperty
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolNetProperty.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolNetProperty.SignalName.html
-- uid: Nebula.Serialization.ProtocolRegistry
-  commentId: T:Nebula.Serialization.ProtocolRegistry
+  href: Nebula.Serialization.NetWriter.html
+  name: NetWriter
+  nameWithType: NetWriter
+  fullName: Nebula.Serialization.NetWriter
+- uid: Nebula.Serialization.SerialVariantType
+  commentId: T:Nebula.Serialization.SerialVariantType
   parent: Nebula.Serialization
   isExternal: true
-  href: Nebula.Serialization.ProtocolRegistry.html
-  name: ProtocolRegistry
-  nameWithType: ProtocolRegistry
-  fullName: Nebula.Serialization.ProtocolRegistry
-- uid: Nebula.Serialization.ProtocolRegistry.MethodName
-  commentId: T:Nebula.Serialization.ProtocolRegistry.MethodName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolRegistry.html
-  name: ProtocolRegistry.MethodName
-  nameWithType: ProtocolRegistry.MethodName
-  fullName: Nebula.Serialization.ProtocolRegistry.MethodName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolRegistry
-    name: ProtocolRegistry
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistry.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.MethodName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolRegistry
-    name: ProtocolRegistry
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistry.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.MethodName.html
-- uid: Nebula.Serialization.ProtocolRegistry.PropertyName
-  commentId: T:Nebula.Serialization.ProtocolRegistry.PropertyName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolRegistry.html
-  name: ProtocolRegistry.PropertyName
-  nameWithType: ProtocolRegistry.PropertyName
-  fullName: Nebula.Serialization.ProtocolRegistry.PropertyName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolRegistry
-    name: ProtocolRegistry
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistry.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolRegistry
-    name: ProtocolRegistry
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistry.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.PropertyName.html
-- uid: Nebula.Serialization.ProtocolRegistry.SignalName
-  commentId: T:Nebula.Serialization.ProtocolRegistry.SignalName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolRegistry.html
-  name: ProtocolRegistry.SignalName
-  nameWithType: ProtocolRegistry.SignalName
-  fullName: Nebula.Serialization.ProtocolRegistry.SignalName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolRegistry
-    name: ProtocolRegistry
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistry.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.SignalName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolRegistry
-    name: ProtocolRegistry
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistry.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistry.SignalName.html
-- uid: Nebula.Serialization.ProtocolRegistryBuilder
-  commentId: T:Nebula.Serialization.ProtocolRegistryBuilder
-  isExternal: true
-  href: Nebula.Serialization.ProtocolRegistryBuilder.html
-  name: ProtocolRegistryBuilder
-  nameWithType: ProtocolRegistryBuilder
-  fullName: Nebula.Serialization.ProtocolRegistryBuilder
-- uid: Nebula.Serialization.ProtocolRegistryBuilder.MethodName
-  commentId: T:Nebula.Serialization.ProtocolRegistryBuilder.MethodName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolRegistryBuilder.html
-  name: ProtocolRegistryBuilder.MethodName
-  nameWithType: ProtocolRegistryBuilder.MethodName
-  fullName: Nebula.Serialization.ProtocolRegistryBuilder.MethodName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder
-    name: ProtocolRegistryBuilder
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.MethodName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder
-    name: ProtocolRegistryBuilder
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.MethodName.html
-- uid: Nebula.Serialization.ProtocolRegistryBuilder.PropertyName
-  commentId: T:Nebula.Serialization.ProtocolRegistryBuilder.PropertyName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolRegistryBuilder.html
-  name: ProtocolRegistryBuilder.PropertyName
-  nameWithType: ProtocolRegistryBuilder.PropertyName
-  fullName: Nebula.Serialization.ProtocolRegistryBuilder.PropertyName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder
-    name: ProtocolRegistryBuilder
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder
-    name: ProtocolRegistryBuilder
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.PropertyName.html
-- uid: Nebula.Serialization.ProtocolRegistryBuilder.SignalName
-  commentId: T:Nebula.Serialization.ProtocolRegistryBuilder.SignalName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolRegistryBuilder.html
-  name: ProtocolRegistryBuilder.SignalName
-  nameWithType: ProtocolRegistryBuilder.SignalName
-  fullName: Nebula.Serialization.ProtocolRegistryBuilder.SignalName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder
-    name: ProtocolRegistryBuilder
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.SignalName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder
-    name: ProtocolRegistryBuilder
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolRegistryBuilder.SignalName.html
-- uid: Nebula.Serialization.ProtocolResource
-  commentId: T:Nebula.Serialization.ProtocolResource
-  isExternal: true
-  href: Nebula.Serialization.ProtocolResource.html
-  name: ProtocolResource
-  nameWithType: ProtocolResource
-  fullName: Nebula.Serialization.ProtocolResource
-- uid: Nebula.Serialization.ProtocolResource.MethodName
-  commentId: T:Nebula.Serialization.ProtocolResource.MethodName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolResource.html
-  name: ProtocolResource.MethodName
-  nameWithType: ProtocolResource.MethodName
-  fullName: Nebula.Serialization.ProtocolResource.MethodName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolResource
-    name: ProtocolResource
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolResource.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.MethodName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolResource
-    name: ProtocolResource
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolResource.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.MethodName.html
-- uid: Nebula.Serialization.ProtocolResource.PropertyName
-  commentId: T:Nebula.Serialization.ProtocolResource.PropertyName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolResource.html
-  name: ProtocolResource.PropertyName
-  nameWithType: ProtocolResource.PropertyName
-  fullName: Nebula.Serialization.ProtocolResource.PropertyName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolResource
-    name: ProtocolResource
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolResource.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolResource
-    name: ProtocolResource
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolResource.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.PropertyName.html
-- uid: Nebula.Serialization.ProtocolResource.SignalName
-  commentId: T:Nebula.Serialization.ProtocolResource.SignalName
-  isExternal: true
-  href: Nebula.Serialization.ProtocolResource.html
-  name: ProtocolResource.SignalName
-  nameWithType: ProtocolResource.SignalName
-  fullName: Nebula.Serialization.ProtocolResource.SignalName
-  spec.csharp:
-  - uid: Nebula.Serialization.ProtocolResource
-    name: ProtocolResource
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolResource.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.SignalName.html
-  spec.vb:
-  - uid: Nebula.Serialization.ProtocolResource
-    name: ProtocolResource
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.html
-  - name: .
-  - uid: Nebula.Serialization.ProtocolResource.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.ProtocolResource.SignalName.html
-- uid: Nebula.Serialization.SerialMetadata
-  commentId: T:Nebula.Serialization.SerialMetadata
+  href: Nebula.Serialization.SerialVariantType.html
+  name: SerialVariantType
+  nameWithType: SerialVariantType
+  fullName: Nebula.Serialization.SerialVariantType
+- uid: Nebula.Serialization.NetworkSources
+  commentId: T:Nebula.Serialization.NetworkSources
   parent: Nebula.Serialization
   isExternal: true
-  href: Nebula.Serialization.SerialMetadata.html
-  name: SerialMetadata
-  nameWithType: SerialMetadata
-  fullName: Nebula.Serialization.SerialMetadata
-- uid: Nebula.Serialization.SerialMetadata.MethodName
-  commentId: T:Nebula.Serialization.SerialMetadata.MethodName
-  isExternal: true
-  href: Nebula.Serialization.SerialMetadata.html
-  name: SerialMetadata.MethodName
-  nameWithType: SerialMetadata.MethodName
-  fullName: Nebula.Serialization.SerialMetadata.MethodName
-  spec.csharp:
-  - uid: Nebula.Serialization.SerialMetadata
-    name: SerialMetadata
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.html
-  - name: .
-  - uid: Nebula.Serialization.SerialMetadata.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.MethodName.html
-  spec.vb:
-  - uid: Nebula.Serialization.SerialMetadata
-    name: SerialMetadata
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.html
-  - name: .
-  - uid: Nebula.Serialization.SerialMetadata.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.MethodName.html
-- uid: Nebula.Serialization.SerialMetadata.PropertyName
-  commentId: T:Nebula.Serialization.SerialMetadata.PropertyName
-  isExternal: true
-  href: Nebula.Serialization.SerialMetadata.html
-  name: SerialMetadata.PropertyName
-  nameWithType: SerialMetadata.PropertyName
-  fullName: Nebula.Serialization.SerialMetadata.PropertyName
-  spec.csharp:
-  - uid: Nebula.Serialization.SerialMetadata
-    name: SerialMetadata
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.html
-  - name: .
-  - uid: Nebula.Serialization.SerialMetadata.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Serialization.SerialMetadata
-    name: SerialMetadata
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.html
-  - name: .
-  - uid: Nebula.Serialization.SerialMetadata.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.PropertyName.html
-- uid: Nebula.Serialization.SerialMetadata.SignalName
-  commentId: T:Nebula.Serialization.SerialMetadata.SignalName
-  isExternal: true
-  href: Nebula.Serialization.SerialMetadata.html
-  name: SerialMetadata.SignalName
-  nameWithType: SerialMetadata.SignalName
-  fullName: Nebula.Serialization.SerialMetadata.SignalName
-  spec.csharp:
-  - uid: Nebula.Serialization.SerialMetadata
-    name: SerialMetadata
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.html
-  - name: .
-  - uid: Nebula.Serialization.SerialMetadata.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.SignalName.html
-  spec.vb:
-  - uid: Nebula.Serialization.SerialMetadata
-    name: SerialMetadata
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.html
-  - name: .
-  - uid: Nebula.Serialization.SerialMetadata.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.SerialMetadata.SignalName.html
-- uid: Nebula.Serialization.SerialTypeIdentifier
-  commentId: T:Nebula.Serialization.SerialTypeIdentifier
-  parent: Nebula.Serialization
-  isExternal: true
-  href: Nebula.Serialization.SerialTypeIdentifier.html
-  name: SerialTypeIdentifier
-  nameWithType: SerialTypeIdentifier
-  fullName: Nebula.Serialization.SerialTypeIdentifier
+  href: Nebula.Serialization.NetworkSources.html
+  name: NetworkSources
+  nameWithType: NetworkSources
+  fullName: Nebula.Serialization.NetworkSources
 - uid: Nebula.Serialization.StaticMethodType
   commentId: T:Nebula.Serialization.StaticMethodType
   parent: Nebula.Serialization
@@ -945,94 +242,115 @@ references:
   name: StaticMethodType
   nameWithType: StaticMethodType
   fullName: Nebula.Serialization.StaticMethodType
-- uid: Nebula.Serialization.StaticMethodResource
-  commentId: T:Nebula.Serialization.StaticMethodResource
+- uid: Nebula.Serialization.SerialMetadata
+  commentId: T:Nebula.Serialization.SerialMetadata
+  parent: Nebula.Serialization
   isExternal: true
-  href: Nebula.Serialization.StaticMethodResource.html
-  name: StaticMethodResource
-  nameWithType: StaticMethodResource
-  fullName: Nebula.Serialization.StaticMethodResource
-- uid: Nebula.Serialization.StaticMethodResource.MethodName
-  commentId: T:Nebula.Serialization.StaticMethodResource.MethodName
+  href: Nebula.Serialization.SerialMetadata.html
+  name: SerialMetadata
+  nameWithType: SerialMetadata
+  fullName: Nebula.Serialization.SerialMetadata
+- uid: Nebula.Serialization.NetFunctionArgument
+  commentId: T:Nebula.Serialization.NetFunctionArgument
   isExternal: true
-  href: Nebula.Serialization.StaticMethodResource.html
-  name: StaticMethodResource.MethodName
-  nameWithType: StaticMethodResource.MethodName
-  fullName: Nebula.Serialization.StaticMethodResource.MethodName
+  href: Nebula.Serialization.NetFunctionArgument.html
+  name: NetFunctionArgument
+  nameWithType: NetFunctionArgument
+  fullName: Nebula.Serialization.NetFunctionArgument
+- uid: Nebula.Serialization.ProtocolNetProperty
+  commentId: T:Nebula.Serialization.ProtocolNetProperty
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.ProtocolNetProperty.html
+  name: ProtocolNetProperty
+  nameWithType: ProtocolNetProperty
+  fullName: Nebula.Serialization.ProtocolNetProperty
+- uid: Nebula.Serialization.ProtocolNetFunction
+  commentId: T:Nebula.Serialization.ProtocolNetFunction
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.ProtocolNetFunction.html
+  name: ProtocolNetFunction
+  nameWithType: ProtocolNetFunction
+  fullName: Nebula.Serialization.ProtocolNetFunction
+- uid: Nebula.Serialization.StaticMethodInfo
+  commentId: T:Nebula.Serialization.StaticMethodInfo
+  isExternal: true
+  href: Nebula.Serialization.StaticMethodInfo.html
+  name: StaticMethodInfo
+  nameWithType: StaticMethodInfo
+  fullName: Nebula.Serialization.StaticMethodInfo
+- uid: Nebula.Serialization.ProtocolSceneInterest
+  commentId: T:Nebula.Serialization.ProtocolSceneInterest
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.ProtocolSceneInterest.html
+  name: ProtocolSceneInterest
+  nameWithType: ProtocolSceneInterest
+  fullName: Nebula.Serialization.ProtocolSceneInterest
+- uid: Nebula.Serialization.GeneratedProtocol
+  commentId: T:Nebula.Serialization.GeneratedProtocol
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.html
+  name: GeneratedProtocol
+  nameWithType: GeneratedProtocol
+  fullName: Nebula.Serialization.GeneratedProtocol
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+  commentId: T:Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.html
+  name: GeneratedProtocol.NetworkDeserializeFunc
+  nameWithType: GeneratedProtocol.NetworkDeserializeFunc
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
   spec.csharp:
-  - uid: Nebula.Serialization.StaticMethodResource
-    name: StaticMethodResource
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
     isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.html
+    href: Nebula.Serialization.GeneratedProtocol.html
   - name: .
-  - uid: Nebula.Serialization.StaticMethodResource.MethodName
-    name: MethodName
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+    name: NetworkDeserializeFunc
     isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.MethodName.html
+    href: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc.html
   spec.vb:
-  - uid: Nebula.Serialization.StaticMethodResource
-    name: StaticMethodResource
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
     isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.html
+    href: Nebula.Serialization.GeneratedProtocol.html
   - name: .
-  - uid: Nebula.Serialization.StaticMethodResource.MethodName
-    name: MethodName
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+    name: NetworkDeserializeFunc
     isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.MethodName.html
-- uid: Nebula.Serialization.StaticMethodResource.PropertyName
-  commentId: T:Nebula.Serialization.StaticMethodResource.PropertyName
+    href: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc.html
+- uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  commentId: T:Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  parent: Nebula.Serialization
   isExternal: true
-  href: Nebula.Serialization.StaticMethodResource.html
-  name: StaticMethodResource.PropertyName
-  nameWithType: StaticMethodResource.PropertyName
-  fullName: Nebula.Serialization.StaticMethodResource.PropertyName
+  href: Nebula.Serialization.GeneratedProtocol.html
+  name: GeneratedProtocol.NetworkSerializeFunc
+  nameWithType: GeneratedProtocol.NetworkSerializeFunc
+  fullName: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
   spec.csharp:
-  - uid: Nebula.Serialization.StaticMethodResource
-    name: StaticMethodResource
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
     isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.html
+    href: Nebula.Serialization.GeneratedProtocol.html
   - name: .
-  - uid: Nebula.Serialization.StaticMethodResource.PropertyName
-    name: PropertyName
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+    name: NetworkSerializeFunc
     isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.PropertyName.html
+    href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html
   spec.vb:
-  - uid: Nebula.Serialization.StaticMethodResource
-    name: StaticMethodResource
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
     isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.html
+    href: Nebula.Serialization.GeneratedProtocol.html
   - name: .
-  - uid: Nebula.Serialization.StaticMethodResource.PropertyName
-    name: PropertyName
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+    name: NetworkSerializeFunc
     isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.PropertyName.html
-- uid: Nebula.Serialization.StaticMethodResource.SignalName
-  commentId: T:Nebula.Serialization.StaticMethodResource.SignalName
-  isExternal: true
-  href: Nebula.Serialization.StaticMethodResource.html
-  name: StaticMethodResource.SignalName
-  nameWithType: StaticMethodResource.SignalName
-  fullName: Nebula.Serialization.StaticMethodResource.SignalName
-  spec.csharp:
-  - uid: Nebula.Serialization.StaticMethodResource
-    name: StaticMethodResource
-    isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.html
-  - name: .
-  - uid: Nebula.Serialization.StaticMethodResource.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.SignalName.html
-  spec.vb:
-  - uid: Nebula.Serialization.StaticMethodResource
-    name: StaticMethodResource
-    isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.html
-  - name: .
-  - uid: Nebula.Serialization.StaticMethodResource.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Serialization.StaticMethodResource.SignalName.html
+    href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html
 - uid: Nebula.Serialization
   commentId: N:Nebula.Serialization
   isExternal: true
@@ -1060,3 +378,4 @@ references:
     name: Serialization
     isExternal: true
     href: Nebula.Serialization.html
+memberLayout: SeparatePages

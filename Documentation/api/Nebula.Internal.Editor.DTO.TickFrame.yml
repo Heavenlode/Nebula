@@ -22,7 +22,7 @@ items:
   fullName: Nebula.Internal.Editor.DTO.TickFrame
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/DTO/TickFrame.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/DTO/TickFrame.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor.DTO
@@ -51,7 +51,7 @@ items:
   fullName: Nebula.Internal.Editor.DTO.TickFrame.TickFrame()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/DTO/TickFrame.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/DTO/TickFrame.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor.DTO
@@ -74,7 +74,7 @@ items:
   fullName: Nebula.Internal.Editor.DTO.TickFrame.WorldId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/DTO/TickFrame.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/DTO/TickFrame.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor.DTO
@@ -97,7 +97,7 @@ items:
   fullName: Nebula.Internal.Editor.DTO.TickFrame.Id
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/DTO/TickFrame.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/DTO/TickFrame.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor.DTO
@@ -120,7 +120,7 @@ items:
   fullName: Nebula.Internal.Editor.DTO.TickFrame.GreatestSize
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/DTO/TickFrame.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/DTO/TickFrame.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor.DTO
@@ -143,7 +143,7 @@ items:
   fullName: Nebula.Internal.Editor.DTO.TickFrame.Timestamp
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/DTO/TickFrame.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/DTO/TickFrame.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor.DTO
@@ -166,7 +166,7 @@ items:
   fullName: Nebula.Internal.Editor.DTO.TickFrame.PeerPayloads
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/DTO/TickFrame.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/DTO/TickFrame.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor.DTO
@@ -189,7 +189,7 @@ items:
   fullName: Nebula.Internal.Editor.DTO.TickFrame.Logs
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/DTO/TickFrame.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/DTO/TickFrame.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor.DTO
@@ -212,7 +212,7 @@ items:
   fullName: Nebula.Internal.Editor.DTO.TickFrame.NetFunctionCalls
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/DTO/TickFrame.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/DTO/TickFrame.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor.DTO
@@ -235,7 +235,7 @@ items:
   fullName: Nebula.Internal.Editor.DTO.TickFrame.WorldState
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/DTO/TickFrame.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/DTO/TickFrame.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor.DTO
@@ -534,7 +534,7 @@ references:
 - uid: Nebula.Internal.Editor.DTO.TickFrame.#ctor*
   commentId: Overload:Nebula.Internal.Editor.DTO.TickFrame.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.DTO.TickFrame.html#Nebula_Internal_Editor_DTO_TickFrame__ctor
+  href: Nebula.Internal.Editor.DTO.TickFrame.-ctor.html#Nebula_Internal_Editor_DTO_TickFrame__ctor
   name: TickFrame
   nameWithType: TickFrame.TickFrame
   fullName: Nebula.Internal.Editor.DTO.TickFrame.TickFrame
@@ -544,7 +544,7 @@ references:
 - uid: Nebula.Internal.Editor.DTO.TickFrame.WorldId*
   commentId: Overload:Nebula.Internal.Editor.DTO.TickFrame.WorldId
   isExternal: true
-  href: Nebula.Internal.Editor.DTO.TickFrame.html#Nebula_Internal_Editor_DTO_TickFrame_WorldId
+  href: Nebula.Internal.Editor.DTO.TickFrame.WorldId.html#Nebula_Internal_Editor_DTO_TickFrame_WorldId
   name: WorldId
   nameWithType: TickFrame.WorldId
   fullName: Nebula.Internal.Editor.DTO.TickFrame.WorldId
@@ -566,7 +566,7 @@ references:
 - uid: Nebula.Internal.Editor.DTO.TickFrame.Id*
   commentId: Overload:Nebula.Internal.Editor.DTO.TickFrame.Id
   isExternal: true
-  href: Nebula.Internal.Editor.DTO.TickFrame.html#Nebula_Internal_Editor_DTO_TickFrame_Id
+  href: Nebula.Internal.Editor.DTO.TickFrame.Id.html#Nebula_Internal_Editor_DTO_TickFrame_Id
   name: Id
   nameWithType: TickFrame.Id
   fullName: Nebula.Internal.Editor.DTO.TickFrame.Id
@@ -584,14 +584,14 @@ references:
 - uid: Nebula.Internal.Editor.DTO.TickFrame.GreatestSize*
   commentId: Overload:Nebula.Internal.Editor.DTO.TickFrame.GreatestSize
   isExternal: true
-  href: Nebula.Internal.Editor.DTO.TickFrame.html#Nebula_Internal_Editor_DTO_TickFrame_GreatestSize
+  href: Nebula.Internal.Editor.DTO.TickFrame.GreatestSize.html#Nebula_Internal_Editor_DTO_TickFrame_GreatestSize
   name: GreatestSize
   nameWithType: TickFrame.GreatestSize
   fullName: Nebula.Internal.Editor.DTO.TickFrame.GreatestSize
 - uid: Nebula.Internal.Editor.DTO.TickFrame.Timestamp*
   commentId: Overload:Nebula.Internal.Editor.DTO.TickFrame.Timestamp
   isExternal: true
-  href: Nebula.Internal.Editor.DTO.TickFrame.html#Nebula_Internal_Editor_DTO_TickFrame_Timestamp
+  href: Nebula.Internal.Editor.DTO.TickFrame.Timestamp.html#Nebula_Internal_Editor_DTO_TickFrame_Timestamp
   name: Timestamp
   nameWithType: TickFrame.Timestamp
   fullName: Nebula.Internal.Editor.DTO.TickFrame.Timestamp
@@ -609,7 +609,7 @@ references:
 - uid: Nebula.Internal.Editor.DTO.TickFrame.PeerPayloads*
   commentId: Overload:Nebula.Internal.Editor.DTO.TickFrame.PeerPayloads
   isExternal: true
-  href: Nebula.Internal.Editor.DTO.TickFrame.html#Nebula_Internal_Editor_DTO_TickFrame_PeerPayloads
+  href: Nebula.Internal.Editor.DTO.TickFrame.PeerPayloads.html#Nebula_Internal_Editor_DTO_TickFrame_PeerPayloads
   name: PeerPayloads
   nameWithType: TickFrame.PeerPayloads
   fullName: Nebula.Internal.Editor.DTO.TickFrame.PeerPayloads
@@ -629,7 +629,7 @@ references:
 - uid: Nebula.Internal.Editor.DTO.TickFrame.Logs*
   commentId: Overload:Nebula.Internal.Editor.DTO.TickFrame.Logs
   isExternal: true
-  href: Nebula.Internal.Editor.DTO.TickFrame.html#Nebula_Internal_Editor_DTO_TickFrame_Logs
+  href: Nebula.Internal.Editor.DTO.TickFrame.Logs.html#Nebula_Internal_Editor_DTO_TickFrame_Logs
   name: Logs
   nameWithType: TickFrame.Logs
   fullName: Nebula.Internal.Editor.DTO.TickFrame.Logs
@@ -734,14 +734,15 @@ references:
 - uid: Nebula.Internal.Editor.DTO.TickFrame.NetFunctionCalls*
   commentId: Overload:Nebula.Internal.Editor.DTO.TickFrame.NetFunctionCalls
   isExternal: true
-  href: Nebula.Internal.Editor.DTO.TickFrame.html#Nebula_Internal_Editor_DTO_TickFrame_NetFunctionCalls
+  href: Nebula.Internal.Editor.DTO.TickFrame.NetFunctionCalls.html#Nebula_Internal_Editor_DTO_TickFrame_NetFunctionCalls
   name: NetFunctionCalls
   nameWithType: TickFrame.NetFunctionCalls
   fullName: Nebula.Internal.Editor.DTO.TickFrame.NetFunctionCalls
 - uid: Nebula.Internal.Editor.DTO.TickFrame.WorldState*
   commentId: Overload:Nebula.Internal.Editor.DTO.TickFrame.WorldState
   isExternal: true
-  href: Nebula.Internal.Editor.DTO.TickFrame.html#Nebula_Internal_Editor_DTO_TickFrame_WorldState
+  href: Nebula.Internal.Editor.DTO.TickFrame.WorldState.html#Nebula_Internal_Editor_DTO_TickFrame_WorldState
   name: WorldState
   nameWithType: TickFrame.WorldState
   fullName: Nebula.Internal.Editor.DTO.TickFrame.WorldState
+memberLayout: SeparatePages

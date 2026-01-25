@@ -8,6 +8,11 @@ items:
   - Nebula.NetProperty.#ctor
   - Nebula.NetProperty.Flags
   - Nebula.NetProperty.InterestMask
+  - Nebula.NetProperty.InterestRequired
+  - Nebula.NetProperty.Interpolate
+  - Nebula.NetProperty.InterpolateSpeed
+  - Nebula.NetProperty.NotifyOnChange
+  - Nebula.NetProperty.Predicted
   langs:
   - csharp
   - vb
@@ -16,19 +21,10 @@ items:
   fullName: Nebula.NetProperty
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: >-
-    Mark a property as being Networked.
-
-    The <xref href="Nebula.WorldRunner" data-throw-if-not-resolved="false"></xref> automatically processes these through the <xref href="Nebula.Serialization.Serializers.NetPropertiesSerializer" data-throw-if-not-resolved="false"></xref> to be optimally sent across the network.
-
-    Only changes are networked.
-
-    When the NetNode receives a change on the property, it will also attempt to call a method <pre><code class="lang-csharp">NetNode.OnNetworkChange{PropertyName}(int tick, T oldValue, T newValue)</code></pre> on the client side if it exists.
-  example: []
   syntax:
     content: >-
       [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
@@ -106,7 +102,7 @@ items:
   fullName: Nebula.NetProperty.Flags
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -127,7 +123,7 @@ items:
   fullName: Nebula.NetProperty.InterestMask
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -136,6 +132,141 @@ items:
     return:
       type: System.Int64
     content.vb: Public InterestMask As Long
+- uid: Nebula.NetProperty.InterestRequired
+  commentId: F:Nebula.NetProperty.InterestRequired
+  id: InterestRequired
+  parent: Nebula.NetProperty
+  langs:
+  - csharp
+  - vb
+  name: InterestRequired
+  nameWithType: NetProperty.InterestRequired
+  fullName: Nebula.NetProperty.InterestRequired
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public long InterestRequired
+    return:
+      type: System.Int64
+    content.vb: Public InterestRequired As Long
+- uid: Nebula.NetProperty.NotifyOnChange
+  commentId: F:Nebula.NetProperty.NotifyOnChange
+  id: NotifyOnChange
+  parent: Nebula.NetProperty
+  langs:
+  - csharp
+  - vb
+  name: NotifyOnChange
+  nameWithType: NetProperty.NotifyOnChange
+  fullName: Nebula.NetProperty.NotifyOnChange
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    When true, the source generator will emit a virtual OnNetworkChange{PropertyName} method
+
+    that you can override to handle property changes. This provides compile-time type safety
+
+    and zero-allocation change notifications.
+  example: []
+  syntax:
+    content: public bool NotifyOnChange
+    return:
+      type: System.Boolean
+    content.vb: Public NotifyOnChange As Boolean
+- uid: Nebula.NetProperty.Interpolate
+  commentId: F:Nebula.NetProperty.Interpolate
+  id: Interpolate
+  parent: Nebula.NetProperty
+  langs:
+  - csharp
+  - vb
+  name: Interpolate
+  nameWithType: NetProperty.Interpolate
+  fullName: Nebula.NetProperty.Interpolate
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    When true, the source generator will emit a virtual Interpolate{PropertyName} method
+
+    that smoothly interpolates this property toward network values each frame.
+
+    The property value is not set immediately on network receive; instead it lerps toward the target.
+  example: []
+  syntax:
+    content: public bool Interpolate
+    return:
+      type: System.Boolean
+    content.vb: Public Interpolate As Boolean
+- uid: Nebula.NetProperty.InterpolateSpeed
+  commentId: F:Nebula.NetProperty.InterpolateSpeed
+  id: InterpolateSpeed
+  parent: Nebula.NetProperty
+  langs:
+  - csharp
+  - vb
+  name: InterpolateSpeed
+  nameWithType: NetProperty.InterpolateSpeed
+  fullName: Nebula.NetProperty.InterpolateSpeed
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Speed of interpolation when Interpolate = true. Higher = faster catch-up.
+
+    Typical values: 10-20 for responsive feel, 5-10 for smooth feel.
+  example: []
+  syntax:
+    content: public float InterpolateSpeed
+    return:
+      type: System.Single
+    content.vb: Public InterpolateSpeed As Single
+- uid: Nebula.NetProperty.Predicted
+  commentId: F:Nebula.NetProperty.Predicted
+  id: Predicted
+  parent: Nebula.NetProperty
+  langs:
+  - csharp
+  - vb
+  name: Predicted
+  nameWithType: NetProperty.Predicted
+  fullName: Nebula.NetProperty.Predicted
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    When true, this property participates in client-side prediction.
+
+    The generator will emit snapshot/restore methods for rollback.
+
+    You MUST define a {PropertyName}PredictionTolerance property (float) to specify
+
+    the tolerance for misprediction detection, or a compile error (NEBULA002) will occur.
+
+    Only meaningful on client for owned entities.
+  example: []
+  syntax:
+    content: public bool Predicted
+    return:
+      type: System.Boolean
+    content.vb: Public Predicted As Boolean
 - uid: Nebula.NetProperty.#ctor
   commentId: M:Nebula.NetProperty.#ctor
   id: '#ctor'
@@ -148,7 +279,7 @@ items:
   fullName: Nebula.NetProperty.NetProperty()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -160,21 +291,6 @@ items:
   fullName.vb: Nebula.NetProperty.New()
   name.vb: New()
 references:
-- uid: Nebula.WorldRunner
-  commentId: T:Nebula.WorldRunner
-  parent: Nebula
-  isExternal: true
-  href: Nebula.WorldRunner.html
-  name: WorldRunner
-  nameWithType: WorldRunner
-  fullName: Nebula.WorldRunner
-- uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
-  commentId: T:Nebula.Serialization.Serializers.NetPropertiesSerializer
-  isExternal: true
-  href: Nebula.Serialization.Serializers.NetPropertiesSerializer.html
-  name: NetPropertiesSerializer
-  nameWithType: NetPropertiesSerializer
-  fullName: Nebula.Serialization.Serializers.NetPropertiesSerializer
 - uid: Nebula
   commentId: N:Nebula
   isExternal: true
@@ -2015,13 +2131,36 @@ references:
   nameWithType.vb: Long
   fullName.vb: Long
   name.vb: Long
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
 - uid: Nebula.NetProperty.#ctor*
   commentId: Overload:Nebula.NetProperty.#ctor
   isExternal: true
-  href: Nebula.NetProperty.html#Nebula_NetProperty__ctor
+  href: Nebula.NetProperty.-ctor.html#Nebula_NetProperty__ctor
   name: NetProperty
   nameWithType: NetProperty.NetProperty
   fullName: Nebula.NetProperty.NetProperty
   nameWithType.vb: NetProperty.New
   fullName.vb: Nebula.NetProperty.New
   name.vb: New
+memberLayout: SeparatePages

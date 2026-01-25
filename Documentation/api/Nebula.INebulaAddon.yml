@@ -48,7 +48,8 @@ references:
 - uid: Nebula.INebulaAddon.Install*
   commentId: Overload:Nebula.INebulaAddon.Install
   isExternal: true
-  href: Nebula.INebulaAddon.html#Nebula_INebulaAddon_Install
+  href: Nebula.INebulaAddon.Install.html#Nebula_INebulaAddon_Install
   name: Install
   nameWithType: INebulaAddon.Install
   fullName: Nebula.INebulaAddon.Install
+memberLayout: SeparatePages

@@ -6,7 +6,6 @@ items:
   parent: Nebula
   children:
   - Nebula.NetPose3D.SignalName.#ctor
-  - Nebula.NetPose3D.SignalName.OnChange
   langs:
   - csharp
   - vb
@@ -15,7 +14,7 @@ items:
   fullName: Nebula.NetPose3D.SignalName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -38,29 +37,6 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
-- uid: Nebula.NetPose3D.SignalName.OnChange
-  commentId: F:Nebula.NetPose3D.SignalName.OnChange
-  id: OnChange
-  parent: Nebula.NetPose3D.SignalName
-  langs:
-  - csharp
-  - vb
-  name: OnChange
-  nameWithType: NetPose3D.SignalName.OnChange
-  fullName: Nebula.NetPose3D.SignalName.OnChange
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'OnChange' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName OnChange
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnChange As StringName
 - uid: Nebula.NetPose3D.SignalName.#ctor
   commentId: M:Nebula.NetPose3D.SignalName.#ctor
   id: '#ctor'
@@ -73,7 +49,7 @@ items:
   fullName: Nebula.NetPose3D.SignalName.SignalName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetPose3D_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -395,20 +371,14 @@ references:
   name: Godot
   nameWithType: Godot
   fullName: Godot
-- uid: Godot.StringName
-  commentId: T:Godot.StringName
-  parent: Godot
-  isExternal: true
-  name: StringName
-  nameWithType: StringName
-  fullName: Godot.StringName
 - uid: Nebula.NetPose3D.SignalName.#ctor*
   commentId: Overload:Nebula.NetPose3D.SignalName.#ctor
   isExternal: true
-  href: Nebula.NetPose3D.SignalName.html#Nebula_NetPose3D_SignalName__ctor
+  href: Nebula.NetPose3D.SignalName.-ctor.html#Nebula_NetPose3D_SignalName__ctor
   name: SignalName
   nameWithType: NetPose3D.SignalName.SignalName
   fullName: Nebula.NetPose3D.SignalName.SignalName
   nameWithType.vb: NetPose3D.SignalName.New
   fullName.vb: Nebula.NetPose3D.SignalName.New
   name.vb: New
+memberLayout: SeparatePages

@@ -1,0 +1,144 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.NetworkSources
+  commentId: T:Nebula.Serialization.NetworkSources
+  id: NetworkSources
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.NetworkSources.All
+  - Nebula.Serialization.NetworkSources.Client
+  - Nebula.Serialization.NetworkSources.None
+  - Nebula.Serialization.NetworkSources.Server
+  langs:
+  - csharp
+  - vb
+  name: NetworkSources
+  nameWithType: NetworkSources
+  fullName: Nebula.Serialization.NetworkSources
+  type: Enum
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum NetworkSources
+    content.vb: >-
+      <Flags>
+
+      Public Enum NetworkSources
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: Nebula.Serialization.NetworkSources.None
+  commentId: F:Nebula.Serialization.NetworkSources.None
+  id: None
+  parent: Nebula.Serialization.NetworkSources
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: NetworkSources.None
+  fullName: Nebula.Serialization.NetworkSources.None
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: None = 0
+    return:
+      type: Nebula.Serialization.NetworkSources
+- uid: Nebula.Serialization.NetworkSources.Server
+  commentId: F:Nebula.Serialization.NetworkSources.Server
+  id: Server
+  parent: Nebula.Serialization.NetworkSources
+  langs:
+  - csharp
+  - vb
+  name: Server
+  nameWithType: NetworkSources.Server
+  fullName: Nebula.Serialization.NetworkSources.Server
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Server = 1
+    return:
+      type: Nebula.Serialization.NetworkSources
+- uid: Nebula.Serialization.NetworkSources.Client
+  commentId: F:Nebula.Serialization.NetworkSources.Client
+  id: Client
+  parent: Nebula.Serialization.NetworkSources
+  langs:
+  - csharp
+  - vb
+  name: Client
+  nameWithType: NetworkSources.Client
+  fullName: Nebula.Serialization.NetworkSources.Client
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Client = 2
+    return:
+      type: Nebula.Serialization.NetworkSources
+- uid: Nebula.Serialization.NetworkSources.All
+  commentId: F:Nebula.Serialization.NetworkSources.All
+  id: All
+  parent: Nebula.Serialization.NetworkSources
+  langs:
+  - csharp
+  - vb
+  name: All
+  nameWithType: NetworkSources.All
+  fullName: Nebula.Serialization.NetworkSources.All
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: All = Server | Client
+    return:
+      type: Nebula.Serialization.NetworkSources
+    content.vb: All = Server Or Client
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.NetworkSources
+  commentId: T:Nebula.Serialization.NetworkSources
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetworkSources.html
+  name: NetworkSources
+  nameWithType: NetworkSources
+  fullName: Nebula.Serialization.NetworkSources
+memberLayout: SeparatePages

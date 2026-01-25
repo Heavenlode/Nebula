@@ -14,7 +14,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -69,7 +69,7 @@ items:
   fullName: Nebula.Utility.Tools.Debugger.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.Debugger_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -564,10 +564,11 @@ references:
 - uid: Nebula.Utility.Tools.Debugger.PropertyName.#ctor*
   commentId: Overload:Nebula.Utility.Tools.Debugger.PropertyName.#ctor
   isExternal: true
-  href: Nebula.Utility.Tools.Debugger.PropertyName.html#Nebula_Utility_Tools_Debugger_PropertyName__ctor
+  href: Nebula.Utility.Tools.Debugger.PropertyName.-ctor.html#Nebula_Utility_Tools_Debugger_PropertyName__ctor
   name: PropertyName
   nameWithType: Debugger.PropertyName.PropertyName
   fullName: Nebula.Utility.Tools.Debugger.PropertyName.PropertyName
   nameWithType.vb: Debugger.PropertyName.New
   fullName.vb: Nebula.Utility.Tools.Debugger.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

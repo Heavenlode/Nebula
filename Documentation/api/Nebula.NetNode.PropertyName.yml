@@ -7,7 +7,6 @@ items:
   children:
   - Nebula.NetNode.PropertyName.#ctor
   - Nebula.NetNode.PropertyName.Network
-  - Nebula.NetNode.PropertyName.Node
   langs:
   - csharp
   - vb
@@ -16,7 +15,7 @@ items:
   fullName: Nebula.NetNode.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -59,29 +58,6 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
-- uid: Nebula.NetNode.PropertyName.Node
-  commentId: F:Nebula.NetNode.PropertyName.Node
-  id: Node
-  parent: Nebula.NetNode.PropertyName
-  langs:
-  - csharp
-  - vb
-  name: Node
-  nameWithType: NetNode.PropertyName.Node
-  fullName: Nebula.NetNode.PropertyName.Node
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'Node' property.
-  example: []
-  syntax:
-    content: public static readonly StringName Node
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly Node As StringName
 - uid: Nebula.NetNode.PropertyName.Network
   commentId: F:Nebula.NetNode.PropertyName.Network
   id: Network
@@ -94,7 +70,7 @@ items:
   fullName: Nebula.NetNode.PropertyName.Network
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -117,7 +93,7 @@ items:
   fullName: Nebula.NetNode.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -589,10 +565,11 @@ references:
 - uid: Nebula.NetNode.PropertyName.#ctor*
   commentId: Overload:Nebula.NetNode.PropertyName.#ctor
   isExternal: true
-  href: Nebula.NetNode.PropertyName.html#Nebula_NetNode_PropertyName__ctor
+  href: Nebula.NetNode.PropertyName.-ctor.html#Nebula_NetNode_PropertyName__ctor
   name: PropertyName
   nameWithType: NetNode.PropertyName.PropertyName
   fullName: Nebula.NetNode.PropertyName.PropertyName
   nameWithType.vb: NetNode.PropertyName.New
   fullName.vb: Nebula.NetNode.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

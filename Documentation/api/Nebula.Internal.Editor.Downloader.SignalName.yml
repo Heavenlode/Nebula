@@ -6,8 +6,6 @@ items:
   parent: Nebula.Internal.Editor
   children:
   - Nebula.Internal.Editor.Downloader.SignalName.#ctor
-  - Nebula.Internal.Editor.Downloader.SignalName.DownloadCompleted
-  - Nebula.Internal.Editor.Downloader.SignalName.DownloadFailed
   langs:
   - csharp
   - vb
@@ -16,7 +14,7 @@ items:
   fullName: Nebula.Internal.Editor.Downloader.SignalName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -50,52 +48,6 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
-- uid: Nebula.Internal.Editor.Downloader.SignalName.DownloadCompleted
-  commentId: F:Nebula.Internal.Editor.Downloader.SignalName.DownloadCompleted
-  id: DownloadCompleted
-  parent: Nebula.Internal.Editor.Downloader.SignalName
-  langs:
-  - csharp
-  - vb
-  name: DownloadCompleted
-  nameWithType: Downloader.SignalName.DownloadCompleted
-  fullName: Nebula.Internal.Editor.Downloader.SignalName.DownloadCompleted
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Internal.Editor
-  summary: Cached name for the 'DownloadCompleted' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName DownloadCompleted
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly DownloadCompleted As StringName
-- uid: Nebula.Internal.Editor.Downloader.SignalName.DownloadFailed
-  commentId: F:Nebula.Internal.Editor.Downloader.SignalName.DownloadFailed
-  id: DownloadFailed
-  parent: Nebula.Internal.Editor.Downloader.SignalName
-  langs:
-  - csharp
-  - vb
-  name: DownloadFailed
-  nameWithType: Downloader.SignalName.DownloadFailed
-  fullName: Nebula.Internal.Editor.Downloader.SignalName.DownloadFailed
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Internal.Editor
-  summary: Cached name for the 'DownloadFailed' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName DownloadFailed
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly DownloadFailed As StringName
 - uid: Nebula.Internal.Editor.Downloader.SignalName.#ctor
   commentId: M:Nebula.Internal.Editor.Downloader.SignalName.#ctor
   id: '#ctor'
@@ -108,7 +60,7 @@ items:
   fullName: Nebula.Internal.Editor.Downloader.SignalName.SignalName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -537,20 +489,14 @@ references:
   name: Godot
   nameWithType: Godot
   fullName: Godot
-- uid: Godot.StringName
-  commentId: T:Godot.StringName
-  parent: Godot
-  isExternal: true
-  name: StringName
-  nameWithType: StringName
-  fullName: Godot.StringName
 - uid: Nebula.Internal.Editor.Downloader.SignalName.#ctor*
   commentId: Overload:Nebula.Internal.Editor.Downloader.SignalName.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.Downloader.SignalName.html#Nebula_Internal_Editor_Downloader_SignalName__ctor
+  href: Nebula.Internal.Editor.Downloader.SignalName.-ctor.html#Nebula_Internal_Editor_Downloader_SignalName__ctor
   name: SignalName
   nameWithType: Downloader.SignalName.SignalName
   fullName: Nebula.Internal.Editor.Downloader.SignalName.SignalName
   nameWithType.vb: Downloader.SignalName.New
   fullName.vb: Nebula.Internal.Editor.Downloader.SignalName.New
   name.vb: New
+memberLayout: SeparatePages

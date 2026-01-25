@@ -1,0 +1,763 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Tools.Main.PropertyName
+  commentId: T:Nebula.Tools.Main.PropertyName
+  id: Main.PropertyName
+  parent: Nebula.Tools
+  children:
+  - Nebula.Tools.Main.PropertyName.#ctor
+  - Nebula.Tools.Main.PropertyName.addonManagerInstance
+  - Nebula.Tools.Main.PropertyName.dockNetScenesInstance
+  - Nebula.Tools.Main.PropertyName.menuItemIds
+  - Nebula.Tools.Main.PropertyName.netSceneInspectorInstance
+  - Nebula.Tools.Main.PropertyName.projectSettingsController
+  - Nebula.Tools.Main.PropertyName.serverDebugClientInstance
+  - Nebula.Tools.Main.PropertyName.toolMenuInstance
+  langs:
+  - csharp
+  - vb
+  name: Main.PropertyName
+  nameWithType: Main.PropertyName
+  fullName: Nebula.Tools.Main.PropertyName
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Tools
+  summary: Cached StringNames for the properties and fields contained in this class, for fast lookup.
+  example: []
+  syntax:
+    content: 'public class Main.PropertyName : EditorPlugin.PropertyName'
+    content.vb: Public Class Main.PropertyName Inherits EditorPlugin.PropertyName
+  inheritance:
+  - System.Object
+  - Godot.GodotObject.PropertyName
+  - Godot.Node.PropertyName
+  - Godot.EditorPlugin.PropertyName
+  inheritedMembers:
+  - Godot.Node.PropertyName._ImportPath
+  - Godot.Node.PropertyName.Name
+  - Godot.Node.PropertyName.UniqueNameInOwner
+  - Godot.Node.PropertyName.SceneFilePath
+  - Godot.Node.PropertyName.Owner
+  - Godot.Node.PropertyName.Multiplayer
+  - Godot.Node.PropertyName.ProcessMode
+  - Godot.Node.PropertyName.ProcessPriority
+  - Godot.Node.PropertyName.ProcessPhysicsPriority
+  - Godot.Node.PropertyName.ProcessThreadGroup
+  - Godot.Node.PropertyName.ProcessThreadGroupOrder
+  - Godot.Node.PropertyName.ProcessThreadMessages
+  - Godot.Node.PropertyName.PhysicsInterpolationMode
+  - Godot.Node.PropertyName.AutoTranslateMode
+  - Godot.Node.PropertyName.EditorDescription
+  - Godot.Node.PropertyName.AccessibilityName
+  - Godot.Node.PropertyName.AccessibilityDescription
+  - Godot.Node.PropertyName.AccessibilityLive
+  - Godot.Node.PropertyName.AccessibilityControlsNodes
+  - Godot.Node.PropertyName.AccessibilityDescribedByNodes
+  - Godot.Node.PropertyName.AccessibilityLabeledByNodes
+  - Godot.Node.PropertyName.AccessibilityFlowToNodes
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Nebula.Tools.Main.PropertyName.dockNetScenesInstance
+  commentId: F:Nebula.Tools.Main.PropertyName.dockNetScenesInstance
+  id: dockNetScenesInstance
+  parent: Nebula.Tools.Main.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: dockNetScenesInstance
+  nameWithType: Main.PropertyName.dockNetScenesInstance
+  fullName: Nebula.Tools.Main.PropertyName.dockNetScenesInstance
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Tools
+  summary: Cached name for the 'dockNetScenesInstance' field.
+  example: []
+  syntax:
+    content: public static readonly StringName dockNetScenesInstance
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly dockNetScenesInstance As StringName
+- uid: Nebula.Tools.Main.PropertyName.serverDebugClientInstance
+  commentId: F:Nebula.Tools.Main.PropertyName.serverDebugClientInstance
+  id: serverDebugClientInstance
+  parent: Nebula.Tools.Main.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: serverDebugClientInstance
+  nameWithType: Main.PropertyName.serverDebugClientInstance
+  fullName: Nebula.Tools.Main.PropertyName.serverDebugClientInstance
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Tools
+  summary: Cached name for the 'serverDebugClientInstance' field.
+  example: []
+  syntax:
+    content: public static readonly StringName serverDebugClientInstance
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly serverDebugClientInstance As StringName
+- uid: Nebula.Tools.Main.PropertyName.netSceneInspectorInstance
+  commentId: F:Nebula.Tools.Main.PropertyName.netSceneInspectorInstance
+  id: netSceneInspectorInstance
+  parent: Nebula.Tools.Main.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: netSceneInspectorInstance
+  nameWithType: Main.PropertyName.netSceneInspectorInstance
+  fullName: Nebula.Tools.Main.PropertyName.netSceneInspectorInstance
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Tools
+  summary: Cached name for the 'netSceneInspectorInstance' field.
+  example: []
+  syntax:
+    content: public static readonly StringName netSceneInspectorInstance
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly netSceneInspectorInstance As StringName
+- uid: Nebula.Tools.Main.PropertyName.addonManagerInstance
+  commentId: F:Nebula.Tools.Main.PropertyName.addonManagerInstance
+  id: addonManagerInstance
+  parent: Nebula.Tools.Main.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: addonManagerInstance
+  nameWithType: Main.PropertyName.addonManagerInstance
+  fullName: Nebula.Tools.Main.PropertyName.addonManagerInstance
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Tools
+  summary: Cached name for the 'addonManagerInstance' field.
+  example: []
+  syntax:
+    content: public static readonly StringName addonManagerInstance
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly addonManagerInstance As StringName
+- uid: Nebula.Tools.Main.PropertyName.toolMenuInstance
+  commentId: F:Nebula.Tools.Main.PropertyName.toolMenuInstance
+  id: toolMenuInstance
+  parent: Nebula.Tools.Main.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: toolMenuInstance
+  nameWithType: Main.PropertyName.toolMenuInstance
+  fullName: Nebula.Tools.Main.PropertyName.toolMenuInstance
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Tools
+  summary: Cached name for the 'toolMenuInstance' field.
+  example: []
+  syntax:
+    content: public static readonly StringName toolMenuInstance
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly toolMenuInstance As StringName
+- uid: Nebula.Tools.Main.PropertyName.projectSettingsController
+  commentId: F:Nebula.Tools.Main.PropertyName.projectSettingsController
+  id: projectSettingsController
+  parent: Nebula.Tools.Main.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: projectSettingsController
+  nameWithType: Main.PropertyName.projectSettingsController
+  fullName: Nebula.Tools.Main.PropertyName.projectSettingsController
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Tools
+  summary: Cached name for the 'projectSettingsController' field.
+  example: []
+  syntax:
+    content: public static readonly StringName projectSettingsController
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly projectSettingsController As StringName
+- uid: Nebula.Tools.Main.PropertyName.menuItemIds
+  commentId: F:Nebula.Tools.Main.PropertyName.menuItemIds
+  id: menuItemIds
+  parent: Nebula.Tools.Main.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: menuItemIds
+  nameWithType: Main.PropertyName.menuItemIds
+  fullName: Nebula.Tools.Main.PropertyName.menuItemIds
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Tools
+  summary: Cached name for the 'menuItemIds' field.
+  example: []
+  syntax:
+    content: public static readonly StringName menuItemIds
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly menuItemIds As StringName
+- uid: Nebula.Tools.Main.PropertyName.#ctor
+  commentId: M:Nebula.Tools.Main.PropertyName.#ctor
+  id: '#ctor'
+  parent: Nebula.Tools.Main.PropertyName
+  langs:
+  - csharp
+  - vb
+  name: PropertyName()
+  nameWithType: Main.PropertyName.PropertyName()
+  fullName: Nebula.Tools.Main.PropertyName.PropertyName()
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.Main_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Tools
+  syntax:
+    content: public PropertyName()
+    content.vb: Public Sub New()
+  overload: Nebula.Tools.Main.PropertyName.#ctor*
+  nameWithType.vb: Main.PropertyName.New()
+  fullName.vb: Nebula.Tools.Main.PropertyName.New()
+  name.vb: New()
+references:
+- uid: Nebula.Tools
+  commentId: N:Nebula.Tools
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Tools
+  nameWithType: Nebula.Tools
+  fullName: Nebula.Tools
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Tools.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Tools.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Godot.GodotObject.PropertyName
+  commentId: T:Godot.GodotObject.PropertyName
+  parent: Godot
+  isExternal: true
+  name: GodotObject.PropertyName
+  nameWithType: GodotObject.PropertyName
+  fullName: Godot.GodotObject.PropertyName
+  spec.csharp:
+  - uid: Godot.GodotObject
+    name: GodotObject
+    isExternal: true
+  - name: .
+  - uid: Godot.GodotObject.PropertyName
+    name: PropertyName
+    isExternal: true
+  spec.vb:
+  - uid: Godot.GodotObject
+    name: GodotObject
+    isExternal: true
+  - name: .
+  - uid: Godot.GodotObject.PropertyName
+    name: PropertyName
+    isExternal: true
+- uid: Godot.Node.PropertyName
+  commentId: T:Godot.Node.PropertyName
+  parent: Godot
+  isExternal: true
+  name: Node.PropertyName
+  nameWithType: Node.PropertyName
+  fullName: Godot.Node.PropertyName
+  spec.csharp:
+  - uid: Godot.Node
+    name: Node
+    isExternal: true
+  - name: .
+  - uid: Godot.Node.PropertyName
+    name: PropertyName
+    isExternal: true
+  spec.vb:
+  - uid: Godot.Node
+    name: Node
+    isExternal: true
+  - name: .
+  - uid: Godot.Node.PropertyName
+    name: PropertyName
+    isExternal: true
+- uid: Godot.EditorPlugin.PropertyName
+  commentId: T:Godot.EditorPlugin.PropertyName
+  parent: Godot
+  isExternal: true
+  name: EditorPlugin.PropertyName
+  nameWithType: EditorPlugin.PropertyName
+  fullName: Godot.EditorPlugin.PropertyName
+  spec.csharp:
+  - uid: Godot.EditorPlugin
+    name: EditorPlugin
+    isExternal: true
+  - name: .
+  - uid: Godot.EditorPlugin.PropertyName
+    name: PropertyName
+    isExternal: true
+  spec.vb:
+  - uid: Godot.EditorPlugin
+    name: EditorPlugin
+    isExternal: true
+  - name: .
+  - uid: Godot.EditorPlugin.PropertyName
+    name: PropertyName
+    isExternal: true
+- uid: Godot.Node.PropertyName._ImportPath
+  commentId: F:Godot.Node.PropertyName._ImportPath
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: _ImportPath
+  nameWithType: Node.PropertyName._ImportPath
+  fullName: Godot.Node.PropertyName._ImportPath
+- uid: Godot.Node.PropertyName.Name
+  commentId: F:Godot.Node.PropertyName.Name
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: Name
+  nameWithType: Node.PropertyName.Name
+  fullName: Godot.Node.PropertyName.Name
+- uid: Godot.Node.PropertyName.UniqueNameInOwner
+  commentId: F:Godot.Node.PropertyName.UniqueNameInOwner
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: UniqueNameInOwner
+  nameWithType: Node.PropertyName.UniqueNameInOwner
+  fullName: Godot.Node.PropertyName.UniqueNameInOwner
+- uid: Godot.Node.PropertyName.SceneFilePath
+  commentId: F:Godot.Node.PropertyName.SceneFilePath
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: SceneFilePath
+  nameWithType: Node.PropertyName.SceneFilePath
+  fullName: Godot.Node.PropertyName.SceneFilePath
+- uid: Godot.Node.PropertyName.Owner
+  commentId: F:Godot.Node.PropertyName.Owner
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: Owner
+  nameWithType: Node.PropertyName.Owner
+  fullName: Godot.Node.PropertyName.Owner
+- uid: Godot.Node.PropertyName.Multiplayer
+  commentId: F:Godot.Node.PropertyName.Multiplayer
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: Multiplayer
+  nameWithType: Node.PropertyName.Multiplayer
+  fullName: Godot.Node.PropertyName.Multiplayer
+- uid: Godot.Node.PropertyName.ProcessMode
+  commentId: F:Godot.Node.PropertyName.ProcessMode
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessMode
+  nameWithType: Node.PropertyName.ProcessMode
+  fullName: Godot.Node.PropertyName.ProcessMode
+- uid: Godot.Node.PropertyName.ProcessPriority
+  commentId: F:Godot.Node.PropertyName.ProcessPriority
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessPriority
+  nameWithType: Node.PropertyName.ProcessPriority
+  fullName: Godot.Node.PropertyName.ProcessPriority
+- uid: Godot.Node.PropertyName.ProcessPhysicsPriority
+  commentId: F:Godot.Node.PropertyName.ProcessPhysicsPriority
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessPhysicsPriority
+  nameWithType: Node.PropertyName.ProcessPhysicsPriority
+  fullName: Godot.Node.PropertyName.ProcessPhysicsPriority
+- uid: Godot.Node.PropertyName.ProcessThreadGroup
+  commentId: F:Godot.Node.PropertyName.ProcessThreadGroup
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessThreadGroup
+  nameWithType: Node.PropertyName.ProcessThreadGroup
+  fullName: Godot.Node.PropertyName.ProcessThreadGroup
+- uid: Godot.Node.PropertyName.ProcessThreadGroupOrder
+  commentId: F:Godot.Node.PropertyName.ProcessThreadGroupOrder
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessThreadGroupOrder
+  nameWithType: Node.PropertyName.ProcessThreadGroupOrder
+  fullName: Godot.Node.PropertyName.ProcessThreadGroupOrder
+- uid: Godot.Node.PropertyName.ProcessThreadMessages
+  commentId: F:Godot.Node.PropertyName.ProcessThreadMessages
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: ProcessThreadMessages
+  nameWithType: Node.PropertyName.ProcessThreadMessages
+  fullName: Godot.Node.PropertyName.ProcessThreadMessages
+- uid: Godot.Node.PropertyName.PhysicsInterpolationMode
+  commentId: F:Godot.Node.PropertyName.PhysicsInterpolationMode
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: PhysicsInterpolationMode
+  nameWithType: Node.PropertyName.PhysicsInterpolationMode
+  fullName: Godot.Node.PropertyName.PhysicsInterpolationMode
+- uid: Godot.Node.PropertyName.AutoTranslateMode
+  commentId: F:Godot.Node.PropertyName.AutoTranslateMode
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AutoTranslateMode
+  nameWithType: Node.PropertyName.AutoTranslateMode
+  fullName: Godot.Node.PropertyName.AutoTranslateMode
+- uid: Godot.Node.PropertyName.EditorDescription
+  commentId: F:Godot.Node.PropertyName.EditorDescription
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: EditorDescription
+  nameWithType: Node.PropertyName.EditorDescription
+  fullName: Godot.Node.PropertyName.EditorDescription
+- uid: Godot.Node.PropertyName.AccessibilityName
+  commentId: F:Godot.Node.PropertyName.AccessibilityName
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityName
+  nameWithType: Node.PropertyName.AccessibilityName
+  fullName: Godot.Node.PropertyName.AccessibilityName
+- uid: Godot.Node.PropertyName.AccessibilityDescription
+  commentId: F:Godot.Node.PropertyName.AccessibilityDescription
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityDescription
+  nameWithType: Node.PropertyName.AccessibilityDescription
+  fullName: Godot.Node.PropertyName.AccessibilityDescription
+- uid: Godot.Node.PropertyName.AccessibilityLive
+  commentId: F:Godot.Node.PropertyName.AccessibilityLive
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityLive
+  nameWithType: Node.PropertyName.AccessibilityLive
+  fullName: Godot.Node.PropertyName.AccessibilityLive
+- uid: Godot.Node.PropertyName.AccessibilityControlsNodes
+  commentId: F:Godot.Node.PropertyName.AccessibilityControlsNodes
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityControlsNodes
+  nameWithType: Node.PropertyName.AccessibilityControlsNodes
+  fullName: Godot.Node.PropertyName.AccessibilityControlsNodes
+- uid: Godot.Node.PropertyName.AccessibilityDescribedByNodes
+  commentId: F:Godot.Node.PropertyName.AccessibilityDescribedByNodes
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityDescribedByNodes
+  nameWithType: Node.PropertyName.AccessibilityDescribedByNodes
+  fullName: Godot.Node.PropertyName.AccessibilityDescribedByNodes
+- uid: Godot.Node.PropertyName.AccessibilityLabeledByNodes
+  commentId: F:Godot.Node.PropertyName.AccessibilityLabeledByNodes
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityLabeledByNodes
+  nameWithType: Node.PropertyName.AccessibilityLabeledByNodes
+  fullName: Godot.Node.PropertyName.AccessibilityLabeledByNodes
+- uid: Godot.Node.PropertyName.AccessibilityFlowToNodes
+  commentId: F:Godot.Node.PropertyName.AccessibilityFlowToNodes
+  parent: Godot.Node.PropertyName
+  isExternal: true
+  name: AccessibilityFlowToNodes
+  nameWithType: Node.PropertyName.AccessibilityFlowToNodes
+  fullName: Godot.Node.PropertyName.AccessibilityFlowToNodes
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot
+- uid: Godot.StringName
+  commentId: T:Godot.StringName
+  parent: Godot
+  isExternal: true
+  name: StringName
+  nameWithType: StringName
+  fullName: Godot.StringName
+- uid: Nebula.Tools.Main.PropertyName.#ctor*
+  commentId: Overload:Nebula.Tools.Main.PropertyName.#ctor
+  isExternal: true
+  href: Nebula.Tools.Main.PropertyName.-ctor.html#Nebula_Tools_Main_PropertyName__ctor
+  name: PropertyName
+  nameWithType: Main.PropertyName.PropertyName
+  fullName: Nebula.Tools.Main.PropertyName.PropertyName
+  nameWithType.vb: Main.PropertyName.New
+  fullName.vb: Nebula.Tools.Main.PropertyName.New
+  name.vb: New
+memberLayout: SeparatePages

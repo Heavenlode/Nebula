@@ -6,14 +6,18 @@ items:
   parent: Nebula.Utility.Nodes
   children:
   - Nebula.Utility.Nodes.NetTransform3D.MethodName.#ctor
+  - Nebula.Utility.Nodes.NetTransform3D.MethodName.EnsureSameHemisphere
   - Nebula.Utility.Nodes.NetTransform3D.MethodName.Face
   - Nebula.Utility.Nodes.NetTransform3D.MethodName.GetParent3D
-  - Nebula.Utility.Nodes.NetTransform3D.MethodName.NetworkLerpNetPosition
-  - Nebula.Utility.Nodes.NetTransform3D.MethodName.NetworkLerpNetRotation
-  - Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetworkChangeIsTeleporting
+  - Nebula.Utility.Nodes.NetTransform3D.MethodName.OnConfirmedStateRestored
+  - Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeIsTeleporting
+  - Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeNetPosition
+  - Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeNetRotation
+  - Nebula.Utility.Nodes.NetTransform3D.MethodName.OnPredictedStateRestored
+  - Nebula.Utility.Nodes.NetTransform3D.MethodName.SafeNormalize
   - Nebula.Utility.Nodes.NetTransform3D.MethodName.Teleport
   - Nebula.Utility.Nodes.NetTransform3D.MethodName._NetworkProcess
-  - Nebula.Utility.Nodes.NetTransform3D.MethodName._PhysicsProcess
+  - Nebula.Utility.Nodes.NetTransform3D.MethodName._Process
   - Nebula.Utility.Nodes.NetTransform3D.MethodName._WorldReady
   langs:
   - csharp
@@ -23,7 +27,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -39,11 +43,14 @@ items:
   - Godot.Node3D.MethodName
   - Nebula.NetNode3D.MethodName
   inheritedMembers:
+  - Nebula.NetNode3D.MethodName._Notification
   - Nebula.NetNode3D.MethodName.SetupSerializers
-  - Nebula.NetNode3D.MethodName.NetworkSerialize
-  - Nebula.NetNode3D.MethodName.GetDeserializeContext
-  - Nebula.NetNode3D.MethodName.NetworkDeserialize
-  - Nebula.NetNode3D.MethodName.BsonDeserialize
+  - Nebula.NetNode3D.MethodName.ProcessInterpolation
+  - Nebula.NetNode3D.MethodName.StorePredictedState
+  - Nebula.NetNode3D.MethodName.StoreConfirmedState
+  - Nebula.NetNode3D.MethodName.Reconcile
+  - Nebula.NetNode3D.MethodName.RestoreToPredictedState
+  - Nebula.NetNode3D.MethodName._PhysicsProcess
   - Nebula.NetNode3D.MethodName.NodePathFromNetScene
   - Godot.Node3D.MethodName.SetTransform
   - Godot.Node3D.MethodName.GetTransform
@@ -123,7 +130,6 @@ items:
   - Godot.Node.MethodName._GetConfigurationWarnings
   - Godot.Node.MethodName._GetFocusedAccessibilityElement
   - Godot.Node.MethodName._Input
-  - Godot.Node.MethodName._Process
   - Godot.Node.MethodName._Ready
   - Godot.Node.MethodName._ShortcutInput
   - Godot.Node.MethodName._UnhandledInput
@@ -268,7 +274,6 @@ items:
   - Godot.GodotObject.MethodName._IterGet
   - Godot.GodotObject.MethodName._IterInit
   - Godot.GodotObject.MethodName._IterNext
-  - Godot.GodotObject.MethodName._Notification
   - Godot.GodotObject.MethodName._PropertyCanRevert
   - Godot.GodotObject.MethodName._PropertyGetRevert
   - Godot.GodotObject.MethodName._Set
@@ -329,29 +334,75 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
-- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetworkChangeIsTeleporting
-  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetworkChangeIsTeleporting
-  id: OnNetworkChangeIsTeleporting
+- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeNetPosition
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeNetPosition
+  id: OnNetChangeNetPosition
   parent: Nebula.Utility.Nodes.NetTransform3D.MethodName
   langs:
   - csharp
   - vb
-  name: OnNetworkChangeIsTeleporting
-  nameWithType: NetTransform3D.MethodName.OnNetworkChangeIsTeleporting
-  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetworkChangeIsTeleporting
+  name: OnNetChangeNetPosition
+  nameWithType: NetTransform3D.MethodName.OnNetChangeNetPosition
+  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeNetPosition
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
-  summary: Cached name for the 'OnNetworkChangeIsTeleporting' method.
+  summary: Cached name for the 'OnNetChangeNetPosition' method.
   example: []
   syntax:
-    content: public static readonly StringName OnNetworkChangeIsTeleporting
+    content: public static readonly StringName OnNetChangeNetPosition
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnNetworkChangeIsTeleporting As StringName
+    content.vb: Public Shared ReadOnly OnNetChangeNetPosition As StringName
+- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeNetRotation
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeNetRotation
+  id: OnNetChangeNetRotation
+  parent: Nebula.Utility.Nodes.NetTransform3D.MethodName
+  langs:
+  - csharp
+  - vb
+  name: OnNetChangeNetRotation
+  nameWithType: NetTransform3D.MethodName.OnNetChangeNetRotation
+  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeNetRotation
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Cached name for the 'OnNetChangeNetRotation' method.
+  example: []
+  syntax:
+    content: public static readonly StringName OnNetChangeNetRotation
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly OnNetChangeNetRotation As StringName
+- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeIsTeleporting
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeIsTeleporting
+  id: OnNetChangeIsTeleporting
+  parent: Nebula.Utility.Nodes.NetTransform3D.MethodName
+  langs:
+  - csharp
+  - vb
+  name: OnNetChangeIsTeleporting
+  nameWithType: NetTransform3D.MethodName.OnNetChangeIsTeleporting
+  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnNetChangeIsTeleporting
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Cached name for the 'OnNetChangeIsTeleporting' method.
+  example: []
+  syntax:
+    content: public static readonly StringName OnNetChangeIsTeleporting
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly OnNetChangeIsTeleporting As StringName
 - uid: Nebula.Utility.Nodes.NetTransform3D.MethodName._WorldReady
   commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName._WorldReady
   id: _WorldReady
@@ -364,7 +415,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName._WorldReady
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -387,7 +438,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.GetParent3D
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -410,7 +461,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.Face
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -421,6 +472,98 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly Face As StringName
+- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnConfirmedStateRestored
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.OnConfirmedStateRestored
+  id: OnConfirmedStateRestored
+  parent: Nebula.Utility.Nodes.NetTransform3D.MethodName
+  langs:
+  - csharp
+  - vb
+  name: OnConfirmedStateRestored
+  nameWithType: NetTransform3D.MethodName.OnConfirmedStateRestored
+  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnConfirmedStateRestored
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Cached name for the 'OnConfirmedStateRestored' method.
+  example: []
+  syntax:
+    content: public static readonly StringName OnConfirmedStateRestored
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly OnConfirmedStateRestored As StringName
+- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnPredictedStateRestored
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.OnPredictedStateRestored
+  id: OnPredictedStateRestored
+  parent: Nebula.Utility.Nodes.NetTransform3D.MethodName
+  langs:
+  - csharp
+  - vb
+  name: OnPredictedStateRestored
+  nameWithType: NetTransform3D.MethodName.OnPredictedStateRestored
+  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.OnPredictedStateRestored
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Cached name for the 'OnPredictedStateRestored' method.
+  example: []
+  syntax:
+    content: public static readonly StringName OnPredictedStateRestored
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly OnPredictedStateRestored As StringName
+- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.SafeNormalize
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.SafeNormalize
+  id: SafeNormalize
+  parent: Nebula.Utility.Nodes.NetTransform3D.MethodName
+  langs:
+  - csharp
+  - vb
+  name: SafeNormalize
+  nameWithType: NetTransform3D.MethodName.SafeNormalize
+  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.SafeNormalize
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Cached name for the 'SafeNormalize' method.
+  example: []
+  syntax:
+    content: public static readonly StringName SafeNormalize
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly SafeNormalize As StringName
+- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.EnsureSameHemisphere
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.EnsureSameHemisphere
+  id: EnsureSameHemisphere
+  parent: Nebula.Utility.Nodes.NetTransform3D.MethodName
+  langs:
+  - csharp
+  - vb
+  name: EnsureSameHemisphere
+  nameWithType: NetTransform3D.MethodName.EnsureSameHemisphere
+  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.EnsureSameHemisphere
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Cached name for the 'EnsureSameHemisphere' method.
+  example: []
+  syntax:
+    content: public static readonly StringName EnsureSameHemisphere
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly EnsureSameHemisphere As StringName
 - uid: Nebula.Utility.Nodes.NetTransform3D.MethodName._NetworkProcess
   commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName._NetworkProcess
   id: _NetworkProcess
@@ -433,7 +576,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName._NetworkProcess
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -444,75 +587,29 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _NetworkProcess As StringName
-- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.NetworkLerpNetPosition
-  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.NetworkLerpNetPosition
-  id: NetworkLerpNetPosition
+- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName._Process
+  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName._Process
+  id: _Process
   parent: Nebula.Utility.Nodes.NetTransform3D.MethodName
   langs:
   - csharp
   - vb
-  name: NetworkLerpNetPosition
-  nameWithType: NetTransform3D.MethodName.NetworkLerpNetPosition
-  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.NetworkLerpNetPosition
+  name: _Process
+  nameWithType: NetTransform3D.MethodName._Process
+  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName._Process
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
-  summary: Cached name for the 'NetworkLerpNetPosition' method.
+  summary: Cached name for the '_Process' method.
   example: []
   syntax:
-    content: public static readonly StringName NetworkLerpNetPosition
+    content: public static readonly StringName _Process
     return:
       type: Godot.StringName
-    content.vb: Public Shared ReadOnly NetworkLerpNetPosition As StringName
-- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.NetworkLerpNetRotation
-  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.NetworkLerpNetRotation
-  id: NetworkLerpNetRotation
-  parent: Nebula.Utility.Nodes.NetTransform3D.MethodName
-  langs:
-  - csharp
-  - vb
-  name: NetworkLerpNetRotation
-  nameWithType: NetTransform3D.MethodName.NetworkLerpNetRotation
-  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.NetworkLerpNetRotation
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Utility.Nodes
-  summary: Cached name for the 'NetworkLerpNetRotation' method.
-  example: []
-  syntax:
-    content: public static readonly StringName NetworkLerpNetRotation
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly NetworkLerpNetRotation As StringName
-- uid: Nebula.Utility.Nodes.NetTransform3D.MethodName._PhysicsProcess
-  commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName._PhysicsProcess
-  id: _PhysicsProcess
-  parent: Nebula.Utility.Nodes.NetTransform3D.MethodName
-  langs:
-  - csharp
-  - vb
-  name: _PhysicsProcess
-  nameWithType: NetTransform3D.MethodName._PhysicsProcess
-  fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName._PhysicsProcess
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Utility.Nodes
-  summary: Cached name for the '_PhysicsProcess' method.
-  example: []
-  syntax:
-    content: public static readonly StringName _PhysicsProcess
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly _PhysicsProcess As StringName
+    content.vb: Public Shared ReadOnly _Process As StringName
 - uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.Teleport
   commentId: F:Nebula.Utility.Nodes.NetTransform3D.MethodName.Teleport
   id: Teleport
@@ -525,7 +622,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.Teleport
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -548,7 +645,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -705,51 +802,75 @@ references:
     name: MethodName
     isExternal: true
     href: Nebula.NetNode3D.MethodName.html
+- uid: Nebula.NetNode3D.MethodName._Notification
+  commentId: F:Nebula.NetNode3D.MethodName._Notification
+  parent: Nebula.NetNode3D.MethodName
+  isExternal: true
+  href: Nebula.NetNode3D.MethodName._Notification.html#Nebula_NetNode3D_MethodName__Notification
+  name: _Notification
+  nameWithType: NetNode3D.MethodName._Notification
+  fullName: Nebula.NetNode3D.MethodName._Notification
 - uid: Nebula.NetNode3D.MethodName.SetupSerializers
   commentId: F:Nebula.NetNode3D.MethodName.SetupSerializers
   parent: Nebula.NetNode3D.MethodName
   isExternal: true
-  href: Nebula.NetNode3D.MethodName.html#Nebula_NetNode3D_MethodName_SetupSerializers
+  href: Nebula.NetNode3D.MethodName.SetupSerializers.html#Nebula_NetNode3D_MethodName_SetupSerializers
   name: SetupSerializers
   nameWithType: NetNode3D.MethodName.SetupSerializers
   fullName: Nebula.NetNode3D.MethodName.SetupSerializers
-- uid: Nebula.NetNode3D.MethodName.NetworkSerialize
-  commentId: F:Nebula.NetNode3D.MethodName.NetworkSerialize
+- uid: Nebula.NetNode3D.MethodName.ProcessInterpolation
+  commentId: F:Nebula.NetNode3D.MethodName.ProcessInterpolation
   parent: Nebula.NetNode3D.MethodName
   isExternal: true
-  href: Nebula.NetNode3D.MethodName.html#Nebula_NetNode3D_MethodName_NetworkSerialize
-  name: NetworkSerialize
-  nameWithType: NetNode3D.MethodName.NetworkSerialize
-  fullName: Nebula.NetNode3D.MethodName.NetworkSerialize
-- uid: Nebula.NetNode3D.MethodName.GetDeserializeContext
-  commentId: F:Nebula.NetNode3D.MethodName.GetDeserializeContext
+  href: Nebula.NetNode3D.MethodName.ProcessInterpolation.html#Nebula_NetNode3D_MethodName_ProcessInterpolation
+  name: ProcessInterpolation
+  nameWithType: NetNode3D.MethodName.ProcessInterpolation
+  fullName: Nebula.NetNode3D.MethodName.ProcessInterpolation
+- uid: Nebula.NetNode3D.MethodName.StorePredictedState
+  commentId: F:Nebula.NetNode3D.MethodName.StorePredictedState
   parent: Nebula.NetNode3D.MethodName
   isExternal: true
-  href: Nebula.NetNode3D.MethodName.html#Nebula_NetNode3D_MethodName_GetDeserializeContext
-  name: GetDeserializeContext
-  nameWithType: NetNode3D.MethodName.GetDeserializeContext
-  fullName: Nebula.NetNode3D.MethodName.GetDeserializeContext
-- uid: Nebula.NetNode3D.MethodName.NetworkDeserialize
-  commentId: F:Nebula.NetNode3D.MethodName.NetworkDeserialize
+  href: Nebula.NetNode3D.MethodName.StorePredictedState.html#Nebula_NetNode3D_MethodName_StorePredictedState
+  name: StorePredictedState
+  nameWithType: NetNode3D.MethodName.StorePredictedState
+  fullName: Nebula.NetNode3D.MethodName.StorePredictedState
+- uid: Nebula.NetNode3D.MethodName.StoreConfirmedState
+  commentId: F:Nebula.NetNode3D.MethodName.StoreConfirmedState
   parent: Nebula.NetNode3D.MethodName
   isExternal: true
-  href: Nebula.NetNode3D.MethodName.html#Nebula_NetNode3D_MethodName_NetworkDeserialize
-  name: NetworkDeserialize
-  nameWithType: NetNode3D.MethodName.NetworkDeserialize
-  fullName: Nebula.NetNode3D.MethodName.NetworkDeserialize
-- uid: Nebula.NetNode3D.MethodName.BsonDeserialize
-  commentId: F:Nebula.NetNode3D.MethodName.BsonDeserialize
+  href: Nebula.NetNode3D.MethodName.StoreConfirmedState.html#Nebula_NetNode3D_MethodName_StoreConfirmedState
+  name: StoreConfirmedState
+  nameWithType: NetNode3D.MethodName.StoreConfirmedState
+  fullName: Nebula.NetNode3D.MethodName.StoreConfirmedState
+- uid: Nebula.NetNode3D.MethodName.Reconcile
+  commentId: F:Nebula.NetNode3D.MethodName.Reconcile
   parent: Nebula.NetNode3D.MethodName
   isExternal: true
-  href: Nebula.NetNode3D.MethodName.html#Nebula_NetNode3D_MethodName_BsonDeserialize
-  name: BsonDeserialize
-  nameWithType: NetNode3D.MethodName.BsonDeserialize
-  fullName: Nebula.NetNode3D.MethodName.BsonDeserialize
+  href: Nebula.NetNode3D.MethodName.Reconcile.html#Nebula_NetNode3D_MethodName_Reconcile
+  name: Reconcile
+  nameWithType: NetNode3D.MethodName.Reconcile
+  fullName: Nebula.NetNode3D.MethodName.Reconcile
+- uid: Nebula.NetNode3D.MethodName.RestoreToPredictedState
+  commentId: F:Nebula.NetNode3D.MethodName.RestoreToPredictedState
+  parent: Nebula.NetNode3D.MethodName
+  isExternal: true
+  href: Nebula.NetNode3D.MethodName.RestoreToPredictedState.html#Nebula_NetNode3D_MethodName_RestoreToPredictedState
+  name: RestoreToPredictedState
+  nameWithType: NetNode3D.MethodName.RestoreToPredictedState
+  fullName: Nebula.NetNode3D.MethodName.RestoreToPredictedState
+- uid: Nebula.NetNode3D.MethodName._PhysicsProcess
+  commentId: F:Nebula.NetNode3D.MethodName._PhysicsProcess
+  parent: Nebula.NetNode3D.MethodName
+  isExternal: true
+  href: Nebula.NetNode3D.MethodName._PhysicsProcess.html#Nebula_NetNode3D_MethodName__PhysicsProcess
+  name: _PhysicsProcess
+  nameWithType: NetNode3D.MethodName._PhysicsProcess
+  fullName: Nebula.NetNode3D.MethodName._PhysicsProcess
 - uid: Nebula.NetNode3D.MethodName.NodePathFromNetScene
   commentId: F:Nebula.NetNode3D.MethodName.NodePathFromNetScene
   parent: Nebula.NetNode3D.MethodName
   isExternal: true
-  href: Nebula.NetNode3D.MethodName.html#Nebula_NetNode3D_MethodName_NodePathFromNetScene
+  href: Nebula.NetNode3D.MethodName.NodePathFromNetScene.html#Nebula_NetNode3D_MethodName_NodePathFromNetScene
   name: NodePathFromNetScene
   nameWithType: NetNode3D.MethodName.NodePathFromNetScene
   fullName: Nebula.NetNode3D.MethodName.NodePathFromNetScene
@@ -1299,13 +1420,6 @@ references:
   name: _Input
   nameWithType: Node.MethodName._Input
   fullName: Godot.Node.MethodName._Input
-- uid: Godot.Node.MethodName._Process
-  commentId: F:Godot.Node.MethodName._Process
-  parent: Godot.Node.MethodName
-  isExternal: true
-  name: _Process
-  nameWithType: Node.MethodName._Process
-  fullName: Godot.Node.MethodName._Process
 - uid: Godot.Node.MethodName._Ready
   commentId: F:Godot.Node.MethodName._Ready
   parent: Godot.Node.MethodName
@@ -2314,13 +2428,6 @@ references:
   name: _IterNext
   nameWithType: GodotObject.MethodName._IterNext
   fullName: Godot.GodotObject.MethodName._IterNext
-- uid: Godot.GodotObject.MethodName._Notification
-  commentId: F:Godot.GodotObject.MethodName._Notification
-  parent: Godot.GodotObject.MethodName
-  isExternal: true
-  name: _Notification
-  nameWithType: GodotObject.MethodName._Notification
-  fullName: Godot.GodotObject.MethodName._Notification
 - uid: Godot.GodotObject.MethodName._PropertyCanRevert
   commentId: F:Godot.GodotObject.MethodName._PropertyCanRevert
   parent: Godot.GodotObject.MethodName
@@ -2941,10 +3048,11 @@ references:
 - uid: Nebula.Utility.Nodes.NetTransform3D.MethodName.#ctor*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.MethodName.#ctor
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.MethodName.html#Nebula_Utility_Nodes_NetTransform3D_MethodName__ctor
+  href: Nebula.Utility.Nodes.NetTransform3D.MethodName.-ctor.html#Nebula_Utility_Nodes_NetTransform3D_MethodName__ctor
   name: MethodName
   nameWithType: NetTransform3D.MethodName.MethodName
   fullName: Nebula.Utility.Nodes.NetTransform3D.MethodName.MethodName
   nameWithType.vb: NetTransform3D.MethodName.New
   fullName.vb: Nebula.Utility.Nodes.NetTransform3D.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

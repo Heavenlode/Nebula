@@ -5,7 +5,8 @@ items:
   id: IBsonSerializable`1
   parent: Nebula.Serialization
   children:
-  - Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
+  - Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  - Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
   langs:
   - csharp
   - vb
@@ -16,46 +17,87 @@ items:
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
+  summary: >-
+    Generic interface for reference types that can be serialized to/from BSON.
+
+    Inherits from base for polymorphic access.
+  example: []
   syntax:
-    content: 'public interface IBsonSerializable<T> : IBsonSerializableBase where T : GodotObject'
+    content: 'public interface IBsonSerializable<T> : IBsonSerializableBase where T : class'
     typeParameters:
     - id: T
-    content.vb: Public Interface IBsonSerializable(Of T As GodotObject) Inherits IBsonSerializableBase
+    content.vb: Public Interface IBsonSerializable(Of T As Class) Inherits IBsonSerializableBase
   inheritedMembers:
-  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  - Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
   nameWithType.vb: IBsonSerializable(Of T)
   fullName.vb: Nebula.Serialization.IBsonSerializable(Of T)
   name.vb: IBsonSerializable(Of T)
-- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-  id: BsonDeserialize(Godot.Variant,System.Byte[],`0)
+- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
+  id: BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],`0)
   parent: Nebula.Serialization.IBsonSerializable`1
   langs:
   - csharp
   - vb
-  name: BsonDeserialize(Variant, byte[], T)
-  nameWithType: IBsonSerializable<T>.BsonDeserialize(Variant, byte[], T)
-  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Godot.Variant, byte[], T)
+  name: BsonDeserialize(NetBsonContext, byte[], T)
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(NetBsonContext, byte[], T)
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[], T)
   type: Method
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
+  summary: >-
+    Static method for BSON deserialization. This handles the base deserialization
+
+    and then calls the virtual OnBsonDeserialize method for custom logic.
+  example: []
   syntax:
-    content: public static abstract T BsonDeserialize(Variant context, byte[] bson, T initialObject)
+    content: public static abstract Task<T> BsonDeserialize(NetBsonContext context, byte[] bson, T initialObject)
     parameters:
     - id: context
-      type: Godot.Variant
+      type: Nebula.Serialization.NetBsonContext
     - id: bson
       type: System.Byte[]
     - id: initialObject
       type: '{T}'
     return:
-      type: '{T}'
-    content.vb: Public Shared MustInherit Function BsonDeserialize(context As [Variant], bson As Byte(), initialObject As T) As T
+      type: System.Threading.Tasks.Task{{T}}
+    content.vb: Public Shared MustInherit Function BsonDeserialize(context As NetBsonContext, bson As Byte(), initialObject As T) As Task(Of T)
   overload: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize*
-  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(Variant, Byte(), T)
-  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Godot.Variant, Byte(), T)
-  name.vb: BsonDeserialize(Variant, Byte(), T)
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(NetBsonContext, Byte(), T)
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte(), T)
+  name.vb: BsonDeserialize(NetBsonContext, Byte(), T)
+- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  id: BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  parent: Nebula.Serialization.IBsonSerializable`1
+  langs:
+  - csharp
+  - vb
+  name: BsonDeserialize(NetBsonContext, byte[])
+  nameWithType: IBsonSerializable<T>.BsonDeserialize(NetBsonContext, byte[])
+  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[])
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Instance method for BSON deserialization convenience.
+  example: []
+  syntax:
+    content: Task<T> BsonDeserialize(NetBsonContext context, byte[] bson)
+    parameters:
+    - id: context
+      type: Nebula.Serialization.NetBsonContext
+    - id: bson
+      type: System.Byte[]
+    return:
+      type: System.Threading.Tasks.Task{{T}}
+    content.vb: Function BsonDeserialize(context As NetBsonContext, bson As Byte()) As Task(Of T)
+  overload: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize*
+  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(NetBsonContext, Byte())
+  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte())
+  name.vb: BsonDeserialize(NetBsonContext, Byte())
 references:
 - uid: Nebula.Serialization
   commentId: N:Nebula.Serialization
@@ -84,32 +126,74 @@ references:
     name: Serialization
     isExternal: true
     href: Nebula.Serialization.html
-- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
   parent: Nebula.Serialization.IBsonSerializableBase
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
-  name: BsonSerialize(Variant)
-  nameWithType: IBsonSerializableBase.BsonSerialize(Variant)
-  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  name: BsonSerialize(NetBsonContext)
+  nameWithType: IBsonSerializableBase.BsonSerialize(NetBsonContext)
+  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
   spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
+  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
     name: BsonSerialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+    href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Nebula.Serialization.NetBsonContext)
+    name: BsonSerialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.BsonSerialize.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: )
+- uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  commentId: M:Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  parent: Nebula.Serialization.IBsonSerializableBase
+  isExternal: true
+  href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  name: OnBsonDeserialize(NetBsonContext, BsonDocument)
+  nameWithType: IBsonSerializableBase.OnBsonDeserialize(NetBsonContext, BsonDocument)
+  fullName: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext, MongoDB.Bson.BsonDocument)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+    name: OnBsonDeserialize
+    isExternal: true
+    href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: MongoDB.Bson.BsonDocument
+    name: BsonDocument
     isExternal: true
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-    name: BsonSerialize
+  - uid: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+    name: OnBsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
+    href: Nebula.Serialization.IBsonSerializableBase.OnBsonDeserialize.html#Nebula_Serialization_IBsonSerializableBase_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: MongoDB.Bson.BsonDocument
+    name: BsonDocument
     isExternal: true
   - name: )
 - uid: Nebula.Serialization.IBsonSerializableBase
@@ -123,19 +207,20 @@ references:
 - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize*
   commentId: Overload:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+  href: Nebula.Serialization.IBsonSerializable-1.BsonDeserialize.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte____0_
   name: BsonDeserialize
   nameWithType: IBsonSerializable<T>.BsonDeserialize
   fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize
   nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize
   fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize
-- uid: Godot.Variant
-  commentId: T:Godot.Variant
-  parent: Godot
+- uid: Nebula.Serialization.NetBsonContext
+  commentId: T:Nebula.Serialization.NetBsonContext
+  parent: Nebula.Serialization
   isExternal: true
-  name: Variant
-  nameWithType: Variant
-  fullName: Godot.Variant
+  href: Nebula.Serialization.NetBsonContext.html
+  name: NetBsonContext
+  nameWithType: NetBsonContext
+  fullName: Nebula.Serialization.NetBsonContext
 - uid: System.Byte[]
   isExternal: true
   href: https://learn.microsoft.com/dotnet/api/system.byte
@@ -165,13 +250,102 @@ references:
   name: T
   nameWithType: T
   fullName: T
-- uid: Godot
-  commentId: N:Godot
-  isExternal: true
-  name: Godot
-  nameWithType: Godot
-  fullName: Godot
+- uid: System.Threading.Tasks.Task{{T}}
+  commentId: T:System.Threading.Tasks.Task{`0}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<T>
+  nameWithType: Task<T>
+  fullName: System.Threading.Tasks.Task<T>
+  nameWithType.vb: Task(Of T)
+  fullName.vb: System.Threading.Tasks.Task(Of T)
+  name.vb: Task(Of T)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
 - uid: T
   name: T
   nameWithType: T
   fullName: T
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+memberLayout: SeparatePages

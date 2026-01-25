@@ -5,153 +5,70 @@ items:
   id: NetId
   parent: Nebula
   children:
-  - Nebula.NetId.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetId)
-  - Nebula.NetId.BsonSerialize(Godot.Variant)
-  - Nebula.NetId.GetDeserializeContext(Nebula.NetId)
+  - Nebula.NetId.#ctor(System.Int64)
+  - Nebula.NetId.BsonDeserialize(MongoDB.Bson.BsonValue)
+  - Nebula.NetId.BsonSerialize(Nebula.NetId@)
+  - Nebula.NetId.Equals(Nebula.NetId)
+  - Nebula.NetId.Equals(System.Object)
+  - Nebula.NetId.GetHashCode
+  - Nebula.NetId.IsNone
+  - Nebula.NetId.IsValid
   - Nebula.NetId.NONE
-  - Nebula.NetId.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  - Nebula.NetId.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetId)
-  - Nebula.NetId.Node
+  - Nebula.NetId.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  - Nebula.NetId.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetId@,Nebula.Serialization.NetBuffer)
+  - Nebula.NetId.None
+  - Nebula.NetId.ToString
   - Nebula.NetId.Value
+  - Nebula.NetId.op_Equality(Nebula.NetId,Nebula.NetId)
+  - Nebula.NetId.op_Explicit(Nebula.NetId)~System.Int64
+  - Nebula.NetId.op_Explicit(System.Int64)~Nebula.NetId
+  - Nebula.NetId.op_Inequality(Nebula.NetId,Nebula.NetId)
   langs:
   - csharp
   - vb
   name: NetId
   nameWithType: NetId
   fullName: Nebula.NetId
-  type: Class
+  type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetId_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: A unique identifier for a networked object. The NetId for a node is different between the server and client. On the client side, a NetId is only a byte, whereas on the server side it is an int64. The server's <xref href="Nebula.WorldRunner" data-throw-if-not-resolved="false"></xref> keeps a map of all NetIds to their corresponding value on each client for serialization.
+  summary: >-
+    A unique identifier for a networked object. The NetId for a node is different between 
+
+    the server and client. On the client side, a NetId is a ushort (0-511), whereas on the server 
+
+    side it is an int64. The server's WorldRunner keeps a map of all NetIds to their 
+
+    corresponding value on each client for serialization.
+
+    This is a value type (struct) to avoid allocations.
   example: []
   syntax:
     content: >-
-      [SerialTypeIdentifier("NetId")]
+      [NetValueLayout(8)]
 
-      [ScriptPath("res://addons/Nebula/Core/NetId.cs")]
-
-      public class NetId : RefCounted, IDisposable, INetSerializable<NetId>, IBsonSerializable<NetId>, IBsonSerializableBase
+      public readonly struct NetId : INetValue<NetId>, IBsonValue<NetId>, IEquatable<NetId>
     content.vb: >-
-      <SerialTypeIdentifier("NetId")>
+      <NetValueLayout(8)>
 
-      <ScriptPath("res://addons/Nebula/Core/NetId.cs")>
-
-      Public Class NetId Inherits RefCounted Implements IDisposable, INetSerializable(Of NetId), IBsonSerializable(Of NetId), IBsonSerializableBase
-  inheritance:
-  - System.Object
-  - Godot.GodotObject
-  - Godot.RefCounted
+      Public Structure NetId Implements INetValue(Of NetId), IBsonValue(Of NetId), IEquatable(Of NetId)
   implements:
-  - System.IDisposable
-  - Nebula.Serialization.INetSerializable{Nebula.NetId}
-  - Nebula.Serialization.IBsonSerializable{Nebula.NetId}
-  - Nebula.Serialization.IBsonSerializableBase
+  - Nebula.Serialization.INetValue{Nebula.NetId}
+  - Nebula.Serialization.IBsonValue{Nebula.NetId}
+  - System.IEquatable{Nebula.NetId}
   inheritedMembers:
-  - Godot.RefCounted.InitRef
-  - Godot.RefCounted.Reference
-  - Godot.RefCounted.Unreference
-  - Godot.RefCounted.GetReferenceCount
-  - Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name@,Godot.NativeInterop.NativeVariantPtrArgs,Godot.NativeInterop.godot_variant@)
-  - Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name@)
-  - Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name@)
-  - Godot.GodotObject.NotificationPostinitialize
-  - Godot.GodotObject.NotificationPredelete
-  - Godot.GodotObject.NotificationExtensionReloaded
-  - Godot.GodotObject.InstanceFromId(System.UInt64)
-  - Godot.GodotObject.IsInstanceIdValid(System.UInt64)
-  - Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
-  - Godot.GodotObject.WeakRef(Godot.GodotObject)
-  - Godot.GodotObject.Dispose
-  - Godot.GodotObject.Dispose(System.Boolean)
-  - Godot.GodotObject.ToString
-  - Godot.GodotObject.ToSignal(Godot.GodotObject,Godot.StringName)
-  - Godot.GodotObject._Get(Godot.StringName)
-  - Godot.GodotObject._GetPropertyList
-  - Godot.GodotObject._IterGet(Godot.Variant)
-  - Godot.GodotObject._IterInit(Godot.Collections.Array)
-  - Godot.GodotObject._IterNext(Godot.Collections.Array)
-  - Godot.GodotObject._Notification(System.Int32)
-  - Godot.GodotObject._PropertyCanRevert(Godot.StringName)
-  - Godot.GodotObject._PropertyGetRevert(Godot.StringName)
-  - Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
-  - Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
-  - Godot.GodotObject.Free
-  - Godot.GodotObject.GetClass
-  - Godot.GodotObject.IsClass(System.String)
-  - Godot.GodotObject.Set(Godot.StringName,Godot.Variant)
-  - Godot.GodotObject.Get(Godot.StringName)
-  - Godot.GodotObject.SetIndexed(Godot.NodePath,Godot.Variant)
-  - Godot.GodotObject.GetIndexed(Godot.NodePath)
-  - Godot.GodotObject.GetPropertyList
-  - Godot.GodotObject.GetMethodList
-  - Godot.GodotObject.PropertyCanRevert(Godot.StringName)
-  - Godot.GodotObject.PropertyGetRevert(Godot.StringName)
-  - Godot.GodotObject.Notification(System.Int32,System.Boolean)
-  - Godot.GodotObject.GetInstanceId
-  - Godot.GodotObject.SetScript(Godot.Variant)
-  - Godot.GodotObject.GetScript
-  - Godot.GodotObject.SetMeta(Godot.StringName,Godot.Variant)
-  - Godot.GodotObject.RemoveMeta(Godot.StringName)
-  - Godot.GodotObject.GetMeta(Godot.StringName,Godot.Variant)
-  - Godot.GodotObject.HasMeta(Godot.StringName)
-  - Godot.GodotObject.GetMetaList
-  - Godot.GodotObject.AddUserSignal(System.String,Godot.Collections.Array)
-  - Godot.GodotObject.HasUserSignal(Godot.StringName)
-  - Godot.GodotObject.RemoveUserSignal(Godot.StringName)
-  - Godot.GodotObject.EmitSignal(Godot.StringName,Godot.Variant[])
-  - Godot.GodotObject.EmitSignal(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-  - Godot.GodotObject.Call(Godot.StringName,Godot.Variant[])
-  - Godot.GodotObject.Call(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-  - Godot.GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])
-  - Godot.GodotObject.CallDeferred(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-  - Godot.GodotObject.SetDeferred(Godot.StringName,Godot.Variant)
-  - Godot.GodotObject.Callv(Godot.StringName,Godot.Collections.Array)
-  - Godot.GodotObject.HasMethod(Godot.StringName)
-  - Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
-  - Godot.GodotObject.HasSignal(Godot.StringName)
-  - Godot.GodotObject.GetSignalList
-  - Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
-  - Godot.GodotObject.GetIncomingConnections
-  - Godot.GodotObject.Connect(Godot.StringName,Godot.Callable,System.UInt32)
-  - Godot.GodotObject.Disconnect(Godot.StringName,Godot.Callable)
-  - Godot.GodotObject.IsConnected(Godot.StringName,Godot.Callable)
-  - Godot.GodotObject.HasConnections(Godot.StringName)
-  - Godot.GodotObject.SetBlockSignals(System.Boolean)
-  - Godot.GodotObject.IsBlockingSignals
-  - Godot.GodotObject.NotifyPropertyListChanged
-  - Godot.GodotObject.SetMessageTranslation(System.Boolean)
-  - Godot.GodotObject.CanTranslateMessages
-  - Godot.GodotObject.Tr(Godot.StringName,Godot.StringName)
-  - Godot.GodotObject.TrN(Godot.StringName,Godot.StringName,System.Int32,Godot.StringName)
-  - Godot.GodotObject.GetTranslationDomain
-  - Godot.GodotObject.SetTranslationDomain(Godot.StringName)
-  - Godot.GodotObject.IsQueuedForDeletion
-  - Godot.GodotObject.CancelFree
-  - Godot.GodotObject.EmitSignalScriptChanged
-  - Godot.GodotObject.EmitSignalPropertyListChanged
-  - Godot.GodotObject.NativeInstance
-  - Godot.GodotObject.ScriptChanged
-  - Godot.GodotObject.PropertyListChanged
   - System.Object.GetType
-  - System.Object.MemberwiseClone
-  - System.Object.Equals(System.Object)
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
-  - System.Object.GetHashCode
   attributes:
-  - type: Nebula.Serialization.SerialTypeIdentifier
-    ctor: Nebula.Serialization.SerialTypeIdentifier.#ctor(System.String)
+  - type: Nebula.Serialization.NetValueLayoutAttribute
+    ctor: Nebula.Serialization.NetValueLayoutAttribute.#ctor(System.Int32)
     arguments:
-    - type: System.String
-      value: NetId
-  - type: Godot.ScriptPathAttribute
-    ctor: Godot.ScriptPathAttribute.#ctor(System.String)
-    arguments:
-    - type: System.String
-      value: res://addons/Nebula/Core/NetId.cs
+    - type: System.Int32
+      value: 8
 - uid: Nebula.NetId.NONE
   commentId: F:Nebula.NetId.NONE
   id: NONE
@@ -164,201 +81,19 @@ items:
   fullName: Nebula.NetId.NONE
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetId_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  syntax:
-    content: public static int NONE
-    return:
-      type: System.Int32
-    content.vb: Public Shared NONE As Integer
-- uid: Nebula.NetId.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetId)
-  commentId: M:Nebula.NetId.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetId)
-  id: BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetId)
-  isEii: true
-  parent: Nebula.NetId
-  langs:
-  - csharp
-  - vb
-  name: BsonDeserialize(Variant, byte[], NetId)
-  nameWithType: NetId.BsonDeserialize(Variant, byte[], NetId)
-  fullName: Nebula.NetId.BsonDeserialize(Godot.Variant, byte[], Nebula.NetId)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetId.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
+  summary: Represents an invalid/unassigned NetId.
   example: []
   syntax:
-    content: static NetId BsonDeserialize(Variant context, byte[] bson, NetId initialObject)
-    parameters:
-    - id: context
-      type: Godot.Variant
-    - id: bson
-      type: System.Byte[]
-    - id: initialObject
-      type: Nebula.NetId
+    content: public const long NONE = -1
     return:
-      type: Nebula.NetId
-    content.vb: Shared Function BsonDeserialize(context As [Variant], bson As Byte(), initialObject As NetId) As NetId
-  overload: Nebula.NetId.BsonDeserialize*
-  implements:
-  - Nebula.Serialization.IBsonSerializable{Nebula.NetId}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetId)
-  nameWithType.vb: NetId.BsonDeserialize(Variant, Byte(), NetId)
-  fullName.vb: Nebula.NetId.BsonDeserialize(Godot.Variant, Byte(), Nebula.NetId)
-  name.vb: BsonDeserialize(Variant, Byte(), NetId)
-- uid: Nebula.NetId.BsonSerialize(Godot.Variant)
-  commentId: M:Nebula.NetId.BsonSerialize(Godot.Variant)
-  id: BsonSerialize(Godot.Variant)
-  parent: Nebula.NetId
-  langs:
-  - csharp
-  - vb
-  name: BsonSerialize(Variant)
-  nameWithType: NetId.BsonSerialize(Variant)
-  fullName: Nebula.NetId.BsonSerialize(Godot.Variant)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetId.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  example: []
-  syntax:
-    content: public BsonValue BsonSerialize(Variant context)
-    parameters:
-    - id: context
-      type: Godot.Variant
-    return:
-      type: MongoDB.Bson.BsonValue
-    content.vb: Public Function BsonSerialize(context As [Variant]) As BsonValue
-  overload: Nebula.NetId.BsonSerialize*
-  implements:
-  - Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-- uid: Nebula.NetId.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetId)
-  commentId: M:Nebula.NetId.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetId)
-  id: NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetId)
-  isEii: true
-  parent: Nebula.NetId
-  langs:
-  - csharp
-  - vb
-  name: NetworkSerialize(WorldRunner, ENetPacketPeer, NetId)
-  nameWithType: NetId.NetworkSerialize(WorldRunner, ENetPacketPeer, NetId)
-  fullName: Nebula.NetId.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.NetId)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetId.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  example: []
-  syntax:
-    content: static HLBuffer NetworkSerialize(WorldRunner currentWorld, ENetPacketPeer peer, NetId obj)
-    parameters:
-    - id: currentWorld
-      type: Nebula.WorldRunner
-    - id: peer
-      type: Godot.ENetPacketPeer
-    - id: obj
-      type: Nebula.NetId
-    return:
-      type: Nebula.Serialization.HLBuffer
-    content.vb: Shared Function NetworkSerialize(currentWorld As WorldRunner, peer As ENetPacketPeer, obj As NetId) As HLBuffer
-  overload: Nebula.NetId.NetworkSerialize*
-  implements:
-  - Nebula.Serialization.INetSerializable{Nebula.NetId}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetId)
-- uid: Nebula.NetId.GetDeserializeContext(Nebula.NetId)
-  commentId: M:Nebula.NetId.GetDeserializeContext(Nebula.NetId)
-  id: GetDeserializeContext(Nebula.NetId)
-  isEii: true
-  parent: Nebula.NetId
-  langs:
-  - csharp
-  - vb
-  name: GetDeserializeContext(NetId)
-  nameWithType: NetId.GetDeserializeContext(NetId)
-  fullName: Nebula.NetId.GetDeserializeContext(Nebula.NetId)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetId.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  example: []
-  syntax:
-    content: static Variant GetDeserializeContext(NetId obj)
-    parameters:
-    - id: obj
-      type: Nebula.NetId
-    return:
-      type: Godot.Variant
-    content.vb: Shared Function GetDeserializeContext(obj As NetId) As [Variant]
-  overload: Nebula.NetId.GetDeserializeContext*
-  implements:
-  - Nebula.Serialization.INetSerializable{Nebula.NetId}.GetDeserializeContext(Nebula.NetId)
-- uid: Nebula.NetId.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  commentId: M:Nebula.NetId.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  id: NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  isEii: true
-  parent: Nebula.NetId
-  langs:
-  - csharp
-  - vb
-  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  nameWithType: NetId.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName: Nebula.NetId.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetId.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  example: []
-  syntax:
-    content: static NetId NetworkDeserialize(WorldRunner currentWorld, ENetPacketPeer peer, HLBuffer buffer, Variant ctx)
-    parameters:
-    - id: currentWorld
-      type: Nebula.WorldRunner
-    - id: peer
-      type: Godot.ENetPacketPeer
-    - id: buffer
-      type: Nebula.Serialization.HLBuffer
-    - id: ctx
-      type: Godot.Variant
-    return:
-      type: Nebula.NetId
-    content.vb: Shared Function NetworkDeserialize(currentWorld As WorldRunner, peer As ENetPacketPeer, buffer As HLBuffer, ctx As [Variant]) As NetId
-  overload: Nebula.NetId.NetworkDeserialize*
-  implements:
-  - Nebula.Serialization.INetSerializable{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-- uid: Nebula.NetId.Node
-  commentId: P:Nebula.NetId.Node
-  id: Node
-  parent: Nebula.NetId
-  langs:
-  - csharp
-  - vb
-  name: Node
-  nameWithType: NetId.Node
-  fullName: Nebula.NetId.Node
-  type: Property
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetId.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  syntax:
-    content: public NetNodeWrapper Node { get; }
-    parameters: []
-    return:
-      type: Nebula.NetNodeWrapper
-    content.vb: Public ReadOnly Property Node As NetNodeWrapper
-  overload: Nebula.NetId.Node*
+      type: System.Int64
+    content.vb: Public Const NONE As Long = -1
 - uid: Nebula.NetId.Value
-  commentId: P:Nebula.NetId.Value
+  commentId: F:Nebula.NetId.Value
   id: Value
   parent: Nebula.NetId
   langs:
@@ -367,28 +102,476 @@ items:
   name: Value
   nameWithType: NetId.Value
   fullName: Nebula.NetId.Value
-  type: Property
+  type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: The underlying value.
+  example: []
+  syntax:
+    content: public readonly long Value
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly Value As Long
+- uid: Nebula.NetId.#ctor(System.Int64)
+  commentId: M:Nebula.NetId.#ctor(System.Int64)
+  id: '#ctor(System.Int64)'
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: NetId(long)
+  nameWithType: NetId.NetId(long)
+  fullName: Nebula.NetId.NetId(long)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Creates a NetId with the specified value.
+  example: []
+  syntax:
+    content: public NetId(long value)
+    parameters:
+    - id: value
+      type: System.Int64
+    content.vb: Public Sub New(value As Long)
+  overload: Nebula.NetId.#ctor*
+  nameWithType.vb: NetId.New(Long)
+  fullName.vb: Nebula.NetId.New(Long)
+  name.vb: New(Long)
+- uid: Nebula.NetId.ToString
+  commentId: M:Nebula.NetId.ToString
+  id: ToString
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: NetId.ToString()
+  fullName: Nebula.NetId.ToString()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.ValueType.ToString
+  overload: Nebula.NetId.ToString*
+- uid: Nebula.NetId.Equals(System.Object)
+  commentId: M:Nebula.NetId.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: Equals(object)
+  nameWithType: NetId.Equals(object)
+  fullName: Nebula.NetId.Equals(object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public override bool Equals(object obj)
+    parameters:
+    - id: obj
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function Equals(obj As Object) As Boolean
+  overridden: System.ValueType.Equals(System.Object)
+  overload: Nebula.NetId.Equals*
+  nameWithType.vb: NetId.Equals(Object)
+  fullName.vb: Nebula.NetId.Equals(Object)
+  name.vb: Equals(Object)
+- uid: Nebula.NetId.Equals(Nebula.NetId)
+  commentId: M:Nebula.NetId.Equals(Nebula.NetId)
+  id: Equals(Nebula.NetId)
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: Equals(NetId)
+  nameWithType: NetId.Equals(NetId)
+  fullName: Nebula.NetId.Equals(Nebula.NetId)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public bool Equals(NetId other)
+    parameters:
+    - id: other
+      type: Nebula.NetId
+    return:
+      type: System.Boolean
+    content.vb: Public Function Equals(other As NetId) As Boolean
+  overload: Nebula.NetId.Equals*
+  implements:
+  - System.IEquatable{Nebula.NetId}.Equals(Nebula.NetId)
+- uid: Nebula.NetId.GetHashCode
+  commentId: M:Nebula.NetId.GetHashCode
+  id: GetHashCode
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: NetId.GetHashCode()
+  fullName: Nebula.NetId.GetHashCode()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+    content.vb: Public Overrides Function GetHashCode() As Integer
+  overridden: System.ValueType.GetHashCode
+  overload: Nebula.NetId.GetHashCode*
+- uid: Nebula.NetId.op_Equality(Nebula.NetId,Nebula.NetId)
+  commentId: M:Nebula.NetId.op_Equality(Nebula.NetId,Nebula.NetId)
+  id: op_Equality(Nebula.NetId,Nebula.NetId)
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: operator ==(NetId, NetId)
+  nameWithType: NetId.operator ==(NetId, NetId)
+  fullName: Nebula.NetId.operator ==(Nebula.NetId, Nebula.NetId)
+  type: Operator
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public long Value { get; }
-    parameters: []
+    content: public static bool operator ==(NetId left, NetId right)
+    parameters:
+    - id: left
+      type: Nebula.NetId
+    - id: right
+      type: Nebula.NetId
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator =(left As NetId, right As NetId) As Boolean
+  overload: Nebula.NetId.op_Equality*
+  nameWithType.vb: NetId.=(NetId, NetId)
+  fullName.vb: Nebula.NetId.=(Nebula.NetId, Nebula.NetId)
+  name.vb: =(NetId, NetId)
+- uid: Nebula.NetId.op_Inequality(Nebula.NetId,Nebula.NetId)
+  commentId: M:Nebula.NetId.op_Inequality(Nebula.NetId,Nebula.NetId)
+  id: op_Inequality(Nebula.NetId,Nebula.NetId)
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: operator !=(NetId, NetId)
+  nameWithType: NetId.operator !=(NetId, NetId)
+  fullName: Nebula.NetId.operator !=(Nebula.NetId, Nebula.NetId)
+  type: Operator
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public static bool operator !=(NetId left, NetId right)
+    parameters:
+    - id: left
+      type: Nebula.NetId
+    - id: right
+      type: Nebula.NetId
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator <>(left As NetId, right As NetId) As Boolean
+  overload: Nebula.NetId.op_Inequality*
+  nameWithType.vb: NetId.<>(NetId, NetId)
+  fullName.vb: Nebula.NetId.<>(Nebula.NetId, Nebula.NetId)
+  name.vb: <>(NetId, NetId)
+- uid: Nebula.NetId.op_Explicit(System.Int64)~Nebula.NetId
+  commentId: M:Nebula.NetId.op_Explicit(System.Int64)~Nebula.NetId
+  id: op_Explicit(System.Int64)~Nebula.NetId
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: explicit operator NetId(long)
+  nameWithType: NetId.explicit operator NetId(long)
+  fullName: Nebula.NetId.explicit operator Nebula.NetId(long)
+  type: Operator
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Explicit conversion from long to NetId.
+  example: []
+  syntax:
+    content: public static explicit operator NetId(long value)
+    parameters:
+    - id: value
+      type: System.Int64
+    return:
+      type: Nebula.NetId
+    content.vb: Public Shared Narrowing Operator CType(value As Long) As NetId
+  overload: Nebula.NetId.op_Explicit*
+  nameWithType.vb: NetId.CType(Long)
+  fullName.vb: Nebula.NetId.CType(Long)
+  name.vb: CType(Long)
+- uid: Nebula.NetId.op_Explicit(Nebula.NetId)~System.Int64
+  commentId: M:Nebula.NetId.op_Explicit(Nebula.NetId)~System.Int64
+  id: op_Explicit(Nebula.NetId)~System.Int64
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: explicit operator long(NetId)
+  nameWithType: NetId.explicit operator long(NetId)
+  fullName: Nebula.NetId.explicit operator long(Nebula.NetId)
+  type: Operator
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Explicit conversion from NetId to long.
+  example: []
+  syntax:
+    content: public static explicit operator long(NetId netId)
+    parameters:
+    - id: netId
+      type: Nebula.NetId
     return:
       type: System.Int64
-    content.vb: Public ReadOnly Property Value As Long
-  overload: Nebula.NetId.Value*
+    content.vb: Public Shared Narrowing Operator CType(netId As NetId) As Long
+  overload: Nebula.NetId.op_Explicit*
+  nameWithType.vb: NetId.CType(NetId)
+  fullName.vb: Nebula.NetId.CType(Nebula.NetId)
+  name.vb: CType(NetId)
+- uid: Nebula.NetId.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetId@,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.NetId.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetId@,Nebula.Serialization.NetBuffer)
+  id: NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetId@,Nebula.Serialization.NetBuffer)
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: NetworkSerialize(WorldRunner, Peer, in NetId, NetBuffer)
+  nameWithType: NetId.NetworkSerialize(WorldRunner, Peer, in NetId, NetBuffer)
+  fullName: Nebula.NetId.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, in Nebula.NetId, Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public static void NetworkSerialize(WorldRunner currentWorld, Peer peer, in NetId value, NetBuffer buffer)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: peer
+      type: ENet.Peer
+    - id: value
+      type: Nebula.NetId
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    content.vb: Public Shared Sub NetworkSerialize(currentWorld As WorldRunner, peer As Peer, value As NetId, buffer As NetBuffer)
+  overload: Nebula.NetId.NetworkSerialize*
+  nameWithType.vb: NetId.NetworkSerialize(WorldRunner, Peer, NetId, NetBuffer)
+  fullName.vb: Nebula.NetId.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.NetId, Nebula.Serialization.NetBuffer)
+  name.vb: NetworkSerialize(WorldRunner, Peer, NetId, NetBuffer)
+- uid: Nebula.NetId.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.NetId.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  id: NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  isEii: true
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  nameWithType: NetId.NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  fullName: Nebula.NetId.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Deserialize a value from the network buffer.
+  example: []
+  syntax:
+    content: static NetId NetworkDeserialize(WorldRunner currentWorld, Peer peer, NetBuffer buffer)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: peer
+      type: ENet.Peer
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    return:
+      type: Nebula.NetId
+    content.vb: Shared Function NetworkDeserialize(currentWorld As WorldRunner, peer As Peer, buffer As NetBuffer) As NetId
+  overload: Nebula.NetId.NetworkDeserialize*
+  implements:
+  - Nebula.Serialization.INetValue{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+- uid: Nebula.NetId.BsonSerialize(Nebula.NetId@)
+  commentId: M:Nebula.NetId.BsonSerialize(Nebula.NetId@)
+  id: BsonSerialize(Nebula.NetId@)
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: BsonSerialize(in NetId)
+  nameWithType: NetId.BsonSerialize(in NetId)
+  fullName: Nebula.NetId.BsonSerialize(in Nebula.NetId)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: public static BsonValue BsonSerialize(in NetId value)
+    parameters:
+    - id: value
+      type: Nebula.NetId
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared Function BsonSerialize(value As NetId) As BsonValue
+  overload: Nebula.NetId.BsonSerialize*
+  nameWithType.vb: NetId.BsonSerialize(NetId)
+  fullName.vb: Nebula.NetId.BsonSerialize(Nebula.NetId)
+  name.vb: BsonSerialize(NetId)
+- uid: Nebula.NetId.BsonDeserialize(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.NetId.BsonDeserialize(MongoDB.Bson.BsonValue)
+  id: BsonDeserialize(MongoDB.Bson.BsonValue)
+  isEii: true
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: BsonDeserialize(BsonValue)
+  nameWithType: NetId.BsonDeserialize(BsonValue)
+  fullName: Nebula.NetId.BsonDeserialize(MongoDB.Bson.BsonValue)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Deserialize a value from BSON.
+  example: []
+  syntax:
+    content: static NetId BsonDeserialize(BsonValue bson)
+    parameters:
+    - id: bson
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: Nebula.NetId
+    content.vb: Shared Function BsonDeserialize(bson As BsonValue) As NetId
+  overload: Nebula.NetId.BsonDeserialize*
+  implements:
+  - Nebula.Serialization.IBsonValue{Nebula.NetId}.BsonDeserialize(MongoDB.Bson.BsonValue)
+- uid: Nebula.NetId.IsNone
+  commentId: P:Nebula.NetId.IsNone
+  id: IsNone
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: IsNone
+  nameWithType: NetId.IsNone
+  fullName: Nebula.NetId.IsNone
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Returns true if this NetId is invalid (NONE).
+
+    Use this instead of null checks since NetId is a struct.
+  example: []
+  syntax:
+    content: public bool IsNone { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsNone As Boolean
+  overload: Nebula.NetId.IsNone*
+- uid: Nebula.NetId.IsValid
+  commentId: P:Nebula.NetId.IsValid
+  id: IsValid
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: IsValid
+  nameWithType: NetId.IsValid
+  fullName: Nebula.NetId.IsValid
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Returns true if this NetId is valid (not NONE and not default).
+  example: []
+  syntax:
+    content: public bool IsValid { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsValid As Boolean
+  overload: Nebula.NetId.IsValid*
+- uid: Nebula.NetId.None
+  commentId: P:Nebula.NetId.None
+  id: None
+  parent: Nebula.NetId
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: NetId.None
+  fullName: Nebula.NetId.None
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/NetId.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Returns an invalid NetId.
+  example: []
+  syntax:
+    content: public static NetId None { get; }
+    parameters: []
+    return:
+      type: Nebula.NetId
+    content.vb: Public Shared ReadOnly Property None As NetId
+  overload: Nebula.NetId.None*
 references:
-- uid: Nebula.WorldRunner
-  commentId: T:Nebula.WorldRunner
-  parent: Nebula
-  isExternal: true
-  href: Nebula.WorldRunner.html
-  name: WorldRunner
-  nameWithType: WorldRunner
-  fullName: Nebula.WorldRunner
 - uid: Nebula
   commentId: N:Nebula
   isExternal: true
@@ -396,55 +579,92 @@ references:
   name: Nebula
   nameWithType: Nebula
   fullName: Nebula
-- uid: System.Object
-  commentId: T:System.Object
+- uid: Nebula.Serialization.INetValue{Nebula.NetId}
+  commentId: T:Nebula.Serialization.INetValue{Nebula.NetId}
+  parent: Nebula.Serialization
+  definition: Nebula.Serialization.INetValue`1
+  href: Nebula.Serialization.INetValue-1.html
+  name: INetValue<NetId>
+  nameWithType: INetValue<NetId>
+  fullName: Nebula.Serialization.INetValue<Nebula.NetId>
+  nameWithType.vb: INetValue(Of NetId)
+  fullName.vb: Nebula.Serialization.INetValue(Of Nebula.NetId)
+  name.vb: INetValue(Of NetId)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetValue`1
+    name: INetValue
+    isExternal: true
+    href: Nebula.Serialization.INetValue-1.html
+  - name: <
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.INetValue`1
+    name: INetValue
+    isExternal: true
+    href: Nebula.Serialization.INetValue-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: )
+- uid: Nebula.Serialization.IBsonValue{Nebula.NetId}
+  commentId: T:Nebula.Serialization.IBsonValue{Nebula.NetId}
+  parent: Nebula.Serialization
+  definition: Nebula.Serialization.IBsonValue`1
+  href: Nebula.Serialization.IBsonValue-1.html
+  name: IBsonValue<NetId>
+  nameWithType: IBsonValue<NetId>
+  fullName: Nebula.Serialization.IBsonValue<Nebula.NetId>
+  nameWithType.vb: IBsonValue(Of NetId)
+  fullName.vb: Nebula.Serialization.IBsonValue(Of Nebula.NetId)
+  name.vb: IBsonValue(Of NetId)
+  spec.csharp:
+  - uid: Nebula.Serialization.IBsonValue`1
+    name: IBsonValue
+    isExternal: true
+    href: Nebula.Serialization.IBsonValue-1.html
+  - name: <
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.IBsonValue`1
+    name: IBsonValue
+    isExternal: true
+    href: Nebula.Serialization.IBsonValue-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: )
+- uid: System.IEquatable{Nebula.NetId}
+  commentId: T:System.IEquatable{Nebula.NetId}
   parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
-  name: object
-  nameWithType: object
-  fullName: object
-  nameWithType.vb: Object
-  fullName.vb: Object
-  name.vb: Object
-- uid: Godot.GodotObject
-  commentId: T:Godot.GodotObject
-  parent: Godot
-  isExternal: true
-  name: GodotObject
-  nameWithType: GodotObject
-  fullName: Godot.GodotObject
-- uid: Godot.RefCounted
-  commentId: T:Godot.RefCounted
-  parent: Godot
-  isExternal: true
-  name: RefCounted
-  nameWithType: RefCounted
-  fullName: Godot.RefCounted
-- uid: System.IDisposable
-  commentId: T:System.IDisposable
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.idisposable
-  name: IDisposable
-  nameWithType: IDisposable
-  fullName: System.IDisposable
-- uid: Nebula.Serialization.INetSerializable{Nebula.NetId}
-  commentId: T:Nebula.Serialization.INetSerializable{Nebula.NetId}
-  parent: Nebula.Serialization
-  definition: Nebula.Serialization.INetSerializable`1
-  href: Nebula.Serialization.INetSerializable-1.html
-  name: INetSerializable<NetId>
-  nameWithType: INetSerializable<NetId>
-  fullName: Nebula.Serialization.INetSerializable<Nebula.NetId>
-  nameWithType.vb: INetSerializable(Of NetId)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetId)
-  name.vb: INetSerializable(Of NetId)
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<NetId>
+  nameWithType: IEquatable<NetId>
+  fullName: System.IEquatable<Nebula.NetId>
+  nameWithType.vb: IEquatable(Of NetId)
+  fullName.vb: System.IEquatable(Of Nebula.NetId)
+  name.vb: IEquatable(Of NetId)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1
-    name: INetSerializable
+  - uid: System.IEquatable`1
+    name: IEquatable
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
   - name: <
   - uid: Nebula.NetId
     name: NetId
@@ -452,10 +672,10 @@ references:
     href: Nebula.NetId.html
   - name: '>'
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1
-    name: INetSerializable
+  - uid: System.IEquatable`1
+    name: IEquatable
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
   - name: (
   - name: Of
   - name: " "
@@ -464,2354 +684,6 @@ references:
     isExternal: true
     href: Nebula.NetId.html
   - name: )
-- uid: Nebula.Serialization.IBsonSerializable{Nebula.NetId}
-  commentId: T:Nebula.Serialization.IBsonSerializable{Nebula.NetId}
-  parent: Nebula.Serialization
-  definition: Nebula.Serialization.IBsonSerializable`1
-  href: Nebula.Serialization.IBsonSerializable-1.html
-  name: IBsonSerializable<NetId>
-  nameWithType: IBsonSerializable<NetId>
-  fullName: Nebula.Serialization.IBsonSerializable<Nebula.NetId>
-  nameWithType.vb: IBsonSerializable(Of NetId)
-  fullName.vb: Nebula.Serialization.IBsonSerializable(Of Nebula.NetId)
-  name.vb: IBsonSerializable(Of NetId)
-  spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializable`1
-    name: IBsonSerializable
-    isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html
-  - name: <
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: '>'
-  spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializable`1
-    name: IBsonSerializable
-    isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html
-  - name: (
-  - name: Of
-  - name: " "
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: )
-- uid: Nebula.Serialization.IBsonSerializableBase
-  commentId: T:Nebula.Serialization.IBsonSerializableBase
-  parent: Nebula.Serialization
-  isExternal: true
-  href: Nebula.Serialization.IBsonSerializableBase.html
-  name: IBsonSerializableBase
-  nameWithType: IBsonSerializableBase
-  fullName: Nebula.Serialization.IBsonSerializableBase
-- uid: Godot.RefCounted.InitRef
-  commentId: M:Godot.RefCounted.InitRef
-  parent: Godot.RefCounted
-  isExternal: true
-  name: InitRef()
-  nameWithType: RefCounted.InitRef()
-  fullName: Godot.RefCounted.InitRef()
-  spec.csharp:
-  - uid: Godot.RefCounted.InitRef
-    name: InitRef
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.RefCounted.InitRef
-    name: InitRef
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.RefCounted.Reference
-  commentId: M:Godot.RefCounted.Reference
-  parent: Godot.RefCounted
-  isExternal: true
-  name: Reference()
-  nameWithType: RefCounted.Reference()
-  fullName: Godot.RefCounted.Reference()
-  spec.csharp:
-  - uid: Godot.RefCounted.Reference
-    name: Reference
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.RefCounted.Reference
-    name: Reference
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.RefCounted.Unreference
-  commentId: M:Godot.RefCounted.Unreference
-  parent: Godot.RefCounted
-  isExternal: true
-  name: Unreference()
-  nameWithType: RefCounted.Unreference()
-  fullName: Godot.RefCounted.Unreference()
-  spec.csharp:
-  - uid: Godot.RefCounted.Unreference
-    name: Unreference
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.RefCounted.Unreference
-    name: Unreference
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.RefCounted.GetReferenceCount
-  commentId: M:Godot.RefCounted.GetReferenceCount
-  parent: Godot.RefCounted
-  isExternal: true
-  name: GetReferenceCount()
-  nameWithType: RefCounted.GetReferenceCount()
-  fullName: Godot.RefCounted.GetReferenceCount()
-  spec.csharp:
-  - uid: Godot.RefCounted.GetReferenceCount
-    name: GetReferenceCount
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.RefCounted.GetReferenceCount
-    name: GetReferenceCount
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name@,Godot.NativeInterop.NativeVariantPtrArgs,Godot.NativeInterop.godot_variant@)
-  commentId: M:Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name@,Godot.NativeInterop.NativeVariantPtrArgs,Godot.NativeInterop.godot_variant@)
-  parent: Godot.RefCounted
-  isExternal: true
-  name: InvokeGodotClassMethod(in godot_string_name, NativeVariantPtrArgs, out godot_variant)
-  nameWithType: RefCounted.InvokeGodotClassMethod(in godot_string_name, NativeVariantPtrArgs, out godot_variant)
-  fullName: Godot.RefCounted.InvokeGodotClassMethod(in Godot.NativeInterop.godot_string_name, Godot.NativeInterop.NativeVariantPtrArgs, out Godot.NativeInterop.godot_variant)
-  nameWithType.vb: RefCounted.InvokeGodotClassMethod(godot_string_name, NativeVariantPtrArgs, godot_variant)
-  fullName.vb: Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant)
-  name.vb: InvokeGodotClassMethod(godot_string_name, NativeVariantPtrArgs, godot_variant)
-  spec.csharp:
-  - uid: Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name@,Godot.NativeInterop.NativeVariantPtrArgs,Godot.NativeInterop.godot_variant@)
-    name: InvokeGodotClassMethod
-    isExternal: true
-  - name: (
-  - name: in
-  - name: " "
-  - uid: Godot.NativeInterop.godot_string_name
-    name: godot_string_name
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.NativeInterop.NativeVariantPtrArgs
-    name: NativeVariantPtrArgs
-    isExternal: true
-  - name: ','
-  - name: " "
-  - name: out
-  - name: " "
-  - uid: Godot.NativeInterop.godot_variant
-    name: godot_variant
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.RefCounted.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name@,Godot.NativeInterop.NativeVariantPtrArgs,Godot.NativeInterop.godot_variant@)
-    name: InvokeGodotClassMethod
-    isExternal: true
-  - name: (
-  - uid: Godot.NativeInterop.godot_string_name
-    name: godot_string_name
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.NativeInterop.NativeVariantPtrArgs
-    name: NativeVariantPtrArgs
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.NativeInterop.godot_variant
-    name: godot_variant
-    isExternal: true
-  - name: )
-- uid: Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name@)
-  commentId: M:Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name@)
-  parent: Godot.RefCounted
-  isExternal: true
-  name: HasGodotClassMethod(in godot_string_name)
-  nameWithType: RefCounted.HasGodotClassMethod(in godot_string_name)
-  fullName: Godot.RefCounted.HasGodotClassMethod(in Godot.NativeInterop.godot_string_name)
-  nameWithType.vb: RefCounted.HasGodotClassMethod(godot_string_name)
-  fullName.vb: Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name)
-  name.vb: HasGodotClassMethod(godot_string_name)
-  spec.csharp:
-  - uid: Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name@)
-    name: HasGodotClassMethod
-    isExternal: true
-  - name: (
-  - name: in
-  - name: " "
-  - uid: Godot.NativeInterop.godot_string_name
-    name: godot_string_name
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.RefCounted.HasGodotClassMethod(Godot.NativeInterop.godot_string_name@)
-    name: HasGodotClassMethod
-    isExternal: true
-  - name: (
-  - uid: Godot.NativeInterop.godot_string_name
-    name: godot_string_name
-    isExternal: true
-  - name: )
-- uid: Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name@)
-  commentId: M:Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name@)
-  parent: Godot.RefCounted
-  isExternal: true
-  name: HasGodotClassSignal(in godot_string_name)
-  nameWithType: RefCounted.HasGodotClassSignal(in godot_string_name)
-  fullName: Godot.RefCounted.HasGodotClassSignal(in Godot.NativeInterop.godot_string_name)
-  nameWithType.vb: RefCounted.HasGodotClassSignal(godot_string_name)
-  fullName.vb: Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name)
-  name.vb: HasGodotClassSignal(godot_string_name)
-  spec.csharp:
-  - uid: Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name@)
-    name: HasGodotClassSignal
-    isExternal: true
-  - name: (
-  - name: in
-  - name: " "
-  - uid: Godot.NativeInterop.godot_string_name
-    name: godot_string_name
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.RefCounted.HasGodotClassSignal(Godot.NativeInterop.godot_string_name@)
-    name: HasGodotClassSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.NativeInterop.godot_string_name
-    name: godot_string_name
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.NotificationPostinitialize
-  commentId: F:Godot.GodotObject.NotificationPostinitialize
-  parent: Godot.GodotObject
-  isExternal: true
-  name: NotificationPostinitialize
-  nameWithType: GodotObject.NotificationPostinitialize
-  fullName: Godot.GodotObject.NotificationPostinitialize
-- uid: Godot.GodotObject.NotificationPredelete
-  commentId: F:Godot.GodotObject.NotificationPredelete
-  parent: Godot.GodotObject
-  isExternal: true
-  name: NotificationPredelete
-  nameWithType: GodotObject.NotificationPredelete
-  fullName: Godot.GodotObject.NotificationPredelete
-- uid: Godot.GodotObject.NotificationExtensionReloaded
-  commentId: F:Godot.GodotObject.NotificationExtensionReloaded
-  parent: Godot.GodotObject
-  isExternal: true
-  name: NotificationExtensionReloaded
-  nameWithType: GodotObject.NotificationExtensionReloaded
-  fullName: Godot.GodotObject.NotificationExtensionReloaded
-- uid: Godot.GodotObject.InstanceFromId(System.UInt64)
-  commentId: M:Godot.GodotObject.InstanceFromId(System.UInt64)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.uint64
-  name: InstanceFromId(ulong)
-  nameWithType: GodotObject.InstanceFromId(ulong)
-  fullName: Godot.GodotObject.InstanceFromId(ulong)
-  nameWithType.vb: GodotObject.InstanceFromId(ULong)
-  fullName.vb: Godot.GodotObject.InstanceFromId(ULong)
-  name.vb: InstanceFromId(ULong)
-  spec.csharp:
-  - uid: Godot.GodotObject.InstanceFromId(System.UInt64)
-    name: InstanceFromId
-    isExternal: true
-  - name: (
-  - uid: System.UInt64
-    name: ulong
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.uint64
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.InstanceFromId(System.UInt64)
-    name: InstanceFromId
-    isExternal: true
-  - name: (
-  - uid: System.UInt64
-    name: ULong
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.uint64
-  - name: )
-- uid: Godot.GodotObject.IsInstanceIdValid(System.UInt64)
-  commentId: M:Godot.GodotObject.IsInstanceIdValid(System.UInt64)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.uint64
-  name: IsInstanceIdValid(ulong)
-  nameWithType: GodotObject.IsInstanceIdValid(ulong)
-  fullName: Godot.GodotObject.IsInstanceIdValid(ulong)
-  nameWithType.vb: GodotObject.IsInstanceIdValid(ULong)
-  fullName.vb: Godot.GodotObject.IsInstanceIdValid(ULong)
-  name.vb: IsInstanceIdValid(ULong)
-  spec.csharp:
-  - uid: Godot.GodotObject.IsInstanceIdValid(System.UInt64)
-    name: IsInstanceIdValid
-    isExternal: true
-  - name: (
-  - uid: System.UInt64
-    name: ulong
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.uint64
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.IsInstanceIdValid(System.UInt64)
-    name: IsInstanceIdValid
-    isExternal: true
-  - name: (
-  - uid: System.UInt64
-    name: ULong
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.uint64
-  - name: )
-- uid: Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
-  commentId: M:Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: IsInstanceValid(GodotObject)
-  nameWithType: GodotObject.IsInstanceValid(GodotObject)
-  fullName: Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
-  spec.csharp:
-  - uid: Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
-    name: IsInstanceValid
-    isExternal: true
-  - name: (
-  - uid: Godot.GodotObject
-    name: GodotObject
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.IsInstanceValid(Godot.GodotObject)
-    name: IsInstanceValid
-    isExternal: true
-  - name: (
-  - uid: Godot.GodotObject
-    name: GodotObject
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.WeakRef(Godot.GodotObject)
-  commentId: M:Godot.GodotObject.WeakRef(Godot.GodotObject)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: WeakRef(GodotObject)
-  nameWithType: GodotObject.WeakRef(GodotObject)
-  fullName: Godot.GodotObject.WeakRef(Godot.GodotObject)
-  spec.csharp:
-  - uid: Godot.GodotObject.WeakRef(Godot.GodotObject)
-    name: WeakRef
-    isExternal: true
-  - name: (
-  - uid: Godot.GodotObject
-    name: GodotObject
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.WeakRef(Godot.GodotObject)
-    name: WeakRef
-    isExternal: true
-  - name: (
-  - uid: Godot.GodotObject
-    name: GodotObject
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.Dispose
-  commentId: M:Godot.GodotObject.Dispose
-  parent: Godot.GodotObject
-  isExternal: true
-  name: Dispose()
-  nameWithType: GodotObject.Dispose()
-  fullName: Godot.GodotObject.Dispose()
-  spec.csharp:
-  - uid: Godot.GodotObject.Dispose
-    name: Dispose
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Dispose
-    name: Dispose
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.Dispose(System.Boolean)
-  commentId: M:Godot.GodotObject.Dispose(System.Boolean)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: Dispose(bool)
-  nameWithType: GodotObject.Dispose(bool)
-  fullName: Godot.GodotObject.Dispose(bool)
-  nameWithType.vb: GodotObject.Dispose(Boolean)
-  fullName.vb: Godot.GodotObject.Dispose(Boolean)
-  name.vb: Dispose(Boolean)
-  spec.csharp:
-  - uid: Godot.GodotObject.Dispose(System.Boolean)
-    name: Dispose
-    isExternal: true
-  - name: (
-  - uid: System.Boolean
-    name: bool
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.boolean
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Dispose(System.Boolean)
-    name: Dispose
-    isExternal: true
-  - name: (
-  - uid: System.Boolean
-    name: Boolean
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.boolean
-  - name: )
-- uid: Godot.GodotObject.ToString
-  commentId: M:Godot.GodotObject.ToString
-  parent: Godot.GodotObject
-  isExternal: true
-  name: ToString()
-  nameWithType: GodotObject.ToString()
-  fullName: Godot.GodotObject.ToString()
-  spec.csharp:
-  - uid: Godot.GodotObject.ToString
-    name: ToString
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.ToString
-    name: ToString
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.ToSignal(Godot.GodotObject,Godot.StringName)
-  commentId: M:Godot.GodotObject.ToSignal(Godot.GodotObject,Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: ToSignal(GodotObject, StringName)
-  nameWithType: GodotObject.ToSignal(GodotObject, StringName)
-  fullName: Godot.GodotObject.ToSignal(Godot.GodotObject, Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.ToSignal(Godot.GodotObject,Godot.StringName)
-    name: ToSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.GodotObject
-    name: GodotObject
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.ToSignal(Godot.GodotObject,Godot.StringName)
-    name: ToSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.GodotObject
-    name: GodotObject
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject._Get(Godot.StringName)
-  commentId: M:Godot.GodotObject._Get(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: _Get(StringName)
-  nameWithType: GodotObject._Get(StringName)
-  fullName: Godot.GodotObject._Get(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject._Get(Godot.StringName)
-    name: _Get
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._Get(Godot.StringName)
-    name: _Get
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject._GetPropertyList
-  commentId: M:Godot.GodotObject._GetPropertyList
-  parent: Godot.GodotObject
-  isExternal: true
-  name: _GetPropertyList()
-  nameWithType: GodotObject._GetPropertyList()
-  fullName: Godot.GodotObject._GetPropertyList()
-  spec.csharp:
-  - uid: Godot.GodotObject._GetPropertyList
-    name: _GetPropertyList
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._GetPropertyList
-    name: _GetPropertyList
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject._IterGet(Godot.Variant)
-  commentId: M:Godot.GodotObject._IterGet(Godot.Variant)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: _IterGet(Variant)
-  nameWithType: GodotObject._IterGet(Variant)
-  fullName: Godot.GodotObject._IterGet(Godot.Variant)
-  spec.csharp:
-  - uid: Godot.GodotObject._IterGet(Godot.Variant)
-    name: _IterGet
-    isExternal: true
-  - name: (
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._IterGet(Godot.Variant)
-    name: _IterGet
-    isExternal: true
-  - name: (
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject._IterInit(Godot.Collections.Array)
-  commentId: M:Godot.GodotObject._IterInit(Godot.Collections.Array)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: _IterInit(Array)
-  nameWithType: GodotObject._IterInit(Array)
-  fullName: Godot.GodotObject._IterInit(Godot.Collections.Array)
-  spec.csharp:
-  - uid: Godot.GodotObject._IterInit(Godot.Collections.Array)
-    name: _IterInit
-    isExternal: true
-  - name: (
-  - uid: Godot.Collections.Array
-    name: Array
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._IterInit(Godot.Collections.Array)
-    name: _IterInit
-    isExternal: true
-  - name: (
-  - uid: Godot.Collections.Array
-    name: Array
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject._IterNext(Godot.Collections.Array)
-  commentId: M:Godot.GodotObject._IterNext(Godot.Collections.Array)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: _IterNext(Array)
-  nameWithType: GodotObject._IterNext(Array)
-  fullName: Godot.GodotObject._IterNext(Godot.Collections.Array)
-  spec.csharp:
-  - uid: Godot.GodotObject._IterNext(Godot.Collections.Array)
-    name: _IterNext
-    isExternal: true
-  - name: (
-  - uid: Godot.Collections.Array
-    name: Array
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._IterNext(Godot.Collections.Array)
-    name: _IterNext
-    isExternal: true
-  - name: (
-  - uid: Godot.Collections.Array
-    name: Array
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject._Notification(System.Int32)
-  commentId: M:Godot.GodotObject._Notification(System.Int32)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: _Notification(int)
-  nameWithType: GodotObject._Notification(int)
-  fullName: Godot.GodotObject._Notification(int)
-  nameWithType.vb: GodotObject._Notification(Integer)
-  fullName.vb: Godot.GodotObject._Notification(Integer)
-  name.vb: _Notification(Integer)
-  spec.csharp:
-  - uid: Godot.GodotObject._Notification(System.Int32)
-    name: _Notification
-    isExternal: true
-  - name: (
-  - uid: System.Int32
-    name: int
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._Notification(System.Int32)
-    name: _Notification
-    isExternal: true
-  - name: (
-  - uid: System.Int32
-    name: Integer
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: )
-- uid: Godot.GodotObject._PropertyCanRevert(Godot.StringName)
-  commentId: M:Godot.GodotObject._PropertyCanRevert(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: _PropertyCanRevert(StringName)
-  nameWithType: GodotObject._PropertyCanRevert(StringName)
-  fullName: Godot.GodotObject._PropertyCanRevert(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject._PropertyCanRevert(Godot.StringName)
-    name: _PropertyCanRevert
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._PropertyCanRevert(Godot.StringName)
-    name: _PropertyCanRevert
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject._PropertyGetRevert(Godot.StringName)
-  commentId: M:Godot.GodotObject._PropertyGetRevert(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: _PropertyGetRevert(StringName)
-  nameWithType: GodotObject._PropertyGetRevert(StringName)
-  fullName: Godot.GodotObject._PropertyGetRevert(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject._PropertyGetRevert(Godot.StringName)
-    name: _PropertyGetRevert
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._PropertyGetRevert(Godot.StringName)
-    name: _PropertyGetRevert
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
-  commentId: M:Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: _Set(StringName, Variant)
-  nameWithType: GodotObject._Set(StringName, Variant)
-  fullName: Godot.GodotObject._Set(Godot.StringName, Godot.Variant)
-  spec.csharp:
-  - uid: Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
-    name: _Set
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
-    name: _Set
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
-  commentId: M:Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: _ValidateProperty(Dictionary)
-  nameWithType: GodotObject._ValidateProperty(Dictionary)
-  fullName: Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
-  spec.csharp:
-  - uid: Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
-    name: _ValidateProperty
-    isExternal: true
-  - name: (
-  - uid: Godot.Collections.Dictionary
-    name: Dictionary
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._ValidateProperty(Godot.Collections.Dictionary)
-    name: _ValidateProperty
-    isExternal: true
-  - name: (
-  - uid: Godot.Collections.Dictionary
-    name: Dictionary
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.Free
-  commentId: M:Godot.GodotObject.Free
-  parent: Godot.GodotObject
-  isExternal: true
-  name: Free()
-  nameWithType: GodotObject.Free()
-  fullName: Godot.GodotObject.Free()
-  spec.csharp:
-  - uid: Godot.GodotObject.Free
-    name: Free
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Free
-    name: Free
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.GetClass
-  commentId: M:Godot.GodotObject.GetClass
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetClass()
-  nameWithType: GodotObject.GetClass()
-  fullName: Godot.GodotObject.GetClass()
-  spec.csharp:
-  - uid: Godot.GodotObject.GetClass
-    name: GetClass
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetClass
-    name: GetClass
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.IsClass(System.String)
-  commentId: M:Godot.GodotObject.IsClass(System.String)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.string
-  name: IsClass(string)
-  nameWithType: GodotObject.IsClass(string)
-  fullName: Godot.GodotObject.IsClass(string)
-  nameWithType.vb: GodotObject.IsClass(String)
-  fullName.vb: Godot.GodotObject.IsClass(String)
-  name.vb: IsClass(String)
-  spec.csharp:
-  - uid: Godot.GodotObject.IsClass(System.String)
-    name: IsClass
-    isExternal: true
-  - name: (
-  - uid: System.String
-    name: string
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.string
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.IsClass(System.String)
-    name: IsClass
-    isExternal: true
-  - name: (
-  - uid: System.String
-    name: String
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.string
-  - name: )
-- uid: Godot.GodotObject.Set(Godot.StringName,Godot.Variant)
-  commentId: M:Godot.GodotObject.Set(Godot.StringName,Godot.Variant)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: Set(StringName, Variant)
-  nameWithType: GodotObject.Set(StringName, Variant)
-  fullName: Godot.GodotObject.Set(Godot.StringName, Godot.Variant)
-  spec.csharp:
-  - uid: Godot.GodotObject.Set(Godot.StringName,Godot.Variant)
-    name: Set
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Set(Godot.StringName,Godot.Variant)
-    name: Set
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.Get(Godot.StringName)
-  commentId: M:Godot.GodotObject.Get(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: Get(StringName)
-  nameWithType: GodotObject.Get(StringName)
-  fullName: Godot.GodotObject.Get(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.Get(Godot.StringName)
-    name: Get
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Get(Godot.StringName)
-    name: Get
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.SetIndexed(Godot.NodePath,Godot.Variant)
-  commentId: M:Godot.GodotObject.SetIndexed(Godot.NodePath,Godot.Variant)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: SetIndexed(NodePath, Variant)
-  nameWithType: GodotObject.SetIndexed(NodePath, Variant)
-  fullName: Godot.GodotObject.SetIndexed(Godot.NodePath, Godot.Variant)
-  spec.csharp:
-  - uid: Godot.GodotObject.SetIndexed(Godot.NodePath,Godot.Variant)
-    name: SetIndexed
-    isExternal: true
-  - name: (
-  - uid: Godot.NodePath
-    name: NodePath
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.SetIndexed(Godot.NodePath,Godot.Variant)
-    name: SetIndexed
-    isExternal: true
-  - name: (
-  - uid: Godot.NodePath
-    name: NodePath
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.GetIndexed(Godot.NodePath)
-  commentId: M:Godot.GodotObject.GetIndexed(Godot.NodePath)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetIndexed(NodePath)
-  nameWithType: GodotObject.GetIndexed(NodePath)
-  fullName: Godot.GodotObject.GetIndexed(Godot.NodePath)
-  spec.csharp:
-  - uid: Godot.GodotObject.GetIndexed(Godot.NodePath)
-    name: GetIndexed
-    isExternal: true
-  - name: (
-  - uid: Godot.NodePath
-    name: NodePath
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetIndexed(Godot.NodePath)
-    name: GetIndexed
-    isExternal: true
-  - name: (
-  - uid: Godot.NodePath
-    name: NodePath
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.GetPropertyList
-  commentId: M:Godot.GodotObject.GetPropertyList
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetPropertyList()
-  nameWithType: GodotObject.GetPropertyList()
-  fullName: Godot.GodotObject.GetPropertyList()
-  spec.csharp:
-  - uid: Godot.GodotObject.GetPropertyList
-    name: GetPropertyList
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetPropertyList
-    name: GetPropertyList
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.GetMethodList
-  commentId: M:Godot.GodotObject.GetMethodList
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetMethodList()
-  nameWithType: GodotObject.GetMethodList()
-  fullName: Godot.GodotObject.GetMethodList()
-  spec.csharp:
-  - uid: Godot.GodotObject.GetMethodList
-    name: GetMethodList
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetMethodList
-    name: GetMethodList
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.PropertyCanRevert(Godot.StringName)
-  commentId: M:Godot.GodotObject.PropertyCanRevert(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: PropertyCanRevert(StringName)
-  nameWithType: GodotObject.PropertyCanRevert(StringName)
-  fullName: Godot.GodotObject.PropertyCanRevert(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.PropertyCanRevert(Godot.StringName)
-    name: PropertyCanRevert
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.PropertyCanRevert(Godot.StringName)
-    name: PropertyCanRevert
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.PropertyGetRevert(Godot.StringName)
-  commentId: M:Godot.GodotObject.PropertyGetRevert(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: PropertyGetRevert(StringName)
-  nameWithType: GodotObject.PropertyGetRevert(StringName)
-  fullName: Godot.GodotObject.PropertyGetRevert(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.PropertyGetRevert(Godot.StringName)
-    name: PropertyGetRevert
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.PropertyGetRevert(Godot.StringName)
-    name: PropertyGetRevert
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.Notification(System.Int32,System.Boolean)
-  commentId: M:Godot.GodotObject.Notification(System.Int32,System.Boolean)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: Notification(int, bool)
-  nameWithType: GodotObject.Notification(int, bool)
-  fullName: Godot.GodotObject.Notification(int, bool)
-  nameWithType.vb: GodotObject.Notification(Integer, Boolean)
-  fullName.vb: Godot.GodotObject.Notification(Integer, Boolean)
-  name.vb: Notification(Integer, Boolean)
-  spec.csharp:
-  - uid: Godot.GodotObject.Notification(System.Int32,System.Boolean)
-    name: Notification
-    isExternal: true
-  - name: (
-  - uid: System.Int32
-    name: int
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: ','
-  - name: " "
-  - uid: System.Boolean
-    name: bool
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.boolean
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Notification(System.Int32,System.Boolean)
-    name: Notification
-    isExternal: true
-  - name: (
-  - uid: System.Int32
-    name: Integer
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: ','
-  - name: " "
-  - uid: System.Boolean
-    name: Boolean
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.boolean
-  - name: )
-- uid: Godot.GodotObject.GetInstanceId
-  commentId: M:Godot.GodotObject.GetInstanceId
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetInstanceId()
-  nameWithType: GodotObject.GetInstanceId()
-  fullName: Godot.GodotObject.GetInstanceId()
-  spec.csharp:
-  - uid: Godot.GodotObject.GetInstanceId
-    name: GetInstanceId
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetInstanceId
-    name: GetInstanceId
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.SetScript(Godot.Variant)
-  commentId: M:Godot.GodotObject.SetScript(Godot.Variant)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: SetScript(Variant)
-  nameWithType: GodotObject.SetScript(Variant)
-  fullName: Godot.GodotObject.SetScript(Godot.Variant)
-  spec.csharp:
-  - uid: Godot.GodotObject.SetScript(Godot.Variant)
-    name: SetScript
-    isExternal: true
-  - name: (
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.SetScript(Godot.Variant)
-    name: SetScript
-    isExternal: true
-  - name: (
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.GetScript
-  commentId: M:Godot.GodotObject.GetScript
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetScript()
-  nameWithType: GodotObject.GetScript()
-  fullName: Godot.GodotObject.GetScript()
-  spec.csharp:
-  - uid: Godot.GodotObject.GetScript
-    name: GetScript
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetScript
-    name: GetScript
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.SetMeta(Godot.StringName,Godot.Variant)
-  commentId: M:Godot.GodotObject.SetMeta(Godot.StringName,Godot.Variant)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: SetMeta(StringName, Variant)
-  nameWithType: GodotObject.SetMeta(StringName, Variant)
-  fullName: Godot.GodotObject.SetMeta(Godot.StringName, Godot.Variant)
-  spec.csharp:
-  - uid: Godot.GodotObject.SetMeta(Godot.StringName,Godot.Variant)
-    name: SetMeta
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.SetMeta(Godot.StringName,Godot.Variant)
-    name: SetMeta
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.RemoveMeta(Godot.StringName)
-  commentId: M:Godot.GodotObject.RemoveMeta(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: RemoveMeta(StringName)
-  nameWithType: GodotObject.RemoveMeta(StringName)
-  fullName: Godot.GodotObject.RemoveMeta(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.RemoveMeta(Godot.StringName)
-    name: RemoveMeta
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.RemoveMeta(Godot.StringName)
-    name: RemoveMeta
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.GetMeta(Godot.StringName,Godot.Variant)
-  commentId: M:Godot.GodotObject.GetMeta(Godot.StringName,Godot.Variant)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetMeta(StringName, Variant)
-  nameWithType: GodotObject.GetMeta(StringName, Variant)
-  fullName: Godot.GodotObject.GetMeta(Godot.StringName, Godot.Variant)
-  spec.csharp:
-  - uid: Godot.GodotObject.GetMeta(Godot.StringName,Godot.Variant)
-    name: GetMeta
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetMeta(Godot.StringName,Godot.Variant)
-    name: GetMeta
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.HasMeta(Godot.StringName)
-  commentId: M:Godot.GodotObject.HasMeta(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: HasMeta(StringName)
-  nameWithType: GodotObject.HasMeta(StringName)
-  fullName: Godot.GodotObject.HasMeta(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.HasMeta(Godot.StringName)
-    name: HasMeta
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.HasMeta(Godot.StringName)
-    name: HasMeta
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.GetMetaList
-  commentId: M:Godot.GodotObject.GetMetaList
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetMetaList()
-  nameWithType: GodotObject.GetMetaList()
-  fullName: Godot.GodotObject.GetMetaList()
-  spec.csharp:
-  - uid: Godot.GodotObject.GetMetaList
-    name: GetMetaList
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetMetaList
-    name: GetMetaList
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.AddUserSignal(System.String,Godot.Collections.Array)
-  commentId: M:Godot.GodotObject.AddUserSignal(System.String,Godot.Collections.Array)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.string
-  name: AddUserSignal(string, Array)
-  nameWithType: GodotObject.AddUserSignal(string, Array)
-  fullName: Godot.GodotObject.AddUserSignal(string, Godot.Collections.Array)
-  nameWithType.vb: GodotObject.AddUserSignal(String, Array)
-  fullName.vb: Godot.GodotObject.AddUserSignal(String, Godot.Collections.Array)
-  name.vb: AddUserSignal(String, Array)
-  spec.csharp:
-  - uid: Godot.GodotObject.AddUserSignal(System.String,Godot.Collections.Array)
-    name: AddUserSignal
-    isExternal: true
-  - name: (
-  - uid: System.String
-    name: string
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.string
-  - name: ','
-  - name: " "
-  - uid: Godot.Collections.Array
-    name: Array
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.AddUserSignal(System.String,Godot.Collections.Array)
-    name: AddUserSignal
-    isExternal: true
-  - name: (
-  - uid: System.String
-    name: String
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.string
-  - name: ','
-  - name: " "
-  - uid: Godot.Collections.Array
-    name: Array
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.HasUserSignal(Godot.StringName)
-  commentId: M:Godot.GodotObject.HasUserSignal(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: HasUserSignal(StringName)
-  nameWithType: GodotObject.HasUserSignal(StringName)
-  fullName: Godot.GodotObject.HasUserSignal(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.HasUserSignal(Godot.StringName)
-    name: HasUserSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.HasUserSignal(Godot.StringName)
-    name: HasUserSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.RemoveUserSignal(Godot.StringName)
-  commentId: M:Godot.GodotObject.RemoveUserSignal(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: RemoveUserSignal(StringName)
-  nameWithType: GodotObject.RemoveUserSignal(StringName)
-  fullName: Godot.GodotObject.RemoveUserSignal(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.RemoveUserSignal(Godot.StringName)
-    name: RemoveUserSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.RemoveUserSignal(Godot.StringName)
-    name: RemoveUserSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.EmitSignal(Godot.StringName,Godot.Variant[])
-  commentId: M:Godot.GodotObject.EmitSignal(Godot.StringName,Godot.Variant[])
-  parent: Godot.GodotObject
-  isExternal: true
-  name: EmitSignal(StringName, params Variant[])
-  nameWithType: GodotObject.EmitSignal(StringName, params Variant[])
-  fullName: Godot.GodotObject.EmitSignal(Godot.StringName, params Godot.Variant[])
-  nameWithType.vb: GodotObject.EmitSignal(StringName, ParamArray Variant())
-  fullName.vb: Godot.GodotObject.EmitSignal(Godot.StringName, ParamArray Godot.Variant())
-  name.vb: EmitSignal(StringName, ParamArray Variant())
-  spec.csharp:
-  - uid: Godot.GodotObject.EmitSignal(Godot.StringName,Godot.Variant[])
-    name: EmitSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - name: params
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: '['
-  - name: ']'
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.EmitSignal(Godot.StringName,Godot.Variant[])
-    name: EmitSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - name: ParamArray
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: (
-  - name: )
-  - name: )
-- uid: Godot.GodotObject.EmitSignal(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-  commentId: M:Godot.GodotObject.EmitSignal(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
-  name: EmitSignal(StringName, ReadOnlySpan<Variant>)
-  nameWithType: GodotObject.EmitSignal(StringName, ReadOnlySpan<Variant>)
-  fullName: Godot.GodotObject.EmitSignal(Godot.StringName, System.ReadOnlySpan<Godot.Variant>)
-  nameWithType.vb: GodotObject.EmitSignal(StringName, ReadOnlySpan(Of Variant))
-  fullName.vb: Godot.GodotObject.EmitSignal(Godot.StringName, System.ReadOnlySpan(Of Godot.Variant))
-  name.vb: EmitSignal(StringName, ReadOnlySpan(Of Variant))
-  spec.csharp:
-  - uid: Godot.GodotObject.EmitSignal(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-    name: EmitSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.ReadOnlySpan`1
-    name: ReadOnlySpan
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
-  - name: <
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: '>'
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.EmitSignal(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-    name: EmitSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.ReadOnlySpan`1
-    name: ReadOnlySpan
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
-  - name: (
-  - name: Of
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  - name: )
-- uid: Godot.GodotObject.Call(Godot.StringName,Godot.Variant[])
-  commentId: M:Godot.GodotObject.Call(Godot.StringName,Godot.Variant[])
-  parent: Godot.GodotObject
-  isExternal: true
-  name: Call(StringName, params Variant[])
-  nameWithType: GodotObject.Call(StringName, params Variant[])
-  fullName: Godot.GodotObject.Call(Godot.StringName, params Godot.Variant[])
-  nameWithType.vb: GodotObject.Call(StringName, ParamArray Variant())
-  fullName.vb: Godot.GodotObject.Call(Godot.StringName, ParamArray Godot.Variant())
-  name.vb: Call(StringName, ParamArray Variant())
-  spec.csharp:
-  - uid: Godot.GodotObject.Call(Godot.StringName,Godot.Variant[])
-    name: Call
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - name: params
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: '['
-  - name: ']'
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Call(Godot.StringName,Godot.Variant[])
-    name: Call
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - name: ParamArray
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: (
-  - name: )
-  - name: )
-- uid: Godot.GodotObject.Call(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-  commentId: M:Godot.GodotObject.Call(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
-  name: Call(StringName, ReadOnlySpan<Variant>)
-  nameWithType: GodotObject.Call(StringName, ReadOnlySpan<Variant>)
-  fullName: Godot.GodotObject.Call(Godot.StringName, System.ReadOnlySpan<Godot.Variant>)
-  nameWithType.vb: GodotObject.Call(StringName, ReadOnlySpan(Of Variant))
-  fullName.vb: Godot.GodotObject.Call(Godot.StringName, System.ReadOnlySpan(Of Godot.Variant))
-  name.vb: Call(StringName, ReadOnlySpan(Of Variant))
-  spec.csharp:
-  - uid: Godot.GodotObject.Call(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-    name: Call
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.ReadOnlySpan`1
-    name: ReadOnlySpan
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
-  - name: <
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: '>'
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Call(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-    name: Call
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.ReadOnlySpan`1
-    name: ReadOnlySpan
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
-  - name: (
-  - name: Of
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  - name: )
-- uid: Godot.GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])
-  commentId: M:Godot.GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])
-  parent: Godot.GodotObject
-  isExternal: true
-  name: CallDeferred(StringName, params Variant[])
-  nameWithType: GodotObject.CallDeferred(StringName, params Variant[])
-  fullName: Godot.GodotObject.CallDeferred(Godot.StringName, params Godot.Variant[])
-  nameWithType.vb: GodotObject.CallDeferred(StringName, ParamArray Variant())
-  fullName.vb: Godot.GodotObject.CallDeferred(Godot.StringName, ParamArray Godot.Variant())
-  name.vb: CallDeferred(StringName, ParamArray Variant())
-  spec.csharp:
-  - uid: Godot.GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])
-    name: CallDeferred
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - name: params
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: '['
-  - name: ']'
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])
-    name: CallDeferred
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - name: ParamArray
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: (
-  - name: )
-  - name: )
-- uid: Godot.GodotObject.CallDeferred(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-  commentId: M:Godot.GodotObject.CallDeferred(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
-  name: CallDeferred(StringName, ReadOnlySpan<Variant>)
-  nameWithType: GodotObject.CallDeferred(StringName, ReadOnlySpan<Variant>)
-  fullName: Godot.GodotObject.CallDeferred(Godot.StringName, System.ReadOnlySpan<Godot.Variant>)
-  nameWithType.vb: GodotObject.CallDeferred(StringName, ReadOnlySpan(Of Variant))
-  fullName.vb: Godot.GodotObject.CallDeferred(Godot.StringName, System.ReadOnlySpan(Of Godot.Variant))
-  name.vb: CallDeferred(StringName, ReadOnlySpan(Of Variant))
-  spec.csharp:
-  - uid: Godot.GodotObject.CallDeferred(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-    name: CallDeferred
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.ReadOnlySpan`1
-    name: ReadOnlySpan
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
-  - name: <
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: '>'
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.CallDeferred(Godot.StringName,System.ReadOnlySpan{Godot.Variant})
-    name: CallDeferred
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.ReadOnlySpan`1
-    name: ReadOnlySpan
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
-  - name: (
-  - name: Of
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  - name: )
-- uid: Godot.GodotObject.SetDeferred(Godot.StringName,Godot.Variant)
-  commentId: M:Godot.GodotObject.SetDeferred(Godot.StringName,Godot.Variant)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: SetDeferred(StringName, Variant)
-  nameWithType: GodotObject.SetDeferred(StringName, Variant)
-  fullName: Godot.GodotObject.SetDeferred(Godot.StringName, Godot.Variant)
-  spec.csharp:
-  - uid: Godot.GodotObject.SetDeferred(Godot.StringName,Godot.Variant)
-    name: SetDeferred
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.SetDeferred(Godot.StringName,Godot.Variant)
-    name: SetDeferred
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.Callv(Godot.StringName,Godot.Collections.Array)
-  commentId: M:Godot.GodotObject.Callv(Godot.StringName,Godot.Collections.Array)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: Callv(StringName, Array)
-  nameWithType: GodotObject.Callv(StringName, Array)
-  fullName: Godot.GodotObject.Callv(Godot.StringName, Godot.Collections.Array)
-  spec.csharp:
-  - uid: Godot.GodotObject.Callv(Godot.StringName,Godot.Collections.Array)
-    name: Callv
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Collections.Array
-    name: Array
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Callv(Godot.StringName,Godot.Collections.Array)
-    name: Callv
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Collections.Array
-    name: Array
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.HasMethod(Godot.StringName)
-  commentId: M:Godot.GodotObject.HasMethod(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: HasMethod(StringName)
-  nameWithType: GodotObject.HasMethod(StringName)
-  fullName: Godot.GodotObject.HasMethod(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.HasMethod(Godot.StringName)
-    name: HasMethod
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.HasMethod(Godot.StringName)
-    name: HasMethod
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
-  commentId: M:Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetMethodArgumentCount(StringName)
-  nameWithType: GodotObject.GetMethodArgumentCount(StringName)
-  fullName: Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
-    name: GetMethodArgumentCount
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetMethodArgumentCount(Godot.StringName)
-    name: GetMethodArgumentCount
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.HasSignal(Godot.StringName)
-  commentId: M:Godot.GodotObject.HasSignal(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: HasSignal(StringName)
-  nameWithType: GodotObject.HasSignal(StringName)
-  fullName: Godot.GodotObject.HasSignal(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.HasSignal(Godot.StringName)
-    name: HasSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.HasSignal(Godot.StringName)
-    name: HasSignal
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.GetSignalList
-  commentId: M:Godot.GodotObject.GetSignalList
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetSignalList()
-  nameWithType: GodotObject.GetSignalList()
-  fullName: Godot.GodotObject.GetSignalList()
-  spec.csharp:
-  - uid: Godot.GodotObject.GetSignalList
-    name: GetSignalList
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetSignalList
-    name: GetSignalList
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
-  commentId: M:Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetSignalConnectionList(StringName)
-  nameWithType: GodotObject.GetSignalConnectionList(StringName)
-  fullName: Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
-    name: GetSignalConnectionList
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetSignalConnectionList(Godot.StringName)
-    name: GetSignalConnectionList
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.GetIncomingConnections
-  commentId: M:Godot.GodotObject.GetIncomingConnections
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetIncomingConnections()
-  nameWithType: GodotObject.GetIncomingConnections()
-  fullName: Godot.GodotObject.GetIncomingConnections()
-  spec.csharp:
-  - uid: Godot.GodotObject.GetIncomingConnections
-    name: GetIncomingConnections
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetIncomingConnections
-    name: GetIncomingConnections
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.Connect(Godot.StringName,Godot.Callable,System.UInt32)
-  commentId: M:Godot.GodotObject.Connect(Godot.StringName,Godot.Callable,System.UInt32)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.uint32
-  name: Connect(StringName, Callable, uint)
-  nameWithType: GodotObject.Connect(StringName, Callable, uint)
-  fullName: Godot.GodotObject.Connect(Godot.StringName, Godot.Callable, uint)
-  nameWithType.vb: GodotObject.Connect(StringName, Callable, UInteger)
-  fullName.vb: Godot.GodotObject.Connect(Godot.StringName, Godot.Callable, UInteger)
-  name.vb: Connect(StringName, Callable, UInteger)
-  spec.csharp:
-  - uid: Godot.GodotObject.Connect(Godot.StringName,Godot.Callable,System.UInt32)
-    name: Connect
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Callable
-    name: Callable
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.UInt32
-    name: uint
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.uint32
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Connect(Godot.StringName,Godot.Callable,System.UInt32)
-    name: Connect
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Callable
-    name: Callable
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.UInt32
-    name: UInteger
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.uint32
-  - name: )
-- uid: Godot.GodotObject.Disconnect(Godot.StringName,Godot.Callable)
-  commentId: M:Godot.GodotObject.Disconnect(Godot.StringName,Godot.Callable)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: Disconnect(StringName, Callable)
-  nameWithType: GodotObject.Disconnect(StringName, Callable)
-  fullName: Godot.GodotObject.Disconnect(Godot.StringName, Godot.Callable)
-  spec.csharp:
-  - uid: Godot.GodotObject.Disconnect(Godot.StringName,Godot.Callable)
-    name: Disconnect
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Callable
-    name: Callable
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Disconnect(Godot.StringName,Godot.Callable)
-    name: Disconnect
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Callable
-    name: Callable
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.IsConnected(Godot.StringName,Godot.Callable)
-  commentId: M:Godot.GodotObject.IsConnected(Godot.StringName,Godot.Callable)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: IsConnected(StringName, Callable)
-  nameWithType: GodotObject.IsConnected(StringName, Callable)
-  fullName: Godot.GodotObject.IsConnected(Godot.StringName, Godot.Callable)
-  spec.csharp:
-  - uid: Godot.GodotObject.IsConnected(Godot.StringName,Godot.Callable)
-    name: IsConnected
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Callable
-    name: Callable
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.IsConnected(Godot.StringName,Godot.Callable)
-    name: IsConnected
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.Callable
-    name: Callable
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.HasConnections(Godot.StringName)
-  commentId: M:Godot.GodotObject.HasConnections(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: HasConnections(StringName)
-  nameWithType: GodotObject.HasConnections(StringName)
-  fullName: Godot.GodotObject.HasConnections(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.HasConnections(Godot.StringName)
-    name: HasConnections
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.HasConnections(Godot.StringName)
-    name: HasConnections
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.SetBlockSignals(System.Boolean)
-  commentId: M:Godot.GodotObject.SetBlockSignals(System.Boolean)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: SetBlockSignals(bool)
-  nameWithType: GodotObject.SetBlockSignals(bool)
-  fullName: Godot.GodotObject.SetBlockSignals(bool)
-  nameWithType.vb: GodotObject.SetBlockSignals(Boolean)
-  fullName.vb: Godot.GodotObject.SetBlockSignals(Boolean)
-  name.vb: SetBlockSignals(Boolean)
-  spec.csharp:
-  - uid: Godot.GodotObject.SetBlockSignals(System.Boolean)
-    name: SetBlockSignals
-    isExternal: true
-  - name: (
-  - uid: System.Boolean
-    name: bool
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.boolean
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.SetBlockSignals(System.Boolean)
-    name: SetBlockSignals
-    isExternal: true
-  - name: (
-  - uid: System.Boolean
-    name: Boolean
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.boolean
-  - name: )
-- uid: Godot.GodotObject.IsBlockingSignals
-  commentId: M:Godot.GodotObject.IsBlockingSignals
-  parent: Godot.GodotObject
-  isExternal: true
-  name: IsBlockingSignals()
-  nameWithType: GodotObject.IsBlockingSignals()
-  fullName: Godot.GodotObject.IsBlockingSignals()
-  spec.csharp:
-  - uid: Godot.GodotObject.IsBlockingSignals
-    name: IsBlockingSignals
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.IsBlockingSignals
-    name: IsBlockingSignals
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.NotifyPropertyListChanged
-  commentId: M:Godot.GodotObject.NotifyPropertyListChanged
-  parent: Godot.GodotObject
-  isExternal: true
-  name: NotifyPropertyListChanged()
-  nameWithType: GodotObject.NotifyPropertyListChanged()
-  fullName: Godot.GodotObject.NotifyPropertyListChanged()
-  spec.csharp:
-  - uid: Godot.GodotObject.NotifyPropertyListChanged
-    name: NotifyPropertyListChanged
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.NotifyPropertyListChanged
-    name: NotifyPropertyListChanged
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.SetMessageTranslation(System.Boolean)
-  commentId: M:Godot.GodotObject.SetMessageTranslation(System.Boolean)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: SetMessageTranslation(bool)
-  nameWithType: GodotObject.SetMessageTranslation(bool)
-  fullName: Godot.GodotObject.SetMessageTranslation(bool)
-  nameWithType.vb: GodotObject.SetMessageTranslation(Boolean)
-  fullName.vb: Godot.GodotObject.SetMessageTranslation(Boolean)
-  name.vb: SetMessageTranslation(Boolean)
-  spec.csharp:
-  - uid: Godot.GodotObject.SetMessageTranslation(System.Boolean)
-    name: SetMessageTranslation
-    isExternal: true
-  - name: (
-  - uid: System.Boolean
-    name: bool
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.boolean
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.SetMessageTranslation(System.Boolean)
-    name: SetMessageTranslation
-    isExternal: true
-  - name: (
-  - uid: System.Boolean
-    name: Boolean
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.boolean
-  - name: )
-- uid: Godot.GodotObject.CanTranslateMessages
-  commentId: M:Godot.GodotObject.CanTranslateMessages
-  parent: Godot.GodotObject
-  isExternal: true
-  name: CanTranslateMessages()
-  nameWithType: GodotObject.CanTranslateMessages()
-  fullName: Godot.GodotObject.CanTranslateMessages()
-  spec.csharp:
-  - uid: Godot.GodotObject.CanTranslateMessages
-    name: CanTranslateMessages
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.CanTranslateMessages
-    name: CanTranslateMessages
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.Tr(Godot.StringName,Godot.StringName)
-  commentId: M:Godot.GodotObject.Tr(Godot.StringName,Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: Tr(StringName, StringName)
-  nameWithType: GodotObject.Tr(StringName, StringName)
-  fullName: Godot.GodotObject.Tr(Godot.StringName, Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.Tr(Godot.StringName,Godot.StringName)
-    name: Tr
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.Tr(Godot.StringName,Godot.StringName)
-    name: Tr
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.TrN(Godot.StringName,Godot.StringName,System.Int32,Godot.StringName)
-  commentId: M:Godot.GodotObject.TrN(Godot.StringName,Godot.StringName,System.Int32,Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: TrN(StringName, StringName, int, StringName)
-  nameWithType: GodotObject.TrN(StringName, StringName, int, StringName)
-  fullName: Godot.GodotObject.TrN(Godot.StringName, Godot.StringName, int, Godot.StringName)
-  nameWithType.vb: GodotObject.TrN(StringName, StringName, Integer, StringName)
-  fullName.vb: Godot.GodotObject.TrN(Godot.StringName, Godot.StringName, Integer, Godot.StringName)
-  name.vb: TrN(StringName, StringName, Integer, StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.TrN(Godot.StringName,Godot.StringName,System.Int32,Godot.StringName)
-    name: TrN
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.Int32
-    name: int
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: ','
-  - name: " "
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.TrN(Godot.StringName,Godot.StringName,System.Int32,Godot.StringName)
-    name: TrN
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.Int32
-    name: Integer
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: ','
-  - name: " "
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.GetTranslationDomain
-  commentId: M:Godot.GodotObject.GetTranslationDomain
-  parent: Godot.GodotObject
-  isExternal: true
-  name: GetTranslationDomain()
-  nameWithType: GodotObject.GetTranslationDomain()
-  fullName: Godot.GodotObject.GetTranslationDomain()
-  spec.csharp:
-  - uid: Godot.GodotObject.GetTranslationDomain
-    name: GetTranslationDomain
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.GetTranslationDomain
-    name: GetTranslationDomain
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.SetTranslationDomain(Godot.StringName)
-  commentId: M:Godot.GodotObject.SetTranslationDomain(Godot.StringName)
-  parent: Godot.GodotObject
-  isExternal: true
-  name: SetTranslationDomain(StringName)
-  nameWithType: GodotObject.SetTranslationDomain(StringName)
-  fullName: Godot.GodotObject.SetTranslationDomain(Godot.StringName)
-  spec.csharp:
-  - uid: Godot.GodotObject.SetTranslationDomain(Godot.StringName)
-    name: SetTranslationDomain
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.SetTranslationDomain(Godot.StringName)
-    name: SetTranslationDomain
-    isExternal: true
-  - name: (
-  - uid: Godot.StringName
-    name: StringName
-    isExternal: true
-  - name: )
-- uid: Godot.GodotObject.IsQueuedForDeletion
-  commentId: M:Godot.GodotObject.IsQueuedForDeletion
-  parent: Godot.GodotObject
-  isExternal: true
-  name: IsQueuedForDeletion()
-  nameWithType: GodotObject.IsQueuedForDeletion()
-  fullName: Godot.GodotObject.IsQueuedForDeletion()
-  spec.csharp:
-  - uid: Godot.GodotObject.IsQueuedForDeletion
-    name: IsQueuedForDeletion
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.IsQueuedForDeletion
-    name: IsQueuedForDeletion
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.CancelFree
-  commentId: M:Godot.GodotObject.CancelFree
-  parent: Godot.GodotObject
-  isExternal: true
-  name: CancelFree()
-  nameWithType: GodotObject.CancelFree()
-  fullName: Godot.GodotObject.CancelFree()
-  spec.csharp:
-  - uid: Godot.GodotObject.CancelFree
-    name: CancelFree
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.CancelFree
-    name: CancelFree
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.EmitSignalScriptChanged
-  commentId: M:Godot.GodotObject.EmitSignalScriptChanged
-  parent: Godot.GodotObject
-  isExternal: true
-  name: EmitSignalScriptChanged()
-  nameWithType: GodotObject.EmitSignalScriptChanged()
-  fullName: Godot.GodotObject.EmitSignalScriptChanged()
-  spec.csharp:
-  - uid: Godot.GodotObject.EmitSignalScriptChanged
-    name: EmitSignalScriptChanged
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.EmitSignalScriptChanged
-    name: EmitSignalScriptChanged
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.EmitSignalPropertyListChanged
-  commentId: M:Godot.GodotObject.EmitSignalPropertyListChanged
-  parent: Godot.GodotObject
-  isExternal: true
-  name: EmitSignalPropertyListChanged()
-  nameWithType: GodotObject.EmitSignalPropertyListChanged()
-  fullName: Godot.GodotObject.EmitSignalPropertyListChanged()
-  spec.csharp:
-  - uid: Godot.GodotObject.EmitSignalPropertyListChanged
-    name: EmitSignalPropertyListChanged
-    isExternal: true
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject.EmitSignalPropertyListChanged
-    name: EmitSignalPropertyListChanged
-    isExternal: true
-  - name: (
-  - name: )
-- uid: Godot.GodotObject.NativeInstance
-  commentId: P:Godot.GodotObject.NativeInstance
-  parent: Godot.GodotObject
-  isExternal: true
-  name: NativeInstance
-  nameWithType: GodotObject.NativeInstance
-  fullName: Godot.GodotObject.NativeInstance
-- uid: Godot.GodotObject.ScriptChanged
-  commentId: E:Godot.GodotObject.ScriptChanged
-  parent: Godot.GodotObject
-  isExternal: true
-  name: ScriptChanged
-  nameWithType: GodotObject.ScriptChanged
-  fullName: Godot.GodotObject.ScriptChanged
-- uid: Godot.GodotObject.PropertyListChanged
-  commentId: E:Godot.GodotObject.PropertyListChanged
-  parent: Godot.GodotObject
-  isExternal: true
-  name: PropertyListChanged
-  nameWithType: GodotObject.PropertyListChanged
-  fullName: Godot.GodotObject.PropertyListChanged
 - uid: System.Object.GetType
   commentId: M:System.Object.GetType
   parent: System.Object
@@ -2835,63 +707,6 @@ references:
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.object.gettype
   - name: (
-  - name: )
-- uid: System.Object.MemberwiseClone
-  commentId: M:System.Object.MemberwiseClone
-  parent: System.Object
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
-  name: MemberwiseClone()
-  nameWithType: object.MemberwiseClone()
-  fullName: object.MemberwiseClone()
-  nameWithType.vb: Object.MemberwiseClone()
-  fullName.vb: Object.MemberwiseClone()
-  spec.csharp:
-  - uid: System.Object.MemberwiseClone
-    name: MemberwiseClone
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: System.Object.MemberwiseClone
-    name: MemberwiseClone
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
-  - name: (
-  - name: )
-- uid: System.Object.Equals(System.Object)
-  commentId: M:System.Object.Equals(System.Object)
-  parent: System.Object
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
-  name: Equals(object)
-  nameWithType: object.Equals(object)
-  fullName: object.Equals(object)
-  nameWithType.vb: Object.Equals(Object)
-  fullName.vb: Object.Equals(Object)
-  name.vb: Equals(Object)
-  spec.csharp:
-  - uid: System.Object.Equals(System.Object)
-    name: Equals
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
-  - name: (
-  - uid: System.Object
-    name: object
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
-  - name: )
-  spec.vb:
-  - uid: System.Object.Equals(System.Object)
-    name: Equals
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
-  - name: (
-  - uid: System.Object
-    name: Object
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
 - uid: System.Object.Equals(System.Object,System.Object)
   commentId: M:System.Object.Equals(System.Object,System.Object)
@@ -2983,66 +798,29 @@ references:
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
-- uid: System.Object.GetHashCode
-  commentId: M:System.Object.GetHashCode
-  parent: System.Object
+- uid: Nebula.Serialization.INetValue`1
+  commentId: T:Nebula.Serialization.INetValue`1
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
-  name: GetHashCode()
-  nameWithType: object.GetHashCode()
-  fullName: object.GetHashCode()
-  nameWithType.vb: Object.GetHashCode()
-  fullName.vb: Object.GetHashCode()
+  href: Nebula.Serialization.INetValue-1.html
+  name: INetValue<T>
+  nameWithType: INetValue<T>
+  fullName: Nebula.Serialization.INetValue<T>
+  nameWithType.vb: INetValue(Of T)
+  fullName.vb: Nebula.Serialization.INetValue(Of T)
+  name.vb: INetValue(Of T)
   spec.csharp:
-  - uid: System.Object.GetHashCode
-    name: GetHashCode
+  - uid: Nebula.Serialization.INetValue`1
+    name: INetValue
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: System.Object.GetHashCode
-    name: GetHashCode
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
-  - name: (
-  - name: )
-- uid: System
-  commentId: N:System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system
-  name: System
-  nameWithType: System
-  fullName: System
-- uid: Godot
-  commentId: N:Godot
-  isExternal: true
-  name: Godot
-  nameWithType: Godot
-  fullName: Godot
-- uid: Nebula.Serialization.INetSerializable`1
-  commentId: T:Nebula.Serialization.INetSerializable`1
-  isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.html
-  name: INetSerializable<T>
-  nameWithType: INetSerializable<T>
-  fullName: Nebula.Serialization.INetSerializable<T>
-  nameWithType.vb: INetSerializable(Of T)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of T)
-  name.vb: INetSerializable(Of T)
-  spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1
-    name: INetSerializable
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html
+    href: Nebula.Serialization.INetValue-1.html
   - name: <
   - name: T
   - name: '>'
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1
-    name: INetSerializable
+  - uid: Nebula.Serialization.INetValue`1
+    name: INetValue
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html
+    href: Nebula.Serialization.INetValue-1.html
   - name: (
   - name: Of
   - name: " "
@@ -3075,34 +853,294 @@ references:
     name: Serialization
     isExternal: true
     href: Nebula.Serialization.html
-- uid: Nebula.Serialization.IBsonSerializable`1
-  commentId: T:Nebula.Serialization.IBsonSerializable`1
+- uid: Nebula.Serialization.IBsonValue`1
+  commentId: T:Nebula.Serialization.IBsonValue`1
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializable-1.html
-  name: IBsonSerializable<T>
-  nameWithType: IBsonSerializable<T>
-  fullName: Nebula.Serialization.IBsonSerializable<T>
-  nameWithType.vb: IBsonSerializable(Of T)
-  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T)
-  name.vb: IBsonSerializable(Of T)
+  href: Nebula.Serialization.IBsonValue-1.html
+  name: IBsonValue<T>
+  nameWithType: IBsonValue<T>
+  fullName: Nebula.Serialization.IBsonValue<T>
+  nameWithType.vb: IBsonValue(Of T)
+  fullName.vb: Nebula.Serialization.IBsonValue(Of T)
+  name.vb: IBsonValue(Of T)
   spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializable`1
-    name: IBsonSerializable
+  - uid: Nebula.Serialization.IBsonValue`1
+    name: IBsonValue
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html
+    href: Nebula.Serialization.IBsonValue-1.html
   - name: <
   - name: T
   - name: '>'
   spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializable`1
-    name: IBsonSerializable
+  - uid: Nebula.Serialization.IBsonValue`1
+    name: IBsonValue
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html
+    href: Nebula.Serialization.IBsonValue-1.html
   - name: (
   - name: Of
   - name: " "
   - name: T
   - name: )
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: Nebula.NetId.#ctor*
+  commentId: Overload:Nebula.NetId.#ctor
+  isExternal: true
+  href: Nebula.NetId.-ctor.html#Nebula_NetId__ctor_System_Int64_
+  name: NetId
+  nameWithType: NetId.NetId
+  fullName: Nebula.NetId.NetId
+  nameWithType.vb: NetId.New
+  fullName.vb: Nebula.NetId.New
+  name.vb: New
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: Nebula.NetId.ToString*
+  commentId: Overload:Nebula.NetId.ToString
+  isExternal: true
+  href: Nebula.NetId.ToString.html#Nebula_NetId_ToString
+  name: ToString
+  nameWithType: NetId.ToString
+  fullName: Nebula.NetId.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: Nebula.NetId.Equals*
+  commentId: Overload:Nebula.NetId.Equals
+  isExternal: true
+  href: Nebula.NetId.Equals.html#Nebula_NetId_Equals_System_Object_
+  name: Equals
+  nameWithType: NetId.Equals
+  fullName: Nebula.NetId.Equals
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.IEquatable{Nebula.NetId}.Equals(Nebula.NetId)
+  commentId: M:System.IEquatable{Nebula.NetId}.Equals(Nebula.NetId)
+  parent: System.IEquatable{Nebula.NetId}
+  definition: System.IEquatable`1.Equals(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(NetId)
+  nameWithType: IEquatable<NetId>.Equals(NetId)
+  fullName: System.IEquatable<Nebula.NetId>.Equals(Nebula.NetId)
+  nameWithType.vb: IEquatable(Of NetId).Equals(NetId)
+  fullName.vb: System.IEquatable(Of Nebula.NetId).Equals(Nebula.NetId)
+  spec.csharp:
+  - uid: System.IEquatable{Nebula.NetId}.Equals(Nebula.NetId)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable{Nebula.NetId}.Equals(Nebula.NetId)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - uid: Nebula.NetId
+    name: NetId
+    isExternal: true
+    href: Nebula.NetId.html
+  - name: )
+- uid: Nebula.NetId
+  commentId: T:Nebula.NetId
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetId.html
+  name: NetId
+  nameWithType: NetId
+  fullName: Nebula.NetId
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: Nebula.NetId.GetHashCode*
+  commentId: Overload:Nebula.NetId.GetHashCode
+  isExternal: true
+  href: Nebula.NetId.GetHashCode.html#Nebula_NetId_GetHashCode
+  name: GetHashCode
+  nameWithType: NetId.GetHashCode
+  fullName: Nebula.NetId.GetHashCode
 - uid: System.Int32
   commentId: T:System.Int32
   parent: System
@@ -3114,197 +1152,209 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
-- uid: Nebula.NetId.BsonDeserialize*
-  commentId: Overload:Nebula.NetId.BsonDeserialize
+- uid: Nebula.NetId.op_Equality*
+  commentId: Overload:Nebula.NetId.op_Equality
   isExternal: true
-  href: Nebula.NetId.html#Nebula_NetId_BsonDeserialize_Godot_Variant_System_Byte___Nebula_NetId_
-  name: BsonDeserialize
-  nameWithType: NetId.BsonDeserialize
-  fullName: Nebula.NetId.BsonDeserialize
-- uid: Nebula.Serialization.IBsonSerializable{Nebula.NetId}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetId)
-  commentId: M:Nebula.Serialization.IBsonSerializable{Nebula.NetId}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetId)
-  parent: Nebula.Serialization.IBsonSerializable{Nebula.NetId}
-  definition: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-  href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
-  name: BsonDeserialize(Variant, byte[], NetId)
-  nameWithType: IBsonSerializable<NetId>.BsonDeserialize(Variant, byte[], NetId)
-  fullName: Nebula.Serialization.IBsonSerializable<Nebula.NetId>.BsonDeserialize(Godot.Variant, byte[], Nebula.NetId)
-  nameWithType.vb: IBsonSerializable(Of NetId).BsonDeserialize(Variant, Byte(), NetId)
-  fullName.vb: Nebula.Serialization.IBsonSerializable(Of Nebula.NetId).BsonDeserialize(Godot.Variant, Byte(), Nebula.NetId)
-  name.vb: BsonDeserialize(Variant, Byte(), NetId)
+  href: Nebula.NetId.op_Equality.html#Nebula_NetId_op_Equality_Nebula_NetId_Nebula_NetId_
+  name: operator ==
+  nameWithType: NetId.operator ==
+  fullName: Nebula.NetId.operator ==
+  nameWithType.vb: NetId.=
+  fullName.vb: Nebula.NetId.=
+  name.vb: =
   spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetId}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetId)
-    name: BsonDeserialize
-    isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
-  - name: (
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: ','
+  - name: operator
   - name: " "
-  - uid: System.Byte
-    name: byte
+  - uid: Nebula.NetId.op_Equality*
+    name: ==
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
-  - name: '['
-  - name: ']'
-  - name: ','
-  - name: " "
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: )
-  spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializable{Nebula.NetId}.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetId)
-    name: BsonDeserialize
-    isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
-  - name: (
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.Byte
-    name: Byte
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
-  - name: (
-  - name: )
-  - name: ','
-  - name: " "
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: )
-- uid: Godot.Variant
-  commentId: T:Godot.Variant
-  parent: Godot
+    href: Nebula.NetId.op_Equality.html#Nebula_NetId_op_Equality_Nebula_NetId_Nebula_NetId_
+- uid: Nebula.NetId.op_Inequality*
+  commentId: Overload:Nebula.NetId.op_Inequality
   isExternal: true
-  name: Variant
-  nameWithType: Variant
-  fullName: Godot.Variant
-- uid: System.Byte[]
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.byte
-  name: byte[]
-  nameWithType: byte[]
-  fullName: byte[]
-  nameWithType.vb: Byte()
-  fullName.vb: Byte()
-  name.vb: Byte()
+  href: Nebula.NetId.op_Inequality.html#Nebula_NetId_op_Inequality_Nebula_NetId_Nebula_NetId_
+  name: operator !=
+  nameWithType: NetId.operator !=
+  fullName: Nebula.NetId.operator !=
+  nameWithType.vb: NetId.<>
+  fullName.vb: Nebula.NetId.<>
+  name.vb: <>
   spec.csharp:
-  - uid: System.Byte
-    name: byte
+  - name: operator
+  - name: " "
+  - uid: Nebula.NetId.op_Inequality*
+    name: '!='
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
-  - name: '['
-  - name: ']'
-  spec.vb:
-  - uid: System.Byte
-    name: Byte
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
-  - name: (
-  - name: )
-- uid: Nebula.NetId
-  commentId: T:Nebula.NetId
+    href: Nebula.NetId.op_Inequality.html#Nebula_NetId_op_Inequality_Nebula_NetId_Nebula_NetId_
+- uid: Nebula.NetId.op_Explicit*
+  commentId: Overload:Nebula.NetId.op_Explicit
+  name: explicit operator
+  nameWithType: NetId.explicit operator
+  fullName: Nebula.NetId.explicit operator
+  nameWithType.vb: NetId.CType
+  fullName.vb: Nebula.NetId.CType
+  name.vb: CType
+  spec.csharp:
+  - name: explicit
+  - name: " "
+  - name: operator
+- uid: Nebula.NetId.NetworkSerialize*
+  commentId: Overload:Nebula.NetId.NetworkSerialize
+  isExternal: true
+  href: Nebula.NetId.NetworkSerialize.html#Nebula_NetId_NetworkSerialize_Nebula_WorldRunner_ENet_Peer_Nebula_NetId__Nebula_Serialization_NetBuffer_
+  name: NetworkSerialize
+  nameWithType: NetId.NetworkSerialize
+  fullName: Nebula.NetId.NetworkSerialize
+- uid: Nebula.WorldRunner
+  commentId: T:Nebula.WorldRunner
   parent: Nebula
   isExternal: true
-  href: Nebula.NetId.html
-  name: NetId
-  nameWithType: NetId
-  fullName: Nebula.NetId
-- uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-  commentId: M:Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
+  href: Nebula.WorldRunner.html
+  name: WorldRunner
+  nameWithType: WorldRunner
+  fullName: Nebula.WorldRunner
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
   isExternal: true
-  href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
-  name: BsonDeserialize(Variant, byte[], T)
-  nameWithType: IBsonSerializable<T>.BsonDeserialize(Variant, byte[], T)
-  fullName: Nebula.Serialization.IBsonSerializable<T>.BsonDeserialize(Godot.Variant, byte[], T)
-  nameWithType.vb: IBsonSerializable(Of T).BsonDeserialize(Variant, Byte(), T)
-  fullName.vb: Nebula.Serialization.IBsonSerializable(Of T).BsonDeserialize(Godot.Variant, Byte(), T)
-  name.vb: BsonDeserialize(Variant, Byte(), T)
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: ENet
+  commentId: N:ENet
+  isExternal: true
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
+- uid: Nebula.NetId.NetworkDeserialize*
+  commentId: Overload:Nebula.NetId.NetworkDeserialize
+  isExternal: true
+  href: Nebula.NetId.NetworkDeserialize.html#Nebula_NetId_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+  name: NetworkDeserialize
+  nameWithType: NetId.NetworkDeserialize
+  fullName: Nebula.NetId.NetworkDeserialize
+- uid: Nebula.Serialization.INetValue{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.INetValue{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  parent: Nebula.Serialization.INetValue{Nebula.NetId}
+  definition: Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  nameWithType: INetValue<NetId>.NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  fullName: Nebula.Serialization.INetValue<Nebula.NetId>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
+  nameWithType.vb: INetValue(Of NetId).NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  fullName.vb: Nebula.Serialization.INetValue(Of Nebula.NetId).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
   spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-    name: BsonDeserialize
+  - uid: Nebula.Serialization.INetValue{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+    name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+    href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: System.Byte
-    name: byte
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
-  - name: '['
-  - name: ']'
-  - name: ','
-  - name: " "
-  - name: T
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializable`1.BsonDeserialize(Godot.Variant,System.Byte[],`0)
-    name: BsonDeserialize
+  - uid: Nebula.Serialization.INetValue{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+    name: NetworkDeserialize
     isExternal: true
-    href: Nebula.Serialization.IBsonSerializable-1.html#Nebula_Serialization_IBsonSerializable_1_BsonDeserialize_Godot_Variant_System_Byte____0_
+    href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: System.Byte
-    name: Byte
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
-  - name: (
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
+- uid: Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+  isExternal: true
+  href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  nameWithType: INetValue<T>.NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  fullName: Nebula.Serialization.INetValue<T>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
+  nameWithType.vb: INetValue(Of T).NetworkDeserialize(WorldRunner, Peer, NetBuffer)
+  fullName.vb: Nebula.Serialization.INetValue(Of T).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - name: T
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetValue`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer)
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetValue-1.NetworkDeserialize.html#Nebula_Serialization_INetValue_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
 - uid: Nebula.NetId.BsonSerialize*
   commentId: Overload:Nebula.NetId.BsonSerialize
   isExternal: true
-  href: Nebula.NetId.html#Nebula_NetId_BsonSerialize_Godot_Variant_
+  href: Nebula.NetId.BsonSerialize.html#Nebula_NetId_BsonSerialize_Nebula_NetId__
   name: BsonSerialize
   nameWithType: NetId.BsonSerialize
   fullName: Nebula.NetId.BsonSerialize
-- uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-  commentId: M:Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-  parent: Nebula.Serialization.IBsonSerializableBase
-  isExternal: true
-  href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
-  name: BsonSerialize(Variant)
-  nameWithType: IBsonSerializableBase.BsonSerialize(Variant)
-  fullName: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-  spec.csharp:
-  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-    name: BsonSerialize
-    isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
-  - name: (
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
-  spec.vb:
-  - uid: Nebula.Serialization.IBsonSerializableBase.BsonSerialize(Godot.Variant)
-    name: BsonSerialize
-    isExternal: true
-    href: Nebula.Serialization.IBsonSerializableBase.html#Nebula_Serialization_IBsonSerializableBase_BsonSerialize_Godot_Variant_
-  - name: (
-  - uid: Godot.Variant
-    name: Variant
-    isExternal: true
-  - name: )
 - uid: MongoDB.Bson.BsonValue
   commentId: T:MongoDB.Bson.BsonValue
   parent: MongoDB.Bson
@@ -3334,357 +1384,91 @@ references:
   - uid: MongoDB.Bson
     name: Bson
     isExternal: true
-- uid: Nebula.NetId.NetworkSerialize*
-  commentId: Overload:Nebula.NetId.NetworkSerialize
+- uid: Nebula.NetId.BsonDeserialize*
+  commentId: Overload:Nebula.NetId.BsonDeserialize
   isExternal: true
-  href: Nebula.NetId.html#Nebula_NetId_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_NetId_
-  name: NetworkSerialize
-  nameWithType: NetId.NetworkSerialize
-  fullName: Nebula.NetId.NetworkSerialize
-- uid: Nebula.Serialization.INetSerializable{Nebula.NetId}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetId)
-  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetId}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetId)
-  parent: Nebula.Serialization.INetSerializable{Nebula.NetId}
-  definition: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
-  name: NetworkSerialize(WorldRunner, ENetPacketPeer, NetId)
-  nameWithType: INetSerializable<NetId>.NetworkSerialize(WorldRunner, ENetPacketPeer, NetId)
-  fullName: Nebula.Serialization.INetSerializable<Nebula.NetId>.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.NetId)
-  nameWithType.vb: INetSerializable(Of NetId).NetworkSerialize(WorldRunner, ENetPacketPeer, NetId)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetId).NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.NetId)
+  href: Nebula.NetId.BsonDeserialize.html#Nebula_NetId_BsonDeserialize_MongoDB_Bson_BsonValue_
+  name: BsonDeserialize
+  nameWithType: NetId.BsonDeserialize
+  fullName: Nebula.NetId.BsonDeserialize
+- uid: Nebula.Serialization.IBsonValue{Nebula.NetId}.BsonDeserialize(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.IBsonValue{Nebula.NetId}.BsonDeserialize(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.IBsonValue{Nebula.NetId}
+  definition: Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
+  href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
+  name: BsonDeserialize(BsonValue)
+  nameWithType: IBsonValue<NetId>.BsonDeserialize(BsonValue)
+  fullName: Nebula.Serialization.IBsonValue<Nebula.NetId>.BsonDeserialize(MongoDB.Bson.BsonValue)
+  nameWithType.vb: IBsonValue(Of NetId).BsonDeserialize(BsonValue)
+  fullName.vb: Nebula.Serialization.IBsonValue(Of Nebula.NetId).BsonDeserialize(MongoDB.Bson.BsonValue)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetId}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetId)
-    name: NetworkSerialize
+  - uid: Nebula.Serialization.IBsonValue{Nebula.NetId}.BsonDeserialize(MongoDB.Bson.BsonValue)
+    name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
+    href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   - name: (
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: ','
-  - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: )
-  spec.vb:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetId}.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetId)
-    name: NetworkSerialize
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
-  - name: (
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: ','
-  - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: )
-- uid: Godot.ENetPacketPeer
-  commentId: T:Godot.ENetPacketPeer
-  parent: Godot
-  isExternal: true
-  name: ENetPacketPeer
-  nameWithType: ENetPacketPeer
-  fullName: Godot.ENetPacketPeer
-- uid: Nebula.Serialization.HLBuffer
-  commentId: T:Nebula.Serialization.HLBuffer
-  parent: Nebula.Serialization
-  isExternal: true
-  href: Nebula.Serialization.HLBuffer.html
-  name: HLBuffer
-  nameWithType: HLBuffer
-  fullName: Nebula.Serialization.HLBuffer
-- uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
-  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
-  isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
-  name: NetworkSerialize(WorldRunner, ENetPacketPeer, T)
-  nameWithType: INetSerializable<T>.NetworkSerialize(WorldRunner, ENetPacketPeer, T)
-  fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, T)
-  nameWithType.vb: INetSerializable(Of T).NetworkSerialize(WorldRunner, ENetPacketPeer, T)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, T)
-  spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
-    name: NetworkSerialize
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
-  - name: (
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: ','
-  - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
-    isExternal: true
-  - name: ','
-  - name: " "
-  - name: T
-  - name: )
-  spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,`0)
-    name: NetworkSerialize
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer__0_
-  - name: (
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: ','
-  - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
-    isExternal: true
-  - name: ','
-  - name: " "
-  - name: T
-  - name: )
-- uid: Nebula.NetId.GetDeserializeContext*
-  commentId: Overload:Nebula.NetId.GetDeserializeContext
-  isExternal: true
-  href: Nebula.NetId.html#Nebula_NetId_GetDeserializeContext_Nebula_NetId_
-  name: GetDeserializeContext
-  nameWithType: NetId.GetDeserializeContext
-  fullName: Nebula.NetId.GetDeserializeContext
-- uid: Nebula.Serialization.INetSerializable{Nebula.NetId}.GetDeserializeContext(Nebula.NetId)
-  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetId}.GetDeserializeContext(Nebula.NetId)
-  parent: Nebula.Serialization.INetSerializable{Nebula.NetId}
-  definition: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  name: GetDeserializeContext(NetId)
-  nameWithType: INetSerializable<NetId>.GetDeserializeContext(NetId)
-  fullName: Nebula.Serialization.INetSerializable<Nebula.NetId>.GetDeserializeContext(Nebula.NetId)
-  nameWithType.vb: INetSerializable(Of NetId).GetDeserializeContext(NetId)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetId).GetDeserializeContext(Nebula.NetId)
-  spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetId}.GetDeserializeContext(Nebula.NetId)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: )
-  spec.vb:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetId}.GetDeserializeContext(Nebula.NetId)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - uid: Nebula.NetId
-    name: NetId
-    isExternal: true
-    href: Nebula.NetId.html
-  - name: )
-- uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-  commentId: M:Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-  isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  name: GetDeserializeContext(T)
-  nameWithType: INetSerializable<T>.GetDeserializeContext(T)
-  fullName: Nebula.Serialization.INetSerializable<T>.GetDeserializeContext(T)
-  nameWithType.vb: INetSerializable(Of T).GetDeserializeContext(T)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of T).GetDeserializeContext(T)
-  spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - name: T
-  - name: )
-  spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1.GetDeserializeContext(`0)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_GetDeserializeContext__0_
-  - name: (
-  - name: T
-  - name: )
-- uid: Nebula.NetId.NetworkDeserialize*
-  commentId: Overload:Nebula.NetId.NetworkDeserialize
-  isExternal: true
-  href: Nebula.NetId.html#Nebula_NetId_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
-  name: NetworkDeserialize
-  nameWithType: NetId.NetworkDeserialize
-  fullName: Nebula.NetId.NetworkDeserialize
-- uid: Nebula.Serialization.INetSerializable{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  commentId: M:Nebula.Serialization.INetSerializable{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  parent: Nebula.Serialization.INetSerializable{Nebula.NetId}
-  definition: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
-  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  nameWithType: INetSerializable<NetId>.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName: Nebula.Serialization.INetSerializable<Nebula.NetId>.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  nameWithType.vb: INetSerializable(Of NetId).NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.NetId).NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-    name: NetworkDeserialize
-    isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
-  - name: (
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: ','
-  - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: MongoDB.Bson.BsonValue
+    name: BsonValue
     isExternal: true
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable{Nebula.NetId}.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-    name: NetworkDeserialize
+  - uid: Nebula.Serialization.IBsonValue{Nebula.NetId}.BsonDeserialize(MongoDB.Bson.BsonValue)
+    name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   - name: (
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: ','
-  - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: MongoDB.Bson.BsonValue
+    name: BsonValue
     isExternal: true
   - name: )
-- uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+- uid: Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
   isExternal: true
-  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
-  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  nameWithType: INetSerializable<T>.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  nameWithType.vb: INetSerializable(Of T).NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
+  href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
+  name: BsonDeserialize(BsonValue)
+  nameWithType: IBsonValue<T>.BsonDeserialize(BsonValue)
+  fullName: Nebula.Serialization.IBsonValue<T>.BsonDeserialize(MongoDB.Bson.BsonValue)
+  nameWithType.vb: IBsonValue(Of T).BsonDeserialize(BsonValue)
+  fullName.vb: Nebula.Serialization.IBsonValue(Of T).BsonDeserialize(MongoDB.Bson.BsonValue)
   spec.csharp:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-    name: NetworkDeserialize
+  - uid: Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
+    name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   - name: (
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: ','
-  - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: MongoDB.Bson.BsonValue
+    name: BsonValue
     isExternal: true
   - name: )
   spec.vb:
-  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-    name: NetworkDeserialize
+  - uid: Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
+    name: BsonDeserialize
     isExternal: true
-    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
   - name: (
-  - uid: Nebula.WorldRunner
-    name: WorldRunner
-    isExternal: true
-    href: Nebula.WorldRunner.html
-  - name: ','
-  - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
-    isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
-  - name: ','
-  - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: MongoDB.Bson.BsonValue
+    name: BsonValue
     isExternal: true
   - name: )
-- uid: Nebula.NetId.Node*
-  commentId: Overload:Nebula.NetId.Node
+- uid: Nebula.NetId.IsNone*
+  commentId: Overload:Nebula.NetId.IsNone
   isExternal: true
-  href: Nebula.NetId.html#Nebula_NetId_Node
-  name: Node
-  nameWithType: NetId.Node
-  fullName: Nebula.NetId.Node
-- uid: Nebula.NetNodeWrapper
-  commentId: T:Nebula.NetNodeWrapper
-  parent: Nebula
+  href: Nebula.NetId.IsNone.html#Nebula_NetId_IsNone
+  name: IsNone
+  nameWithType: NetId.IsNone
+  fullName: Nebula.NetId.IsNone
+- uid: Nebula.NetId.IsValid*
+  commentId: Overload:Nebula.NetId.IsValid
   isExternal: true
-  href: Nebula.NetNodeWrapper.html
-  name: NetNodeWrapper
-  nameWithType: NetNodeWrapper
-  fullName: Nebula.NetNodeWrapper
-- uid: Nebula.NetId.Value*
-  commentId: Overload:Nebula.NetId.Value
+  href: Nebula.NetId.IsValid.html#Nebula_NetId_IsValid
+  name: IsValid
+  nameWithType: NetId.IsValid
+  fullName: Nebula.NetId.IsValid
+- uid: Nebula.NetId.None*
+  commentId: Overload:Nebula.NetId.None
   isExternal: true
-  href: Nebula.NetId.html#Nebula_NetId_Value
-  name: Value
-  nameWithType: NetId.Value
-  fullName: Nebula.NetId.Value
-- uid: System.Int64
-  commentId: T:System.Int64
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int64
-  name: long
-  nameWithType: long
-  fullName: long
-  nameWithType.vb: Long
-  fullName.vb: Long
-  name.vb: Long
+  href: Nebula.NetId.None.html#Nebula_NetId_None
+  name: None
+  nameWithType: NetId.None
+  fullName: Nebula.NetId.None
+memberLayout: SeparatePages

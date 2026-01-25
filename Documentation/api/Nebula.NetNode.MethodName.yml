@@ -6,14 +6,17 @@ items:
   parent: Nebula
   children:
   - Nebula.NetNode.MethodName.#ctor
-  - Nebula.NetNode.MethodName.BsonDeserialize
-  - Nebula.NetNode.MethodName.GetDeserializeContext
-  - Nebula.NetNode.MethodName.NetworkDeserialize
-  - Nebula.NetNode.MethodName.NetworkSerialize
   - Nebula.NetNode.MethodName.NodePathFromNetScene
+  - Nebula.NetNode.MethodName.ProcessInterpolation
+  - Nebula.NetNode.MethodName.Reconcile
+  - Nebula.NetNode.MethodName.RestoreToPredictedState
   - Nebula.NetNode.MethodName.SetupSerializers
+  - Nebula.NetNode.MethodName.StoreConfirmedState
+  - Nebula.NetNode.MethodName.StorePredictedState
   - Nebula.NetNode.MethodName._NetworkProcess
+  - Nebula.NetNode.MethodName._Notification
   - Nebula.NetNode.MethodName._PhysicsProcess
+  - Nebula.NetNode.MethodName._Process
   - Nebula.NetNode.MethodName._WorldReady
   langs:
   - csharp
@@ -23,7 +26,7 @@ items:
   fullName: Nebula.NetNode.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -44,7 +47,6 @@ items:
   - Godot.Node.MethodName._GetConfigurationWarnings
   - Godot.Node.MethodName._GetFocusedAccessibilityElement
   - Godot.Node.MethodName._Input
-  - Godot.Node.MethodName._Process
   - Godot.Node.MethodName._Ready
   - Godot.Node.MethodName._ShortcutInput
   - Godot.Node.MethodName._UnhandledInput
@@ -189,7 +191,6 @@ items:
   - Godot.GodotObject.MethodName._IterGet
   - Godot.GodotObject.MethodName._IterInit
   - Godot.GodotObject.MethodName._IterNext
-  - Godot.GodotObject.MethodName._Notification
   - Godot.GodotObject.MethodName._PropertyCanRevert
   - Godot.GodotObject.MethodName._PropertyGetRevert
   - Godot.GodotObject.MethodName._Set
@@ -250,6 +251,29 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
+- uid: Nebula.NetNode.MethodName._Notification
+  commentId: F:Nebula.NetNode.MethodName._Notification
+  id: _Notification
+  parent: Nebula.NetNode.MethodName
+  langs:
+  - csharp
+  - vb
+  name: _Notification
+  nameWithType: NetNode.MethodName._Notification
+  fullName: Nebula.NetNode.MethodName._Notification
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_Notification' method.
+  example: []
+  syntax:
+    content: public static readonly StringName _Notification
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _Notification As StringName
 - uid: Nebula.NetNode.MethodName.SetupSerializers
   commentId: F:Nebula.NetNode.MethodName.SetupSerializers
   id: SetupSerializers
@@ -262,7 +286,7 @@ items:
   fullName: Nebula.NetNode.MethodName.SetupSerializers
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -285,7 +309,7 @@ items:
   fullName: Nebula.NetNode.MethodName._WorldReady
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -308,7 +332,7 @@ items:
   fullName: Nebula.NetNode.MethodName._NetworkProcess
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -319,6 +343,144 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _NetworkProcess As StringName
+- uid: Nebula.NetNode.MethodName.ProcessInterpolation
+  commentId: F:Nebula.NetNode.MethodName.ProcessInterpolation
+  id: ProcessInterpolation
+  parent: Nebula.NetNode.MethodName
+  langs:
+  - csharp
+  - vb
+  name: ProcessInterpolation
+  nameWithType: NetNode.MethodName.ProcessInterpolation
+  fullName: Nebula.NetNode.MethodName.ProcessInterpolation
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'ProcessInterpolation' method.
+  example: []
+  syntax:
+    content: public static readonly StringName ProcessInterpolation
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly ProcessInterpolation As StringName
+- uid: Nebula.NetNode.MethodName.StorePredictedState
+  commentId: F:Nebula.NetNode.MethodName.StorePredictedState
+  id: StorePredictedState
+  parent: Nebula.NetNode.MethodName
+  langs:
+  - csharp
+  - vb
+  name: StorePredictedState
+  nameWithType: NetNode.MethodName.StorePredictedState
+  fullName: Nebula.NetNode.MethodName.StorePredictedState
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'StorePredictedState' method.
+  example: []
+  syntax:
+    content: public static readonly StringName StorePredictedState
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly StorePredictedState As StringName
+- uid: Nebula.NetNode.MethodName.StoreConfirmedState
+  commentId: F:Nebula.NetNode.MethodName.StoreConfirmedState
+  id: StoreConfirmedState
+  parent: Nebula.NetNode.MethodName
+  langs:
+  - csharp
+  - vb
+  name: StoreConfirmedState
+  nameWithType: NetNode.MethodName.StoreConfirmedState
+  fullName: Nebula.NetNode.MethodName.StoreConfirmedState
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'StoreConfirmedState' method.
+  example: []
+  syntax:
+    content: public static readonly StringName StoreConfirmedState
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly StoreConfirmedState As StringName
+- uid: Nebula.NetNode.MethodName.Reconcile
+  commentId: F:Nebula.NetNode.MethodName.Reconcile
+  id: Reconcile
+  parent: Nebula.NetNode.MethodName
+  langs:
+  - csharp
+  - vb
+  name: Reconcile
+  nameWithType: NetNode.MethodName.Reconcile
+  fullName: Nebula.NetNode.MethodName.Reconcile
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'Reconcile' method.
+  example: []
+  syntax:
+    content: public static readonly StringName Reconcile
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly Reconcile As StringName
+- uid: Nebula.NetNode.MethodName.RestoreToPredictedState
+  commentId: F:Nebula.NetNode.MethodName.RestoreToPredictedState
+  id: RestoreToPredictedState
+  parent: Nebula.NetNode.MethodName
+  langs:
+  - csharp
+  - vb
+  name: RestoreToPredictedState
+  nameWithType: NetNode.MethodName.RestoreToPredictedState
+  fullName: Nebula.NetNode.MethodName.RestoreToPredictedState
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the 'RestoreToPredictedState' method.
+  example: []
+  syntax:
+    content: public static readonly StringName RestoreToPredictedState
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly RestoreToPredictedState As StringName
+- uid: Nebula.NetNode.MethodName._Process
+  commentId: F:Nebula.NetNode.MethodName._Process
+  id: _Process
+  parent: Nebula.NetNode.MethodName
+  langs:
+  - csharp
+  - vb
+  name: _Process
+  nameWithType: NetNode.MethodName._Process
+  fullName: Nebula.NetNode.MethodName._Process
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Cached name for the '_Process' method.
+  example: []
+  syntax:
+    content: public static readonly StringName _Process
+    return:
+      type: Godot.StringName
+    content.vb: Public Shared ReadOnly _Process As StringName
 - uid: Nebula.NetNode.MethodName._PhysicsProcess
   commentId: F:Nebula.NetNode.MethodName._PhysicsProcess
   id: _PhysicsProcess
@@ -331,7 +493,7 @@ items:
   fullName: Nebula.NetNode.MethodName._PhysicsProcess
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -342,98 +504,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly _PhysicsProcess As StringName
-- uid: Nebula.NetNode.MethodName.NetworkSerialize
-  commentId: F:Nebula.NetNode.MethodName.NetworkSerialize
-  id: NetworkSerialize
-  parent: Nebula.NetNode.MethodName
-  langs:
-  - csharp
-  - vb
-  name: NetworkSerialize
-  nameWithType: NetNode.MethodName.NetworkSerialize
-  fullName: Nebula.NetNode.MethodName.NetworkSerialize
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'NetworkSerialize' method.
-  example: []
-  syntax:
-    content: public static readonly StringName NetworkSerialize
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly NetworkSerialize As StringName
-- uid: Nebula.NetNode.MethodName.GetDeserializeContext
-  commentId: F:Nebula.NetNode.MethodName.GetDeserializeContext
-  id: GetDeserializeContext
-  parent: Nebula.NetNode.MethodName
-  langs:
-  - csharp
-  - vb
-  name: GetDeserializeContext
-  nameWithType: NetNode.MethodName.GetDeserializeContext
-  fullName: Nebula.NetNode.MethodName.GetDeserializeContext
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'GetDeserializeContext' method.
-  example: []
-  syntax:
-    content: public static readonly StringName GetDeserializeContext
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly GetDeserializeContext As StringName
-- uid: Nebula.NetNode.MethodName.NetworkDeserialize
-  commentId: F:Nebula.NetNode.MethodName.NetworkDeserialize
-  id: NetworkDeserialize
-  parent: Nebula.NetNode.MethodName
-  langs:
-  - csharp
-  - vb
-  name: NetworkDeserialize
-  nameWithType: NetNode.MethodName.NetworkDeserialize
-  fullName: Nebula.NetNode.MethodName.NetworkDeserialize
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'NetworkDeserialize' method.
-  example: []
-  syntax:
-    content: public static readonly StringName NetworkDeserialize
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly NetworkDeserialize As StringName
-- uid: Nebula.NetNode.MethodName.BsonDeserialize
-  commentId: F:Nebula.NetNode.MethodName.BsonDeserialize
-  id: BsonDeserialize
-  parent: Nebula.NetNode.MethodName
-  langs:
-  - csharp
-  - vb
-  name: BsonDeserialize
-  nameWithType: NetNode.MethodName.BsonDeserialize
-  fullName: Nebula.NetNode.MethodName.BsonDeserialize
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'BsonDeserialize' method.
-  example: []
-  syntax:
-    content: public static readonly StringName BsonDeserialize
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly BsonDeserialize As StringName
 - uid: Nebula.NetNode.MethodName.NodePathFromNetScene
   commentId: F:Nebula.NetNode.MethodName.NodePathFromNetScene
   id: NodePathFromNetScene
@@ -446,7 +516,7 @@ items:
   fullName: Nebula.NetNode.MethodName.NodePathFromNetScene
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -469,7 +539,7 @@ items:
   fullName: Nebula.NetNode.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetNode_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -594,13 +664,6 @@ references:
   name: _Input
   nameWithType: Node.MethodName._Input
   fullName: Godot.Node.MethodName._Input
-- uid: Godot.Node.MethodName._Process
-  commentId: F:Godot.Node.MethodName._Process
-  parent: Godot.Node.MethodName
-  isExternal: true
-  name: _Process
-  nameWithType: Node.MethodName._Process
-  fullName: Godot.Node.MethodName._Process
 - uid: Godot.Node.MethodName._Ready
   commentId: F:Godot.Node.MethodName._Ready
   parent: Godot.Node.MethodName
@@ -1609,13 +1672,6 @@ references:
   name: _IterNext
   nameWithType: GodotObject.MethodName._IterNext
   fullName: Godot.GodotObject.MethodName._IterNext
-- uid: Godot.GodotObject.MethodName._Notification
-  commentId: F:Godot.GodotObject.MethodName._Notification
-  parent: Godot.GodotObject.MethodName
-  isExternal: true
-  name: _Notification
-  nameWithType: GodotObject.MethodName._Notification
-  fullName: Godot.GodotObject.MethodName._Notification
 - uid: Godot.GodotObject.MethodName._PropertyCanRevert
   commentId: F:Godot.GodotObject.MethodName._PropertyCanRevert
   parent: Godot.GodotObject.MethodName
@@ -2229,10 +2285,11 @@ references:
 - uid: Nebula.NetNode.MethodName.#ctor*
   commentId: Overload:Nebula.NetNode.MethodName.#ctor
   isExternal: true
-  href: Nebula.NetNode.MethodName.html#Nebula_NetNode_MethodName__ctor
+  href: Nebula.NetNode.MethodName.-ctor.html#Nebula_NetNode_MethodName__ctor
   name: MethodName
   nameWithType: NetNode.MethodName.MethodName
   fullName: Nebula.NetNode.MethodName.MethodName
   nameWithType.vb: NetNode.MethodName.New
   fullName.vb: Nebula.NetNode.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

@@ -23,7 +23,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -49,15 +49,15 @@ items:
   fullName: Nebula.WorldRunner.PeerState.Peer
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public ENetPacketPeer Peer
+    content: public Peer Peer
     return:
-      type: Godot.ENetPacketPeer
-    content.vb: Public Peer As ENetPacketPeer
+      type: ENet.Peer
+    content.vb: Public Peer As Peer
 - uid: Nebula.WorldRunner.PeerState.Tick
   commentId: F:Nebula.WorldRunner.PeerState.Tick
   id: Tick
@@ -70,7 +70,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.Tick
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -91,7 +91,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.Status
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -112,7 +112,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.Id
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -133,7 +133,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.Token
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -154,15 +154,15 @@ items:
   fullName: Nebula.WorldRunner.PeerState.WorldToPeerNodeMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public Dictionary<NetId, byte> WorldToPeerNodeMap
+    content: public Dictionary<NetId, ushort> WorldToPeerNodeMap
     return:
-      type: System.Collections.Generic.Dictionary{Nebula.NetId,System.Byte}
-    content.vb: Public WorldToPeerNodeMap As Dictionary(Of NetId, Byte)
+      type: System.Collections.Generic.Dictionary{Nebula.NetId,System.UInt16}
+    content.vb: Public WorldToPeerNodeMap As Dictionary(Of NetId, UShort)
 - uid: Nebula.WorldRunner.PeerState.PeerToWorldNodeMap
   commentId: F:Nebula.WorldRunner.PeerState.PeerToWorldNodeMap
   id: PeerToWorldNodeMap
@@ -175,15 +175,15 @@ items:
   fullName: Nebula.WorldRunner.PeerState.PeerToWorldNodeMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
   syntax:
-    content: public Dictionary<byte, NetId> PeerToWorldNodeMap
+    content: public Dictionary<ushort, NetId> PeerToWorldNodeMap
     return:
-      type: System.Collections.Generic.Dictionary{System.Byte,Nebula.NetId}
-    content.vb: Public PeerToWorldNodeMap As Dictionary(Of Byte, NetId)
+      type: System.Collections.Generic.Dictionary{System.UInt16,Nebula.NetId}
+    content.vb: Public PeerToWorldNodeMap As Dictionary(Of UShort, NetId)
 - uid: Nebula.WorldRunner.PeerState.SpawnAware
   commentId: F:Nebula.WorldRunner.PeerState.SpawnAware
   id: SpawnAware
@@ -196,7 +196,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.SpawnAware
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -219,17 +219,20 @@ items:
   fullName: Nebula.WorldRunner.PeerState.AvailableNodes
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: A bit list of nodeIds that are available to the peer.
+  summary: >-
+    A hierarchical bitmask of nodeIds that are in use by the peer.
+
+    8 groups of 64 nodes each (512 total).
   example: []
   syntax:
-    content: public long AvailableNodes
+    content: public long[] AvailableNodes
     return:
-      type: System.Int64
-    content.vb: Public AvailableNodes As Long
+      type: System.Int64[]
+    content.vb: Public AvailableNodes As Long()
 - uid: Nebula.WorldRunner.PeerState.OwnedNodes
   commentId: F:Nebula.WorldRunner.PeerState.OwnedNodes
   id: OwnedNodes
@@ -242,17 +245,17 @@ items:
   fullName: Nebula.WorldRunner.PeerState.OwnedNodes
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
   summary: A list of nodes that the player owns (i.e. InputAuthority == peer
   example: []
   syntax:
-    content: public HashSet<INetNode> OwnedNodes
+    content: public HashSet<NetworkController> OwnedNodes
     return:
-      type: System.Collections.Generic.HashSet{Nebula.INetNode}
-    content.vb: Public OwnedNodes As HashSet(Of INetNode)
+      type: System.Collections.Generic.HashSet{Nebula.NetworkController}
+    content.vb: Public OwnedNodes As HashSet(Of NetworkController)
 references:
 - uid: Nebula
   commentId: N:Nebula
@@ -478,19 +481,19 @@ references:
   name: System
   nameWithType: System
   fullName: System
-- uid: Godot.ENetPacketPeer
-  commentId: T:Godot.ENetPacketPeer
-  parent: Godot
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
   isExternal: true
-  name: ENetPacketPeer
-  nameWithType: ENetPacketPeer
-  fullName: Godot.ENetPacketPeer
-- uid: Godot
-  commentId: N:Godot
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: ENet
+  commentId: N:ENet
   isExternal: true
-  name: Godot
-  nameWithType: Godot
-  fullName: Godot
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
 - uid: System.Int32
   commentId: T:System.Int32
   parent: System
@@ -549,17 +552,17 @@ references:
   nameWithType.vb: String
   fullName.vb: String
   name.vb: String
-- uid: System.Collections.Generic.Dictionary{Nebula.NetId,System.Byte}
-  commentId: T:System.Collections.Generic.Dictionary{Nebula.NetId,System.Byte}
+- uid: System.Collections.Generic.Dictionary{Nebula.NetId,System.UInt16}
+  commentId: T:System.Collections.Generic.Dictionary{Nebula.NetId,System.UInt16}
   parent: System.Collections.Generic
   definition: System.Collections.Generic.Dictionary`2
   href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
-  name: Dictionary<NetId, byte>
-  nameWithType: Dictionary<NetId, byte>
-  fullName: System.Collections.Generic.Dictionary<Nebula.NetId, byte>
-  nameWithType.vb: Dictionary(Of NetId, Byte)
-  fullName.vb: System.Collections.Generic.Dictionary(Of Nebula.NetId, Byte)
-  name.vb: Dictionary(Of NetId, Byte)
+  name: Dictionary<NetId, ushort>
+  nameWithType: Dictionary<NetId, ushort>
+  fullName: System.Collections.Generic.Dictionary<Nebula.NetId, ushort>
+  nameWithType.vb: Dictionary(Of NetId, UShort)
+  fullName.vb: System.Collections.Generic.Dictionary(Of Nebula.NetId, UShort)
+  name.vb: Dictionary(Of NetId, UShort)
   spec.csharp:
   - uid: System.Collections.Generic.Dictionary`2
     name: Dictionary
@@ -572,10 +575,10 @@ references:
     href: Nebula.NetId.html
   - name: ','
   - name: " "
-  - uid: System.Byte
-    name: byte
+  - uid: System.UInt16
+    name: ushort
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
   - name: '>'
   spec.vb:
   - uid: System.Collections.Generic.Dictionary`2
@@ -591,10 +594,10 @@ references:
     href: Nebula.NetId.html
   - name: ','
   - name: " "
-  - uid: System.Byte
-    name: Byte
+  - uid: System.UInt16
+    name: UShort
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
   - name: )
 - uid: System.Collections.Generic.Dictionary`2
   commentId: T:System.Collections.Generic.Dictionary`2
@@ -667,27 +670,27 @@ references:
     name: Generic
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.collections.generic
-- uid: System.Collections.Generic.Dictionary{System.Byte,Nebula.NetId}
-  commentId: T:System.Collections.Generic.Dictionary{System.Byte,Nebula.NetId}
+- uid: System.Collections.Generic.Dictionary{System.UInt16,Nebula.NetId}
+  commentId: T:System.Collections.Generic.Dictionary{System.UInt16,Nebula.NetId}
   parent: System.Collections.Generic
   definition: System.Collections.Generic.Dictionary`2
   href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
-  name: Dictionary<byte, NetId>
-  nameWithType: Dictionary<byte, NetId>
-  fullName: System.Collections.Generic.Dictionary<byte, Nebula.NetId>
-  nameWithType.vb: Dictionary(Of Byte, NetId)
-  fullName.vb: System.Collections.Generic.Dictionary(Of Byte, Nebula.NetId)
-  name.vb: Dictionary(Of Byte, NetId)
+  name: Dictionary<ushort, NetId>
+  nameWithType: Dictionary<ushort, NetId>
+  fullName: System.Collections.Generic.Dictionary<ushort, Nebula.NetId>
+  nameWithType.vb: Dictionary(Of UShort, NetId)
+  fullName.vb: System.Collections.Generic.Dictionary(Of UShort, Nebula.NetId)
+  name.vb: Dictionary(Of UShort, NetId)
   spec.csharp:
   - uid: System.Collections.Generic.Dictionary`2
     name: Dictionary
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
   - name: <
-  - uid: System.Byte
-    name: byte
+  - uid: System.UInt16
+    name: ushort
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
   - name: ','
   - name: " "
   - uid: Nebula.NetId
@@ -703,10 +706,10 @@ references:
   - name: (
   - name: Of
   - name: " "
-  - uid: System.Byte
-    name: Byte
+  - uid: System.UInt16
+    name: UShort
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.byte
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
   - name: ','
   - name: " "
   - uid: Nebula.NetId
@@ -761,38 +764,50 @@ references:
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.boolean
   - name: )
-- uid: System.Int64
-  commentId: T:System.Int64
-  parent: System
+- uid: System.Int64[]
   isExternal: true
   href: https://learn.microsoft.com/dotnet/api/system.int64
-  name: long
-  nameWithType: long
-  fullName: long
-  nameWithType.vb: Long
-  fullName.vb: Long
-  name.vb: Long
-- uid: System.Collections.Generic.HashSet{Nebula.INetNode}
-  commentId: T:System.Collections.Generic.HashSet{Nebula.INetNode}
+  name: long[]
+  nameWithType: long[]
+  fullName: long[]
+  nameWithType.vb: Long()
+  fullName.vb: Long()
+  name.vb: Long()
+  spec.csharp:
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.HashSet{Nebula.NetworkController}
+  commentId: T:System.Collections.Generic.HashSet{Nebula.NetworkController}
   parent: System.Collections.Generic
   definition: System.Collections.Generic.HashSet`1
   href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
-  name: HashSet<INetNode>
-  nameWithType: HashSet<INetNode>
-  fullName: System.Collections.Generic.HashSet<Nebula.INetNode>
-  nameWithType.vb: HashSet(Of INetNode)
-  fullName.vb: System.Collections.Generic.HashSet(Of Nebula.INetNode)
-  name.vb: HashSet(Of INetNode)
+  name: HashSet<NetworkController>
+  nameWithType: HashSet<NetworkController>
+  fullName: System.Collections.Generic.HashSet<Nebula.NetworkController>
+  nameWithType.vb: HashSet(Of NetworkController)
+  fullName.vb: System.Collections.Generic.HashSet(Of Nebula.NetworkController)
+  name.vb: HashSet(Of NetworkController)
   spec.csharp:
   - uid: System.Collections.Generic.HashSet`1
     name: HashSet
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
   - name: <
-  - uid: Nebula.INetNode
-    name: INetNode
+  - uid: Nebula.NetworkController
+    name: NetworkController
     isExternal: true
-    href: Nebula.INetNode.html
+    href: Nebula.NetworkController.html
   - name: '>'
   spec.vb:
   - uid: System.Collections.Generic.HashSet`1
@@ -802,10 +817,10 @@ references:
   - name: (
   - name: Of
   - name: " "
-  - uid: Nebula.INetNode
-    name: INetNode
+  - uid: Nebula.NetworkController
+    name: NetworkController
     isExternal: true
-    href: Nebula.INetNode.html
+    href: Nebula.NetworkController.html
   - name: )
 - uid: System.Collections.Generic.HashSet`1
   commentId: T:System.Collections.Generic.HashSet`1
@@ -835,3 +850,4 @@ references:
   - name: " "
   - name: T
   - name: )
+memberLayout: SeparatePages

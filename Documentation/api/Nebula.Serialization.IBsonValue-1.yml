@@ -1,0 +1,174 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.IBsonValue`1
+  commentId: T:Nebula.Serialization.IBsonValue`1
+  id: IBsonValue`1
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
+  - Nebula.Serialization.IBsonValue`1.BsonSerialize(`0@)
+  langs:
+  - csharp
+  - vb
+  name: IBsonValue<T>
+  nameWithType: IBsonValue<T>
+  fullName: Nebula.Serialization.IBsonValue<T>
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Interface for value types (structs) that can be serialized to/from BSON.
+
+    Uses static-only methods to avoid boxing. No async to avoid Task allocation.
+  example: []
+  syntax:
+    content: 'public interface IBsonValue<T> where T : struct'
+    typeParameters:
+    - id: T
+      description: The struct type being serialized
+    content.vb: Public Interface IBsonValue(Of T As Structure)
+  nameWithType.vb: IBsonValue(Of T)
+  fullName.vb: Nebula.Serialization.IBsonValue(Of T)
+  name.vb: IBsonValue(Of T)
+- uid: Nebula.Serialization.IBsonValue`1.BsonSerialize(`0@)
+  commentId: M:Nebula.Serialization.IBsonValue`1.BsonSerialize(`0@)
+  id: BsonSerialize(`0@)
+  parent: Nebula.Serialization.IBsonValue`1
+  langs:
+  - csharp
+  - vb
+  name: BsonSerialize(in T)
+  nameWithType: IBsonValue<T>.BsonSerialize(in T)
+  fullName: Nebula.Serialization.IBsonValue<T>.BsonSerialize(in T)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Serialize the value to a BSON value.
+  example: []
+  syntax:
+    content: public static abstract BsonValue BsonSerialize(in T value)
+    parameters:
+    - id: value
+      type: '{T}'
+    return:
+      type: MongoDB.Bson.BsonValue
+    content.vb: Public Shared MustInherit Function BsonSerialize(value As T) As BsonValue
+  overload: Nebula.Serialization.IBsonValue`1.BsonSerialize*
+  nameWithType.vb: IBsonValue(Of T).BsonSerialize(T)
+  fullName.vb: Nebula.Serialization.IBsonValue(Of T).BsonSerialize(T)
+  name.vb: BsonSerialize(T)
+- uid: Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
+  commentId: M:Nebula.Serialization.IBsonValue`1.BsonDeserialize(MongoDB.Bson.BsonValue)
+  id: BsonDeserialize(MongoDB.Bson.BsonValue)
+  parent: Nebula.Serialization.IBsonValue`1
+  langs:
+  - csharp
+  - vb
+  name: BsonDeserialize(BsonValue)
+  nameWithType: IBsonValue<T>.BsonDeserialize(BsonValue)
+  fullName: Nebula.Serialization.IBsonValue<T>.BsonDeserialize(MongoDB.Bson.BsonValue)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Deserialize a value from BSON.
+  example: []
+  syntax:
+    content: public static abstract T BsonDeserialize(BsonValue bson)
+    parameters:
+    - id: bson
+      type: MongoDB.Bson.BsonValue
+    return:
+      type: '{T}'
+    content.vb: Public Shared MustInherit Function BsonDeserialize(bson As BsonValue) As T
+  overload: Nebula.Serialization.IBsonValue`1.BsonDeserialize*
+  nameWithType.vb: IBsonValue(Of T).BsonDeserialize(BsonValue)
+  fullName.vb: Nebula.Serialization.IBsonValue(Of T).BsonDeserialize(MongoDB.Bson.BsonValue)
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.IBsonValue`1.BsonSerialize*
+  commentId: Overload:Nebula.Serialization.IBsonValue`1.BsonSerialize
+  isExternal: true
+  href: Nebula.Serialization.IBsonValue-1.BsonSerialize.html#Nebula_Serialization_IBsonValue_1_BsonSerialize__0__
+  name: BsonSerialize
+  nameWithType: IBsonValue<T>.BsonSerialize
+  fullName: Nebula.Serialization.IBsonValue<T>.BsonSerialize
+  nameWithType.vb: IBsonValue(Of T).BsonSerialize
+  fullName.vb: Nebula.Serialization.IBsonValue(Of T).BsonSerialize
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: MongoDB.Bson.BsonValue
+  commentId: T:MongoDB.Bson.BsonValue
+  parent: MongoDB.Bson
+  isExternal: true
+  name: BsonValue
+  nameWithType: BsonValue
+  fullName: MongoDB.Bson.BsonValue
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: MongoDB.Bson
+  commentId: N:MongoDB.Bson
+  isExternal: true
+  name: MongoDB.Bson
+  nameWithType: MongoDB.Bson
+  fullName: MongoDB.Bson
+  spec.csharp:
+  - uid: MongoDB
+    name: MongoDB
+    isExternal: true
+  - name: .
+  - uid: MongoDB.Bson
+    name: Bson
+    isExternal: true
+  spec.vb:
+  - uid: MongoDB
+    name: MongoDB
+    isExternal: true
+  - name: .
+  - uid: MongoDB.Bson
+    name: Bson
+    isExternal: true
+- uid: Nebula.Serialization.IBsonValue`1.BsonDeserialize*
+  commentId: Overload:Nebula.Serialization.IBsonValue`1.BsonDeserialize
+  isExternal: true
+  href: Nebula.Serialization.IBsonValue-1.BsonDeserialize.html#Nebula_Serialization_IBsonValue_1_BsonDeserialize_MongoDB_Bson_BsonValue_
+  name: BsonDeserialize
+  nameWithType: IBsonValue<T>.BsonDeserialize
+  fullName: Nebula.Serialization.IBsonValue<T>.BsonDeserialize
+  nameWithType.vb: IBsonValue(Of T).BsonDeserialize
+  fullName.vb: Nebula.Serialization.IBsonValue(Of T).BsonDeserialize
+memberLayout: SeparatePages

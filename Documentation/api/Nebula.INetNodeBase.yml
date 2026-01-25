@@ -1,0 +1,636 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.INetNodeBase
+  commentId: T:Nebula.INetNodeBase
+  id: INetNodeBase
+  parent: Nebula
+  children:
+  - Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  - Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
+  - Nebula.INetNodeBase.Network
+  - Nebula.INetNodeBase.ProcessInterpolation(System.Single)
+  - Nebula.INetNodeBase.Reconcile(System.Int32,System.Boolean)
+  - Nebula.INetNodeBase.RestoreToPredictedState(System.Int32)
+  - Nebula.INetNodeBase.Serializers
+  - Nebula.INetNodeBase.SetNetPropertyByIndex(System.Int32,Nebula.PropertyCache@)
+  - Nebula.INetNodeBase.SetupSerializers
+  - Nebula.INetNodeBase.StoreConfirmedState
+  - Nebula.INetNodeBase.StorePredictedState(System.Int32)
+  - Nebula.INetNodeBase._NetworkProcess(System.Int32)
+  - Nebula.INetNodeBase._WorldReady
+  langs:
+  - csharp
+  - vb
+  name: INetNodeBase
+  nameWithType: INetNodeBase
+  fullName: Nebula.INetNodeBase
+  type: Interface
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    This provides a common interface for NetNode, NetNode2D, and NetNode3D.
+
+    This is necessary because they don't share an inheritance chain.
+
+    For example, NetNode2D inherits from Node2D, while NetNode ineherits from Node.
+
+    NetNode2D cannot inherit from NetNode because it needs Node2D functionality and C# does not support multiple inheritance.
+  example: []
+  syntax:
+    content: public interface INetNodeBase
+    content.vb: Public Interface INetNodeBase
+- uid: Nebula.INetNodeBase.SetupSerializers
+  commentId: M:Nebula.INetNodeBase.SetupSerializers
+  id: SetupSerializers
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: SetupSerializers()
+  nameWithType: INetNodeBase.SetupSerializers()
+  fullName: Nebula.INetNodeBase.SetupSerializers()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: void SetupSerializers()
+    content.vb: Sub SetupSerializers()
+  overload: Nebula.INetNodeBase.SetupSerializers*
+- uid: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  commentId: M:Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  id: InitializeInterest(ENet.Peer)
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: InitializeInterest(Peer)
+  nameWithType: INetNodeBase.InitializeInterest(Peer)
+  fullName: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: When the node is first spawned, and when players first connect to the world, this method is called to determine the initial interest layers for the node.
+  example: []
+  syntax:
+    content: long InitializeInterest(Peer peer)
+    parameters:
+    - id: peer
+      type: ENet.Peer
+    return:
+      type: System.Int64
+      description: The initial interest layers for the node.
+    content.vb: Function InitializeInterest(peer As Peer) As Long
+  overload: Nebula.INetNodeBase.InitializeInterest*
+- uid: Nebula.INetNodeBase._WorldReady
+  commentId: M:Nebula.INetNodeBase._WorldReady
+  id: _WorldReady
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: _WorldReady()
+  nameWithType: INetNodeBase._WorldReady()
+  fullName: Nebula.INetNodeBase._WorldReady()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Called once when the world is ready for this node.
+  example: []
+  syntax:
+    content: void _WorldReady()
+    content.vb: Sub _WorldReady()
+  overload: Nebula.INetNodeBase._WorldReady*
+- uid: Nebula.INetNodeBase._NetworkProcess(System.Int32)
+  commentId: M:Nebula.INetNodeBase._NetworkProcess(System.Int32)
+  id: _NetworkProcess(System.Int32)
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: _NetworkProcess(int)
+  nameWithType: INetNodeBase._NetworkProcess(int)
+  fullName: Nebula.INetNodeBase._NetworkProcess(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Called each network tick. Override to handle per-tick game logic.
+  example: []
+  syntax:
+    content: void _NetworkProcess(int tick)
+    parameters:
+    - id: tick
+      type: System.Int32
+      description: The current network tick
+    content.vb: Sub _NetworkProcess(tick As Integer)
+  overload: Nebula.INetNodeBase._NetworkProcess*
+  nameWithType.vb: INetNodeBase._NetworkProcess(Integer)
+  fullName.vb: Nebula.INetNodeBase._NetworkProcess(Integer)
+  name.vb: _NetworkProcess(Integer)
+- uid: Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
+  commentId: M:Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
+  id: InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: InvokePropertyChangeHandler(int, int, ref PropertyCache, ref PropertyCache)
+  nameWithType: INetNodeBase.InvokePropertyChangeHandler(int, int, ref PropertyCache, ref PropertyCache)
+  fullName: Nebula.INetNodeBase.InvokePropertyChangeHandler(int, int, ref Nebula.PropertyCache, ref Nebula.PropertyCache)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Invokes the property change handler for the given property index.
+
+    This method is generated by the source generator for classes with [NetProperty(NotifyOnChange = true)].
+
+    Default implementation does nothing - override is generated when properties have NotifyOnChange = true.
+  example: []
+  syntax:
+    content: void InvokePropertyChangeHandler(int propIndex, int tick, ref PropertyCache oldVal, ref PropertyCache newVal)
+    parameters:
+    - id: propIndex
+      type: System.Int32
+      description: The index of the property (from GetNetPropertyIndex)
+    - id: tick
+      type: System.Int32
+      description: The network tick when the change occurred
+    - id: oldVal
+      type: Nebula.PropertyCache
+      description: The previous value stored in a PropertyCache
+    - id: newVal
+      type: Nebula.PropertyCache
+      description: The new value stored in a PropertyCache
+    content.vb: Sub InvokePropertyChangeHandler(propIndex As Integer, tick As Integer, oldVal As PropertyCache, newVal As PropertyCache)
+  overload: Nebula.INetNodeBase.InvokePropertyChangeHandler*
+  nameWithType.vb: INetNodeBase.InvokePropertyChangeHandler(Integer, Integer, PropertyCache, PropertyCache)
+  fullName.vb: Nebula.INetNodeBase.InvokePropertyChangeHandler(Integer, Integer, Nebula.PropertyCache, Nebula.PropertyCache)
+  name.vb: InvokePropertyChangeHandler(Integer, Integer, PropertyCache, PropertyCache)
+- uid: Nebula.INetNodeBase.SetNetPropertyByIndex(System.Int32,Nebula.PropertyCache@)
+  commentId: M:Nebula.INetNodeBase.SetNetPropertyByIndex(System.Int32,Nebula.PropertyCache@)
+  id: SetNetPropertyByIndex(System.Int32,Nebula.PropertyCache@)
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: SetNetPropertyByIndex(int, ref PropertyCache)
+  nameWithType: INetNodeBase.SetNetPropertyByIndex(int, ref PropertyCache)
+  fullName: Nebula.INetNodeBase.SetNetPropertyByIndex(int, ref Nebula.PropertyCache)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Sets a network property by its index using the value from a PropertyCache.
+
+    This method is generated by the source generator to avoid Godot boundary crossing.
+
+    Default implementation does nothing - override is generated for all net properties.
+  example: []
+  syntax:
+    content: void SetNetPropertyByIndex(int propIndex, ref PropertyCache value)
+    parameters:
+    - id: propIndex
+      type: System.Int32
+      description: The index of the property
+    - id: value
+      type: Nebula.PropertyCache
+      description: The new value stored in a PropertyCache
+    content.vb: Sub SetNetPropertyByIndex(propIndex As Integer, value As PropertyCache)
+  overload: Nebula.INetNodeBase.SetNetPropertyByIndex*
+  nameWithType.vb: INetNodeBase.SetNetPropertyByIndex(Integer, PropertyCache)
+  fullName.vb: Nebula.INetNodeBase.SetNetPropertyByIndex(Integer, Nebula.PropertyCache)
+  name.vb: SetNetPropertyByIndex(Integer, PropertyCache)
+- uid: Nebula.INetNodeBase.ProcessInterpolation(System.Single)
+  commentId: M:Nebula.INetNodeBase.ProcessInterpolation(System.Single)
+  id: ProcessInterpolation(System.Single)
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: ProcessInterpolation(float)
+  nameWithType: INetNodeBase.ProcessInterpolation(float)
+  fullName: Nebula.INetNodeBase.ProcessInterpolation(float)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Processes interpolation for all interpolated properties.
+
+    Called each frame by the serializer on clients.
+
+    This method is generated by the source generator for classes with [NetProperty(Interpolate = true)].
+  example: []
+  syntax:
+    content: void ProcessInterpolation(float delta)
+    parameters:
+    - id: delta
+      type: System.Single
+      description: Frame delta time in seconds
+    content.vb: Sub ProcessInterpolation(delta As Single)
+  overload: Nebula.INetNodeBase.ProcessInterpolation*
+  nameWithType.vb: INetNodeBase.ProcessInterpolation(Single)
+  fullName.vb: Nebula.INetNodeBase.ProcessInterpolation(Single)
+  name.vb: ProcessInterpolation(Single)
+- uid: Nebula.INetNodeBase.StorePredictedState(System.Int32)
+  commentId: M:Nebula.INetNodeBase.StorePredictedState(System.Int32)
+  id: StorePredictedState(System.Int32)
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: StorePredictedState(int)
+  nameWithType: INetNodeBase.StorePredictedState(int)
+  fullName: Nebula.INetNodeBase.StorePredictedState(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Stores current predicted state for rollback comparison.
+
+    Generated implementation stores each [NetProperty(Predicted=true)] property
+
+    in a circular buffer indexed by tick.
+  example: []
+  syntax:
+    content: void StorePredictedState(int tick)
+    parameters:
+    - id: tick
+      type: System.Int32
+      description: The tick to associate with this predicted state
+    content.vb: Sub StorePredictedState(tick As Integer)
+  overload: Nebula.INetNodeBase.StorePredictedState*
+  nameWithType.vb: INetNodeBase.StorePredictedState(Integer)
+  fullName.vb: Nebula.INetNodeBase.StorePredictedState(Integer)
+  name.vb: StorePredictedState(Integer)
+- uid: Nebula.INetNodeBase.StoreConfirmedState
+  commentId: M:Nebula.INetNodeBase.StoreConfirmedState
+  id: StoreConfirmedState
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: StoreConfirmedState()
+  nameWithType: INetNodeBase.StoreConfirmedState()
+  fullName: Nebula.INetNodeBase.StoreConfirmedState()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Stores confirmed server state for reconciliation.
+
+    Called when authoritative server state is received.
+  example: []
+  syntax:
+    content: void StoreConfirmedState()
+    content.vb: Sub StoreConfirmedState()
+  overload: Nebula.INetNodeBase.StoreConfirmedState*
+- uid: Nebula.INetNodeBase.Reconcile(System.Int32,System.Boolean)
+  commentId: M:Nebula.INetNodeBase.Reconcile(System.Int32,System.Boolean)
+  id: Reconcile(System.Int32,System.Boolean)
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: Reconcile(int, bool)
+  nameWithType: INetNodeBase.Reconcile(int, bool)
+  fullName: Nebula.INetNodeBase.Reconcile(int, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Compares predicted state with confirmed server state and restores mispredicted properties.
+
+    Combines comparison and selective restoration in a single call.
+
+    If forceRestoreAll is true, skips comparison and restores all properties to confirmed state.
+  example: []
+  syntax:
+    content: bool Reconcile(int tick, bool forceRestoreAll = false)
+    parameters:
+    - id: tick
+      type: System.Int32
+      description: The tick whose predicted state to compare
+    - id: forceRestoreAll
+      type: System.Boolean
+      description: If true, restores all properties without comparing
+    return:
+      type: System.Boolean
+      description: True if any misprediction was detected (rollback needed), false if all predictions correct
+    content.vb: Function Reconcile(tick As Integer, forceRestoreAll As Boolean = False) As Boolean
+  overload: Nebula.INetNodeBase.Reconcile*
+  nameWithType.vb: INetNodeBase.Reconcile(Integer, Boolean)
+  fullName.vb: Nebula.INetNodeBase.Reconcile(Integer, Boolean)
+  name.vb: Reconcile(Integer, Boolean)
+- uid: Nebula.INetNodeBase.RestoreToPredictedState(System.Int32)
+  commentId: M:Nebula.INetNodeBase.RestoreToPredictedState(System.Int32)
+  id: RestoreToPredictedState(System.Int32)
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: RestoreToPredictedState(int)
+  nameWithType: INetNodeBase.RestoreToPredictedState(int)
+  fullName: Nebula.INetNodeBase.RestoreToPredictedState(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Restores properties from the prediction buffer for a given tick.
+
+    Used when prediction was correct and we need to continue with predicted values after server state import.
+  example: []
+  syntax:
+    content: void RestoreToPredictedState(int tick)
+    parameters:
+    - id: tick
+      type: System.Int32
+    content.vb: Sub RestoreToPredictedState(tick As Integer)
+  overload: Nebula.INetNodeBase.RestoreToPredictedState*
+  nameWithType.vb: INetNodeBase.RestoreToPredictedState(Integer)
+  fullName.vb: Nebula.INetNodeBase.RestoreToPredictedState(Integer)
+  name.vb: RestoreToPredictedState(Integer)
+- uid: Nebula.INetNodeBase.Network
+  commentId: P:Nebula.INetNodeBase.Network
+  id: Network
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: Network
+  nameWithType: INetNodeBase.Network
+  fullName: Nebula.INetNodeBase.Network
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: NetworkController Network { get; }
+    parameters: []
+    return:
+      type: Nebula.NetworkController
+    content.vb: ReadOnly Property Network As NetworkController
+  overload: Nebula.INetNodeBase.Network*
+- uid: Nebula.INetNodeBase.Serializers
+  commentId: P:Nebula.INetNodeBase.Serializers
+  id: Serializers
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: Serializers
+  nameWithType: INetNodeBase.Serializers
+  fullName: Nebula.INetNodeBase.Serializers
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  syntax:
+    content: IStateSerializer[] Serializers { get; }
+    parameters: []
+    return:
+      type: Nebula.Serialization.Serializers.IStateSerializer[]
+    content.vb: ReadOnly Property Serializers As IStateSerializer()
+  overload: Nebula.INetNodeBase.Serializers*
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.INetNodeBase.SetupSerializers*
+  commentId: Overload:Nebula.INetNodeBase.SetupSerializers
+  isExternal: true
+  href: Nebula.INetNodeBase.SetupSerializers.html#Nebula_INetNodeBase_SetupSerializers
+  name: SetupSerializers
+  nameWithType: INetNodeBase.SetupSerializers
+  fullName: Nebula.INetNodeBase.SetupSerializers
+- uid: Nebula.INetNodeBase.InitializeInterest*
+  commentId: Overload:Nebula.INetNodeBase.InitializeInterest
+  isExternal: true
+  href: Nebula.INetNodeBase.InitializeInterest.html#Nebula_INetNodeBase_InitializeInterest_ENet_Peer_
+  name: InitializeInterest
+  nameWithType: INetNodeBase.InitializeInterest
+  fullName: Nebula.INetNodeBase.InitializeInterest
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
+  isExternal: true
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: ENet
+  commentId: N:ENet
+  isExternal: true
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.INetNodeBase._WorldReady*
+  commentId: Overload:Nebula.INetNodeBase._WorldReady
+  isExternal: true
+  href: Nebula.INetNodeBase._WorldReady.html#Nebula_INetNodeBase__WorldReady
+  name: _WorldReady
+  nameWithType: INetNodeBase._WorldReady
+  fullName: Nebula.INetNodeBase._WorldReady
+- uid: Nebula.INetNodeBase._NetworkProcess*
+  commentId: Overload:Nebula.INetNodeBase._NetworkProcess
+  isExternal: true
+  href: Nebula.INetNodeBase._NetworkProcess.html#Nebula_INetNodeBase__NetworkProcess_System_Int32_
+  name: _NetworkProcess
+  nameWithType: INetNodeBase._NetworkProcess
+  fullName: Nebula.INetNodeBase._NetworkProcess
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.INetNodeBase.InvokePropertyChangeHandler*
+  commentId: Overload:Nebula.INetNodeBase.InvokePropertyChangeHandler
+  isExternal: true
+  href: Nebula.INetNodeBase.InvokePropertyChangeHandler.html#Nebula_INetNodeBase_InvokePropertyChangeHandler_System_Int32_System_Int32_Nebula_PropertyCache__Nebula_PropertyCache__
+  name: InvokePropertyChangeHandler
+  nameWithType: INetNodeBase.InvokePropertyChangeHandler
+  fullName: Nebula.INetNodeBase.InvokePropertyChangeHandler
+- uid: Nebula.PropertyCache
+  commentId: T:Nebula.PropertyCache
+  parent: Nebula
+  isExternal: true
+  href: Nebula.PropertyCache.html
+  name: PropertyCache
+  nameWithType: PropertyCache
+  fullName: Nebula.PropertyCache
+- uid: Nebula.INetNodeBase.SetNetPropertyByIndex*
+  commentId: Overload:Nebula.INetNodeBase.SetNetPropertyByIndex
+  isExternal: true
+  href: Nebula.INetNodeBase.SetNetPropertyByIndex.html#Nebula_INetNodeBase_SetNetPropertyByIndex_System_Int32_Nebula_PropertyCache__
+  name: SetNetPropertyByIndex
+  nameWithType: INetNodeBase.SetNetPropertyByIndex
+  fullName: Nebula.INetNodeBase.SetNetPropertyByIndex
+- uid: Nebula.INetNodeBase.ProcessInterpolation*
+  commentId: Overload:Nebula.INetNodeBase.ProcessInterpolation
+  isExternal: true
+  href: Nebula.INetNodeBase.ProcessInterpolation.html#Nebula_INetNodeBase_ProcessInterpolation_System_Single_
+  name: ProcessInterpolation
+  nameWithType: INetNodeBase.ProcessInterpolation
+  fullName: Nebula.INetNodeBase.ProcessInterpolation
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: Nebula.INetNodeBase.StorePredictedState*
+  commentId: Overload:Nebula.INetNodeBase.StorePredictedState
+  isExternal: true
+  href: Nebula.INetNodeBase.StorePredictedState.html#Nebula_INetNodeBase_StorePredictedState_System_Int32_
+  name: StorePredictedState
+  nameWithType: INetNodeBase.StorePredictedState
+  fullName: Nebula.INetNodeBase.StorePredictedState
+- uid: Nebula.INetNodeBase.StoreConfirmedState*
+  commentId: Overload:Nebula.INetNodeBase.StoreConfirmedState
+  isExternal: true
+  href: Nebula.INetNodeBase.StoreConfirmedState.html#Nebula_INetNodeBase_StoreConfirmedState
+  name: StoreConfirmedState
+  nameWithType: INetNodeBase.StoreConfirmedState
+  fullName: Nebula.INetNodeBase.StoreConfirmedState
+- uid: Nebula.INetNodeBase.Reconcile*
+  commentId: Overload:Nebula.INetNodeBase.Reconcile
+  isExternal: true
+  href: Nebula.INetNodeBase.Reconcile.html#Nebula_INetNodeBase_Reconcile_System_Int32_System_Boolean_
+  name: Reconcile
+  nameWithType: INetNodeBase.Reconcile
+  fullName: Nebula.INetNodeBase.Reconcile
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.INetNodeBase.RestoreToPredictedState*
+  commentId: Overload:Nebula.INetNodeBase.RestoreToPredictedState
+  isExternal: true
+  href: Nebula.INetNodeBase.RestoreToPredictedState.html#Nebula_INetNodeBase_RestoreToPredictedState_System_Int32_
+  name: RestoreToPredictedState
+  nameWithType: INetNodeBase.RestoreToPredictedState
+  fullName: Nebula.INetNodeBase.RestoreToPredictedState
+- uid: Nebula.INetNodeBase.Network*
+  commentId: Overload:Nebula.INetNodeBase.Network
+  isExternal: true
+  href: Nebula.INetNodeBase.Network.html#Nebula_INetNodeBase_Network
+  name: Network
+  nameWithType: INetNodeBase.Network
+  fullName: Nebula.INetNodeBase.Network
+- uid: Nebula.NetworkController
+  commentId: T:Nebula.NetworkController
+  parent: Nebula
+  isExternal: true
+  href: Nebula.NetworkController.html
+  name: NetworkController
+  nameWithType: NetworkController
+  fullName: Nebula.NetworkController
+- uid: Nebula.INetNodeBase.Serializers*
+  commentId: Overload:Nebula.INetNodeBase.Serializers
+  isExternal: true
+  href: Nebula.INetNodeBase.Serializers.html#Nebula_INetNodeBase_Serializers
+  name: Serializers
+  nameWithType: INetNodeBase.Serializers
+  fullName: Nebula.INetNodeBase.Serializers
+- uid: Nebula.Serialization.Serializers.IStateSerializer[]
+  isExternal: true
+  href: Nebula.Serialization.Serializers.IStateSerializer.html
+  name: IStateSerializer[]
+  nameWithType: IStateSerializer[]
+  fullName: Nebula.Serialization.Serializers.IStateSerializer[]
+  nameWithType.vb: IStateSerializer()
+  fullName.vb: Nebula.Serialization.Serializers.IStateSerializer()
+  name.vb: IStateSerializer()
+  spec.csharp:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer
+    name: IStateSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: Nebula.Serialization.Serializers.IStateSerializer
+    name: IStateSerializer
+    isExternal: true
+    href: Nebula.Serialization.Serializers.IStateSerializer.html
+  - name: (
+  - name: )
+memberLayout: SeparatePages

@@ -16,10 +16,6 @@ items:
   - Nebula.Utility.Nodes.NetworkVisibility.MethodName
   - Nebula.Utility.Nodes.NetworkVisibility.PropertyName
   - Nebula.Utility.Nodes.NetworkVisibility.SignalName
-  - Nebula.Utility.Nodes.QuantizedNetTransform3D
-  - Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
-  - Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
-  - Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
   - Nebula.Utility.Nodes.TickTimer
   langs:
   - csharp
@@ -207,94 +203,6 @@ references:
     name: SignalName
     isExternal: true
     href: Nebula.Utility.Nodes.NetTransform3D.SignalName.html
-- uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
-  commentId: T:Nebula.Utility.Nodes.QuantizedNetTransform3D
-  isExternal: true
-  href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
-  name: QuantizedNetTransform3D
-  nameWithType: QuantizedNetTransform3D
-  fullName: Nebula.Utility.Nodes.QuantizedNetTransform3D
-- uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
-  commentId: T:Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
-  isExternal: true
-  href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
-  name: QuantizedNetTransform3D.MethodName
-  nameWithType: QuantizedNetTransform3D.MethodName
-  fullName: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
-  spec.csharp:
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
-    name: QuantizedNetTransform3D
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
-  - name: .
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName.html
-  spec.vb:
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
-    name: QuantizedNetTransform3D
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
-  - name: .
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
-    name: MethodName
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName.html
-- uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
-  commentId: T:Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
-  isExternal: true
-  href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
-  name: QuantizedNetTransform3D.PropertyName
-  nameWithType: QuantizedNetTransform3D.PropertyName
-  fullName: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
-  spec.csharp:
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
-    name: QuantizedNetTransform3D
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
-  - name: .
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName.html
-  spec.vb:
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
-    name: QuantizedNetTransform3D
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
-  - name: .
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
-    name: PropertyName
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName.html
-- uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
-  commentId: T:Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
-  isExternal: true
-  href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
-  name: QuantizedNetTransform3D.SignalName
-  nameWithType: QuantizedNetTransform3D.SignalName
-  fullName: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
-  spec.csharp:
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
-    name: QuantizedNetTransform3D
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
-  - name: .
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName.html
-  spec.vb:
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
-    name: QuantizedNetTransform3D
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.html
-  - name: .
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
-    name: SignalName
-    isExternal: true
-    href: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName.html
 - uid: Nebula.Utility.Nodes.NetworkVisibility
   commentId: T:Nebula.Utility.Nodes.NetworkVisibility
   isExternal: true
@@ -428,3 +336,4 @@ references:
     name: Nodes
     isExternal: true
     href: Nebula.Utility.Nodes.html
+memberLayout: SeparatePages

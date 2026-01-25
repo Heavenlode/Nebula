@@ -12,7 +12,6 @@ items:
   - Nebula.Internal.Editor.WorldDebug.PropertyName.disconnected
   - Nebula.Internal.Editor.WorldDebug.PropertyName.greatestStateSize
   - Nebula.Internal.Editor.WorldDebug.PropertyName.port
-  - Nebula.Internal.Editor.WorldDebug.PropertyName.worldId
   - Nebula.Internal.Editor.WorldDebug.PropertyName.worldIdLabel
   langs:
   - csharp
@@ -22,7 +21,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.PropertyName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -139,7 +138,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.PropertyName.IsLive
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -162,7 +161,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.PropertyName.worldIdLabel
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -185,7 +184,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.PropertyName.debugConnection
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -208,7 +207,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.PropertyName.port
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -231,7 +230,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.PropertyName.SelectedTickFrameId
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -254,7 +253,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.PropertyName.greatestStateSize
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -265,29 +264,6 @@ items:
     return:
       type: Godot.StringName
     content.vb: Public Shared ReadOnly greatestStateSize As StringName
-- uid: Nebula.Internal.Editor.WorldDebug.PropertyName.worldId
-  commentId: F:Nebula.Internal.Editor.WorldDebug.PropertyName.worldId
-  id: worldId
-  parent: Nebula.Internal.Editor.WorldDebug.PropertyName
-  langs:
-  - csharp
-  - vb
-  name: worldId
-  nameWithType: WorldDebug.PropertyName.worldId
-  fullName: Nebula.Internal.Editor.WorldDebug.PropertyName.worldId
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Internal.Editor
-  summary: Cached name for the 'worldId' field.
-  example: []
-  syntax:
-    content: public static readonly StringName worldId
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly worldId As StringName
 - uid: Nebula.Internal.Editor.WorldDebug.PropertyName.disconnected
   commentId: F:Nebula.Internal.Editor.WorldDebug.PropertyName.disconnected
   id: disconnected
@@ -300,7 +276,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.PropertyName.disconnected
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -323,7 +299,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.PropertyName.PropertyName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -1307,10 +1283,11 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug.PropertyName.#ctor*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.PropertyName.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.PropertyName.html#Nebula_Internal_Editor_WorldDebug_PropertyName__ctor
+  href: Nebula.Internal.Editor.WorldDebug.PropertyName.-ctor.html#Nebula_Internal_Editor_WorldDebug_PropertyName__ctor
   name: PropertyName
   nameWithType: WorldDebug.PropertyName.PropertyName
   fullName: Nebula.Internal.Editor.WorldDebug.PropertyName.PropertyName
   nameWithType.vb: WorldDebug.PropertyName.New
   fullName.vb: Nebula.Internal.Editor.WorldDebug.PropertyName.New
   name.vb: New
+memberLayout: SeparatePages

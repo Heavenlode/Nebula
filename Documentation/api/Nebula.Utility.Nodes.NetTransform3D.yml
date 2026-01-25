@@ -7,18 +7,30 @@ items:
   children:
   - Nebula.Utility.Nodes.NetTransform3D.#ctor
   - Nebula.Utility.Nodes.NetTransform3D.Face(Godot.Vector3)
+  - Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex(System.String)
   - Nebula.Utility.Nodes.NetTransform3D.GetParent3D
+  - Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler(System.Int32)
+  - Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition(System.Single,Godot.Vector3,Godot.Vector3)
+  - Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation(System.Single,Godot.Quaternion,Godot.Quaternion)
   - Nebula.Utility.Nodes.NetTransform3D.IsTeleporting
+  - Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerIsTeleporting
+  - Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerNetPosition
+  - Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerNetRotation
   - Nebula.Utility.Nodes.NetTransform3D.NetPosition
+  - Nebula.Utility.Nodes.NetTransform3D.NetPositionPredictionTolerance
   - Nebula.Utility.Nodes.NetTransform3D.NetRotation
-  - Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetPosition(Godot.Variant,Godot.Variant,System.Double)
-  - Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetRotation(Godot.Variant,Godot.Variant,System.Double)
-  - Nebula.Utility.Nodes.NetTransform3D.OnNetworkChangeIsTeleporting(System.Int32,System.Boolean,System.Boolean)
+  - Nebula.Utility.Nodes.NetTransform3D.NetRotationPredictionTolerance
+  - Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged(System.Boolean,System.Boolean)
+  - Nebula.Utility.Nodes.NetTransform3D.OnNetPositionChanged(Godot.Vector3,Godot.Vector3)
+  - Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged(Godot.Quaternion,Godot.Quaternion)
+  - Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName(System.String,System.Object)
   - Nebula.Utility.Nodes.NetTransform3D.SourceNode
   - Nebula.Utility.Nodes.NetTransform3D.TargetNode
   - Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3)
+  - Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3,Godot.Quaternion)
+  - Nebula.Utility.Nodes.NetTransform3D.VisualInterpolateSpeed
   - Nebula.Utility.Nodes.NetTransform3D._NetworkProcess(System.Int32)
-  - Nebula.Utility.Nodes.NetTransform3D._PhysicsProcess(System.Double)
+  - Nebula.Utility.Nodes.NetTransform3D._Process(System.Double)
   - Nebula.Utility.Nodes.NetTransform3D._WorldReady
   langs:
   - csharp
@@ -28,23 +40,32 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Nodes.NetTransform3D_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
+  summary: >-
+    Synchronizes a Node3D's transform over the network with support for:
+
+    - Server authoritative state
+
+    - Client-side prediction for owned entities
+
+    - Smooth visual interpolation for ALL clients (owned and non-owned)
+  example: []
   syntax:
     content: >-
       [GlobalClass]
 
       [ScriptPath("res://addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs")]
 
-      public class NetTransform3D : NetNode3D, IDisposable, INetNode, INotifyPropertyChanged, INetSerializable<NetNode3D>, IBsonSerializable<NetNode3D>, IBsonSerializableBase
+      public class NetTransform3D : NetNode3D, IDisposable, INetNode<NetNode3D>, INetNodeBase, INetSerializable<NetNode3D>, IBsonSerializable<NetNode3D>, IBsonSerializableBase, INotifyPropertyChanged
     content.vb: >-
       <GlobalClass>
 
       <ScriptPath("res://addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs")>
 
-      Public Class NetTransform3D Inherits NetNode3D Implements IDisposable, INetNode, INotifyPropertyChanged, INetSerializable(Of NetNode3D), IBsonSerializable(Of NetNode3D), IBsonSerializableBase
+      Public Class NetTransform3D Inherits NetNode3D Implements IDisposable, INetNode(Of NetNode3D), INetNodeBase, INetSerializable(Of NetNode3D), IBsonSerializable(Of NetNode3D), IBsonSerializableBase, INotifyPropertyChanged
   inheritance:
   - System.Object
   - Godot.GodotObject
@@ -53,22 +74,26 @@ items:
   - Nebula.NetNode3D
   implements:
   - System.IDisposable
-  - Nebula.INetNode
-  - System.ComponentModel.INotifyPropertyChanged
+  - Nebula.INetNode{Nebula.NetNode3D}
+  - Nebula.INetNodeBase
   - Nebula.Serialization.INetSerializable{Nebula.NetNode3D}
   - Nebula.Serialization.IBsonSerializable{Nebula.NetNode3D}
   - Nebula.Serialization.IBsonSerializableBase
+  - System.ComponentModel.INotifyPropertyChanged
   inheritedMembers:
+  - Nebula.NetNode3D._Notification(System.Int32)
+  - Nebula.NetNode3D.InitializeInterest(ENet.Peer)
   - Nebula.NetNode3D.SetupSerializers
-  - Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode3D)
-  - Nebula.NetNode3D.GetDeserializeContext(Nebula.NetNode3D)
-  - Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  - Nebula.NetNode3D.BsonSerialize(Godot.Variant)
-  - Nebula.NetNode3D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode3D)
+  - Nebula.NetNode3D._PhysicsProcess(System.Double)
+  - Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode3D,Nebula.Serialization.NetBuffer)
+  - Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode3D)
+  - Nebula.NetNode3D.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  - Nebula.NetNode3D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  - Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  - Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode3D)
   - Nebula.NetNode3D.NodePathFromNetScene
   - Nebula.NetNode3D.OnPropertyChanged(System.String)
   - Nebula.NetNode3D.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)
-  - Nebula.NetNode3D.Node
   - Nebula.NetNode3D.Network
   - Nebula.NetNode3D.Serializers
   - Nebula.NetNode3D.PropertyChanged
@@ -197,7 +222,6 @@ items:
   - Godot.Node._GetConfigurationWarnings
   - Godot.Node._GetFocusedAccessibilityElement
   - Godot.Node._Input(Godot.InputEvent)
-  - Godot.Node._Process(System.Double)
   - Godot.Node._Ready
   - Godot.Node._ShortcutInput(Godot.InputEvent)
   - Godot.Node._UnhandledInput(Godot.InputEvent)
@@ -357,7 +381,6 @@ items:
   - Godot.GodotObject._IterGet(Godot.Variant)
   - Godot.GodotObject._IterInit(Godot.Collections.Array)
   - Godot.GodotObject._IterNext(Godot.Collections.Array)
-  - Godot.GodotObject._Notification(System.Int32)
   - Godot.GodotObject._PropertyCanRevert(Godot.StringName)
   - Godot.GodotObject._PropertyGetRevert(Godot.StringName)
   - Godot.GodotObject._Set(Godot.StringName,Godot.Variant)
@@ -434,36 +457,6 @@ items:
     arguments:
     - type: System.String
       value: res://addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
-- uid: Nebula.Utility.Nodes.NetTransform3D.OnNetworkChangeIsTeleporting(System.Int32,System.Boolean,System.Boolean)
-  commentId: M:Nebula.Utility.Nodes.NetTransform3D.OnNetworkChangeIsTeleporting(System.Int32,System.Boolean,System.Boolean)
-  id: OnNetworkChangeIsTeleporting(System.Int32,System.Boolean,System.Boolean)
-  parent: Nebula.Utility.Nodes.NetTransform3D
-  langs:
-  - csharp
-  - vb
-  name: OnNetworkChangeIsTeleporting(int, bool, bool)
-  nameWithType: NetTransform3D.OnNetworkChangeIsTeleporting(int, bool, bool)
-  fullName: Nebula.Utility.Nodes.NetTransform3D.OnNetworkChangeIsTeleporting(int, bool, bool)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Utility.Nodes
-  syntax:
-    content: public void OnNetworkChangeIsTeleporting(int tick, bool from, bool to)
-    parameters:
-    - id: tick
-      type: System.Int32
-    - id: from
-      type: System.Boolean
-    - id: to
-      type: System.Boolean
-    content.vb: Public Sub OnNetworkChangeIsTeleporting(tick As Integer, from As Boolean, [to] As Boolean)
-  overload: Nebula.Utility.Nodes.NetTransform3D.OnNetworkChangeIsTeleporting*
-  nameWithType.vb: NetTransform3D.OnNetworkChangeIsTeleporting(Integer, Boolean, Boolean)
-  fullName.vb: Nebula.Utility.Nodes.NetTransform3D.OnNetworkChangeIsTeleporting(Integer, Boolean, Boolean)
-  name.vb: OnNetworkChangeIsTeleporting(Integer, Boolean, Boolean)
 - uid: Nebula.Utility.Nodes.NetTransform3D._WorldReady
   commentId: M:Nebula.Utility.Nodes.NetTransform3D._WorldReady
   id: _WorldReady
@@ -476,10 +469,11 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D._WorldReady()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
+  summary: Called once when the world is ready for this node.
   example: []
   syntax:
     content: public override void _WorldReady()
@@ -498,7 +492,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.GetParent3D()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -520,7 +514,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.Face(Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -543,114 +537,52 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D._NetworkProcess(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
+  summary: Called each network tick. Override to handle per-tick game logic.
   example: []
   syntax:
     content: public override void _NetworkProcess(int tick)
     parameters:
     - id: tick
       type: System.Int32
+      description: The current network tick
     content.vb: Public Overrides Sub _NetworkProcess(tick As Integer)
   overridden: Nebula.NetNode3D._NetworkProcess(System.Int32)
   overload: Nebula.Utility.Nodes.NetTransform3D._NetworkProcess*
   nameWithType.vb: NetTransform3D._NetworkProcess(Integer)
   fullName.vb: Nebula.Utility.Nodes.NetTransform3D._NetworkProcess(Integer)
   name.vb: _NetworkProcess(Integer)
-- uid: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetPosition(Godot.Variant,Godot.Variant,System.Double)
-  commentId: M:Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetPosition(Godot.Variant,Godot.Variant,System.Double)
-  id: NetworkLerpNetPosition(Godot.Variant,Godot.Variant,System.Double)
+- uid: Nebula.Utility.Nodes.NetTransform3D._Process(System.Double)
+  commentId: M:Nebula.Utility.Nodes.NetTransform3D._Process(System.Double)
+  id: _Process(System.Double)
   parent: Nebula.Utility.Nodes.NetTransform3D
   langs:
   - csharp
   - vb
-  name: NetworkLerpNetPosition(Variant, Variant, double)
-  nameWithType: NetTransform3D.NetworkLerpNetPosition(Variant, Variant, double)
-  fullName: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetPosition(Godot.Variant, Godot.Variant, double)
+  name: _Process(double)
+  nameWithType: NetTransform3D._Process(double)
+  fullName: Nebula.Utility.Nodes.NetTransform3D._Process(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Utility.Nodes
-  syntax:
-    content: public double NetworkLerpNetPosition(Variant from, Variant to, double weight)
-    parameters:
-    - id: from
-      type: Godot.Variant
-    - id: to
-      type: Godot.Variant
-    - id: weight
-      type: System.Double
-    return:
-      type: System.Double
-    content.vb: Public Function NetworkLerpNetPosition(from As [Variant], [to] As [Variant], weight As Double) As Double
-  overload: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetPosition*
-  nameWithType.vb: NetTransform3D.NetworkLerpNetPosition(Variant, Variant, Double)
-  fullName.vb: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetPosition(Godot.Variant, Godot.Variant, Double)
-  name.vb: NetworkLerpNetPosition(Variant, Variant, Double)
-- uid: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetRotation(Godot.Variant,Godot.Variant,System.Double)
-  commentId: M:Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetRotation(Godot.Variant,Godot.Variant,System.Double)
-  id: NetworkLerpNetRotation(Godot.Variant,Godot.Variant,System.Double)
-  parent: Nebula.Utility.Nodes.NetTransform3D
-  langs:
-  - csharp
-  - vb
-  name: NetworkLerpNetRotation(Variant, Variant, double)
-  nameWithType: NetTransform3D.NetworkLerpNetRotation(Variant, Variant, double)
-  fullName: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetRotation(Godot.Variant, Godot.Variant, double)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Utility.Nodes
-  syntax:
-    content: public double NetworkLerpNetRotation(Variant from, Variant to, double weight)
-    parameters:
-    - id: from
-      type: Godot.Variant
-    - id: to
-      type: Godot.Variant
-    - id: weight
-      type: System.Double
-    return:
-      type: System.Double
-    content.vb: Public Function NetworkLerpNetRotation(from As [Variant], [to] As [Variant], weight As Double) As Double
-  overload: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetRotation*
-  nameWithType.vb: NetTransform3D.NetworkLerpNetRotation(Variant, Variant, Double)
-  fullName.vb: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetRotation(Godot.Variant, Godot.Variant, Double)
-  name.vb: NetworkLerpNetRotation(Variant, Variant, Double)
-- uid: Nebula.Utility.Nodes.NetTransform3D._PhysicsProcess(System.Double)
-  commentId: M:Nebula.Utility.Nodes.NetTransform3D._PhysicsProcess(System.Double)
-  id: _PhysicsProcess(System.Double)
-  parent: Nebula.Utility.Nodes.NetTransform3D
-  langs:
-  - csharp
-  - vb
-  name: _PhysicsProcess(double)
-  nameWithType: NetTransform3D._PhysicsProcess(double)
-  fullName: Nebula.Utility.Nodes.NetTransform3D._PhysicsProcess(double)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
   example: []
   syntax:
-    content: public override void _PhysicsProcess(double delta)
+    content: public override void _Process(double delta)
     parameters:
     - id: delta
       type: System.Double
-    content.vb: Public Overrides Sub _PhysicsProcess(delta As Double)
-  overridden: Nebula.NetNode3D._PhysicsProcess(System.Double)
-  overload: Nebula.Utility.Nodes.NetTransform3D._PhysicsProcess*
-  nameWithType.vb: NetTransform3D._PhysicsProcess(Double)
-  fullName.vb: Nebula.Utility.Nodes.NetTransform3D._PhysicsProcess(Double)
-  name.vb: _PhysicsProcess(Double)
+    content.vb: Public Overrides Sub _Process(delta As Double)
+  overridden: Nebula.NetNode3D._Process(System.Double)
+  overload: Nebula.Utility.Nodes.NetTransform3D._Process*
+  nameWithType.vb: NetTransform3D._Process(Double)
+  fullName.vb: Nebula.Utility.Nodes.NetTransform3D._Process(Double)
+  name.vb: _Process(Double)
 - uid: Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3)
   commentId: M:Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3)
   id: Teleport(Godot.Vector3)
@@ -663,10 +595,12 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
+  summary: Teleports to a position, skipping interpolation.
+  example: []
   syntax:
     content: public void Teleport(Vector3 incoming_position)
     parameters:
@@ -674,6 +608,285 @@ items:
       type: Godot.Vector3
     content.vb: Public Sub Teleport(incoming_position As Vector3)
   overload: Nebula.Utility.Nodes.NetTransform3D.Teleport*
+- uid: Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3,Godot.Quaternion)
+  commentId: M:Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3,Godot.Quaternion)
+  id: Teleport(Godot.Vector3,Godot.Quaternion)
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: Teleport(Vector3, Quaternion)
+  nameWithType: NetTransform3D.Teleport(Vector3, Quaternion)
+  fullName: Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3, Godot.Quaternion)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Teleports to a position and rotation, skipping interpolation.
+  example: []
+  syntax:
+    content: public void Teleport(Vector3 incoming_position, Quaternion incoming_rotation)
+    parameters:
+    - id: incoming_position
+      type: Godot.Vector3
+    - id: incoming_rotation
+      type: Godot.Quaternion
+    content.vb: Public Sub Teleport(incoming_position As Vector3, incoming_rotation As Quaternion)
+  overload: Nebula.Utility.Nodes.NetTransform3D.Teleport*
+- uid: Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged(System.Boolean,System.Boolean)
+  commentId: M:Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged(System.Boolean,System.Boolean)
+  id: OnIsTeleportingChanged(System.Boolean,System.Boolean)
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: OnIsTeleportingChanged(bool, bool)
+  nameWithType: NetTransform3D.OnIsTeleportingChanged(bool, bool)
+  fullName: Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged(bool, bool)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  syntax:
+    content: public void OnIsTeleportingChanged(bool oldVal, bool newVal)
+    parameters:
+    - id: oldVal
+      type: System.Boolean
+    - id: newVal
+      type: System.Boolean
+    content.vb: Public Sub OnIsTeleportingChanged(oldVal As Boolean, newVal As Boolean)
+  overload: Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged*
+  nameWithType.vb: NetTransform3D.OnIsTeleportingChanged(Boolean, Boolean)
+  fullName.vb: Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged(Boolean, Boolean)
+  name.vb: OnIsTeleportingChanged(Boolean, Boolean)
+- uid: Nebula.Utility.Nodes.NetTransform3D.OnNetPositionChanged(Godot.Vector3,Godot.Vector3)
+  commentId: M:Nebula.Utility.Nodes.NetTransform3D.OnNetPositionChanged(Godot.Vector3,Godot.Vector3)
+  id: OnNetPositionChanged(Godot.Vector3,Godot.Vector3)
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: OnNetPositionChanged(Vector3, Vector3)
+  nameWithType: NetTransform3D.OnNetPositionChanged(Vector3, Vector3)
+  fullName: Nebula.Utility.Nodes.NetTransform3D.OnNetPositionChanged(Godot.Vector3, Godot.Vector3)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  syntax:
+    content: public void OnNetPositionChanged(Vector3 oldVal, Vector3 newVal)
+    parameters:
+    - id: oldVal
+      type: Godot.Vector3
+    - id: newVal
+      type: Godot.Vector3
+    content.vb: Public Sub OnNetPositionChanged(oldVal As Vector3, newVal As Vector3)
+  overload: Nebula.Utility.Nodes.NetTransform3D.OnNetPositionChanged*
+- uid: Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged(Godot.Quaternion,Godot.Quaternion)
+  commentId: M:Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged(Godot.Quaternion,Godot.Quaternion)
+  id: OnNetRotationChanged(Godot.Quaternion,Godot.Quaternion)
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: OnNetRotationChanged(Quaternion, Quaternion)
+  nameWithType: NetTransform3D.OnNetRotationChanged(Quaternion, Quaternion)
+  fullName: Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged(Godot.Quaternion, Godot.Quaternion)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  syntax:
+    content: public void OnNetRotationChanged(Quaternion oldVal, Quaternion newVal)
+    parameters:
+    - id: oldVal
+      type: Godot.Quaternion
+    - id: newVal
+      type: Godot.Quaternion
+    content.vb: Public Sub OnNetRotationChanged(oldVal As Quaternion, newVal As Quaternion)
+  overload: Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged*
+- uid: Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex(System.String)
+  commentId: M:Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex(System.String)
+  id: GetNetPropertyIndex(System.String)
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: GetNetPropertyIndex(string)
+  nameWithType: NetTransform3D.GetNetPropertyIndex(string)
+  fullName: Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex(string)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Gets the property index for the given property name, or -1 if not found.
+  example: []
+  syntax:
+    content: public static int GetNetPropertyIndex(string propertyName)
+    parameters:
+    - id: propertyName
+      type: System.String
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function GetNetPropertyIndex(propertyName As String) As Integer
+  overload: Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex*
+  nameWithType.vb: NetTransform3D.GetNetPropertyIndex(String)
+  fullName.vb: Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex(String)
+  name.vb: GetNetPropertyIndex(String)
+- uid: Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler(System.Int32)
+  commentId: M:Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler(System.Int32)
+  id: HasPropertyChangeHandler(System.Int32)
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: HasPropertyChangeHandler(int)
+  nameWithType: NetTransform3D.HasPropertyChangeHandler(int)
+  fullName: Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Returns true if the property at the given index has a change handler.
+  example: []
+  syntax:
+    content: public static bool HasPropertyChangeHandler(int propIndex)
+    parameters:
+    - id: propIndex
+      type: System.Int32
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function HasPropertyChangeHandler(propIndex As Integer) As Boolean
+  overload: Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler*
+  nameWithType.vb: NetTransform3D.HasPropertyChangeHandler(Integer)
+  fullName.vb: Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler(Integer)
+  name.vb: HasPropertyChangeHandler(Integer)
+- uid: Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName(System.String,System.Object)
+  commentId: M:Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName(System.String,System.Object)
+  id: SetBsonPropertyByName(System.String,System.Object)
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: SetBsonPropertyByName(string, object)
+  nameWithType: NetTransform3D.SetBsonPropertyByName(string, object)
+  fullName: Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName(string, object)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Sets a BSON-serializable property by name. This class has no BSON-serializable properties.
+  example: []
+  syntax:
+    content: public bool SetBsonPropertyByName(string propName, object value)
+    parameters:
+    - id: propName
+      type: System.String
+    - id: value
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Function SetBsonPropertyByName(propName As String, value As Object) As Boolean
+  overload: Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName*
+  nameWithType.vb: NetTransform3D.SetBsonPropertyByName(String, Object)
+  fullName.vb: Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName(String, Object)
+  name.vb: SetBsonPropertyByName(String, Object)
+- uid: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition(System.Single,Godot.Vector3,Godot.Vector3)
+  commentId: M:Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition(System.Single,Godot.Vector3,Godot.Vector3)
+  id: InterpolateNetPosition(System.Single,Godot.Vector3,Godot.Vector3)
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: InterpolateNetPosition(float, Vector3, Vector3)
+  nameWithType: NetTransform3D.InterpolateNetPosition(float, Vector3, Vector3)
+  fullName: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition(float, Godot.Vector3, Godot.Vector3)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: >-
+    Interpolates NetPosition toward the network target value.
+
+    Override to customize interpolation behavior.
+  example: []
+  syntax:
+    content: protected virtual Vector3 InterpolateNetPosition(float delta, Vector3 current, Vector3 target)
+    parameters:
+    - id: delta
+      type: System.Single
+      description: Frame delta time in seconds
+    - id: current
+      type: Godot.Vector3
+      description: Current property value
+    - id: target
+      type: Godot.Vector3
+      description: Target value from network
+    return:
+      type: Godot.Vector3
+      description: The interpolated value to set
+    content.vb: Protected Overridable Function InterpolateNetPosition(delta As Single, current As Vector3, target As Vector3) As Vector3
+  overload: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition*
+  nameWithType.vb: NetTransform3D.InterpolateNetPosition(Single, Vector3, Vector3)
+  fullName.vb: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition(Single, Godot.Vector3, Godot.Vector3)
+  name.vb: InterpolateNetPosition(Single, Vector3, Vector3)
+- uid: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation(System.Single,Godot.Quaternion,Godot.Quaternion)
+  commentId: M:Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation(System.Single,Godot.Quaternion,Godot.Quaternion)
+  id: InterpolateNetRotation(System.Single,Godot.Quaternion,Godot.Quaternion)
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: InterpolateNetRotation(float, Quaternion, Quaternion)
+  nameWithType: NetTransform3D.InterpolateNetRotation(float, Quaternion, Quaternion)
+  fullName: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation(float, Godot.Quaternion, Godot.Quaternion)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: >-
+    Interpolates NetRotation toward the network target value.
+
+    Override to customize interpolation behavior.
+  example: []
+  syntax:
+    content: protected virtual Quaternion InterpolateNetRotation(float delta, Quaternion current, Quaternion target)
+    parameters:
+    - id: delta
+      type: System.Single
+      description: Frame delta time in seconds
+    - id: current
+      type: Godot.Quaternion
+      description: Current property value
+    - id: target
+      type: Godot.Quaternion
+      description: Target value from network
+    return:
+      type: Godot.Quaternion
+      description: The interpolated value to set
+    content.vb: Protected Overridable Function InterpolateNetRotation(delta As Single, current As Quaternion, target As Quaternion) As Quaternion
+  overload: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation*
+  nameWithType.vb: NetTransform3D.InterpolateNetRotation(Single, Quaternion, Quaternion)
+  fullName.vb: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation(Single, Godot.Quaternion, Godot.Quaternion)
+  name.vb: InterpolateNetRotation(Single, Quaternion, Quaternion)
 - uid: Nebula.Utility.Nodes.NetTransform3D.#ctor
   commentId: M:Nebula.Utility.Nodes.NetTransform3D.#ctor
   id: '#ctor'
@@ -686,7 +899,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetTransform3D()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -709,10 +922,15 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.SourceNode
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
+  summary: >-
+    The physics/simulation node to read authoritative transform from.
+
+    This node runs at tick rate. Defaults to parent if not set.
+  example: []
   syntax:
     content: >-
       [Export(PropertyHint.None, "")]
@@ -746,10 +964,19 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.TargetNode
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
+  summary: >-
+    The visual node to write interpolated transform to.
+
+    If null, defaults to SourceNode (legacy behavior).
+
+    For owned clients, this interpolates toward SourceNode at frame rate.
+
+    For non-owned clients, this interpolates toward NetPosition/NetRotation.
+  example: []
   syntax:
     content: >-
       [Export(PropertyHint.None, "")]
@@ -771,6 +998,48 @@ items:
       value: "0"
     - type: System.String
       value: ''
+- uid: Nebula.Utility.Nodes.NetTransform3D.VisualInterpolateSpeed
+  commentId: P:Nebula.Utility.Nodes.NetTransform3D.VisualInterpolateSpeed
+  id: VisualInterpolateSpeed
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: VisualInterpolateSpeed
+  nameWithType: NetTransform3D.VisualInterpolateSpeed
+  fullName: Nebula.Utility.Nodes.NetTransform3D.VisualInterpolateSpeed
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: >-
+    How fast the TargetNode interpolates toward the source transform.
+
+    Higher values = faster/tighter follow, lower = smoother but more lag.
+  example: []
+  syntax:
+    content: >-
+      [Export(PropertyHint.None, "")]
+
+      public float VisualInterpolateSpeed { get; set; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <Export(PropertyHint.None, "")>
+
+      Public Property VisualInterpolateSpeed As Single
+  overload: Nebula.Utility.Nodes.NetTransform3D.VisualInterpolateSpeed*
+  attributes:
+  - type: Godot.ExportAttribute
+    ctor: Godot.ExportAttribute.#ctor(Godot.PropertyHint,System.String)
+    arguments:
+    - type: Godot.PropertyHint
+      value: "0"
+    - type: System.String
+      value: ''
 - uid: Nebula.Utility.Nodes.NetTransform3D.IsTeleporting
   commentId: P:Nebula.Utility.Nodes.NetTransform3D.IsTeleporting
   id: IsTeleporting
@@ -783,20 +1052,20 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.IsTeleporting
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
   syntax:
     content: >-
-      [NetProperty]
+      [NetProperty(NotifyOnChange = true)]
 
       public bool IsTeleporting { get; set; }
     parameters: []
     return:
       type: System.Boolean
     content.vb: >-
-      <NetProperty>
+      <NetProperty(NotifyOnChange:=True)>
 
       Public Property IsTeleporting As Boolean
   overload: Nebula.Utility.Nodes.NetTransform3D.IsTeleporting*
@@ -804,6 +1073,10 @@ items:
   - type: Nebula.NetProperty
     ctor: Nebula.NetProperty.#ctor
     arguments: []
+    namedArguments:
+    - name: NotifyOnChange
+      type: System.Boolean
+      value: true
 - uid: Nebula.Utility.Nodes.NetTransform3D.NetPosition
   commentId: P:Nebula.Utility.Nodes.NetTransform3D.NetPosition
   id: NetPosition
@@ -816,20 +1089,22 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetPosition
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
+  summary: Networked position with interpolation for non-owned and prediction for owned entities.
+  example: []
   syntax:
     content: >-
-      [NetProperty]
+      [NetProperty(Interpolate = true, InterpolateSpeed = 10, Predicted = true, NotifyOnChange = true)]
 
       public Vector3 NetPosition { get; set; }
     parameters: []
     return:
       type: Godot.Vector3
     content.vb: >-
-      <NetProperty>
+      <NetProperty(Interpolate:=True, InterpolateSpeed:=10, Predicted:=True, NotifyOnChange:=True)>
 
       Public Property NetPosition As Vector3
   overload: Nebula.Utility.Nodes.NetTransform3D.NetPosition*
@@ -837,6 +1112,61 @@ items:
   - type: Nebula.NetProperty
     ctor: Nebula.NetProperty.#ctor
     arguments: []
+    namedArguments:
+    - name: Interpolate
+      type: System.Boolean
+      value: true
+    - name: InterpolateSpeed
+      type: System.Single
+      value: 10
+    - name: Predicted
+      type: System.Boolean
+      value: true
+    - name: NotifyOnChange
+      type: System.Boolean
+      value: true
+- uid: Nebula.Utility.Nodes.NetTransform3D.NetPositionPredictionTolerance
+  commentId: P:Nebula.Utility.Nodes.NetTransform3D.NetPositionPredictionTolerance
+  id: NetPositionPredictionTolerance
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: NetPositionPredictionTolerance
+  nameWithType: NetTransform3D.NetPositionPredictionTolerance
+  fullName: Nebula.Utility.Nodes.NetTransform3D.NetPositionPredictionTolerance
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: >-
+    Tolerance for position misprediction detection.
+
+    Set this from parent nodes that use NetTransform3D via composition.
+  example: []
+  syntax:
+    content: >-
+      [Export(PropertyHint.None, "")]
+
+      public float NetPositionPredictionTolerance { get; set; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <Export(PropertyHint.None, "")>
+
+      Public Property NetPositionPredictionTolerance As Single
+  overload: Nebula.Utility.Nodes.NetTransform3D.NetPositionPredictionTolerance*
+  attributes:
+  - type: Godot.ExportAttribute
+    ctor: Godot.ExportAttribute.#ctor(Godot.PropertyHint,System.String)
+    arguments:
+    - type: Godot.PropertyHint
+      value: "0"
+    - type: System.String
+      value: ''
 - uid: Nebula.Utility.Nodes.NetTransform3D.NetRotation
   commentId: P:Nebula.Utility.Nodes.NetTransform3D.NetRotation
   id: NetRotation
@@ -849,27 +1179,147 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetRotation
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
+  summary: Networked rotation with interpolation for non-owned and prediction for owned entities.
+  example: []
   syntax:
     content: >-
-      [NetProperty]
+      [NetProperty(Interpolate = true, InterpolateSpeed = 15, Predicted = true, NotifyOnChange = true)]
 
-      public Vector3 NetRotation { get; set; }
+      public Quaternion NetRotation { get; set; }
     parameters: []
     return:
-      type: Godot.Vector3
+      type: Godot.Quaternion
     content.vb: >-
-      <NetProperty>
+      <NetProperty(Interpolate:=True, InterpolateSpeed:=15, Predicted:=True, NotifyOnChange:=True)>
 
-      Public Property NetRotation As Vector3
+      Public Property NetRotation As Quaternion
   overload: Nebula.Utility.Nodes.NetTransform3D.NetRotation*
   attributes:
   - type: Nebula.NetProperty
     ctor: Nebula.NetProperty.#ctor
     arguments: []
+    namedArguments:
+    - name: Interpolate
+      type: System.Boolean
+      value: true
+    - name: InterpolateSpeed
+      type: System.Single
+      value: 15
+    - name: Predicted
+      type: System.Boolean
+      value: true
+    - name: NotifyOnChange
+      type: System.Boolean
+      value: true
+- uid: Nebula.Utility.Nodes.NetTransform3D.NetRotationPredictionTolerance
+  commentId: P:Nebula.Utility.Nodes.NetTransform3D.NetRotationPredictionTolerance
+  id: NetRotationPredictionTolerance
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: NetRotationPredictionTolerance
+  nameWithType: NetTransform3D.NetRotationPredictionTolerance
+  fullName: Nebula.Utility.Nodes.NetTransform3D.NetRotationPredictionTolerance
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Core/Nodes/NetTransform/NetTransform3D.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: >-
+    Tolerance for rotation misprediction detection.
+
+    Set this from parent nodes that use NetTransform3D via composition.
+  example: []
+  syntax:
+    content: >-
+      [Export(PropertyHint.None, "")]
+
+      public float NetRotationPredictionTolerance { get; set; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <Export(PropertyHint.None, "")>
+
+      Public Property NetRotationPredictionTolerance As Single
+  overload: Nebula.Utility.Nodes.NetTransform3D.NetRotationPredictionTolerance*
+  attributes:
+  - type: Godot.ExportAttribute
+    ctor: Godot.ExportAttribute.#ctor(Godot.PropertyHint,System.String)
+    arguments:
+    - type: Godot.PropertyHint
+      value: "0"
+    - type: System.String
+      value: ''
+- uid: Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerIsTeleporting
+  commentId: E:Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerIsTeleporting
+  id: NetChangeListenerIsTeleporting
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: NetChangeListenerIsTeleporting
+  nameWithType: NetTransform3D.NetChangeListenerIsTeleporting
+  fullName: Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerIsTeleporting
+  type: Event
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  syntax:
+    content: public event Action<int, bool, bool> NetChangeListenerIsTeleporting
+    return:
+      type: System.Action{System.Int32,System.Boolean,System.Boolean}
+    content.vb: Public Event NetChangeListenerIsTeleporting As Action(Of Integer, Boolean, Boolean)
+- uid: Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerNetPosition
+  commentId: E:Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerNetPosition
+  id: NetChangeListenerNetPosition
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: NetChangeListenerNetPosition
+  nameWithType: NetTransform3D.NetChangeListenerNetPosition
+  fullName: Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerNetPosition
+  type: Event
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  syntax:
+    content: public event Action<int, Vector3, Vector3> NetChangeListenerNetPosition
+    return:
+      type: System.Action{System.Int32,Godot.Vector3,Godot.Vector3}
+    content.vb: Public Event NetChangeListenerNetPosition As Action(Of Integer, Vector3, Vector3)
+- uid: Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerNetRotation
+  commentId: E:Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerNetRotation
+  id: NetChangeListenerNetRotation
+  parent: Nebula.Utility.Nodes.NetTransform3D
+  langs:
+  - csharp
+  - vb
+  name: NetChangeListenerNetRotation
+  nameWithType: NetTransform3D.NetChangeListenerNetRotation
+  fullName: Nebula.Utility.Nodes.NetTransform3D.NetChangeListenerNetRotation
+  type: Event
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform3D.NetProperties.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  syntax:
+    content: public event Action<int, Quaternion, Quaternion> NetChangeListenerNetRotation
+    return:
+      type: System.Action{System.Int32,Godot.Quaternion,Godot.Quaternion}
+    content.vb: Public Event NetChangeListenerNetRotation As Action(Of Integer, Quaternion, Quaternion)
 references:
 - uid: Nebula.Utility.Nodes
   commentId: N:Nebula.Utility.Nodes
@@ -956,22 +1406,49 @@ references:
   name: IDisposable
   nameWithType: IDisposable
   fullName: System.IDisposable
-- uid: Nebula.INetNode
-  commentId: T:Nebula.INetNode
+- uid: Nebula.INetNode{Nebula.NetNode3D}
+  commentId: T:Nebula.INetNode{Nebula.NetNode3D}
+  parent: Nebula
+  definition: Nebula.INetNode`1
+  href: Nebula.INetNode-1.html
+  name: INetNode<NetNode3D>
+  nameWithType: INetNode<NetNode3D>
+  fullName: Nebula.INetNode<Nebula.NetNode3D>
+  nameWithType.vb: INetNode(Of NetNode3D)
+  fullName.vb: Nebula.INetNode(Of Nebula.NetNode3D)
+  name.vb: INetNode(Of NetNode3D)
+  spec.csharp:
+  - uid: Nebula.INetNode`1
+    name: INetNode
+    isExternal: true
+    href: Nebula.INetNode-1.html
+  - name: <
+  - uid: Nebula.NetNode3D
+    name: NetNode3D
+    isExternal: true
+    href: Nebula.NetNode3D.html
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.INetNode`1
+    name: INetNode
+    isExternal: true
+    href: Nebula.INetNode-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.NetNode3D
+    name: NetNode3D
+    isExternal: true
+    href: Nebula.NetNode3D.html
+  - name: )
+- uid: Nebula.INetNodeBase
+  commentId: T:Nebula.INetNodeBase
   parent: Nebula
   isExternal: true
-  href: Nebula.INetNode.html
-  name: INetNode
-  nameWithType: INetNode
-  fullName: Nebula.INetNode
-- uid: System.ComponentModel.INotifyPropertyChanged
-  commentId: T:System.ComponentModel.INotifyPropertyChanged
-  parent: System.ComponentModel
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged
-  name: INotifyPropertyChanged
-  nameWithType: INotifyPropertyChanged
-  fullName: System.ComponentModel.INotifyPropertyChanged
+  href: Nebula.INetNodeBase.html
+  name: INetNodeBase
+  nameWithType: INetNodeBase
+  fullName: Nebula.INetNodeBase
 - uid: Nebula.Serialization.INetSerializable{Nebula.NetNode3D}
   commentId: T:Nebula.Serialization.INetSerializable{Nebula.NetNode3D}
   parent: Nebula.Serialization
@@ -1050,11 +1527,80 @@ references:
   name: IBsonSerializableBase
   nameWithType: IBsonSerializableBase
   fullName: Nebula.Serialization.IBsonSerializableBase
+- uid: System.ComponentModel.INotifyPropertyChanged
+  commentId: T:System.ComponentModel.INotifyPropertyChanged
+  parent: System.ComponentModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged
+  name: INotifyPropertyChanged
+  nameWithType: INotifyPropertyChanged
+  fullName: System.ComponentModel.INotifyPropertyChanged
+- uid: Nebula.NetNode3D._Notification(System.Int32)
+  commentId: M:Nebula.NetNode3D._Notification(System.Int32)
+  parent: Nebula.NetNode3D
+  isExternal: true
+  href: Nebula.NetNode3D._Notification.html#Nebula_NetNode3D__Notification_System_Int32_
+  name: _Notification(int)
+  nameWithType: NetNode3D._Notification(int)
+  fullName: Nebula.NetNode3D._Notification(int)
+  nameWithType.vb: NetNode3D._Notification(Integer)
+  fullName.vb: Nebula.NetNode3D._Notification(Integer)
+  name.vb: _Notification(Integer)
+  spec.csharp:
+  - uid: Nebula.NetNode3D._Notification(System.Int32)
+    name: _Notification
+    isExternal: true
+    href: Nebula.NetNode3D._Notification.html#Nebula_NetNode3D__Notification_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Nebula.NetNode3D._Notification(System.Int32)
+    name: _Notification
+    isExternal: true
+    href: Nebula.NetNode3D._Notification.html#Nebula_NetNode3D__Notification_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Nebula.NetNode3D.InitializeInterest(ENet.Peer)
+  commentId: M:Nebula.NetNode3D.InitializeInterest(ENet.Peer)
+  parent: Nebula.NetNode3D
+  isExternal: true
+  href: Nebula.NetNode3D.InitializeInterest.html#Nebula_NetNode3D_InitializeInterest_ENet_Peer_
+  name: InitializeInterest(Peer)
+  nameWithType: NetNode3D.InitializeInterest(Peer)
+  fullName: Nebula.NetNode3D.InitializeInterest(ENet.Peer)
+  spec.csharp:
+  - uid: Nebula.NetNode3D.InitializeInterest(ENet.Peer)
+    name: InitializeInterest
+    isExternal: true
+    href: Nebula.NetNode3D.InitializeInterest.html#Nebula_NetNode3D_InitializeInterest_ENet_Peer_
+  - name: (
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Nebula.NetNode3D.InitializeInterest(ENet.Peer)
+    name: InitializeInterest
+    isExternal: true
+    href: Nebula.NetNode3D.InitializeInterest.html#Nebula_NetNode3D_InitializeInterest_ENet_Peer_
+  - name: (
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: )
 - uid: Nebula.NetNode3D.SetupSerializers
   commentId: M:Nebula.NetNode3D.SetupSerializers
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_SetupSerializers
+  href: Nebula.NetNode3D.SetupSerializers.html#Nebula_NetNode3D_SetupSerializers
   name: SetupSerializers()
   nameWithType: NetNode3D.SetupSerializers()
   fullName: Nebula.NetNode3D.SetupSerializers()
@@ -1062,29 +1608,62 @@ references:
   - uid: Nebula.NetNode3D.SetupSerializers
     name: SetupSerializers
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_SetupSerializers
+    href: Nebula.NetNode3D.SetupSerializers.html#Nebula_NetNode3D_SetupSerializers
   - name: (
   - name: )
   spec.vb:
   - uid: Nebula.NetNode3D.SetupSerializers
     name: SetupSerializers
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_SetupSerializers
+    href: Nebula.NetNode3D.SetupSerializers.html#Nebula_NetNode3D_SetupSerializers
   - name: (
   - name: )
-- uid: Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode3D)
-  commentId: M:Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode3D)
+- uid: Nebula.NetNode3D._PhysicsProcess(System.Double)
+  commentId: M:Nebula.NetNode3D._PhysicsProcess(System.Double)
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_NetNode3D_
-  name: NetworkSerialize(WorldRunner, ENetPacketPeer, NetNode3D)
-  nameWithType: NetNode3D.NetworkSerialize(WorldRunner, ENetPacketPeer, NetNode3D)
-  fullName: Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.NetNode3D)
+  href: Nebula.NetNode3D._PhysicsProcess.html#Nebula_NetNode3D__PhysicsProcess_System_Double_
+  name: _PhysicsProcess(double)
+  nameWithType: NetNode3D._PhysicsProcess(double)
+  fullName: Nebula.NetNode3D._PhysicsProcess(double)
+  nameWithType.vb: NetNode3D._PhysicsProcess(Double)
+  fullName.vb: Nebula.NetNode3D._PhysicsProcess(Double)
+  name.vb: _PhysicsProcess(Double)
   spec.csharp:
-  - uid: Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode3D)
+  - uid: Nebula.NetNode3D._PhysicsProcess(System.Double)
+    name: _PhysicsProcess
+    isExternal: true
+    href: Nebula.NetNode3D._PhysicsProcess.html#Nebula_NetNode3D__PhysicsProcess_System_Double_
+  - name: (
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: )
+  spec.vb:
+  - uid: Nebula.NetNode3D._PhysicsProcess(System.Double)
+    name: _PhysicsProcess
+    isExternal: true
+    href: Nebula.NetNode3D._PhysicsProcess.html#Nebula_NetNode3D__PhysicsProcess_System_Double_
+  - name: (
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: )
+- uid: Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode3D,Nebula.Serialization.NetBuffer)
+  commentId: M:Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode3D,Nebula.Serialization.NetBuffer)
+  parent: Nebula.NetNode3D
+  isExternal: true
+  href: Nebula.NetNode3D.NetworkSerialize.html#Nebula_NetNode3D_NetworkSerialize_Nebula_WorldRunner_ENet_Peer_Nebula_NetNode3D_Nebula_Serialization_NetBuffer_
+  name: NetworkSerialize(WorldRunner, Peer, NetNode3D, NetBuffer)
+  nameWithType: NetNode3D.NetworkSerialize(WorldRunner, Peer, NetNode3D, NetBuffer)
+  fullName: Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.NetNode3D, Nebula.Serialization.NetBuffer)
+  spec.csharp:
+  - uid: Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode3D,Nebula.Serialization.NetBuffer)
     name: NetworkSerialize
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_NetNode3D_
+    href: Nebula.NetNode3D.NetworkSerialize.html#Nebula_NetNode3D_NetworkSerialize_Nebula_WorldRunner_ENet_Peer_Nebula_NetNode3D_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -1092,8 +1671,8 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
@@ -1101,12 +1680,18 @@ references:
     name: NetNode3D
     isExternal: true
     href: Nebula.NetNode3D.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
   spec.vb:
-  - uid: Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.NetNode3D)
+  - uid: Nebula.NetNode3D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode3D,Nebula.Serialization.NetBuffer)
     name: NetworkSerialize
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_NetworkSerialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_NetNode3D_
+    href: Nebula.NetNode3D.NetworkSerialize.html#Nebula_NetNode3D_NetworkSerialize_Nebula_WorldRunner_ENet_Peer_Nebula_NetNode3D_Nebula_Serialization_NetBuffer_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -1114,8 +1699,8 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
@@ -1123,50 +1708,26 @@ references:
     name: NetNode3D
     isExternal: true
     href: Nebula.NetNode3D.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
   - name: )
-- uid: Nebula.NetNode3D.GetDeserializeContext(Nebula.NetNode3D)
-  commentId: M:Nebula.NetNode3D.GetDeserializeContext(Nebula.NetNode3D)
+- uid: Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode3D)
+  commentId: M:Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode3D)
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_GetDeserializeContext_Nebula_NetNode3D_
-  name: GetDeserializeContext(NetNode3D)
-  nameWithType: NetNode3D.GetDeserializeContext(NetNode3D)
-  fullName: Nebula.NetNode3D.GetDeserializeContext(Nebula.NetNode3D)
+  href: Nebula.NetNode3D.NetworkDeserialize.html#Nebula_NetNode3D_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_Nebula_NetNode3D_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetNode3D)
+  nameWithType: NetNode3D.NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetNode3D)
+  fullName: Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.NetNode3D)
   spec.csharp:
-  - uid: Nebula.NetNode3D.GetDeserializeContext(Nebula.NetNode3D)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_GetDeserializeContext_Nebula_NetNode3D_
-  - name: (
-  - uid: Nebula.NetNode3D
-    name: NetNode3D
-    isExternal: true
-    href: Nebula.NetNode3D.html
-  - name: )
-  spec.vb:
-  - uid: Nebula.NetNode3D.GetDeserializeContext(Nebula.NetNode3D)
-    name: GetDeserializeContext
-    isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_GetDeserializeContext_Nebula_NetNode3D_
-  - name: (
-  - uid: Nebula.NetNode3D
-    name: NetNode3D
-    isExternal: true
-    href: Nebula.NetNode3D.html
-  - name: )
-- uid: Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  commentId: M:Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
-  parent: Nebula.NetNode3D
-  isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
-  name: NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  nameWithType: NetNode3D.NetworkDeserialize(WorldRunner, ENetPacketPeer, HLBuffer, Variant)
-  fullName: Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner, Godot.ENetPacketPeer, Nebula.Serialization.HLBuffer, Godot.Variant)
-  spec.csharp:
-  - uid: Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - uid: Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode3D)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.NetNode3D.NetworkDeserialize.html#Nebula_NetNode3D_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_Nebula_NetNode3D_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -1174,26 +1735,27 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
+    href: Nebula.Serialization.NetBuffer.html
   - name: ','
   - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.NetNode3D
+    name: NetNode3D
     isExternal: true
+    href: Nebula.NetNode3D.html
   - name: )
   spec.vb:
-  - uid: Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner,Godot.ENetPacketPeer,Nebula.Serialization.HLBuffer,Godot.Variant)
+  - uid: Nebula.NetNode3D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode3D)
     name: NetworkDeserialize
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_NetworkDeserialize_Nebula_WorldRunner_Godot_ENetPacketPeer_Nebula_Serialization_HLBuffer_Godot_Variant_
+    href: Nebula.NetNode3D.NetworkDeserialize.html#Nebula_NetNode3D_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_Nebula_NetNode3D_
   - name: (
   - uid: Nebula.WorldRunner
     name: WorldRunner
@@ -1201,69 +1763,162 @@ references:
     href: Nebula.WorldRunner.html
   - name: ','
   - name: " "
-  - uid: Godot.ENetPacketPeer
-    name: ENetPacketPeer
+  - uid: ENet.Peer
+    name: Peer
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
     isExternal: true
-    href: Nebula.Serialization.HLBuffer.html
+    href: Nebula.Serialization.NetBuffer.html
   - name: ','
   - name: " "
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.NetNode3D
+    name: NetNode3D
     isExternal: true
+    href: Nebula.NetNode3D.html
   - name: )
-- uid: Nebula.NetNode3D.BsonSerialize(Godot.Variant)
-  commentId: M:Nebula.NetNode3D.BsonSerialize(Godot.Variant)
+- uid: Nebula.NetNode3D.BsonSerialize(Nebula.Serialization.NetBsonContext)
+  commentId: M:Nebula.NetNode3D.BsonSerialize(Nebula.Serialization.NetBsonContext)
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_BsonSerialize_Godot_Variant_
-  name: BsonSerialize(Variant)
-  nameWithType: NetNode3D.BsonSerialize(Variant)
-  fullName: Nebula.NetNode3D.BsonSerialize(Godot.Variant)
+  href: Nebula.NetNode3D.BsonSerialize.html#Nebula_NetNode3D_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  name: BsonSerialize(NetBsonContext)
+  nameWithType: NetNode3D.BsonSerialize(NetBsonContext)
+  fullName: Nebula.NetNode3D.BsonSerialize(Nebula.Serialization.NetBsonContext)
   spec.csharp:
-  - uid: Nebula.NetNode3D.BsonSerialize(Godot.Variant)
+  - uid: Nebula.NetNode3D.BsonSerialize(Nebula.Serialization.NetBsonContext)
     name: BsonSerialize
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_BsonSerialize_Godot_Variant_
+    href: Nebula.NetNode3D.BsonSerialize.html#Nebula_NetNode3D_BsonSerialize_Nebula_Serialization_NetBsonContext_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.NetNode3D.BsonSerialize(Nebula.Serialization.NetBsonContext)
+    name: BsonSerialize
+    isExternal: true
+    href: Nebula.NetNode3D.BsonSerialize.html#Nebula_NetNode3D_BsonSerialize_Nebula_Serialization_NetBsonContext_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: )
+- uid: Nebula.NetNode3D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  commentId: M:Nebula.NetNode3D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+  parent: Nebula.NetNode3D
+  isExternal: true
+  href: Nebula.NetNode3D.OnBsonDeserialize.html#Nebula_NetNode3D_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  name: OnBsonDeserialize(NetBsonContext, BsonDocument)
+  nameWithType: NetNode3D.OnBsonDeserialize(NetBsonContext, BsonDocument)
+  fullName: Nebula.NetNode3D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext, MongoDB.Bson.BsonDocument)
+  spec.csharp:
+  - uid: Nebula.NetNode3D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+    name: OnBsonDeserialize
+    isExternal: true
+    href: Nebula.NetNode3D.OnBsonDeserialize.html#Nebula_NetNode3D_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: MongoDB.Bson.BsonDocument
+    name: BsonDocument
     isExternal: true
   - name: )
   spec.vb:
-  - uid: Nebula.NetNode3D.BsonSerialize(Godot.Variant)
-    name: BsonSerialize
+  - uid: Nebula.NetNode3D.OnBsonDeserialize(Nebula.Serialization.NetBsonContext,MongoDB.Bson.BsonDocument)
+    name: OnBsonDeserialize
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_BsonSerialize_Godot_Variant_
+    href: Nebula.NetNode3D.OnBsonDeserialize.html#Nebula_NetNode3D_OnBsonDeserialize_Nebula_Serialization_NetBsonContext_MongoDB_Bson_BsonDocument_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: MongoDB.Bson.BsonDocument
+    name: BsonDocument
     isExternal: true
   - name: )
-- uid: Nebula.NetNode3D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode3D)
-  commentId: M:Nebula.NetNode3D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode3D)
+- uid: Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+  commentId: M:Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_BsonDeserialize_Godot_Variant_System_Byte___Nebula_NetNode3D_
-  name: BsonDeserialize(Variant, byte[], NetNode3D)
-  nameWithType: NetNode3D.BsonDeserialize(Variant, byte[], NetNode3D)
-  fullName: Nebula.NetNode3D.BsonDeserialize(Godot.Variant, byte[], Nebula.NetNode3D)
-  nameWithType.vb: NetNode3D.BsonDeserialize(Variant, Byte(), NetNode3D)
-  fullName.vb: Nebula.NetNode3D.BsonDeserialize(Godot.Variant, Byte(), Nebula.NetNode3D)
-  name.vb: BsonDeserialize(Variant, Byte(), NetNode3D)
+  href: Nebula.NetNode3D.BsonDeserialize.html#Nebula_NetNode3D_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  name: BsonDeserialize(NetBsonContext, byte[])
+  nameWithType: NetNode3D.BsonDeserialize(NetBsonContext, byte[])
+  fullName: Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[])
+  nameWithType.vb: NetNode3D.BsonDeserialize(NetBsonContext, Byte())
+  fullName.vb: Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte())
+  name.vb: BsonDeserialize(NetBsonContext, Byte())
   spec.csharp:
-  - uid: Nebula.NetNode3D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode3D)
+  - uid: Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_BsonDeserialize_Godot_Variant_System_Byte___Nebula_NetNode3D_
+    href: Nebula.NetNode3D.BsonDeserialize.html#Nebula_NetNode3D_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[])
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.NetNode3D.BsonDeserialize.html#Nebula_NetNode3D_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode3D)
+  commentId: M:Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode3D)
+  parent: Nebula.NetNode3D
+  isExternal: true
+  href: Nebula.NetNode3D.BsonDeserialize.html#Nebula_NetNode3D_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___Nebula_NetNode3D_
+  name: BsonDeserialize(NetBsonContext, byte[], NetNode3D)
+  nameWithType: NetNode3D.BsonDeserialize(NetBsonContext, byte[], NetNode3D)
+  fullName: Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext, byte[], Nebula.NetNode3D)
+  nameWithType.vb: NetNode3D.BsonDeserialize(NetBsonContext, Byte(), NetNode3D)
+  fullName.vb: Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext, Byte(), Nebula.NetNode3D)
+  name.vb: BsonDeserialize(NetBsonContext, Byte(), NetNode3D)
+  spec.csharp:
+  - uid: Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode3D)
+    name: BsonDeserialize
+    isExternal: true
+    href: Nebula.NetNode3D.BsonDeserialize.html#Nebula_NetNode3D_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___Nebula_NetNode3D_
+  - name: (
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
   - uid: System.Byte
@@ -1280,14 +1935,15 @@ references:
     href: Nebula.NetNode3D.html
   - name: )
   spec.vb:
-  - uid: Nebula.NetNode3D.BsonDeserialize(Godot.Variant,System.Byte[],Nebula.NetNode3D)
+  - uid: Nebula.NetNode3D.BsonDeserialize(Nebula.Serialization.NetBsonContext,System.Byte[],Nebula.NetNode3D)
     name: BsonDeserialize
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_BsonDeserialize_Godot_Variant_System_Byte___Nebula_NetNode3D_
+    href: Nebula.NetNode3D.BsonDeserialize.html#Nebula_NetNode3D_BsonDeserialize_Nebula_Serialization_NetBsonContext_System_Byte___Nebula_NetNode3D_
   - name: (
-  - uid: Godot.Variant
-    name: Variant
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
     isExternal: true
+    href: Nebula.Serialization.NetBsonContext.html
   - name: ','
   - name: " "
   - uid: System.Byte
@@ -1307,7 +1963,7 @@ references:
   commentId: M:Nebula.NetNode3D.NodePathFromNetScene
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_NodePathFromNetScene
+  href: Nebula.NetNode3D.NodePathFromNetScene.html#Nebula_NetNode3D_NodePathFromNetScene
   name: NodePathFromNetScene()
   nameWithType: NetNode3D.NodePathFromNetScene()
   fullName: Nebula.NetNode3D.NodePathFromNetScene()
@@ -1315,21 +1971,21 @@ references:
   - uid: Nebula.NetNode3D.NodePathFromNetScene
     name: NodePathFromNetScene
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_NodePathFromNetScene
+    href: Nebula.NetNode3D.NodePathFromNetScene.html#Nebula_NetNode3D_NodePathFromNetScene
   - name: (
   - name: )
   spec.vb:
   - uid: Nebula.NetNode3D.NodePathFromNetScene
     name: NodePathFromNetScene
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_NodePathFromNetScene
+    href: Nebula.NetNode3D.NodePathFromNetScene.html#Nebula_NetNode3D_NodePathFromNetScene
   - name: (
   - name: )
 - uid: Nebula.NetNode3D.OnPropertyChanged(System.String)
   commentId: M:Nebula.NetNode3D.OnPropertyChanged(System.String)
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_OnPropertyChanged_System_String_
+  href: Nebula.NetNode3D.OnPropertyChanged.html#Nebula_NetNode3D_OnPropertyChanged_System_String_
   name: OnPropertyChanged(string)
   nameWithType: NetNode3D.OnPropertyChanged(string)
   fullName: Nebula.NetNode3D.OnPropertyChanged(string)
@@ -1340,7 +1996,7 @@ references:
   - uid: Nebula.NetNode3D.OnPropertyChanged(System.String)
     name: OnPropertyChanged
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_OnPropertyChanged_System_String_
+    href: Nebula.NetNode3D.OnPropertyChanged.html#Nebula_NetNode3D_OnPropertyChanged_System_String_
   - name: (
   - uid: System.String
     name: string
@@ -1351,7 +2007,7 @@ references:
   - uid: Nebula.NetNode3D.OnPropertyChanged(System.String)
     name: OnPropertyChanged
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_OnPropertyChanged_System_String_
+    href: Nebula.NetNode3D.OnPropertyChanged.html#Nebula_NetNode3D_OnPropertyChanged_System_String_
   - name: (
   - uid: System.String
     name: String
@@ -1362,7 +2018,7 @@ references:
   commentId: M:Nebula.NetNode3D.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_OnPropertyChanged_System_ComponentModel_PropertyChangedEventArgs_
+  href: Nebula.NetNode3D.OnPropertyChanged.html#Nebula_NetNode3D_OnPropertyChanged_System_ComponentModel_PropertyChangedEventArgs_
   name: OnPropertyChanged(PropertyChangedEventArgs)
   nameWithType: NetNode3D.OnPropertyChanged(PropertyChangedEventArgs)
   fullName: Nebula.NetNode3D.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)
@@ -1370,7 +2026,7 @@ references:
   - uid: Nebula.NetNode3D.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)
     name: OnPropertyChanged
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_OnPropertyChanged_System_ComponentModel_PropertyChangedEventArgs_
+    href: Nebula.NetNode3D.OnPropertyChanged.html#Nebula_NetNode3D_OnPropertyChanged_System_ComponentModel_PropertyChangedEventArgs_
   - name: (
   - uid: System.ComponentModel.PropertyChangedEventArgs
     name: PropertyChangedEventArgs
@@ -1381,26 +2037,18 @@ references:
   - uid: Nebula.NetNode3D.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)
     name: OnPropertyChanged
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D_OnPropertyChanged_System_ComponentModel_PropertyChangedEventArgs_
+    href: Nebula.NetNode3D.OnPropertyChanged.html#Nebula_NetNode3D_OnPropertyChanged_System_ComponentModel_PropertyChangedEventArgs_
   - name: (
   - uid: System.ComponentModel.PropertyChangedEventArgs
     name: PropertyChangedEventArgs
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.componentmodel.propertychangedeventargs
   - name: )
-- uid: Nebula.NetNode3D.Node
-  commentId: P:Nebula.NetNode3D.Node
-  parent: Nebula.NetNode3D
-  isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_Node
-  name: Node
-  nameWithType: NetNode3D.Node
-  fullName: Nebula.NetNode3D.Node
 - uid: Nebula.NetNode3D.Network
   commentId: P:Nebula.NetNode3D.Network
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_Network
+  href: Nebula.NetNode3D.Network.html#Nebula_NetNode3D_Network
   name: Network
   nameWithType: NetNode3D.Network
   fullName: Nebula.NetNode3D.Network
@@ -1408,7 +2056,7 @@ references:
   commentId: P:Nebula.NetNode3D.Serializers
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_Serializers
+  href: Nebula.NetNode3D.Serializers.html#Nebula_NetNode3D_Serializers
   name: Serializers
   nameWithType: NetNode3D.Serializers
   fullName: Nebula.NetNode3D.Serializers
@@ -1416,7 +2064,7 @@ references:
   commentId: E:Nebula.NetNode3D.PropertyChanged
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D_PropertyChanged
+  href: Nebula.NetNode3D.PropertyChanged.html#Nebula_NetNode3D_PropertyChanged
   name: PropertyChanged
   nameWithType: NetNode3D.PropertyChanged
   fullName: Nebula.NetNode3D.PropertyChanged
@@ -3483,37 +4131,6 @@ references:
   - uid: Godot.InputEvent
     name: InputEvent
     isExternal: true
-  - name: )
-- uid: Godot.Node._Process(System.Double)
-  commentId: M:Godot.Node._Process(System.Double)
-  parent: Godot.Node
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.double
-  name: _Process(double)
-  nameWithType: Node._Process(double)
-  fullName: Godot.Node._Process(double)
-  nameWithType.vb: Node._Process(Double)
-  fullName.vb: Godot.Node._Process(Double)
-  name.vb: _Process(Double)
-  spec.csharp:
-  - uid: Godot.Node._Process(System.Double)
-    name: _Process
-    isExternal: true
-  - name: (
-  - uid: System.Double
-    name: double
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.double
-  - name: )
-  spec.vb:
-  - uid: Godot.Node._Process(System.Double)
-    name: _Process
-    isExternal: true
-  - name: (
-  - uid: System.Double
-    name: Double
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.double
   - name: )
 - uid: Godot.Node._Ready
   commentId: M:Godot.Node._Ready
@@ -7261,37 +7878,6 @@ references:
     name: Array
     isExternal: true
   - name: )
-- uid: Godot.GodotObject._Notification(System.Int32)
-  commentId: M:Godot.GodotObject._Notification(System.Int32)
-  parent: Godot.GodotObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: _Notification(int)
-  nameWithType: GodotObject._Notification(int)
-  fullName: Godot.GodotObject._Notification(int)
-  nameWithType.vb: GodotObject._Notification(Integer)
-  fullName.vb: Godot.GodotObject._Notification(Integer)
-  name.vb: _Notification(Integer)
-  spec.csharp:
-  - uid: Godot.GodotObject._Notification(System.Int32)
-    name: _Notification
-    isExternal: true
-  - name: (
-  - uid: System.Int32
-    name: int
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: )
-  spec.vb:
-  - uid: Godot.GodotObject._Notification(System.Int32)
-    name: _Notification
-    isExternal: true
-  - name: (
-  - uid: System.Int32
-    name: Integer
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.int32
-  - name: )
 - uid: Godot.GodotObject._PropertyCanRevert(Godot.StringName)
   commentId: M:Godot.GodotObject._PropertyCanRevert(Godot.StringName)
   parent: Godot.GodotObject
@@ -9237,33 +9823,34 @@ references:
   name: Nebula
   nameWithType: Nebula
   fullName: Nebula
-- uid: System.ComponentModel
-  commentId: N:System.ComponentModel
+- uid: Nebula.INetNode`1
+  commentId: T:Nebula.INetNode`1
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system
-  name: System.ComponentModel
-  nameWithType: System.ComponentModel
-  fullName: System.ComponentModel
+  href: Nebula.INetNode-1.html
+  name: INetNode<T>
+  nameWithType: INetNode<T>
+  fullName: Nebula.INetNode<T>
+  nameWithType.vb: INetNode(Of T)
+  fullName.vb: Nebula.INetNode(Of T)
+  name.vb: INetNode(Of T)
   spec.csharp:
-  - uid: System
-    name: System
+  - uid: Nebula.INetNode`1
+    name: INetNode
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system
-  - name: .
-  - uid: System.ComponentModel
-    name: ComponentModel
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
+    href: Nebula.INetNode-1.html
+  - name: <
+  - name: T
+  - name: '>'
   spec.vb:
-  - uid: System
-    name: System
+  - uid: Nebula.INetNode`1
+    name: INetNode
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system
-  - name: .
-  - uid: System.ComponentModel
-    name: ComponentModel
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
+    href: Nebula.INetNode-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
 - uid: Nebula.Serialization.INetSerializable`1
   commentId: T:Nebula.Serialization.INetSerializable`1
   isExternal: true
@@ -9347,40 +9934,38 @@ references:
   - name: " "
   - name: T
   - name: )
-- uid: Nebula.Utility.Nodes.NetTransform3D.OnNetworkChangeIsTeleporting*
-  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.OnNetworkChangeIsTeleporting
+- uid: System.ComponentModel
+  commentId: N:System.ComponentModel
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_OnNetworkChangeIsTeleporting_System_Int32_System_Boolean_System_Boolean_
-  name: OnNetworkChangeIsTeleporting
-  nameWithType: NetTransform3D.OnNetworkChangeIsTeleporting
-  fullName: Nebula.Utility.Nodes.NetTransform3D.OnNetworkChangeIsTeleporting
-- uid: System.Int32
-  commentId: T:System.Int32
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: int
-  nameWithType: int
-  fullName: int
-  nameWithType.vb: Integer
-  fullName.vb: Integer
-  name.vb: Integer
-- uid: System.Boolean
-  commentId: T:System.Boolean
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: bool
-  nameWithType: bool
-  fullName: bool
-  nameWithType.vb: Boolean
-  fullName.vb: Boolean
-  name.vb: Boolean
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.ComponentModel
+  nameWithType: System.ComponentModel
+  fullName: System.ComponentModel
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.ComponentModel
+    name: ComponentModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.ComponentModel
+    name: ComponentModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
 - uid: Nebula.NetNode3D._WorldReady
   commentId: M:Nebula.NetNode3D._WorldReady
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D__WorldReady
+  href: Nebula.NetNode3D._WorldReady.html#Nebula_NetNode3D__WorldReady
   name: _WorldReady()
   nameWithType: NetNode3D._WorldReady()
   fullName: Nebula.NetNode3D._WorldReady()
@@ -9388,34 +9973,34 @@ references:
   - uid: Nebula.NetNode3D._WorldReady
     name: _WorldReady
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D__WorldReady
+    href: Nebula.NetNode3D._WorldReady.html#Nebula_NetNode3D__WorldReady
   - name: (
   - name: )
   spec.vb:
   - uid: Nebula.NetNode3D._WorldReady
     name: _WorldReady
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D__WorldReady
+    href: Nebula.NetNode3D._WorldReady.html#Nebula_NetNode3D__WorldReady
   - name: (
   - name: )
 - uid: Nebula.Utility.Nodes.NetTransform3D._WorldReady*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D._WorldReady
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D__WorldReady
+  href: Nebula.Utility.Nodes.NetTransform3D._WorldReady.html#Nebula_Utility_Nodes_NetTransform3D__WorldReady
   name: _WorldReady
   nameWithType: NetTransform3D._WorldReady
   fullName: Nebula.Utility.Nodes.NetTransform3D._WorldReady
 - uid: Nebula.Utility.Nodes.NetTransform3D.GetParent3D*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.GetParent3D
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_GetParent3D
+  href: Nebula.Utility.Nodes.NetTransform3D.GetParent3D.html#Nebula_Utility_Nodes_NetTransform3D_GetParent3D
   name: GetParent3D
   nameWithType: NetTransform3D.GetParent3D
   fullName: Nebula.Utility.Nodes.NetTransform3D.GetParent3D
 - uid: Nebula.Utility.Nodes.NetTransform3D.Face*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.Face
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_Face_Godot_Vector3_
+  href: Nebula.Utility.Nodes.NetTransform3D.Face.html#Nebula_Utility_Nodes_NetTransform3D_Face_Godot_Vector3_
   name: Face
   nameWithType: NetTransform3D.Face
   fullName: Nebula.Utility.Nodes.NetTransform3D.Face
@@ -9430,7 +10015,7 @@ references:
   commentId: M:Nebula.NetNode3D._NetworkProcess(System.Int32)
   parent: Nebula.NetNode3D
   isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D__NetworkProcess_System_Int32_
+  href: Nebula.NetNode3D._NetworkProcess.html#Nebula_NetNode3D__NetworkProcess_System_Int32_
   name: _NetworkProcess(int)
   nameWithType: NetNode3D._NetworkProcess(int)
   fullName: Nebula.NetNode3D._NetworkProcess(int)
@@ -9441,7 +10026,7 @@ references:
   - uid: Nebula.NetNode3D._NetworkProcess(System.Int32)
     name: _NetworkProcess
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D__NetworkProcess_System_Int32_
+    href: Nebula.NetNode3D._NetworkProcess.html#Nebula_NetNode3D__NetworkProcess_System_Int32_
   - name: (
   - uid: System.Int32
     name: int
@@ -9452,7 +10037,7 @@ references:
   - uid: Nebula.NetNode3D._NetworkProcess(System.Int32)
     name: _NetworkProcess
     isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D__NetworkProcess_System_Int32_
+    href: Nebula.NetNode3D._NetworkProcess.html#Nebula_NetNode3D__NetworkProcess_System_Int32_
   - name: (
   - uid: System.Int32
     name: Integer
@@ -9462,24 +10047,61 @@ references:
 - uid: Nebula.Utility.Nodes.NetTransform3D._NetworkProcess*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D._NetworkProcess
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D__NetworkProcess_System_Int32_
+  href: Nebula.Utility.Nodes.NetTransform3D._NetworkProcess.html#Nebula_Utility_Nodes_NetTransform3D__NetworkProcess_System_Int32_
   name: _NetworkProcess
   nameWithType: NetTransform3D._NetworkProcess
   fullName: Nebula.Utility.Nodes.NetTransform3D._NetworkProcess
-- uid: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetPosition*
-  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetPosition
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_NetworkLerpNetPosition_Godot_Variant_Godot_Variant_System_Double_
-  name: NetworkLerpNetPosition
-  nameWithType: NetTransform3D.NetworkLerpNetPosition
-  fullName: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetPosition
-- uid: Godot.Variant
-  commentId: T:Godot.Variant
-  parent: Godot
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Nebula.NetNode3D._Process(System.Double)
+  commentId: M:Nebula.NetNode3D._Process(System.Double)
+  parent: Nebula.NetNode3D
   isExternal: true
-  name: Variant
-  nameWithType: Variant
-  fullName: Godot.Variant
+  href: Nebula.NetNode3D._Process.html#Nebula_NetNode3D__Process_System_Double_
+  name: _Process(double)
+  nameWithType: NetNode3D._Process(double)
+  fullName: Nebula.NetNode3D._Process(double)
+  nameWithType.vb: NetNode3D._Process(Double)
+  fullName.vb: Nebula.NetNode3D._Process(Double)
+  name.vb: _Process(Double)
+  spec.csharp:
+  - uid: Nebula.NetNode3D._Process(System.Double)
+    name: _Process
+    isExternal: true
+    href: Nebula.NetNode3D._Process.html#Nebula_NetNode3D__Process_System_Double_
+  - name: (
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: )
+  spec.vb:
+  - uid: Nebula.NetNode3D._Process(System.Double)
+    name: _Process
+    isExternal: true
+    href: Nebula.NetNode3D._Process.html#Nebula_NetNode3D__Process_System_Double_
+  - name: (
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: )
+- uid: Nebula.Utility.Nodes.NetTransform3D._Process*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D._Process
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D._Process.html#Nebula_Utility_Nodes_NetTransform3D__Process_System_Double_
+  name: _Process
+  nameWithType: NetTransform3D._Process
+  fullName: Nebula.Utility.Nodes.NetTransform3D._Process
 - uid: System.Double
   commentId: T:System.Double
   parent: System
@@ -9491,64 +10113,113 @@ references:
   nameWithType.vb: Double
   fullName.vb: Double
   name.vb: Double
-- uid: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetRotation*
-  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetRotation
-  isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_NetworkLerpNetRotation_Godot_Variant_Godot_Variant_System_Double_
-  name: NetworkLerpNetRotation
-  nameWithType: NetTransform3D.NetworkLerpNetRotation
-  fullName: Nebula.Utility.Nodes.NetTransform3D.NetworkLerpNetRotation
-- uid: Nebula.NetNode3D._PhysicsProcess(System.Double)
-  commentId: M:Nebula.NetNode3D._PhysicsProcess(System.Double)
-  parent: Nebula.NetNode3D
-  isExternal: true
-  href: Nebula.NetNode3D.html#Nebula_NetNode3D__PhysicsProcess_System_Double_
-  name: _PhysicsProcess(double)
-  nameWithType: NetNode3D._PhysicsProcess(double)
-  fullName: Nebula.NetNode3D._PhysicsProcess(double)
-  nameWithType.vb: NetNode3D._PhysicsProcess(Double)
-  fullName.vb: Nebula.NetNode3D._PhysicsProcess(Double)
-  name.vb: _PhysicsProcess(Double)
-  spec.csharp:
-  - uid: Nebula.NetNode3D._PhysicsProcess(System.Double)
-    name: _PhysicsProcess
-    isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D__PhysicsProcess_System_Double_
-  - name: (
-  - uid: System.Double
-    name: double
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.double
-  - name: )
-  spec.vb:
-  - uid: Nebula.NetNode3D._PhysicsProcess(System.Double)
-    name: _PhysicsProcess
-    isExternal: true
-    href: Nebula.NetNode3D.html#Nebula_NetNode3D__PhysicsProcess_System_Double_
-  - name: (
-  - uid: System.Double
-    name: Double
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.double
-  - name: )
-- uid: Nebula.Utility.Nodes.NetTransform3D._PhysicsProcess*
-  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D._PhysicsProcess
-  isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D__PhysicsProcess_System_Double_
-  name: _PhysicsProcess
-  nameWithType: NetTransform3D._PhysicsProcess
-  fullName: Nebula.Utility.Nodes.NetTransform3D._PhysicsProcess
 - uid: Nebula.Utility.Nodes.NetTransform3D.Teleport*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.Teleport
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_Teleport_Godot_Vector3_
+  href: Nebula.Utility.Nodes.NetTransform3D.Teleport.html#Nebula_Utility_Nodes_NetTransform3D_Teleport_Godot_Vector3_
   name: Teleport
   nameWithType: NetTransform3D.Teleport
   fullName: Nebula.Utility.Nodes.NetTransform3D.Teleport
+- uid: Godot.Quaternion
+  commentId: T:Godot.Quaternion
+  parent: Godot
+  isExternal: true
+  name: Quaternion
+  nameWithType: Quaternion
+  fullName: Godot.Quaternion
+- uid: Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged.html#Nebula_Utility_Nodes_NetTransform3D_OnIsTeleportingChanged_System_Boolean_System_Boolean_
+  name: OnIsTeleportingChanged
+  nameWithType: NetTransform3D.OnIsTeleportingChanged
+  fullName: Nebula.Utility.Nodes.NetTransform3D.OnIsTeleportingChanged
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.Utility.Nodes.NetTransform3D.OnNetPositionChanged*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.OnNetPositionChanged
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.OnNetPositionChanged.html#Nebula_Utility_Nodes_NetTransform3D_OnNetPositionChanged_Godot_Vector3_Godot_Vector3_
+  name: OnNetPositionChanged
+  nameWithType: NetTransform3D.OnNetPositionChanged
+  fullName: Nebula.Utility.Nodes.NetTransform3D.OnNetPositionChanged
+- uid: Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged.html#Nebula_Utility_Nodes_NetTransform3D_OnNetRotationChanged_Godot_Quaternion_Godot_Quaternion_
+  name: OnNetRotationChanged
+  nameWithType: NetTransform3D.OnNetRotationChanged
+  fullName: Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged
+- uid: Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex.html#Nebula_Utility_Nodes_NetTransform3D_GetNetPropertyIndex_System_String_
+  name: GetNetPropertyIndex
+  nameWithType: NetTransform3D.GetNetPropertyIndex
+  fullName: Nebula.Utility.Nodes.NetTransform3D.GetNetPropertyIndex
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler.html#Nebula_Utility_Nodes_NetTransform3D_HasPropertyChangeHandler_System_Int32_
+  name: HasPropertyChangeHandler
+  nameWithType: NetTransform3D.HasPropertyChangeHandler
+  fullName: Nebula.Utility.Nodes.NetTransform3D.HasPropertyChangeHandler
+- uid: Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName.html#Nebula_Utility_Nodes_NetTransform3D_SetBsonPropertyByName_System_String_System_Object_
+  name: SetBsonPropertyByName
+  nameWithType: NetTransform3D.SetBsonPropertyByName
+  fullName: Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName
+- uid: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition.html#Nebula_Utility_Nodes_NetTransform3D_InterpolateNetPosition_System_Single_Godot_Vector3_Godot_Vector3_
+  name: InterpolateNetPosition
+  nameWithType: NetTransform3D.InterpolateNetPosition
+  fullName: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetPosition
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation.html#Nebula_Utility_Nodes_NetTransform3D_InterpolateNetRotation_System_Single_Godot_Quaternion_Godot_Quaternion_
+  name: InterpolateNetRotation
+  nameWithType: NetTransform3D.InterpolateNetRotation
+  fullName: Nebula.Utility.Nodes.NetTransform3D.InterpolateNetRotation
 - uid: Nebula.Utility.Nodes.NetTransform3D.#ctor*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.#ctor
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D__ctor
+  href: Nebula.Utility.Nodes.NetTransform3D.-ctor.html#Nebula_Utility_Nodes_NetTransform3D__ctor
   name: NetTransform3D
   nameWithType: NetTransform3D.NetTransform3D
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetTransform3D
@@ -9558,35 +10229,266 @@ references:
 - uid: Nebula.Utility.Nodes.NetTransform3D.SourceNode*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.SourceNode
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_SourceNode
+  href: Nebula.Utility.Nodes.NetTransform3D.SourceNode.html#Nebula_Utility_Nodes_NetTransform3D_SourceNode
   name: SourceNode
   nameWithType: NetTransform3D.SourceNode
   fullName: Nebula.Utility.Nodes.NetTransform3D.SourceNode
 - uid: Nebula.Utility.Nodes.NetTransform3D.TargetNode*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.TargetNode
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_TargetNode
+  href: Nebula.Utility.Nodes.NetTransform3D.TargetNode.html#Nebula_Utility_Nodes_NetTransform3D_TargetNode
   name: TargetNode
   nameWithType: NetTransform3D.TargetNode
   fullName: Nebula.Utility.Nodes.NetTransform3D.TargetNode
+- uid: Nebula.Utility.Nodes.NetTransform3D.VisualInterpolateSpeed*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.VisualInterpolateSpeed
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.VisualInterpolateSpeed.html#Nebula_Utility_Nodes_NetTransform3D_VisualInterpolateSpeed
+  name: VisualInterpolateSpeed
+  nameWithType: NetTransform3D.VisualInterpolateSpeed
+  fullName: Nebula.Utility.Nodes.NetTransform3D.VisualInterpolateSpeed
 - uid: Nebula.Utility.Nodes.NetTransform3D.IsTeleporting*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.IsTeleporting
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_IsTeleporting
+  href: Nebula.Utility.Nodes.NetTransform3D.IsTeleporting.html#Nebula_Utility_Nodes_NetTransform3D_IsTeleporting
   name: IsTeleporting
   nameWithType: NetTransform3D.IsTeleporting
   fullName: Nebula.Utility.Nodes.NetTransform3D.IsTeleporting
 - uid: Nebula.Utility.Nodes.NetTransform3D.NetPosition*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.NetPosition
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_NetPosition
+  href: Nebula.Utility.Nodes.NetTransform3D.NetPosition.html#Nebula_Utility_Nodes_NetTransform3D_NetPosition
   name: NetPosition
   nameWithType: NetTransform3D.NetPosition
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetPosition
+- uid: Nebula.Utility.Nodes.NetTransform3D.NetPositionPredictionTolerance*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.NetPositionPredictionTolerance
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.NetPositionPredictionTolerance.html#Nebula_Utility_Nodes_NetTransform3D_NetPositionPredictionTolerance
+  name: NetPositionPredictionTolerance
+  nameWithType: NetTransform3D.NetPositionPredictionTolerance
+  fullName: Nebula.Utility.Nodes.NetTransform3D.NetPositionPredictionTolerance
 - uid: Nebula.Utility.Nodes.NetTransform3D.NetRotation*
   commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.NetRotation
   isExternal: true
-  href: Nebula.Utility.Nodes.NetTransform3D.html#Nebula_Utility_Nodes_NetTransform3D_NetRotation
+  href: Nebula.Utility.Nodes.NetTransform3D.NetRotation.html#Nebula_Utility_Nodes_NetTransform3D_NetRotation
   name: NetRotation
   nameWithType: NetTransform3D.NetRotation
   fullName: Nebula.Utility.Nodes.NetTransform3D.NetRotation
+- uid: Nebula.Utility.Nodes.NetTransform3D.NetRotationPredictionTolerance*
+  commentId: Overload:Nebula.Utility.Nodes.NetTransform3D.NetRotationPredictionTolerance
+  isExternal: true
+  href: Nebula.Utility.Nodes.NetTransform3D.NetRotationPredictionTolerance.html#Nebula_Utility_Nodes_NetTransform3D_NetRotationPredictionTolerance
+  name: NetRotationPredictionTolerance
+  nameWithType: NetTransform3D.NetRotationPredictionTolerance
+  fullName: Nebula.Utility.Nodes.NetTransform3D.NetRotationPredictionTolerance
+- uid: System.Action{System.Int32,System.Boolean,System.Boolean}
+  commentId: T:System.Action{System.Int32,System.Boolean,System.Boolean}
+  parent: System
+  definition: System.Action`3
+  href: https://learn.microsoft.com/dotnet/api/system.action-3
+  name: Action<int, bool, bool>
+  nameWithType: Action<int, bool, bool>
+  fullName: System.Action<int, bool, bool>
+  nameWithType.vb: Action(Of Integer, Boolean, Boolean)
+  fullName.vb: System.Action(Of Integer, Boolean, Boolean)
+  name.vb: Action(Of Integer, Boolean, Boolean)
+  spec.csharp:
+  - uid: System.Action`3
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`3
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.Action`3
+  commentId: T:System.Action`3
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-3
+  name: Action<T1, T2, T3>
+  nameWithType: Action<T1, T2, T3>
+  fullName: System.Action<T1, T2, T3>
+  nameWithType.vb: Action(Of T1, T2, T3)
+  fullName.vb: System.Action(Of T1, T2, T3)
+  name.vb: Action(Of T1, T2, T3)
+  spec.csharp:
+  - uid: System.Action`3
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: <
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: ','
+  - name: " "
+  - name: T3
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`3
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: ','
+  - name: " "
+  - name: T3
+  - name: )
+- uid: System.Action{System.Int32,Godot.Vector3,Godot.Vector3}
+  commentId: T:System.Action{System.Int32,Godot.Vector3,Godot.Vector3}
+  parent: System
+  definition: System.Action`3
+  href: https://learn.microsoft.com/dotnet/api/system.action-3
+  name: Action<int, Vector3, Vector3>
+  nameWithType: Action<int, Vector3, Vector3>
+  fullName: System.Action<int, Godot.Vector3, Godot.Vector3>
+  nameWithType.vb: Action(Of Integer, Vector3, Vector3)
+  fullName.vb: System.Action(Of Integer, Godot.Vector3, Godot.Vector3)
+  name.vb: Action(Of Integer, Vector3, Vector3)
+  spec.csharp:
+  - uid: System.Action`3
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Godot.Vector3
+    name: Vector3
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Vector3
+    name: Vector3
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`3
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Godot.Vector3
+    name: Vector3
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Vector3
+    name: Vector3
+    isExternal: true
+  - name: )
+- uid: System.Action{System.Int32,Godot.Quaternion,Godot.Quaternion}
+  commentId: T:System.Action{System.Int32,Godot.Quaternion,Godot.Quaternion}
+  parent: System
+  definition: System.Action`3
+  href: https://learn.microsoft.com/dotnet/api/system.action-3
+  name: Action<int, Quaternion, Quaternion>
+  nameWithType: Action<int, Quaternion, Quaternion>
+  fullName: System.Action<int, Godot.Quaternion, Godot.Quaternion>
+  nameWithType.vb: Action(Of Integer, Quaternion, Quaternion)
+  fullName.vb: System.Action(Of Integer, Godot.Quaternion, Godot.Quaternion)
+  name.vb: Action(Of Integer, Quaternion, Quaternion)
+  spec.csharp:
+  - uid: System.Action`3
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Godot.Quaternion
+    name: Quaternion
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Quaternion
+    name: Quaternion
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`3
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-3
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Godot.Quaternion
+    name: Quaternion
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Godot.Quaternion
+    name: Quaternion
+    isExternal: true
+  - name: )
+memberLayout: SeparatePages

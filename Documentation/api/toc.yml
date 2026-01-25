@@ -4,12 +4,24 @@ items:
   name: Nebula
   type: Namespace
   items:
+  - uid: Nebula.CustomPropertyType
+    name: CustomPropertyType
+    type: Enum
   - uid: Nebula.INebulaAddon
     name: INebulaAddon
     type: Interface
-  - uid: Nebula.INetNode
-    name: INetNode
+  - uid: Nebula.INetNodeBase
+    name: INetNodeBase
     type: Interface
+  - uid: Nebula.INetNode`1
+    name: INetNode<T>
+    type: Interface
+  - uid: Nebula.ITransformable
+    name: ITransformable
+    type: Interface
+  - uid: Nebula.NativeBridge
+    name: NativeBridge
+    type: Class
   - uid: Nebula.NetFunction
     name: NetFunction
     type: Class
@@ -18,15 +30,9 @@ items:
     type: Enum
   - uid: Nebula.NetId
     name: NetId
-    type: Class
-  - uid: Nebula.NetId.MethodName
-    name: NetId.MethodName
-    type: Class
-  - uid: Nebula.NetId.PropertyName
-    name: NetId.PropertyName
-    type: Class
-  - uid: Nebula.NetId.SignalName
-    name: NetId.SignalName
+    type: Struct
+  - uid: Nebula.NetInterest
+    name: NetInterest
     type: Class
   - uid: Nebula.NetNode
     name: NetNode
@@ -64,18 +70,6 @@ items:
   - uid: Nebula.NetNode3D.SignalName
     name: NetNode3D.SignalName
     type: Class
-  - uid: Nebula.NetNodeWrapper
-    name: NetNodeWrapper
-    type: Class
-  - uid: Nebula.NetNodeWrapper.MethodName
-    name: NetNodeWrapper.MethodName
-    type: Class
-  - uid: Nebula.NetNodeWrapper.PropertyName
-    name: NetNodeWrapper.PropertyName
-    type: Class
-  - uid: Nebula.NetNodeWrapper.SignalName
-    name: NetNodeWrapper.SignalName
-    type: Class
   - uid: Nebula.NetPose3D
     name: NetPose3D
     type: Class
@@ -85,9 +79,6 @@ items:
   - uid: Nebula.NetPose3D.MethodName
     name: NetPose3D.MethodName
     type: Class
-  - uid: Nebula.NetPose3D.OnChangeEventHandler
-    name: NetPose3D.OnChangeEventHandler
-    type: Delegate
   - uid: Nebula.NetPose3D.PropertyName
     name: NetPose3D.PropertyName
     type: Class
@@ -109,18 +100,6 @@ items:
   - uid: Nebula.NetRunner.MethodName
     name: NetRunner.MethodName
     type: Class
-  - uid: Nebula.NetRunner.OnConnectedToServerEventHandler
-    name: NetRunner.OnConnectedToServerEventHandler
-    type: Delegate
-  - uid: Nebula.NetRunner.OnPeerConnectedEventHandler
-    name: NetRunner.OnPeerConnectedEventHandler
-    type: Delegate
-  - uid: Nebula.NetRunner.OnPeerDisconnectedEventHandler
-    name: NetRunner.OnPeerDisconnectedEventHandler
-    type: Delegate
-  - uid: Nebula.NetRunner.OnWorldCreatedEventHandler
-    name: NetRunner.OnWorldCreatedEventHandler
-    type: Delegate
   - uid: Nebula.NetRunner.PropertyName
     name: NetRunner.PropertyName
     type: Class
@@ -130,54 +109,36 @@ items:
   - uid: Nebula.NetworkController
     name: NetworkController
     type: Class
-  - uid: Nebula.NetworkController.InterestChangedEventHandler
-    name: NetworkController.InterestChangedEventHandler
-    type: Delegate
   - uid: Nebula.NetworkController.MethodName
     name: NetworkController.MethodName
     type: Class
-  - uid: Nebula.NetworkController.NetPropertyChangedEventHandler
-    name: NetworkController.NetPropertyChangedEventHandler
-    type: Delegate
-  - uid: Nebula.NetworkController.NetworkChildrenSearchToggle
-    name: NetworkController.NetworkChildrenSearchToggle
-    type: Enum
   - uid: Nebula.NetworkController.PropertyName
     name: NetworkController.PropertyName
     type: Class
   - uid: Nebula.NetworkController.SignalName
     name: NetworkController.SignalName
     type: Class
+  - uid: Nebula.PropertyCache
+    name: PropertyCache
+    type: Struct
   - uid: Nebula.UUID
     name: UUID
-    type: Class
-  - uid: Nebula.UUID.MethodName
-    name: UUID.MethodName
-    type: Class
-  - uid: Nebula.UUID.PropertyName
-    name: UUID.PropertyName
-    type: Class
-  - uid: Nebula.UUID.SignalName
-    name: UUID.SignalName
-    type: Class
+    type: Struct
   - uid: Nebula.WorldRunner
     name: WorldRunner
     type: Class
   - uid: Nebula.WorldRunner.DebugDataType
     name: WorldRunner.DebugDataType
     type: Enum
+  - uid: Nebula.WorldRunner.DebugMessenger
+    name: WorldRunner.DebugMessenger
+    type: Class
   - uid: Nebula.WorldRunner.MethodName
     name: WorldRunner.MethodName
     type: Class
-  - uid: Nebula.WorldRunner.OnAfterNetworkTickEventHandler
-    name: WorldRunner.OnAfterNetworkTickEventHandler
-    type: Delegate
-  - uid: Nebula.WorldRunner.OnPeerSyncStatusChangeEventHandler
-    name: WorldRunner.OnPeerSyncStatusChangeEventHandler
-    type: Delegate
-  - uid: Nebula.WorldRunner.OnPlayerJoinedEventHandler
-    name: WorldRunner.OnPlayerJoinedEventHandler
-    type: Delegate
+  - uid: Nebula.WorldRunner.NetFunctionCtx
+    name: WorldRunner.NetFunctionCtx
+    type: Struct
   - uid: Nebula.WorldRunner.PeerState
     name: WorldRunner.PeerState
     type: Struct
@@ -249,12 +210,6 @@ items:
   - uid: Nebula.Internal.Editor.Downloader
     name: Downloader
     type: Class
-  - uid: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-    name: Downloader.DownloadCompletedEventHandler
-    type: Delegate
-  - uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-    name: Downloader.DownloadFailedEventHandler
-    type: Delegate
   - uid: Nebula.Internal.Editor.Downloader.MethodName
     name: Downloader.MethodName
     type: Class
@@ -344,138 +299,75 @@ items:
   - uid: Nebula.Serialization.BsonTransformer
     name: BsonTransformer
     type: Class
-  - uid: Nebula.Serialization.BsonTransformer.MethodName
-    name: BsonTransformer.MethodName
+  - uid: Nebula.Serialization.BsonTypeHelper
+    name: BsonTypeHelper
     type: Class
-  - uid: Nebula.Serialization.BsonTransformer.PropertyName
-    name: BsonTransformer.PropertyName
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
     type: Class
-  - uid: Nebula.Serialization.BsonTransformer.SignalName
-    name: BsonTransformer.SignalName
-    type: Class
-  - uid: Nebula.Serialization.HLBuffer
-    name: HLBuffer
-    type: Class
-  - uid: Nebula.Serialization.HLBuffer.MethodName
-    name: HLBuffer.MethodName
-    type: Class
-  - uid: Nebula.Serialization.HLBuffer.PropertyName
-    name: HLBuffer.PropertyName
-    type: Class
-  - uid: Nebula.Serialization.HLBuffer.SignalName
-    name: HLBuffer.SignalName
-    type: Class
-  - uid: Nebula.Serialization.HLBytes
-    name: HLBytes
-    type: Class
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
+    name: GeneratedProtocol.NetworkDeserializeFunc
+    type: Delegate
+  - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+    name: GeneratedProtocol.NetworkSerializeFunc
+    type: Delegate
   - uid: Nebula.Serialization.IBsonSerializableBase
     name: IBsonSerializableBase
     type: Interface
   - uid: Nebula.Serialization.IBsonSerializable`1
     name: IBsonSerializable<T>
     type: Interface
+  - uid: Nebula.Serialization.IBsonValue`1
+    name: IBsonValue<T>
+    type: Interface
   - uid: Nebula.Serialization.INetSerializable`1
     name: INetSerializable<T>
     type: Interface
+  - uid: Nebula.Serialization.INetValue`1
+    name: INetValue<T>
+    type: Interface
+  - uid: Nebula.Serialization.NetBsonContext
+    name: NetBsonContext
+    type: Struct
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    type: Class
   - uid: Nebula.Serialization.NetFunctionArgument
     name: NetFunctionArgument
+    type: Struct
+  - uid: Nebula.Serialization.NetReader
+    name: NetReader
     type: Class
-  - uid: Nebula.Serialization.NetFunctionArgument.MethodName
-    name: NetFunctionArgument.MethodName
+  - uid: Nebula.Serialization.NetValueLayoutAttribute
+    name: NetValueLayoutAttribute
     type: Class
-  - uid: Nebula.Serialization.NetFunctionArgument.PropertyName
-    name: NetFunctionArgument.PropertyName
+  - uid: Nebula.Serialization.NetWriter
+    name: NetWriter
     type: Class
-  - uid: Nebula.Serialization.NetFunctionArgument.SignalName
-    name: NetFunctionArgument.SignalName
+  - uid: Nebula.Serialization.NetworkSources
+    name: NetworkSources
+    type: Enum
+  - uid: Nebula.Serialization.Protocol
+    name: Protocol
     type: Class
   - uid: Nebula.Serialization.ProtocolNetFunction
     name: ProtocolNetFunction
-    type: Class
-  - uid: Nebula.Serialization.ProtocolNetFunction.MethodName
-    name: ProtocolNetFunction.MethodName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolNetFunction.PropertyName
-    name: ProtocolNetFunction.PropertyName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolNetFunction.SignalName
-    name: ProtocolNetFunction.SignalName
-    type: Class
+    type: Struct
   - uid: Nebula.Serialization.ProtocolNetProperty
     name: ProtocolNetProperty
-    type: Class
-  - uid: Nebula.Serialization.ProtocolNetProperty.MethodName
-    name: ProtocolNetProperty.MethodName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolNetProperty.PropertyName
-    name: ProtocolNetProperty.PropertyName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolNetProperty.SignalName
-    name: ProtocolNetProperty.SignalName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolRegistry
-    name: ProtocolRegistry
-    type: Class
-  - uid: Nebula.Serialization.ProtocolRegistry.MethodName
-    name: ProtocolRegistry.MethodName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolRegistry.PropertyName
-    name: ProtocolRegistry.PropertyName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolRegistry.SignalName
-    name: ProtocolRegistry.SignalName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder
-    name: ProtocolRegistryBuilder
-    type: Class
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder.MethodName
-    name: ProtocolRegistryBuilder.MethodName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder.PropertyName
-    name: ProtocolRegistryBuilder.PropertyName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolRegistryBuilder.SignalName
-    name: ProtocolRegistryBuilder.SignalName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolResource
-    name: ProtocolResource
-    type: Class
-  - uid: Nebula.Serialization.ProtocolResource.MethodName
-    name: ProtocolResource.MethodName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolResource.PropertyName
-    name: ProtocolResource.PropertyName
-    type: Class
-  - uid: Nebula.Serialization.ProtocolResource.SignalName
-    name: ProtocolResource.SignalName
-    type: Class
+    type: Struct
+  - uid: Nebula.Serialization.ProtocolSceneInterest
+    name: ProtocolSceneInterest
+    type: Struct
   - uid: Nebula.Serialization.SerialMetadata
     name: SerialMetadata
-    type: Class
-  - uid: Nebula.Serialization.SerialMetadata.MethodName
-    name: SerialMetadata.MethodName
-    type: Class
-  - uid: Nebula.Serialization.SerialMetadata.PropertyName
-    name: SerialMetadata.PropertyName
-    type: Class
-  - uid: Nebula.Serialization.SerialMetadata.SignalName
-    name: SerialMetadata.SignalName
-    type: Class
-  - uid: Nebula.Serialization.SerialTypeIdentifier
-    name: SerialTypeIdentifier
-    type: Class
-  - uid: Nebula.Serialization.StaticMethodResource
-    name: StaticMethodResource
-    type: Class
-  - uid: Nebula.Serialization.StaticMethodResource.MethodName
-    name: StaticMethodResource.MethodName
-    type: Class
-  - uid: Nebula.Serialization.StaticMethodResource.PropertyName
-    name: StaticMethodResource.PropertyName
-    type: Class
-  - uid: Nebula.Serialization.StaticMethodResource.SignalName
-    name: StaticMethodResource.SignalName
-    type: Class
+    type: Struct
+  - uid: Nebula.Serialization.SerialVariantType
+    name: SerialVariantType
+    type: Enum
+  - uid: Nebula.Serialization.StaticMethodInfo
+    name: StaticMethodInfo
+    type: Struct
   - uid: Nebula.Serialization.StaticMethodType
     name: StaticMethodType
     type: Enum
@@ -486,18 +378,27 @@ items:
   - uid: Nebula.Serialization.Serializers.BitConstants
     name: BitConstants
     type: Class
-  - uid: Nebula.Serialization.Serializers.DespawnSerializer
-    name: DespawnSerializer
-    type: Class
+  - uid: Nebula.Serialization.Serializers.DeltaEncodingFlags
+    name: DeltaEncodingFlags
+    type: Enum
   - uid: Nebula.Serialization.Serializers.IStateSerializer
     name: IStateSerializer
     type: Interface
+  - uid: Nebula.Serialization.Serializers.InterestResyncSerializer
+    name: InterestResyncSerializer
+    type: Class
+  - uid: Nebula.Serialization.Serializers.InterestResyncSerializer.MethodName
+    name: InterestResyncSerializer.MethodName
+    type: Class
+  - uid: Nebula.Serialization.Serializers.InterestResyncSerializer.PropertyName
+    name: InterestResyncSerializer.PropertyName
+    type: Class
+  - uid: Nebula.Serialization.Serializers.InterestResyncSerializer.SignalName
+    name: InterestResyncSerializer.SignalName
+    type: Class
   - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer
     name: NetPropertiesSerializer
     type: Class
-  - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.LerpableChangeQueue
-    name: NetPropertiesSerializer.LerpableChangeQueue
-    type: Struct
   - uid: Nebula.Serialization.Serializers.NetPropertiesSerializer.MethodName
     name: NetPropertiesSerializer.MethodName
     type: Class
@@ -518,6 +419,127 @@ items:
     type: Class
   - uid: Nebula.Serialization.Serializers.SpawnSerializer.SignalName
     name: SpawnSerializer.SignalName
+    type: Class
+- uid: Nebula.Testing
+  name: Nebula.Testing
+  type: Namespace
+  items:
+  - uid: Nebula.Testing.NebulaTestCollection
+    name: NebulaTestCollection
+    type: Class
+  - uid: Nebula.Testing.NebulaTestFixture
+    name: NebulaTestFixture
+    type: Class
+  - uid: Nebula.Testing.ProtocolBuilder
+    name: ProtocolBuilder
+    type: Class
+  - uid: Nebula.Testing.ProtocolBuilder.MethodName
+    name: ProtocolBuilder.MethodName
+    type: Class
+  - uid: Nebula.Testing.ProtocolBuilder.PropertyName
+    name: ProtocolBuilder.PropertyName
+    type: Class
+  - uid: Nebula.Testing.ProtocolBuilder.SignalName
+    name: ProtocolBuilder.SignalName
+    type: Class
+- uid: Nebula.Testing.Integration
+  name: Nebula.Testing.Integration
+  type: Namespace
+  items:
+  - uid: Nebula.Testing.Integration.ClientConfig
+    name: ClientConfig
+    type: Class
+  - uid: Nebula.Testing.Integration.CustomCommand
+    name: CustomCommand
+    type: Class
+  - uid: Nebula.Testing.Integration.DebugEvent
+    name: DebugEvent
+    type: Struct
+  - uid: Nebula.Testing.Integration.GodotProcess
+    name: GodotProcess
+    type: Class
+  - uid: Nebula.Testing.Integration.InputCommand
+    name: InputCommand
+    type: Class
+  - uid: Nebula.Testing.Integration.IntegrationTestBase
+    name: IntegrationTestBase
+    type: Class
+  - uid: Nebula.Testing.Integration.OrderAttribute
+    name: OrderAttribute
+    type: Class
+  - uid: Nebula.Testing.Integration.PriorityOrderer
+    name: PriorityOrderer
+    type: Class
+  - uid: Nebula.Testing.Integration.ServerCommandBuilder
+    name: ServerCommandBuilder
+    type: Class
+  - uid: Nebula.Testing.Integration.ServerConfig
+    name: ServerConfig
+    type: Class
+  - uid: Nebula.Testing.Integration.SpawnCommand
+    name: SpawnCommand
+    type: Class
+  - uid: Nebula.Testing.Integration.StdinCommandHandler
+    name: StdinCommandHandler
+    type: Class
+  - uid: Nebula.Testing.Integration.StdinCommandHandler.MethodName
+    name: StdinCommandHandler.MethodName
+    type: Class
+  - uid: Nebula.Testing.Integration.StdinCommandHandler.PropertyName
+    name: StdinCommandHandler.PropertyName
+    type: Class
+  - uid: Nebula.Testing.Integration.StdinCommandHandler.SignalName
+    name: StdinCommandHandler.SignalName
+    type: Class
+- uid: Nebula.Testing.Unit
+  name: Nebula.Testing.Unit
+  type: Namespace
+  items:
+  - uid: Nebula.Testing.Unit.NebulaUnitTestAttribute
+    name: NebulaUnitTestAttribute
+    type: Class
+  - uid: Nebula.Testing.Unit.NebulaUnitTests
+    name: NebulaUnitTests
+    type: Class
+  - uid: Nebula.Testing.Unit.TestRunnerNode
+    name: TestRunnerNode
+    type: Class
+  - uid: Nebula.Testing.Unit.TestRunnerNode.MethodName
+    name: TestRunnerNode.MethodName
+    type: Class
+  - uid: Nebula.Testing.Unit.TestRunnerNode.PropertyName
+    name: TestRunnerNode.PropertyName
+    type: Class
+  - uid: Nebula.Testing.Unit.TestRunnerNode.SignalName
+    name: TestRunnerNode.SignalName
+    type: Class
+- uid: Nebula.Tools
+  name: Nebula.Tools
+  type: Namespace
+  items:
+  - uid: Nebula.Tools.Main
+    name: Main
+    type: Class
+  - uid: Nebula.Tools.Main.MethodName
+    name: Main.MethodName
+    type: Class
+  - uid: Nebula.Tools.Main.PropertyName
+    name: Main.PropertyName
+    type: Class
+  - uid: Nebula.Tools.Main.SignalName
+    name: Main.SignalName
+    type: Class
+  - uid: Nebula.Tools.ProjectSettingsController
+    name: ProjectSettingsController
+    type: Class
+  - uid: Nebula.Tools.ProjectSettingsController.MethodName
+    name: ProjectSettingsController.MethodName
+    type: Class
+  - uid: Nebula.Tools.ProjectSettingsController.PropertyName
+    name: ProjectSettingsController.PropertyName
+    type: Class
+  - uid: Nebula.Tools.ProjectSettingsController.SignalName
+    name: ProjectSettingsController.SignalName
     type: Class
 - uid: Nebula.Utility.Nodes
   name: Nebula.Utility.Nodes
@@ -559,18 +581,6 @@ items:
   - uid: Nebula.Utility.Nodes.NetworkVisibility.SignalName
     name: NetworkVisibility.SignalName
     type: Class
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D
-    name: QuantizedNetTransform3D
-    type: Class
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.MethodName
-    name: QuantizedNetTransform3D.MethodName
-    type: Class
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.PropertyName
-    name: QuantizedNetTransform3D.PropertyName
-    type: Class
-  - uid: Nebula.Utility.Nodes.QuantizedNetTransform3D.SignalName
-    name: QuantizedNetTransform3D.SignalName
-    type: Class
   - uid: Nebula.Utility.Nodes.TickTimer
     name: TickTimer
     type: Class
@@ -596,6 +606,9 @@ items:
   - uid: Nebula.Utility.Tools.Env
     name: Env
     type: Class
+  - uid: Nebula.Utility.Tools.Env.CdnModeType
+    name: Env.CdnModeType
+    type: Enum
   - uid: Nebula.Utility.Tools.Env.DevelopmentModeType
     name: Env.DevelopmentModeType
     type: Enum
@@ -611,6 +624,9 @@ items:
   - uid: Nebula.Utility.Tools.Env.SignalName
     name: Env.SignalName
     type: Class
+  - uid: Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler
+    name: NebulaLogInterpolatedStringHandler
+    type: Struct
   - uid: Nebula.Utility.Tools.ServerClientConnector
     name: ServerClientConnector
     type: Class
@@ -623,4 +639,4 @@ items:
   - uid: Nebula.Utility.Tools.ServerClientConnector.SignalName
     name: ServerClientConnector.SignalName
     type: Class
-memberLayout: SamePage
+memberLayout: SeparatePages

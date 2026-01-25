@@ -6,9 +6,6 @@ items:
   parent: Nebula
   children:
   - Nebula.WorldRunner.SignalName.#ctor
-  - Nebula.WorldRunner.SignalName.OnAfterNetworkTick
-  - Nebula.WorldRunner.SignalName.OnPeerSyncStatusChange
-  - Nebula.WorldRunner.SignalName.OnPlayerJoined
   langs:
   - csharp
   - vb
@@ -17,7 +14,7 @@ items:
   fullName: Nebula.WorldRunner.SignalName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -51,75 +48,6 @@ items:
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.GetHashCode
-- uid: Nebula.WorldRunner.SignalName.OnPeerSyncStatusChange
-  commentId: F:Nebula.WorldRunner.SignalName.OnPeerSyncStatusChange
-  id: OnPeerSyncStatusChange
-  parent: Nebula.WorldRunner.SignalName
-  langs:
-  - csharp
-  - vb
-  name: OnPeerSyncStatusChange
-  nameWithType: WorldRunner.SignalName.OnPeerSyncStatusChange
-  fullName: Nebula.WorldRunner.SignalName.OnPeerSyncStatusChange
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'OnPeerSyncStatusChange' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName OnPeerSyncStatusChange
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnPeerSyncStatusChange As StringName
-- uid: Nebula.WorldRunner.SignalName.OnAfterNetworkTick
-  commentId: F:Nebula.WorldRunner.SignalName.OnAfterNetworkTick
-  id: OnAfterNetworkTick
-  parent: Nebula.WorldRunner.SignalName
-  langs:
-  - csharp
-  - vb
-  name: OnAfterNetworkTick
-  nameWithType: WorldRunner.SignalName.OnAfterNetworkTick
-  fullName: Nebula.WorldRunner.SignalName.OnAfterNetworkTick
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'OnAfterNetworkTick' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName OnAfterNetworkTick
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnAfterNetworkTick As StringName
-- uid: Nebula.WorldRunner.SignalName.OnPlayerJoined
-  commentId: F:Nebula.WorldRunner.SignalName.OnPlayerJoined
-  id: OnPlayerJoined
-  parent: Nebula.WorldRunner.SignalName
-  langs:
-  - csharp
-  - vb
-  name: OnPlayerJoined
-  nameWithType: WorldRunner.SignalName.OnPlayerJoined
-  fullName: Nebula.WorldRunner.SignalName.OnPlayerJoined
-  type: Field
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula
-  summary: Cached name for the 'OnPlayerJoined' signal.
-  example: []
-  syntax:
-    content: public static readonly StringName OnPlayerJoined
-    return:
-      type: Godot.StringName
-    content.vb: Public Shared ReadOnly OnPlayerJoined As StringName
 - uid: Nebula.WorldRunner.SignalName.#ctor
   commentId: M:Nebula.WorldRunner.SignalName.#ctor
   id: '#ctor'
@@ -132,7 +60,7 @@ items:
   fullName: Nebula.WorldRunner.SignalName.SignalName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -531,20 +459,14 @@ references:
   name: Godot
   nameWithType: Godot
   fullName: Godot
-- uid: Godot.StringName
-  commentId: T:Godot.StringName
-  parent: Godot
-  isExternal: true
-  name: StringName
-  nameWithType: StringName
-  fullName: Godot.StringName
 - uid: Nebula.WorldRunner.SignalName.#ctor*
   commentId: Overload:Nebula.WorldRunner.SignalName.#ctor
   isExternal: true
-  href: Nebula.WorldRunner.SignalName.html#Nebula_WorldRunner_SignalName__ctor
+  href: Nebula.WorldRunner.SignalName.-ctor.html#Nebula_WorldRunner_SignalName__ctor
   name: SignalName
   nameWithType: WorldRunner.SignalName.SignalName
   fullName: Nebula.WorldRunner.SignalName.SignalName
   nameWithType.vb: WorldRunner.SignalName.New
   fullName.vb: Nebula.WorldRunner.SignalName.New
   name.vb: New
+memberLayout: SeparatePages

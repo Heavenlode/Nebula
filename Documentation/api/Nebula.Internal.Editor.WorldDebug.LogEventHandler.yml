@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler
   type: Delegate
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -55,7 +55,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.LogEventHandler(object, nint)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -83,7 +83,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.Invoke(int, string, string, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -115,7 +115,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.BeginInvoke(int, string, string, string, System.AsyncCallback, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -153,7 +153,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.EndInvoke(System.IAsyncResult)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -234,7 +234,7 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug.LogEventHandler.#ctor*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.LogEventHandler.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.LogEventHandler.html#Nebula_Internal_Editor_WorldDebug_LogEventHandler__ctor_System_Object_System_IntPtr_
+  href: Nebula.Internal.Editor.WorldDebug.LogEventHandler.-ctor.html#Nebula_Internal_Editor_WorldDebug_LogEventHandler__ctor_System_Object_System_IntPtr_
   name: LogEventHandler
   nameWithType: WorldDebug.LogEventHandler.LogEventHandler
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.LogEventHandler
@@ -266,14 +266,14 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug.LogEventHandler.Invoke*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.LogEventHandler.Invoke
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.LogEventHandler.html#Nebula_Internal_Editor_WorldDebug_LogEventHandler_Invoke_System_Int32_System_String_System_String_System_String_
+  href: Nebula.Internal.Editor.WorldDebug.LogEventHandler.Invoke.html#Nebula_Internal_Editor_WorldDebug_LogEventHandler_Invoke_System_Int32_System_String_System_String_System_String_
   name: Invoke
   nameWithType: WorldDebug.LogEventHandler.Invoke
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.Invoke
 - uid: Nebula.Internal.Editor.WorldDebug.LogEventHandler.BeginInvoke*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.LogEventHandler.BeginInvoke
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.LogEventHandler.html#Nebula_Internal_Editor_WorldDebug_LogEventHandler_BeginInvoke_System_Int32_System_String_System_String_System_String_System_AsyncCallback_System_Object_
+  href: Nebula.Internal.Editor.WorldDebug.LogEventHandler.BeginInvoke.html#Nebula_Internal_Editor_WorldDebug_LogEventHandler_BeginInvoke_System_Int32_System_String_System_String_System_String_System_AsyncCallback_System_Object_
   name: BeginInvoke
   nameWithType: WorldDebug.LogEventHandler.BeginInvoke
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.BeginInvoke
@@ -296,7 +296,8 @@ references:
 - uid: Nebula.Internal.Editor.WorldDebug.LogEventHandler.EndInvoke*
   commentId: Overload:Nebula.Internal.Editor.WorldDebug.LogEventHandler.EndInvoke
   isExternal: true
-  href: Nebula.Internal.Editor.WorldDebug.LogEventHandler.html#Nebula_Internal_Editor_WorldDebug_LogEventHandler_EndInvoke_System_IAsyncResult_
+  href: Nebula.Internal.Editor.WorldDebug.LogEventHandler.EndInvoke.html#Nebula_Internal_Editor_WorldDebug_LogEventHandler_EndInvoke_System_IAsyncResult_
   name: EndInvoke
   nameWithType: WorldDebug.LogEventHandler.EndInvoke
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.EndInvoke
+memberLayout: SeparatePages

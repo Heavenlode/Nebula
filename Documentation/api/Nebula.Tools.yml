@@ -1,0 +1,229 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Tools
+  commentId: N:Nebula.Tools
+  id: Nebula.Tools
+  children:
+  - Nebula.Tools.Main
+  - Nebula.Tools.Main.MethodName
+  - Nebula.Tools.Main.PropertyName
+  - Nebula.Tools.Main.SignalName
+  - Nebula.Tools.ProjectSettingsController
+  - Nebula.Tools.ProjectSettingsController.MethodName
+  - Nebula.Tools.ProjectSettingsController.PropertyName
+  - Nebula.Tools.ProjectSettingsController.SignalName
+  langs:
+  - csharp
+  - vb
+  name: Nebula.Tools
+  nameWithType: Nebula.Tools
+  fullName: Nebula.Tools
+  type: Namespace
+  assemblies:
+  - Nebula
+references:
+- uid: Nebula.Tools.Main
+  commentId: T:Nebula.Tools.Main
+  parent: Nebula.Tools
+  isExternal: true
+  href: Nebula.Tools.Main.html
+  name: Main
+  nameWithType: Main
+  fullName: Nebula.Tools.Main
+- uid: Nebula.Tools.Main.MethodName
+  commentId: T:Nebula.Tools.Main.MethodName
+  isExternal: true
+  href: Nebula.Tools.Main.html
+  name: Main.MethodName
+  nameWithType: Main.MethodName
+  fullName: Nebula.Tools.Main.MethodName
+  spec.csharp:
+  - uid: Nebula.Tools.Main
+    name: Main
+    isExternal: true
+    href: Nebula.Tools.Main.html
+  - name: .
+  - uid: Nebula.Tools.Main.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Tools.Main.MethodName.html
+  spec.vb:
+  - uid: Nebula.Tools.Main
+    name: Main
+    isExternal: true
+    href: Nebula.Tools.Main.html
+  - name: .
+  - uid: Nebula.Tools.Main.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Tools.Main.MethodName.html
+- uid: Nebula.Tools.Main.PropertyName
+  commentId: T:Nebula.Tools.Main.PropertyName
+  isExternal: true
+  href: Nebula.Tools.Main.html
+  name: Main.PropertyName
+  nameWithType: Main.PropertyName
+  fullName: Nebula.Tools.Main.PropertyName
+  spec.csharp:
+  - uid: Nebula.Tools.Main
+    name: Main
+    isExternal: true
+    href: Nebula.Tools.Main.html
+  - name: .
+  - uid: Nebula.Tools.Main.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Tools.Main.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Tools.Main
+    name: Main
+    isExternal: true
+    href: Nebula.Tools.Main.html
+  - name: .
+  - uid: Nebula.Tools.Main.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Tools.Main.PropertyName.html
+- uid: Nebula.Tools.Main.SignalName
+  commentId: T:Nebula.Tools.Main.SignalName
+  isExternal: true
+  href: Nebula.Tools.Main.html
+  name: Main.SignalName
+  nameWithType: Main.SignalName
+  fullName: Nebula.Tools.Main.SignalName
+  spec.csharp:
+  - uid: Nebula.Tools.Main
+    name: Main
+    isExternal: true
+    href: Nebula.Tools.Main.html
+  - name: .
+  - uid: Nebula.Tools.Main.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Tools.Main.SignalName.html
+  spec.vb:
+  - uid: Nebula.Tools.Main
+    name: Main
+    isExternal: true
+    href: Nebula.Tools.Main.html
+  - name: .
+  - uid: Nebula.Tools.Main.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Tools.Main.SignalName.html
+- uid: Nebula.Tools.ProjectSettingsController
+  commentId: T:Nebula.Tools.ProjectSettingsController
+  isExternal: true
+  href: Nebula.Tools.ProjectSettingsController.html
+  name: ProjectSettingsController
+  nameWithType: ProjectSettingsController
+  fullName: Nebula.Tools.ProjectSettingsController
+- uid: Nebula.Tools.ProjectSettingsController.MethodName
+  commentId: T:Nebula.Tools.ProjectSettingsController.MethodName
+  isExternal: true
+  href: Nebula.Tools.ProjectSettingsController.html
+  name: ProjectSettingsController.MethodName
+  nameWithType: ProjectSettingsController.MethodName
+  fullName: Nebula.Tools.ProjectSettingsController.MethodName
+  spec.csharp:
+  - uid: Nebula.Tools.ProjectSettingsController
+    name: ProjectSettingsController
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.html
+  - name: .
+  - uid: Nebula.Tools.ProjectSettingsController.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.MethodName.html
+  spec.vb:
+  - uid: Nebula.Tools.ProjectSettingsController
+    name: ProjectSettingsController
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.html
+  - name: .
+  - uid: Nebula.Tools.ProjectSettingsController.MethodName
+    name: MethodName
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.MethodName.html
+- uid: Nebula.Tools.ProjectSettingsController.PropertyName
+  commentId: T:Nebula.Tools.ProjectSettingsController.PropertyName
+  isExternal: true
+  href: Nebula.Tools.ProjectSettingsController.html
+  name: ProjectSettingsController.PropertyName
+  nameWithType: ProjectSettingsController.PropertyName
+  fullName: Nebula.Tools.ProjectSettingsController.PropertyName
+  spec.csharp:
+  - uid: Nebula.Tools.ProjectSettingsController
+    name: ProjectSettingsController
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.html
+  - name: .
+  - uid: Nebula.Tools.ProjectSettingsController.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.PropertyName.html
+  spec.vb:
+  - uid: Nebula.Tools.ProjectSettingsController
+    name: ProjectSettingsController
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.html
+  - name: .
+  - uid: Nebula.Tools.ProjectSettingsController.PropertyName
+    name: PropertyName
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.PropertyName.html
+- uid: Nebula.Tools.ProjectSettingsController.SignalName
+  commentId: T:Nebula.Tools.ProjectSettingsController.SignalName
+  isExternal: true
+  href: Nebula.Tools.ProjectSettingsController.html
+  name: ProjectSettingsController.SignalName
+  nameWithType: ProjectSettingsController.SignalName
+  fullName: Nebula.Tools.ProjectSettingsController.SignalName
+  spec.csharp:
+  - uid: Nebula.Tools.ProjectSettingsController
+    name: ProjectSettingsController
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.html
+  - name: .
+  - uid: Nebula.Tools.ProjectSettingsController.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.SignalName.html
+  spec.vb:
+  - uid: Nebula.Tools.ProjectSettingsController
+    name: ProjectSettingsController
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.html
+  - name: .
+  - uid: Nebula.Tools.ProjectSettingsController.SignalName
+    name: SignalName
+    isExternal: true
+    href: Nebula.Tools.ProjectSettingsController.SignalName.html
+- uid: Nebula.Tools
+  commentId: N:Nebula.Tools
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Tools
+  nameWithType: Nebula.Tools
+  fullName: Nebula.Tools
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Tools.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Tools
+    name: Tools
+    isExternal: true
+    href: Nebula.Tools.html
+memberLayout: SeparatePages

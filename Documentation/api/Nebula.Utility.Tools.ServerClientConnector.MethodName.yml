@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector.MethodName
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -256,7 +256,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector.MethodName._Ready
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -279,7 +279,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector.MethodName.prepareServer
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -302,7 +302,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector.MethodName.prepareClient
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -325,7 +325,7 @@ items:
   fullName: Nebula.Utility.Tools.ServerClientConnector.MethodName.MethodName()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Utility.Tools.ServerClientConnector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Tools
@@ -2115,10 +2115,11 @@ references:
 - uid: Nebula.Utility.Tools.ServerClientConnector.MethodName.#ctor*
   commentId: Overload:Nebula.Utility.Tools.ServerClientConnector.MethodName.#ctor
   isExternal: true
-  href: Nebula.Utility.Tools.ServerClientConnector.MethodName.html#Nebula_Utility_Tools_ServerClientConnector_MethodName__ctor
+  href: Nebula.Utility.Tools.ServerClientConnector.MethodName.-ctor.html#Nebula_Utility_Tools_ServerClientConnector_MethodName__ctor
   name: MethodName
   nameWithType: ServerClientConnector.MethodName.MethodName
   fullName: Nebula.Utility.Tools.ServerClientConnector.MethodName.MethodName
   nameWithType.vb: ServerClientConnector.MethodName.New
   fullName.vb: Nebula.Utility.Tools.ServerClientConnector.MethodName.New
   name.vb: New
+memberLayout: SeparatePages

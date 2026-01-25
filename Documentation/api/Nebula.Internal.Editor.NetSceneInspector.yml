@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Internal.Editor.NetSceneInspector
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.NetSceneInspector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.NetSceneInspector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -161,7 +161,7 @@ items:
   fullName: Nebula.Internal.Editor.NetSceneInspector._CanHandle(Godot.GodotObject)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Inspector/NetSceneInspector.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Inspector/NetSceneInspector.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -188,7 +188,7 @@ items:
   fullName: Nebula.Internal.Editor.NetSceneInspector._ParseBegin(Godot.GodotObject)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/Inspector/NetSceneInspector.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/Inspector/NetSceneInspector.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -213,7 +213,7 @@ items:
   fullName: Nebula.Internal.Editor.NetSceneInspector.NetSceneInspector()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.NetSceneInspector_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.NetSceneInspector_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -3259,7 +3259,7 @@ references:
 - uid: Nebula.Internal.Editor.NetSceneInspector._CanHandle*
   commentId: Overload:Nebula.Internal.Editor.NetSceneInspector._CanHandle
   isExternal: true
-  href: Nebula.Internal.Editor.NetSceneInspector.html#Nebula_Internal_Editor_NetSceneInspector__CanHandle_Godot_GodotObject_
+  href: Nebula.Internal.Editor.NetSceneInspector._CanHandle.html#Nebula_Internal_Editor_NetSceneInspector__CanHandle_Godot_GodotObject_
   name: _CanHandle
   nameWithType: NetSceneInspector._CanHandle
   fullName: Nebula.Internal.Editor.NetSceneInspector._CanHandle
@@ -3302,17 +3302,18 @@ references:
 - uid: Nebula.Internal.Editor.NetSceneInspector._ParseBegin*
   commentId: Overload:Nebula.Internal.Editor.NetSceneInspector._ParseBegin
   isExternal: true
-  href: Nebula.Internal.Editor.NetSceneInspector.html#Nebula_Internal_Editor_NetSceneInspector__ParseBegin_Godot_GodotObject_
+  href: Nebula.Internal.Editor.NetSceneInspector._ParseBegin.html#Nebula_Internal_Editor_NetSceneInspector__ParseBegin_Godot_GodotObject_
   name: _ParseBegin
   nameWithType: NetSceneInspector._ParseBegin
   fullName: Nebula.Internal.Editor.NetSceneInspector._ParseBegin
 - uid: Nebula.Internal.Editor.NetSceneInspector.#ctor*
   commentId: Overload:Nebula.Internal.Editor.NetSceneInspector.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.NetSceneInspector.html#Nebula_Internal_Editor_NetSceneInspector__ctor
+  href: Nebula.Internal.Editor.NetSceneInspector.-ctor.html#Nebula_Internal_Editor_NetSceneInspector__ctor
   name: NetSceneInspector
   nameWithType: NetSceneInspector.NetSceneInspector
   fullName: Nebula.Internal.Editor.NetSceneInspector.NetSceneInspector
   nameWithType.vb: NetSceneInspector.New
   fullName.vb: Nebula.Internal.Editor.NetSceneInspector.New
   name.vb: New
+memberLayout: SeparatePages

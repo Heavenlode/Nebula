@@ -9,8 +9,6 @@ items:
   - Nebula.Internal.Editor.Downloader.DownloadAddon(System.String,System.String,System.String,System.String)
   - Nebula.Internal.Editor.Downloader.DownloadCompleted
   - Nebula.Internal.Editor.Downloader.DownloadFailed
-  - Nebula.Internal.Editor.Downloader.EmitSignalDownloadCompleted(System.String)
-  - Nebula.Internal.Editor.Downloader.EmitSignalDownloadFailed(System.String)
   - Nebula.Internal.Editor.Downloader._Ready
   langs:
   - csharp
@@ -20,7 +18,7 @@ items:
   fullName: Nebula.Internal.Editor.Downloader
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -357,7 +355,7 @@ items:
   fullName: Nebula.Internal.Editor.Downloader._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/AddonManager/Downloader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/AddonManager/Downloader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -379,7 +377,7 @@ items:
   fullName: Nebula.Internal.Editor.Downloader.DownloadAddon(string, string, string, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/addons/Nebula/Tools/AddonManager/Downloader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/addons/Nebula/Tools/AddonManager/Downloader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -399,58 +397,6 @@ items:
   nameWithType.vb: Downloader.DownloadAddon(String, String, String, String)
   fullName.vb: Nebula.Internal.Editor.Downloader.DownloadAddon(String, String, String, String)
   name.vb: DownloadAddon(String, String, String, String)
-- uid: Nebula.Internal.Editor.Downloader.EmitSignalDownloadCompleted(System.String)
-  commentId: M:Nebula.Internal.Editor.Downloader.EmitSignalDownloadCompleted(System.String)
-  id: EmitSignalDownloadCompleted(System.String)
-  parent: Nebula.Internal.Editor.Downloader
-  langs:
-  - csharp
-  - vb
-  name: EmitSignalDownloadCompleted(string)
-  nameWithType: Downloader.EmitSignalDownloadCompleted(string)
-  fullName: Nebula.Internal.Editor.Downloader.EmitSignalDownloadCompleted(string)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.Downloader_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Internal.Editor
-  syntax:
-    content: protected void EmitSignalDownloadCompleted(string targetPath)
-    parameters:
-    - id: targetPath
-      type: System.String
-    content.vb: Protected Sub EmitSignalDownloadCompleted(targetPath As String)
-  overload: Nebula.Internal.Editor.Downloader.EmitSignalDownloadCompleted*
-  nameWithType.vb: Downloader.EmitSignalDownloadCompleted(String)
-  fullName.vb: Nebula.Internal.Editor.Downloader.EmitSignalDownloadCompleted(String)
-  name.vb: EmitSignalDownloadCompleted(String)
-- uid: Nebula.Internal.Editor.Downloader.EmitSignalDownloadFailed(System.String)
-  commentId: M:Nebula.Internal.Editor.Downloader.EmitSignalDownloadFailed(System.String)
-  id: EmitSignalDownloadFailed(System.String)
-  parent: Nebula.Internal.Editor.Downloader
-  langs:
-  - csharp
-  - vb
-  name: EmitSignalDownloadFailed(string)
-  nameWithType: Downloader.EmitSignalDownloadFailed(string)
-  fullName: Nebula.Internal.Editor.Downloader.EmitSignalDownloadFailed(string)
-  type: Method
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.Downloader_ScriptSignals.generated.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Internal.Editor
-  syntax:
-    content: protected void EmitSignalDownloadFailed(string error)
-    parameters:
-    - id: error
-      type: System.String
-    content.vb: Protected Sub EmitSignalDownloadFailed([error] As String)
-  overload: Nebula.Internal.Editor.Downloader.EmitSignalDownloadFailed*
-  nameWithType.vb: Downloader.EmitSignalDownloadFailed(String)
-  fullName.vb: Nebula.Internal.Editor.Downloader.EmitSignalDownloadFailed(String)
-  name.vb: EmitSignalDownloadFailed(String)
 - uid: Nebula.Internal.Editor.Downloader.#ctor
   commentId: M:Nebula.Internal.Editor.Downloader.#ctor
   id: '#ctor'
@@ -463,7 +409,7 @@ items:
   fullName: Nebula.Internal.Editor.Downloader.Downloader()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -486,16 +432,15 @@ items:
   fullName: Nebula.Internal.Editor.Downloader.DownloadCompleted
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.Downloader_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
-  example: []
   syntax:
-    content: public event Downloader.DownloadCompletedEventHandler DownloadCompleted
+    content: public event Action<string> DownloadCompleted
     return:
-      type: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-    content.vb: Public Event DownloadCompleted As Downloader.DownloadCompletedEventHandler
+      type: System.Action{System.String}
+    content.vb: Public Event DownloadCompleted As Action(Of String)
 - uid: Nebula.Internal.Editor.Downloader.DownloadFailed
   commentId: E:Nebula.Internal.Editor.Downloader.DownloadFailed
   id: DownloadFailed
@@ -508,16 +453,15 @@ items:
   fullName: Nebula.Internal.Editor.Downloader.DownloadFailed
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/6934753158e75e4cbe917368b26a15034ea45ff3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.Downloader_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/e6f3d58379c38de2a1384baa45474be8b3c76324/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.Downloader_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
-  example: []
   syntax:
-    content: public event Downloader.DownloadFailedEventHandler DownloadFailed
+    content: public event Action<string> DownloadFailed
     return:
-      type: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-    content.vb: Public Event DownloadFailed As Downloader.DownloadFailedEventHandler
+      type: System.Action{System.String}
+    content.vb: Public Event DownloadFailed As Action(Of String)
 references:
 - uid: Nebula.Internal.Editor
   commentId: N:Nebula.Internal.Editor
@@ -7242,14 +7186,14 @@ references:
 - uid: Nebula.Internal.Editor.Downloader._Ready*
   commentId: Overload:Nebula.Internal.Editor.Downloader._Ready
   isExternal: true
-  href: Nebula.Internal.Editor.Downloader.html#Nebula_Internal_Editor_Downloader__Ready
+  href: Nebula.Internal.Editor.Downloader._Ready.html#Nebula_Internal_Editor_Downloader__Ready
   name: _Ready
   nameWithType: Downloader._Ready
   fullName: Nebula.Internal.Editor.Downloader._Ready
 - uid: Nebula.Internal.Editor.Downloader.DownloadAddon*
   commentId: Overload:Nebula.Internal.Editor.Downloader.DownloadAddon
   isExternal: true
-  href: Nebula.Internal.Editor.Downloader.html#Nebula_Internal_Editor_Downloader_DownloadAddon_System_String_System_String_System_String_System_String_
+  href: Nebula.Internal.Editor.Downloader.DownloadAddon.html#Nebula_Internal_Editor_Downloader_DownloadAddon_System_String_System_String_System_String_System_String_
   name: DownloadAddon
   nameWithType: Downloader.DownloadAddon
   fullName: Nebula.Internal.Editor.Downloader.DownloadAddon
@@ -7264,83 +7208,77 @@ references:
   nameWithType.vb: String
   fullName.vb: String
   name.vb: String
-- uid: Nebula.Internal.Editor.Downloader.EmitSignalDownloadCompleted*
-  commentId: Overload:Nebula.Internal.Editor.Downloader.EmitSignalDownloadCompleted
-  isExternal: true
-  href: Nebula.Internal.Editor.Downloader.html#Nebula_Internal_Editor_Downloader_EmitSignalDownloadCompleted_System_String_
-  name: EmitSignalDownloadCompleted
-  nameWithType: Downloader.EmitSignalDownloadCompleted
-  fullName: Nebula.Internal.Editor.Downloader.EmitSignalDownloadCompleted
-- uid: Nebula.Internal.Editor.Downloader.EmitSignalDownloadFailed*
-  commentId: Overload:Nebula.Internal.Editor.Downloader.EmitSignalDownloadFailed
-  isExternal: true
-  href: Nebula.Internal.Editor.Downloader.html#Nebula_Internal_Editor_Downloader_EmitSignalDownloadFailed_System_String_
-  name: EmitSignalDownloadFailed
-  nameWithType: Downloader.EmitSignalDownloadFailed
-  fullName: Nebula.Internal.Editor.Downloader.EmitSignalDownloadFailed
 - uid: Nebula.Internal.Editor.Downloader.#ctor*
   commentId: Overload:Nebula.Internal.Editor.Downloader.#ctor
   isExternal: true
-  href: Nebula.Internal.Editor.Downloader.html#Nebula_Internal_Editor_Downloader__ctor
+  href: Nebula.Internal.Editor.Downloader.-ctor.html#Nebula_Internal_Editor_Downloader__ctor
   name: Downloader
   nameWithType: Downloader.Downloader
   fullName: Nebula.Internal.Editor.Downloader.Downloader
   nameWithType.vb: Downloader.New
   fullName.vb: Nebula.Internal.Editor.Downloader.New
   name.vb: New
-- uid: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-  commentId: T:Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-  parent: Nebula.Internal.Editor
-  isExternal: true
-  href: Nebula.Internal.Editor.Downloader.html
-  name: Downloader.DownloadCompletedEventHandler
-  nameWithType: Downloader.DownloadCompletedEventHandler
-  fullName: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
+- uid: System.Action{System.String}
+  commentId: T:System.Action{System.String}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<string>
+  nameWithType: Action<string>
+  fullName: System.Action<string>
+  nameWithType.vb: Action(Of String)
+  fullName.vb: System.Action(Of String)
+  name.vb: Action(Of String)
   spec.csharp:
-  - uid: Nebula.Internal.Editor.Downloader
-    name: Downloader
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.Internal.Editor.Downloader.html
-  - name: .
-  - uid: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-    name: DownloadCompletedEventHandler
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: System.String
+    name: string
     isExternal: true
-    href: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler.html
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
   spec.vb:
-  - uid: Nebula.Internal.Editor.Downloader
-    name: Downloader
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.Internal.Editor.Downloader.html
-  - name: .
-  - uid: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler
-    name: DownloadCompletedEventHandler
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
     isExternal: true
-    href: Nebula.Internal.Editor.Downloader.DownloadCompletedEventHandler.html
-- uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-  commentId: T:Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-  parent: Nebula.Internal.Editor
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
   isExternal: true
-  href: Nebula.Internal.Editor.Downloader.html
-  name: Downloader.DownloadFailedEventHandler
-  nameWithType: Downloader.DownloadFailedEventHandler
-  fullName: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
   spec.csharp:
-  - uid: Nebula.Internal.Editor.Downloader
-    name: Downloader
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.Internal.Editor.Downloader.html
-  - name: .
-  - uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-    name: DownloadFailedEventHandler
-    isExternal: true
-    href: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.html
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
   spec.vb:
-  - uid: Nebula.Internal.Editor.Downloader
-    name: Downloader
+  - uid: System.Action`1
+    name: Action
     isExternal: true
-    href: Nebula.Internal.Editor.Downloader.html
-  - name: .
-  - uid: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler
-    name: DownloadFailedEventHandler
-    isExternal: true
-    href: Nebula.Internal.Editor.Downloader.DownloadFailedEventHandler.html
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+memberLayout: SeparatePages

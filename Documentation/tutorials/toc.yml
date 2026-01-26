@@ -1,5 +1,5 @@
-- name: Snake
+- name: Big Chungus Online
   items:
-  - name: Create a Snake
-    href: snake/create-a-snake.md
+  - name: Getting Started
+    href: big-chungus-online/chapter-1-getting-started.md
 

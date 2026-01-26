@@ -19,7 +19,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.ServerDebugClient_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -584,7 +584,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient._OnCloseRequested()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -604,7 +604,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -626,7 +626,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -648,7 +648,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient._Process(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -676,7 +676,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.Dispose(bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -704,7 +704,7 @@ items:
   fullName: Nebula.Internal.Editor.ServerDebugClient.ServerDebugClient()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/Debugger/ServerDebugClient.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor

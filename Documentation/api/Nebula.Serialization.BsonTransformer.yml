@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Serialization.BsonTransformer
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/BsonTransformer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Serialization/BsonTransformer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -49,7 +49,7 @@ items:
   fullName: Nebula.Serialization.BsonTransformer.SerializeBsonValue(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/BsonTransformer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Serialization/BsonTransformer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -74,7 +74,7 @@ items:
   fullName: Nebula.Serialization.BsonTransformer.DeserializeBsonValue<T>(byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Serialization/BsonTransformer.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Serialization/BsonTransformer.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization

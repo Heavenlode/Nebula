@@ -39,7 +39,7 @@ items:
   fullName: Nebula.Serialization.Protocol
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -73,7 +73,7 @@ items:
   fullName: Nebula.Serialization.Protocol.LookupProperty(string, string, string, out Nebula.Serialization.ProtocolNetProperty)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -109,7 +109,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackProperty(string, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -141,7 +141,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryUnpackProperty(string, int, out Nebula.Serialization.ProtocolNetProperty)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -175,7 +175,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetPropertyCount(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -205,7 +205,7 @@ items:
   fullName: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId(string, byte, string, out Nebula.Serialization.ProtocolNetProperty)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -244,7 +244,7 @@ items:
   fullName: Nebula.Serialization.Protocol.LookupFunction(string, string, string, out Nebula.Serialization.ProtocolNetFunction)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -280,7 +280,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackFunction(string, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -312,7 +312,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetFunctionCount(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -342,7 +342,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetScenePath(byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -372,7 +372,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryGetSceneId(string, out byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -404,7 +404,7 @@ items:
   fullName: Nebula.Serialization.Protocol.IsNetScene(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -434,7 +434,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetSceneInterest(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -464,7 +464,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryGetSceneInterest(string, out Nebula.Serialization.ProtocolSceneInterest)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -496,7 +496,7 @@ items:
   fullName: Nebula.Serialization.Protocol.PackScene(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -526,7 +526,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackScene(byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -556,7 +556,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetStaticNodePath(string, byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -588,7 +588,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryGetStaticNodeId(string, string, out byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -622,7 +622,7 @@ items:
   fullName: Nebula.Serialization.Protocol.PackNode(string, string, out byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -656,7 +656,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackNode(string, byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -688,7 +688,7 @@ items:
   fullName: Nebula.Serialization.Protocol.InvokeStaticMethod(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType, params object[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -725,7 +725,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetStaticMethodCallable(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -757,7 +757,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetStaticMethod(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -786,7 +786,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetDeserializer(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -821,7 +821,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetSerializer(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -856,7 +856,7 @@ items:
   fullName: Nebula.Serialization.Protocol.ToGodotVariantType(Nebula.Serialization.SerialVariantType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -883,7 +883,7 @@ items:
   fullName: Nebula.Serialization.Protocol.FromGodotVariantType(Godot.Variant.Type)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization

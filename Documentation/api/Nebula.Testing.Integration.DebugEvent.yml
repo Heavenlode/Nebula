@@ -15,7 +15,7 @@ items:
   fullName: Nebula.Testing.Integration.DebugEvent
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -43,7 +43,7 @@ items:
   fullName: Nebula.Testing.Integration.DebugEvent.Category
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -66,7 +66,7 @@ items:
   fullName: Nebula.Testing.Integration.DebugEvent.Message
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Testing/Integration/GodotProcess.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration

@@ -15,7 +15,7 @@ items:
   fullName: Nebula.WorldRunner.DebugMessenger
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -49,7 +49,7 @@ items:
   fullName: Nebula.WorldRunner.DebugMessenger.DebugMessenger(Nebula.WorldRunner)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -75,7 +75,7 @@ items:
   fullName: Nebula.WorldRunner.DebugMessenger.Send(string, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula

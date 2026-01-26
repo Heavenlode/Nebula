@@ -21,7 +21,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -614,7 +614,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.ScenesTree
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -649,7 +649,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.Dispose(bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Dock/NetScenes/DockNetScenes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/Dock/NetScenes/DockNetScenes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -677,7 +677,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes._OnVisibilityChanged()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -697,7 +697,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.OnInspectNode(Godot.TreeItem, Godot.Node)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/Dock/NetScenes/DockNetScenes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/Dock/NetScenes/DockNetScenes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -722,7 +722,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes._OnItemSelected()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -742,7 +742,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.EmitSignalInspectNode(Godot.Node)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -765,7 +765,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.DockNetScenes()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -788,7 +788,7 @@ items:
   fullName: Nebula.Internal.Editor.DockNetScenes.InspectNode
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptSignals.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptSignalsGenerator/Nebula.Internal.Editor.DockNetScenes_ScriptSignals.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor

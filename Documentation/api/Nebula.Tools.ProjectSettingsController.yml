@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -358,7 +358,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController._EnterTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/ProjectSettingsController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/ProjectSettingsController.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -384,7 +384,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/ProjectSettingsController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/ProjectSettingsController.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -410,7 +410,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController.Build()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Tools/ProjectSettingsController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Tools/ProjectSettingsController.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -435,7 +435,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController.ProjectSettingsController()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools

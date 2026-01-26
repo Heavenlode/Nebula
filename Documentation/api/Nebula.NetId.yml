@@ -31,7 +31,7 @@ items:
   fullName: Nebula.NetId
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -81,7 +81,7 @@ items:
   fullName: Nebula.NetId.NONE
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -104,7 +104,7 @@ items:
   fullName: Nebula.NetId.Value
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -127,7 +127,7 @@ items:
   fullName: Nebula.NetId.NetId(long)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -155,7 +155,7 @@ items:
   fullName: Nebula.NetId.ToString()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -179,7 +179,7 @@ items:
   fullName: Nebula.NetId.Equals(object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -209,7 +209,7 @@ items:
   fullName: Nebula.NetId.Equals(Nebula.NetId)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -237,7 +237,7 @@ items:
   fullName: Nebula.NetId.GetHashCode()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -261,7 +261,7 @@ items:
   fullName: Nebula.NetId.operator ==(Nebula.NetId, Nebula.NetId)
   type: Operator
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -291,7 +291,7 @@ items:
   fullName: Nebula.NetId.operator !=(Nebula.NetId, Nebula.NetId)
   type: Operator
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -321,7 +321,7 @@ items:
   fullName: Nebula.NetId.explicit operator Nebula.NetId(long)
   type: Operator
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -351,7 +351,7 @@ items:
   fullName: Nebula.NetId.explicit operator long(Nebula.NetId)
   type: Operator
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -381,7 +381,7 @@ items:
   fullName: Nebula.NetId.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, in Nebula.NetId, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -414,7 +414,7 @@ items:
   fullName: Nebula.NetId.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -447,7 +447,7 @@ items:
   fullName: Nebula.NetId.BsonSerialize(in Nebula.NetId)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -476,7 +476,7 @@ items:
   fullName: Nebula.NetId.BsonDeserialize(MongoDB.Bson.BsonValue)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -505,7 +505,7 @@ items:
   fullName: Nebula.NetId.IsNone
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -533,7 +533,7 @@ items:
   fullName: Nebula.NetId.IsValid
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -558,7 +558,7 @@ items:
   fullName: Nebula.NetId.None
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/168df2e5039c4c52bf9e23c670d1a403492d8eb9/addons/Nebula/Core/NetId.cs
+    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetId.cs
   assemblies:
   - Nebula
   namespace: Nebula

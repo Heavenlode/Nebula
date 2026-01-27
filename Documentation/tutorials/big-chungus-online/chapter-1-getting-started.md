@@ -1,10 +1,11 @@
-# Big Chungus Online - 1 - Nebula Setup
-
-## Introduction
+# Big Chungus Online - Nebula Setup
 
 This chapter covers:
 * Some basic Nebula terminology
 * How to setup Nebula and get it running
+
+## Introduction
+
 
 As an introduction to Nebula, we're going to make a game called Big Chungus Online. The objective of the game is to consume pellets to grow your character bigger. Larger players eat smaller ones. _Definitely not inspired by [another game](https://agar.io)._
 
@@ -14,7 +15,7 @@ As an introduction to Nebula, we're going to make a game called Big Chungus Onli
 
 First, we'll create a Godot project, and create a C# solution for it. We'll need to make sure we have the .NET version of Godot installed to do this. This is possible for existing Godot projects too if preferred!
 
-![Create Solution](~/images/big-chungus/create-solution.png)
+![Create Solution](~/images/big-chungus/chapter-1/create-solution.png)
 
 Now download Nebula [(Github download link)](https://github.com/Heavenlode/Nebula/archive/refs/heads/main.zip). From this zip, we'll copy the addons folder into our new Godot project. We might get errors in Godot which is fine, just ignore it.
 
@@ -39,7 +40,7 @@ At this point, a file called `FodyWeavers.xml` will suddenly appear in the proje
 
 Now that we've built the project, we can go ahead and enable Nebula in the project settings.
 
-![Enable Nebula](~/images/big-chungus/enable-nebula.png)
+![Enable Nebula](~/images/big-chungus/chapter-1/enable-nebula.png)
 
 >[!WARNING] Trying to enable Nebula before compiling/building will result in errors and fail to enable. It can only be enabled after the build succeeds.
 
@@ -51,15 +52,15 @@ Nebula requires you to tell it when to start the server or start client. However
 
 For that boilerplate, we'll just set Godot's Main Scene to `res://addons/Nebula/Utils/ServerClientConnector/default_server_client_connector.tscn`
 
-![Enable Nebula](~/images/big-chungus/boilerplate-scene.png)
+![Enable Nebula](~/images/big-chungus/chapter-1/boilerplate-scene.png)
 
 Don't worry, this isn't going to be the scene where the game lives. This scene will tell the server to create our game World for us. How does it do that?
 
 Well, first let's setup a new blank scene with a Node3D, and attach a C# script to it, called `GameArena.cs`
 
-![Enable Nebula](~/images/big-chungus/create-scene.png)
+![Enable Nebula](~/images/big-chungus/chapter-1/create-scene.png)
 
-![Enable Nebula](~/images/big-chungus/attach-script.png)
+![Enable Nebula](~/images/big-chungus/chapter-1/attach-script.png)
 
 The script will have the following content:
 
@@ -71,9 +72,11 @@ public partial class GameArena : NetNode3D
 {
     public override void _WorldReady()
     {
+        base._WorldReady();
         Debugger.Instance.Log(Debugger.DebugLevel.INFO, $"GameArena _WorldReady!");
     }
 }
+
 ```
 
 That's it, we've created our first Nebula "World" and "NetScene".
@@ -86,17 +89,17 @@ What makes it a World? Well, it will be a World as soon as we use it to spawn a 
 
 To tell Nebula to use `game_arena.tscn` as our World scene, we set the "Default Scene" under the new "Nebula -> World" section in Project Settings.
 
-![Enable Nebula](~/images/big-chungus/default-world-scene.png)
+![Enable Nebula](~/images/big-chungus/chapter-1/default-world-scene.png)
 
 While we're at it, let's update Nebula's debug log level to "INFO"
 
-![Enable Nebula](~/images/big-chungus/log-level.png)
+![Enable Nebula](~/images/big-chungus/chapter-1/log-level.png)
 
 Now we'll configure Godot to run three instances: a server and two clients.
 
-![Run Instances](~/images/big-chungus/run-instances.png)
+![Run Instances](~/images/big-chungus/chapter-1/run-instances.png)
 
-![Configure Run Instances](~/images/big-chungus/configure-run-instances.png)
+![Configure Run Instances](~/images/big-chungus/chapter-1/configure-run-instances.png)
 
 That's it. Now we can run the game. The output should show something similar to the following:
 
@@ -133,7 +136,7 @@ ServerClientConnector _Ready
 
 Our clients have connected to our server, and everyone got the correct `GameArena _WorldReady!` output! That means the server told the clients what scene to use as their World.
 
-Nebula is all setup. Now we can start building our game.
+Nebula is all setup. In the next chapter, we'll spawn our player characters and setup the game arena.
 
 ## Bonus
 
@@ -143,16 +146,16 @@ If you want, you can use Godot's debugger to look at the scene tree for the serv
 
 Server instance:
 
-![Server Scene Tree](~/images/big-chungus/server-scene-tree.png)
+![Server Scene Tree](~/images/big-chungus/chapter-1/server-scene-tree.png)
 
 Client instance:
 
-![Client Scene Tree](~/images/big-chungus/client-scene-tree.png)
+![Client Scene Tree](~/images/big-chungus/chapter-1/client-scene-tree.png)
 
 Notice how the server has the extra `00000000-0000-0000-0000-000000000000` node? That's a [World3D](https://docs.godotengine.org/en/stable/classes/class_world3d.html). Nebula uses those to spawn isolated instanced environments. You might recognize the crazy number as being a null uuidv4 / GUID. This is the World ID, which is null since we didn't specify one.
 
 One of the ways we can specify a World ID is by using a command line argument. Then we'll see it reflect in the server's scene tree accordingly.
 
-![Client Scene Tree](~/images/big-chungus/bonus-world-id.png)
+![Client Scene Tree](~/images/big-chungus/chapter-1/bonus-world-id.png)
 
-![Client Scene Tree](~/images/big-chungus/bonus-world-id-scene-tree.png)
+![Client Scene Tree](~/images/big-chungus/chapter-1/bonus-world-id-scene-tree.png)

@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using System.Threading.Tasks;
 
 namespace Nebula.Utility.Tools
 {
@@ -35,9 +36,10 @@ namespace Nebula.Utility.Tools
 			}
 		}
 
-		private void prepareClient()
+		private async void prepareClient()
 		{
 			Debugger.Instance.Log("ServerClientConnector prepareClient");
+			await Task.Delay(300);
 			NetRunner.Instance.StartClient();
 		}
 	}

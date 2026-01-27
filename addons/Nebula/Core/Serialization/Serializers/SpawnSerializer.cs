@@ -24,6 +24,7 @@ namespace Nebula.Serialization.Serializers
             public byte SceneId;
             public byte NodePathId;
             public ushort NetId;
+            public byte HasInputAuthority;
         }
 
         // Pre-allocated buffers for nested scene handling (static to avoid per-instance allocation)
@@ -145,7 +146,8 @@ namespace Nebula.Serialization.Serializers
                 throw new System.Exception($"FAILED TO PACK FOR SPAWN: Node path not found for {netController.RawNode.GetPath()}, relativePath={relativePath}");
             }
 
-            var hasInputAuth = netController.InputAuthority.Equals(peer) ? (byte)1 : (byte)0;
+            // Use ID comparison instead of Equals - more reliable for ENet.Peer structs
+            var hasInputAuth = netController.InputAuthority.IsSet && netController.InputAuthority.ID == peer.ID ? (byte)1 : (byte)0;
             NetWriter.WriteByte(buffer, hasInputAuth);
             
             // Write nested NetScenes
@@ -180,6 +182,7 @@ namespace Nebula.Serialization.Serializers
                     NetWriter.WriteByte(buffer, 0);
                     NetWriter.WriteByte(buffer, 0);
                     NetWriter.WriteUInt16(buffer, 0);
+                    NetWriter.WriteByte(buffer, 0);
                     continue;
                 }
                 
@@ -190,9 +193,13 @@ namespace Nebula.Serialization.Serializers
                         $"SceneId {nestedSceneId} exceeds safe limit (245). Too many registered scenes.");
                 }
                 
+                // Check if this peer owns the nested scene
+                var nestedHasInputAuth = nested.InputAuthority.IsSet && nested.InputAuthority.ID == peer.ID ? (byte)1 : (byte)0;
+                
                 NetWriter.WriteByte(buffer, nestedSceneId);
                 NetWriter.WriteByte(buffer, nested.CachedNodePathIdInParent);
                 NetWriter.WriteUInt16(buffer, nestedPeerId);
+                NetWriter.WriteByte(buffer, nestedHasInputAuth);
                 
                 // Mark nested as spawned so its NetPropertiesSerializer exports in same tick
                 currentWorld.SetSpawnedForClient(nested.NetId, peer);
@@ -346,6 +353,12 @@ namespace Nebula.Serialization.Serializers
                     local.NetId = new NetId(_nestedDataBuffer[matchIndex].NetId);
                     local.IsClientSpawn = true;
                     local.CurrentWorld = currentWorld;
+                    // Set InputAuthority if this client owns the nested scene
+                    if (_nestedDataBuffer[matchIndex].HasInputAuthority == 1)
+                    {
+                        local.InputAuthority = NetRunner.Instance.ServerPeer;
+                        currentWorld.MarkOwnedEntitiesDirty();
+                    }
                     // Set NetParentId so it gets added to DynamicNetworkChildren
                     local.NetParentId = nodeOut.NetId;
                     // Register with WorldRunner so it can receive despawn commands
@@ -373,6 +386,12 @@ namespace Nebula.Serialization.Serializers
                 instance.Network.NetId = new NetId(data.NetId);
                 instance.Network.IsClientSpawn = true;
                 instance.Network.CurrentWorld = currentWorld;
+                // Set InputAuthority if this client owns the nested scene
+                if (data.HasInputAuthority == 1)
+                {
+                    instance.Network.InputAuthority = NetRunner.Instance.ServerPeer;
+                    currentWorld.MarkOwnedEntitiesDirty();
+                }
                 
                 // Add to correct parent node using the path
                 Node targetParent;
@@ -514,6 +533,7 @@ namespace Nebula.Serialization.Serializers
                 var sceneId = NetReader.ReadByte(buffer);
                 var nodePathId = NetReader.ReadByte(buffer);
                 var netId = NetReader.ReadUInt16(buffer);
+                var hasInputAuth = NetReader.ReadByte(buffer);
                 
                 // Skip entries where allocation failed on server (netId == 0)
                 // Note: sceneId=0 is valid (first registered scene), but netId=0 means no allocation
@@ -523,7 +543,8 @@ namespace Nebula.Serialization.Serializers
                 {
                     SceneId = sceneId,
                     NodePathId = nodePathId,
-                    NetId = netId
+                    NetId = netId,
+                    HasInputAuthority = hasInputAuth
                 };
             }
         }

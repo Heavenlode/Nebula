@@ -425,6 +425,50 @@ namespace Nebula
         /// </summary>
         public int CurrentTick { get; internal set; } = 0;
 
+        #region Snapshot Interpolation
+
+        /// <summary>
+        /// Time accumulator for sub-tick interpolation (global for all entities).
+        /// </summary>
+        internal float TimeSinceLastTick = 0f;
+
+        /// <summary>
+        /// Number of ticks to delay rendering behind the latest received tick.
+        /// Default 2 (~33ms at 60Hz). Lower = less latency, Higher = smoother.
+        /// </summary>
+        public int InterpolationDelayTicks { get; set; } = 2;
+
+        /// <summary>
+        /// Called in WorldRunner._Process to accumulate time between ticks.
+        /// </summary>
+        internal void AccumulateRenderTime(float delta)
+        {
+            TimeSinceLastTick += delta;
+        }
+
+        /// <summary>
+        /// Called when ClientProcessTick receives a new tick (resets accumulator).
+        /// </summary>
+        internal void OnWorldTickReceived(int tick)
+        {
+            // Reset accumulator when we receive a new tick
+            TimeSinceLastTick = 0f;
+        }
+
+        /// <summary>
+        /// Get the fractional render tick for interpolation (used by all entities).
+        /// </summary>
+        public float GetRenderTick()
+        {
+            float tickDuration = 1f / NetRunner.TPS;
+            float fractionalTick = TimeSinceLastTick / tickDuration;
+            // Clamp to avoid extrapolating too far if frame is slow
+            fractionalTick = Math.Min(fractionalTick, 1.5f);
+            return CurrentTick + fractionalTick - InterpolationDelayTicks;
+        }
+
+        #endregion
+
         #region Server Input Buffering
 
         // ============================================================
@@ -459,18 +503,42 @@ namespace Nebula
         }
 
         /// <summary>
-        /// Input buffers per-entity on the server side.
-        /// Key is NetId (not peer), since inputs are per-entity.
+        /// Composite key for server input buffers.
+        /// For NetScenes: (NetId, 0)
+        /// For static children: (parentNetId, staticChildId)
         /// </summary>
-        private Dictionary<NetId, EntityInputBuffer> _serverInputBuffers = new();
+        internal readonly struct InputBufferKey : IEquatable<InputBufferKey>
+        {
+            public readonly NetId ParentNetId;
+            public readonly byte StaticChildId;
+
+            public InputBufferKey(NetId parentNetId, byte staticChildId = 0)
+            {
+                ParentNetId = parentNetId;
+                StaticChildId = staticChildId;
+            }
+
+            public bool Equals(InputBufferKey other) => 
+                ParentNetId == other.ParentNetId && StaticChildId == other.StaticChildId;
+
+            public override bool Equals(object obj) => obj is InputBufferKey other && Equals(other);
+
+            public override int GetHashCode() => HashCode.Combine(ParentNetId.Value, StaticChildId);
+        }
+
+        /// <summary>
+        /// Input buffers per-entity on the server side.
+        /// Key is composite (parentNetId, staticChildId) to support static children.
+        /// </summary>
+        private Dictionary<InputBufferKey, EntityInputBuffer> _serverInputBuffers = new();
 
         /// <summary>
         /// Buffers input from a client for a specific entity and tick.
         /// </summary>
-        private void BufferServerInput(NetId netId, Tick tick, byte[] input)
+        private void BufferServerInput(InputBufferKey key, Tick tick, byte[] input)
         {
             // Use ref access to avoid struct copy on modification
-            ref var buffer = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(_serverInputBuffers, netId, out bool exists);
+            ref var buffer = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(_serverInputBuffers, key, out bool exists);
             if (!exists)
             {
                 buffer.Initialize();
@@ -501,10 +569,10 @@ namespace Nebula
         /// Gets buffered input for an entity at a specific tick.
         /// If not available, falls back to most recent input.
         /// </summary>
-        private byte[] GetServerBufferedInput(NetId netId, Tick tick)
+        private byte[] GetServerBufferedInput(InputBufferKey key, Tick tick)
         {
             // Use ref access to avoid struct copy when caching fallback
-            ref var buffer = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(_serverInputBuffers, netId);
+            ref var buffer = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(_serverInputBuffers, key);
             if (System.Runtime.CompilerServices.Unsafe.IsNullRef(ref buffer))
             {
                 return null;
@@ -547,9 +615,9 @@ namespace Nebula
         /// <summary>
         /// Cleans up input buffer for a despawned entity.
         /// </summary>
-        internal void CleanupEntityInputBuffer(NetId netId)
+        internal void CleanupEntityInputBuffer(InputBufferKey key)
         {
-            _serverInputBuffers.Remove(netId);
+            _serverInputBuffers.Remove(key);
         }
 
         #endregion
@@ -587,7 +655,7 @@ namespace Nebula
             CurrentTick = serverTick;
             _clientPredictedTick = serverTick;
             _predictionInitialized = true;
-            Log(Debugger.DebugLevel.VERBOSE, $"[Prediction] Initialized: serverTick={serverTick}");
+            // Log(Debugger.DebugLevel.VERBOSE, $"[Prediction] Initialized: serverTick={serverTick}");
         }
 
         /// <summary>
@@ -921,7 +989,7 @@ namespace Nebula
                     // Apply buffered input for this tick before processing
                     if (networkChild.HasInputSupport)
                     {
-                        var bufferedInput = GetServerBufferedInput(networkChild.NetId, CurrentTick);
+                        var bufferedInput = GetServerBufferedInput(new InputBufferKey(netController.NetId, networkChild.StaticChildId), CurrentTick);
                         if (bufferedInput != null)
                         {
                             networkChild.SetInputBytes(bufferedInput);
@@ -934,7 +1002,7 @@ namespace Nebula
                 // Apply input for the root netController if it has input support
                 if (netController.HasInputSupport)
                 {
-                    var rootInput = GetServerBufferedInput(netController.NetId, CurrentTick);
+                    var rootInput = GetServerBufferedInput(new InputBufferKey(netController.NetId), CurrentTick);
                     if (rootInput != null)
                     {
                         netController.SetInputBytes(rootInput);
@@ -1124,6 +1192,15 @@ namespace Nebula
         internal void QueueDespawn(NetworkController node)
         {
             QueueDespawnedNodes.Add(node);
+        }
+
+        public override void _Process(double delta)
+        {
+            base._Process(delta);
+            if (NetRunner.Instance.IsClient)
+            {
+                AccumulateRenderTime((float)delta);
+            }
         }
 
         public override void _PhysicsProcess(double delta)
@@ -1495,7 +1572,6 @@ namespace Nebula
         // Declare these as fields, not locals - reuse across ticks
         private Dictionary<ushort, NetBuffer> _peerNodesBuffers = new();
         private Dictionary<ushort, byte> _peerNodesSerializersList = new();
-        private List<ushort> _orderedNodeKeys = new();
         private NetBuffer _serializersBuffer;
         private NetBuffer _tempSerializerBuffer;
         private Dictionary<ushort, NetBuffer> _nodeBufferPool = new();
@@ -1608,21 +1684,27 @@ namespace Nebula
                     }
                 }
 
-                // Replace LINQ with manual sort
-                _orderedNodeKeys.Clear();
-                foreach (var key in _peerNodesBuffers.Keys)
+                // Write serializerMasks and node data in bitmask iteration order (ascending nodeId)
+                // This is zero-allocation and produces sorted order since Combine(g,local) = (g<<6)|local
+                for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
                 {
-                    _orderedNodeKeys.Add(key);
+                    if ((groupMask & (1 << g)) == 0) continue;
+                    for (int local = 0; local < NodeIdUtils.NODES_PER_GROUP; local++)
+                    {
+                        if ((_updatedNodesMask[g] & (1L << local)) == 0) continue;
+                        ushort nodeId = NodeIdUtils.Combine(g, local);
+                        NetWriter.WriteByte(_exportPeerBuffers[peerId], _peerNodesSerializersList[nodeId]);
+                    }
                 }
-                _orderedNodeKeys.Sort();
-
-                foreach (var nodeKey in _orderedNodeKeys)
+                for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
                 {
-                    NetWriter.WriteByte(_exportPeerBuffers[peerId], _peerNodesSerializersList[nodeKey]);
-                }
-                foreach (var nodeKey in _orderedNodeKeys)
-                {
-                    NetWriter.WriteBytes(_exportPeerBuffers[peerId], _peerNodesBuffers[nodeKey].WrittenSpan);
+                    if ((groupMask & (1 << g)) == 0) continue;
+                    for (int local = 0; local < NodeIdUtils.NODES_PER_GROUP; local++)
+                    {
+                        if ((_updatedNodesMask[g] & (1L << local)) == 0) continue;
+                        ushort nodeId = NodeIdUtils.Combine(g, local);
+                        NetWriter.WriteBytes(_exportPeerBuffers[peerId], _peerNodesBuffers[nodeId].WrittenSpan);
+                    }
                 }
             }
 
@@ -1672,59 +1754,73 @@ namespace Nebula
                 }
             }
 
-            foreach (var nodeIdSerializerList in _importNodeSerializerMap)
+            // Process nodes in bitmask iteration order (ascending nodeId) to match export order
+            for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
             {
-                var localNodeId = nodeIdSerializerList.Key;
-                var serializerMask = nodeIdSerializerList.Value;
-                var netController = GetNodeFromNetId(localNodeId);
-                bool isNewNode = netController == null;
-
-                if (netController == null)
+                if ((groupMask & (1 << g)) == 0) continue;
+                for (int local = 0; local < NodeIdUtils.NODES_PER_GROUP; local++)
                 {
-                    var blankScene = new NetNode3D();
-                    blankScene.Network.NetId = AllocateNetId(localNodeId);
-                    blankScene.SetupSerializers();
-                    NetRunner.Instance.AddChild(blankScene);
-                    TryRegisterPeerNode(blankScene.Network);
-                    netController = blankScene.Network;
-                }
+                    if ((nodeMasks[g] & (1L << local)) == 0) continue;
+                    
+                    ushort localNodeId = NodeIdUtils.Combine(g, local);
+                    var serializerMask = _importNodeSerializerMap[localNodeId];
+                    var netController = GetNodeFromNetId(localNodeId);
+                    bool isNewNode = netController == null;
 
-                for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
-                {
-                    if ((serializerMask & ((long)1 << serializerIdx)) == 0)
+                    if (netController == null)
                     {
-                        continue;
+                        var blankScene = new NetNode3D();
+                        blankScene.Network.NetId = AllocateNetId(localNodeId);
+                        blankScene.SetupSerializers();
+                        NetRunner.Instance.AddChild(blankScene);
+                        TryRegisterPeerNode(blankScene.Network);
+                        netController = blankScene.Network;
                     }
-                    var serializerInstance = netController.NetNode.Serializers[serializerIdx];
 
-                    try
+                    for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                     {
-                        serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
-                        if (netController != nodeOut)
+                        if ((serializerMask & ((long)1 << serializerIdx)) == 0)
                         {
-                            netController = nodeOut;
-                            serializerIdx = 0;
+                            continue;
                         }
-                    }
-                    catch (System.Exception ex)
-                    {
-                        // Log error with context and ABORT processing this tick entirely
-                        // to prevent cascading errors from corrupted buffer position
-                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[ImportState ERROR] Failed to import node {localNodeId} serializer {serializerIdx}: {ex.Message}. Buffer pos={stateBytes.ReadPosition}/{stateBytes.Length}. Aborting tick import.");
-                        return; // Don't continue processing - buffer position is corrupted
+                        var serializerInstance = netController.NetNode.Serializers[serializerIdx];
+
+                        try
+                        {
+                            serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
+                            if (netController != nodeOut)
+                            {
+                                netController = nodeOut;
+                                serializerIdx = 0;
+                            }
+                        }
+                        catch (System.Exception ex)
+                        {
+                            // Log error with context and ABORT processing this tick entirely
+                            // to prevent cascading errors from corrupted buffer position
+                            Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[ImportState ERROR] Failed to import node {localNodeId} serializer {serializerIdx}: {ex.Message}. Buffer pos={stateBytes.ReadPosition}/{stateBytes.Length}. Aborting tick import.");
+                            return; // Don't continue processing - buffer position is corrupted
+                        }
                     }
                 }
             }
 
-            foreach (var nodeIdSerializerList in _importNodeSerializerMap)
+            // Call _WorldReady on new nodes in bitmask iteration order
+            for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
             {
-                var localNodeId = nodeIdSerializerList.Key;
-                var netController = GetNodeFromNetId(localNodeId);
-                if (!netController.IsWorldReady)
+                if ((groupMask & (1 << g)) == 0) continue;
+                for (int local = 0; local < NodeIdUtils.NODES_PER_GROUP; local++)
                 {
-                    // Ensure newly spawned nodes are now world-ready
-                    // We don't run this in SpawnSerializer because subsequent serializers may need to run before "ready"
-                    netController._WorldReady();
+                    if ((nodeMasks[g] & (1L << local)) == 0) continue;
+                    
+                    ushort localNodeId = NodeIdUtils.Combine(g, local);
+                    var netController = GetNodeFromNetId(localNodeId);
+                    if (!netController.IsWorldReady)
+                    {
+                        // Ensure newly spawned nodes are now world-ready
+                        // We don't run this in SpawnSerializer because subsequent serializers may need to run before "ready"
+                        netController._WorldReady();
+                    }
                 }
             }
         }
@@ -1805,6 +1901,7 @@ namespace Nebula
             }
 
             CurrentTick = incomingTick;
+            OnWorldTickReceived(incomingTick); // Reset time accumulator for snapshot interpolation
             try
             {
                 // Log(Debugger.DebugLevel.VERBOSE, $"Importing state bytes of size {stateBytes.Length}");
@@ -2047,7 +2144,8 @@ namespace Nebula
                 }
             }
 
-            if (!node.InputAuthority.Equals(peer))
+            // Use ID comparison instead of Equals - more reliable for ENet.Peer structs
+            if (!node.InputAuthority.IsSet || node.InputAuthority.ID != peer.ID)
             {
                 Log(Debugger.DebugLevel.ERROR, $"Received input for node {worldNetId} (staticChild={staticChildId}) from unauthorized peer {peer}");
                 return;
@@ -2070,8 +2168,8 @@ namespace Nebula
                 var inputSize = NetReader.ReadInt32(buffer);
                 var inputBytes = NetReader.ReadBytes(buffer, inputSize);
 
-                // Buffer the input for this tick
-                BufferServerInput(node.NetId, tick, inputBytes);
+                // Buffer the input for this tick using composite key (parentNetId, staticChildId)
+                BufferServerInput(new InputBufferKey(worldNetId, staticChildId), tick, inputBytes);
 
                 // Also set as current input if this is the most recent tick we've seen
                 if (tick > node.LastConfirmedTick)

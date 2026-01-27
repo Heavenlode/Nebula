@@ -385,27 +385,50 @@ public class NetPropertyGenerator : IIncrementalGenerator
 
     /// <summary>
     /// Generates the default interpolation implementation based on property type.
+    /// Uses snapshot buffering for smooth, deterministic interpolation.
     /// </summary>
-    private static string GetDefaultInterpolationImpl(string propertyType, float speed)
+    private static string GetDefaultInterpolationImpl(string propertyType, string propertyName, float speed)
     {
-        var speedStr = speed.ToString(System.Globalization.CultureInfo.InvariantCulture) + "f";
-
         // Normalize type name for comparison
         var normalizedType = propertyType.Replace("Godot.", "");
 
+        // Generate snapshot-based interpolation
+        // Note: Uses _interpolate_parentNetwork which is set by ProcessInterpolation to the correct parent network
         return normalizedType switch
         {
-            "Vector3" => $"float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta); return current.Lerp(target, t);",
-            "Vector2" => $"float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta); return current.Lerp(target, t);",
-            "Quaternion" => $@"// Guard against uninitialized (zero) quaternions
-        if (target.LengthSquared() < 0.0001f) return current.LengthSquared() < 0.0001f ? Godot.Quaternion.Identity : current;
-        if (current.LengthSquared() < 0.0001f) current = Godot.Quaternion.Identity;
-        float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta);
-        var normalizedTarget = target.Normalized();
-        if (current.Dot(normalizedTarget) < 0) normalizedTarget = -normalizedTarget;
-        return current.Slerp(normalizedTarget, t);",
-            "float" or "System.Single" => $"float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta); return Godot.Mathf.Lerp(current, target, t);",
-            "double" or "System.Double" => $"float t = 1f - Godot.Mathf.Exp(-{speedStr} * delta); return Godot.Mathf.Lerp((float)current, (float)target, t);",
+            "Vector3" => $@"// Snapshot-based interpolation for smooth motion
+        if (!_interpolate_parentNetwork.GetInterpolationSnapshots(_interpolate_{propertyName}_GlobalIndex, out var fromCache, out var toCache, out var t))
+        {{
+            return target; // Not enough snapshots - snap to latest
+        }}
+        return fromCache.Vec3Value.Lerp(toCache.Vec3Value, t);",
+            "Vector2" => $@"// Snapshot-based interpolation for smooth motion
+        if (!_interpolate_parentNetwork.GetInterpolationSnapshots(_interpolate_{propertyName}_GlobalIndex, out var fromCache, out var toCache, out var t))
+        {{
+            return target; // Not enough snapshots - snap to latest
+        }}
+        return fromCache.Vec2Value.Lerp(toCache.Vec2Value, t);",
+            "Quaternion" => $@"// Snapshot-based interpolation with shortest-path slerp
+        if (!_interpolate_parentNetwork.GetInterpolationSnapshots(_interpolate_{propertyName}_GlobalIndex, out var fromCache, out var toCache, out var t))
+        {{
+            return target; // Not enough snapshots - snap to latest
+        }}
+        var from = fromCache.QuatValue.LengthSquared() < 0.0001f ? Godot.Quaternion.Identity : fromCache.QuatValue.Normalized();
+        var to = toCache.QuatValue.LengthSquared() < 0.0001f ? Godot.Quaternion.Identity : toCache.QuatValue.Normalized();
+        if (from.Dot(to) < 0) to = -to; // Shortest path
+        return from.Slerp(to, t);",
+            "float" or "System.Single" => $@"// Snapshot-based interpolation for smooth motion
+        if (!_interpolate_parentNetwork.GetInterpolationSnapshots(_interpolate_{propertyName}_GlobalIndex, out var fromCache, out var toCache, out var t))
+        {{
+            return target; // Not enough snapshots - snap to latest
+        }}
+        return Godot.Mathf.Lerp(fromCache.FloatValue, toCache.FloatValue, t);",
+            "double" or "System.Double" => $@"// Snapshot-based interpolation for smooth motion
+        if (!_interpolate_parentNetwork.GetInterpolationSnapshots(_interpolate_{propertyName}_GlobalIndex, out var fromCache, out var toCache, out var t))
+        {{
+            return target; // Not enough snapshots - snap to latest
+        }}
+        return Godot.Mathf.Lerp((float)fromCache.DoubleValue, (float)toCache.DoubleValue, t);",
             _ => "return target ?? current; // No interpolation for this type - snap to target, but preserve current if target is null"
         };
     }
@@ -721,6 +744,11 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine("    #region Interpolation");
                 sb.AppendLine();
 
+                // Generate field to cache the parent network for snapshot access
+                sb.AppendLine("    /// <summary>Cached parent network for snapshot interpolation access.</summary>");
+                sb.AppendLine("    private Nebula.NetworkController _interpolate_parentNetwork;");
+                sb.AppendLine();
+
                 // Generate cached global index fields for each interpolated property
                 foreach (var prop in interpolatedProps)
                 {
@@ -731,7 +759,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 // Generate Interpolate{PropertyName} virtual methods with default implementations
                 foreach (var prop in interpolatedProps)
                 {
-                    var defaultImpl = GetDefaultInterpolationImpl(prop!.PropertyType, prop.InterpolateSpeed);
+                    var defaultImpl = GetDefaultInterpolationImpl(prop!.PropertyType, prop.PropertyName, prop.InterpolateSpeed);
 
                     sb.AppendLine($"    /// <summary>");
                     sb.AppendLine($"    /// Interpolates {prop.PropertyName} toward the network target value.");
@@ -766,6 +794,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 }
                 
                 sb.AppendLine("        var parentNetwork = Network.IsNetScene() ? Network : Network.NetParent;");
+                sb.AppendLine("        _interpolate_parentNetwork = parentNetwork; // Cache for interpolation methods");
                 sb.AppendLine("        var scenePath = parentNetwork.NetSceneFilePath;");
                 sb.AppendLine("        var staticChildId = Network.StaticChildId;");
                 sb.AppendLine();

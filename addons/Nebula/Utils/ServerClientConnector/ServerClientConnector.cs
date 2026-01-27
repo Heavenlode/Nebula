@@ -39,6 +39,7 @@ namespace Nebula.Utility.Tools
 		private async void prepareClient()
 		{
 			Debugger.Instance.Log("ServerClientConnector prepareClient");
+			// Slight delay to allow the server to fully setup before the clients connect
 			await Task.Delay(300);
 			NetRunner.Instance.StartClient();
 		}

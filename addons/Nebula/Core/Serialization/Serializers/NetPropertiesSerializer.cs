@@ -271,6 +271,12 @@ namespace Nebula.Serialization.Serializers
 
             // Update cache (this is the target for interpolated properties and reconciliation)
             network.CachedProperties[prop.Index] = newValue;
+            
+            // Store in snapshot buffer for interpolation (client-side, interpolated properties only)
+            if (NetRunner.Instance.IsClient && network.IsWorldReady && prop.Interpolate)
+            {
+                network.UpdateSnapshotProperty(prop.Index, ref newValue);
+            }
 
             // ============================================================
             // PREDICTION CHECK: For owned predicted entities, don't directly
@@ -736,6 +742,12 @@ namespace Nebula.Serialization.Serializers
             
             // Cache IsNodeReady() once before the loop to avoid repeated Godot calls
             bool isReady = network.RawNode.IsNodeReady();
+            
+            // Begin snapshot for this tick (client-side only, for interpolation)
+            if (NetRunner.Instance.IsClient && network.IsWorldReady)
+            {
+                network.BeginSnapshotForTick(currentWorld.CurrentTick);
+            }
             
             foreach (var propIndex in data.properties.Keys)
             {

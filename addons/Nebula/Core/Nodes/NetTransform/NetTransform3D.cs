@@ -42,7 +42,7 @@ namespace Nebula.Utility.Nodes
         /// <summary>
         /// Networked position with interpolation for non-owned and prediction for owned entities.
         /// </summary>
-        [NetProperty(Interpolate = true, InterpolateSpeed = 10f, Predicted = true, NotifyOnChange = true)]
+        [NetProperty(Interpolate = true, InterpolateSpeed = 1f, Predicted = true, NotifyOnChange = true)]
         public Vector3 NetPosition { get; set; }
 
         /// <summary>
@@ -103,13 +103,16 @@ namespace Nebula.Utility.Nodes
         }
 
         private bool _isTeleporting = false;
-        private bool _visualInitialized = false;
         private bool teleportExported = false;
 
         protected virtual void OnNetChangeIsTeleporting(int tick, bool oldVal, bool newVal)
         {
             _isTeleporting = true;
-            _visualInitialized = false; // Reset so next position snaps
+            // Clear snapshot buffer on teleport to prevent interpolating from old position
+            if (newVal && NetRunner.Instance.IsClient)
+            {
+                Network.ClearSnapshotBuffer();
+            }
         }
 
         /// <inheritdoc/>
@@ -284,37 +287,9 @@ namespace Nebula.Utility.Nodes
                 return;
             }
 
-            // Non-owned client: interpolate toward NetPosition/NetRotation
-            Vector3 targetPos = NetPosition;
-            Quaternion targetRot = SafeNormalize(NetRotation);
-
-            // Initialize on first frame or after teleport
-            if (!_visualInitialized)
-            {
-                target.Position = targetPos;
-                target.Quaternion = targetRot;
-                _visualInitialized = true;
-                return;
-            }
-
-            // Smooth interpolation using exponential decay
-            float t2 = (float)(1.0 - Math.Exp(-VisualInterpolateSpeed * delta));
-            target.Position = target.Position.Lerp(targetPos, t2);
-            
-            // Ensure quaternions are normalized and on same hemisphere before Slerp
-            var currentRot = SafeNormalize(target.Quaternion);
-            currentRot = EnsureSameHemisphere(currentRot, targetRot);
-            
-            // Check for large rotation error - snap instead of slerp
-            float angleDiff2 = currentRot.AngleTo(targetRot);
-            if (angleDiff2 > RotationSnapThreshold)
-            {
-                target.Quaternion = targetRot;
-            }
-            else
-            {
-                target.Quaternion = currentRot.Slerp(targetRot, t2);
-            }
+            // Non-owned client: use NetPosition/NetRotation directly (network layer already interpolates)
+            target.Position = NetPosition;
+            target.Quaternion = SafeNormalize(NetRotation);
         }
 
         /// <summary>
@@ -332,7 +307,6 @@ namespace Nebula.Utility.Nodes
             }
             NetPosition = incoming_position;
             IsTeleporting = true;
-            _visualInitialized = false;
         }
 
         /// <summary>
@@ -355,7 +329,6 @@ namespace Nebula.Utility.Nodes
             NetPosition = incoming_position;
             NetRotation = normalizedRotation;
             IsTeleporting = true;
-            _visualInitialized = false;
         }
     }
 }

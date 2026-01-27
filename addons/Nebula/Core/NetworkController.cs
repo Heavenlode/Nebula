@@ -16,6 +16,163 @@ namespace Nebula
 	*/
 	public partial class NetworkController : RefCounted
 	{
+		#region Snapshot Interpolation
+
+		/// <summary>
+		/// A snapshot of property values at a specific tick for smooth interpolation.
+		/// </summary>
+		internal struct Snapshot
+		{
+			public int Tick;
+			public PropertyCache[] Properties;
+		}
+
+		/// <summary>
+		/// Size of the circular snapshot buffer. ~130ms at 60Hz tick rate.
+		/// </summary>
+		internal const int SNAPSHOT_BUFFER_SIZE = 8;
+
+		/// <summary>
+		/// Circular buffer of snapshots for interpolation (client-side only).
+		/// </summary>
+		internal Snapshot[] SnapshotBuffer = new Snapshot[SNAPSHOT_BUFFER_SIZE];
+
+		/// <summary>
+		/// Current write index in the circular snapshot buffer.
+		/// </summary>
+		internal int SnapshotWriteIndex = 0;
+
+		/// <summary>
+		/// Number of snapshots currently stored in the buffer.
+		/// </summary>
+		internal int SnapshotCount = 0;
+
+		/// <summary>
+		/// The tick of the snapshot currently being built during import.
+		/// -1 if no snapshot is being built.
+		/// </summary>
+		private int _currentSnapshotTick = -1;
+
+		/// <summary>
+		/// Called at the start of importing an entity's tick data.
+		/// Creates a new snapshot slot and copies previous values (for delta compression).
+		/// </summary>
+		internal void BeginSnapshotForTick(int tick)
+		{
+			// Skip if we already started a snapshot for this tick (shouldn't happen)
+			if (tick == _currentSnapshotTick) return;
+
+			// Skip old ticks (only accept newer ticks)
+			if (SnapshotCount > 0)
+			{
+				int prevIdx = (SnapshotWriteIndex - 1 + SNAPSHOT_BUFFER_SIZE) % SNAPSHOT_BUFFER_SIZE;
+				if (tick <= SnapshotBuffer[prevIdx].Tick)
+					return;
+			}
+
+			_currentSnapshotTick = tick;
+
+			// Allocate property array if needed
+			if (SnapshotBuffer[SnapshotWriteIndex].Properties == null)
+				SnapshotBuffer[SnapshotWriteIndex].Properties = new PropertyCache[CachedProperties.Length];
+
+			// Copy previous snapshot values (handles unchanged properties due to delta compression)
+			if (SnapshotCount > 0)
+			{
+				int prevIdx = (SnapshotWriteIndex - 1 + SNAPSHOT_BUFFER_SIZE) % SNAPSHOT_BUFFER_SIZE;
+				Array.Copy(SnapshotBuffer[prevIdx].Properties, SnapshotBuffer[SnapshotWriteIndex].Properties,
+						   CachedProperties.Length);
+			}
+			else
+			{
+				// First snapshot - copy from CachedProperties
+				Array.Copy(CachedProperties, SnapshotBuffer[SnapshotWriteIndex].Properties, CachedProperties.Length);
+			}
+
+			SnapshotBuffer[SnapshotWriteIndex].Tick = tick;
+			SnapshotWriteIndex = (SnapshotWriteIndex + 1) % SNAPSHOT_BUFFER_SIZE;
+			SnapshotCount = Math.Min(SnapshotCount + 1, SNAPSHOT_BUFFER_SIZE);
+		}
+
+		/// <summary>
+		/// Updates a specific property in the current snapshot (called per imported property).
+		/// </summary>
+		internal void UpdateSnapshotProperty(int propertyIndex, ref PropertyCache value)
+		{
+			if (_currentSnapshotTick < 0) return;
+			int idx = (SnapshotWriteIndex - 1 + SNAPSHOT_BUFFER_SIZE) % SNAPSHOT_BUFFER_SIZE;
+			SnapshotBuffer[idx].Properties[propertyIndex] = value;
+		}
+
+		/// <summary>
+		/// Finds the two snapshots bracketing the global render tick and returns interpolation factor.
+		/// Returns false if insufficient snapshots (caller should snap to target).
+		/// </summary>
+		public bool GetInterpolationSnapshots(int propertyIndex, out PropertyCache from, out PropertyCache to, out float t)
+		{
+			from = default;
+			to = default;
+			t = 0f;
+
+			if (SnapshotCount < 2) return false;
+
+			// Use GLOBAL render tick from WorldRunner (not per-entity)
+			float renderTick = CurrentWorld.GetRenderTick();
+
+			// Find bracketing snapshots (linear scan - buffer is small)
+			int fromIdx = -1, toIdx = -1;
+			for (int i = 0; i < SnapshotCount; i++)
+			{
+				int idx = (SnapshotWriteIndex - SnapshotCount + i + SNAPSHOT_BUFFER_SIZE) % SNAPSHOT_BUFFER_SIZE;
+				if (SnapshotBuffer[idx].Tick <= renderTick)
+					fromIdx = idx;
+				if (SnapshotBuffer[idx].Tick > renderTick && toIdx == -1)
+					toIdx = idx;
+			}
+
+			// Edge case: render tick is beyond all snapshots - hold last value (no extrapolation)
+			if (toIdx == -1)
+			{
+				int lastIdx = (SnapshotWriteIndex - 1 + SNAPSHOT_BUFFER_SIZE) % SNAPSHOT_BUFFER_SIZE;
+				from = SnapshotBuffer[lastIdx].Properties[propertyIndex];
+				to = from; // Same value = no interpolation
+				t = 0f;
+				return true;
+			}
+
+			// Edge case: render tick is before all snapshots - snap to earliest
+			if (fromIdx == -1)
+			{
+				from = SnapshotBuffer[toIdx].Properties[propertyIndex];
+				to = from;
+				t = 0f;
+				return true;
+			}
+
+			// Normal case: interpolate between bracketing snapshots
+			from = SnapshotBuffer[fromIdx].Properties[propertyIndex];
+			to = SnapshotBuffer[toIdx].Properties[propertyIndex];
+
+			int fromTick = SnapshotBuffer[fromIdx].Tick;
+			int toTick = SnapshotBuffer[toIdx].Tick;
+			t = (renderTick - fromTick) / (toTick - fromTick);
+			t = Math.Clamp(t, 0f, 1f); // Safety clamp
+
+			return true;
+		}
+
+		/// <summary>
+		/// Clears the snapshot buffer. Called on teleport or interest regain.
+		/// </summary>
+		public void ClearSnapshotBuffer()
+		{
+			SnapshotCount = 0;
+			SnapshotWriteIndex = 0;
+			_currentSnapshotTick = -1;
+		}
+
+		#endregion
+
 		public Node RawNode { get; internal set; }
 		public INetNodeBase NetNode;
 
@@ -139,7 +296,15 @@ namespace Nebula
 		/// Called by InterestResyncSerializer when the client receives an interest change signal.
 		/// </summary>
 		/// <param name="hasInterest">True if interest was gained, false if lost</param>
-		internal void FireInterestChanged(bool hasInterest) => OnInterestChanged?.Invoke(hasInterest);
+		internal void FireInterestChanged(bool hasInterest)
+		{
+			// Clear snapshot buffer on interest regain to prevent interpolating from stale data
+			if (hasInterest)
+			{
+				ClearSnapshotBuffer();
+			}
+			OnInterestChanged?.Invoke(hasInterest);
+		}
 
 		public void SetPeerInterest(UUID peerId, long newInterest, bool recurse = true)
 		{
@@ -878,7 +1043,12 @@ namespace Nebula
 				{
 					var networkChild = DynamicNetworkChildren.ElementAt(i);
 					networkChild.InterestLayers = InterestLayers;
-					networkChild.InputAuthority = InputAuthority;
+					// On client, don't overwrite InputAuthority if child already has it set
+					// (server sends correct InputAuthority for each node via spawn data)
+					if (NetRunner.Instance.IsServer || !networkChild.InputAuthority.IsSet)
+					{
+						networkChild.InputAuthority = InputAuthority;
+					}
 					networkChild.CurrentWorld = world;
 					networkChild.NetParentId = NetId;
 					networkChild._NetworkPrepare(world);
@@ -887,7 +1057,12 @@ namespace Nebula
 				{
 					var networkChild = StaticNetworkChildren[i];
 					networkChild.InterestLayers = InterestLayers;
-					networkChild.InputAuthority = InputAuthority;
+					// On client, don't overwrite InputAuthority if child already has it set
+					// (server sends correct InputAuthority for each node via spawn data)
+					if (NetRunner.Instance.IsServer || !networkChild.InputAuthority.IsSet)
+					{
+						networkChild.InputAuthority = InputAuthority;
+					}
 					networkChild.CurrentWorld = world;
 					networkChild.NetParentId = NetId;
 					networkChild._NetworkPrepare(world);

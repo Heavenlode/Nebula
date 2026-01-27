@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c18ded3drxmoq"]
+[gd_scene format=3 uid="uid://c18ded3drxmoq"]
 
 [ext_resource type="Script" uid="uid://yifw50n4oaq0" path="res://addons/Nebula/Utils/ServerClientConnector/ServerClientConnector.cs" id="1_aqxkk"]
 
-[node name="DefaultServerClientConnector" type="Node"]
+[node name="DefaultServerClientConnector" type="Node" unique_id=1559193245]
 script = ExtResource("1_aqxkk")

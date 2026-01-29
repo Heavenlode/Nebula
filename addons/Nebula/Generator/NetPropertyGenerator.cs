@@ -14,11 +14,11 @@ namespace Nebula.Generator;
 [Generator]
 public class NetPropertyGenerator : IIncrementalGenerator
 {
-    // Diagnostic for missing NotifyOnChange handler override (warning, not error - empty virtual is valid)
+    // Diagnostic for missing NotifyOnChange handler for regular properties
     private static readonly DiagnosticDescriptor MissingChangeHandlerDiagnostic = new(
         id: "NEBULA001",
         title: "Network change handler not defined",
-        messageFormat: "Property '{0}' has NotifyOnChange=true but the virtual method 'OnNetChange{0}' is not defined. Define the method to handle changes.",
+        messageFormat: "Property '{0}' has NotifyOnChange=true but the handler method is not defined. Expected signature: protected virtual void OnNetChange{0}(int tick, {1} oldValue, {1} newValue)",
         category: "Nebula",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
@@ -28,6 +28,15 @@ public class NetPropertyGenerator : IIncrementalGenerator
         id: "NEBULA002",
         title: "Missing prediction tolerance property",
         messageFormat: "Property '{0}' has Predicted=true but '{0}PredictionTolerance' property is not defined",
+        category: "Nebula",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    // Diagnostic for missing NotifyOnChange handler for NetArray properties
+    private static readonly DiagnosticDescriptor MissingNetArrayChangeHandlerDiagnostic = new(
+        id: "NEBULA003",
+        title: "NetArray change handler not defined",
+        messageFormat: "NetArray property '{0}' has NotifyOnChange=true but the handler method is not defined. Expected signature: protected virtual void OnNetChange{0}(int tick, {1}[] deletedValues, int[] changedIndices, {1}[] addedValues)",
         category: "Nebula",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
@@ -112,11 +121,16 @@ public class NetPropertyGenerator : IIncrementalGenerator
 
         // Check if the property type implements IBsonValue<T> or IBsonSerializable<T>
         bool isBsonSerializable = false;
+        bool implementsINetPropertyBindable = false;
         if (propertySymbol.Type is INamedTypeSymbol namedType)
         {
             isBsonSerializable = namedType.AllInterfaces.Any(i =>
                 i.IsGenericType && (i.OriginalDefinition.Name == "IBsonValue" ||
                                     i.OriginalDefinition.Name == "IBsonSerializable"));
+            
+            // Check if the type implements INetPropertyBindable
+            implementsINetPropertyBindable = namedType.AllInterfaces.Any(i =>
+                i.Name == "INetPropertyBindable");
         }
 
         // Simple name for internal lookups (PropertyCache field mapping)
@@ -129,16 +143,21 @@ public class NetPropertyGenerator : IIncrementalGenerator
         int baseClassPropertyCount = CountBaseClassNetProperties(containingType);
 
         // Check if the user defined the OnNetChange virtual method on the declaring class
-        // The user must define: protected virtual void OnNetChange{PropertyName}(int tick, T oldVal, T newVal)
+        // For regular properties: protected virtual void OnNetChange{PropertyName}(int tick, T oldVal, T newVal)
+        // For NetArray properties: protected virtual void OnNetChange{PropertyName}(int tick, int[] deletedIndices, int[] changedIndices, T[] addedValues)
         // Derived classes can then override it.
         bool hasChangeHandlerImpl = false;
         if (notifyOnChange)
         {
             var expectedMethodName = $"OnNetChange{propertySymbol.Name}";
+            // NetArray has 4 parameters, regular properties have 3
+            bool isNetArray = fullyQualifiedTypeName.Contains("Nebula.Serialization.NetArray<");
+            int expectedParamCount = isNetArray ? 4 : 3;
+            
             // Look for the method defined in this class (virtual or override)
             hasChangeHandlerImpl = containingType.GetMembers(expectedMethodName)
                 .OfType<IMethodSymbol>()
-                .Any(m => m.Parameters.Length == 3 && (m.IsVirtual || m.IsOverride));
+                .Any(m => m.Parameters.Length == expectedParamCount && (m.IsVirtual || m.IsOverride));
         }
 
         // Check if the user defined the {PropertyName}PredictionTolerance property
@@ -172,7 +191,8 @@ public class NetPropertyGenerator : IIncrementalGenerator
             hasChangeHandlerImpl,
             propertyLocation,
             predicted,
-            hasToleranceProperty);
+            hasToleranceProperty,
+            implementsINetPropertyBindable);
     }
 
     /// <summary>
@@ -292,6 +312,14 @@ public class NetPropertyGenerator : IIncrementalGenerator
             return $"Nebula.Serialization.BsonTypeHelper.ToBsonEnum({prop.PropertyName})";
         }
         
+        // Handle NetArray<T> types - need explicit generic parameter
+        if (prop.PropertyType.StartsWith("Nebula.Serialization.NetArray<"))
+        {
+            // Extract element type from NetArray<ElementType>
+            var elementType = ExtractNetArrayElementType(prop.PropertyType);
+            return $"Nebula.Serialization.BsonTypeHelper.ToBson<{elementType}>({prop.PropertyName})";
+        }
+        
         if (prop.IsBsonSerializable)
         {
             // Check if it's a value type implementing IBsonValue or reference type implementing IBsonSerializable
@@ -308,6 +336,32 @@ public class NetPropertyGenerator : IIncrementalGenerator
         // Standard types handled by BsonTypeHelper
         return $"Nebula.Serialization.BsonTypeHelper.ToBson({prop.PropertyName})";
     }
+    
+    /// <summary>
+    /// Extracts the element type from a NetArray type string.
+    /// E.g., "Nebula.Serialization.NetArray&lt;Godot.Vector3&gt;" -> "Godot.Vector3"
+    /// </summary>
+    private static string ExtractNetArrayElementType(string netArrayType)
+    {
+        const string prefix = "Nebula.Serialization.NetArray<";
+        if (!netArrayType.StartsWith(prefix))
+            return "object";
+        
+        var start = prefix.Length;
+        var end = netArrayType.LastIndexOf('>');
+        if (end <= start)
+            return "object";
+        
+        return netArrayType.Substring(start, end - start);
+    }
+
+    /// <summary>
+    /// Returns true if the type is a NetArray type.
+    /// </summary>
+    private static bool IsNetArrayType(string propertyType)
+    {
+        return propertyType.StartsWith("Nebula.Serialization.NetArray<");
+    }
 
     /// <summary>
     /// Generates the expression to deserialize a property from BSON using BsonTypeHelper.
@@ -319,6 +373,13 @@ public class NetPropertyGenerator : IIncrementalGenerator
         if (prop.IsEnum)
         {
             return $"Nebula.Serialization.BsonTypeHelper.ToEnum<{prop.PropertyType}>({bsonValueExpr})";
+        }
+        
+        // Handle NetArray<T> types - need explicit generic parameter
+        if (prop.PropertyType.StartsWith("Nebula.Serialization.NetArray<"))
+        {
+            var elementType = ExtractNetArrayElementType(prop.PropertyType);
+            return $"Nebula.Serialization.BsonTypeHelper.ToNetArray<{elementType}>({bsonValueExpr})";
         }
         
         if (prop.IsBsonSerializable)
@@ -452,11 +513,24 @@ public class NetPropertyGenerator : IIncrementalGenerator
             {
                 if (prop!.NotifyOnChange && !prop.HasChangeHandlerImpl && prop.PropertyLocation != null)
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(
-                        MissingChangeHandlerDiagnostic,
-                        prop.PropertyLocation,
-                        prop.PropertyName,
-                        prop.PropertyType));
+                    if (IsNetArrayType(prop.PropertyType))
+                    {
+                        // NetArray has a different signature - use element type
+                        var elementType = ExtractNetArrayElementType(prop.PropertyType);
+                        context.ReportDiagnostic(Diagnostic.Create(
+                            MissingNetArrayChangeHandlerDiagnostic,
+                            prop.PropertyLocation,
+                            prop.PropertyName,
+                            elementType));
+                    }
+                    else
+                    {
+                        context.ReportDiagnostic(Diagnostic.Create(
+                            MissingChangeHandlerDiagnostic,
+                            prop.PropertyLocation,
+                            prop.PropertyName,
+                            prop.PropertyType));
+                    }
                 }
             }
 
@@ -488,13 +562,52 @@ public class NetPropertyGenerator : IIncrementalGenerator
             sb.AppendLine("{");
 
             // Generate On{PropertyName}Changed methods (existing functionality)
-            foreach (var prop in propList)
+            for (int i = 0; i < propList.Count; i++)
             {
-                var markDirtyMethod = prop!.IsValueType ? "MarkDirty" : "MarkDirtyRef";
+                var prop = propList[i]!;
+                var markDirtyMethod = prop.IsValueType ? "MarkDirty" : "MarkDirtyRef";
+                var globalPropIndex = baseOffset + i;
 
                 sb.AppendLine($"    public void On{prop.PropertyName}Changed({prop.FullyQualifiedPropertyType} oldVal, {prop.FullyQualifiedPropertyType} newVal)");
                 sb.AppendLine("    {");
                 sb.AppendLine($"        Network.{markDirtyMethod}(this, \"{prop.PropertyName}\", newVal);");
+                
+                // If the property type implements INetPropertyBindable, bind the callback
+                // This allows types like NetArray to notify when internal state changes
+                if (prop.ImplementsINetPropertyBindable)
+                {
+                    sb.AppendLine($"        (newVal as Nebula.Serialization.INetPropertyBindable)?.BindToNetProperty(() => Network.MarkDirtyByIndex({globalPropIndex}));");
+                }
+                
+                sb.AppendLine("    }");
+                sb.AppendLine();
+            }
+
+            // Generate InitializeNetPropertyBindings for INetPropertyBindable properties
+            // This is called from _NetworkPrepare to bind callbacks for properties initialized inline
+            var bindableProps = propList.Where(p => p!.ImplementsINetPropertyBindable).ToList();
+            if (bindableProps.Count > 0)
+            {
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// Initializes network property bindings for INetPropertyBindable properties.");
+                sb.AppendLine("    /// Called from _NetworkPrepare to bind callbacks for properties initialized inline.");
+                sb.AppendLine("    /// </summary>");
+                sb.AppendLine("    internal override void InitializeNetPropertyBindings()");
+                sb.AppendLine("    {");
+                sb.AppendLine("        base.InitializeNetPropertyBindings();");
+                
+                for (int i = 0; i < propList.Count; i++)
+                {
+                    var prop = propList[i]!;
+                    if (!prop.ImplementsINetPropertyBindable) continue;
+                    
+                    var globalPropIndex = baseOffset + i;
+                    // Bind mutation callback for future changes
+                    sb.AppendLine($"        ({prop.PropertyName} as Nebula.Serialization.INetPropertyBindable)?.BindToNetProperty(() => Network.MarkDirtyByIndex({globalPropIndex}));");
+                    // Also cache the initial value so serializer can find it (inline initialization bypasses property setter)
+                    sb.AppendLine($"        if ({prop.PropertyName} != null) Network.MarkDirtyRef(this, \"{prop.PropertyName}\", {prop.PropertyName});");
+                }
+                
                 sb.AppendLine("    }");
                 sb.AppendLine();
             }
@@ -511,7 +624,16 @@ public class NetPropertyGenerator : IIncrementalGenerator
 
                 foreach (var prop in notifyProps)
                 {
-                    sb.AppendLine($"    public event System.Action<int, {prop!.PropertyType}, {prop.PropertyType}> NetChangeListener{prop.PropertyName};");
+                    // NetArray uses a different event signature with change info
+                    if (IsNetArrayType(prop!.PropertyType))
+                    {
+                        var elementType = ExtractNetArrayElementType(prop.PropertyType);
+                        sb.AppendLine($"    public event System.Action<int, {elementType}[], int[], {elementType}[]> NetChangeListener{prop.PropertyName};");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"    public event System.Action<int, {prop.PropertyType}, {prop.PropertyType}> NetChangeListener{prop.PropertyName};");
+                    }
                     sb.AppendLine();
                 }
 
@@ -564,11 +686,26 @@ public class NetPropertyGenerator : IIncrementalGenerator
                     var prop = propList[i]!;
                     if (prop.NotifyOnChange)
                     {
-                        var oldExpr = GetCacheReadExpression(prop, "oldVal");
-                        var newExpr = GetCacheReadExpression(prop, "newVal");
                         sb.AppendLine($"            case {baseOffset + i}: {{");
-                        sb.AppendLine($"                OnNetChange{prop.PropertyName}(tick, {oldExpr}, {newExpr});");
-                        sb.AppendLine($"                NetChangeListener{prop.PropertyName}?.Invoke(tick, {oldExpr}, {newExpr});");
+                        
+                        // NetArray uses change info instead of old/new values
+                        if (IsNetArrayType(prop.PropertyType))
+                        {
+                            var elementType = ExtractNetArrayElementType(prop.PropertyType);
+                            var newExpr = GetCacheReadExpression(prop, "newVal");
+                            sb.AppendLine($"                var _arr = {newExpr};");
+                            sb.AppendLine($"                var _changeInfo = _arr?.LastChangeInfo ?? Nebula.Serialization.NetArrayChangeInfo<{elementType}>.Empty;");
+                            sb.AppendLine($"                OnNetChange{prop.PropertyName}(tick, _changeInfo.DeletedValues, _changeInfo.ChangedIndices, _changeInfo.AddedValues);");
+                            sb.AppendLine($"                NetChangeListener{prop.PropertyName}?.Invoke(tick, _changeInfo.DeletedValues, _changeInfo.ChangedIndices, _changeInfo.AddedValues);");
+                        }
+                        else
+                        {
+                            var oldExpr = GetCacheReadExpression(prop, "oldVal");
+                            var newExpr = GetCacheReadExpression(prop, "newVal");
+                            sb.AppendLine($"                OnNetChange{prop.PropertyName}(tick, {oldExpr}, {newExpr});");
+                            sb.AppendLine($"                NetChangeListener{prop.PropertyName}?.Invoke(tick, {oldExpr}, {newExpr});");
+                        }
+                        
                         sb.AppendLine($"                break;");
                         sb.AppendLine($"            }}");
                     }
@@ -794,6 +931,8 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 }
                 
                 sb.AppendLine("        var parentNetwork = Network.IsNetScene() ? Network : Network.NetParent;");
+                sb.AppendLine("        // Guard against disposed parent (can happen during entity despawn)");
+                sb.AppendLine("        if (parentNetwork?.RawNode == null || !IsInstanceValid(parentNetwork.RawNode)) return;");
                 sb.AppendLine("        _interpolate_parentNetwork = parentNetwork; // Cache for interpolation methods");
                 sb.AppendLine("        var scenePath = parentNetwork.NetSceneFilePath;");
                 sb.AppendLine("        var staticChildId = Network.StaticChildId;");
@@ -878,6 +1017,8 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine("    internal override void StoreConfirmedState()");
                 sb.AppendLine("    {");
                 sb.AppendLine("        var parentNetwork = Network.IsNetScene() ? Network : Network.NetParent;");
+                sb.AppendLine("        // Guard against disposed parent (can happen during entity despawn)");
+                sb.AppendLine("        if (parentNetwork?.RawNode == null || !IsInstanceValid(parentNetwork.RawNode)) return;");
                 sb.AppendLine("        var scenePath = parentNetwork.NetSceneFilePath;");
                 sb.AppendLine("        var staticChildId = Network.StaticChildId;");
                 sb.AppendLine();
@@ -1005,5 +1146,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
         Location? PropertyLocation,
         // Prediction fields
         bool Predicted,
-        bool HasToleranceProperty);
+        bool HasToleranceProperty,
+        // INetPropertyBindable support
+        bool ImplementsINetPropertyBindable);
 }

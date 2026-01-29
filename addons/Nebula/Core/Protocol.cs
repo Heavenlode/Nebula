@@ -354,6 +354,28 @@ namespace Nebula.Serialization
             return GeneratedProtocol.Serializers.TryGetValue(classIndex, out var serializer) ? serializer : null;
         }
 
+        /// <summary>
+        /// Get a generated OnPeerAcknowledge delegate for an INetSerializable type.
+        /// Only available for reference types (not INetValue).
+        /// </summary>
+        /// <param name="classIndex">The class index from ProtocolNetProperty.ClassIndex</param>
+        /// <returns>The delegate, or null if not found or type is a value type</returns>
+        public static GeneratedProtocol.OnPeerAcknowledgeFunc GetOnPeerAcknowledge(int classIndex)
+        {
+            return GeneratedProtocol.OnPeerAcknowledgeFuncs.TryGetValue(classIndex, out var func) ? func : null;
+        }
+
+        /// <summary>
+        /// Get a generated OnPeerDisconnected delegate for an INetSerializable type.
+        /// Only available for reference types (not INetValue).
+        /// </summary>
+        /// <param name="classIndex">The class index from ProtocolNetProperty.ClassIndex</param>
+        /// <returns>The delegate, or null if not found or type is a value type</returns>
+        public static GeneratedProtocol.OnPeerDisconnectedFunc GetOnPeerDisconnected(int classIndex)
+        {
+            return GeneratedProtocol.OnPeerDisconnectedFuncs.TryGetValue(classIndex, out var func) ? func : null;
+        }
+
         private static MethodInfo GetCachedMethod(string typeName, string methodName)
         {
             var key = (typeName, methodName);

@@ -281,7 +281,9 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    {prop.NotifyOnChange.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.Interpolate.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.InterpolateSpeed.ToString(CultureInfo.InvariantCulture)}f,");
-            sb.AppendLine($"{indent}    {prop.Predicted.ToString().ToLowerInvariant()}),");
+            sb.AppendLine($"{indent}    {prop.Predicted.ToString().ToLowerInvariant()},");
+            sb.AppendLine($"{indent}    {prop.ChunkBudget},");
+            sb.AppendLine($"{indent}    {prop.IsObjectProperty.ToString().ToLowerInvariant()}),");
         }
 
         private static void EmitPropertyWithIntKey(StringBuilder sb, int key, PropertyData prop, string indent)
@@ -312,7 +314,9 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    {prop.NotifyOnChange.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.Interpolate.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.InterpolateSpeed.ToString(CultureInfo.InvariantCulture)}f,");
-            sb.AppendLine($"{indent}    {prop.Predicted.ToString().ToLowerInvariant()}),");
+            sb.AppendLine($"{indent}    {prop.Predicted.ToString().ToLowerInvariant()},");
+            sb.AppendLine($"{indent}    {prop.ChunkBudget},");
+            sb.AppendLine($"{indent}    {prop.IsObjectProperty.ToString().ToLowerInvariant()}),");
         }
 
         private static void EmitFunctionsMap(StringBuilder sb, ProtocolData data)
@@ -478,8 +482,14 @@ namespace Nebula.Generators
             sb.AppendLine("        /// <summary>Delegate for reflection-free network deserialization.</summary>");
             sb.AppendLine("        public delegate object NetworkDeserializeFunc(WorldRunner world, NetPeer peer, NetBuffer buffer, object existing);");
             sb.AppendLine();
-            sb.AppendLine("        /// <summary>Delegate for reflection-free network serialization. Works directly with PropertyCache.</summary>");
-            sb.AppendLine("        public delegate void NetworkSerializeFunc(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer);");
+            sb.AppendLine("        /// <summary>Delegate for reflection-free network serialization. Returns true if data was written.</summary>");
+            sb.AppendLine("        public delegate bool NetworkSerializeFunc(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer, int maxBytes);");
+            sb.AppendLine();
+            sb.AppendLine("        /// <summary>Delegate for peer acknowledgment callback on INetSerializable types.</summary>");
+            sb.AppendLine("        public delegate void OnPeerAcknowledgeFunc(object obj, UUID peerId);");
+            sb.AppendLine();
+            sb.AppendLine("        /// <summary>Delegate for peer disconnect callback on INetSerializable types.</summary>");
+            sb.AppendLine("        public delegate void OnPeerDisconnectedFunc(object obj, UUID peerId);");
             sb.AppendLine();
             sb.AppendLine("        #endregion");
             sb.AppendLine();
@@ -490,6 +500,9 @@ namespace Nebula.Generators
         /// </summary>
         private static void EmitDeserializersDictionary(StringBuilder sb, ProtocolData data)
         {
+            // Collect concrete generic types (same as serializers)
+            var concreteGenerics = CollectConcreteGenericTypes(data);
+            
             sb.AppendLine("        public static readonly FrozenDictionary<int, NetworkDeserializeFunc> Deserializers =");
             sb.AppendLine("            new Dictionary<int, NetworkDeserializeFunc>");
             sb.AppendLine("            {");
@@ -518,6 +531,19 @@ namespace Nebula.Generators
                 }
             }
             
+            // Add concrete generic types (e.g., NetArray<Vector3>)
+            foreach (var (classIndex, concreteType, isValueType) in concreteGenerics)
+            {
+                if (isValueType)
+                {
+                    sb.AppendLine($"                [{classIndex}] = (world, peer, buffer, existing) => {concreteType}.NetworkDeserialize(world, peer, buffer),");
+                }
+                else
+                {
+                    sb.AppendLine($"                [{classIndex}] = (world, peer, buffer, existing) => {concreteType}.NetworkDeserialize(world, peer, buffer, existing as {concreteType}),");
+                }
+            }
+            
             sb.AppendLine("            }.ToFrozenDictionary();");
             sb.AppendLine();
         }
@@ -528,6 +554,10 @@ namespace Nebula.Generators
         /// </summary>
         private static void EmitSerializersDictionary(StringBuilder sb, ProtocolData data)
         {
+            // Collect concrete generic types from properties
+            // These need serializers generated even though their open generic definitions are skipped
+            var concreteGenerics = CollectConcreteGenericTypes(data);
+            
             // First, emit all the static serializer methods
             sb.AppendLine("        #region Serializer Methods");
             sb.AppendLine();
@@ -540,7 +570,7 @@ namespace Nebula.Generators
                 
                 var typeName = kvp.Value.TypeFullName;
                 
-                // Skip open generic types
+                // Skip open generic types - we'll handle concrete generic types separately
                 if (IsOpenGenericType(typeName))
                     continue;
                 
@@ -549,16 +579,121 @@ namespace Nebula.Generators
                 
                 if (kvp.Value.IsValueType)
                 {
-                    // Value types use their specific PropertyCache field
-                    sb.AppendLine($"        private static void {methodName}(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer)");
-                    sb.AppendLine($"            => {typeName}.NetworkSerialize(world, peer, in cache.{shortName}Value, buffer);");
+                    // Value types (INetValue<T>) don't support maxBytes, always return true
+                    sb.AppendLine($"        private static bool {methodName}(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer, int maxBytes)");
+                    sb.AppendLine("        {");
+                    sb.AppendLine($"            {typeName}.NetworkSerialize(world, peer, in cache.{shortName}Value, buffer);");
+                    sb.AppendLine("            return true;");
+                    sb.AppendLine("        }");
                 }
                 else
                 {
-                    // Reference types use cache.RefValue cast to the type
-                    sb.AppendLine($"        private static void {methodName}(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer)");
-                    sb.AppendLine($"            => {typeName}.NetworkSerialize(world, peer, ({typeName})cache.RefValue, buffer);");
+                    // Reference types (INetSerializable<T>) support maxBytes and return bool
+                    sb.AppendLine($"        private static bool {methodName}(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer, int maxBytes)");
+                    sb.AppendLine($"            => {typeName}.NetworkSerialize(world, peer, ({typeName})cache.RefValue, buffer, maxBytes);");
                 }
+                sb.AppendLine();
+            }
+            
+            // Emit serializers for concrete generic types (e.g., NetArray<Vector3>)
+            foreach (var (classIndex, concreteType, isValueType) in concreteGenerics)
+            {
+                var methodName = $"Serializer_{classIndex}";
+                
+                if (isValueType)
+                {
+                    var shortName = GetShortTypeName(concreteType);
+                    sb.AppendLine($"        private static bool {methodName}(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer, int maxBytes)");
+                    sb.AppendLine("        {");
+                    sb.AppendLine($"            {concreteType}.NetworkSerialize(world, peer, in cache.{shortName}Value, buffer);");
+                    sb.AppendLine("            return true;");
+                    sb.AppendLine("        }");
+                }
+                else
+                {
+                    sb.AppendLine($"        private static bool {methodName}(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer, int maxBytes)");
+                    sb.AppendLine($"            => {concreteType}.NetworkSerialize(world, peer, ({concreteType})cache.RefValue, buffer, maxBytes);");
+                }
+                sb.AppendLine();
+            }
+            
+            sb.AppendLine("        #endregion");
+            sb.AppendLine();
+            
+            // Emit OnPeerAcknowledge methods for reference types
+            sb.AppendLine("        #region OnPeerAcknowledge Methods");
+            sb.AppendLine();
+            
+            foreach (var kvp in data.StaticMethods)
+            {
+                // Only for reference types (INetSerializable)
+                if (kvp.Value.IsValueType)
+                    continue;
+                
+                // Only include types that have NetworkSerialize (bit 0)
+                if ((kvp.Value.MethodType & 1) == 0)
+                    continue;
+                
+                var typeName = kvp.Value.TypeFullName;
+                
+                // Skip open generic types
+                if (IsOpenGenericType(typeName))
+                    continue;
+                
+                var methodName = $"OnPeerAcknowledge_{kvp.Key}";
+                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId)");
+                sb.AppendLine($"            => {typeName}.OnPeerAcknowledge(({typeName})obj, peerId);");
+                sb.AppendLine();
+            }
+            
+            // Emit OnPeerAcknowledge for concrete generic types (reference types only)
+            foreach (var (classIndex, concreteType, isValueType) in concreteGenerics)
+            {
+                if (isValueType) continue;
+                
+                var methodName = $"OnPeerAcknowledge_{classIndex}";
+                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId)");
+                sb.AppendLine($"            => {concreteType}.OnPeerAcknowledge(({concreteType})obj, peerId);");
+                sb.AppendLine();
+            }
+            
+            sb.AppendLine("        #endregion");
+            sb.AppendLine();
+            
+            // Emit OnPeerDisconnected methods for reference types
+            sb.AppendLine("        #region OnPeerDisconnected Methods");
+            sb.AppendLine();
+            
+            foreach (var kvp in data.StaticMethods)
+            {
+                // Only for reference types (INetSerializable)
+                if (kvp.Value.IsValueType)
+                    continue;
+                
+                // Only include types that have NetworkSerialize (bit 0)
+                if ((kvp.Value.MethodType & 1) == 0)
+                    continue;
+                
+                var typeName = kvp.Value.TypeFullName;
+                
+                // Skip open generic types
+                if (IsOpenGenericType(typeName))
+                    continue;
+                
+                var methodName = $"OnPeerDisconnected_{kvp.Key}";
+                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId)");
+                sb.AppendLine($"            => {typeName}.OnPeerDisconnected(({typeName})obj, peerId);");
+                sb.AppendLine();
+            }
+            
+            // Emit OnPeerDisconnected for concrete generic types (reference types only)
+            foreach (var (classIndex, concreteType, isValueType) in concreteGenerics)
+            {
+                if (isValueType) continue;
+                
+                var methodName = $"OnPeerDisconnected_{classIndex}";
+                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId)");
+                sb.AppendLine($"            => {concreteType}.OnPeerDisconnected(({concreteType})obj, peerId);");
                 sb.AppendLine();
             }
             
@@ -583,6 +718,68 @@ namespace Nebula.Generators
                     continue;
                 
                 sb.AppendLine($"                [{kvp.Key}] = Serializer_{kvp.Key},");
+            }
+            
+            // Include concrete generic types in the dictionary
+            foreach (var (classIndex, _, _) in concreteGenerics)
+            {
+                sb.AppendLine($"                [{classIndex}] = Serializer_{classIndex},");
+            }
+            
+            sb.AppendLine("            }.ToFrozenDictionary();");
+            sb.AppendLine();
+            
+            // Emit OnPeerAcknowledge dictionary (only reference types)
+            sb.AppendLine("        public static readonly FrozenDictionary<int, OnPeerAcknowledgeFunc> OnPeerAcknowledgeFuncs =");
+            sb.AppendLine("            new Dictionary<int, OnPeerAcknowledgeFunc>");
+            sb.AppendLine("            {");
+            
+            foreach (var kvp in data.StaticMethods)
+            {
+                if (kvp.Value.IsValueType)
+                    continue;
+                if ((kvp.Value.MethodType & 1) == 0)
+                    continue;
+                var typeName = kvp.Value.TypeFullName;
+                if (IsOpenGenericType(typeName))
+                    continue;
+                
+                sb.AppendLine($"                [{kvp.Key}] = OnPeerAcknowledge_{kvp.Key},");
+            }
+            
+            // Include concrete generic reference types
+            foreach (var (classIndex, _, isValueType) in concreteGenerics)
+            {
+                if (!isValueType)
+                    sb.AppendLine($"                [{classIndex}] = OnPeerAcknowledge_{classIndex},");
+            }
+            
+            sb.AppendLine("            }.ToFrozenDictionary();");
+            sb.AppendLine();
+            
+            // Emit OnPeerDisconnected dictionary (only reference types)
+            sb.AppendLine("        public static readonly FrozenDictionary<int, OnPeerDisconnectedFunc> OnPeerDisconnectedFuncs =");
+            sb.AppendLine("            new Dictionary<int, OnPeerDisconnectedFunc>");
+            sb.AppendLine("            {");
+            
+            foreach (var kvp in data.StaticMethods)
+            {
+                if (kvp.Value.IsValueType)
+                    continue;
+                if ((kvp.Value.MethodType & 1) == 0)
+                    continue;
+                var typeName = kvp.Value.TypeFullName;
+                if (IsOpenGenericType(typeName))
+                    continue;
+                
+                sb.AppendLine($"                [{kvp.Key}] = OnPeerDisconnected_{kvp.Key},");
+            }
+            
+            // Include concrete generic reference types
+            foreach (var (classIndex, _, isValueType) in concreteGenerics)
+            {
+                if (!isValueType)
+                    sb.AppendLine($"                [{classIndex}] = OnPeerDisconnected_{classIndex},");
             }
             
             sb.AppendLine("            }.ToFrozenDictionary();");
@@ -632,6 +829,73 @@ namespace Nebula.Generators
             }
             
             return false;
+        }
+        
+        /// <summary>
+        /// Collects concrete generic types used in properties that need serializers generated.
+        /// For example, if a property uses NetArray&lt;Vector3&gt;, we need to generate a serializer for it
+        /// even though the open generic NetArray&lt;T&gt; is registered in StaticMethods.
+        /// </summary>
+        private static List<(int classIndex, string concreteType, bool isValueType)> CollectConcreteGenericTypes(ProtocolData data)
+        {
+            var result = new List<(int, string, bool)>();
+            var seen = new HashSet<int>();
+            
+            // Find all open generic types with their class indices
+            var openGenericIndices = new Dictionary<string, (int index, bool isValueType)>();
+            foreach (var kvp in data.StaticMethods)
+            {
+                var typeName = kvp.Value.TypeFullName;
+                if (IsOpenGenericType(typeName))
+                {
+                    // Extract the base name (e.g., "Nebula.Serialization.NetArray" from "Nebula.Serialization.NetArray<T>")
+                    var genericStart = typeName.IndexOf('<');
+                    if (genericStart > 0)
+                    {
+                        var baseName = typeName.Substring(0, genericStart);
+                        openGenericIndices[baseName] = (kvp.Key, kvp.Value.IsValueType);
+                    }
+                }
+            }
+            
+            // Scan PropertiesLookup: scenePath -> propertyIndex -> PropertyData
+            foreach (var sceneKvp in data.PropertiesLookup)
+            {
+                foreach (var propKvp in sceneKvp.Value)
+                {
+                    var prop = propKvp.Value;
+                    ScanPropertyForConcreteGeneric(prop, openGenericIndices, seen, result);
+                }
+            }
+            
+            return result;
+        }
+        
+        private static void ScanPropertyForConcreteGeneric(
+            PropertyData prop,
+            Dictionary<string, (int index, bool isValueType)> openGenericIndices,
+            HashSet<int> seen,
+            List<(int classIndex, string concreteType, bool isValueType)> result)
+        {
+            var typeName = prop.TypeFullName;
+            
+            // Skip if not a generic type or if it's an open generic
+            if (string.IsNullOrEmpty(typeName) || typeName.IndexOf('<') < 0 || IsOpenGenericType(typeName))
+                return;
+            
+            // Extract base name
+            var genericStart = typeName.IndexOf('<');
+            var baseName = typeName.Substring(0, genericStart);
+            
+            // Check if this is a concrete version of a known open generic
+            if (openGenericIndices.TryGetValue(baseName, out var info))
+            {
+                if (!seen.Contains(info.index))
+                {
+                    seen.Add(info.index);
+                    result.Add((info.index, typeName, info.isValueType));
+                }
+            }
         }
     }
 }

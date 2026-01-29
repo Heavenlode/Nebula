@@ -43,5 +43,13 @@ namespace Nebula
         /// Only meaningful on client for owned entities.
         /// </summary>
         public bool Predicted = false;
+
+        /// <summary>
+        /// Maximum bytes per tick for chunked initial sync of NetArray properties.
+        /// When a new client joins, large arrays are synced gradually across multiple ticks
+        /// to avoid bandwidth spikes. Default: 256 bytes per tick.
+        /// Only applicable to NetArray&lt;T&gt; properties.
+        /// </summary>
+        public int ChunkBudget = 256;
     }
 }

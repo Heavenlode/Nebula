@@ -126,6 +126,16 @@ namespace Nebula.Serialization
         /// Server state is not directly applied; reconciliation handles it.
         /// </summary>
         public readonly bool Predicted;
+        /// <summary>
+        /// Maximum bytes per tick for chunked initial sync of NetArray properties.
+        /// </summary>
+        public readonly int ChunkBudget;
+        /// <summary>
+        /// When true, this property type implements INetSerializable (reference type).
+        /// Object properties are always called during serialization and self-filter.
+        /// Primitive properties (INetValue) are only serialized when dirty.
+        /// </summary>
+        public readonly bool IsObjectProperty;
 
         public ProtocolNetProperty(
             string nodePath,
@@ -140,7 +150,9 @@ namespace Nebula.Serialization
             bool notifyOnChange = false,
             bool interpolate = false,
             float interpolateSpeed = 15f,
-            bool predicted = false)
+            bool predicted = false,
+            int chunkBudget = 256,
+            bool isObjectProperty = false)
         {
             NodePath = nodePath;
             Name = name;
@@ -155,6 +167,8 @@ namespace Nebula.Serialization
             Interpolate = interpolate;
             InterpolateSpeed = interpolateSpeed;
             Predicted = predicted;
+            ChunkBudget = chunkBudget;
+            IsObjectProperty = isObjectProperty;
         }
     }
 

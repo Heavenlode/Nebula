@@ -34,6 +34,10 @@ namespace Nebula.Generators
             /// When true, this property participates in client-side prediction.
             /// </summary>
             public bool Predicted { get; init; } = false;
+            /// <summary>
+            /// Maximum bytes per tick for chunked initial sync of NetArray properties.
+            /// </summary>
+            public int ChunkBudget { get; init; } = 256;
         }
 
         public sealed class NetFunctionInfo
@@ -341,6 +345,7 @@ namespace Nebula.Generators
                         EnumUnderlyingTypeName = enumUnderlyingType,
                         ClassLocalIndex = (byte)cumulativeIndex,
                         Predicted = GetNamedArgument(netPropAttr, "Predicted", false),
+                        ChunkBudget = GetNamedArgument(netPropAttr, "ChunkBudget", 256),
                     };
                 }
 

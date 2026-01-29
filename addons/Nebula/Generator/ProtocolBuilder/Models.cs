@@ -47,6 +47,16 @@ namespace Nebula.Generators
         /// When true, this property participates in client-side prediction.
         /// </summary>
         public bool Predicted { get; set; } = false;
+        /// <summary>
+        /// Maximum bytes per tick for chunked initial sync of NetArray properties.
+        /// </summary>
+        public int ChunkBudget { get; set; } = 256;
+        /// <summary>
+        /// When true, this property type implements INetSerializable (reference type).
+        /// Object properties are always called during serialization and self-filter.
+        /// Primitive properties (INetValue) are only serialized when dirty.
+        /// </summary>
+        public bool IsObjectProperty { get; set; } = false;
     }
 
     internal sealed class FunctionData

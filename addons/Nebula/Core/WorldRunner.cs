@@ -48,6 +48,19 @@ namespace Nebula
             DISCONNECTED
         }
 
+        /// <summary>
+        /// Tracks the spawn lifecycle for a node per peer.
+        /// </summary>
+        public enum ClientSpawnState
+        {
+            /// <summary>Node not registered for this peer yet</summary>
+            NotSpawned,
+            /// <summary>Spawn data being sent (registered but not ACKed)</summary>
+            Spawning,
+            /// <summary>Spawn ACKed, client definitely has the node</summary>
+            Spawned
+        }
+
         public struct PeerState
         {
             public NetPeer Peer;
@@ -59,9 +72,9 @@ namespace Nebula
             public Dictionary<ushort, NetId> PeerToWorldNodeMap;
 
             /// <summary>
-            /// A list of nodes that the player is aware of in the world (i.e. has spawned locally)
+            /// Tracks the spawn state of each node for this peer.
             /// </summary>
-            public Dictionary<NetId, bool> SpawnAware;
+            public Dictionary<NetId, ClientSpawnState> SpawnState;
 
             /// <summary>
             /// A hierarchical bitmask of nodeIds that are in use by the peer.
@@ -797,8 +810,24 @@ namespace Nebula
         {
             if (networkId.IsNone || !networkId.IsValid)
                 return null;
-            // Fix #7: Use TryGetValue
-            return NetScenes.TryGetValue(networkId, out var controller) ? controller : null;
+            
+            // First check NetScenes
+            if (NetScenes.TryGetValue(networkId, out var controller))
+                return controller;
+            
+            // If not found and we're processing, check pending adds
+            // This handles the case where a node is spawned during _NetworkProcess
+            // and tries to look up its parent before FlushPendingNetSceneChanges runs
+            if (_isProcessingNetScenes)
+            {
+                foreach (var pending in _pendingNetSceneAdds)
+                {
+                    if (pending.Id == networkId)
+                        return pending.Controller;
+                }
+            }
+            
+            return null;
         }
 
         public NetworkController GetNodeFromNetId(long networkId)
@@ -808,7 +837,9 @@ namespace Nebula
             // Fix #7: Use TryGetValue
             if (!networkIds.TryGetValue(networkId, out var netId))
                 return null;
-            return NetScenes.TryGetValue(netId, out var controller) ? controller : null;
+            
+            // Use the main overload which handles pending adds
+            return GetNodeFromNetId(netId);
         }
 
         public NetId AllocateNetId()
@@ -958,16 +989,17 @@ namespace Nebula
                 CleanupPlayer(peer);
             }
 
+            _netIdsToRemove.Clear();
+            _isProcessingNetScenes = true;
             foreach (var net_id in NetScenes.Keys)
             {
-                var netController = NetScenes[net_id];
-                if (netController == null)
+                if (!NetScenes.TryGetValue(net_id, out var netController) || netController == null)
                     continue;
 
                 // Use cached flag to avoid Godot method call allocation
                 if (!IsInstanceValid(netController.RawNode) || netController.IsMarkedForDeletion)
                 {
-                    NetScenes.Remove(net_id);
+                    _netIdsToRemove.Add(net_id);
                     continue;
                 }
                 if (netController.RawNode.ProcessMode == ProcessModeEnum.Disabled)
@@ -1011,6 +1043,8 @@ namespace Nebula
                 
                 netController._NetworkProcess(CurrentTick);
             }
+            _isProcessingNetScenes = false;
+            FlushPendingNetSceneChanges();
 
             if (DebugTcpListener != null && DebugTcpClients.Count > 0)
             {
@@ -1258,21 +1292,56 @@ namespace Nebula
             }
         }
 
+        /// <summary>
+        /// Gets the spawn state for a node for a specific peer.
+        /// </summary>
+        public ClientSpawnState GetClientSpawnState(NetId networkId, NetPeer peer)
+        {
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            if (!PeerStates.TryGetValue(peerId, out var peerState))
+            {
+                return ClientSpawnState.NotSpawned;
+            }
+            return peerState.SpawnState.TryGetValue(networkId, out var state) ? state : ClientSpawnState.NotSpawned;
+        }
+
+        /// <summary>
+        /// Sets the spawn state for a node for a specific peer.
+        /// </summary>
+        public void SetClientSpawnState(NetId networkId, NetPeer peer, ClientSpawnState state)
+        {
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            PeerStates[peerId].SpawnState[networkId] = state;
+        }
+
+        /// <summary>
+        /// Returns true if the spawn has been acknowledged by the peer (state == Spawned).
+        /// </summary>
         public bool HasSpawnedForClient(NetId networkId, NetPeer peer)
         {
-            // Fix #7: Use TryGetValue
+            return GetClientSpawnState(networkId, peer) == ClientSpawnState.Spawned;
+        }
+
+        /// <summary>
+        /// Checks if a node has been registered for a peer (spawn data was sent).
+        /// This is true when SpawnSerializer has exported for this peer, regardless of ACK.
+        /// </summary>
+        public bool IsNodeRegisteredForPeer(NetId networkId, NetPeer peer)
+        {
             var peerId = NetRunner.Instance.GetPeerId(peer);
             if (!PeerStates.TryGetValue(peerId, out var peerState))
             {
                 return false;
             }
-            return peerState.SpawnAware.TryGetValue(networkId, out var isSpawned) && isSpawned;
+            return peerState.WorldToPeerNodeMap.ContainsKey(networkId);
         }
 
+        /// <summary>
+        /// Sets the spawn state to Spawned (for backward compatibility).
+        /// </summary>
         public void SetSpawnedForClient(NetId networkId, NetPeer peer)
         {
-            var peerId = NetRunner.Instance.GetPeerId(peer);
-            PeerStates[peerId].SpawnAware[networkId] = true;
+            SetClientSpawnState(networkId, peer, ClientSpawnState.Spawned);
         }
 
         public void ChangeScene(NetworkController netController)
@@ -1315,7 +1384,58 @@ namespace Nebula
         /// <summary>
         /// Reusable list for peers to disconnect (avoids allocation each tick).
         /// </summary>
-        private List<NetPeer> _peersToDisconnect = new(16);
+        private List<NetPeer> _peersToDisconnect = new(32);
+
+        /// <summary>
+        /// Reusable list for net IDs to remove from NetScenes (avoids allocation each tick).
+        /// </summary>
+        private List<NetId> _netIdsToRemove = new(64);
+
+        /// <summary>
+        /// Flag to track when we're iterating NetScenes to defer modifications.
+        /// </summary>
+        private bool _isProcessingNetScenes = false;
+
+        /// <summary>
+        /// Pending NetScene additions queued during iteration (applied after loop completes).
+        /// </summary>
+        private List<(NetId Id, NetworkController Controller)> _pendingNetSceneAdds = new(16);
+
+        /// <summary>
+        /// Adds a network controller to NetScenes. Defers the add if currently iterating.
+        /// </summary>
+        internal void AddNetScene(NetId id, NetworkController controller)
+        {
+            if (_isProcessingNetScenes)
+                _pendingNetSceneAdds.Add((id, controller));
+            else
+                NetScenes[id] = controller;
+        }
+
+        /// <summary>
+        /// Removes a network controller from NetScenes. Defers the remove if currently iterating.
+        /// </summary>
+        internal void RemoveNetScene(NetId id)
+        {
+            if (_isProcessingNetScenes)
+                _netIdsToRemove.Add(id);
+            else
+                NetScenes.Remove(id);
+        }
+
+        /// <summary>
+        /// Applies all pending NetScenes additions and removals after iteration completes.
+        /// </summary>
+        private void FlushPendingNetSceneChanges()
+        {
+            foreach (var (id, ctrl) in _pendingNetSceneAdds)
+                NetScenes[id] = ctrl;
+            _pendingNetSceneAdds.Clear();
+
+            foreach (var id in _netIdsToRemove)
+                NetScenes.Remove(id);
+            _netIdsToRemove.Clear();
+        }
 
         /// <summary>
         /// Cached peer list to avoid ToList() allocation every tick (Fix #1).
@@ -1399,7 +1519,7 @@ namespace Nebula
             }
             else
             {
-                NetScenes.Remove(node.NetId);
+                RemoveNetScene(node.NetId);
             }
         }
 
@@ -1443,7 +1563,7 @@ namespace Nebula
 
             // On client, also register in networkIds so GetNodeFromNetId(long) works
             networkIds[node.NetId.Value] = node.NetId;
-            NetScenes[node.NetId] = node;
+            AddNetScene(node.NetId, node);
             return 1;
         }
 
@@ -1543,7 +1663,7 @@ namespace Nebula
                 Token = token,
                 WorldToPeerNodeMap = [],
                 PeerToWorldNodeMap = [],
-                SpawnAware = [],
+                SpawnState = [],
                 AvailableNodes = NodeIdUtils.CreateMasks(),
                 OwnedNodes = []
             };
@@ -1777,28 +1897,36 @@ namespace Nebula
                         netController = blankScene.Network;
                     }
 
+                    // Log($"[ImportState] Processing node {localNodeId}: isNewNode={isNewNode}, serializerMask=0b{Convert.ToString(serializerMask, 2)}, scenePath='{netController.NetSceneFilePath}'");
+                    
                     for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                     {
                         if ((serializerMask & ((long)1 << serializerIdx)) == 0)
                         {
+                            // Log($"[ImportState] Node {localNodeId}: Skipping serializer {serializerIdx} (bit not set)");
                             continue;
                         }
                         var serializerInstance = netController.NetNode.Serializers[serializerIdx];
+                        // Log($"[ImportState] Node {localNodeId}: Running serializer {serializerIdx} ({serializerInstance.GetType().Name})");
 
                         try
                         {
                             serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
                             if (netController != nodeOut)
                             {
+                                // Log($"[ImportState] Node {localNodeId}: Serializer {serializerIdx} replaced node, new scenePath='{nodeOut.NetSceneFilePath}', restarting loop");
                                 netController = nodeOut;
                                 serializerIdx = 0;
                             }
                         }
                         catch (System.Exception ex)
                         {
-                            // Log error with context and ABORT processing this tick entirely
+                            // Log error with FULL STACK TRACE and context, then ABORT processing this tick entirely
                             // to prevent cascading errors from corrupted buffer position
-                            Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[ImportState ERROR] Failed to import node {localNodeId} serializer {serializerIdx}: {ex.Message}. Buffer pos={stateBytes.ReadPosition}/{stateBytes.Length}. Aborting tick import.");
+                            var scenePath = netController?.NetSceneFilePath ?? "(null)";
+                            var nodeType = netController?.RawNode?.GetType().Name ?? "(null)";
+                            var nodeName = netController?.RawNode?.Name ?? "(null)";
+                            Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[ImportState ERROR] Failed to import node {localNodeId} serializer {serializerIdx}: {ex.Message}. Buffer pos={stateBytes.ReadPosition}/{stateBytes.Length}. Node info: scenePath='{scenePath}', type={nodeType}, name={nodeName}, isNewNode={isNewNode}. Aborting tick import.\nStack trace:\n{ex.StackTrace}");
                             return; // Don't continue processing - buffer position is corrupted
                         }
                     }
@@ -1929,14 +2057,16 @@ namespace Nebula
             }
 
             // Process non-owned entities with server state
+            _netIdsToRemove.Clear();
+            _isProcessingNetScenes = true;
             foreach (var net_id in NetScenes.Keys)
             {
-                var netController = NetScenes[net_id];
-                if (netController == null) continue;
+                if (!NetScenes.TryGetValue(net_id, out var netController) || netController == null)
+                    continue;
 
                 if (netController.IsMarkedForDeletion)
                 {
-                    NetScenes.Remove(net_id);
+                    _netIdsToRemove.Add(net_id);
                     continue;
                 }
 
@@ -1956,6 +2086,8 @@ namespace Nebula
                     }
                 }
             }
+            _isProcessingNetScenes = false;
+            FlushPendingNetSceneChanges();
 
             // ============================================================
             // PREDICTION: Advance predicted tick for owned entities
@@ -2043,7 +2175,7 @@ namespace Nebula
             if (NetRunner.Instance.IsServer)
             {
                 network.NetId = AllocateNetId();
-                NetScenes[network.NetId] = network;
+                AddNetScene(network.NetId, network);
             }
             else
             {

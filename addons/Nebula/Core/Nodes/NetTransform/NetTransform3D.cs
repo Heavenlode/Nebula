@@ -90,7 +90,7 @@ namespace Nebula.Utility.Nodes
         {
             // Ensure the rotation is normalized for interpolation
             NetRotation = SafeNormalize(newVal);
-            
+
             // During spawn (before world ready), sync imported rotation to SourceNode
             if (!Network.IsWorldReady && NetRunner.Instance.IsClient)
             {
@@ -172,7 +172,7 @@ namespace Nebula.Utility.Nodes
             {
                 // Sync position from the (just restored) property
                 SourceNode.Position = NetPosition;
-                
+
                 // Sync rotation with normalization and hemisphere check
                 var confirmedRot = SafeNormalize(NetRotation);
                 var currentRot = SafeNormalize(SourceNode.Quaternion);
@@ -188,7 +188,7 @@ namespace Nebula.Utility.Nodes
         {
             // Ensure restored rotation is normalized
             NetRotation = SafeNormalize(NetRotation);
-            
+
             if (SourceNode != null)
             {
                 SourceNode.Position = NetPosition;
@@ -218,7 +218,7 @@ namespace Nebula.Utility.Nodes
         public override void _NetworkProcess(int tick)
         {
             base._NetworkProcess(tick);
-            
+
             // Non-owned clients don't run simulation - interpolation handles them
             if (NetRunner.Instance.IsClient && !Network.IsCurrentOwner) return;
 
@@ -265,15 +265,15 @@ namespace Nebula.Utility.Nodes
             {
                 // Frame-rate independent smoothing factor
                 float t = 1f - Mathf.Exp(-VisualInterpolateSpeed * (float)delta);
-                
+
                 // Smooth position
                 target.Position = target.Position.Lerp(SourceNode.Position, t);
-                
+
                 // Smooth rotation with hemisphere check for shortest path
                 var sourceRot = SafeNormalize(SourceNode.Quaternion);
                 var visualRot = SafeNormalize(target.Quaternion);
                 visualRot = EnsureSameHemisphere(visualRot, sourceRot);
-                
+
                 // Check for large rotation error - snap instead of slerp to avoid visual artifacts
                 float angleDiff = visualRot.AngleTo(sourceRot);
                 if (angleDiff > RotationSnapThreshold)
@@ -315,7 +315,7 @@ namespace Nebula.Utility.Nodes
         public void Teleport(Vector3 incoming_position, Quaternion incoming_rotation)
         {
             var normalizedRotation = SafeNormalize(incoming_rotation);
-            
+
             if (SourceNode != null)
             {
                 SourceNode.Position = incoming_position;

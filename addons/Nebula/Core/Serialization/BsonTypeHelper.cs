@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Godot;
 using MongoDB.Bson;
 
@@ -56,6 +57,44 @@ namespace Nebula.Serialization
         public static BsonValue ToBson(long[] value) => value != null 
             ? new BsonArray(value) 
             : BsonNull.Value;
+
+        /// <summary>
+        /// Serializes a NetArray to BSON as an array of its elements.
+        /// </summary>
+        public static BsonValue ToBson<T>(NetArray<T> value) where T : struct
+        {
+            if (value == null || value.Length == 0)
+                return BsonNull.Value;
+            
+            var arr = new BsonArray();
+            for (int i = 0; i < value.Length; i++)
+            {
+                arr.Add(ElementToBson(value[i]));
+            }
+            return arr;
+        }
+        
+        /// <summary>
+        /// Helper to convert individual NetArray elements to BSON.
+        /// </summary>
+        private static BsonValue ElementToBson<T>(T value) where T : struct
+        {
+            return value switch
+            {
+                int i => i,
+                float f => (double)f,
+                byte b => (int)b,
+                long l => l,
+                short s => (int)s,
+                Vector2 v2 => new BsonArray { v2.X, v2.Y },
+                Vector3 v3 => new BsonArray { v3.X, v3.Y, v3.Z },
+                Quaternion q => new BsonArray { q.X, q.Y, q.Z, q.W },
+                Vector2I v2i => new BsonArray { v2i.X, v2i.Y },
+                Vector3I v3i => new BsonArray { v3i.X, v3i.Y, v3i.Z },
+                Color c => new BsonArray { c.R, c.G, c.B, c.A },
+                _ => throw new NotSupportedException($"NetArray element type {typeof(T).Name} is not supported for BSON serialization")
+            };
+        }
 
         /// <summary>
         /// Serializes an enum value to BSON as its underlying integer value.
@@ -154,6 +193,96 @@ namespace Nebula.Serialization
         public static long[] ToInt64Array(BsonValue value) => value.IsBsonNull 
             ? null 
             : value.AsBsonArray.Select(x => x.AsInt64).ToArray();
+
+        /// <summary>
+        /// Deserializes a BSON array to a NetArray.
+        /// </summary>
+        public static NetArray<T> ToNetArray<T>(BsonValue value) where T : struct
+        {
+            if (value.IsBsonNull)
+                return null;
+            
+            var bsonArray = value.AsBsonArray;
+            var result = new NetArray<T>(bsonArray.Count);
+            result.SetLength(bsonArray.Count);
+            
+            for (int i = 0; i < bsonArray.Count; i++)
+            {
+                result.SetFromNetwork(i, BsonToElement<T>(bsonArray[i]));
+            }
+            
+            return result;
+        }
+        
+        /// <summary>
+        /// Helper to convert BSON to individual NetArray elements.
+        /// </summary>
+        private static T BsonToElement<T>(BsonValue value) where T : struct
+        {
+            if (typeof(T) == typeof(int))
+            {
+                var v = value.AsInt32;
+                return Unsafe.As<int, T>(ref v);
+            }
+            if (typeof(T) == typeof(float))
+            {
+                var v = (float)value.AsDouble;
+                return Unsafe.As<float, T>(ref v);
+            }
+            if (typeof(T) == typeof(byte))
+            {
+                var v = (byte)value.AsInt32;
+                return Unsafe.As<byte, T>(ref v);
+            }
+            if (typeof(T) == typeof(long))
+            {
+                var v = value.AsInt64;
+                return Unsafe.As<long, T>(ref v);
+            }
+            if (typeof(T) == typeof(short))
+            {
+                var v = (short)value.AsInt32;
+                return Unsafe.As<short, T>(ref v);
+            }
+            if (typeof(T) == typeof(Vector2))
+            {
+                var arr = value.AsBsonArray;
+                var v = new Vector2((float)arr[0].AsDouble, (float)arr[1].AsDouble);
+                return Unsafe.As<Vector2, T>(ref v);
+            }
+            if (typeof(T) == typeof(Vector3))
+            {
+                var arr = value.AsBsonArray;
+                var v = new Vector3((float)arr[0].AsDouble, (float)arr[1].AsDouble, (float)arr[2].AsDouble);
+                return Unsafe.As<Vector3, T>(ref v);
+            }
+            if (typeof(T) == typeof(Quaternion))
+            {
+                var arr = value.AsBsonArray;
+                var v = new Quaternion((float)arr[0].AsDouble, (float)arr[1].AsDouble, (float)arr[2].AsDouble, (float)arr[3].AsDouble);
+                return Unsafe.As<Quaternion, T>(ref v);
+            }
+            if (typeof(T) == typeof(Vector2I))
+            {
+                var arr = value.AsBsonArray;
+                var v = new Vector2I(arr[0].AsInt32, arr[1].AsInt32);
+                return Unsafe.As<Vector2I, T>(ref v);
+            }
+            if (typeof(T) == typeof(Vector3I))
+            {
+                var arr = value.AsBsonArray;
+                var v = new Vector3I(arr[0].AsInt32, arr[1].AsInt32, arr[2].AsInt32);
+                return Unsafe.As<Vector3I, T>(ref v);
+            }
+            if (typeof(T) == typeof(Color))
+            {
+                var arr = value.AsBsonArray;
+                var v = new Color((float)arr[0].AsDouble, (float)arr[1].AsDouble, (float)arr[2].AsDouble, (float)arr[3].AsDouble);
+                return Unsafe.As<Color, T>(ref v);
+            }
+            
+            throw new NotSupportedException($"NetArray element type {typeof(T).Name} is not supported for BSON deserialization");
+        }
 
         /// <summary>
         /// Deserializes a BSON value to an enum.

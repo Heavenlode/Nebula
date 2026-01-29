@@ -296,23 +296,25 @@ namespace Nebula.Generators
 
                         foreach (var prop in propKvp.Value)
                         {
-                        result.Properties[newNodePath][prop.Key] = new PropertyData
-                        {
-                            NodePath = $"{nodePath}/{prop.Value.NodePath}",
-                            Name = prop.Value.Name,
-                            TypeFullName = prop.Value.TypeFullName,
-                            SubtypeIdentifier = prop.Value.SubtypeIdentifier,
-                            Index = (byte)propertyCount++,
-                            LocalIndex = prop.Value.LocalIndex, // Preserve class-local index from nested scene
-                            InterestMask = prop.Value.InterestMask,
-                            InterestRequired = prop.Value.InterestRequired,
-                            ClassIndex = prop.Value.ClassIndex,
-                            NotifyOnChange = prop.Value.NotifyOnChange,
-                            Interpolate = prop.Value.Interpolate,
-                            InterpolateSpeed = prop.Value.InterpolateSpeed,
-                            IsEnum = prop.Value.IsEnum,
-                            Predicted = prop.Value.Predicted
-                        };
+                            result.Properties[newNodePath][prop.Key] = new PropertyData
+                            {
+                                NodePath = $"{nodePath}/{prop.Value.NodePath}",
+                                Name = prop.Value.Name,
+                                TypeFullName = prop.Value.TypeFullName,
+                                SubtypeIdentifier = prop.Value.SubtypeIdentifier,
+                                Index = (byte)propertyCount++,
+                                LocalIndex = prop.Value.LocalIndex, // Preserve class-local index from nested scene
+                                InterestMask = prop.Value.InterestMask,
+                                InterestRequired = prop.Value.InterestRequired,
+                                ClassIndex = prop.Value.ClassIndex,
+                                NotifyOnChange = prop.Value.NotifyOnChange,
+                                Interpolate = prop.Value.Interpolate,
+                                InterpolateSpeed = prop.Value.InterpolateSpeed,
+                                IsEnum = prop.Value.IsEnum,
+                                Predicted = prop.Value.Predicted,
+                                ChunkBudget = prop.Value.ChunkBudget,
+                                IsObjectProperty = prop.Value.IsObjectProperty
+                            };
                         }
                     }
 
@@ -359,15 +361,40 @@ namespace Nebula.Generators
 
                     foreach (var prop in typeInfo.Properties)
                     {
-                        var classIndex = analysisResult.SerializableTypeIndices
-                            .TryGetValue(prop.TypeFullName, out var idx) ? idx : -1;
+                        // Look up class index - try exact type first, then generic type definition
+                        var classIndex = LookupClassIndex(analysisResult, prop.TypeFullName);
+                        
+                        // Determine if this is an object property (INetSerializable reference type)
+                        // vs a primitive/value property (INetValue value type)
+                        var isObjectProperty = false;
+                        if (classIndex >= 0 && classIndex < analysisResult.SerializableTypes.Count)
+                        {
+                            var serializableType = analysisResult.SerializableTypes[classIndex];
+                            isObjectProperty = !serializableType.IsValueType;
+                        }
+                        
+                        // Determine SubtypeIdentifier:
+                        // - For enums: use the underlying type name
+                        // - For custom/Object types (including generics like NetArray<T>): 
+                        //   preserve the full type name for runtime type detection
+                        // - Otherwise: null (will be resolved by MapTypeToVariant)
+                        string? subtypeId = null;
+                        if (prop.IsEnum)
+                        {
+                            subtypeId = prop.EnumUnderlyingTypeName;
+                        }
+                        else if (IsCustomObjectType(prop.TypeFullName))
+                        {
+                            // Custom serializable type - preserve full type name for NetArray detection etc.
+                            subtypeId = prop.TypeFullName;
+                        }
 
                         result.Properties[nodePath][prop.Name] = new PropertyData
                         {
                             NodePath = nodePath,
                             Name = prop.Name,
                             TypeFullName = prop.TypeFullName,
-                            SubtypeIdentifier = prop.IsEnum ? prop.EnumUnderlyingTypeName : null,
+                            SubtypeIdentifier = subtypeId,
                             Index = (byte)propertyCount++,
                             LocalIndex = prop.ClassLocalIndex, // Use class-local index from analyzer
                             InterestMask = prop.InterestMask,
@@ -377,7 +404,9 @@ namespace Nebula.Generators
                             Interpolate = prop.Interpolate,
                             InterpolateSpeed = prop.InterpolateSpeed,
                             IsEnum = prop.IsEnum,
-                            Predicted = prop.Predicted
+                            Predicted = prop.Predicted,
+                            ChunkBudget = prop.ChunkBudget,
+                            IsObjectProperty = isObjectProperty
                         };
                     }
                 }
@@ -453,6 +482,103 @@ namespace Nebula.Generators
 
             // Fallback if path doesn't start with project root
             return "";
+        }
+        
+        /// <summary>
+        /// Determines if a type would map to SerialVariantType.Object (custom types).
+        /// These types need their full type name preserved in metadata for runtime detection.
+        /// </summary>
+        private static bool IsCustomObjectType(string typeFullName)
+        {
+            // Built-in primitive types
+            if (typeFullName is "System.Boolean" or "bool" or
+                "System.Int16" or "short" or
+                "System.Int32" or "int" or
+                "System.Byte" or "byte" or
+                "System.Int64" or "long" or
+                "System.UInt64" or "ulong" or
+                "System.Single" or "float" or
+                "System.Double" or "double" or
+                "System.String" or "string")
+            {
+                return false;
+            }
+            
+            // Built-in array types
+            if (typeFullName is "System.Byte[]" or "byte[]" or
+                "System.Int64[]" or "long[]")
+            {
+                return false;
+            }
+            
+            // Built-in Godot types
+            if (typeFullName is "Godot.Vector2" or "Godot.Vector2I" or
+                "Godot.Vector3" or "Godot.Vector3I" or
+                "Godot.Vector4" or "Godot.Quaternion" or
+                "Godot.Color" or "Godot.Transform2D" or
+                "Godot.Transform3D" or "Godot.Basis" or
+                "Godot.Rect2" or "Godot.Rect2I" or
+                "Godot.Aabb" or "Godot.Plane" or
+                "Godot.Projection")
+            {
+                return false;
+            }
+            
+            // Everything else is a custom Object type
+            return true;
+        }
+        
+        /// <summary>
+        /// Looks up the class index for a type, handling generic types by
+        /// falling back to the generic type definition if the exact type isn't found.
+        /// </summary>
+        private static int LookupClassIndex(TypeAnalyzer.AnalysisResult analysisResult, string typeFullName)
+        {
+            // Try exact match first
+            if (analysisResult.SerializableTypeIndices.TryGetValue(typeFullName, out var idx))
+            {
+                return idx;
+            }
+            
+            // If it's a generic type (contains '<'), try to find the generic type definition
+            // e.g., "Nebula.Serialization.NetArray<Godot.Vector3>" -> "Nebula.Serialization.NetArray<T>"
+            var genericBracket = typeFullName.IndexOf('<');
+            if (genericBracket > 0)
+            {
+                var genericBase = typeFullName.Substring(0, genericBracket);
+                
+                // Count type arguments to construct the right generic definition
+                // For single type arg: NetArray<T>, for two: Dict<TKey, TValue>, etc.
+                var typeArgs = typeFullName.Substring(genericBracket + 1);
+                var depth = 0;
+                var argCount = 1;
+                foreach (var c in typeArgs)
+                {
+                    if (c == '<') depth++;
+                    else if (c == '>') depth--;
+                    else if (c == ',' && depth == 0) argCount++;
+                }
+                
+                // Build the generic definition name based on arg count
+                string genericDef;
+                if (argCount == 1)
+                {
+                    genericDef = genericBase + "<T>";
+                }
+                else
+                {
+                    // For multiple type args, use T1, T2, etc.
+                    var args = string.Join(", ", Enumerable.Range(1, argCount).Select(i => $"T{i}"));
+                    genericDef = genericBase + "<" + args + ">";
+                }
+                
+                if (analysisResult.SerializableTypeIndices.TryGetValue(genericDef, out idx))
+                {
+                    return idx;
+                }
+            }
+            
+            return -1;
         }
     }
 }

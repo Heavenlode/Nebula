@@ -324,10 +324,26 @@ namespace Nebula
 			InterestChanged?.Invoke(peerId, oldInterest, newInterest);
 		}
 
+		public void AddPeerInterest(NetPeer peer, long interestLayers, bool recurse = true)
+		{
+			SetPeerInterest(NetRunner.Instance.GetPeerId(peer), interestLayers, recurse);
+		}
+
 		public void AddPeerInterest(UUID peerId, long interestLayers, bool recurse = true)
 		{
 			var currentInterest = InterestLayers.GetValueOrDefault(peerId, 0);
 			SetPeerInterest(peerId, currentInterest | interestLayers, recurse);
+		}
+
+	public void RemovePeerInterest(NetPeer peer, long interestLayers, bool recurse = true)
+		{
+			SetPeerInterest(NetRunner.Instance.GetPeerId(peer), interestLayers, recurse);
+		}
+
+		public void RemovePeerInterest(UUID peerId, long interestLayers, bool recurse = true)
+		{
+			var currentInterest = InterestLayers.GetValueOrDefault(peerId, 0);
+			SetPeerInterest(peerId, currentInterest & ~interestLayers, recurse);
 		}
 
 		public bool IsPeerInterested(UUID peerId)
@@ -569,7 +585,6 @@ namespace Nebula
 			var staticChildId = sourceNode.Network.StaticChildId;
 			if (!Protocol.LookupPropertyByStaticChildId(NetSceneFilePath, staticChildId, propertyName, out var prop))
 			{
-				Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"MarkDirtyRef: Property not found: staticChildId={staticChildId}, prop={propertyName}");
 				return;
 			}
 
@@ -586,6 +601,22 @@ namespace Nebula
 				CachedProperties[prop.Index].Type = SerialVariantType.Object;
 				CachedProperties[prop.Index].RefValue = value;
 			}
+		}
+
+		/// <summary>
+		/// Marks a property as dirty by its global property index.
+		/// Used by INetPropertyBindable types (like NetArray) when internal state changes.
+		/// </summary>
+		public void MarkDirtyByIndex(int globalPropertyIndex)
+		{
+			// Static children propagate to parent net scene
+			if (!IsNetScene())
+			{
+				NetParent?.MarkDirtyByIndex(globalPropertyIndex);
+				return;
+			}
+
+			DirtyMask |= (1L << globalPropertyIndex);
 		}
 
 		/// <summary>
@@ -1025,6 +1056,17 @@ namespace Nebula
 			}
 
 			CurrentWorld = world;
+			
+			// Initialize bindings for INetPropertyBindable properties (like NetArray)
+			// This ensures properties initialized inline get their mutation callbacks bound
+			// and their initial values cached for network serialization
+			// Must call through concrete type for polymorphic dispatch (interface has default empty impl)
+			if (RawNode is NetNode3D n3d)
+				n3d.InitializeNetPropertyBindings();
+			else if (RawNode is NetNode2D n2d)
+				n2d.InitializeNetPropertyBindings();
+			else if (RawNode is NetNode nn)
+				nn.InitializeNetPropertyBindings();
 			if (IsNetScene())
 			{
 				if (NetRunner.Instance.IsServer)

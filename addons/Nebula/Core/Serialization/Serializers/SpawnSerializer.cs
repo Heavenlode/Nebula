@@ -70,9 +70,11 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
-            if (currentWorld.HasSpawnedForClient(netController.NetId, peer))
+            // Check if spawn data has already been sent (Spawning or Spawned state)
+            var spawnState = currentWorld.GetClientSpawnState(netController.NetId, peer);
+            if (spawnState != WorldRunner.ClientSpawnState.NotSpawned)
             {
-                // This is expected for already-spawned nodes, don't log
+                // Already sent spawn data (or ACKed), skip
                 return;
             }
 
@@ -120,8 +122,8 @@ namespace Nebula.Serialization.Serializers
                 // Write nested NetScenes for root scene
                 ExportNestedScenes(currentWorld, peer, buffer);
                 
-                // Mark spawned immediately so NetPropertiesSerializer can export in the same tick
-                currentWorld.SetSpawnedForClient(netController.NetId, peer);
+                // Mark spawn as being sent (waiting for ACK)
+                currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
                 return;
             }
 
@@ -153,14 +155,14 @@ namespace Nebula.Serialization.Serializers
             // Write nested NetScenes
             ExportNestedScenes(currentWorld, peer, buffer);
 
-            currentWorld.Debug?.Send("Spawn", $"Exported:{netController.RawNode.SceneFilePath}");
+            // Mark spawn as being sent (waiting for ACK)
+            currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
 
-            // Mark spawned immediately so NetPropertiesSerializer can export in the same tick
-            currentWorld.SetSpawnedForClient(netController.NetId, peer);
+            currentWorld.Debug?.Send("Spawn", $"Exported:{netController.RawNode.SceneFilePath}");
         }
         
         /// <summary>
-        /// Exports all nested NetScenes in the subtree.
+        /// Exports all nested NetScenes in the subtree that the peer has interest in.
         /// </summary>
         private void ExportNestedScenes(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
@@ -168,11 +170,22 @@ namespace Nebula.Serialization.Serializers
             _nestedSceneBuffer.Clear();
             CollectNestedNetScenesRecursive(netController, _nestedSceneBuffer);
             
-            NetWriter.WriteByte(buffer, (byte)_nestedSceneBuffer.Count);
-            
+            // Filter to only include scenes the peer has interest in
+            _interestedNestedBuffer.Clear();
             for (int i = 0; i < _nestedSceneBuffer.Count; i++)
             {
                 var nested = _nestedSceneBuffer[i];
+                if (nested.IsPeerInterested(peer))
+                {
+                    _interestedNestedBuffer.Add(nested);
+                }
+            }
+            
+            NetWriter.WriteByte(buffer, (byte)_interestedNestedBuffer.Count);
+            
+            for (int i = 0; i < _interestedNestedBuffer.Count; i++)
+            {
+                var nested = _interestedNestedBuffer[i];
                 
                 // Allocate peer-specific ID for this nested scene
                 var nestedPeerId = currentWorld.TryRegisterPeerNode(nested, peer);
@@ -200,11 +213,11 @@ namespace Nebula.Serialization.Serializers
                 NetWriter.WriteByte(buffer, nested.CachedNodePathIdInParent);
                 NetWriter.WriteUInt16(buffer, nestedPeerId);
                 NetWriter.WriteByte(buffer, nestedHasInputAuth);
-                
-                // Mark nested as spawned so its NetPropertiesSerializer exports in same tick
-                currentWorld.SetSpawnedForClient(nested.NetId, peer);
             }
         }
+        
+        // Reusable buffer for interested nested scenes to avoid allocation
+        private List<NetworkController> _interestedNestedBuffer = new(64);
         
         /// <summary>
         /// Recursively collects all nested NetScenes in the subtree.
@@ -239,11 +252,15 @@ namespace Nebula.Serialization.Serializers
         public void Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController controllerOut)
         {
             controllerOut = netController;
+            // Debugger.Instance.Log($"[SpawnSerializer.Import] START - netController.NetId={netController.NetId}, hasImported={hasImported}, scenePath='{netController.NetSceneFilePath}'");
+            
             var data = Deserialize(buffer);
+            // Debugger.Instance.Log($"[SpawnSerializer.Import] Deserialized - classId={data.classId}, parentId={data.parentId}, scene={Protocol.UnpackScene(data.classId)?.ResourcePath ?? "null"}");
 
             // Skip if this node was already properly imported
             if (hasImported)
             {
+                // Debugger.Instance.Log($"[SpawnSerializer.Import] SKIPPED - already imported");
                 return;
             }
 
@@ -291,6 +308,7 @@ namespace Nebula.Serialization.Serializers
 
             if (data.parentId == 0)
             {
+                // Debugger.Instance.Log($"[SpawnSerializer.Import] ROOT SCENE - calling ChangeScene, controllerOut.NetId={controllerOut.NetId}, scenePath='{controllerOut.NetSceneFilePath}'");
                 currentWorld.ChangeScene(controllerOut);
                 currentWorld.Debug?.Send("Spawn", $"Imported:{controllerOut.NetSceneFilePath}");
                 return;
@@ -363,6 +381,11 @@ namespace Nebula.Serialization.Serializers
                     local.NetParentId = nodeOut.NetId;
                     // Register with WorldRunner so it can receive despawn commands
                     currentWorld.TryRegisterPeerNode(local);
+                    // Mark the nested scene's SpawnSerializer as imported to prevent duplicate import
+                    if (local.NetNode.Serializers.Length > 0 && local.NetNode.Serializers[0] is SpawnSerializer nestedSpawnSerializer)
+                    {
+                        nestedSpawnSerializer.hasImported = true;
+                    }
                     // Mark as processed (use 246 as sentinel, > 245 reserved)
                     _nestedDataBuffer[matchIndex].SceneId = 246;
                 }
@@ -411,6 +434,12 @@ namespace Nebula.Serialization.Serializers
                 instance.Network.NetParentId = nodeOut.NetId;
                 // Register with WorldRunner so it can receive despawn commands
                 currentWorld.TryRegisterPeerNode(instance.Network);
+                // Mark the nested scene's SpawnSerializer as imported to prevent duplicate import
+                // (serializers are already created during NotificationSceneInstantiated)
+                if (instance.Serializers.Length > 0 && instance.Serializers[0] is SpawnSerializer nestedSpawnSerializer)
+                {
+                    nestedSpawnSerializer.hasImported = true;
+                }
             }
             
             // Also process static children (non-NetScene NetNodes)

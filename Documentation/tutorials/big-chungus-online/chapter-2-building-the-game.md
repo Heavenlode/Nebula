@@ -74,8 +74,8 @@ public partial class Player : NetNode
         if (Network.IsClient && Network.IsCurrentOwner) {
             var camera = new Camera3D();
             camera.Position = new Vector3(0, 10, 0);
-            camera.LookAt(new Vector3(0, 0, 0));
             GetNode("Model").AddChild(camera);
+            camera.LookAt(new Vector3(0, 0, 0));
         }
     }
 }
@@ -88,74 +88,182 @@ A few things are happening here:
 3. We check if it is a client running the code (we don't want the server to add a camera) and we make sure the current client owns the NetNode.
 4. We instantiate our camera to be positioned above the model and pointing downwards, to look at it from above.
 
+## Main Menu
+
+Real quick, we'll setup a spot for the players to drop into once they open the game, as well as where to return when their character is eaten.
+
+Let's put together a quick and simple UI for this purpose. It can be laid out however we want, so feel free to be creative. The most imporant element is a button to enter the game.
+
+Here's an example layout:
+
+![Player Spawn Manager Setup](~/images/big-chungus/chapter-2/ui.png)
+
+![Player Spawn Manager Setup](~/images/big-chungus/chapter-2/ui-preview.png)
+
 ## Spawning And Playing
 
-Now let's go ahead and spawn our players in. Going back to `game_arena.tscn` we'll add a new Node called "PlayerSpawnManager" with a script attached:
+Now let's go ahead and spawn our players in when they click Play. Going back to `game_arena.tscn` we'll add a new Node called "PlayerSpawner" with a script attached:
 
 ![Player Spawn Manager Setup](~/images/big-chungus/chapter-2/player-spawn-manager-setup.png)
 
+
 ```cs
+using System.Collections.Generic;
 using Godot;
 using Nebula;
 
-public partial class PlayerSpawnManager : NetNode
+public partial class PlayerSpawner : NetNode
 {
     [Export]
     public PackedScene CharacterScene;
-    public override void _WorldReady()
+
+    [Export]
+    public Control StartScreen;
+    
+    [Export]
+    public Control ScoreContainer;
+}
+```
+
+First, let's create handlers for when they click "Play" and "Exit", wiring up the button Pressed signals to their respective functions:
+
+```cs
+    public void _OnPlay()
     {
-        base._WorldReady();
-        
-        if (Network.IsServer) {
-            Network.CurrentWorld.OnPlayerJoined += _OnPlayerJoined;
-        }
+        StartScreen.Visible = false;
+        ScoreContainer.Visible = true;
+        JoinGame();
     }
 
-    private void _OnPlayerJoined(UUID peerId)
+    public void _OnExit()
     {
-        var playerCharacter = CharacterScene.Instantiate<Player>();
-        Network.CurrentWorld.Spawn(playerCharacter, inputAuthority: NetRunner.Instance.Peers[peerId]);
+        GetTree().Quit();
+    }
+```
+
+Now we'll implement JoinGame. This will be how our client tells our server to spawn them in with a new player.
+
+```cs
+    [NetFunction(Source = NetFunction.NetworkSources.Client, ExecuteOnCaller = false)]
+    public void JoinGame()
+    {
+    }
+```
+
+Here we're defining a `NetFunction`. This is Nebula's version of an RPC. `Source` and `ExecuteOnCaller` parameters are self-explanatory: the RPC can only be initiated by a client, and the caller will not execute the function themselves.
+
+In other words, a client can call `JoinGame()` and it will only run on the server.
+
+This function is very simple: the server must spawn a new player scene for the client.
+
+```cs
+    [NetFunction(Source = NetFunction.NetworkSources.Client, ExecuteOnCaller = false)]
+    public void JoinGame()
+    {   
+        var newPlayer = CharacterScene.Instantiate<Player>();
+        Network.CurrentWorld.Spawn(newPlayer, inputAuthority: Network.CurrentWorld.NetFunctionContext.Caller);
+    }
+```
+
+That's it! So to recap:
+
+1. Client clicks "Play!" UI button
+2. UI button calls `_OnPlay()` via a "Pressed" signal
+3. `_OnPlay()` calls `JoinGame()`
+4. `JoinGame` executes on the server
+5. The server spawns a new player character scene and sets the "Input Authority" to the client that called JoinGame
+
+Input Authority is essentially the "Owner". It says which client owns the node, meaning they're allowed to send inputs (like movement) to that node. Earlier, we had that conditional `Network.IsCurrentOwner`. This is exactly what that is.
+
+So the overall script for player spawning will look like this:
+
+```cs
+using System.Collections.Generic;
+using Godot;
+using Nebula;
+
+public partial class PlayerSpawner : NetNode
+{
+    [Export]
+    public PackedScene CharacterScene;
+
+    [Export]
+    public Control StartScreen;
+    
+    [Export]
+    public Control ScoreContainer;
+
+    [NetFunction(Source = NetFunction.NetworkSources.Client, ExecuteOnCaller = false)]
+    public void JoinGame()
+    {
+        var newPlayer = CharacterScene.Instantiate<Player>();
+        Network.CurrentWorld.Spawn(newPlayer, inputAuthority: Network.CurrentWorld.NetFunctionContext.Caller);
+    }
+
+    public void _OnPlay()
+    {
+        StartScreen.Visible = false;
+        ScoreContainer.Visible = true;
+        JoinGame();
+    }
+
+    public void _OnExit()
+    {
+        GetTree().Quit();
     }
 }
 ```
 
-Be sure to attach the character scene:
-![Attach Character Scene](~/images/big-chungus/chapter-2/character-scene.png)
-
-On the server side, the PlayerSpawnManager is hooking into the World's "player join" event, and spawning a player.tscn for them.
-
-Notice the `inputAuthority` part? That's what designates who owns the node. Earlier in our `Player.cs` script we had `Network.IsCurrentOwner`. We're saying the peer who just joined is the owner if this newly spawned node. We'll see more about what that means shortly.
+>[!WARNING] Be sure to attach the exported variables in Godot! You'll need to attach the character scene, the start screen UI to hide, and the score container to show when they join the game.
 
 ## Level Setup & Running The Game
 
-Let's get ready to run the game. The last thing we'll do is just add a plane MeshInstance3D to the `game_arena.tscn` for the "floor" of the level that our players can move around on. We can also add a custom texture to it, to make it easy to see when the player is moving. Here's a simple shader which will render a grid on the plane:
+The last thing we'll do is just add a plane MeshInstance3D to the `game_arena.tscn` for the "floor" of the level that our players can move around on, and a directional light to see.
+
+We can also add a custom texture to the floor, to make it easy to see when the player is moving and make things look more interesting. Here's a simple shader which will render a grid on the plane:
 
 
-```
+```GLSL
 shader_type spatial;
+render_mode specular_disabled;
 
-uniform vec3 color_white : source_color = vec3(0.8, 0.8, 0.8);
-uniform vec3 color_navy : source_color = vec3(0.0, 0.0, 0.5);
-uniform float grid_size : hint_range(1.0, 1000.0) = 500.0;
+uniform vec3 color_grid : source_color = vec3(0.8, 0.8, 0.8);
+uniform vec3 color_tile : source_color = vec3(0.102, 0.102, 0.102);
+uniform float small_grid_size : hint_range(1.0, 1000.0) = 60.0;
+uniform float large_grid_size : hint_range(1.0, 200.0) = 10.0;
+uniform float line_thickness : hint_range(0.001, 0.1) = 0.02;
+uniform float fade_start_distance : hint_range(0.0, 200.0) = 25.0;
+uniform float fade_end_distance : hint_range(0.0, 500.0) = 30.0;
+
+float grid_line(vec2 uv, float grid_size, float thickness) {
+	vec2 grid_uv = uv * grid_size;
+	vec2 f = fract(grid_uv);
+	float dist_to_line = min(min(f.x, 1.0 - f.x), min(f.y, 1.0 - f.y));
+	return 1.0 - smoothstep(0.0, thickness, dist_to_line);
+}
+
+varying vec3 world_pos;
+
+void vertex() {
+	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+}
 
 void fragment() {
-	vec2 scaled_uv = UV * grid_size;
-	vec2 cell = floor(scaled_uv);
-	float checker = mod(cell.x + cell.y, 2.0);
-	vec3 color = mix(color_white, color_navy, checker);
-	
-	ALBEDO = color;
+	float small_line = grid_line(UV, small_grid_size, line_thickness);
+	float large_line = grid_line(UV, large_grid_size, line_thickness);
+	float distance_to_camera = length(CAMERA_POSITION_WORLD - world_pos);
+	float fade = smoothstep(fade_start_distance, fade_end_distance, distance_to_camera);
+	float line = max(small_line * (1.0 - fade), large_line * fade);
+
+	ALBEDO = mix(color_tile, color_grid, clamp(line, 0.0, 1.0));
+	ROUGHNESS = 1.0;
 }
 ```
 
 ![Level Floor Setup](~/images/big-chungus/chapter-2/level-floor-setup.png)
 
-Let's also add a simple directional light with shadow casting.
-
-![Light Setup](~/images/big-chungus/chapter-2/light-setup.png)
-
 That's it! Now run the game and we should see something similar to the following:
 
-![First Game Run](~/images/big-chungus/chapter-2/game-animation.gif)
+![First Game Run](~/images/big-chungus/chapter-2/players.gif)
 
-The player characters and game arena are all setup. In the next chapter, we'll handle player inputs (movement), and points / character growth.
+The player characters and game arena are all setup. In the next chapter, we'll handle the core gameplay: player inputs (movement); points; character growth.

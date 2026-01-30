@@ -13,6 +13,7 @@ As an introduction to Nebula, we're going to make a game called Big Chungus Onli
 >[!NOTE] The tutorial was done on macOS, but the steps should all be basically the same on Windows and Linux.
 
 By the end of this tutorial, you'll have made this game:
+
 ![Demo](~/images/big-chungus/chapter-1/completed-game.gif)
 
 ## Installation

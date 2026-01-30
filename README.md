@@ -245,7 +245,7 @@ worldRunner.Spawn(player, inputAuthority: peer);
 
 ## Documentation
 
-Comprehensive documentation is available at: **https://nebula.dev.heavenlode.com**
+Comprehensive documentation is available at: **https://nebula.heavenlode.com**
 
 For implementation details and architecture overview, see [NEBULA_OVERVIEW.mdc](./NEBULA_OVERVIEW.mdc). This file is particularly useful for AI/vibe coding as well.
 

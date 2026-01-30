@@ -72,11 +72,10 @@ public partial class Player : NetNode3D
     public override void _NetworkProcess(int tick)
     {
         // Both server AND owning client run this for prediction
-        if (NetRunner.Instance.IsServer || Network.IsCurrentOwner)
-        {
-            ref readonly var input = ref Network.GetInput<PlayerInput>();
-            Position += new Vector3(input.MoveX, 0, input.MoveY) * Speed;
-        }
+        ref readonly var input = ref Network.GetInput<PlayerInput>();
+
+        // Normalized inputs for easy cheat/hack prevention!
+        Position += new Vector3(input.MoveX, 0, input.MoveY).Normalized() * Speed;
     }
 }
 ```
@@ -189,7 +188,7 @@ public struct PlayerInput
 // In your node:
 public override void _PhysicsProcess(double delta)
 {
-    if (Network.IsCurrentOwner && !NetRunner.Instance.IsServer)
+    if (Network.IsCurrentOwner && !Network.IsServer)
     {
         Network.SetInput(new PlayerInput
         {

@@ -94,9 +94,9 @@ namespace Nebula
         /// <summary>
         /// This is set after <see cref="StartClient"/> or <see cref="StartServer"/> is called, i.e. when <see cref="NetStarted"/> == true. Before that, this value is unreliable.
         /// </summary>
-        public bool IsServer { get; private set; }
+        internal bool IsServer { get; private set; }
 
-        public bool IsClient => !IsServer;
+        internal bool IsClient => !IsServer;
 
         /// <summary>
         /// This is set to true once <see cref="StartClient"/> or <see cref="StartServer"/> have succeeded.

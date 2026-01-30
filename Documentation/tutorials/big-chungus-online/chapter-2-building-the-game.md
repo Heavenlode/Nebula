@@ -71,7 +71,7 @@ public partial class Player : NetNode
     public override void _WorldReady() {
         base._WorldReady();
 
-        if (NetRunner.Instance.IsClient && Network.IsCurrentOwner) {
+        if (Network.IsClient && Network.IsCurrentOwner) {
             var camera = new Camera3D();
             camera.Position = new Vector3(0, 10, 0);
             camera.LookAt(new Vector3(0, 0, 0));
@@ -106,7 +106,7 @@ public partial class PlayerSpawnManager : NetNode
     {
         base._WorldReady();
         
-        if (NetRunner.Instance.IsServer) {
+        if (Network.IsServer) {
             Network.CurrentWorld.OnPlayerJoined += _OnPlayerJoined;
         }
     }

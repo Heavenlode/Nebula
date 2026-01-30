@@ -27,6 +27,9 @@ namespace Nebula
 			public PropertyCache[] Properties;
 		}
 
+		public bool IsClient => NetRunner.Instance.IsClient;
+		public bool IsServer => NetRunner.Instance.IsServer;
+
 		/// <summary>
 		/// Size of the circular snapshot buffer. ~130ms at 60Hz tick rate.
 		/// </summary>
@@ -979,7 +982,7 @@ namespace Nebula
 		public NetPeer InputAuthority { get; internal set; }
 		public void SetInputAuthority(NetPeer inputAuthority)
 		{
-			if (!NetRunner.Instance.IsServer) throw new Exception("InputAuthority can only be set on the server");
+			if (!IsServer) throw new Exception("InputAuthority can only be set on the server");
 			if (CurrentWorld == null) throw new Exception("Can only set input authority after node is assigned to a world");
 			if (InputAuthority.IsSet)
 			{
@@ -1028,7 +1031,7 @@ namespace Nebula
 
 		public bool IsCurrentOwner
 		{
-			get { return NetRunner.Instance.IsServer || (NetRunner.Instance.IsClient && InputAuthority.IsSet); }
+			get { return IsServer || (IsClient && InputAuthority.IsSet); }
 		}
 
 		public static INetNodeBase FindFromChild(Node node)
@@ -1069,7 +1072,7 @@ namespace Nebula
 				nn.InitializeNetPropertyBindings();
 			if (IsNetScene())
 			{
-				if (NetRunner.Instance.IsServer)
+				if (IsServer)
 				{
 					foreach (var peer in NetRunner.Instance.Peers.Keys)
 					{
@@ -1087,7 +1090,7 @@ namespace Nebula
 					networkChild.InterestLayers = InterestLayers;
 					// On client, don't overwrite InputAuthority if child already has it set
 					// (server sends correct InputAuthority for each node via spawn data)
-					if (NetRunner.Instance.IsServer || !networkChild.InputAuthority.IsSet)
+					if (IsServer || !networkChild.InputAuthority.IsSet)
 					{
 						networkChild.InputAuthority = InputAuthority;
 					}
@@ -1101,7 +1104,7 @@ namespace Nebula
 					networkChild.InterestLayers = InterestLayers;
 					// On client, don't overwrite InputAuthority if child already has it set
 					// (server sends correct InputAuthority for each node via spawn data)
-					if (NetRunner.Instance.IsServer || !networkChild.InputAuthority.IsSet)
+					if (IsServer || !networkChild.InputAuthority.IsSet)
 					{
 						networkChild.InputAuthority = InputAuthority;
 					}
@@ -1109,7 +1112,7 @@ namespace Nebula
 					networkChild.NetParentId = NetId;
 					networkChild._NetworkPrepare(world);
 				}
-				if (NetRunner.Instance.IsClient)
+				if (IsClient)
 				{
 					return;
 				}
@@ -1211,7 +1214,7 @@ namespace Nebula
 
 		public void Despawn()
 		{
-			if (!NetRunner.Instance.IsServer)
+			if (!IsServer)
 			{
 				Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Cannot despawn {RawNode.GetPath()}. Only the server can despawn nodes.");
 				return;

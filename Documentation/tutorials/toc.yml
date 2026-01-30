@@ -2,8 +2,9 @@
   items:
   - name: Getting Started
     href: big-chungus-online/chapter-1-getting-started.md
-  - name: Building The Game
-    href: big-chungus-online/chapter-2-building-the-game.md
-  - name: Gameplay
-    href: big-chungus-online/chapter-3-gameplay.md
-
+  - name: Spawning Players
+    href: big-chungus-online/chapter-2-spawning-players.md
+  - name: Spawning Pellets
+    href: big-chungus-online/chapter-3-spawning-pellets.md
+  - name: Gaining Score
+    href: big-chungus-online/chapter-4-gaining-score.md

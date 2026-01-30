@@ -138,7 +138,7 @@ namespace Nebula
             // Process interpolation on clients only
             // Note: Don't iterate StaticNetworkChildren here - Godot calls _Process on each node,
             // so each node handles its own interpolation. Manual iteration causes double-processing.
-            if (!NetRunner.Instance.IsServer)
+            if (!Network.IsServer)
             {
                 ProcessInterpolation((float)delta);
             }

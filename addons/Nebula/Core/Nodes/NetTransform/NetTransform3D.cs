@@ -72,7 +72,7 @@ namespace Nebula.Utility.Nodes
         protected virtual void OnNetChangeNetPosition(int tick, Vector3 oldVal, Vector3 newVal)
         {
             // During spawn (before world ready), sync imported position to SourceNode
-            if (!Network.IsWorldReady && NetRunner.Instance.IsClient)
+            if (!Network.IsWorldReady && Network.IsClient)
             {
                 SourceNode ??= GetParent3D();
                 if (SourceNode != null)
@@ -92,7 +92,7 @@ namespace Nebula.Utility.Nodes
             NetRotation = SafeNormalize(newVal);
 
             // During spawn (before world ready), sync imported rotation to SourceNode
-            if (!Network.IsWorldReady && NetRunner.Instance.IsClient)
+            if (!Network.IsWorldReady && Network.IsClient)
             {
                 SourceNode ??= GetParent3D();
                 if (SourceNode != null)
@@ -109,7 +109,7 @@ namespace Nebula.Utility.Nodes
         {
             _isTeleporting = true;
             // Clear snapshot buffer on teleport to prevent interpolating from old position
-            if (newVal && NetRunner.Instance.IsClient)
+            if (newVal && Network.IsClient)
             {
                 Network.ClearSnapshotBuffer();
             }
@@ -121,19 +121,19 @@ namespace Nebula.Utility.Nodes
             base._WorldReady();
             SourceNode ??= GetParent3D();
 
-            if (NetRunner.Instance.IsServer && SourceNode != null)
+            if (Network.IsServer && SourceNode != null)
             {
                 // Server: initialize NetPosition from SourceNode so first state export is correct
                 NetPosition = SourceNode.Position;
                 NetRotation = SafeNormalize(SourceNode.Quaternion);
             }
-            if (NetRunner.Instance.IsClient && SourceNode != null)
+            if (Network.IsClient && SourceNode != null)
             {
                 SourceNode.Position = NetPosition;
                 SourceNode.Quaternion = SafeNormalize(NetRotation);
             }
             // Ensure TargetNode has a valid initial quaternion
-            if (NetRunner.Instance.IsClient && TargetNode != null)
+            if (Network.IsClient && TargetNode != null)
             {
                 TargetNode.Quaternion = SafeNormalize(TargetNode.Quaternion);
             }
@@ -152,7 +152,7 @@ namespace Nebula.Utility.Nodes
 
         public void Face(Vector3 direction)
         {
-            if (NetRunner.Instance.IsClient)
+            if (Network.IsClient)
             {
                 return;
             }
@@ -221,7 +221,7 @@ namespace Nebula.Utility.Nodes
             base._NetworkProcess(tick);
 
             // Non-owned clients don't run simulation - interpolation handles them
-            if (NetRunner.Instance.IsClient && !Network.IsCurrentOwner) return;
+            if (Network.IsClient && !Network.IsCurrentOwner) return;
 
             // Server AND owned client: read from SourceNode (physics simulation node)
             if (SourceNode != null)
@@ -255,7 +255,7 @@ namespace Nebula.Utility.Nodes
         {
             base._Process(delta);
             if (!Network.IsWorldReady) return;
-            if (!NetRunner.Instance.IsClient) return;
+            if (!Network.IsClient) return;
 
             // Determine the target node to interpolate (TargetNode if set, otherwise SourceNode)
             var target = TargetNode ?? SourceNode;

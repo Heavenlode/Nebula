@@ -59,7 +59,7 @@ namespace Nebula.Utility.Nodes
         public override void _NetworkProcess(int tick)
         {
             base._NetworkProcess(tick);
-            if (NetRunner.Instance.IsClient)
+            if (Network.IsClient)
             {
                 return;
             }
@@ -107,7 +107,7 @@ namespace Nebula.Utility.Nodes
                 return;
             }
             base._PhysicsProcess(delta);
-            if (NetRunner.Instance.IsServer)
+            if (Network.IsServer)
             {
                 return;
             }

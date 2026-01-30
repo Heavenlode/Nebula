@@ -137,8 +137,8 @@ The main network manager. Handles:
 
 ```csharp
 // Key properties
-NetRunner.Instance.IsServer      // True if running as server
-NetRunner.Instance.IsClient      // True if running as client
+Network.IsServer      // True if running as server
+Network.IsClient      // True if running as client
 NetRunner.Instance.NetStarted    // True after Start* called
 NetRunner.TPS                    // Ticks per second
 ```
@@ -187,7 +187,7 @@ public partial class MyNetworkNode : NetNode3D
     public override void _NetworkProcess(int tick)
     {
         // Both server and owning client process for prediction
-        if (NetRunner.Instance.IsServer || Network.IsCurrentOwner)
+        if (Network.IsServer || Network.IsCurrentOwner)
         {
             ref readonly var input = ref Network.GetInput<PlayerInput>();
             // ... handle input ...
@@ -300,7 +300,7 @@ public partial class Player : NetNode3D
         base._PhysicsProcess(delta);
         
         // Only the owning client samples input
-        if (!Network.IsCurrentOwner || NetRunner.Instance.IsServer) return;
+        if (!Network.IsCurrentOwner || Network.IsServer) return;
         
         Network.SetInput(new PlayerInput
         {
@@ -323,7 +323,7 @@ public override void _NetworkProcess(int tick)
     // Client (owner): prediction processing  
     // Client (non-owner): skip (no input authority)
     
-    if (NetRunner.Instance.IsServer || Network.IsCurrentOwner)
+    if (Network.IsServer || Network.IsCurrentOwner)
     {
         ref readonly var input = ref Network.GetInput<PlayerInput>();
         Velocity = new Vector3(input.Movement.X, 0, input.Movement.Y) * Speed;

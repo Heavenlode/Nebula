@@ -29,6 +29,12 @@ namespace Nebula {
         /// </summary>
         /// <param name="tick">The current network tick</param>
         public void _NetworkProcess(int tick) { }
+        
+        /// <summary>
+        /// Called when this node is being despawned from the network.
+        /// Override to perform cleanup before the node is removed.
+        /// </summary>
+        public void _Despawn() { }
 
         /// <summary>
         /// Invokes the property change handler for the given property index.

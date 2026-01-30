@@ -26,7 +26,7 @@ namespace Nebula
         public bool ExecuteOnCaller { get; set; } = true;
         public override void OnEntry(MethodExecutionArgs args)
         {
-            Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"NetFunction: {args.Method.Name} called on {args.Instance.GetType().Name}");
+            // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"NetFunction: {args.Method.Name} called on {args.Instance.GetType().Name}");
             if (args.Instance is INetNodeBase netNode)
             {
                 if (netNode.Network.IsInboundCall)

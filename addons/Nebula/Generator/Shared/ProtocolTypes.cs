@@ -53,9 +53,9 @@ namespace Nebula.Serialization
     public enum NetworkSources
     {
         None = 0,
-        Server = 1 << 0,
-        Client = 1 << 1,
-        All = Server | Client,
+        Client = 1 << 0,
+        Server = 1 << 1,
+        All = Client | Server,
     }
 
     [System.Flags]

@@ -127,15 +127,16 @@ namespace Nebula.Utility.Nodes
                 NetPosition = SourceNode.Position;
                 NetRotation = SafeNormalize(SourceNode.Quaternion);
             }
-            
+            if (NetRunner.Instance.IsClient && SourceNode != null)
+            {
+                SourceNode.Position = NetPosition;
+                SourceNode.Quaternion = SafeNormalize(NetRotation);
+            }
             // Ensure TargetNode has a valid initial quaternion
             if (NetRunner.Instance.IsClient && TargetNode != null)
             {
                 TargetNode.Quaternion = SafeNormalize(TargetNode.Quaternion);
             }
-            
-            // Ensure NetRotation is normalized (for interpolation)
-            NetRotation = SafeNormalize(NetRotation);
         }
 
         public Node3D GetParent3D()

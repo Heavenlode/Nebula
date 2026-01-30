@@ -49,6 +49,7 @@ namespace Nebula
 
         public virtual void _WorldReady() { }
         public virtual void _NetworkProcess(int _tick) { }
+        public virtual void _Despawn() { }
 
         /// <summary>
         /// Processes interpolation for all interpolated properties.

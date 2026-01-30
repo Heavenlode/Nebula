@@ -1225,17 +1225,17 @@ namespace Nebula
 			handleDespawn();
 		}
 
-		internal void handleDespawn()
+	internal void handleDespawn()
+	{
+		if (CurrentWorld == null)
 		{
-			Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"Despawning node {RawNode.GetPath()}");
-			if (CurrentWorld == null)
-			{
-				// Node was never fully initialized (e.g., placeholder node) - just queue free
-				RawNode.QueueFree();
-				return;
-			}
-			CurrentWorld.QueueDespawn(this);
+			// Node was never fully initialized (e.g., placeholder node) - just queue free
+			RawNode.QueueFree();
+			return;
 		}
+		NetNode._Despawn();
+		CurrentWorld.QueueDespawn(this);
+	}
 	}
 }
 

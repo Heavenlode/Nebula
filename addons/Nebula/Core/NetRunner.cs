@@ -122,11 +122,6 @@ namespace Nebula
             /// NetFunction call.
             /// </summary>
             Function = 3,
-
-            /// <summary>
-            /// Despawn request.
-            /// </summary>
-            Despawn = 4,
         }
 
         /// <summary>
@@ -484,14 +479,6 @@ namespace Nebula
                                 {
                                     WorldRunner.CurrentWorld.ReceiveNetFunction(ServerPeer, data);
                                 }
-                                break;
-
-                            case ENetChannelId.Despawn:
-                                if (!IsServer)
-                                {
-                                    WorldRunner.CurrentWorld.ReceiveDespawn(ServerPeer, data);
-                                }
-                                // Server should never receive despawn requests
                                 break;
 
                             default:

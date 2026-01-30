@@ -51,35 +51,35 @@ namespace Nebula.Serialization.Serializers
         private long processingDirtyMask = 0;
 
         private Dictionary<UUID, byte[]> peerInitialPropSync = new();
-        
+
         // Cached to avoid Godot StringName allocations every access
         private string _cachedSceneFilePath;
-        
+
         // Cached node lookups to avoid GetNode() allocations
         private Dictionary<StringName, Node> _nodePathCache = new();
 
         // ============================================================
         // DELTA ENCODING STATE
         // ============================================================
-        
+
         /// <summary>Main state dictionary - access via CollectionsMarshal refs only</summary>
         private Dictionary<UUID, PeerPropertyState> _peerStates = new();
-        
+
         /// <summary>Pool of pre-allocated states to avoid allocation on peer join</summary>
         private Stack<PeerPropertyState> _statePool = new();
-        
+
         /// <summary>Pre-cached property count</summary>
         private readonly int _propertyCount;
-        
+
         /// <summary>Pre-cached: does this property type support delta encoding?</summary>
         private readonly bool[] _propSupportsDelta;
-        
+
         /// <summary>Pre-cached property types</summary>
         private readonly SerialVariantType[] _propTypes;
-        
+
         /// <summary>Pre-cached: is this property an object property (INetSerializable)?</summary>
         private readonly bool[] _propIsObject;
-        
+
         /// <summary>Pre-cached: property class indices for object properties (for lifecycle callbacks)</summary>
         private readonly int[] _propClassIndex;
 
@@ -93,7 +93,7 @@ namespace Nebula.Serialization.Serializers
         public NetPropertiesSerializer(NetworkController _network)
         {
             network = _network;
-            
+
             // Cache SceneFilePath once to avoid Godot StringName allocations on every access
             _cachedSceneFilePath = network.RawNode.SceneFilePath;
 
@@ -113,7 +113,7 @@ namespace Nebula.Serialization.Serializers
             _propTypes = new SerialVariantType[_propertyCount];
             _propIsObject = new bool[_propertyCount];
             _propClassIndex = new int[_propertyCount];
-            
+
             for (int i = 0; i < _propertyCount; i++)
             {
                 var prop = Protocol.UnpackProperty(_cachedSceneFilePath, i);
@@ -144,7 +144,7 @@ namespace Nebula.Serialization.Serializers
                     {
                         var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
 
-                        bool wasVisible = (prop.InterestMask & oldInterest) != 0 
+                        bool wasVisible = (prop.InterestMask & oldInterest) != 0
                             && (prop.InterestRequired & oldInterest) == prop.InterestRequired;
                         bool isNowVisible = (prop.InterestMask & newInterest) != 0
                             && (prop.InterestRequired & newInterest) == prop.InterestRequired;
@@ -153,7 +153,7 @@ namespace Nebula.Serialization.Serializers
                         {
                             // Mark property as not-yet-synced so Export() will include it
                             ClearBit(syncMask, propIndex);
-                            
+
                             // Also clear the acked mask for delta encoding
                             ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
                             if (!Unsafe.IsNullRef(ref state) && state.IsInitialized)
@@ -210,7 +210,7 @@ namespace Nebula.Serialization.Serializers
                 state.IsInitialized = true;
                 return state;
             }
-            
+
             int byteCount = GetByteCountOfProperties();
             return new PeerPropertyState
             {
@@ -259,7 +259,7 @@ namespace Nebula.Serialization.Serializers
             }
             return node;
         }
-        
+
         /// <summary>
         /// Imports a property value from the network. Uses cached old values and generated setters
         /// to avoid crossing the Godot boundary.
@@ -267,10 +267,10 @@ namespace Nebula.Serialization.Serializers
         public void ImportProperty(ProtocolNetProperty prop, Tick tick, ref PropertyCache newValue)
         {
             // Debugger.Instance.Log($"[ImportProperty] START - prop.Index={prop.Index}, prop.LocalIndex={prop.LocalIndex}, prop.NodePath={prop.NodePath}, prop.Name={prop.Name}");
-            
+
             // Get the node that owns this property (cached to avoid GetNode allocations)
             Node propNode;
-            try 
+            try
             {
                 propNode = GetCachedNode(prop.NodePath);
                 // Debugger.Instance.Log($"[ImportProperty] GetCachedNode returned: {propNode?.GetType().Name ?? "null"}, Name={propNode?.Name ?? "null"}");
@@ -280,7 +280,7 @@ namespace Nebula.Serialization.Serializers
                 // Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[ImportProperty] GetCachedNode threw: {ex.Message}");
                 throw;
             }
-            
+
             if (propNode is not INetNodeBase netNode)
             {
                 Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Property node {prop.NodePath} is not INetNodeBase, cannot import");
@@ -295,15 +295,15 @@ namespace Nebula.Serialization.Serializers
             // These types (like NetArray) are deserialized in-place and track their own changes
             // internally. The fact that we received data means something changed.
             // For value types, do a proper equality check.
-            bool valueChanged = (prop.VariantType == SerialVariantType.Object) 
+            bool valueChanged = (prop.VariantType == SerialVariantType.Object)
                 || !PropertyCacheEquals(ref oldValue, ref newValue);
-            
+
             // Copy old value BEFORE updating cache (needed for callback after value changes)
             PropertyCache oldValueSnapshot = oldValue;
 
             // Update cache (this is the target for interpolated properties and reconciliation)
             network.CachedProperties[prop.Index] = newValue;
-            
+
             // Store in snapshot buffer for interpolation (client-side, interpolated properties only)
             if (NetRunner.Instance.IsClient && network.IsWorldReady && prop.Interpolate)
             {
@@ -319,12 +319,12 @@ namespace Nebula.Serialization.Serializers
             // EXCEPTION: During initial spawn (IsWorldReady=false), always apply the
             // value so the entity starts with the correct server state.
             // ============================================================
-            bool isOwnedPredicted = network.IsCurrentOwner 
-                && prop.Predicted 
-                && !network.IsResimulating 
+            bool isOwnedPredicted = network.IsCurrentOwner
+                && prop.Predicted
+                && !network.IsResimulating
                 && NetRunner.Instance.IsClient
                 && network.IsWorldReady;  // Allow initial spawn to apply values
-            
+
             if (isOwnedPredicted)
             {
                 // Don't apply immediately - reconciliation in WorldRunner will handle
@@ -368,14 +368,14 @@ namespace Nebula.Serialization.Serializers
                     throw;
                 }
             }
-            
+
             // Fire change callbacks AFTER value is set (cache updated, property set if applicable)
             if (valueChanged && prop.NotifyOnChange)
             {
                 FirePropertyChangeCallback(propNode, prop.LocalIndex, tick, ref oldValueSnapshot, ref newValue);
             }
         }
-        
+
         /// <summary>
         /// Helper to fire property change callbacks via the correct base class type for virtual dispatch.
         /// </summary>
@@ -402,7 +402,7 @@ namespace Nebula.Serialization.Serializers
         {
             int byteCount = GetByteCountOfProperties();
             // Debugger.Instance.Log($"[NetPropertiesSerializer.Deserialize] scenePath='{_cachedSceneFilePath}', byteCount={byteCount}, _propertyCount={_propertyCount}");
-            
+
             var data = new Data
             {
                 propertiesUpdated = new byte[byteCount],
@@ -413,7 +413,7 @@ namespace Nebula.Serialization.Serializers
             {
                 data.propertiesUpdated[i] = NetReader.ReadByte(buffer);
             }
-            
+
             // Debugger.Instance.Log($"[NetPropertiesSerializer.Deserialize] Read bitmask: [{string.Join(",", data.propertiesUpdated.Select(b => $"0x{b:X2}"))}]");
 
             for (byte propertyByteIndex = 0; propertyByteIndex < data.propertiesUpdated.Length; propertyByteIndex++)
@@ -428,7 +428,7 @@ namespace Nebula.Serialization.Serializers
 
                     var propertyIndex = propertyByteIndex * BitConstants.BitsInByte + propertyBit;
                     // Debugger.Instance.Log($"[NetPropertiesSerializer.Deserialize] Processing propIndex={propertyIndex}, CachedProperties.Length={network.CachedProperties.Length}");
-                    
+
                     var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propertyIndex);
                     if (string.IsNullOrEmpty(prop.Name))
                     {
@@ -438,7 +438,7 @@ namespace Nebula.Serialization.Serializers
                     // Debugger.Instance.Log($"[NetPropertiesSerializer.Deserialize] prop.Index={prop.Index}, prop.Name={prop.Name}, prop.NodePath={prop.NodePath}");
 
                     var cache = new PropertyCache();
-                    
+
                     // Get existing value for delta reconstruction
                     if (propertyIndex >= network.CachedProperties.Length)
                     {
@@ -451,7 +451,7 @@ namespace Nebula.Serialization.Serializers
                     {
                         // Custom types with NetworkDeserialize (including INetSerializable types like NetArray)
                         // Object properties don't use delta encoding - they handle their own internal state
-                        
+
                         var deserializer = Protocol.GetDeserializer(prop.ClassIndex);
                         if (deserializer == null)
                         {
@@ -487,34 +487,34 @@ namespace Nebula.Serialization.Serializers
         {
             var flags = (DeltaEncodingFlags)NetReader.ReadByte(buffer);
             cache.Type = type;
-            
+
             // Check for quaternion compressed encoding
             if ((flags & DeltaEncodingFlags.QuatCompressed) != 0)
             {
                 cache.QuatValue = NetReader.ReadQuatSmallestThree(buffer);
                 return;
             }
-            
+
             // Get base encoding type (mask out compression flags)
             var encoding = flags & (DeltaEncodingFlags)0x7F;
-            
+
             switch (encoding)
             {
                 case DeltaEncodingFlags.Absolute:
                     // Full absolute value
                     ReadAbsoluteValue(buffer, type, subtype, ref cache);
                     break;
-                    
+
                 case DeltaEncodingFlags.DeltaSmall:
                     // Small delta (half-float/short encoding)
                     ReadSmallDelta(buffer, type, subtype, ref existing, ref cache);
                     break;
-                    
+
                 case DeltaEncodingFlags.DeltaFull:
                     // Full delta (same type as property)
                     ReadFullDelta(buffer, type, subtype, ref existing, ref cache);
                     break;
-                    
+
                 default:
                     Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Unknown delta encoding flag: {flags}");
                     ReadAbsoluteValue(buffer, type, subtype, ref cache);
@@ -611,7 +611,7 @@ namespace Nebula.Serialization.Serializers
                     float deltaF = NetReader.ReadHalfFloat(buffer);
                     cache.FloatValue = existing.FloatValue + deltaF;
                     break;
-                    
+
                 case SerialVariantType.Int:
                     // Small delta uses Int16 for all integer types
                     short deltaS = NetReader.ReadInt16(buffer);
@@ -641,13 +641,13 @@ namespace Nebula.Serialization.Serializers
                             break;
                     }
                     break;
-                    
+
                 case SerialVariantType.Vector2:
                     float dx2 = NetReader.ReadHalfFloat(buffer);
                     float dy2 = NetReader.ReadHalfFloat(buffer);
                     cache.Vec2Value = new Vector2(existing.Vec2Value.X + dx2, existing.Vec2Value.Y + dy2);
                     break;
-                    
+
                 case SerialVariantType.Vector3:
                     float dx3 = NetReader.ReadHalfFloat(buffer);
                     float dy3 = NetReader.ReadHalfFloat(buffer);
@@ -657,7 +657,7 @@ namespace Nebula.Serialization.Serializers
                         existing.Vec3Value.Y + dy3,
                         existing.Vec3Value.Z + dz3);
                     break;
-                    
+
                 default:
                     // Fallback to absolute for unsupported small delta types
                     Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"Small delta not supported for type {type}, reading absolute");
@@ -678,7 +678,7 @@ namespace Nebula.Serialization.Serializers
                     float deltaF = NetReader.ReadFloat(buffer);
                     cache.FloatValue = existing.FloatValue + deltaF;
                     break;
-                    
+
                 case SerialVariantType.Int:
                     // Full delta uses the same size as the property type for larger deltas
                     cache.LongValue = 0; // Clear first
@@ -714,17 +714,17 @@ namespace Nebula.Serialization.Serializers
                             break;
                     }
                     break;
-                    
+
                 case SerialVariantType.Vector2:
                     Vector2 deltaV2 = NetReader.ReadVector2(buffer);
                     cache.Vec2Value = existing.Vec2Value + deltaV2;
                     break;
-                    
+
                 case SerialVariantType.Vector3:
                     Vector3 deltaV3 = NetReader.ReadVector3(buffer);
                     cache.Vec3Value = existing.Vec3Value + deltaV3;
                     break;
-                    
+
                 default:
                     // Fallback to absolute for unsupported delta types
                     Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"Full delta not supported for type {type}, reading absolute");
@@ -740,7 +740,7 @@ namespace Nebula.Serialization.Serializers
         private static void SetDeserializedValueToCache(object result, ref PropertyCache cache)
         {
             cache.Type = SerialVariantType.Object;
-            
+
             // Store custom value types in their proper field (matching NetworkController.SetCachedValue)
             switch (result)
             {
@@ -757,7 +757,7 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        
+
         /// <summary>
         /// Writes a custom type from the cache using a generated serializer delegate.
         /// The delegate knows which PropertyCache field to access (no type-specific code needed here).
@@ -770,7 +770,7 @@ namespace Nebula.Serialization.Serializers
                 Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"No serializer found for {prop.NodePath}.{prop.Name}");
                 return;
             }
-            
+
             // Reuse pooled buffer instead of allocating new one each time
             _customTypeBuffer ??= new NetBuffer();
             _customTypeBuffer.Reset();
@@ -779,13 +779,13 @@ namespace Nebula.Serialization.Serializers
             serializer(currentWorld, peer, ref cache, _customTypeBuffer, prop.ChunkBudget);
             NetWriter.WriteBytes(buffer, _customTypeBuffer.WrittenSpan);
         }
-        
+
         public void Begin()
         {
             // Snapshot the dirty mask and clear the original
             processingDirtyMask = network.DirtyMask;
             network.ClearDirtyMask();
-            
+
             // Track which properties have ever been set (for initial sync to new peers)
             for (int i = 0; i < 64; i++)
             {
@@ -801,22 +801,22 @@ namespace Nebula.Serialization.Serializers
             nodeOut = network;
 
             var data = Deserialize(buffer);
-            
+
             // Cache IsNodeReady() once before the loop to avoid repeated Godot calls
             bool isReady = network.RawNode.IsNodeReady();
-            
+
             // Begin snapshot for this tick (client-side only, for interpolation)
             if (NetRunner.Instance.IsClient && network.IsWorldReady)
             {
                 network.BeginSnapshotForTick(currentWorld.CurrentTick);
             }
-            
+
             foreach (var propIndex in data.properties.Keys)
             {
                 var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                 // Get a ref to the value in the dictionary for zero-copy
                 ref var propValue = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(data.properties, propIndex);
-                
+
                 if (isReady)
                 {
                     ImportProperty(prop, currentWorld.CurrentTick, ref propValue);
@@ -834,7 +834,7 @@ namespace Nebula.Serialization.Serializers
         }
 
         private HashSet<int> nonDefaultProperties = new();
-        
+
         // Pooled buffer for custom type serialization
         private NetBuffer _customTypeBuffer;
 
@@ -865,17 +865,20 @@ namespace Nebula.Serialization.Serializers
         }
 
         private byte[] _propertiesUpdated;
-        
+
         public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
-            // Only export if spawn data is being sent or has been acknowledged
-            // NotSpawned means SpawnSerializer hasn't written data yet this tick
+            // Only export if spawn data has been sent AND not despawning/despawned
+            // NotSpawned: SpawnSerializer hasn't written spawn data yet
+            // Despawning/Despawned: Node is being removed, no point sending property updates
             var spawnState = currentWorld.GetClientSpawnState(network.NetId, peer);
-            if (spawnState == WorldRunner.ClientSpawnState.NotSpawned)
+            if (spawnState == WorldRunner.ClientSpawnState.NotSpawned ||
+                spawnState == WorldRunner.ClientSpawnState.Despawning ||
+                spawnState == WorldRunner.ClientSpawnState.Despawned)
             {
                 return;
             }
-            
+
             // For nested scenes, don't export until parent spawn is at least being sent
             if (network.NetParent != null)
             {
@@ -885,7 +888,7 @@ namespace Nebula.Serialization.Serializers
                     return;
                 }
             }
-            
+
             var peerId = NetRunner.Instance.GetPeerId(peer);
             int byteCount = GetByteCountOfProperties();
 
@@ -916,7 +919,7 @@ namespace Nebula.Serialization.Serializers
             {
                 // Skip object properties - they will be called unconditionally and self-filter
                 if (_propIsObject[propIndex]) continue;
-                
+
                 if ((processingDirtyMask & (1L << propIndex)) != 0)
                 {
                     _propertiesUpdated[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
@@ -928,7 +931,7 @@ namespace Nebula.Serialization.Serializers
             {
                 // Skip object properties
                 if (_propIsObject[propIndex]) continue;
-                
+
                 var byteIndex = propIndex / BitConstants.BitsInByte;
                 var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
                 if ((initialSync[byteIndex] & propSlot) == 0)
@@ -975,7 +978,7 @@ namespace Nebula.Serialization.Serializers
             // ============================================================
             // RESERVE-AND-BACKFILL PATTERN
             // ============================================================
-            
+
             // Reserve space for the mask (we'll backfill it after writing properties)
             int maskStartPos = buffer.WritePosition;
             for (var i = 0; i < byteCount; i++)
@@ -993,7 +996,7 @@ namespace Nebula.Serialization.Serializers
             {
                 var propSegment = _propertiesUpdated[i];
                 if (propSegment == 0) continue;
-                
+
                 for (var j = 0; j < BitConstants.BitsInByte; j++)
                 {
                     if ((propSegment & (byte)(1 << j)) == 0) continue;
@@ -1001,23 +1004,23 @@ namespace Nebula.Serialization.Serializers
                     var propIndex = i * BitConstants.BitsInByte + j;
                     // Skip object properties - handled in next loop
                     if (_propIsObject[propIndex]) continue;
-                    
+
                     try
                     {
                         ref var current = ref network.CachedProperties[propIndex];
                         ref var acked = ref state.LastAcked[propIndex];
                         bool hasAcked = (state.AckedMask[i] & (1 << j)) != 0;
-                        
+
                         // Write with delta encoding
                         WriteDeltaOrAbsolute(currentWorld, peer, buffer, propIndex, ref current, ref acked, hasAcked);
-                        
+
                         // Track in pending state
                         state.Pending[propIndex] = current;
                     }
                     catch (Exception ex)
                     {
                         var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, 
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
                             $"Error serializing property {prop.NodePath}.{prop.Name}: {ex.InnerException?.Message ?? ex.Message}");
                         // Clear the bit since we failed to write
                         actualMask[i] &= (byte)~(1 << j);
@@ -1030,34 +1033,34 @@ namespace Nebula.Serialization.Serializers
             for (int propIndex = 0; propIndex < _propertyCount; propIndex++)
             {
                 if (!_propIsObject[propIndex]) continue;
-                
+
                 // Check interest for this property
                 if (!PeerHasInterestInProperty(propIndex, peerInterestLayers)) continue;
-                
+
                 var classIndex = _propClassIndex[propIndex];
                 if (classIndex < 0) continue;
-                
+
                 var serializer = Protocol.GetSerializer(classIndex);
                 if (serializer == null) continue;
-                
+
                 ref var cache = ref network.CachedProperties[propIndex];
                 var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
 
                 // Remember position in case we need to rewind
                 int startPos = buffer.WritePosition;
-                
+
                 try
                 {
                     // Object serializers return true if they wrote data
                     bool wroteData = serializer(currentWorld, peer, ref cache, buffer, prop.ChunkBudget);
-                    
+
                     if (wroteData)
                     {
                         // Set the bit in the actual mask
                         int byteIdx = propIndex / 8;
                         int bitIdx = propIndex % 8;
                         actualMask[byteIdx] |= (byte)(1 << bitIdx);
-                        
+
                         // Track in pending state
                         state.Pending[propIndex] = cache;
                     }
@@ -1069,7 +1072,7 @@ namespace Nebula.Serialization.Serializers
                 }
                 catch (Exception ex)
                 {
-                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, 
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
                         $"Error serializing object property {prop.NodePath}.{prop.Name}: {ex.InnerException?.Message ?? ex.Message}");
                     // Rewind on error
                     buffer.WritePosition = startPos;
@@ -1129,7 +1132,7 @@ namespace Nebula.Serialization.Serializers
             bool hasAcked)
         {
             var type = _propTypes[propIndex];
-            
+
             // Non-delta types or first sync: send absolute
             if (!hasAcked || !_propSupportsDelta[propIndex])
             {
@@ -1146,7 +1149,7 @@ namespace Nebula.Serialization.Serializers
                 }
                 return;
             }
-            
+
             // Delta encoding path
             switch (type)
             {
@@ -1163,13 +1166,13 @@ namespace Nebula.Serialization.Serializers
                         NetWriter.WriteFloat(buffer, deltaF);
                     }
                     break;
-                    
+
                 case SerialVariantType.Int:
                     // Get the property subtype to read from the correct field
                     var intProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                     var intSubtype = intProp.Metadata.TypeIdentifier;
                     long currentVal, ackedVal;
-                    
+
                     // Read current and acked values from the appropriate field
                     switch (intSubtype)
                     {
@@ -1197,7 +1200,7 @@ namespace Nebula.Serialization.Serializers
                             ackedVal = acked.LongValue;
                             break;
                     }
-                    
+
                     long deltaL = currentVal - ackedVal;
                     // Use small encoding for deltas that fit in short range
                     if (deltaL >= short.MinValue && deltaL <= short.MaxValue)
@@ -1234,7 +1237,7 @@ namespace Nebula.Serialization.Serializers
                         }
                     }
                     break;
-                    
+
                 case SerialVariantType.Vector2:
                     Vector2 deltaV2 = current.Vec2Value - acked.Vec2Value;
                     float mag2 = deltaV2.LengthSquared();
@@ -1250,7 +1253,7 @@ namespace Nebula.Serialization.Serializers
                         NetWriter.WriteVector2(buffer, deltaV2);
                     }
                     break;
-                    
+
                 case SerialVariantType.Vector3:
                     Vector3 deltaV3 = current.Vec3Value - acked.Vec3Value;
                     float mag3 = deltaV3.LengthSquared();
@@ -1267,7 +1270,7 @@ namespace Nebula.Serialization.Serializers
                         NetWriter.WriteVector3(buffer, deltaV3);
                     }
                     break;
-                    
+
                 default:
                     // Fallback to absolute for any other types
                     NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.Absolute);
@@ -1357,13 +1360,13 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        public void Cleanup() 
+        public void Cleanup()
         {
             // NOTE: This is called every tick after ExportState(), NOT when the object is destroyed.
             // Do not clear per-peer caches here - that would break state synchronization!
             // Use CleanupPeer() for per-peer cleanup on disconnect instead.
         }
-        
+
         /// <summary>
         /// Removes all cached data for a specific peer. Call this when a peer disconnects.
         /// Returns the PeerPropertyState to the pool for reuse.
@@ -1371,25 +1374,25 @@ namespace Nebula.Serialization.Serializers
         public void CleanupPeer(UUID peerId)
         {
             peerInitialPropSync.Remove(peerId);
-            
+
             // Return the state to the pool for reuse
             if (_peerStates.TryGetValue(peerId, out var state) && state.IsInitialized)
             {
                 _statePool.Push(state);
             }
             _peerStates.Remove(peerId);
-            
+
             // Call OnPeerDisconnected on all object properties
             for (int i = 0; i < _propertyCount; i++)
             {
                 if (!_propIsObject[i]) continue;
-                
+
                 var classIndex = _propClassIndex[i];
                 if (classIndex < 0) continue;
-                
+
                 var onDisconnected = Protocol.GetOnPeerDisconnected(classIndex);
                 if (onDisconnected == null) continue;
-                
+
                 ref var cache = ref network.CachedProperties[i];
                 if (cache.RefValue != null)
                 {
@@ -1397,41 +1400,41 @@ namespace Nebula.Serialization.Serializers
                 }
             }
         }
-        
+
         public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick latestAck)
         {
             var peerId = NetRunner.Instance.GetPeerId(peer);
-            
+
             // Zero-alloc ref access
             ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
             if (Unsafe.IsNullRef(ref state) || !state.IsInitialized)
             {
                 return;
             }
-            
+
             // O(1) array swap - Pending becomes LastAcked
             (state.LastAcked, state.Pending) = (state.Pending, state.LastAcked);
-            
+
             // Mark all pending properties as acked (for delta encoding initial sync detection)
             for (int i = 0; i < state.AckedMask.Length && i < state.PendingDirtyMask.Length; i++)
             {
                 state.AckedMask[i] |= state.PendingDirtyMask[i];
             }
-            
+
             // Clear pending dirty mask - these properties are now acknowledged
             Array.Clear(state.PendingDirtyMask, 0, state.PendingDirtyMask.Length);
-            
+
             // Call OnPeerAcknowledge on all object properties
             for (int i = 0; i < _propertyCount; i++)
             {
                 if (!_propIsObject[i]) continue;
-                
+
                 var classIndex = _propClassIndex[i];
                 if (classIndex < 0) continue;
-                
+
                 var onAck = Protocol.GetOnPeerAcknowledge(classIndex);
                 if (onAck == null) continue;
-                
+
                 ref var cache = ref network.CachedProperties[i];
                 if (cache.RefValue != null)
                 {

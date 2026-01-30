@@ -20,6 +20,8 @@ namespace Nebula.Serialization
         Chunked = 2,
         /// <summary>Length change - array was resized</summary>
         Resized = 4,
+        /// <summary>Chunked sync with delta updates for already-sent indices</summary>
+        ChunkedWithDelta = 8,
     }
 
     /// <summary>
@@ -120,35 +122,30 @@ namespace Nebula.Serialization
         private ulong[] _dirtyMask; // Bit array for tracking dirty indices
         private int _length;
         private bool _isFullDirty; // True if entire array needs sync (e.g., after resize)
-        
+
         /// <summary>
         /// Client-side: tracks how many elements have been received during chunked sync.
         /// Used to correctly identify "added" elements across multiple chunks.
         /// Reset to -1 when not in chunked sync.
         /// </summary>
         private int _clientReceivedUpTo = -1;
-        
+
         /// <summary>
         /// Callback to notify parent NetworkController when internal state changes.
         /// Set via BindToNetProperty.
         /// </summary>
         private Action _onMutated;
-        
+
         /// <summary>
         /// Per-peer synchronization state. Keyed by peer UUID.
         /// </summary>
         private Dictionary<UUID, PeerSyncState> _peerState;
-        
+
         /// <summary>
         /// Information about the most recent network change.
         /// Populated during deserialization, used by NotifyOnChange callbacks.
         /// </summary>
         public NetArrayChangeInfo<T> LastChangeInfo { get; internal set; }
-        
-        /// <summary>
-        /// Default chunk size in bytes for initial sync to new clients.
-        /// </summary>
-        public const int DefaultChunkBudget = 256;
 
         /// <summary>
         /// Creates a new NetArray with the specified capacity.
@@ -161,7 +158,7 @@ namespace Nebula.Serialization
                 throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be positive");
             if (initialLength < 0 || initialLength > capacity)
                 throw new ArgumentOutOfRangeException(nameof(initialLength), "Initial length must be between 0 and capacity");
-            
+
             _data = new T[capacity];
             _dirtyMask = new ulong[(capacity + 63) / 64]; // Round up to nearest 64-bit block
             _length = initialLength;
@@ -175,7 +172,7 @@ namespace Nebula.Serialization
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            
+
             _data = new T[source.Length];
             Array.Copy(source, _data, source.Length);
             _dirtyMask = new ulong[(source.Length + 63) / 64];
@@ -224,7 +221,7 @@ namespace Nebula.Serialization
             {
                 if ((uint)index >= (uint)_length)
                     throw new IndexOutOfRangeException($"Index {index} out of range [0, {_length})");
-                
+
                 // Only mark dirty if value actually changed
                 if (!EqualityComparer<T>.Default.Equals(_data[index], value))
                 {
@@ -244,7 +241,7 @@ namespace Nebula.Serialization
         {
             if ((uint)index >= (uint)_length)
                 throw new IndexOutOfRangeException($"Index {index} out of range [0, {_length})");
-            
+
             _data[index] = value;
             MarkDirty(index);
             _onMutated?.Invoke();
@@ -257,7 +254,7 @@ namespace Nebula.Serialization
         {
             if (_length >= _data.Length)
                 throw new InvalidOperationException($"Array is at capacity ({_data.Length})");
-            
+
             _data[_length] = item;
             MarkDirty(_length);
             _length++;
@@ -274,7 +271,7 @@ namespace Nebula.Serialization
         {
             if (newLength < 0 || newLength > _data.Length)
                 throw new ArgumentOutOfRangeException(nameof(newLength));
-            
+
             if (newLength != _length)
             {
                 // Clear removed elements
@@ -282,7 +279,7 @@ namespace Nebula.Serialization
                 {
                     Array.Clear(_data, newLength, _length - newLength);
                 }
-                
+
                 _length = newLength;
                 _isFullDirty = true; // Length changed, need full sync
                 _onMutated?.Invoke();
@@ -354,7 +351,7 @@ namespace Nebula.Serialization
         public bool HasDirtyElements()
         {
             if (_isFullDirty) return true;
-            
+
             for (int i = 0; i < _dirtyMask.Length; i++)
             {
                 if (_dirtyMask[i] != 0) return true;
@@ -432,12 +429,12 @@ namespace Nebula.Serialization
         private ref PeerSyncState GetOrCreatePeerState(UUID peerId)
         {
             _peerState ??= new Dictionary<UUID, PeerSyncState>();
-            
+
             if (!_peerState.ContainsKey(peerId))
             {
                 _peerState[peerId] = PeerSyncState.Create();
             }
-            
+
             // Note: We need to get the value, modify it, and put it back since it's a struct
             // This is a limitation of Dictionary with struct values
             return ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(_peerState, peerId, out _);
@@ -507,46 +504,99 @@ namespace Nebula.Serialization
             // If we have a pending (unacked) chunk, re-send from the acked position
             int startIndex = state.AckedUpToIndex;
             int elementSize = ElementSize;
-            
+
+            // First, collect dirty indices BELOW startIndex (already sent in previous chunks)
+            // These need to be re-sent as delta updates
+            List<int> dirtyResendIndices = null;
+            for (int block = 0; block < obj._dirtyMask.Length; block++)
+            {
+                var mask = obj._dirtyMask[block];
+                if (mask == 0) continue;
+
+                int baseIndex = block * 64;
+                if (baseIndex >= startIndex) break; // Past the already-sent region
+
+                while (mask != 0)
+                {
+                    int bit = BitOperations.TrailingZeroCount(mask);
+                    int index = baseIndex + bit;
+                    if (index < startIndex && index < obj._length)
+                    {
+                        dirtyResendIndices ??= new List<int>();
+                        dirtyResendIndices.Add(index);
+                    }
+                    mask &= mask - 1; // Clear lowest set bit
+                }
+            }
+
+            int dirtyResendCount = dirtyResendIndices?.Count ?? 0;
+            bool hasDirtyResends = dirtyResendCount > 0;
+
             // Calculate how many elements fit in the budget
-            // Header: 1 (flags) + 4 (total length) + 4 (start index) + 2 (chunk count) = 11 bytes
-            int headerSize = 11;
-            int availableBytes = maxBytes - headerSize;
+            // Header for Chunked: 1 (flags) + 4 (total length) + 4 (start index) + 2 (chunk count) = 11 bytes
+            // Additional for ChunkedWithDelta: 2 (delta count) + (2 + elementSize) per delta entry
+            int headerSize = hasDirtyResends ? 13 : 11; // +2 for delta count if needed
+            int deltaBytes = hasDirtyResends ? dirtyResendCount * (2 + elementSize) : 0;
+            int availableBytes = maxBytes - headerSize - deltaBytes;
             int maxElements = Math.Max(1, availableBytes / elementSize);
             int elementsToSend = Math.Min(maxElements, obj._length - startIndex);
-            
-            if (elementsToSend <= 0)
+
+            if (elementsToSend <= 0 && !hasDirtyResends)
             {
                 // We've sent everything, mark as complete
                 state.InitialSyncComplete = true;
                 state.LastSyncedLength = obj._length;
                 return false; // Nothing to send
             }
-            
-            // Write chunked header
-            NetWriter.WriteByte(buffer, (byte)NetArraySyncFlags.Chunked);
+
+            // Write header - use ChunkedWithDelta if we have dirty resends
+            var flags = hasDirtyResends ? NetArraySyncFlags.ChunkedWithDelta : NetArraySyncFlags.Chunked;
+            NetWriter.WriteByte(buffer, (byte)flags);
             NetWriter.WriteInt32(buffer, obj._length);
             NetWriter.WriteInt32(buffer, startIndex);
             NetWriter.WriteUInt16(buffer, (ushort)elementsToSend);
-            
-            // Write elements
+
+            // Write chunk elements
             for (int i = 0; i < elementsToSend; i++)
             {
                 WriteElement(buffer, obj._data[startIndex + i]);
             }
-            
+
+            // Write dirty resends if any
+            // NOTE: We do NOT clear dirty bits here - they will be cleared by ClearDirty() 
+            // when the peer acks. This ensures packet loss recovery works and other peers
+            // (if any) still receive delta updates.
+            if (hasDirtyResends)
+            {
+                NetWriter.WriteUInt16(buffer, (ushort)dirtyResendCount);
+                foreach (int index in dirtyResendIndices)
+                {
+                    NetWriter.WriteUInt16(buffer, (ushort)index);
+                    WriteElement(buffer, obj._data[index]);
+                }
+            }
+
             // Mark this chunk as pending (awaiting ack)
-            state.PendingSyncIndex = startIndex + elementsToSend;
+            if (elementsToSend > 0)
+            {
+                state.PendingSyncIndex = startIndex + elementsToSend;
+                state.HasPendingChunk = true;
+            }
             state.LastSyncedLength = obj._length;
-            state.HasPendingChunk = true;
-            
+
+            // Check if we're done with initial sync (sent everything and no more to send)
+            if (state.PendingSyncIndex >= obj._length && !state.HasPendingChunk)
+            {
+                state.InitialSyncComplete = true;
+            }
+
             return true; // We wrote data
         }
 
         private static void WriteDeltaSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state)
         {
             int dirtyCount = obj.DirtyCount;
-            
+
             if (dirtyCount == 0)
             {
                 // No changes - write empty delta
@@ -558,14 +608,14 @@ namespace Nebula.Serialization
             // Write delta header
             NetWriter.WriteByte(buffer, (byte)NetArraySyncFlags.Delta);
             NetWriter.WriteUInt16(buffer, (ushort)Math.Min(dirtyCount, ushort.MaxValue));
-            
+
             // Write changed indices and values - iterate without LINQ
             int written = 0;
             for (int block = 0; block < obj._dirtyMask.Length && written < dirtyCount; block++)
             {
                 var mask = obj._dirtyMask[block];
                 if (mask == 0) continue;
-                
+
                 int baseIndex = block * 64;
                 while (mask != 0 && written < dirtyCount)
                 {
@@ -588,10 +638,14 @@ namespace Nebula.Serialization
         public static NetArray<T> NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, NetArray<T> existing = null)
         {
             var flags = (NetArraySyncFlags)NetReader.ReadByte(buffer);
-            
+
             // Note: Full = 0, so bitwise AND check (flags & Full) == Full is always true.
             // We must check non-zero flags first and treat Full as the default fallback.
-            if ((flags & NetArraySyncFlags.Chunked) == NetArraySyncFlags.Chunked)
+            if ((flags & NetArraySyncFlags.ChunkedWithDelta) == NetArraySyncFlags.ChunkedWithDelta)
+            {
+                return ReadChunkedWithDeltaSync(buffer, existing);
+            }
+            else if ((flags & NetArraySyncFlags.Chunked) == NetArraySyncFlags.Chunked)
             {
                 return ReadChunkedSync(buffer, existing);
             }
@@ -610,13 +664,13 @@ namespace Nebula.Serialization
             int totalLength = NetReader.ReadInt32(buffer);
             int startIndex = NetReader.ReadInt32(buffer);
             int chunkCount = NetReader.ReadUInt16(buffer);
-            
+
             // Validate network data to prevent crashes from corrupted packets
             if (totalLength < 0 || startIndex < 0 || chunkCount < 0)
             {
                 return existing ?? new NetArray<T>(64);
             }
-            
+
             // For determining "added" vs "changed", we need to know the ORIGINAL length
             // before any chunks in this sync were received. Use _clientReceivedUpTo to track this.
             // If startIndex == 0, this is the first chunk - capture the original state.
@@ -636,7 +690,7 @@ namespace Nebula.Serialization
                 // Fallback (shouldn't happen normally)
                 originalPopulatedLength = existing?.Length ?? 0;
             }
-            
+
             // Capture deleted values before they're removed (if array is shrinking)
             T[] deletedValues = Array.Empty<T>();
             int existingLength = existing?.Length ?? 0;
@@ -649,7 +703,7 @@ namespace Nebula.Serialization
                     deletedValues[i] = existing._data[totalLength + i];
                 }
             }
-            
+
             // Create or resize array as needed
             NetArray<T> result;
             if (existing == null || existing.Capacity < totalLength)
@@ -671,17 +725,17 @@ namespace Nebula.Serialization
                     result._length = totalLength;
                 }
             }
-            
+
             // Track the original populated length for subsequent chunks
             if (startIndex == 0)
             {
                 result._clientReceivedUpTo = originalPopulatedLength;
             }
-            
+
             // Track changed indices and added values - pre-allocate to avoid List resizing
             int changedCount = 0;
             int addedCount = 0;
-            
+
             // First pass: count using originalPopulatedLength (not current _length)
             for (int i = 0; i < chunkCount; i++)
             {
@@ -692,25 +746,25 @@ namespace Nebula.Serialization
                     else changedCount++;
                 }
             }
-            
+
             // Nebula.Utility.Tools.Debugger.Instance.Log(Nebula.Utility.Tools.Debugger.DebugLevel.INFO,
             //     $"[NetArray.ReadChunkedSync] totalLen={totalLength}, start={startIndex}, chunkCount={chunkCount}, originalPopulatedLen={originalPopulatedLength}, changedCount={changedCount}, addedCount={addedCount}");
-            
+
             var changedIndices = changedCount > 0 ? new int[changedCount] : Array.Empty<int>();
             var addedValues = addedCount > 0 ? new T[addedCount] : Array.Empty<T>();
             int changedIdx = 0;
             int addedIdx = 0;
-            
+
             // Read chunk elements
             for (int i = 0; i < chunkCount; i++)
             {
                 int index = startIndex + i;
                 T value = ReadElement(buffer);
-                
+
                 if (index < result._length)
                 {
                     result._data[index] = value;
-                    
+
                     if (index >= originalPopulatedLength)
                     {
                         addedValues[addedIdx++] = value;
@@ -721,7 +775,7 @@ namespace Nebula.Serialization
                     }
                 }
             }
-            
+
             // Check if chunked sync is complete (we've received all elements)
             int receivedUpTo = startIndex + chunkCount;
             if (receivedUpTo >= totalLength)
@@ -729,8 +783,133 @@ namespace Nebula.Serialization
                 // Sync complete - reset the tracking
                 result._clientReceivedUpTo = -1;
             }
-            
+
             result.LastChangeInfo = new NetArrayChangeInfo<T>(deletedValues, changedIndices, addedValues);
+            result.ClearDirty();
+            return result;
+        }
+
+        private static NetArray<T> ReadChunkedWithDeltaSync(NetBuffer buffer, NetArray<T> existing)
+        {
+            int totalLength = NetReader.ReadInt32(buffer);
+            int startIndex = NetReader.ReadInt32(buffer);
+            int chunkCount = NetReader.ReadUInt16(buffer);
+
+            // Validate network data to prevent crashes from corrupted packets
+            if (totalLength < 0 || startIndex < 0 || chunkCount < 0)
+            {
+                return existing ?? new NetArray<T>(64);
+            }
+
+            // For determining "added" vs "changed", we need to know the ORIGINAL length
+            int originalPopulatedLength;
+            if (startIndex == 0)
+            {
+                originalPopulatedLength = existing?.Length ?? 0;
+            }
+            else if (existing != null && existing._clientReceivedUpTo >= 0)
+            {
+                originalPopulatedLength = existing._clientReceivedUpTo;
+            }
+            else
+            {
+                originalPopulatedLength = existing?.Length ?? 0;
+            }
+
+            // Capture deleted values before they're removed (if array is shrinking)
+            T[] deletedValues = Array.Empty<T>();
+            int existingLength = existing?.Length ?? 0;
+            if (existing != null && existingLength > totalLength)
+            {
+                int deleteCount = existingLength - totalLength;
+                deletedValues = new T[deleteCount];
+                for (int i = 0; i < deleteCount; i++)
+                {
+                    deletedValues[i] = existing._data[totalLength + i];
+                }
+            }
+
+            // Create or resize array as needed
+            NetArray<T> result;
+            if (existing == null || existing.Capacity < totalLength)
+            {
+                result = new NetArray<T>(Math.Max(totalLength, 64), totalLength);
+            }
+            else
+            {
+                result = existing;
+                if (result._length != totalLength)
+                {
+                    if (totalLength < result._length)
+                    {
+                        Array.Clear(result._data, totalLength, result._length - totalLength);
+                    }
+                    result._length = totalLength;
+                }
+            }
+
+            // Track the original populated length for subsequent chunks
+            if (startIndex == 0)
+            {
+                result._clientReceivedUpTo = originalPopulatedLength;
+            }
+
+            // Track changed indices - we'll add both chunk changes and delta changes
+            var changedIndicesList = new List<int>();
+            var addedValuesList = new List<T>();
+
+            // Read chunk elements
+            for (int i = 0; i < chunkCount; i++)
+            {
+                int index = startIndex + i;
+                T value = ReadElement(buffer);
+
+                if (index < result._length)
+                {
+                    result._data[index] = value;
+
+                    if (index >= originalPopulatedLength)
+                    {
+                        addedValuesList.Add(value);
+                    }
+                    else
+                    {
+                        changedIndicesList.Add(index);
+                    }
+                }
+            }
+
+            // Read delta updates (changes to already-sent chunks)
+            int deltaCount = NetReader.ReadUInt16(buffer);
+            for (int i = 0; i < deltaCount; i++)
+            {
+                int index = NetReader.ReadUInt16(buffer);
+                T value = ReadElement(buffer);
+
+                if (index < result._length)
+                {
+                    result._data[index] = value;
+                    // Delta updates are always to existing indices (< originalPopulatedLength)
+                    // Add to changed list if not already there
+                    if (!changedIndicesList.Contains(index))
+                    {
+                        changedIndicesList.Add(index);
+                    }
+                }
+            }
+
+            // Check if chunked sync is complete
+            int receivedUpTo = startIndex + chunkCount;
+            if (receivedUpTo >= totalLength)
+            {
+                result._clientReceivedUpTo = -1;
+            }
+
+            result.LastChangeInfo = new NetArrayChangeInfo<T>(
+                deletedValues,
+                changedIndicesList.Count > 0 ? changedIndicesList.ToArray() : Array.Empty<int>(),
+                addedValuesList.Count > 0 ? addedValuesList.ToArray() : Array.Empty<T>()
+            );
             result.ClearDirty();
             return result;
         }
@@ -738,17 +917,17 @@ namespace Nebula.Serialization
         private static NetArray<T> ReadFullSync(NetBuffer buffer, NetArray<T> existing)
         {
             int length = NetReader.ReadInt32(buffer);
-            
+
             // Validate network data
             if (length < 0)
             {
-                Nebula.Utility.Tools.Debugger.Instance.Log(Nebula.Utility.Tools.Debugger.DebugLevel.ERROR, 
+                Nebula.Utility.Tools.Debugger.Instance.Log(Nebula.Utility.Tools.Debugger.DebugLevel.ERROR,
                     $"[NetArray.ReadFullSync] Invalid length={length}");
                 return existing ?? new NetArray<T>(64);
             }
-            
+
             int previousLength = existing?.Length ?? 0;
-            
+
             // Capture deleted values before they're removed (if array is shrinking)
             T[] deletedValues = Array.Empty<T>();
             if (existing != null && previousLength > length)
@@ -760,7 +939,7 @@ namespace Nebula.Serialization
                     deletedValues[i] = existing._data[length + i];
                 }
             }
-            
+
             if (length == 0)
             {
                 NetArray<T> emptyResult;
@@ -776,11 +955,11 @@ namespace Nebula.Serialization
                 {
                     emptyResult = new NetArray<T>(64);
                 }
-                
+
                 emptyResult.LastChangeInfo = new NetArrayChangeInfo<T>(deletedValues, Array.Empty<int>(), Array.Empty<T>());
                 return emptyResult;
             }
-            
+
             NetArray<T> result;
             if (existing != null && existing.Capacity >= length)
             {
@@ -796,18 +975,18 @@ namespace Nebula.Serialization
                 // Create with length as initial length (not 0)
                 result = new NetArray<T>(Math.Max(length, 64), length);
             }
-            
+
             // Pre-allocate arrays
             int changedCount = Math.Min(length, previousLength);
             int addedCount = Math.Max(0, length - previousLength);
             var changedIndices = changedCount > 0 ? new int[changedCount] : Array.Empty<int>();
             var addedValues = addedCount > 0 ? new T[addedCount] : Array.Empty<T>();
-            
+
             for (int i = 0; i < length; i++)
             {
                 T value = ReadElement(buffer);
                 result._data[i] = value;
-                
+
                 if (i < previousLength)
                 {
                     changedIndices[i] = i;
@@ -817,7 +996,7 @@ namespace Nebula.Serialization
                     addedValues[i - previousLength] = value;
                 }
             }
-            
+
             result.LastChangeInfo = new NetArrayChangeInfo<T>(deletedValues, changedIndices, addedValues);
             result.ClearDirty();
             return result;
@@ -826,7 +1005,7 @@ namespace Nebula.Serialization
         private static NetArray<T> ReadDeltaSync(NetBuffer buffer, NetArray<T> existing)
         {
             int count = NetReader.ReadUInt16(buffer);
-            
+
             if (existing == null)
             {
                 // Can't apply delta to non-existent array - skip data
@@ -839,29 +1018,29 @@ namespace Nebula.Serialization
                 emptyResult.LastChangeInfo = NetArrayChangeInfo<T>.Empty;
                 return emptyResult;
             }
-            
+
             // Pre-allocate changed indices array
             var changedIndices = count > 0 ? new int[count] : Array.Empty<int>();
             int changedIdx = 0;
-            
+
             for (int i = 0; i < count; i++)
             {
                 int index = NetReader.ReadUInt16(buffer);
                 T value = ReadElement(buffer);
-                
+
                 if (index < existing._length)
                 {
                     existing._data[index] = value;
                     changedIndices[changedIdx++] = index;
                 }
             }
-            
+
             // Trim array if we didn't fill it
             if (changedIdx < changedIndices.Length)
             {
                 Array.Resize(ref changedIndices, changedIdx);
             }
-            
+
             // Delta sync doesn't change length, so no deletions or additions
             existing.LastChangeInfo = new NetArrayChangeInfo<T>(Array.Empty<T>(), changedIndices, Array.Empty<T>());
             return existing;
@@ -874,23 +1053,23 @@ namespace Nebula.Serialization
         {
             if (obj == null || obj._peerState == null) return;
             if (!obj._peerState.TryGetValue(peerId, out var state)) return;
-            
+
             // Commit pending chunk progress
             if (state.HasPendingChunk)
             {
                 state.AckedUpToIndex = state.PendingSyncIndex;
                 state.HasPendingChunk = false;
-                
+
                 // Check if initial sync is now complete
                 if (state.AckedUpToIndex >= state.LastSyncedLength && state.LastSyncedLength > 0)
                 {
                     state.InitialSyncComplete = true;
                 }
             }
-            
+
             // Write back the modified struct
             obj._peerState[peerId] = state;
-            
+
             // Clear dirty flags after successful ack (elements have been confirmed received)
             obj.ClearDirty();
         }
@@ -1084,7 +1263,7 @@ namespace Nebula.Serialization
         public static int TrailingZeroCount(ulong value)
         {
             if (value == 0) return 64;
-            
+
             int count = 0;
             while ((value & 1) == 0)
             {

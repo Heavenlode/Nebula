@@ -58,7 +58,11 @@ namespace Nebula
             /// <summary>Spawn data being sent (registered but not ACKed)</summary>
             Spawning,
             /// <summary>Spawn ACKed, client definitely has the node</summary>
-            Spawned
+            Spawned,
+            /// <summary>Despawn data being sent, waiting for ACK</summary>
+            Despawning,
+            /// <summary>Despawn ACKed, safe to clean up</summary>
+            Despawned
         }
 
         public struct PeerState
@@ -940,6 +944,30 @@ namespace Nebula
                     }
                 }
             }
+            
+            // When a peer disconnects, treat any pending despawns as acknowledged
+            // Check if any nodes queued for despawn can now be deleted
+            foreach (var netController in QueueDespawnedNodes)
+            {
+                // The peer's SpawnState entry will be removed with PeerStates below
+                // Check if all REMAINING peers have despawned (after this peer is removed)
+                bool allRemainingDespawned = true;
+                foreach (var otherPeerState in PeerStates.Values)
+                {
+                    if (otherPeerState.Id == peerId) continue; // Skip the disconnecting peer
+                    var state = GetClientSpawnState(netController.NetId, otherPeerState.Peer);
+                    if (state != ClientSpawnState.Despawned && state != ClientSpawnState.NotSpawned)
+                    {
+                        allRemainingDespawned = false;
+                        break;
+                    }
+                }
+                
+                if (allRemainingDespawned)
+                {
+                    _pendingDeletion.Add(netController);
+                }
+            }
 
             PeerStates.Remove(peerId);
             _peerLastAckTick.Remove(peerId);
@@ -1163,21 +1191,42 @@ namespace Nebula
                 }
             }
 
+            // Note: Despawns are now handled by SpawnSerializer through the tick channel.
+            // QueueDespawnedNodes tells SpawnSerializer.Export to send despawn data.
+            // The node is NOT deleted here - it stays in NetScenes so SpawnSerializer can continue exporting.
+            // Once all peers have acknowledged the despawn, the node is moved to _pendingDeletion.
+            
+            // For peers that are NotSpawned (never received spawn), mark them as Despawned immediately
             foreach (var netController in QueueDespawnedNodes)
             {
                 foreach (var peerState in PeerStates.Values)
                 {
-                    var peer = peerState.Peer;
-                    if (HasSpawnedForClient(netController.NetId, peer))
+                    var state = GetClientSpawnState(netController.NetId, peerState.Peer);
+                    if (state == ClientSpawnState.NotSpawned)
                     {
-                        SendDespawn(peer, netController.NetId);
-                        DeregisterPeerNode(netController, peer);
+                        // Peer never received spawn, mark as despawned immediately
+                        SetClientSpawnState(netController.NetId, peerState.Peer, ClientSpawnState.Despawned);
                     }
                 }
+                
+                // Check if already all peers are despawned (e.g., no peers connected, or all were NotSpawned)
+                if (AreAllPeersDespawned(netController.NetId))
+                {
+                    _pendingDeletion.Add(netController);
+                }
+            }
+            // Note: We don't clear QueueDespawnedNodes here - SpawnSerializer checks IsQueuedForDespawn
+            // The node stays in QueueDespawnedNodes until it's added to _pendingDeletion
+            
+            // Process nodes that all peers have acknowledged despawn for
+            foreach (var netController in _pendingDeletion)
+            {
+                QueueDespawnedNodes.Remove(netController);
                 netController.NetParentId = NetId.None;
+                RemoveNetScene(netController.NetId);
                 netController.QueueNodeForDeletion();
             }
-            QueueDespawnedNodes.Clear();
+            _pendingDeletion.Clear();
         }
 
         /// <summary>
@@ -1226,6 +1275,49 @@ namespace Nebula
         internal void QueueDespawn(NetworkController node)
         {
             QueueDespawnedNodes.Add(node);
+        }
+        
+        /// <summary>
+        /// Nodes that have been despawned by all peers and are ready for deletion.
+        /// </summary>
+        internal HashSet<NetworkController> _pendingDeletion = [];
+        
+        /// <summary>
+        /// Client-side: NetIds that received despawn before spawn (due to packet loss).
+        /// When a spawn arrives for a NetId in this set, it should be immediately despawned.
+        /// </summary>
+        private HashSet<NetId> _pendingClientDespawns = new();
+        
+        /// <summary>
+        /// Checks if all peers have acknowledged the despawn for a node.
+        /// Returns true if all peers are in Despawned or NotSpawned state.
+        /// </summary>
+        internal bool AreAllPeersDespawned(NetId netId)
+        {
+            foreach (var peerState in PeerStates.Values)
+            {
+                var state = GetClientSpawnState(netId, peerState.Peer);
+                if (state != ClientSpawnState.Despawned && state != ClientSpawnState.NotSpawned)
+                    return false;
+            }
+            return true;
+        }
+        
+        /// <summary>
+        /// Adds a NetId to the pending client despawns set (called when despawn arrives before spawn).
+        /// </summary>
+        internal void AddPendingClientDespawn(NetId netId)
+        {
+            _pendingClientDespawns.Add(netId);
+        }
+        
+        /// <summary>
+        /// Checks if a NetId has a pending despawn and removes it from the set.
+        /// Returns true if there was a pending despawn.
+        /// </summary>
+        internal bool CheckAndRemovePendingClientDespawn(NetId netId)
+        {
+            return _pendingClientDespawns.Remove(netId);
         }
 
         public override void _Process(double delta)
@@ -1414,6 +1506,7 @@ namespace Nebula
 
         /// <summary>
         /// Removes a network controller from NetScenes. Defers the remove if currently iterating.
+        /// Also cleans up networkIds on the client side.
         /// </summary>
         internal void RemoveNetScene(NetId id)
         {
@@ -1421,6 +1514,9 @@ namespace Nebula
                 _netIdsToRemove.Add(id);
             else
                 NetScenes.Remove(id);
+            
+            // Clean up networkIds (used on client for GetNodeFromNetId(long) lookups)
+            networkIds.Remove(id.Value);
         }
 
         /// <summary>
@@ -1778,7 +1874,13 @@ namespace Nebula
                     // Fix #5: Track that this object has pending data for this peer
                     pendingAcks.Add(netController);
 
-                    ushort localNodeId = PeerStates[peerId].WorldToPeerNodeMap[netController.NetId];
+                    // Safety check: ensure node is registered before lookup
+                    if (!PeerStates[peerId].WorldToPeerNodeMap.TryGetValue(netController.NetId, out var localNodeId))
+                    {
+                        Log(Debugger.DebugLevel.ERROR, 
+                            $"[ExportState] Node {netController.RawNode?.Name} (NetId={netController.NetId}) wrote data but isn't registered for peer {peerId}.");
+                        continue;
+                    }
                     NodeIdUtils.SetBit(_updatedNodesMask, localNodeId);
                     _peerNodesSerializersList[localNodeId] = serializersRun;
 
@@ -1891,6 +1993,7 @@ namespace Nebula
                     {
                         var blankScene = new NetNode3D();
                         blankScene.Network.NetId = AllocateNetId(localNodeId);
+                        blankScene.Network.CurrentWorld = this; // Set CurrentWorld so handleDespawn uses QueueDespawn instead of immediate QueueFree
                         blankScene.SetupSerializers();
                         NetRunner.Instance.AddChild(blankScene);
                         TryRegisterPeerNode(blankScene.Network);
@@ -1906,6 +2009,13 @@ namespace Nebula
                             // Log($"[ImportState] Node {localNodeId}: Skipping serializer {serializerIdx} (bit not set)");
                             continue;
                         }
+                        
+                        // Skip if node was queued for despawn during import (e.g., by SpawnSerializer handling despawn)
+                        if (netController.IsQueuedForDespawn || netController.IsMarkedForDeletion)
+                        {
+                            break;
+                        }
+                        
                         var serializerInstance = netController.NetNode.Serializers[serializerIdx];
                         // Log($"[ImportState] Node {localNodeId}: Running serializer {serializerIdx} ({serializerInstance.GetType().Name})");
 
@@ -2381,20 +2491,6 @@ namespace Nebula
                 Args = _netFunctionArgsPool.ToArray(),
                 Sender = peer
             });
-        }
-
-        internal void SendDespawn(NetPeer peer, NetId netId)
-        {
-            if (!NetRunner.Instance.IsServer) return;
-            using var buffer = new NetBuffer();
-            NetId.NetworkSerialize(this, peer, netId, buffer);
-            NetRunner.SendReliable(peer, (byte)NetRunner.ENetChannelId.Despawn, buffer);
-        }
-
-        internal void ReceiveDespawn(NetPeer peer, NetBuffer buffer)
-        {
-            var netId = NetId.NetworkDeserialize(this, peer, buffer);
-            GetNodeFromNetId(netId)?.handleDespawn();
         }
     }
 }

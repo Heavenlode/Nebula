@@ -12,7 +12,8 @@ If you wish to skip ahead and download the finished game now, the repo is availa
 
 As an introduction to Nebula, we're going to make a game called Big Chungus Online. The objective of the game is to consume pellets to grow your character bigger. Larger players eat smaller ones. _Definitely not inspired by [another game](https://agar.io)._
 
->[!NOTE] The tutorial was done on macOS, but the steps should all be basically the same on Windows and Linux.
+> [!NOTE]
+> The tutorial was done on macOS, but the steps should all be basically the same on Windows and Linux.
 
 By the end of this tutorial, you'll have made this game:
 
@@ -50,7 +51,7 @@ Now that we've built the project, we can go ahead and enable Nebula in the proje
 ![Enable Nebula](~/images/big-chungus/chapter-1/enable-nebula.png)
 
 > [!WARNING]
-> rying to enable Nebula before compiling/building will result in errors and fail to enable. It can only be enabled after the build succeeds.
+> Trying to enable Nebula before compiling/building will result in errors and fail to enable. It can only be enabled after the build succeeds.
 
 ## Getting things running
 

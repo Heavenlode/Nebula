@@ -249,7 +249,8 @@ There are a few different ways to do this. One easy way is to just save a "Seed"
     }
 ```
 
-> [!NOTE] You will need to make sure the MeshInstance3D has a StandardMaterial3D attached for this to work.
+> [!NOTE]
+> You will need to make sure the MeshInstance3D has a StandardMaterial3D attached for this to work.
 
 ![Demo](~/images/big-chungus/chapter-5/model-material.png)
 
@@ -265,6 +266,6 @@ If you encounter any issues along the way, or have any questions, please feel fr
 
 You can add tickets or code changes in Github: https://github.com/Heavenlode/Nebula
 
-You can join the new Nebula discord community: https://discord.gg/dF2H7hAg
+You can join the new Nebula discord community: https://discord.gg/AUjzVA4sEK
 
 Look forward to hearing from you soon :)

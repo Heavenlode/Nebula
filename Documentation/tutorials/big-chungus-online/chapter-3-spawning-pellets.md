@@ -9,7 +9,7 @@ This chapter covers:
 
 For this game, the user is simply able to move up, down, left, right, or diagonally. Go ahead and open up the `PlayerController.cs` file for the following changes.
 
-First, we'll define an "input struct" that the client can end to the server. You can put this at the top of the file:
+First, we'll define an "input struct" that the client can send to the server. You can put this at the top of the file:
 
 ```cs
 using System.Runtime.InteropServices;
@@ -321,3 +321,5 @@ public partial class PelletSpawner : NetNode
 When we run the game, we'll see the pellet positions and colors are synchronized across clients!
 
 ![Create Solution](~/images/big-chungus/chapter-3/pellet-preview.gif)
+
+In the next chapter, we will finish the game with scorekeeping and dynamic gameplay.

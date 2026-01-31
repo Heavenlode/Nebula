@@ -1,6 +1,7 @@
 # Big Chungus Online - Spawning Players
 
 This chapter covers:
+
 * Setting up game players
 * Basic game mechanics
 

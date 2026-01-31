@@ -85,7 +85,7 @@ public partial class Player : NetNode3D
 
 If you're eager to get started quickly, you can follow the [Big Chungus tutorial](https://nebula.heavenlode.com/tutorials/big-chungus-online/chapter-1-getting-started.html) to build your first game with Nebula + Godot right away.
 
-![Big Chungus Preview](https://nebula.heavenlode.com/images/big-chungus/chapter-1/completed-game.gif)
+![completed-game](https://github.com/user-attachments/assets/a6947550-e8bc-4a85-8078-a5fc3377da2f)
 
 ## Features
 

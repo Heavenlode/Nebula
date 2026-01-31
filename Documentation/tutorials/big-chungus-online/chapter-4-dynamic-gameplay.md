@@ -5,7 +5,8 @@ This chapter covers:
 * Score tracking
 * Dynamic gameplay
 
-> [!NOTE] This part of the tutorial is more code-heavy, but the difficulty level is not too high!
+> [!NOTE]
+> This part of the tutorial is more code-heavy, but the difficulty level is not too high!
 
 ## Score and Size
 
@@ -269,7 +270,8 @@ Halfway done. The last part is the actual pellet collection / collision mechanis
 
 To do this, we need to check the distance from every player to every pellet. There are multiple correct ways to do this, so feel free to come up with your own approach. For this tutorial, we're going to centralize this in a new `GameScoreManager` node.
 
-> [!NOTE] We'll be using this node in the _next chapter_ to also calculate collisions between players.
+> [!NOTE]
+> We'll be using this node in the _next chapter_ to also calculate collisions between players.
 
 ## Pellet Collection
 
@@ -303,7 +305,8 @@ public partial class GameScoreManager : NetNode
 
 Very simply, CheckPelletCollisions should check the distance of every player to every pellet.
 
-> [!NOTE] For the computer science geeks, this is an `O(n * m)` operation, so it's not the most efficient. It's not really a big deal for our purposes though, especially since vector math isn't that expensive.
+> [!NOTE]
+> For the computer science geeks, this is an `O(n * m)` operation, so it's not the most efficient. It's not really a big deal for our purposes though, especially since vector math isn't that expensive.
 
 ```cs
     foreach (var player in Players)

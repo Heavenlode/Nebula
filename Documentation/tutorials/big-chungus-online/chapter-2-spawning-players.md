@@ -232,7 +232,8 @@ public partial class PlayerSpawner : NetNode
 }
 ```
 
->[!WARNING] Be sure to attach the exported variables in Godot! You'll need to attach the character scene, the start screen UI to hide, and the score container to show when they join the game.
+> [!WARNING]
+> Be sure to attach the exported variables in Godot! You'll need to attach the character scene, the start screen UI to hide, and the score container to show when they join the game.
 
 ## Level Setup & Running The Game
 

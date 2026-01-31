@@ -49,7 +49,8 @@ Now that we've built the project, we can go ahead and enable Nebula in the proje
 
 ![Enable Nebula](~/images/big-chungus/chapter-1/enable-nebula.png)
 
->[!WARNING] Trying to enable Nebula before compiling/building will result in errors and fail to enable. It can only be enabled after the build succeeds.
+> [!WARNING]
+> rying to enable Nebula before compiling/building will result in errors and fail to enable. It can only be enabled after the build succeeds.
 
 ## Getting things running
 
@@ -92,7 +93,8 @@ What makes it a NetScene? The fact that it is a NetNode3D that is the root node 
 
 What makes it a World? Well, it will be a World as soon as we use it to spawn a new "instanced environment" in Nebula. For testing, or a smaller game like Big Chungus, we'll just keep it simple and have one World.
 
-> [!NOTE] For larger games (e.g. instanced dungeons) we can create multiple Worlds in the same Server instance. Nebula does this by utilizing Godot's [World3D node](https://docs.godotengine.org/en/stable/classes/class_world3d.html). This is beyond the scope of this tutorial.
+> [!NOTE]
+> For larger games (e.g. instanced dungeons) we can create multiple Worlds in the same Server instance. Nebula does this by utilizing Godot's [World3D node](https://docs.godotengine.org/en/stable/classes/class_world3d.html). This is beyond the scope of this tutorial.
 
 To tell Nebula to use `game_arena.tscn` as our World scene, we set the "Default Scene" under the new "Nebula -> World" section in Project Settings.
 

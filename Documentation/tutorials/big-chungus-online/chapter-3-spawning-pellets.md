@@ -142,7 +142,7 @@ Notice this demonstrates something very fundamental about how Nebula works:
 
 That's it! We can run the game again and control our characters using the arrow keys.
 
-![Create Solution](~/images/big-chungus/chapter-3/movement.gif)
+![Movement](~/images/big-chungus/chapter-3/movement.gif)
 
 ## Collecting Growth Pellets
 
@@ -158,11 +158,11 @@ We'll see how we can actually pack quite a lot of objects and data into an onlin
 
 First, let's start by creating a new node called "PelletSpawner", with a MultiMeshInstance3D that defines how we want our pellets to look.
 
-![Create Solution](~/images/big-chungus/chapter-3/pellet-mesh-1.png)
+![Pellet Mesh Setup](~/images/big-chungus/chapter-3/pellet-mesh-1.png)
 
-![Create Solution](~/images/big-chungus/chapter-3/pellet-mesh-2.png)
+![Pellet Mesh Setup](~/images/big-chungus/chapter-3/pellet-mesh-2.png)
 
-![Create Solution](~/images/big-chungus/chapter-3/pellet-mesh-3.png)
+![Pellet Mesh Setup](~/images/big-chungus/chapter-3/pellet-mesh-3.png)
 
 Attaching our script:
 
@@ -320,6 +320,6 @@ public partial class PelletSpawner : NetNode
 
 When we run the game, we'll see the pellet positions and colors are synchronized across clients!
 
-![Create Solution](~/images/big-chungus/chapter-3/pellet-preview.gif)
+![Pellet Preview](~/images/big-chungus/chapter-3/pellet-preview.gif)
 
 In the next chapter, we will finish the game with scorekeeping and dynamic gameplay.

@@ -6,6 +6,8 @@ This chapter covers:
 
 This tutorial does not cover the fundamentals of Godot. You should at least be familiar with [Godot's key concepts](https://docs.godotengine.org/en/4.5/getting_started/introduction/key_concepts_overview.html).
 
+If you wish to skip ahead and download the finished game now, the repo is available on Github: https://github.com/Heavenlode/Nebula-Big-Chungus-Demo
+
 ## Introduction
 
 As an introduction to Nebula, we're going to make a game called Big Chungus Online. The objective of the game is to consume pellets to grow your character bigger. Larger players eat smaller ones. _Definitely not inspired by [another game](https://agar.io)._

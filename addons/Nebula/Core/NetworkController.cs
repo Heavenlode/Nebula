@@ -779,6 +779,8 @@ namespace Nebula
 		/// <param name="input">The input struct to send to the server.</param>
 		public void SetInput<TInput>(in TInput input) where TInput : unmanaged
 		{
+			if (!IsWorldReady || !IsCurrentOwner || IsServer) return;
+
 			if (_inputData == null)
 			{
 				Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"SetInput called but input not initialized. Call InitializeInput<T>() first.");

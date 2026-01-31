@@ -1,10 +1,12 @@
 - name: Big Chungus Online
   items:
-  - name: Getting Started
+  - name: Chapter 1: Getting Started
     href: big-chungus-online/chapter-1-getting-started.md
-  - name: Spawning Players
+  - name: Chapter 2: Spawning Players
     href: big-chungus-online/chapter-2-spawning-players.md
-  - name: Spawning Pellets
+  - name: Chapter 3: Spawning Pellets
     href: big-chungus-online/chapter-3-spawning-pellets.md
-  - name: Dynamic Gameplay
+  - name: Chapter 4: Dynamic Gameplay
     href: big-chungus-online/chapter-4-dynamic-gameplay.md
+  - name: Chapter 5: Finishing The Game
+    href: big-chungus-online/chapter-5-finishing-the-game.md

@@ -8,6 +8,7 @@ Nebula is a tick-based, server-authoritative networking framework that makes bui
 
 - [Why Nebula?](#why-nebula)
 - [Quick Example](#quick-example)
+- [Jump In](#jump-in)
 - [Features](#features)
   - [Core Networking](#core-networking)
   - [Client-Side Prediction](#client-side-prediction)
@@ -52,14 +53,14 @@ public partial class Player : NetNode3D
         Network.InitializeInput<PlayerInput>();
     }
 
-    // Synced to all clients, with interpolation for smooth movement
+    // Synced to all clients, with rollback and interpolation for smooth movement
     [NetProperty(Interpolate = true, Predicted = true, NotifyOnChange = true)]
     public Vector3 Position { get; set; }
     
-    // Required for predicted properties - defines misprediction threshold
+    // Defines misprediction threshold for automagic rollback
     public float PositionPredictionTolerance { get; set; } = 2f;
 
-    // Server-only state - only visible to specific players
+    // Interest management - only visible to specific players
     [NetProperty(InterestMask = 0x02)]
     public int SecretScore { get; set; }
 
@@ -79,6 +80,12 @@ public partial class Player : NetNode3D
     }
 }
 ```
+
+## Jump In
+
+If you're eager to get started quickly, you can follow the [Big Chungus tutorial](https://nebula.heavenlode.com/tutorials/big-chungus-online/chapter-1-getting-started.html) to build your first game with Nebula + Godot right away.
+
+![Big Chungus Preview](https://nebula.heavenlode.com/images/big-chungus/chapter-1/completed-game.gif)
 
 ## Features
 
@@ -110,7 +117,7 @@ public partial class Player : NetNode3D
 - **No boxing** — PropertyCache union type avoids boxing value types
 
 ### Architecture
-- **Multiple worlds** — Run separate game instances (lobbies, matches) in one server process
+- **Multiple worlds** — Run separate game instances (dungeons, lobbies, matches) in one server process
 - **Flexible serialization** — Built-in support for primitives, vectors, quaternions, and custom types
 - **ENet transport** — Reliable UDP with automatic connection management
 
@@ -138,13 +145,13 @@ public partial class Player : NetNode3D
    </Project>
    ```
 
-3. **Enable the plugin**
+3. **Build your project**
+
+   This compiles Nebula, allowing you to enable the plugin.
+
+4. **Enable the plugin**
    
    In Godot: Project → Project Settings → Plugins → Enable "Nebula"
-
-4. **Build your project**
-   
-   The source generators will create the necessary code on first build.
 
 ## Core Concepts
 
@@ -188,15 +195,12 @@ public struct PlayerInput
 // In your node:
 public override void _PhysicsProcess(double delta)
 {
-    if (Network.IsCurrentOwner && !Network.IsServer)
+    Network.SetInput(new PlayerInput
     {
-        Network.SetInput(new PlayerInput
-        {
-            MoveX = Input.GetAxis("left", "right"),
-            MoveY = Input.GetAxis("up", "down"),
-            Jump = Input.IsActionPressed("jump")
-        });
-    }
+        MoveX = Input.GetAxis("left", "right"),
+        MoveY = Input.GetAxis("up", "down"),
+        Jump = Input.IsActionPressed("jump")
+    });
 }
 ```
 
@@ -206,6 +210,19 @@ public override void _PhysicsProcess(double delta)
 // Server-side spawning with input authority
 var player = playerScene.Instantiate<Player>();
 worldRunner.Spawn(player, inputAuthority: peer);
+```
+
+### Net Functions
+
+Nebula's version of an RPC.
+
+```cs
+[NetFunction(Source = NetFunction.NetworkSources.Client, ExecuteOnCaller = false)]
+public void JoinGame()
+{
+    var player = playerScene.Instantiate<Player>();
+    Network.CurrentWorld.Spawn(newPlayer, inputAuthority: Network.CurrentWorld.NetFunctionContext.Caller);
+}
 ```
 
 ## Comparison
@@ -231,7 +248,7 @@ worldRunner.Spawn(player, inputAuthority: peer);
 - Are building in C#, want maximum type safety, and performance optimization
 - Need fine-grained control over what data each player sees
 - Want prediction and interpolation to "just work" together
-- Are building a game with lobbies/matches (multiple worlds)
+- Are building a game with instances areas, lobbies, matches (multiple worlds)
 
 **Choose Godot's built-in multiplayer if you:**
 - Want the simplest possible setup
@@ -247,7 +264,7 @@ worldRunner.Spawn(player, inputAuthority: peer);
 
 Comprehensive documentation is available at: **https://nebula.heavenlode.com**
 
-For implementation details and architecture overview, see [NEBULA_OVERVIEW.mdc](./NEBULA_OVERVIEW.mdc). This file is particularly useful for AI/vibe coding as well.
+For implementation details and architecture overview, see [NEBULA_OVERVIEW.mdc](https://github.com/Heavenlode/Nebula/blob/main/addons/Nebula/NEBULA_OVERVIEW.mdc). This file is particularly useful for AI/vibe coding as well.
 
 ## Roadmap
 

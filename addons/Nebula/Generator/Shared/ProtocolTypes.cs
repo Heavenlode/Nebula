@@ -136,6 +136,11 @@ namespace Nebula.Serialization
         /// Primitive properties (INetValue) are only serialized when dirty.
         /// </summary>
         public readonly bool IsObjectProperty;
+        /// <summary>
+        /// When true, this property stores per-peer values (different value for each connected peer).
+        /// The serializer will look up the value for the specific peer being exported to.
+        /// </summary>
+        public readonly bool IsPerPeer;
 
         public ProtocolNetProperty(
             string nodePath,
@@ -152,7 +157,8 @@ namespace Nebula.Serialization
             float interpolateSpeed = 15f,
             bool predicted = false,
             int chunkBudget = 256,
-            bool isObjectProperty = false)
+            bool isObjectProperty = false,
+            bool isPerPeer = false)
         {
             NodePath = nodePath;
             Name = name;
@@ -169,6 +175,7 @@ namespace Nebula.Serialization
             Predicted = predicted;
             ChunkBudget = chunkBudget;
             IsObjectProperty = isObjectProperty;
+            IsPerPeer = isPerPeer;
         }
     }
 

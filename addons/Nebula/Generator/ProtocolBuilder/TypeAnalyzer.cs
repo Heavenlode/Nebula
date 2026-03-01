@@ -38,6 +38,10 @@ namespace Nebula.Generators
             /// Maximum bytes per tick for chunked initial sync of NetArray properties.
             /// </summary>
             public int ChunkBudget { get; init; } = 256;
+            /// <summary>
+            /// When true, this property stores per-peer values (different value for each connected peer).
+            /// </summary>
+            public bool IsPerPeer { get; init; } = false;
         }
 
         public sealed class NetFunctionInfo
@@ -346,6 +350,7 @@ namespace Nebula.Generators
                         ClassLocalIndex = (byte)cumulativeIndex,
                         Predicted = GetNamedArgument(netPropAttr, "Predicted", false),
                         ChunkBudget = GetNamedArgument(netPropAttr, "ChunkBudget", 256),
+                        IsPerPeer = GetNamedArgument(netPropAttr, "PerPeerState", false),
                     };
                 }
 

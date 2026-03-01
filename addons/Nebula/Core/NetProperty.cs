@@ -51,5 +51,11 @@ namespace Nebula
         /// Only applicable to NetArray&lt;T&gt; properties.
         /// </summary>
         public int ChunkBudget = 256;
+
+        /// <summary>
+        /// When true, this property will have different values for each peer.
+        /// This is useful for properties where each peer sees a unique value, such as quest state.
+        /// </summary>
+        public bool PerPeerState = false;
     }
 }

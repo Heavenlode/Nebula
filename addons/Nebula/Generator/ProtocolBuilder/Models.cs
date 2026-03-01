@@ -57,6 +57,10 @@ namespace Nebula.Generators
         /// Primitive properties (INetValue) are only serialized when dirty.
         /// </summary>
         public bool IsObjectProperty { get; set; } = false;
+        /// <summary>
+        /// When true, this property stores per-peer values (different value for each connected peer).
+        /// </summary>
+        public bool IsPerPeer { get; set; } = false;
     }
 
     internal sealed class FunctionData

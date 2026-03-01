@@ -700,6 +700,48 @@ namespace Nebula
         }
 
         /// <summary>
+        /// Runs one prediction tick for all owned entities.
+        /// Called from the independent client tick loop in _PhysicsProcess.
+        /// </summary>
+        private void RunClientPredictionTick()
+        {
+            if (_ownedEntitiesDirty)
+            {
+                RebuildOwnedEntitiesCache();
+            }
+
+            _clientPredictedTick++;
+
+            for (int i = 0; i < _ownedEntities.Count; i++)
+            {
+                var netController = _ownedEntities[i];
+                if (netController == null || netController.IsMarkedForDeletion) continue;
+
+                netController.IsPredicting = true;
+                netController._NetworkProcess(_clientPredictedTick);
+                netController.StorePredictedState(_clientPredictedTick);
+                netController.IsPredicting = false;
+
+                // Send input with redundancy
+                SendInput(netController);
+
+                // Also handle static children
+                foreach (var staticChild in netController.StaticNetworkChildren)
+                {
+                    if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                    if (!staticChild.IsCurrentOwner) continue;
+
+                    staticChild.IsPredicting = true;
+                    staticChild._NetworkProcess(_clientPredictedTick);
+                    staticChild.StorePredictedState(_clientPredictedTick);
+                    staticChild.IsPredicting = false;
+
+                    SendInput(staticChild);
+                }
+            }
+        }
+
+        /// <summary>
         /// Reconciles a single owned entity: compares predicted state with server state,
         /// performs rollback if needed, and resimulates.
         /// </summary>
@@ -728,6 +770,7 @@ namespace Nebula
             {
                 if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
                 if (!staticChild.IsCurrentOwner) continue;
+                
                 if (staticChild.Reconcile(incomingTick, forceRestoreAll))
                 {
                     childMispredicted = true;
@@ -796,15 +839,11 @@ namespace Nebula
             }
             else
             {
-                // Prediction correct - restore from prediction buffer
-                netController.RestoreToPredictedState(incomingTick);
-
-                foreach (var staticChild in netController.StaticNetworkChildren)
-                {
-                    if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
-                    if (!staticChild.IsCurrentOwner) continue;
-                    staticChild.RestoreToPredictedState(incomingTick);
-                }
+                // Prediction correct - no action needed.
+                // The entity's current state is already at the latest predicted tick,
+                // and import didn't modify predicted properties for owned entities.
+                // Do NOT call RestoreToPredictedState(incomingTick) here - that would
+                // reset the entity to an old tick's state, causing visual jumps.
             }
         }
 
@@ -982,11 +1021,17 @@ namespace Nebula
         }
 
         private int _frameCounter = 0;
+        private int _clientFrameCounter = 0;
+        
         /// <summary>
         /// This method is executed every tick on the Server side, and kicks off all logic which processes and sends data to every client.
         /// </summary>
         public void ServerProcessTick()
         {
+            // Process buffered player joins FIRST (tick-aligned)
+            // This ensures OnPlayerJoined fires at a safe, predictable point before any Export iteration
+            ProcessPendingPlayerJoins();
+
             // Check for peers that have timed out (no acks for too long)
             int ackTimeoutTicks = (int)(PEER_ACK_TIMEOUT_SECONDS * NetRunner.TPS);
             _peersToDisconnect.Clear();
@@ -1382,6 +1427,17 @@ namespace Nebula
 #endif
                 OnAfterNetworkTick?.Invoke(CurrentTick);
             }
+
+            // CLIENT: Independent prediction tick loop
+            if (NetRunner.Instance.IsClient && _predictionInitialized)
+            {
+                _clientFrameCounter += 1;
+                if (_clientFrameCounter >= NetRunner.PhysicsTicksPerNetworkTick)
+                {
+                    _clientFrameCounter = 0;
+                    RunClientPredictionTick();
+                }
+            }
         }
 
         /// <summary>
@@ -1545,6 +1601,14 @@ namespace Nebula
         /// This allows PeerAcknowledge to only iterate relevant objects instead of all NetScenes.
         /// </summary>
         private Dictionary<UUID, HashSet<NetworkController>> _peerPendingAcks = new();
+
+        /// <summary>
+        /// Buffer for tick-aligned player joined events.
+        /// Player joins are buffered here and fired at the start of ServerProcessTick()
+        /// to ensure they occur at a predictable point in the tick cycle.
+        /// </summary>
+        private readonly List<UUID> _pendingPlayerJoined = new();
+
         public void SetPeerState(UUID peerId, PeerState state)
         {
             if (PeerStates[peerId].Status != state.Status)
@@ -1552,7 +1616,8 @@ namespace Nebula
                 OnPeerSyncStatusChange?.Invoke(peerId, state.Status);
                 if (state.Status == PeerSyncStatus.IN_WORLD)
                 {
-                    OnPlayerJoined?.Invoke(peerId);
+                    // Buffer instead of firing immediately - will be processed at start of ServerProcessTick
+                    _pendingPlayerJoined.Add(peerId);
                 }
             }
             PeerStates[peerId] = state;
@@ -1561,6 +1626,22 @@ namespace Nebula
         {
             var peerId = NetRunner.Instance.GetPeerId(peer);
             SetPeerState(peerId, state);
+        }
+
+        /// <summary>
+        /// Processes buffered player join events. Called at the start of ServerProcessTick()
+        /// to ensure OnPlayerJoined fires at a predictable, tick-aligned point.
+        /// </summary>
+        private void ProcessPendingPlayerJoins()
+        {
+            if (_pendingPlayerJoined.Count == 0) return;
+
+            foreach (var peerId in _pendingPlayerJoined)
+            {
+                OnPlayerJoined?.Invoke(peerId);
+            }
+
+            _pendingPlayerJoined.Clear();
         }
 
         public ushort GetPeerNodeId(NetPeer peer, NetworkController node)
@@ -1662,7 +1743,7 @@ namespace Nebula
             AddNetScene(node.NetId, node);
             return 1;
         }
-
+        
         public T Spawn<T>(
             T node,
             NetworkController parent = null,
@@ -2199,38 +2280,9 @@ namespace Nebula
             _isProcessingNetScenes = false;
             FlushPendingNetSceneChanges();
 
-            // ============================================================
-            // PREDICTION: Advance predicted tick for owned entities
-            // ============================================================
-            _clientPredictedTick++;
-
-            for (int i = 0; i < _ownedEntities.Count; i++)
-            {
-                var netController = _ownedEntities[i];
-                if (netController == null || netController.IsMarkedForDeletion) continue;
-
-                netController.IsPredicting = true;
-                netController._NetworkProcess(_clientPredictedTick);
-                netController.StorePredictedState(_clientPredictedTick);
-                netController.IsPredicting = false;
-
-                // Send input with redundancy
-                SendInput(netController);
-
-                // Also handle static children
-                foreach (var staticChild in netController.StaticNetworkChildren)
-                {
-                    if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
-                    if (!staticChild.IsCurrentOwner) continue;
-
-                    staticChild.IsPredicting = true;
-                    staticChild._NetworkProcess(_clientPredictedTick);
-                    staticChild.StorePredictedState(_clientPredictedTick);
-                    staticChild.IsPredicting = false;
-
-                    SendInput(staticChild);
-                }
-            }
+            // NOTE: Prediction advancement has been moved to RunClientPredictionTick()
+            // which runs independently in _PhysicsProcess at a consistent rate.
+            // This method (ClientProcessTick) now only handles reconciliation.
 
             // ============================================================
             // PROCESS QUEUED NET FUNCTIONS

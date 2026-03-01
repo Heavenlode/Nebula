@@ -16,6 +16,25 @@ namespace Nebula
 	*/
 	public partial class NetworkController : RefCounted
 	{
+		public ref struct PeerScope
+		{
+			private readonly NetworkController _network;
+
+			internal PeerScope(NetworkController network, UUID peerId)
+			{
+				_network = network;
+				_network._currentContextPeer = peerId;
+			}
+
+			public void Dispose()
+			{
+				_network._currentContextPeer = default;
+			}
+		}
+
+		public PeerScope ForPeer(UUID peerId) => new PeerScope(this, peerId);
+		private UUID _currentContextPeer = default;
+
 		#region Snapshot Interpolation
 
 		/// <summary>
@@ -254,7 +273,26 @@ namespace Nebula
 
 		internal List<Tuple<string, string>> InitialSetNetProperties = [];
 		public WorldRunner CurrentWorld { get; internal set; }
+
+		/// <summary>
+		/// The interest layers that the node exists in for each peer.
+		/// For [NetProperty], this determines which properties the peers will recieve.
+		/// For [NetInterest], this determines which peers the node will spawn for.
+		/// </summary>
 		public Dictionary<UUID, long> InterestLayers { get; set; } = [];
+
+		/// <summary>
+		/// This is an initial filter _prior_ to the InterestLayers filter.
+		/// Only peers in this set will be considered for the InterestLayers filter
+		/// This enables nodes to spawn for only a certain peer or subset of peers, without having to burn an interest layer for each peer.
+		/// e.g. item drops only visible to a player or party.
+		/// </summary>
+		public HashSet<UUID> InterestPeers = [];
+
+		/// <summary>
+		/// If set to true, the node will be automatically despawned on the same tick the server identifies that there are no more peers interested in the node.
+		/// </summary>
+		public bool DespawnOnNoInterestPeers = false;
 		public NetworkController[] StaticNetworkChildren = [];
 
 		/// <summary>
@@ -280,6 +318,28 @@ namespace Nebula
 		/// Cached property values. Populated by MarkDirty, read by serializer during Export.
 		/// </summary>
 		internal PropertyCache[] CachedProperties = new PropertyCache[64];
+
+		/// <summary>
+		/// Per-peer storage using dictionaries (one per per-peer property).
+		/// PerPeerValues[propIndex][peerId] = PropertyCache
+		/// Only allocated for properties where _propIsPerPeer[propIndex] == true
+		/// 
+		/// FUTURE OPTIMIZATION: If profiling shows dictionary lookups are a bottleneck,
+		/// consider a "peer slot" system that maps UUIDs to compact integer indices
+		/// for array-based storage with O(1) access via pointer arithmetic.
+		/// </summary>
+		internal Dictionary<UUID, PropertyCache>[] PerPeerValues;
+
+		/// <summary>
+		/// Per-peer dirty masks: bit N set = property N dirty for this peer.
+		/// </summary>
+		internal Dictionary<UUID, long> PerPeerDirtyMask;
+
+		/// <summary>
+		/// Cached protocol metadata - which properties are per-peer.
+		/// </summary>
+		private bool[] _propIsPerPeer;
+		private int _perPeerPropertyCount;
 
 		public HashSet<NetworkController> DynamicNetworkChildren = [];
 
@@ -338,7 +398,7 @@ namespace Nebula
 			SetPeerInterest(peerId, currentInterest | interestLayers, recurse);
 		}
 
-	public void RemovePeerInterest(NetPeer peer, long interestLayers, bool recurse = true)
+		public void RemovePeerInterest(NetPeer peer, long interestLayers, bool recurse = true)
 		{
 			SetPeerInterest(NetRunner.Instance.GetPeerId(peer), interestLayers, recurse);
 		}
@@ -394,6 +454,19 @@ namespace Nebula
 			spawnReady.Remove(peerId);
 			preparingSpawn.Remove(peerId);
 			InterestLayers.Remove(peerId);
+
+			// Clear per-peer property data for this peer
+			if (PerPeerValues != null && _propIsPerPeer != null)
+			{
+				for (int i = 0; i < _propIsPerPeer.Length; i++)
+				{
+					if (_propIsPerPeer[i] && PerPeerValues[i] != null)
+					{
+						PerPeerValues[i].Remove(peerId);
+					}
+				}
+			}
+			PerPeerDirtyMask?.Remove(peerId);
 		}
 
 		public bool IsWorldReady { get; internal set; } = false;
@@ -448,6 +521,41 @@ namespace Nebula
 				NetNode.SetupSerializers();
 				InitializeStaticChildren();
 				InitializeDynamicChildren();
+				InitializePerPeerStorage();
+			}
+		}
+
+		/// <summary>
+		/// Initializes per-peer property storage based on protocol metadata.
+		/// Called during Setup() after protocol is loaded.
+		/// </summary>
+		private void InitializePerPeerStorage()
+		{
+			var propCount = Protocol.GetPropertyCount(NetSceneFilePath);
+			if (propCount == 0) return;
+
+			_propIsPerPeer = new bool[propCount];
+			_perPeerPropertyCount = 0;
+
+			for (int i = 0; i < propCount; i++)
+			{
+				var prop = Protocol.UnpackProperty(NetSceneFilePath, i);
+				_propIsPerPeer[i] = prop.IsPerPeer;
+				if (prop.IsPerPeer) _perPeerPropertyCount++;
+			}
+
+			if (_perPeerPropertyCount == 0) return;
+
+			// Allocate per-peer storage
+			PerPeerValues = new Dictionary<UUID, PropertyCache>[propCount];
+			PerPeerDirtyMask = new Dictionary<UUID, long>();
+
+			for (int i = 0; i < propCount; i++)
+			{
+				if (_propIsPerPeer[i])
+				{
+					PerPeerValues[i] = new Dictionary<UUID, PropertyCache>();
+				}
 			}
 		}
 
@@ -563,6 +671,24 @@ namespace Nebula
 				return;
 			}
 
+			// Per-peer property with context set?
+			if (_currentContextPeer != default && _propIsPerPeer != null && _propIsPerPeer[prop.Index])
+			{
+				var peerId = _currentContextPeer;
+
+				// Store in per-peer dictionary
+				var cache = new PropertyCache();
+				SetCachedValueToCache(prop.VariantType, value, ref cache);
+				PerPeerValues[prop.Index][peerId] = cache;
+
+				// Update per-peer dirty mask
+				if (!PerPeerDirtyMask.TryGetValue(peerId, out var mask))
+					mask = 0;
+				PerPeerDirtyMask[peerId] = mask | (1L << prop.Index);
+				return;
+			}
+
+			// Broadcast path - update global dirty mask and cached value
 			DirtyMask |= (1L << prop.Index);
 			SetCachedValue(prop.Index, prop.VariantType, value);
 		}
@@ -704,6 +830,85 @@ namespace Nebula
 						cache.Type = SerialVariantType.Object;
 						cache.RefValue = value;
 						Debugger.Instance.Log(Debugger.DebugLevel.WARN, $"SetCachedValue: Unknown value type {typeof(T).Name}, boxing");
+					}
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Helper to set value into a PropertyCache. Used by both broadcast and per-peer paths.
+		/// </summary>
+		private void SetCachedValueToCache<T>(SerialVariantType variantType, T value, ref PropertyCache cache) where T : struct
+		{
+			cache.Type = variantType;
+
+			switch (value)
+			{
+				case bool b:
+					cache.BoolValue = b;
+					break;
+				case byte by:
+					cache.ByteValue = by;
+					break;
+				case int i:
+					cache.IntValue = i;
+					break;
+				case long l:
+					cache.LongValue = l;
+					break;
+				case ulong ul:
+					cache.LongValue = (long)ul;
+					break;
+				case float f:
+					cache.FloatValue = f;
+					break;
+				case double d:
+					cache.DoubleValue = d;
+					break;
+				case Vector2 v2:
+					cache.Vec2Value = v2;
+					break;
+				case Vector3 v3:
+					cache.Vec3Value = v3;
+					break;
+				case Quaternion q:
+					cache.QuatValue = q;
+					break;
+				case NetId netId:
+					cache.NetIdValue = netId;
+					break;
+				case UUID uuid:
+					cache.UUIDValue = uuid;
+					break;
+				default:
+					if (typeof(T).IsEnum)
+					{
+						var enumVal = value;
+						int enumSize = Unsafe.SizeOf<T>();
+						cache.LongValue = 0;
+						switch (enumSize)
+						{
+							case 1:
+								cache.ByteValue = Unsafe.As<T, byte>(ref enumVal);
+								break;
+							case 2:
+								cache.IntValue = Unsafe.As<T, short>(ref enumVal);
+								break;
+							case 4:
+								cache.IntValue = Unsafe.As<T, int>(ref enumVal);
+								break;
+							case 8:
+								cache.LongValue = Unsafe.As<T, long>(ref enumVal);
+								break;
+							default:
+								cache.IntValue = Unsafe.As<T, int>(ref enumVal);
+								break;
+						}
+					}
+					else
+					{
+						cache.Type = SerialVariantType.Object;
+						cache.RefValue = value;
 					}
 					break;
 			}
@@ -1061,7 +1266,7 @@ namespace Nebula
 			}
 
 			CurrentWorld = world;
-			
+
 			// Initialize bindings for INetPropertyBindable properties (like NetArray)
 			// This ensures properties initialized inline get their mutation callbacks bound
 			// and their initial values cached for network serialization
@@ -1230,17 +1435,17 @@ namespace Nebula
 			handleDespawn();
 		}
 
-	internal void handleDespawn()
-	{
-		if (CurrentWorld == null)
+		internal void handleDespawn()
 		{
-			// Node was never fully initialized (e.g., placeholder node) - just queue free
-			RawNode.QueueFree();
-			return;
+			if (CurrentWorld == null)
+			{
+				// Node was never fully initialized (e.g., placeholder node) - just queue free
+				RawNode.QueueFree();
+				return;
+			}
+			NetNode._Despawn();
+			CurrentWorld.QueueDespawn(this);
 		}
-		NetNode._Despawn();
-		CurrentWorld.QueueDespawn(this);
-	}
 	}
 }
 

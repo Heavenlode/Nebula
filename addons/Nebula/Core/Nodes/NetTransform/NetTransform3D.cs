@@ -88,6 +88,15 @@ namespace Nebula.Utility.Nodes
         /// </summary>
         protected virtual void OnNetChangeNetRotation(int tick, Quaternion oldVal, Quaternion newVal)
         {
+            // For owned predicted entities post-spawn, don't modify NetRotation here.
+            // Reconciliation will handle applying confirmed state if needed.
+            // Only normalize and apply for non-owned or during spawn.
+            if (Network.IsCurrentOwner && Network.IsWorldReady && NetRunner.Instance.IsClient)
+            {
+                // Owned + world ready + client = prediction is active, don't interfere
+                return;
+            }
+            
             // Ensure the rotation is normalized for interpolation
             NetRotation = SafeNormalize(newVal);
 
@@ -256,6 +265,9 @@ namespace Nebula.Utility.Nodes
             base._Process(delta);
             if (!Network.IsWorldReady) return;
             if (!Network.IsClient) return;
+            
+            // Skip visual interpolation during resimulation - physics is replaying history
+            if (Network.IsResimulating) return;
 
             // Determine the target node to interpolate (TargetNode if set, otherwise SourceNode)
             var target = TargetNode ?? SourceNode;

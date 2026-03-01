@@ -50,6 +50,9 @@ public class PropertyCacheGenerator : IIncrementalGenerator
         if (symbol == null)
             return null;
 
+        if (symbol.IsGenericType)
+            return null;
+
         // Check if it implements INetValue<T>
         foreach (var iface in symbol.AllInterfaces)
         {

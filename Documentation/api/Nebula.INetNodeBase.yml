@@ -6,6 +6,7 @@ items:
   parent: Nebula
   children:
   - Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
+  - Nebula.INetNodeBase.InitializeNetPropertyBindings
   - Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
   - Nebula.INetNodeBase.Network
   - Nebula.INetNodeBase.ProcessInterpolation(System.Single)
@@ -16,6 +17,7 @@ items:
   - Nebula.INetNodeBase.SetupSerializers
   - Nebula.INetNodeBase.StoreConfirmedState
   - Nebula.INetNodeBase.StorePredictedState(System.Int32)
+  - Nebula.INetNodeBase._Despawn
   - Nebula.INetNodeBase._NetworkProcess(System.Int32)
   - Nebula.INetNodeBase._WorldReady
   langs:
@@ -26,7 +28,7 @@ items:
   fullName: Nebula.INetNodeBase
   type: Interface
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -54,7 +56,7 @@ items:
   fullName: Nebula.INetNodeBase.SetupSerializers()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -74,7 +76,7 @@ items:
   fullName: Nebula.INetNodeBase.InitializeInterest(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -102,7 +104,7 @@ items:
   fullName: Nebula.INetNodeBase._WorldReady()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -124,7 +126,7 @@ items:
   fullName: Nebula.INetNodeBase._NetworkProcess(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -141,6 +143,31 @@ items:
   nameWithType.vb: INetNodeBase._NetworkProcess(Integer)
   fullName.vb: Nebula.INetNodeBase._NetworkProcess(Integer)
   name.vb: _NetworkProcess(Integer)
+- uid: Nebula.INetNodeBase._Despawn
+  commentId: M:Nebula.INetNodeBase._Despawn
+  id: _Despawn
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: _Despawn()
+  nameWithType: INetNodeBase._Despawn()
+  fullName: Nebula.INetNodeBase._Despawn()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Called when this node is being despawned from the network.
+
+    Override to perform cleanup before the node is removed.
+  example: []
+  syntax:
+    content: void _Despawn()
+    content.vb: Sub _Despawn()
+  overload: Nebula.INetNodeBase._Despawn*
 - uid: Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
   commentId: M:Nebula.INetNodeBase.InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
   id: InvokePropertyChangeHandler(System.Int32,System.Int32,Nebula.PropertyCache@,Nebula.PropertyCache@)
@@ -153,7 +180,7 @@ items:
   fullName: Nebula.INetNodeBase.InvokePropertyChangeHandler(int, int, ref Nebula.PropertyCache, ref Nebula.PropertyCache)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -196,7 +223,7 @@ items:
   fullName: Nebula.INetNodeBase.SetNetPropertyByIndex(int, ref Nebula.PropertyCache)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -221,6 +248,33 @@ items:
   nameWithType.vb: INetNodeBase.SetNetPropertyByIndex(Integer, PropertyCache)
   fullName.vb: Nebula.INetNodeBase.SetNetPropertyByIndex(Integer, Nebula.PropertyCache)
   name.vb: SetNetPropertyByIndex(Integer, PropertyCache)
+- uid: Nebula.INetNodeBase.InitializeNetPropertyBindings
+  commentId: M:Nebula.INetNodeBase.InitializeNetPropertyBindings
+  id: InitializeNetPropertyBindings
+  parent: Nebula.INetNodeBase
+  langs:
+  - csharp
+  - vb
+  name: InitializeNetPropertyBindings()
+  nameWithType: INetNodeBase.InitializeNetPropertyBindings()
+  fullName: Nebula.INetNodeBase.InitializeNetPropertyBindings()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Initializes network property bindings for INetPropertyBindable properties (like NetArray).
+
+    Called from _NetworkPrepare to bind mutation callbacks for properties initialized inline.
+
+    Override is generated by the source generator for classes with INetPropertyBindable properties.
+  example: []
+  syntax:
+    content: void InitializeNetPropertyBindings()
+    content.vb: Sub InitializeNetPropertyBindings()
+  overload: Nebula.INetNodeBase.InitializeNetPropertyBindings*
 - uid: Nebula.INetNodeBase.ProcessInterpolation(System.Single)
   commentId: M:Nebula.INetNodeBase.ProcessInterpolation(System.Single)
   id: ProcessInterpolation(System.Single)
@@ -233,7 +287,7 @@ items:
   fullName: Nebula.INetNodeBase.ProcessInterpolation(float)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -267,7 +321,7 @@ items:
   fullName: Nebula.INetNodeBase.StorePredictedState(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -301,7 +355,7 @@ items:
   fullName: Nebula.INetNodeBase.StoreConfirmedState()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -326,7 +380,7 @@ items:
   fullName: Nebula.INetNodeBase.Reconcile(int, bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -366,7 +420,7 @@ items:
   fullName: Nebula.INetNodeBase.RestoreToPredictedState(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -397,7 +451,7 @@ items:
   fullName: Nebula.INetNodeBase.Network
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -420,7 +474,7 @@ items:
   fullName: Nebula.INetNodeBase.Serializers
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/INetNode.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/INetNode.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -509,6 +563,13 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
+- uid: Nebula.INetNodeBase._Despawn*
+  commentId: Overload:Nebula.INetNodeBase._Despawn
+  isExternal: true
+  href: Nebula.INetNodeBase.html#Nebula_INetNodeBase__Despawn
+  name: _Despawn
+  nameWithType: INetNodeBase._Despawn
+  fullName: Nebula.INetNodeBase._Despawn
 - uid: Nebula.INetNodeBase.InvokePropertyChangeHandler*
   commentId: Overload:Nebula.INetNodeBase.InvokePropertyChangeHandler
   isExternal: true
@@ -531,6 +592,13 @@ references:
   name: SetNetPropertyByIndex
   nameWithType: INetNodeBase.SetNetPropertyByIndex
   fullName: Nebula.INetNodeBase.SetNetPropertyByIndex
+- uid: Nebula.INetNodeBase.InitializeNetPropertyBindings*
+  commentId: Overload:Nebula.INetNodeBase.InitializeNetPropertyBindings
+  isExternal: true
+  href: Nebula.INetNodeBase.html#Nebula_INetNodeBase_InitializeNetPropertyBindings
+  name: InitializeNetPropertyBindings
+  nameWithType: INetNodeBase.InitializeNetPropertyBindings
+  fullName: Nebula.INetNodeBase.InitializeNetPropertyBindings
 - uid: Nebula.INetNodeBase.ProcessInterpolation*
   commentId: Overload:Nebula.INetNodeBase.ProcessInterpolation
   isExternal: true

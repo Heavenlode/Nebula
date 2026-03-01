@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://jsevrqluv5xb"]
+
+[ext_resource type="Script" uid="uid://dsdjt2j73ihq5" path="res://addons/Nebula/Core/Nodes/InterestArea3D.cs" id="1_6h8ow"]
+
+[node name="InterestArea" type="Area3D" unique_id=679632937]
+script = ExtResource("1_6h8ow")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=155333178]
+
+[connection signal="area_entered" from="." to="." method="OnAreaEntered"]
+[connection signal="area_exited" from="." to="." method="OnAreaExited"]

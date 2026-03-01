@@ -50,24 +50,6 @@ items:
     content: None = 0
     return:
       type: Nebula.Serialization.NetworkSources
-- uid: Nebula.Serialization.NetworkSources.Server
-  commentId: F:Nebula.Serialization.NetworkSources.Server
-  id: Server
-  parent: Nebula.Serialization.NetworkSources
-  langs:
-  - csharp
-  - vb
-  name: Server
-  nameWithType: NetworkSources.Server
-  fullName: Nebula.Serialization.NetworkSources.Server
-  type: Field
-  assemblies:
-  - Nebula
-  namespace: Nebula.Serialization
-  syntax:
-    content: Server = 1
-    return:
-      type: Nebula.Serialization.NetworkSources
 - uid: Nebula.Serialization.NetworkSources.Client
   commentId: F:Nebula.Serialization.NetworkSources.Client
   id: Client
@@ -83,7 +65,25 @@ items:
   - Nebula
   namespace: Nebula.Serialization
   syntax:
-    content: Client = 2
+    content: Client = 1
+    return:
+      type: Nebula.Serialization.NetworkSources
+- uid: Nebula.Serialization.NetworkSources.Server
+  commentId: F:Nebula.Serialization.NetworkSources.Server
+  id: Server
+  parent: Nebula.Serialization.NetworkSources
+  langs:
+  - csharp
+  - vb
+  name: Server
+  nameWithType: NetworkSources.Server
+  fullName: Nebula.Serialization.NetworkSources.Server
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: Server = 2
     return:
       type: Nebula.Serialization.NetworkSources
 - uid: Nebula.Serialization.NetworkSources.All
@@ -101,10 +101,10 @@ items:
   - Nebula
   namespace: Nebula.Serialization
   syntax:
-    content: All = Server | Client
+    content: All = Client | Server
     return:
       type: Nebula.Serialization.NetworkSources
-    content.vb: All = Server Or Client
+    content.vb: All = Client Or Server
 references:
 - uid: Nebula.Serialization
   commentId: N:Nebula.Serialization

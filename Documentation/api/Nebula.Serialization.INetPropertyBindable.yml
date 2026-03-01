@@ -1,0 +1,103 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.INetPropertyBindable
+  commentId: T:Nebula.Serialization.INetPropertyBindable
+  id: INetPropertyBindable
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.INetPropertyBindable.BindToNetProperty(System.Action)
+  langs:
+  - csharp
+  - vb
+  name: INetPropertyBindable
+  nameWithType: INetPropertyBindable
+  fullName: Nebula.Serialization.INetPropertyBindable
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Interface for types that need to notify their parent NetworkController when internal state mutates.
+
+    Used by NetArray to signal that element-level changes need to trigger serialization.
+  example: []
+  syntax:
+    content: public interface INetPropertyBindable
+    content.vb: Public Interface INetPropertyBindable
+- uid: Nebula.Serialization.INetPropertyBindable.BindToNetProperty(System.Action)
+  commentId: M:Nebula.Serialization.INetPropertyBindable.BindToNetProperty(System.Action)
+  id: BindToNetProperty(System.Action)
+  parent: Nebula.Serialization.INetPropertyBindable
+  langs:
+  - csharp
+  - vb
+  name: BindToNetProperty(Action)
+  nameWithType: INetPropertyBindable.BindToNetProperty(Action)
+  fullName: Nebula.Serialization.INetPropertyBindable.BindToNetProperty(System.Action)
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Bind a callback to be invoked when internal state changes.
+
+    The callback should mark the property dirty in the NetworkController.
+  example: []
+  syntax:
+    content: void BindToNetProperty(Action onMutated)
+    parameters:
+    - id: onMutated
+      type: System.Action
+      description: Callback to invoke on internal mutation
+    content.vb: Sub BindToNetProperty(onMutated As Action)
+  overload: Nebula.Serialization.INetPropertyBindable.BindToNetProperty*
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.INetPropertyBindable.BindToNetProperty*
+  commentId: Overload:Nebula.Serialization.INetPropertyBindable.BindToNetProperty
+  isExternal: true
+  href: Nebula.Serialization.INetPropertyBindable.html#Nebula_Serialization_INetPropertyBindable_BindToNetProperty_System_Action_
+  name: BindToNetProperty
+  nameWithType: INetPropertyBindable.BindToNetProperty
+  fullName: Nebula.Serialization.INetPropertyBindable.BindToNetProperty
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

@@ -19,6 +19,7 @@ items:
   - Nebula.WorldRunner.CurrentWorld
   - Nebula.WorldRunner.Debug
   - Nebula.WorldRunner.DebugPort
+  - Nebula.WorldRunner.GetClientSpawnState(Nebula.NetId,ENet.Peer)
   - Nebula.WorldRunner.GetNetId(System.Int64)
   - Nebula.WorldRunner.GetNetIdFromPeerId(ENet.Peer,System.UInt16)
   - Nebula.WorldRunner.GetNodeFromNetId(Nebula.NetId)
@@ -27,7 +28,10 @@ items:
   - Nebula.WorldRunner.GetPeerNodeId(ENet.Peer,Nebula.NetworkController)
   - Nebula.WorldRunner.GetPeerWorldState(ENet.Peer)
   - Nebula.WorldRunner.GetPeerWorldState(Nebula.UUID)
+  - Nebula.WorldRunner.GetRenderTick
   - Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId,ENet.Peer)
+  - Nebula.WorldRunner.InterpolationDelayTicks
+  - Nebula.WorldRunner.IsNodeRegisteredForPeer(Nebula.NetId,ENet.Peer)
   - Nebula.WorldRunner.Log(Nebula.Utility.Tools.Debugger.DebugLevel,Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler@)
   - Nebula.WorldRunner.Log(System.String,Nebula.Utility.Tools.Debugger.DebugLevel)
   - Nebula.WorldRunner.MarkOwnedEntitiesDirty
@@ -41,6 +45,7 @@ items:
   - Nebula.WorldRunner.RootScene
   - Nebula.WorldRunner.RpcCallsThisTick
   - Nebula.WorldRunner.ServerProcessTick
+  - Nebula.WorldRunner.SetClientSpawnState(Nebula.NetId,ENet.Peer,Nebula.WorldRunner.ClientSpawnState)
   - Nebula.WorldRunner.SetPeerState(ENet.Peer,Nebula.WorldRunner.PeerState)
   - Nebula.WorldRunner.SetPeerState(Nebula.UUID,Nebula.WorldRunner.PeerState)
   - Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId,ENet.Peer)
@@ -49,6 +54,7 @@ items:
   - Nebula.WorldRunner.WorldId
   - Nebula.WorldRunner._ExitTree
   - Nebula.WorldRunner._PhysicsProcess(System.Double)
+  - Nebula.WorldRunner._Process(System.Double)
   - Nebula.WorldRunner._Ready
   langs:
   - csharp
@@ -58,7 +64,7 @@ items:
   fullName: Nebula.WorldRunner
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -149,7 +155,6 @@ items:
   - Godot.Node._GetConfigurationWarnings
   - Godot.Node._GetFocusedAccessibilityElement
   - Godot.Node._Input(Godot.InputEvent)
-  - Godot.Node._Process(System.Double)
   - Godot.Node._ShortcutInput(Godot.InputEvent)
   - Godot.Node._UnhandledInput(Godot.InputEvent)
   - Godot.Node._UnhandledKeyInput(Godot.InputEvent)
@@ -397,7 +402,7 @@ items:
   fullName: Nebula.WorldRunner.PEER_ACK_TIMEOUT_SECONDS
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -420,7 +425,7 @@ items:
   fullName: Nebula.WorldRunner.ClientAvailableNodes
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -441,7 +446,7 @@ items:
   fullName: Nebula.WorldRunner.RootScene
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -467,7 +472,7 @@ items:
   fullName: Nebula.WorldRunner.TotalRpcCallsProcessed
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -488,7 +493,7 @@ items:
   fullName: Nebula.WorldRunner.RpcCallsThisTick
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -509,7 +514,7 @@ items:
   fullName: Nebula.WorldRunner.AutoPlayerCleanup
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -537,7 +542,7 @@ items:
   fullName: Nebula.WorldRunner.Log(string, Nebula.Utility.Tools.Debugger.DebugLevel)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -565,7 +570,7 @@ items:
   fullName: Nebula.WorldRunner.Log(Nebula.Utility.Tools.Debugger.DebugLevel, ref Nebula.Utility.Tools.NebulaLogInterpolatedStringHandler)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -593,7 +598,7 @@ items:
   fullName: Nebula.WorldRunner._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -615,7 +620,7 @@ items:
   fullName: Nebula.WorldRunner._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -625,6 +630,30 @@ items:
     content.vb: Public Overrides Sub _ExitTree()
   overridden: Godot.Node._ExitTree
   overload: Nebula.WorldRunner._ExitTree*
+- uid: Nebula.WorldRunner.GetRenderTick
+  commentId: M:Nebula.WorldRunner.GetRenderTick
+  id: GetRenderTick
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: GetRenderTick()
+  nameWithType: WorldRunner.GetRenderTick()
+  fullName: Nebula.WorldRunner.GetRenderTick()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Get the fractional render tick for interpolation (used by all entities).
+  example: []
+  syntax:
+    content: public float GetRenderTick()
+    return:
+      type: System.Single
+    content.vb: Public Function GetRenderTick() As Single
+  overload: Nebula.WorldRunner.GetRenderTick*
 - uid: Nebula.WorldRunner.MarkOwnedEntitiesDirty
   commentId: M:Nebula.WorldRunner.MarkOwnedEntitiesDirty
   id: MarkOwnedEntitiesDirty
@@ -637,7 +666,7 @@ items:
   fullName: Nebula.WorldRunner.MarkOwnedEntitiesDirty()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -659,7 +688,7 @@ items:
   fullName: Nebula.WorldRunner.GetNodeFromNetId(Nebula.NetId)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -684,7 +713,7 @@ items:
   fullName: Nebula.WorldRunner.GetNodeFromNetId(long)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -712,7 +741,7 @@ items:
   fullName: Nebula.WorldRunner.AllocateNetId()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -734,7 +763,7 @@ items:
   fullName: Nebula.WorldRunner.AllocateNetId(ushort)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -762,7 +791,7 @@ items:
   fullName: Nebula.WorldRunner.GetNetId(long)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -790,7 +819,7 @@ items:
   fullName: Nebula.WorldRunner.GetNetIdFromPeerId(ENet.Peer, ushort)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -820,7 +849,7 @@ items:
   fullName: Nebula.WorldRunner.CleanupPlayer(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -849,7 +878,7 @@ items:
   fullName: Nebula.WorldRunner.ServerProcessTick()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -859,6 +888,34 @@ items:
     content: public void ServerProcessTick()
     content.vb: Public Sub ServerProcessTick()
   overload: Nebula.WorldRunner.ServerProcessTick*
+- uid: Nebula.WorldRunner._Process(System.Double)
+  commentId: M:Nebula.WorldRunner._Process(System.Double)
+  id: _Process(System.Double)
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: _Process(double)
+  nameWithType: WorldRunner._Process(double)
+  fullName: Nebula.WorldRunner._Process(double)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  example: []
+  syntax:
+    content: public override void _Process(double delta)
+    parameters:
+    - id: delta
+      type: System.Double
+    content.vb: Public Overrides Sub _Process(delta As Double)
+  overridden: Godot.Node._Process(System.Double)
+  overload: Nebula.WorldRunner._Process*
+  nameWithType.vb: WorldRunner._Process(Double)
+  fullName.vb: Nebula.WorldRunner._Process(Double)
+  name.vb: _Process(Double)
 - uid: Nebula.WorldRunner._PhysicsProcess(System.Double)
   commentId: M:Nebula.WorldRunner._PhysicsProcess(System.Double)
   id: _PhysicsProcess(System.Double)
@@ -871,7 +928,7 @@ items:
   fullName: Nebula.WorldRunner._PhysicsProcess(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -887,6 +944,64 @@ items:
   nameWithType.vb: WorldRunner._PhysicsProcess(Double)
   fullName.vb: Nebula.WorldRunner._PhysicsProcess(Double)
   name.vb: _PhysicsProcess(Double)
+- uid: Nebula.WorldRunner.GetClientSpawnState(Nebula.NetId,ENet.Peer)
+  commentId: M:Nebula.WorldRunner.GetClientSpawnState(Nebula.NetId,ENet.Peer)
+  id: GetClientSpawnState(Nebula.NetId,ENet.Peer)
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: GetClientSpawnState(NetId, Peer)
+  nameWithType: WorldRunner.GetClientSpawnState(NetId, Peer)
+  fullName: Nebula.WorldRunner.GetClientSpawnState(Nebula.NetId, ENet.Peer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Gets the spawn state for a node for a specific peer.
+  example: []
+  syntax:
+    content: public WorldRunner.ClientSpawnState GetClientSpawnState(NetId networkId, Peer peer)
+    parameters:
+    - id: networkId
+      type: Nebula.NetId
+    - id: peer
+      type: ENet.Peer
+    return:
+      type: Nebula.WorldRunner.ClientSpawnState
+    content.vb: Public Function GetClientSpawnState(networkId As NetId, peer As Peer) As WorldRunner.ClientSpawnState
+  overload: Nebula.WorldRunner.GetClientSpawnState*
+- uid: Nebula.WorldRunner.SetClientSpawnState(Nebula.NetId,ENet.Peer,Nebula.WorldRunner.ClientSpawnState)
+  commentId: M:Nebula.WorldRunner.SetClientSpawnState(Nebula.NetId,ENet.Peer,Nebula.WorldRunner.ClientSpawnState)
+  id: SetClientSpawnState(Nebula.NetId,ENet.Peer,Nebula.WorldRunner.ClientSpawnState)
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: SetClientSpawnState(NetId, Peer, ClientSpawnState)
+  nameWithType: WorldRunner.SetClientSpawnState(NetId, Peer, WorldRunner.ClientSpawnState)
+  fullName: Nebula.WorldRunner.SetClientSpawnState(Nebula.NetId, ENet.Peer, Nebula.WorldRunner.ClientSpawnState)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Sets the spawn state for a node for a specific peer.
+  example: []
+  syntax:
+    content: public void SetClientSpawnState(NetId networkId, Peer peer, WorldRunner.ClientSpawnState state)
+    parameters:
+    - id: networkId
+      type: Nebula.NetId
+    - id: peer
+      type: ENet.Peer
+    - id: state
+      type: Nebula.WorldRunner.ClientSpawnState
+    content.vb: Public Sub SetClientSpawnState(networkId As NetId, peer As Peer, state As WorldRunner.ClientSpawnState)
+  overload: Nebula.WorldRunner.SetClientSpawnState*
 - uid: Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId,ENet.Peer)
   commentId: M:Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId,ENet.Peer)
   id: HasSpawnedForClient(Nebula.NetId,ENet.Peer)
@@ -899,10 +1014,12 @@ items:
   fullName: Nebula.WorldRunner.HasSpawnedForClient(Nebula.NetId, ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Returns true if the spawn has been acknowledged by the peer (state == Spawned).
+  example: []
   syntax:
     content: public bool HasSpawnedForClient(NetId networkId, Peer peer)
     parameters:
@@ -914,6 +1031,38 @@ items:
       type: System.Boolean
     content.vb: Public Function HasSpawnedForClient(networkId As NetId, peer As Peer) As Boolean
   overload: Nebula.WorldRunner.HasSpawnedForClient*
+- uid: Nebula.WorldRunner.IsNodeRegisteredForPeer(Nebula.NetId,ENet.Peer)
+  commentId: M:Nebula.WorldRunner.IsNodeRegisteredForPeer(Nebula.NetId,ENet.Peer)
+  id: IsNodeRegisteredForPeer(Nebula.NetId,ENet.Peer)
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: IsNodeRegisteredForPeer(NetId, Peer)
+  nameWithType: WorldRunner.IsNodeRegisteredForPeer(NetId, Peer)
+  fullName: Nebula.WorldRunner.IsNodeRegisteredForPeer(Nebula.NetId, ENet.Peer)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Checks if a node has been registered for a peer (spawn data was sent).
+
+    This is true when SpawnSerializer has exported for this peer, regardless of ACK.
+  example: []
+  syntax:
+    content: public bool IsNodeRegisteredForPeer(NetId networkId, Peer peer)
+    parameters:
+    - id: networkId
+      type: Nebula.NetId
+    - id: peer
+      type: ENet.Peer
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsNodeRegisteredForPeer(networkId As NetId, peer As Peer) As Boolean
+  overload: Nebula.WorldRunner.IsNodeRegisteredForPeer*
 - uid: Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId,ENet.Peer)
   commentId: M:Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId,ENet.Peer)
   id: SetSpawnedForClient(Nebula.NetId,ENet.Peer)
@@ -926,10 +1075,12 @@ items:
   fullName: Nebula.WorldRunner.SetSpawnedForClient(Nebula.NetId, ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
+  summary: Sets the spawn state to Spawned (for backward compatibility).
+  example: []
   syntax:
     content: public void SetSpawnedForClient(NetId networkId, Peer peer)
     parameters:
@@ -951,7 +1102,7 @@ items:
   fullName: Nebula.WorldRunner.ChangeScene(Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -974,7 +1125,7 @@ items:
   fullName: Nebula.WorldRunner.GetPeerWorldState(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -999,7 +1150,7 @@ items:
   fullName: Nebula.WorldRunner.GetPeerWorldState(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1024,7 +1175,7 @@ items:
   fullName: Nebula.WorldRunner.SetPeerState(Nebula.UUID, Nebula.WorldRunner.PeerState)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1049,7 +1200,7 @@ items:
   fullName: Nebula.WorldRunner.SetPeerState(ENet.Peer, Nebula.WorldRunner.PeerState)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1074,7 +1225,7 @@ items:
   fullName: Nebula.WorldRunner.GetPeerNodeId(ENet.Peer, Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1101,7 +1252,7 @@ items:
   fullName: Nebula.WorldRunner.GetPeerNode(ENet.Peer, ushort)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1136,7 +1287,7 @@ items:
   fullName: Nebula.WorldRunner.Spawn<T>(T, Nebula.NetworkController, ENet.Peer, Godot.NodePath)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1172,7 +1323,7 @@ items:
   fullName: Nebula.WorldRunner.PeerAcknowledge(ENet.Peer, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1200,7 +1351,7 @@ items:
   fullName: Nebula.WorldRunner.ClientProcessTick(int, byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1228,7 +1379,7 @@ items:
   fullName: Nebula.WorldRunner.CheckStaticInitialization(Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1261,7 +1412,7 @@ items:
   fullName: Nebula.WorldRunner.WorldRunner()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1284,7 +1435,7 @@ items:
   fullName: Nebula.WorldRunner.ClientId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1309,7 +1460,7 @@ items:
   fullName: Nebula.WorldRunner.NetFunctionContext
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1334,7 +1485,7 @@ items:
   fullName: Nebula.WorldRunner.WorldId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1357,7 +1508,7 @@ items:
   fullName: Nebula.WorldRunner.CurrentWorld
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1382,7 +1533,7 @@ items:
   fullName: Nebula.WorldRunner.Debug
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1407,7 +1558,7 @@ items:
   fullName: Nebula.WorldRunner.DebugPort
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1432,7 +1583,7 @@ items:
   fullName: Nebula.WorldRunner.CurrentTick
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/WorldRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1445,6 +1596,34 @@ items:
       type: System.Int32
     content.vb: Public ReadOnly Property CurrentTick As Integer
   overload: Nebula.WorldRunner.CurrentTick*
+- uid: Nebula.WorldRunner.InterpolationDelayTicks
+  commentId: P:Nebula.WorldRunner.InterpolationDelayTicks
+  id: InterpolationDelayTicks
+  parent: Nebula.WorldRunner
+  langs:
+  - csharp
+  - vb
+  name: InterpolationDelayTicks
+  nameWithType: WorldRunner.InterpolationDelayTicks
+  fullName: Nebula.WorldRunner.InterpolationDelayTicks
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/WorldRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Number of ticks to delay rendering behind the latest received tick.
+
+    Default 2 (~33ms at 60Hz). Lower = less latency, Higher = smoother.
+  example: []
+  syntax:
+    content: public int InterpolationDelayTicks { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property InterpolationDelayTicks As Integer
+  overload: Nebula.WorldRunner.InterpolationDelayTicks*
 - uid: Nebula.WorldRunner.OnPeerSyncStatusChange
   commentId: E:Nebula.WorldRunner.OnPeerSyncStatusChange
   id: OnPeerSyncStatusChange
@@ -1457,7 +1636,7 @@ items:
   fullName: Nebula.WorldRunner.OnPeerSyncStatusChange
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1480,7 +1659,7 @@ items:
   fullName: Nebula.WorldRunner.OnAfterNetworkTick
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1503,7 +1682,7 @@ items:
   fullName: Nebula.WorldRunner.OnPlayerJoined
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1526,7 +1705,7 @@ items:
   fullName: Nebula.WorldRunner.OnPlayerCleanup
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -2372,37 +2551,6 @@ references:
   - uid: Godot.InputEvent
     name: InputEvent
     isExternal: true
-  - name: )
-- uid: Godot.Node._Process(System.Double)
-  commentId: M:Godot.Node._Process(System.Double)
-  parent: Godot.Node
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.double
-  name: _Process(double)
-  nameWithType: Node._Process(double)
-  fullName: Godot.Node._Process(double)
-  nameWithType.vb: Node._Process(Double)
-  fullName.vb: Godot.Node._Process(Double)
-  name.vb: _Process(Double)
-  spec.csharp:
-  - uid: Godot.Node._Process(System.Double)
-    name: _Process
-    isExternal: true
-  - name: (
-  - uid: System.Double
-    name: double
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.double
-  - name: )
-  spec.vb:
-  - uid: Godot.Node._Process(System.Double)
-    name: _Process
-    isExternal: true
-  - name: (
-  - uid: System.Double
-    name: Double
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.double
   - name: )
 - uid: Godot.Node._ShortcutInput(Godot.InputEvent)
   commentId: M:Godot.Node._ShortcutInput(Godot.InputEvent)
@@ -8453,6 +8601,13 @@ references:
   name: _ExitTree
   nameWithType: WorldRunner._ExitTree
   fullName: Nebula.WorldRunner._ExitTree
+- uid: Nebula.WorldRunner.GetRenderTick*
+  commentId: Overload:Nebula.WorldRunner.GetRenderTick
+  isExternal: true
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetRenderTick
+  name: GetRenderTick
+  nameWithType: WorldRunner.GetRenderTick
+  fullName: Nebula.WorldRunner.GetRenderTick
 - uid: Nebula.WorldRunner.MarkOwnedEntitiesDirty*
   commentId: Overload:Nebula.WorldRunner.MarkOwnedEntitiesDirty
   isExternal: true
@@ -8534,6 +8689,55 @@ references:
   name: ServerProcessTick
   nameWithType: WorldRunner.ServerProcessTick
   fullName: Nebula.WorldRunner.ServerProcessTick
+- uid: Godot.Node._Process(System.Double)
+  commentId: M:Godot.Node._Process(System.Double)
+  parent: Godot.Node
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: _Process(double)
+  nameWithType: Node._Process(double)
+  fullName: Godot.Node._Process(double)
+  nameWithType.vb: Node._Process(Double)
+  fullName.vb: Godot.Node._Process(Double)
+  name.vb: _Process(Double)
+  spec.csharp:
+  - uid: Godot.Node._Process(System.Double)
+    name: _Process
+    isExternal: true
+  - name: (
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: )
+  spec.vb:
+  - uid: Godot.Node._Process(System.Double)
+    name: _Process
+    isExternal: true
+  - name: (
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: )
+- uid: Nebula.WorldRunner._Process*
+  commentId: Overload:Nebula.WorldRunner._Process
+  isExternal: true
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner__Process_System_Double_
+  name: _Process
+  nameWithType: WorldRunner._Process
+  fullName: Nebula.WorldRunner._Process
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
 - uid: Godot.Node._PhysicsProcess(System.Double)
   commentId: M:Godot.Node._PhysicsProcess(System.Double)
   parent: Godot.Node
@@ -8572,17 +8776,48 @@ references:
   name: _PhysicsProcess
   nameWithType: WorldRunner._PhysicsProcess
   fullName: Nebula.WorldRunner._PhysicsProcess
-- uid: System.Double
-  commentId: T:System.Double
-  parent: System
+- uid: Nebula.WorldRunner.GetClientSpawnState*
+  commentId: Overload:Nebula.WorldRunner.GetClientSpawnState
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.double
-  name: double
-  nameWithType: double
-  fullName: double
-  nameWithType.vb: Double
-  fullName.vb: Double
-  name.vb: Double
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_GetClientSpawnState_Nebula_NetId_ENet_Peer_
+  name: GetClientSpawnState
+  nameWithType: WorldRunner.GetClientSpawnState
+  fullName: Nebula.WorldRunner.GetClientSpawnState
+- uid: Nebula.WorldRunner.ClientSpawnState
+  commentId: T:Nebula.WorldRunner.ClientSpawnState
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner.ClientSpawnState
+  nameWithType: WorldRunner.ClientSpawnState
+  fullName: Nebula.WorldRunner.ClientSpawnState
+  spec.csharp:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.ClientSpawnState
+    name: ClientSpawnState
+    isExternal: true
+    href: Nebula.WorldRunner.ClientSpawnState.html
+  spec.vb:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.ClientSpawnState
+    name: ClientSpawnState
+    isExternal: true
+    href: Nebula.WorldRunner.ClientSpawnState.html
+- uid: Nebula.WorldRunner.SetClientSpawnState*
+  commentId: Overload:Nebula.WorldRunner.SetClientSpawnState
+  isExternal: true
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_SetClientSpawnState_Nebula_NetId_ENet_Peer_Nebula_WorldRunner_ClientSpawnState_
+  name: SetClientSpawnState
+  nameWithType: WorldRunner.SetClientSpawnState
+  fullName: Nebula.WorldRunner.SetClientSpawnState
 - uid: Nebula.WorldRunner.HasSpawnedForClient*
   commentId: Overload:Nebula.WorldRunner.HasSpawnedForClient
   isExternal: true
@@ -8590,6 +8825,13 @@ references:
   name: HasSpawnedForClient
   nameWithType: WorldRunner.HasSpawnedForClient
   fullName: Nebula.WorldRunner.HasSpawnedForClient
+- uid: Nebula.WorldRunner.IsNodeRegisteredForPeer*
+  commentId: Overload:Nebula.WorldRunner.IsNodeRegisteredForPeer
+  isExternal: true
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_IsNodeRegisteredForPeer_Nebula_NetId_ENet_Peer_
+  name: IsNodeRegisteredForPeer
+  nameWithType: WorldRunner.IsNodeRegisteredForPeer
+  fullName: Nebula.WorldRunner.IsNodeRegisteredForPeer
 - uid: Nebula.WorldRunner.SetSpawnedForClient*
   commentId: Overload:Nebula.WorldRunner.SetSpawnedForClient
   isExternal: true
@@ -8928,6 +9170,13 @@ references:
   name: CurrentTick
   nameWithType: WorldRunner.CurrentTick
   fullName: Nebula.WorldRunner.CurrentTick
+- uid: Nebula.WorldRunner.InterpolationDelayTicks*
+  commentId: Overload:Nebula.WorldRunner.InterpolationDelayTicks
+  isExternal: true
+  href: Nebula.WorldRunner.html#Nebula_WorldRunner_InterpolationDelayTicks
+  name: InterpolationDelayTicks
+  nameWithType: WorldRunner.InterpolationDelayTicks
+  fullName: Nebula.WorldRunner.InterpolationDelayTicks
 - uid: System.Action{Nebula.UUID,Nebula.WorldRunner.PeerSyncStatus}
   commentId: T:System.Action{Nebula.UUID,Nebula.WorldRunner.PeerSyncStatus}
   parent: System

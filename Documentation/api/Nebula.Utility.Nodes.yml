@@ -4,10 +4,9 @@ items:
   commentId: N:Nebula.Utility.Nodes
   id: Nebula.Utility.Nodes
   children:
+  - Nebula.Utility.Nodes.InterestArea3D
   - Nebula.Utility.Nodes.NetTransform2D
   - Nebula.Utility.Nodes.NetTransform3D
-  - Nebula.Utility.Nodes.NetworkVisibility
-  - Nebula.Utility.Nodes.TickTimer
   langs:
   - csharp
   - vb
@@ -18,6 +17,13 @@ items:
   assemblies:
   - Nebula
 references:
+- uid: Nebula.Utility.Nodes.InterestArea3D
+  commentId: T:Nebula.Utility.Nodes.InterestArea3D
+  isExternal: true
+  href: Nebula.Utility.Nodes.InterestArea3D.html
+  name: InterestArea3D
+  nameWithType: InterestArea3D
+  fullName: Nebula.Utility.Nodes.InterestArea3D
 - uid: Nebula.Utility.Nodes.NetTransform2D
   commentId: T:Nebula.Utility.Nodes.NetTransform2D
   isExternal: true
@@ -32,55 +38,3 @@ references:
   name: NetTransform3D
   nameWithType: NetTransform3D
   fullName: Nebula.Utility.Nodes.NetTransform3D
-- uid: Nebula.Utility.Nodes.NetworkVisibility
-  commentId: T:Nebula.Utility.Nodes.NetworkVisibility
-  isExternal: true
-  href: Nebula.Utility.Nodes.NetworkVisibility.html
-  name: NetworkVisibility
-  nameWithType: NetworkVisibility
-  fullName: Nebula.Utility.Nodes.NetworkVisibility
-- uid: Nebula.Utility.Nodes.TickTimer
-  commentId: T:Nebula.Utility.Nodes.TickTimer
-  parent: Nebula.Utility.Nodes
-  isExternal: true
-  href: Nebula.Utility.Nodes.TickTimer.html
-  name: TickTimer
-  nameWithType: TickTimer
-  fullName: Nebula.Utility.Nodes.TickTimer
-- uid: Nebula.Utility.Nodes
-  commentId: N:Nebula.Utility.Nodes
-  isExternal: true
-  href: Nebula.html
-  name: Nebula.Utility.Nodes
-  nameWithType: Nebula.Utility.Nodes
-  fullName: Nebula.Utility.Nodes
-  spec.csharp:
-  - uid: Nebula
-    name: Nebula
-    isExternal: true
-    href: Nebula.html
-  - name: .
-  - uid: Nebula.Utility
-    name: Utility
-    isExternal: true
-    href: Nebula.Utility.html
-  - name: .
-  - uid: Nebula.Utility.Nodes
-    name: Nodes
-    isExternal: true
-    href: Nebula.Utility.Nodes.html
-  spec.vb:
-  - uid: Nebula
-    name: Nebula
-    isExternal: true
-    href: Nebula.html
-  - name: .
-  - uid: Nebula.Utility
-    name: Utility
-    isExternal: true
-    href: Nebula.Utility.html
-  - name: .
-  - uid: Nebula.Utility.Nodes
-    name: Nodes
-    isExternal: true
-    href: Nebula.Utility.Nodes.html

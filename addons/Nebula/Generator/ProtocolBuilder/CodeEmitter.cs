@@ -283,7 +283,8 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    {prop.InterpolateSpeed.ToString(CultureInfo.InvariantCulture)}f,");
             sb.AppendLine($"{indent}    {prop.Predicted.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.ChunkBudget},");
-            sb.AppendLine($"{indent}    {prop.IsObjectProperty.ToString().ToLowerInvariant()}),");
+            sb.AppendLine($"{indent}    {prop.IsObjectProperty.ToString().ToLowerInvariant()},");
+            sb.AppendLine($"{indent}    {prop.IsPerPeer.ToString().ToLowerInvariant()}),");
         }
 
         private static void EmitPropertyWithIntKey(StringBuilder sb, int key, PropertyData prop, string indent)
@@ -316,7 +317,8 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    {prop.InterpolateSpeed.ToString(CultureInfo.InvariantCulture)}f,");
             sb.AppendLine($"{indent}    {prop.Predicted.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.ChunkBudget},");
-            sb.AppendLine($"{indent}    {prop.IsObjectProperty.ToString().ToLowerInvariant()}),");
+            sb.AppendLine($"{indent}    {prop.IsObjectProperty.ToString().ToLowerInvariant()},");
+            sb.AppendLine($"{indent}    {prop.IsPerPeer.ToString().ToLowerInvariant()}),");
         }
 
         private static void EmitFunctionsMap(StringBuilder sb, ProtocolData data)

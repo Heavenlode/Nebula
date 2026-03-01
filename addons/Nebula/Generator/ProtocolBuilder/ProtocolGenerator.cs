@@ -313,7 +313,8 @@ namespace Nebula.Generators
                                 IsEnum = prop.Value.IsEnum,
                                 Predicted = prop.Value.Predicted,
                                 ChunkBudget = prop.Value.ChunkBudget,
-                                IsObjectProperty = prop.Value.IsObjectProperty
+                                IsObjectProperty = prop.Value.IsObjectProperty,
+                                IsPerPeer = prop.Value.IsPerPeer
                             };
                         }
                     }
@@ -406,7 +407,8 @@ namespace Nebula.Generators
                             IsEnum = prop.IsEnum,
                             Predicted = prop.Predicted,
                             ChunkBudget = prop.ChunkBudget,
-                            IsObjectProperty = isObjectProperty
+                            IsObjectProperty = isObjectProperty,
+                            IsPerPeer = prop.IsPerPeer
                         };
                     }
                 }

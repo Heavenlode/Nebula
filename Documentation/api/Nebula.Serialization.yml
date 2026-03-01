@@ -9,11 +9,17 @@ items:
   - Nebula.Serialization.GeneratedProtocol
   - Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
   - Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
+  - Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+  - Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
   - Nebula.Serialization.IBsonSerializableBase
   - Nebula.Serialization.IBsonSerializable`1
   - Nebula.Serialization.IBsonValue`1
+  - Nebula.Serialization.INetPropertyBindable
   - Nebula.Serialization.INetSerializable`1
   - Nebula.Serialization.INetValue`1
+  - Nebula.Serialization.NetArrayChangeInfo`1
+  - Nebula.Serialization.NetArraySyncFlags
+  - Nebula.Serialization.NetArray`1
   - Nebula.Serialization.NetBsonContext
   - Nebula.Serialization.NetBuffer
   - Nebula.Serialization.NetFunctionArgument
@@ -39,6 +45,72 @@ items:
   assemblies:
   - Nebula
 references:
+- uid: Nebula.Serialization.NetArraySyncFlags
+  commentId: T:Nebula.Serialization.NetArraySyncFlags
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetArraySyncFlags.html
+  name: NetArraySyncFlags
+  nameWithType: NetArraySyncFlags
+  fullName: Nebula.Serialization.NetArraySyncFlags
+- uid: Nebula.Serialization.NetArrayChangeInfo`1
+  commentId: T:Nebula.Serialization.NetArrayChangeInfo`1
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  name: NetArrayChangeInfo<T>
+  nameWithType: NetArrayChangeInfo<T>
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>
+  nameWithType.vb: NetArrayChangeInfo(Of T)
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T)
+  name.vb: NetArrayChangeInfo(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.NetArrayChangeInfo`1
+    name: NetArrayChangeInfo
+    isExternal: true
+    href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.NetArrayChangeInfo`1
+    name: NetArrayChangeInfo
+    isExternal: true
+    href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.NetArray`1
+  commentId: T:Nebula.Serialization.NetArray`1
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html
+  name: NetArray<T>
+  nameWithType: NetArray<T>
+  fullName: Nebula.Serialization.NetArray<T>
+  nameWithType.vb: NetArray(Of T)
+  fullName.vb: Nebula.Serialization.NetArray(Of T)
+  name.vb: NetArray(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
 - uid: Nebula.Serialization.Protocol
   commentId: T:Nebula.Serialization.Protocol
   isExternal: true
@@ -132,6 +204,14 @@ references:
   - name: " "
   - name: T
   - name: )
+- uid: Nebula.Serialization.INetPropertyBindable
+  commentId: T:Nebula.Serialization.INetPropertyBindable
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.INetPropertyBindable.html
+  name: INetPropertyBindable
+  nameWithType: INetPropertyBindable
+  fullName: Nebula.Serialization.INetPropertyBindable
 - uid: Nebula.Serialization.INetValue`1
   commentId: T:Nebula.Serialization.INetValue`1
   isExternal: true
@@ -351,6 +431,62 @@ references:
     name: NetworkSerializeFunc
     isExternal: true
     href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html
+- uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+  commentId: T:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.html
+  name: GeneratedProtocol.OnPeerAcknowledgeFunc
+  nameWithType: GeneratedProtocol.OnPeerAcknowledgeFunc
+  fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+  spec.csharp:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+    name: OnPeerAcknowledgeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.html
+  spec.vb:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+    name: OnPeerAcknowledgeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.html
+- uid: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+  commentId: T:Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.html
+  name: GeneratedProtocol.OnPeerDisconnectedFunc
+  nameWithType: GeneratedProtocol.OnPeerDisconnectedFunc
+  fullName: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+  spec.csharp:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+    name: OnPeerDisconnectedFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc.html
+  spec.vb:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+    name: OnPeerDisconnectedFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc.html
 - uid: Nebula.Serialization
   commentId: N:Nebula.Serialization
   isExternal: true

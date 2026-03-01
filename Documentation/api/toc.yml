@@ -44,13 +44,6 @@ items:
   - uid: Nebula.NetNode3D
     name: NetNode3D
     type: Class
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
-    type: Class
-    items:
-    - uid: Nebula.NetPose3D.ChangeType
-      name: ChangeType
-      type: Enum
   - uid: Nebula.NetProperty
     name: NetProperty
     type: Class
@@ -68,6 +61,10 @@ items:
   - uid: Nebula.NetworkController
     name: NetworkController
     type: Class
+    items:
+    - uid: Nebula.NetworkController.PeerScope
+      name: PeerScope
+      type: Struct
   - uid: Nebula.PropertyCache
     name: PropertyCache
     type: Struct
@@ -78,6 +75,9 @@ items:
     name: WorldRunner
     type: Class
     items:
+    - uid: Nebula.WorldRunner.ClientSpawnState
+      name: ClientSpawnState
+      type: Enum
     - uid: Nebula.WorldRunner.DebugDataType
       name: DebugDataType
       type: Enum
@@ -185,6 +185,12 @@ items:
     - uid: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc
       name: NetworkSerializeFunc
       type: Delegate
+    - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+      name: OnPeerAcknowledgeFunc
+      type: Delegate
+    - uid: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+      name: OnPeerDisconnectedFunc
+      type: Delegate
   - uid: Nebula.Serialization.IBsonSerializableBase
     name: IBsonSerializableBase
     type: Interface
@@ -194,12 +200,24 @@ items:
   - uid: Nebula.Serialization.IBsonValue`1
     name: IBsonValue<T>
     type: Interface
+  - uid: Nebula.Serialization.INetPropertyBindable
+    name: INetPropertyBindable
+    type: Interface
   - uid: Nebula.Serialization.INetSerializable`1
     name: INetSerializable<T>
     type: Interface
   - uid: Nebula.Serialization.INetValue`1
     name: INetValue<T>
     type: Interface
+  - uid: Nebula.Serialization.NetArrayChangeInfo`1
+    name: NetArrayChangeInfo<T>
+    type: Struct
+  - uid: Nebula.Serialization.NetArraySyncFlags
+    name: NetArraySyncFlags
+    type: Enum
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray<T>
+    type: Class
   - uid: Nebula.Serialization.NetBsonContext
     name: NetBsonContext
     type: Struct
@@ -347,17 +365,14 @@ items:
   name: Nebula.Utility.Nodes
   type: Namespace
   items:
+  - uid: Nebula.Utility.Nodes.InterestArea3D
+    name: InterestArea3D
+    type: Class
   - uid: Nebula.Utility.Nodes.NetTransform2D
     name: NetTransform2D
     type: Class
   - uid: Nebula.Utility.Nodes.NetTransform3D
     name: NetTransform3D
-    type: Class
-  - uid: Nebula.Utility.Nodes.NetworkVisibility
-    name: NetworkVisibility
-    type: Class
-  - uid: Nebula.Utility.Nodes.TickTimer
-    name: TickTimer
     type: Class
 - uid: Nebula.Utility.Tools
   name: Nebula.Utility.Tools

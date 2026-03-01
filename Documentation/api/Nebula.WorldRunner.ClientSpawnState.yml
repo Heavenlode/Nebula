@@ -1,0 +1,175 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.WorldRunner.ClientSpawnState
+  commentId: T:Nebula.WorldRunner.ClientSpawnState
+  id: WorldRunner.ClientSpawnState
+  parent: Nebula
+  children:
+  - Nebula.WorldRunner.ClientSpawnState.Despawned
+  - Nebula.WorldRunner.ClientSpawnState.Despawning
+  - Nebula.WorldRunner.ClientSpawnState.NotSpawned
+  - Nebula.WorldRunner.ClientSpawnState.Spawned
+  - Nebula.WorldRunner.ClientSpawnState.Spawning
+  langs:
+  - csharp
+  - vb
+  name: WorldRunner.ClientSpawnState
+  nameWithType: WorldRunner.ClientSpawnState
+  fullName: Nebula.WorldRunner.ClientSpawnState
+  type: Enum
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Tracks the spawn lifecycle for a node per peer.
+  example: []
+  syntax:
+    content: public enum WorldRunner.ClientSpawnState
+    content.vb: Public Enum WorldRunner.ClientSpawnState
+- uid: Nebula.WorldRunner.ClientSpawnState.NotSpawned
+  commentId: F:Nebula.WorldRunner.ClientSpawnState.NotSpawned
+  id: NotSpawned
+  parent: Nebula.WorldRunner.ClientSpawnState
+  langs:
+  - csharp
+  - vb
+  name: NotSpawned
+  nameWithType: WorldRunner.ClientSpawnState.NotSpawned
+  fullName: Nebula.WorldRunner.ClientSpawnState.NotSpawned
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Node not registered for this peer yet
+  example: []
+  syntax:
+    content: NotSpawned = 0
+    return:
+      type: Nebula.WorldRunner.ClientSpawnState
+- uid: Nebula.WorldRunner.ClientSpawnState.Spawning
+  commentId: F:Nebula.WorldRunner.ClientSpawnState.Spawning
+  id: Spawning
+  parent: Nebula.WorldRunner.ClientSpawnState
+  langs:
+  - csharp
+  - vb
+  name: Spawning
+  nameWithType: WorldRunner.ClientSpawnState.Spawning
+  fullName: Nebula.WorldRunner.ClientSpawnState.Spawning
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Spawn data being sent (registered but not ACKed)
+  example: []
+  syntax:
+    content: Spawning = 1
+    return:
+      type: Nebula.WorldRunner.ClientSpawnState
+- uid: Nebula.WorldRunner.ClientSpawnState.Spawned
+  commentId: F:Nebula.WorldRunner.ClientSpawnState.Spawned
+  id: Spawned
+  parent: Nebula.WorldRunner.ClientSpawnState
+  langs:
+  - csharp
+  - vb
+  name: Spawned
+  nameWithType: WorldRunner.ClientSpawnState.Spawned
+  fullName: Nebula.WorldRunner.ClientSpawnState.Spawned
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Spawn ACKed, client definitely has the node
+  example: []
+  syntax:
+    content: Spawned = 2
+    return:
+      type: Nebula.WorldRunner.ClientSpawnState
+- uid: Nebula.WorldRunner.ClientSpawnState.Despawning
+  commentId: F:Nebula.WorldRunner.ClientSpawnState.Despawning
+  id: Despawning
+  parent: Nebula.WorldRunner.ClientSpawnState
+  langs:
+  - csharp
+  - vb
+  name: Despawning
+  nameWithType: WorldRunner.ClientSpawnState.Despawning
+  fullName: Nebula.WorldRunner.ClientSpawnState.Despawning
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Despawn data being sent, waiting for ACK
+  example: []
+  syntax:
+    content: Despawning = 3
+    return:
+      type: Nebula.WorldRunner.ClientSpawnState
+- uid: Nebula.WorldRunner.ClientSpawnState.Despawned
+  commentId: F:Nebula.WorldRunner.ClientSpawnState.Despawned
+  id: Despawned
+  parent: Nebula.WorldRunner.ClientSpawnState
+  langs:
+  - csharp
+  - vb
+  name: Despawned
+  nameWithType: WorldRunner.ClientSpawnState.Despawned
+  fullName: Nebula.WorldRunner.ClientSpawnState.Despawned
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: Despawn ACKed, safe to clean up
+  example: []
+  syntax:
+    content: Despawned = 4
+    return:
+      type: Nebula.WorldRunner.ClientSpawnState
+references:
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: Nebula.WorldRunner.ClientSpawnState
+  commentId: T:Nebula.WorldRunner.ClientSpawnState
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner.ClientSpawnState
+  nameWithType: WorldRunner.ClientSpawnState
+  fullName: Nebula.WorldRunner.ClientSpawnState
+  spec.csharp:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.ClientSpawnState
+    name: ClientSpawnState
+    isExternal: true
+    href: Nebula.WorldRunner.ClientSpawnState.html
+  spec.vb:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.ClientSpawnState
+    name: ClientSpawnState
+    isExternal: true
+    href: Nebula.WorldRunner.ClientSpawnState.html

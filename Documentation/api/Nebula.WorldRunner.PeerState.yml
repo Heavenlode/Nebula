@@ -10,7 +10,7 @@ items:
   - Nebula.WorldRunner.PeerState.OwnedNodes
   - Nebula.WorldRunner.PeerState.Peer
   - Nebula.WorldRunner.PeerState.PeerToWorldNodeMap
-  - Nebula.WorldRunner.PeerState.SpawnAware
+  - Nebula.WorldRunner.PeerState.SpawnState
   - Nebula.WorldRunner.PeerState.Status
   - Nebula.WorldRunner.PeerState.Tick
   - Nebula.WorldRunner.PeerState.Token
@@ -23,7 +23,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -49,7 +49,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.Peer
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -70,7 +70,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.Tick
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -91,7 +91,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.Status
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -112,7 +112,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.Id
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -133,7 +133,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.Token
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -154,7 +154,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.WorldToPeerNodeMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -175,7 +175,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.PeerToWorldNodeMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -184,29 +184,29 @@ items:
     return:
       type: System.Collections.Generic.Dictionary{System.UInt16,Nebula.NetId}
     content.vb: Public PeerToWorldNodeMap As Dictionary(Of UShort, NetId)
-- uid: Nebula.WorldRunner.PeerState.SpawnAware
-  commentId: F:Nebula.WorldRunner.PeerState.SpawnAware
-  id: SpawnAware
+- uid: Nebula.WorldRunner.PeerState.SpawnState
+  commentId: F:Nebula.WorldRunner.PeerState.SpawnState
+  id: SpawnState
   parent: Nebula.WorldRunner.PeerState
   langs:
   - csharp
   - vb
-  name: SpawnAware
-  nameWithType: WorldRunner.PeerState.SpawnAware
-  fullName: Nebula.WorldRunner.PeerState.SpawnAware
+  name: SpawnState
+  nameWithType: WorldRunner.PeerState.SpawnState
+  fullName: Nebula.WorldRunner.PeerState.SpawnState
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
-  summary: A list of nodes that the player is aware of in the world (i.e. has spawned locally)
+  summary: Tracks the spawn state of each node for this peer.
   example: []
   syntax:
-    content: public Dictionary<NetId, bool> SpawnAware
+    content: public Dictionary<NetId, WorldRunner.ClientSpawnState> SpawnState
     return:
-      type: System.Collections.Generic.Dictionary{Nebula.NetId,System.Boolean}
-    content.vb: Public SpawnAware As Dictionary(Of NetId, Boolean)
+      type: System.Collections.Generic.Dictionary{Nebula.NetId,Nebula.WorldRunner.ClientSpawnState}
+    content.vb: Public SpawnState As Dictionary(Of NetId, WorldRunner.ClientSpawnState)
 - uid: Nebula.WorldRunner.PeerState.AvailableNodes
   commentId: F:Nebula.WorldRunner.PeerState.AvailableNodes
   id: AvailableNodes
@@ -219,7 +219,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.AvailableNodes
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -245,7 +245,7 @@ items:
   fullName: Nebula.WorldRunner.PeerState.OwnedNodes
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.WorldRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -717,17 +717,17 @@ references:
     isExternal: true
     href: Nebula.NetId.html
   - name: )
-- uid: System.Collections.Generic.Dictionary{Nebula.NetId,System.Boolean}
-  commentId: T:System.Collections.Generic.Dictionary{Nebula.NetId,System.Boolean}
+- uid: System.Collections.Generic.Dictionary{Nebula.NetId,Nebula.WorldRunner.ClientSpawnState}
+  commentId: T:System.Collections.Generic.Dictionary{Nebula.NetId,Nebula.WorldRunner.ClientSpawnState}
   parent: System.Collections.Generic
   definition: System.Collections.Generic.Dictionary`2
   href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
-  name: Dictionary<NetId, bool>
-  nameWithType: Dictionary<NetId, bool>
-  fullName: System.Collections.Generic.Dictionary<Nebula.NetId, bool>
-  nameWithType.vb: Dictionary(Of NetId, Boolean)
-  fullName.vb: System.Collections.Generic.Dictionary(Of Nebula.NetId, Boolean)
-  name.vb: Dictionary(Of NetId, Boolean)
+  name: Dictionary<NetId, WorldRunner.ClientSpawnState>
+  nameWithType: Dictionary<NetId, WorldRunner.ClientSpawnState>
+  fullName: System.Collections.Generic.Dictionary<Nebula.NetId, Nebula.WorldRunner.ClientSpawnState>
+  nameWithType.vb: Dictionary(Of NetId, WorldRunner.ClientSpawnState)
+  fullName.vb: System.Collections.Generic.Dictionary(Of Nebula.NetId, Nebula.WorldRunner.ClientSpawnState)
+  name.vb: Dictionary(Of NetId, WorldRunner.ClientSpawnState)
   spec.csharp:
   - uid: System.Collections.Generic.Dictionary`2
     name: Dictionary
@@ -740,10 +740,15 @@ references:
     href: Nebula.NetId.html
   - name: ','
   - name: " "
-  - uid: System.Boolean
-    name: bool
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.boolean
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.ClientSpawnState
+    name: ClientSpawnState
+    isExternal: true
+    href: Nebula.WorldRunner.ClientSpawnState.html
   - name: '>'
   spec.vb:
   - uid: System.Collections.Generic.Dictionary`2
@@ -759,10 +764,15 @@ references:
     href: Nebula.NetId.html
   - name: ','
   - name: " "
-  - uid: System.Boolean
-    name: Boolean
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
     isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.boolean
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.ClientSpawnState
+    name: ClientSpawnState
+    isExternal: true
+    href: Nebula.WorldRunner.ClientSpawnState.html
   - name: )
 - uid: System.Int64[]
   isExternal: true

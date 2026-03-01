@@ -1,0 +1,565 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.NetArrayChangeInfo`1
+  commentId: T:Nebula.Serialization.NetArrayChangeInfo`1
+  id: NetArrayChangeInfo`1
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.NetArrayChangeInfo`1.#ctor(`0[],System.Int32[],`0[])
+  - Nebula.Serialization.NetArrayChangeInfo`1.AddedValues
+  - Nebula.Serialization.NetArrayChangeInfo`1.ChangedIndices
+  - Nebula.Serialization.NetArrayChangeInfo`1.DeletedValues
+  - Nebula.Serialization.NetArrayChangeInfo`1.Empty
+  - Nebula.Serialization.NetArrayChangeInfo`1.HasChanges
+  langs:
+  - csharp
+  - vb
+  name: NetArrayChangeInfo<T>
+  nameWithType: NetArrayChangeInfo<T>
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>
+  type: Struct
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Information about what changed in a NetArray during a network update.
+
+    Used for NotifyOnChange callbacks on NetArray properties.
+  example: []
+  syntax:
+    content: 'public readonly struct NetArrayChangeInfo<T> where T : struct'
+    typeParameters:
+    - id: T
+    content.vb: Public Structure NetArrayChangeInfo(Of T As Structure)
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.GetType
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  nameWithType.vb: NetArrayChangeInfo(Of T)
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T)
+  name.vb: NetArrayChangeInfo(Of T)
+- uid: Nebula.Serialization.NetArrayChangeInfo`1.DeletedValues
+  commentId: F:Nebula.Serialization.NetArrayChangeInfo`1.DeletedValues
+  id: DeletedValues
+  parent: Nebula.Serialization.NetArrayChangeInfo`1
+  langs:
+  - csharp
+  - vb
+  name: DeletedValues
+  nameWithType: NetArrayChangeInfo<T>.DeletedValues
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>.DeletedValues
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Values that were deleted from the end of the array (when array shrinks).
+
+    Empty array if no elements were deleted.
+  example: []
+  syntax:
+    content: public readonly T[] DeletedValues
+    return:
+      type: '{T}[]'
+    content.vb: Public ReadOnly DeletedValues As T()
+  nameWithType.vb: NetArrayChangeInfo(Of T).DeletedValues
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T).DeletedValues
+- uid: Nebula.Serialization.NetArrayChangeInfo`1.ChangedIndices
+  commentId: F:Nebula.Serialization.NetArrayChangeInfo`1.ChangedIndices
+  id: ChangedIndices
+  parent: Nebula.Serialization.NetArrayChangeInfo`1
+  langs:
+  - csharp
+  - vb
+  name: ChangedIndices
+  nameWithType: NetArrayChangeInfo<T>.ChangedIndices
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>.ChangedIndices
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Indices that had their values changed.
+
+    Includes both delta updates and chunked sync updates.
+  example: []
+  syntax:
+    content: public readonly int[] ChangedIndices
+    return:
+      type: System.Int32[]
+    content.vb: Public ReadOnly ChangedIndices As Integer()
+  nameWithType.vb: NetArrayChangeInfo(Of T).ChangedIndices
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T).ChangedIndices
+- uid: Nebula.Serialization.NetArrayChangeInfo`1.AddedValues
+  commentId: F:Nebula.Serialization.NetArrayChangeInfo`1.AddedValues
+  id: AddedValues
+  parent: Nebula.Serialization.NetArrayChangeInfo`1
+  langs:
+  - csharp
+  - vb
+  name: AddedValues
+  nameWithType: NetArrayChangeInfo<T>.AddedValues
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>.AddedValues
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    The actual values that were added to the end of the array (when array grows).
+
+    Empty array if no elements were added.
+  example: []
+  syntax:
+    content: public readonly T[] AddedValues
+    return:
+      type: '{T}[]'
+    content.vb: Public ReadOnly AddedValues As T()
+  nameWithType.vb: NetArrayChangeInfo(Of T).AddedValues
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T).AddedValues
+- uid: Nebula.Serialization.NetArrayChangeInfo`1.#ctor(`0[],System.Int32[],`0[])
+  commentId: M:Nebula.Serialization.NetArrayChangeInfo`1.#ctor(`0[],System.Int32[],`0[])
+  id: '#ctor(`0[],System.Int32[],`0[])'
+  parent: Nebula.Serialization.NetArrayChangeInfo`1
+  langs:
+  - csharp
+  - vb
+  name: NetArrayChangeInfo(T[], int[], T[])
+  nameWithType: NetArrayChangeInfo<T>.NetArrayChangeInfo(T[], int[], T[])
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>.NetArrayChangeInfo(T[], int[], T[])
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public NetArrayChangeInfo(T[] deletedValues, int[] changedIndices, T[] addedValues)
+    parameters:
+    - id: deletedValues
+      type: '{T}[]'
+    - id: changedIndices
+      type: System.Int32[]
+    - id: addedValues
+      type: '{T}[]'
+    content.vb: Public Sub New(deletedValues As T(), changedIndices As Integer(), addedValues As T())
+  overload: Nebula.Serialization.NetArrayChangeInfo`1.#ctor*
+  nameWithType.vb: NetArrayChangeInfo(Of T).New(T(), Integer(), T())
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T).New(T(), Integer(), T())
+  name.vb: New(T(), Integer(), T())
+- uid: Nebula.Serialization.NetArrayChangeInfo`1.HasChanges
+  commentId: P:Nebula.Serialization.NetArrayChangeInfo`1.HasChanges
+  id: HasChanges
+  parent: Nebula.Serialization.NetArrayChangeInfo`1
+  langs:
+  - csharp
+  - vb
+  name: HasChanges
+  nameWithType: NetArrayChangeInfo<T>.HasChanges
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>.HasChanges
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Returns true if there were any changes.
+  example: []
+  syntax:
+    content: public bool HasChanges { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property HasChanges As Boolean
+  overload: Nebula.Serialization.NetArrayChangeInfo`1.HasChanges*
+  nameWithType.vb: NetArrayChangeInfo(Of T).HasChanges
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T).HasChanges
+- uid: Nebula.Serialization.NetArrayChangeInfo`1.Empty
+  commentId: P:Nebula.Serialization.NetArrayChangeInfo`1.Empty
+  id: Empty
+  parent: Nebula.Serialization.NetArrayChangeInfo`1
+  langs:
+  - csharp
+  - vb
+  name: Empty
+  nameWithType: NetArrayChangeInfo<T>.Empty
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>.Empty
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Creates an empty change info (no changes).
+  example: []
+  syntax:
+    content: public static NetArrayChangeInfo<T> Empty { get; }
+    parameters: []
+    return:
+      type: Nebula.Serialization.NetArrayChangeInfo`1
+    content.vb: Public Shared ReadOnly Property Empty As NetArrayChangeInfo(Of T)
+  overload: Nebula.Serialization.NetArrayChangeInfo`1.Empty*
+  nameWithType.vb: NetArrayChangeInfo(Of T).Empty
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T).Empty
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: '{T}[]'
+  isExternal: true
+  name: T[]
+  nameWithType: T[]
+  fullName: T[]
+  nameWithType.vb: T()
+  fullName.vb: T()
+  name.vb: T()
+  spec.csharp:
+  - name: T
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: T
+  - name: (
+  - name: )
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.NetArrayChangeInfo`1.#ctor*
+  commentId: Overload:Nebula.Serialization.NetArrayChangeInfo`1.#ctor
+  isExternal: true
+  href: Nebula.Serialization.NetArrayChangeInfo-1.html#Nebula_Serialization_NetArrayChangeInfo_1__ctor__0___System_Int32____0___
+  name: NetArrayChangeInfo
+  nameWithType: NetArrayChangeInfo<T>.NetArrayChangeInfo
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>.NetArrayChangeInfo
+  nameWithType.vb: NetArrayChangeInfo(Of T).New
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T).New
+  name.vb: New
+- uid: Nebula.Serialization.NetArrayChangeInfo`1.HasChanges*
+  commentId: Overload:Nebula.Serialization.NetArrayChangeInfo`1.HasChanges
+  isExternal: true
+  href: Nebula.Serialization.NetArrayChangeInfo-1.html#Nebula_Serialization_NetArrayChangeInfo_1_HasChanges
+  name: HasChanges
+  nameWithType: NetArrayChangeInfo<T>.HasChanges
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>.HasChanges
+  nameWithType.vb: NetArrayChangeInfo(Of T).HasChanges
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T).HasChanges
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.Serialization.NetArrayChangeInfo`1.Empty*
+  commentId: Overload:Nebula.Serialization.NetArrayChangeInfo`1.Empty
+  isExternal: true
+  href: Nebula.Serialization.NetArrayChangeInfo-1.html#Nebula_Serialization_NetArrayChangeInfo_1_Empty
+  name: Empty
+  nameWithType: NetArrayChangeInfo<T>.Empty
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>.Empty
+  nameWithType.vb: NetArrayChangeInfo(Of T).Empty
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T).Empty
+- uid: Nebula.Serialization.NetArrayChangeInfo`1
+  commentId: T:Nebula.Serialization.NetArrayChangeInfo`1
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  name: NetArrayChangeInfo<T>
+  nameWithType: NetArrayChangeInfo<T>
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>
+  nameWithType.vb: NetArrayChangeInfo(Of T)
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T)
+  name.vb: NetArrayChangeInfo(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.NetArrayChangeInfo`1
+    name: NetArrayChangeInfo
+    isExternal: true
+    href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.NetArrayChangeInfo`1
+    name: NetArrayChangeInfo
+    isExternal: true
+    href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )

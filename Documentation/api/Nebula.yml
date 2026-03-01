@@ -17,16 +17,16 @@ items:
   - Nebula.NetNode
   - Nebula.NetNode2D
   - Nebula.NetNode3D
-  - Nebula.NetPose3D
-  - Nebula.NetPose3D.ChangeType
   - Nebula.NetProperty
   - Nebula.NetProperty.SyncFlags
   - Nebula.NetRunner
   - Nebula.NetRunner.ENetChannelId
   - Nebula.NetworkController
+  - Nebula.NetworkController.PeerScope
   - Nebula.PropertyCache
   - Nebula.UUID
   - Nebula.WorldRunner
+  - Nebula.WorldRunner.ClientSpawnState
   - Nebula.WorldRunner.DebugDataType
   - Nebula.WorldRunner.DebugMessenger
   - Nebula.WorldRunner.NetFunctionCtx
@@ -253,42 +253,34 @@ references:
   name: NetworkController
   nameWithType: NetworkController
   fullName: Nebula.NetworkController
-- uid: Nebula.NetPose3D
-  commentId: T:Nebula.NetPose3D
+- uid: Nebula.NetworkController.PeerScope
+  commentId: T:Nebula.NetworkController.PeerScope
   parent: Nebula
   isExternal: true
-  href: Nebula.NetPose3D.html
-  name: NetPose3D
-  nameWithType: NetPose3D
-  fullName: Nebula.NetPose3D
-- uid: Nebula.NetPose3D.ChangeType
-  commentId: T:Nebula.NetPose3D.ChangeType
-  parent: Nebula
-  isExternal: true
-  href: Nebula.NetPose3D.html
-  name: NetPose3D.ChangeType
-  nameWithType: NetPose3D.ChangeType
-  fullName: Nebula.NetPose3D.ChangeType
+  href: Nebula.NetworkController.html
+  name: NetworkController.PeerScope
+  nameWithType: NetworkController.PeerScope
+  fullName: Nebula.NetworkController.PeerScope
   spec.csharp:
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
+  - uid: Nebula.NetworkController
+    name: NetworkController
     isExternal: true
-    href: Nebula.NetPose3D.html
+    href: Nebula.NetworkController.html
   - name: .
-  - uid: Nebula.NetPose3D.ChangeType
-    name: ChangeType
+  - uid: Nebula.NetworkController.PeerScope
+    name: PeerScope
     isExternal: true
-    href: Nebula.NetPose3D.ChangeType.html
+    href: Nebula.NetworkController.PeerScope.html
   spec.vb:
-  - uid: Nebula.NetPose3D
-    name: NetPose3D
+  - uid: Nebula.NetworkController
+    name: NetworkController
     isExternal: true
-    href: Nebula.NetPose3D.html
+    href: Nebula.NetworkController.html
   - name: .
-  - uid: Nebula.NetPose3D.ChangeType
-    name: ChangeType
+  - uid: Nebula.NetworkController.PeerScope
+    name: PeerScope
     isExternal: true
-    href: Nebula.NetPose3D.ChangeType.html
+    href: Nebula.NetworkController.PeerScope.html
 - uid: Nebula.UUID
   commentId: T:Nebula.UUID
   parent: Nebula
@@ -361,6 +353,34 @@ references:
     name: PeerSyncStatus
     isExternal: true
     href: Nebula.WorldRunner.PeerSyncStatus.html
+- uid: Nebula.WorldRunner.ClientSpawnState
+  commentId: T:Nebula.WorldRunner.ClientSpawnState
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner.ClientSpawnState
+  nameWithType: WorldRunner.ClientSpawnState
+  fullName: Nebula.WorldRunner.ClientSpawnState
+  spec.csharp:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.ClientSpawnState
+    name: ClientSpawnState
+    isExternal: true
+    href: Nebula.WorldRunner.ClientSpawnState.html
+  spec.vb:
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: .
+  - uid: Nebula.WorldRunner.ClientSpawnState
+    name: ClientSpawnState
+    isExternal: true
+    href: Nebula.WorldRunner.ClientSpawnState.html
 - uid: Nebula.WorldRunner.PeerState
   commentId: T:Nebula.WorldRunner.PeerState
   parent: Nebula

@@ -8,6 +8,8 @@ items:
   - Nebula.Serialization.GeneratedProtocol.Deserializers
   - Nebula.Serialization.GeneratedProtocol.FunctionsLookup
   - Nebula.Serialization.GeneratedProtocol.FunctionsMap
+  - Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFuncs
+  - Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFuncs
   - Nebula.Serialization.GeneratedProtocol.PropertiesByStaticChildId
   - Nebula.Serialization.GeneratedProtocol.PropertiesLookup
   - Nebula.Serialization.GeneratedProtocol.PropertiesMap
@@ -27,7 +29,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -61,7 +63,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.StaticMethods
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -82,7 +84,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.ScenesMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -103,7 +105,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.ScenesPack
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -124,7 +126,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.SceneInterestMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -145,7 +147,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -166,7 +168,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsPack
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -187,7 +189,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.PropertiesMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -208,7 +210,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.PropertiesLookup
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -229,7 +231,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.PropertiesByStaticChildId
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -250,7 +252,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.FunctionsMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -271,7 +273,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.FunctionsLookup
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -292,7 +294,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.SerialTypePack
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -313,7 +315,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.Deserializers
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -334,7 +336,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.Serializers
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -343,6 +345,48 @@ items:
     return:
       type: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc}
     content.vb: Public Shared ReadOnly Serializers As FrozenDictionary(Of Integer, GeneratedProtocol.NetworkSerializeFunc)
+- uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFuncs
+  commentId: F:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFuncs
+  id: OnPeerAcknowledgeFuncs
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: OnPeerAcknowledgeFuncs
+  nameWithType: GeneratedProtocol.OnPeerAcknowledgeFuncs
+  fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFuncs
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<int, GeneratedProtocol.OnPeerAcknowledgeFunc> OnPeerAcknowledgeFuncs
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc}
+    content.vb: Public Shared ReadOnly OnPeerAcknowledgeFuncs As FrozenDictionary(Of Integer, GeneratedProtocol.OnPeerAcknowledgeFunc)
+- uid: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFuncs
+  commentId: F:Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFuncs
+  id: OnPeerDisconnectedFuncs
+  parent: Nebula.Serialization.GeneratedProtocol
+  langs:
+  - csharp
+  - vb
+  name: OnPeerDisconnectedFuncs
+  nameWithType: GeneratedProtocol.OnPeerDisconnectedFuncs
+  fullName: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFuncs
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: public static readonly FrozenDictionary<int, GeneratedProtocol.OnPeerDisconnectedFunc> OnPeerDisconnectedFuncs
+    return:
+      type: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc}
+    content.vb: Public Shared ReadOnly OnPeerDisconnectedFuncs As FrozenDictionary(Of Integer, GeneratedProtocol.OnPeerDisconnectedFunc)
 references:
 - uid: Nebula.Serialization
   commentId: N:Nebula.Serialization
@@ -1616,4 +1660,118 @@ references:
     name: NetworkSerializeFunc
     isExternal: true
     href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<int, GeneratedProtocol.OnPeerAcknowledgeFunc>
+  nameWithType: FrozenDictionary<int, GeneratedProtocol.OnPeerAcknowledgeFunc>
+  fullName: System.Collections.Frozen.FrozenDictionary<int, Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc>
+  nameWithType.vb: FrozenDictionary(Of Integer, GeneratedProtocol.OnPeerAcknowledgeFunc)
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of Integer, Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc)
+  name.vb: FrozenDictionary(Of Integer, GeneratedProtocol.OnPeerAcknowledgeFunc)
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+    name: OnPeerAcknowledgeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+    name: OnPeerAcknowledgeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.html
+  - name: )
+- uid: System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc}
+  commentId: T:System.Collections.Frozen.FrozenDictionary{System.Int32,Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc}
+  parent: System.Collections.Frozen
+  definition: System.Collections.Frozen.FrozenDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  name: FrozenDictionary<int, GeneratedProtocol.OnPeerDisconnectedFunc>
+  nameWithType: FrozenDictionary<int, GeneratedProtocol.OnPeerDisconnectedFunc>
+  fullName: System.Collections.Frozen.FrozenDictionary<int, Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc>
+  nameWithType.vb: FrozenDictionary(Of Integer, GeneratedProtocol.OnPeerDisconnectedFunc)
+  fullName.vb: System.Collections.Frozen.FrozenDictionary(Of Integer, Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc)
+  name.vb: FrozenDictionary(Of Integer, GeneratedProtocol.OnPeerDisconnectedFunc)
+  spec.csharp:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+    name: OnPeerDisconnectedFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Frozen.FrozenDictionary`2
+    name: FrozenDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.frozen.frozendictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+    name: OnPeerDisconnectedFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc.html
   - name: )

@@ -8,6 +8,8 @@ items:
   - Nebula.Serialization.Protocol.FromGodotVariantType(Godot.Variant.Type)
   - Nebula.Serialization.Protocol.GetDeserializer(System.Int32)
   - Nebula.Serialization.Protocol.GetFunctionCount(System.String)
+  - Nebula.Serialization.Protocol.GetOnPeerAcknowledge(System.Int32)
+  - Nebula.Serialization.Protocol.GetOnPeerDisconnected(System.Int32)
   - Nebula.Serialization.Protocol.GetPropertyCount(System.String)
   - Nebula.Serialization.Protocol.GetSceneInterest(System.String)
   - Nebula.Serialization.Protocol.GetScenePath(System.Byte)
@@ -39,7 +41,7 @@ items:
   fullName: Nebula.Serialization.Protocol
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -73,7 +75,7 @@ items:
   fullName: Nebula.Serialization.Protocol.LookupProperty(string, string, string, out Nebula.Serialization.ProtocolNetProperty)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -109,7 +111,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackProperty(string, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -141,7 +143,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryUnpackProperty(string, int, out Nebula.Serialization.ProtocolNetProperty)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -175,7 +177,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetPropertyCount(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -205,7 +207,7 @@ items:
   fullName: Nebula.Serialization.Protocol.LookupPropertyByStaticChildId(string, byte, string, out Nebula.Serialization.ProtocolNetProperty)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -244,7 +246,7 @@ items:
   fullName: Nebula.Serialization.Protocol.LookupFunction(string, string, string, out Nebula.Serialization.ProtocolNetFunction)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -280,7 +282,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackFunction(string, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -312,7 +314,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetFunctionCount(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -342,7 +344,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetScenePath(byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -372,7 +374,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryGetSceneId(string, out byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -404,7 +406,7 @@ items:
   fullName: Nebula.Serialization.Protocol.IsNetScene(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -434,7 +436,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetSceneInterest(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -464,7 +466,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryGetSceneInterest(string, out Nebula.Serialization.ProtocolSceneInterest)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -496,7 +498,7 @@ items:
   fullName: Nebula.Serialization.Protocol.PackScene(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -526,7 +528,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackScene(byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -556,7 +558,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetStaticNodePath(string, byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -588,7 +590,7 @@ items:
   fullName: Nebula.Serialization.Protocol.TryGetStaticNodeId(string, string, out byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -622,7 +624,7 @@ items:
   fullName: Nebula.Serialization.Protocol.PackNode(string, string, out byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -656,7 +658,7 @@ items:
   fullName: Nebula.Serialization.Protocol.UnpackNode(string, byte)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -688,7 +690,7 @@ items:
   fullName: Nebula.Serialization.Protocol.InvokeStaticMethod(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType, params object[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -725,7 +727,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetStaticMethodCallable(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -757,7 +759,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetStaticMethod(Nebula.Serialization.ProtocolNetProperty, Nebula.Serialization.StaticMethodType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -786,7 +788,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetDeserializer(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -821,7 +823,7 @@ items:
   fullName: Nebula.Serialization.Protocol.GetSerializer(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -844,6 +846,76 @@ items:
   nameWithType.vb: Protocol.GetSerializer(Integer)
   fullName.vb: Nebula.Serialization.Protocol.GetSerializer(Integer)
   name.vb: GetSerializer(Integer)
+- uid: Nebula.Serialization.Protocol.GetOnPeerAcknowledge(System.Int32)
+  commentId: M:Nebula.Serialization.Protocol.GetOnPeerAcknowledge(System.Int32)
+  id: GetOnPeerAcknowledge(System.Int32)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetOnPeerAcknowledge(int)
+  nameWithType: Protocol.GetOnPeerAcknowledge(int)
+  fullName: Nebula.Serialization.Protocol.GetOnPeerAcknowledge(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Get a generated OnPeerAcknowledge delegate for an INetSerializable type.
+
+    Only available for reference types (not INetValue).
+  example: []
+  syntax:
+    content: public static GeneratedProtocol.OnPeerAcknowledgeFunc GetOnPeerAcknowledge(int classIndex)
+    parameters:
+    - id: classIndex
+      type: System.Int32
+      description: The class index from ProtocolNetProperty.ClassIndex
+    return:
+      type: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+      description: The delegate, or null if not found or type is a value type
+    content.vb: Public Shared Function GetOnPeerAcknowledge(classIndex As Integer) As GeneratedProtocol.OnPeerAcknowledgeFunc
+  overload: Nebula.Serialization.Protocol.GetOnPeerAcknowledge*
+  nameWithType.vb: Protocol.GetOnPeerAcknowledge(Integer)
+  fullName.vb: Nebula.Serialization.Protocol.GetOnPeerAcknowledge(Integer)
+  name.vb: GetOnPeerAcknowledge(Integer)
+- uid: Nebula.Serialization.Protocol.GetOnPeerDisconnected(System.Int32)
+  commentId: M:Nebula.Serialization.Protocol.GetOnPeerDisconnected(System.Int32)
+  id: GetOnPeerDisconnected(System.Int32)
+  parent: Nebula.Serialization.Protocol
+  langs:
+  - csharp
+  - vb
+  name: GetOnPeerDisconnected(int)
+  nameWithType: Protocol.GetOnPeerDisconnected(int)
+  fullName: Nebula.Serialization.Protocol.GetOnPeerDisconnected(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Get a generated OnPeerDisconnected delegate for an INetSerializable type.
+
+    Only available for reference types (not INetValue).
+  example: []
+  syntax:
+    content: public static GeneratedProtocol.OnPeerDisconnectedFunc GetOnPeerDisconnected(int classIndex)
+    parameters:
+    - id: classIndex
+      type: System.Int32
+      description: The class index from ProtocolNetProperty.ClassIndex
+    return:
+      type: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+      description: The delegate, or null if not found or type is a value type
+    content.vb: Public Shared Function GetOnPeerDisconnected(classIndex As Integer) As GeneratedProtocol.OnPeerDisconnectedFunc
+  overload: Nebula.Serialization.Protocol.GetOnPeerDisconnected*
+  nameWithType.vb: Protocol.GetOnPeerDisconnected(Integer)
+  fullName.vb: Nebula.Serialization.Protocol.GetOnPeerDisconnected(Integer)
+  name.vb: GetOnPeerDisconnected(Integer)
 - uid: Nebula.Serialization.Protocol.ToGodotVariantType(Nebula.Serialization.SerialVariantType)
   commentId: M:Nebula.Serialization.Protocol.ToGodotVariantType(Nebula.Serialization.SerialVariantType)
   id: ToGodotVariantType(Nebula.Serialization.SerialVariantType)
@@ -856,7 +928,7 @@ items:
   fullName: Nebula.Serialization.Protocol.ToGodotVariantType(Nebula.Serialization.SerialVariantType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -883,7 +955,7 @@ items:
   fullName: Nebula.Serialization.Protocol.FromGodotVariantType(Godot.Variant.Type)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/Protocol.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Protocol.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -1579,6 +1651,76 @@ references:
     name: NetworkSerializeFunc
     isExternal: true
     href: Nebula.Serialization.GeneratedProtocol.NetworkSerializeFunc.html
+- uid: Nebula.Serialization.Protocol.GetOnPeerAcknowledge*
+  commentId: Overload:Nebula.Serialization.Protocol.GetOnPeerAcknowledge
+  isExternal: true
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetOnPeerAcknowledge_System_Int32_
+  name: GetOnPeerAcknowledge
+  nameWithType: Protocol.GetOnPeerAcknowledge
+  fullName: Nebula.Serialization.Protocol.GetOnPeerAcknowledge
+- uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+  commentId: T:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.html
+  name: GeneratedProtocol.OnPeerAcknowledgeFunc
+  nameWithType: GeneratedProtocol.OnPeerAcknowledgeFunc
+  fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+  spec.csharp:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+    name: OnPeerAcknowledgeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.html
+  spec.vb:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
+    name: OnPeerAcknowledgeFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.html
+- uid: Nebula.Serialization.Protocol.GetOnPeerDisconnected*
+  commentId: Overload:Nebula.Serialization.Protocol.GetOnPeerDisconnected
+  isExternal: true
+  href: Nebula.Serialization.Protocol.html#Nebula_Serialization_Protocol_GetOnPeerDisconnected_System_Int32_
+  name: GetOnPeerDisconnected
+  nameWithType: Protocol.GetOnPeerDisconnected
+  fullName: Nebula.Serialization.Protocol.GetOnPeerDisconnected
+- uid: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+  commentId: T:Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.GeneratedProtocol.html
+  name: GeneratedProtocol.OnPeerDisconnectedFunc
+  nameWithType: GeneratedProtocol.OnPeerDisconnectedFunc
+  fullName: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+  spec.csharp:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+    name: OnPeerDisconnectedFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc.html
+  spec.vb:
+  - uid: Nebula.Serialization.GeneratedProtocol
+    name: GeneratedProtocol
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.html
+  - name: .
+  - uid: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc
+    name: OnPeerDisconnectedFunc
+    isExternal: true
+    href: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFunc.html
 - uid: Nebula.Serialization.Protocol.ToGodotVariantType*
   commentId: Overload:Nebula.Serialization.Protocol.ToGodotVariantType
   isExternal: true

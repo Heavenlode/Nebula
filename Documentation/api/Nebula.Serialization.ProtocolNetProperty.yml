@@ -5,13 +5,16 @@ items:
   id: ProtocolNetProperty
   parent: Nebula.Serialization
   children:
-  - Nebula.Serialization.ProtocolNetProperty.#ctor(System.String,System.String,Nebula.Serialization.SerialVariantType,Nebula.Serialization.SerialMetadata,System.Byte,System.Byte,System.Int64,System.Int64,System.Int32,System.Boolean,System.Boolean,System.Single,System.Boolean)
+  - Nebula.Serialization.ProtocolNetProperty.#ctor(System.String,System.String,Nebula.Serialization.SerialVariantType,Nebula.Serialization.SerialMetadata,System.Byte,System.Byte,System.Int64,System.Int64,System.Int32,System.Boolean,System.Boolean,System.Single,System.Boolean,System.Int32,System.Boolean,System.Boolean)
+  - Nebula.Serialization.ProtocolNetProperty.ChunkBudget
   - Nebula.Serialization.ProtocolNetProperty.ClassIndex
   - Nebula.Serialization.ProtocolNetProperty.Index
   - Nebula.Serialization.ProtocolNetProperty.InterestMask
   - Nebula.Serialization.ProtocolNetProperty.InterestRequired
   - Nebula.Serialization.ProtocolNetProperty.Interpolate
   - Nebula.Serialization.ProtocolNetProperty.InterpolateSpeed
+  - Nebula.Serialization.ProtocolNetProperty.IsObjectProperty
+  - Nebula.Serialization.ProtocolNetProperty.IsPerPeer
   - Nebula.Serialization.ProtocolNetProperty.LocalIndex
   - Nebula.Serialization.ProtocolNetProperty.Metadata
   - Nebula.Serialization.ProtocolNetProperty.Name
@@ -27,7 +30,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -55,7 +58,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.NodePath
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -76,7 +79,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.Name
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -97,7 +100,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.VariantType
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -118,7 +121,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.Metadata
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -139,7 +142,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.Index
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -162,7 +165,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.LocalIndex
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -188,7 +191,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.InterestMask
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -209,7 +212,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.InterestRequired
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -230,7 +233,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.ClassIndex
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -251,7 +254,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.NotifyOnChange
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -272,7 +275,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.Interpolate
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -293,7 +296,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.InterpolateSpeed
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -314,7 +317,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetProperty.Predicted
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -328,24 +331,101 @@ items:
     return:
       type: System.Boolean
     content.vb: Public ReadOnly Predicted As Boolean
-- uid: Nebula.Serialization.ProtocolNetProperty.#ctor(System.String,System.String,Nebula.Serialization.SerialVariantType,Nebula.Serialization.SerialMetadata,System.Byte,System.Byte,System.Int64,System.Int64,System.Int32,System.Boolean,System.Boolean,System.Single,System.Boolean)
-  commentId: M:Nebula.Serialization.ProtocolNetProperty.#ctor(System.String,System.String,Nebula.Serialization.SerialVariantType,Nebula.Serialization.SerialMetadata,System.Byte,System.Byte,System.Int64,System.Int64,System.Int32,System.Boolean,System.Boolean,System.Single,System.Boolean)
-  id: '#ctor(System.String,System.String,Nebula.Serialization.SerialVariantType,Nebula.Serialization.SerialMetadata,System.Byte,System.Byte,System.Int64,System.Int64,System.Int32,System.Boolean,System.Boolean,System.Single,System.Boolean)'
+- uid: Nebula.Serialization.ProtocolNetProperty.ChunkBudget
+  commentId: F:Nebula.Serialization.ProtocolNetProperty.ChunkBudget
+  id: ChunkBudget
   parent: Nebula.Serialization.ProtocolNetProperty
   langs:
   - csharp
   - vb
-  name: ProtocolNetProperty(string, string, SerialVariantType, SerialMetadata, byte, byte, long, long, int, bool, bool, float, bool)
-  nameWithType: ProtocolNetProperty.ProtocolNetProperty(string, string, SerialVariantType, SerialMetadata, byte, byte, long, long, int, bool, bool, float, bool)
-  fullName: Nebula.Serialization.ProtocolNetProperty.ProtocolNetProperty(string, string, Nebula.Serialization.SerialVariantType, Nebula.Serialization.SerialMetadata, byte, byte, long, long, int, bool, bool, float, bool)
+  name: ChunkBudget
+  nameWithType: ProtocolNetProperty.ChunkBudget
+  fullName: Nebula.Serialization.ProtocolNetProperty.ChunkBudget
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Maximum bytes per tick for chunked initial sync of NetArray properties.
+  example: []
+  syntax:
+    content: public readonly int ChunkBudget
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly ChunkBudget As Integer
+- uid: Nebula.Serialization.ProtocolNetProperty.IsObjectProperty
+  commentId: F:Nebula.Serialization.ProtocolNetProperty.IsObjectProperty
+  id: IsObjectProperty
+  parent: Nebula.Serialization.ProtocolNetProperty
+  langs:
+  - csharp
+  - vb
+  name: IsObjectProperty
+  nameWithType: ProtocolNetProperty.IsObjectProperty
+  fullName: Nebula.Serialization.ProtocolNetProperty.IsObjectProperty
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    When true, this property type implements INetSerializable (reference type).
+
+    Object properties are always called during serialization and self-filter.
+
+    Primitive properties (INetValue) are only serialized when dirty.
+  example: []
+  syntax:
+    content: public readonly bool IsObjectProperty
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly IsObjectProperty As Boolean
+- uid: Nebula.Serialization.ProtocolNetProperty.IsPerPeer
+  commentId: F:Nebula.Serialization.ProtocolNetProperty.IsPerPeer
+  id: IsPerPeer
+  parent: Nebula.Serialization.ProtocolNetProperty
+  langs:
+  - csharp
+  - vb
+  name: IsPerPeer
+  nameWithType: ProtocolNetProperty.IsPerPeer
+  fullName: Nebula.Serialization.ProtocolNetProperty.IsPerPeer
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    When true, this property stores per-peer values (different value for each connected peer).
+
+    The serializer will look up the value for the specific peer being exported to.
+  example: []
+  syntax:
+    content: public readonly bool IsPerPeer
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly IsPerPeer As Boolean
+- uid: Nebula.Serialization.ProtocolNetProperty.#ctor(System.String,System.String,Nebula.Serialization.SerialVariantType,Nebula.Serialization.SerialMetadata,System.Byte,System.Byte,System.Int64,System.Int64,System.Int32,System.Boolean,System.Boolean,System.Single,System.Boolean,System.Int32,System.Boolean,System.Boolean)
+  commentId: M:Nebula.Serialization.ProtocolNetProperty.#ctor(System.String,System.String,Nebula.Serialization.SerialVariantType,Nebula.Serialization.SerialMetadata,System.Byte,System.Byte,System.Int64,System.Int64,System.Int32,System.Boolean,System.Boolean,System.Single,System.Boolean,System.Int32,System.Boolean,System.Boolean)
+  id: '#ctor(System.String,System.String,Nebula.Serialization.SerialVariantType,Nebula.Serialization.SerialMetadata,System.Byte,System.Byte,System.Int64,System.Int64,System.Int32,System.Boolean,System.Boolean,System.Single,System.Boolean,System.Int32,System.Boolean,System.Boolean)'
+  parent: Nebula.Serialization.ProtocolNetProperty
+  langs:
+  - csharp
+  - vb
+  name: ProtocolNetProperty(string, string, SerialVariantType, SerialMetadata, byte, byte, long, long, int, bool, bool, float, bool, int, bool, bool)
+  nameWithType: ProtocolNetProperty.ProtocolNetProperty(string, string, SerialVariantType, SerialMetadata, byte, byte, long, long, int, bool, bool, float, bool, int, bool, bool)
+  fullName: Nebula.Serialization.ProtocolNetProperty.ProtocolNetProperty(string, string, Nebula.Serialization.SerialVariantType, Nebula.Serialization.SerialMetadata, byte, byte, long, long, int, bool, bool, float, bool, int, bool, bool)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
   syntax:
-    content: public ProtocolNetProperty(string nodePath, string name, SerialVariantType variantType, SerialMetadata metadata, byte index, byte localIndex, long interestMask, long interestRequired, int classIndex, bool notifyOnChange = false, bool interpolate = false, float interpolateSpeed = 15, bool predicted = false)
+    content: public ProtocolNetProperty(string nodePath, string name, SerialVariantType variantType, SerialMetadata metadata, byte index, byte localIndex, long interestMask, long interestRequired, int classIndex, bool notifyOnChange = false, bool interpolate = false, float interpolateSpeed = 15, bool predicted = false, int chunkBudget = 256, bool isObjectProperty = false, bool isPerPeer = false)
     parameters:
     - id: nodePath
       type: System.String
@@ -373,11 +453,17 @@ items:
       type: System.Single
     - id: predicted
       type: System.Boolean
-    content.vb: Public Sub New(nodePath As String, name As String, variantType As SerialVariantType, metadata As SerialMetadata, index As Byte, localIndex As Byte, interestMask As Long, interestRequired As Long, classIndex As Integer, notifyOnChange As Boolean = False, interpolate As Boolean = False, interpolateSpeed As Single = 15, predicted As Boolean = False)
+    - id: chunkBudget
+      type: System.Int32
+    - id: isObjectProperty
+      type: System.Boolean
+    - id: isPerPeer
+      type: System.Boolean
+    content.vb: Public Sub New(nodePath As String, name As String, variantType As SerialVariantType, metadata As SerialMetadata, index As Byte, localIndex As Byte, interestMask As Long, interestRequired As Long, classIndex As Integer, notifyOnChange As Boolean = False, interpolate As Boolean = False, interpolateSpeed As Single = 15, predicted As Boolean = False, chunkBudget As Integer = 256, isObjectProperty As Boolean = False, isPerPeer As Boolean = False)
   overload: Nebula.Serialization.ProtocolNetProperty.#ctor*
-  nameWithType.vb: ProtocolNetProperty.New(String, String, SerialVariantType, SerialMetadata, Byte, Byte, Long, Long, Integer, Boolean, Boolean, Single, Boolean)
-  fullName.vb: Nebula.Serialization.ProtocolNetProperty.New(String, String, Nebula.Serialization.SerialVariantType, Nebula.Serialization.SerialMetadata, Byte, Byte, Long, Long, Integer, Boolean, Boolean, Single, Boolean)
-  name.vb: New(String, String, SerialVariantType, SerialMetadata, Byte, Byte, Long, Long, Integer, Boolean, Boolean, Single, Boolean)
+  nameWithType.vb: ProtocolNetProperty.New(String, String, SerialVariantType, SerialMetadata, Byte, Byte, Long, Long, Integer, Boolean, Boolean, Single, Boolean, Integer, Boolean, Boolean)
+  fullName.vb: Nebula.Serialization.ProtocolNetProperty.New(String, String, Nebula.Serialization.SerialVariantType, Nebula.Serialization.SerialMetadata, Byte, Byte, Long, Long, Integer, Boolean, Boolean, Single, Boolean, Integer, Boolean, Boolean)
+  name.vb: New(String, String, SerialVariantType, SerialMetadata, Byte, Byte, Long, Long, Integer, Boolean, Boolean, Single, Boolean, Integer, Boolean, Boolean)
 references:
 - uid: Nebula.Serialization
   commentId: N:Nebula.Serialization
@@ -708,7 +794,7 @@ references:
 - uid: Nebula.Serialization.ProtocolNetProperty.#ctor*
   commentId: Overload:Nebula.Serialization.ProtocolNetProperty.#ctor
   isExternal: true
-  href: Nebula.Serialization.ProtocolNetProperty.html#Nebula_Serialization_ProtocolNetProperty__ctor_System_String_System_String_Nebula_Serialization_SerialVariantType_Nebula_Serialization_SerialMetadata_System_Byte_System_Byte_System_Int64_System_Int64_System_Int32_System_Boolean_System_Boolean_System_Single_System_Boolean_
+  href: Nebula.Serialization.ProtocolNetProperty.html#Nebula_Serialization_ProtocolNetProperty__ctor_System_String_System_String_Nebula_Serialization_SerialVariantType_Nebula_Serialization_SerialMetadata_System_Byte_System_Byte_System_Int64_System_Int64_System_Int32_System_Boolean_System_Boolean_System_Single_System_Boolean_System_Int32_System_Boolean_System_Boolean_
   name: ProtocolNetProperty
   nameWithType: ProtocolNetProperty.ProtocolNetProperty
   fullName: Nebula.Serialization.ProtocolNetProperty.ProtocolNetProperty

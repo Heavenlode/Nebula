@@ -1,0 +1,173 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.NetArraySyncFlags
+  commentId: T:Nebula.Serialization.NetArraySyncFlags
+  id: NetArraySyncFlags
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.NetArraySyncFlags.Chunked
+  - Nebula.Serialization.NetArraySyncFlags.ChunkedWithDelta
+  - Nebula.Serialization.NetArraySyncFlags.Delta
+  - Nebula.Serialization.NetArraySyncFlags.Full
+  - Nebula.Serialization.NetArraySyncFlags.Resized
+  langs:
+  - csharp
+  - vb
+  name: NetArraySyncFlags
+  nameWithType: NetArraySyncFlags
+  fullName: Nebula.Serialization.NetArraySyncFlags
+  type: Enum
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Sync operation flags for NetArray serialization protocol.
+  example: []
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum NetArraySyncFlags : byte
+    content.vb: >-
+      <Flags>
+
+      Public Enum NetArraySyncFlags As Byte
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: Nebula.Serialization.NetArraySyncFlags.Full
+  commentId: F:Nebula.Serialization.NetArraySyncFlags.Full
+  id: Full
+  parent: Nebula.Serialization.NetArraySyncFlags
+  langs:
+  - csharp
+  - vb
+  name: Full
+  nameWithType: NetArraySyncFlags.Full
+  fullName: Nebula.Serialization.NetArraySyncFlags.Full
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Full array sync (initial or reset)
+  example: []
+  syntax:
+    content: Full = 0
+    return:
+      type: Nebula.Serialization.NetArraySyncFlags
+- uid: Nebula.Serialization.NetArraySyncFlags.Delta
+  commentId: F:Nebula.Serialization.NetArraySyncFlags.Delta
+  id: Delta
+  parent: Nebula.Serialization.NetArraySyncFlags
+  langs:
+  - csharp
+  - vb
+  name: Delta
+  nameWithType: NetArraySyncFlags.Delta
+  fullName: Nebula.Serialization.NetArraySyncFlags.Delta
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Delta sync - only changed indices
+  example: []
+  syntax:
+    content: Delta = 1
+    return:
+      type: Nebula.Serialization.NetArraySyncFlags
+- uid: Nebula.Serialization.NetArraySyncFlags.Chunked
+  commentId: F:Nebula.Serialization.NetArraySyncFlags.Chunked
+  id: Chunked
+  parent: Nebula.Serialization.NetArraySyncFlags
+  langs:
+  - csharp
+  - vb
+  name: Chunked
+  nameWithType: NetArraySyncFlags.Chunked
+  fullName: Nebula.Serialization.NetArraySyncFlags.Chunked
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Chunked sync - partial array for initial sync
+  example: []
+  syntax:
+    content: Chunked = 2
+    return:
+      type: Nebula.Serialization.NetArraySyncFlags
+- uid: Nebula.Serialization.NetArraySyncFlags.Resized
+  commentId: F:Nebula.Serialization.NetArraySyncFlags.Resized
+  id: Resized
+  parent: Nebula.Serialization.NetArraySyncFlags
+  langs:
+  - csharp
+  - vb
+  name: Resized
+  nameWithType: NetArraySyncFlags.Resized
+  fullName: Nebula.Serialization.NetArraySyncFlags.Resized
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Length change - array was resized
+  example: []
+  syntax:
+    content: Resized = 4
+    return:
+      type: Nebula.Serialization.NetArraySyncFlags
+- uid: Nebula.Serialization.NetArraySyncFlags.ChunkedWithDelta
+  commentId: F:Nebula.Serialization.NetArraySyncFlags.ChunkedWithDelta
+  id: ChunkedWithDelta
+  parent: Nebula.Serialization.NetArraySyncFlags
+  langs:
+  - csharp
+  - vb
+  name: ChunkedWithDelta
+  nameWithType: NetArraySyncFlags.ChunkedWithDelta
+  fullName: Nebula.Serialization.NetArraySyncFlags.ChunkedWithDelta
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Chunked sync with delta updates for already-sent indices
+  example: []
+  syntax:
+    content: ChunkedWithDelta = 8
+    return:
+      type: Nebula.Serialization.NetArraySyncFlags
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.NetArraySyncFlags
+  commentId: T:Nebula.Serialization.NetArraySyncFlags
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetArraySyncFlags.html
+  name: NetArraySyncFlags
+  nameWithType: NetArraySyncFlags
+  fullName: Nebula.Serialization.NetArraySyncFlags

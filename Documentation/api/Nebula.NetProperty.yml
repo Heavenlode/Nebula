@@ -6,12 +6,14 @@ items:
   parent: Nebula
   children:
   - Nebula.NetProperty.#ctor
+  - Nebula.NetProperty.ChunkBudget
   - Nebula.NetProperty.Flags
   - Nebula.NetProperty.InterestMask
   - Nebula.NetProperty.InterestRequired
   - Nebula.NetProperty.Interpolate
   - Nebula.NetProperty.InterpolateSpeed
   - Nebula.NetProperty.NotifyOnChange
+  - Nebula.NetProperty.PerPeerState
   - Nebula.NetProperty.Predicted
   langs:
   - csharp
@@ -21,7 +23,7 @@ items:
   fullName: Nebula.NetProperty
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -102,7 +104,7 @@ items:
   fullName: Nebula.NetProperty.Flags
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -123,7 +125,7 @@ items:
   fullName: Nebula.NetProperty.InterestMask
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -144,7 +146,7 @@ items:
   fullName: Nebula.NetProperty.InterestRequired
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -165,7 +167,7 @@ items:
   fullName: Nebula.NetProperty.NotifyOnChange
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -193,7 +195,7 @@ items:
   fullName: Nebula.NetProperty.Interpolate
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -221,7 +223,7 @@ items:
   fullName: Nebula.NetProperty.InterpolateSpeed
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -247,7 +249,7 @@ items:
   fullName: Nebula.NetProperty.Predicted
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -267,6 +269,62 @@ items:
     return:
       type: System.Boolean
     content.vb: Public Predicted As Boolean
+- uid: Nebula.NetProperty.ChunkBudget
+  commentId: F:Nebula.NetProperty.ChunkBudget
+  id: ChunkBudget
+  parent: Nebula.NetProperty
+  langs:
+  - csharp
+  - vb
+  name: ChunkBudget
+  nameWithType: NetProperty.ChunkBudget
+  fullName: Nebula.NetProperty.ChunkBudget
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Maximum bytes per tick for chunked initial sync of NetArray properties.
+
+    When a new client joins, large arrays are synced gradually across multiple ticks
+
+    to avoid bandwidth spikes. Default: 256 bytes per tick.
+
+    Only applicable to NetArray&lt;T&gt; properties.
+  example: []
+  syntax:
+    content: public int ChunkBudget
+    return:
+      type: System.Int32
+    content.vb: Public ChunkBudget As Integer
+- uid: Nebula.NetProperty.PerPeerState
+  commentId: F:Nebula.NetProperty.PerPeerState
+  id: PerPeerState
+  parent: Nebula.NetProperty
+  langs:
+  - csharp
+  - vb
+  name: PerPeerState
+  nameWithType: NetProperty.PerPeerState
+  fullName: Nebula.NetProperty.PerPeerState
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    When true, this property will have different values for each peer.
+
+    This is useful for properties where each peer sees a unique value, such as quest state.
+  example: []
+  syntax:
+    content: public bool PerPeerState
+    return:
+      type: System.Boolean
+    content.vb: Public PerPeerState As Boolean
 - uid: Nebula.NetProperty.#ctor
   commentId: M:Nebula.NetProperty.#ctor
   id: '#ctor'
@@ -279,7 +337,7 @@ items:
   fullName: Nebula.NetProperty.NetProperty()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/aba642edeee372c4266ecfca724bd2b7301b04c3/addons/Nebula/Core/NetProperty.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetProperty.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -2153,6 +2211,17 @@ references:
   nameWithType.vb: Single
   fullName.vb: Single
   name.vb: Single
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
 - uid: Nebula.NetProperty.#ctor*
   commentId: Overload:Nebula.NetProperty.#ctor
   isExternal: true

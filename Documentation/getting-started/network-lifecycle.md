@@ -294,4 +294,4 @@ Both operations automatically replicate to all interested clients.
 
 ## What's Next?
 
-Now that you understand how data flows through Nebula, check out the [tutorials](../tutorials/snake/create-a-snake.md) to build something real!
+Now that you understand how data flows through Nebula, check out the [tutorials](../tutorials/big-chungus-online/chapter-1-getting-started.md) to build something real!

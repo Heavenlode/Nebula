@@ -1,0 +1,2297 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.NetArray`1
+  commentId: T:Nebula.Serialization.NetArray`1
+  id: NetArray`1
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.NetArray`1.#ctor(System.Int32,System.Int32)
+  - Nebula.Serialization.NetArray`1.#ctor(`0[])
+  - Nebula.Serialization.NetArray`1.Add(`0)
+  - Nebula.Serialization.NetArray`1.AsSpan
+  - Nebula.Serialization.NetArray`1.BindToNetProperty(System.Action)
+  - Nebula.Serialization.NetArray`1.Capacity
+  - Nebula.Serialization.NetArray`1.Clear
+  - Nebula.Serialization.NetArray`1.ClearDirty
+  - Nebula.Serialization.NetArray`1.CopyTo(`0[],System.Int32)
+  - Nebula.Serialization.NetArray`1.DirtyCount
+  - Nebula.Serialization.NetArray`1.ElementSize
+  - Nebula.Serialization.NetArray`1.GetEnumerator
+  - Nebula.Serialization.NetArray`1.HasDirtyElements
+  - Nebula.Serialization.NetArray`1.Item(System.Int32)
+  - Nebula.Serialization.NetArray`1.LastChangeInfo
+  - Nebula.Serialization.NetArray`1.Length
+  - Nebula.Serialization.NetArray`1.MarkFullDirty
+  - Nebula.Serialization.NetArray`1.NeedsFullSync
+  - Nebula.Serialization.NetArray`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.Serialization.NetArray{`0})
+  - Nebula.Serialization.NetArray`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetArray{`0},Nebula.Serialization.NetBuffer,System.Int32)
+  - Nebula.Serialization.NetArray`1.OnPeerAcknowledge(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+  - Nebula.Serialization.NetArray`1.OnPeerDisconnected(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+  - Nebula.Serialization.NetArray`1.SetLength(System.Int32)
+  - Nebula.Serialization.NetArray`1.SetUnchecked(System.Int32,`0)
+  langs:
+  - csharp
+  - vb
+  name: NetArray<T>
+  nameWithType: NetArray<T>
+  fullName: Nebula.Serialization.NetArray<T>
+  type: Class
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    A network-synchronized array that tracks element-level changes for efficient delta sync.
+
+    Only modified indices are sent over the network, significantly reducing bandwidth for large arrays.
+
+    Implements INetPropertyBindable to notify parent NetworkController on internal mutations.
+  example: []
+  syntax:
+    content: 'public sealed class NetArray<T> : INetSerializable<NetArray<T>>, INetPropertyBindable, IEnumerable<T>, IEnumerable where T : struct'
+    typeParameters:
+    - id: T
+      description: Element type (must be a supported primitive or Godot struct)
+    content.vb: Public NotInheritable Class NetArray(Of T As Structure) Implements INetSerializable(Of NetArray(Of T)), INetPropertyBindable, IEnumerable(Of T), IEnumerable
+  inheritance:
+  - System.Object
+  implements:
+  - Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}
+  - Nebula.Serialization.INetPropertyBindable
+  - System.Collections.Generic.IEnumerable{{T}}
+  - System.Collections.IEnumerable
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  nameWithType.vb: NetArray(Of T)
+  fullName.vb: Nebula.Serialization.NetArray(Of T)
+  name.vb: NetArray(Of T)
+- uid: Nebula.Serialization.NetArray`1.#ctor(System.Int32,System.Int32)
+  commentId: M:Nebula.Serialization.NetArray`1.#ctor(System.Int32,System.Int32)
+  id: '#ctor(System.Int32,System.Int32)'
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: NetArray(int, int)
+  nameWithType: NetArray<T>.NetArray(int, int)
+  fullName: Nebula.Serialization.NetArray<T>.NetArray(int, int)
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Creates a new NetArray with the specified capacity.
+  example: []
+  syntax:
+    content: public NetArray(int capacity = 64, int initialLength = 0)
+    parameters:
+    - id: capacity
+      type: System.Int32
+      description: Maximum number of elements
+    - id: initialLength
+      type: System.Int32
+      description: Initial length (defaults to 0). If specified, elements are initialized to default(T).
+    content.vb: Public Sub New(capacity As Integer = 64, initialLength As Integer = 0)
+  overload: Nebula.Serialization.NetArray`1.#ctor*
+  nameWithType.vb: NetArray(Of T).New(Integer, Integer)
+  fullName.vb: Nebula.Serialization.NetArray(Of T).New(Integer, Integer)
+  name.vb: New(Integer, Integer)
+- uid: Nebula.Serialization.NetArray`1.#ctor(`0[])
+  commentId: M:Nebula.Serialization.NetArray`1.#ctor(`0[])
+  id: '#ctor(`0[])'
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: NetArray(T[])
+  nameWithType: NetArray<T>.NetArray(T[])
+  fullName: Nebula.Serialization.NetArray<T>.NetArray(T[])
+  type: Constructor
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Creates a NetArray from an existing array.
+  example: []
+  syntax:
+    content: public NetArray(T[] source)
+    parameters:
+    - id: source
+      type: '{T}[]'
+    content.vb: Public Sub New(source As T())
+  overload: Nebula.Serialization.NetArray`1.#ctor*
+  nameWithType.vb: NetArray(Of T).New(T())
+  fullName.vb: Nebula.Serialization.NetArray(Of T).New(T())
+  name.vb: New(T())
+- uid: Nebula.Serialization.NetArray`1.BindToNetProperty(System.Action)
+  commentId: M:Nebula.Serialization.NetArray`1.BindToNetProperty(System.Action)
+  id: BindToNetProperty(System.Action)
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: BindToNetProperty(Action)
+  nameWithType: NetArray<T>.BindToNetProperty(Action)
+  fullName: Nebula.Serialization.NetArray<T>.BindToNetProperty(System.Action)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Binds a callback to be invoked when internal state changes.
+
+    Called by the source generator when the property is set.
+  example: []
+  syntax:
+    content: public void BindToNetProperty(Action onMutated)
+    parameters:
+    - id: onMutated
+      type: System.Action
+    content.vb: Public Sub BindToNetProperty(onMutated As Action)
+  overload: Nebula.Serialization.NetArray`1.BindToNetProperty*
+  implements:
+  - Nebula.Serialization.INetPropertyBindable.BindToNetProperty(System.Action)
+  nameWithType.vb: NetArray(Of T).BindToNetProperty(Action)
+  fullName.vb: Nebula.Serialization.NetArray(Of T).BindToNetProperty(System.Action)
+- uid: Nebula.Serialization.NetArray`1.SetUnchecked(System.Int32,`0)
+  commentId: M:Nebula.Serialization.NetArray`1.SetUnchecked(System.Int32,`0)
+  id: SetUnchecked(System.Int32,`0)
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: SetUnchecked(int, T)
+  nameWithType: NetArray<T>.SetUnchecked(int, T)
+  fullName: Nebula.Serialization.NetArray<T>.SetUnchecked(int, T)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Sets an element without checking if it changed (always marks dirty).
+
+    Use when you know the value is different to avoid comparison overhead.
+  example: []
+  syntax:
+    content: public void SetUnchecked(int index, T value)
+    parameters:
+    - id: index
+      type: System.Int32
+    - id: value
+      type: '{T}'
+    content.vb: Public Sub SetUnchecked(index As Integer, value As T)
+  overload: Nebula.Serialization.NetArray`1.SetUnchecked*
+  nameWithType.vb: NetArray(Of T).SetUnchecked(Integer, T)
+  fullName.vb: Nebula.Serialization.NetArray(Of T).SetUnchecked(Integer, T)
+  name.vb: SetUnchecked(Integer, T)
+- uid: Nebula.Serialization.NetArray`1.Add(`0)
+  commentId: M:Nebula.Serialization.NetArray`1.Add(`0)
+  id: Add(`0)
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: Add(T)
+  nameWithType: NetArray<T>.Add(T)
+  fullName: Nebula.Serialization.NetArray<T>.Add(T)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Adds an element to the end of the array.
+  example: []
+  syntax:
+    content: public void Add(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+    content.vb: Public Sub Add(item As T)
+  overload: Nebula.Serialization.NetArray`1.Add*
+  nameWithType.vb: NetArray(Of T).Add(T)
+  fullName.vb: Nebula.Serialization.NetArray(Of T).Add(T)
+- uid: Nebula.Serialization.NetArray`1.SetLength(System.Int32)
+  commentId: M:Nebula.Serialization.NetArray`1.SetLength(System.Int32)
+  id: SetLength(System.Int32)
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: SetLength(int)
+  nameWithType: NetArray<T>.SetLength(int)
+  fullName: Nebula.Serialization.NetArray<T>.SetLength(int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Sets the length of the array.
+
+    If increasing, new elements are default(T).
+
+    If decreasing, excess elements are discarded.
+  example: []
+  syntax:
+    content: public void SetLength(int newLength)
+    parameters:
+    - id: newLength
+      type: System.Int32
+    content.vb: Public Sub SetLength(newLength As Integer)
+  overload: Nebula.Serialization.NetArray`1.SetLength*
+  nameWithType.vb: NetArray(Of T).SetLength(Integer)
+  fullName.vb: Nebula.Serialization.NetArray(Of T).SetLength(Integer)
+  name.vb: SetLength(Integer)
+- uid: Nebula.Serialization.NetArray`1.Clear
+  commentId: M:Nebula.Serialization.NetArray`1.Clear
+  id: Clear
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: NetArray<T>.Clear()
+  fullName: Nebula.Serialization.NetArray<T>.Clear()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Clears all elements (sets length to 0).
+  example: []
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: Nebula.Serialization.NetArray`1.Clear*
+  nameWithType.vb: NetArray(Of T).Clear()
+  fullName.vb: Nebula.Serialization.NetArray(Of T).Clear()
+- uid: Nebula.Serialization.NetArray`1.AsSpan
+  commentId: M:Nebula.Serialization.NetArray`1.AsSpan
+  id: AsSpan
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: AsSpan()
+  nameWithType: NetArray<T>.AsSpan()
+  fullName: Nebula.Serialization.NetArray<T>.AsSpan()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Gets a span of the current elements (read-only access, doesn't mark dirty).
+  example: []
+  syntax:
+    content: public ReadOnlySpan<T> AsSpan()
+    return:
+      type: System.ReadOnlySpan{{T}}
+    content.vb: Public Function AsSpan() As ReadOnlySpan(Of T)
+  overload: Nebula.Serialization.NetArray`1.AsSpan*
+  nameWithType.vb: NetArray(Of T).AsSpan()
+  fullName.vb: Nebula.Serialization.NetArray(Of T).AsSpan()
+- uid: Nebula.Serialization.NetArray`1.CopyTo(`0[],System.Int32)
+  commentId: M:Nebula.Serialization.NetArray`1.CopyTo(`0[],System.Int32)
+  id: CopyTo(`0[],System.Int32)
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: CopyTo(T[], int)
+  nameWithType: NetArray<T>.CopyTo(T[], int)
+  fullName: Nebula.Serialization.NetArray<T>.CopyTo(T[], int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Copies elements to a destination array.
+  example: []
+  syntax:
+    content: public void CopyTo(T[] destination, int startIndex = 0)
+    parameters:
+    - id: destination
+      type: '{T}[]'
+    - id: startIndex
+      type: System.Int32
+    content.vb: Public Sub CopyTo(destination As T(), startIndex As Integer = 0)
+  overload: Nebula.Serialization.NetArray`1.CopyTo*
+  nameWithType.vb: NetArray(Of T).CopyTo(T(), Integer)
+  fullName.vb: Nebula.Serialization.NetArray(Of T).CopyTo(T(), Integer)
+  name.vb: CopyTo(T(), Integer)
+- uid: Nebula.Serialization.NetArray`1.HasDirtyElements
+  commentId: M:Nebula.Serialization.NetArray`1.HasDirtyElements
+  id: HasDirtyElements
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: HasDirtyElements()
+  nameWithType: NetArray<T>.HasDirtyElements()
+  fullName: Nebula.Serialization.NetArray<T>.HasDirtyElements()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Returns true if any elements have been modified since last sync.
+  example: []
+  syntax:
+    content: public bool HasDirtyElements()
+    return:
+      type: System.Boolean
+    content.vb: Public Function HasDirtyElements() As Boolean
+  overload: Nebula.Serialization.NetArray`1.HasDirtyElements*
+  nameWithType.vb: NetArray(Of T).HasDirtyElements()
+  fullName.vb: Nebula.Serialization.NetArray(Of T).HasDirtyElements()
+- uid: Nebula.Serialization.NetArray`1.ClearDirty
+  commentId: M:Nebula.Serialization.NetArray`1.ClearDirty
+  id: ClearDirty
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: ClearDirty()
+  nameWithType: NetArray<T>.ClearDirty()
+  fullName: Nebula.Serialization.NetArray<T>.ClearDirty()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Clears all dirty flags. Called after successful sync.
+  example: []
+  syntax:
+    content: public void ClearDirty()
+    content.vb: Public Sub ClearDirty()
+  overload: Nebula.Serialization.NetArray`1.ClearDirty*
+  nameWithType.vb: NetArray(Of T).ClearDirty()
+  fullName.vb: Nebula.Serialization.NetArray(Of T).ClearDirty()
+- uid: Nebula.Serialization.NetArray`1.MarkFullDirty
+  commentId: M:Nebula.Serialization.NetArray`1.MarkFullDirty
+  id: MarkFullDirty
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: MarkFullDirty()
+  nameWithType: NetArray<T>.MarkFullDirty()
+  fullName: Nebula.Serialization.NetArray<T>.MarkFullDirty()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Marks the entire array as needing a full sync.
+  example: []
+  syntax:
+    content: public void MarkFullDirty()
+    content.vb: Public Sub MarkFullDirty()
+  overload: Nebula.Serialization.NetArray`1.MarkFullDirty*
+  nameWithType.vb: NetArray(Of T).MarkFullDirty()
+  fullName.vb: Nebula.Serialization.NetArray(Of T).MarkFullDirty()
+- uid: Nebula.Serialization.NetArray`1.GetEnumerator
+  commentId: M:Nebula.Serialization.NetArray`1.GetEnumerator
+  id: GetEnumerator
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: GetEnumerator()
+  nameWithType: NetArray<T>.GetEnumerator()
+  fullName: Nebula.Serialization.NetArray<T>.GetEnumerator()
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  example: []
+  syntax:
+    content: public IEnumerator<T> GetEnumerator()
+    return:
+      type: System.Collections.Generic.IEnumerator{{T}}
+    content.vb: Public Function GetEnumerator() As IEnumerator(Of T)
+  overload: Nebula.Serialization.NetArray`1.GetEnumerator*
+  implements:
+  - System.Collections.Generic.IEnumerable{{T}}.GetEnumerator
+  nameWithType.vb: NetArray(Of T).GetEnumerator()
+  fullName.vb: Nebula.Serialization.NetArray(Of T).GetEnumerator()
+- uid: Nebula.Serialization.NetArray`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetArray{`0},Nebula.Serialization.NetBuffer,System.Int32)
+  commentId: M:Nebula.Serialization.NetArray`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetArray{`0},Nebula.Serialization.NetBuffer,System.Int32)
+  id: NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetArray{`0},Nebula.Serialization.NetBuffer,System.Int32)
+  isEii: true
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: NetworkSerialize(WorldRunner, Peer, NetArray<T>, NetBuffer, int)
+  nameWithType: NetArray<T>.NetworkSerialize(WorldRunner, Peer, NetArray<T>, NetBuffer, int)
+  fullName: Nebula.Serialization.NetArray<T>.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetArray<T>, Nebula.Serialization.NetBuffer, int)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Serializes the array to the network buffer for a specific peer.
+
+    Returns true if data was written, false if nothing to send.
+
+    Uses chunked sync for initial data and delta sync for changes.
+  example: []
+  syntax:
+    content: static bool NetworkSerialize(WorldRunner currentWorld, Peer peer, NetArray<T> obj, NetBuffer buffer, int maxBytes)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: peer
+      type: ENet.Peer
+    - id: obj
+      type: Nebula.Serialization.NetArray`1
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: maxBytes
+      type: System.Int32
+    return:
+      type: System.Boolean
+    content.vb: Shared Function NetworkSerialize(currentWorld As WorldRunner, peer As Peer, obj As NetArray(Of T), buffer As NetBuffer, maxBytes As Integer) As Boolean
+  overload: Nebula.Serialization.NetArray`1.NetworkSerialize*
+  implements:
+  - Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetArray{{T}},Nebula.Serialization.NetBuffer,System.Int32)
+  nameWithType.vb: NetArray(Of T).NetworkSerialize(WorldRunner, Peer, NetArray(Of T), NetBuffer, Integer)
+  fullName.vb: Nebula.Serialization.NetArray(Of T).NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetArray(Of T), Nebula.Serialization.NetBuffer, Integer)
+  name.vb: NetworkSerialize(WorldRunner, Peer, NetArray(Of T), NetBuffer, Integer)
+- uid: Nebula.Serialization.NetArray`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.Serialization.NetArray{`0})
+  commentId: M:Nebula.Serialization.NetArray`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.Serialization.NetArray{`0})
+  id: NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.Serialization.NetArray{`0})
+  isEii: true
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetArray<T>)
+  nameWithType: NetArray<T>.NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetArray<T>)
+  fullName: Nebula.Serialization.NetArray<T>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.Serialization.NetArray<T>)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Deserializes the array from the network buffer.
+  example: []
+  syntax:
+    content: static NetArray<T> NetworkDeserialize(WorldRunner currentWorld, Peer peer, NetBuffer buffer, NetArray<T> existing = null)
+    parameters:
+    - id: currentWorld
+      type: Nebula.WorldRunner
+    - id: peer
+      type: ENet.Peer
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: existing
+      type: Nebula.Serialization.NetArray`1
+    return:
+      type: Nebula.Serialization.NetArray`1
+    content.vb: Shared Function NetworkDeserialize(currentWorld As WorldRunner, peer As Peer, buffer As NetBuffer, existing As NetArray(Of T) = Nothing) As NetArray(Of T)
+  overload: Nebula.Serialization.NetArray`1.NetworkDeserialize*
+  implements:
+  - Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.Serialization.NetArray{{T}})
+  nameWithType.vb: NetArray(Of T).NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetArray(Of T))
+  fullName.vb: Nebula.Serialization.NetArray(Of T).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.Serialization.NetArray(Of T))
+  name.vb: NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetArray(Of T))
+- uid: Nebula.Serialization.NetArray`1.OnPeerAcknowledge(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+  commentId: M:Nebula.Serialization.NetArray`1.OnPeerAcknowledge(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+  id: OnPeerAcknowledge(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+  isEii: true
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: OnPeerAcknowledge(NetArray<T>, UUID)
+  nameWithType: NetArray<T>.OnPeerAcknowledge(NetArray<T>, UUID)
+  fullName: Nebula.Serialization.NetArray<T>.OnPeerAcknowledge(Nebula.Serialization.NetArray<T>, Nebula.UUID)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Called when peer acknowledges receipt. Commits pending state to confirmed.
+  example: []
+  syntax:
+    content: static void OnPeerAcknowledge(NetArray<T> obj, UUID peerId)
+    parameters:
+    - id: obj
+      type: Nebula.Serialization.NetArray`1
+    - id: peerId
+      type: Nebula.UUID
+    content.vb: Shared Sub OnPeerAcknowledge(obj As NetArray(Of T), peerId As UUID)
+  overload: Nebula.Serialization.NetArray`1.OnPeerAcknowledge*
+  implements:
+  - Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.OnPeerAcknowledge(Nebula.Serialization.NetArray{{T}},Nebula.UUID)
+  nameWithType.vb: NetArray(Of T).OnPeerAcknowledge(NetArray(Of T), UUID)
+  fullName.vb: Nebula.Serialization.NetArray(Of T).OnPeerAcknowledge(Nebula.Serialization.NetArray(Of T), Nebula.UUID)
+  name.vb: OnPeerAcknowledge(NetArray(Of T), UUID)
+- uid: Nebula.Serialization.NetArray`1.OnPeerDisconnected(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+  commentId: M:Nebula.Serialization.NetArray`1.OnPeerDisconnected(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+  id: OnPeerDisconnected(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+  isEii: true
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: OnPeerDisconnected(NetArray<T>, UUID)
+  nameWithType: NetArray<T>.OnPeerDisconnected(NetArray<T>, UUID)
+  fullName: Nebula.Serialization.NetArray<T>.OnPeerDisconnected(Nebula.Serialization.NetArray<T>, Nebula.UUID)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Called when a peer disconnects. Clean up per-peer state.
+  example: []
+  syntax:
+    content: static void OnPeerDisconnected(NetArray<T> obj, UUID peerId)
+    parameters:
+    - id: obj
+      type: Nebula.Serialization.NetArray`1
+    - id: peerId
+      type: Nebula.UUID
+    content.vb: Shared Sub OnPeerDisconnected(obj As NetArray(Of T), peerId As UUID)
+  overload: Nebula.Serialization.NetArray`1.OnPeerDisconnected*
+  implements:
+  - Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.OnPeerDisconnected(Nebula.Serialization.NetArray{{T}},Nebula.UUID)
+  nameWithType.vb: NetArray(Of T).OnPeerDisconnected(NetArray(Of T), UUID)
+  fullName.vb: Nebula.Serialization.NetArray(Of T).OnPeerDisconnected(Nebula.Serialization.NetArray(Of T), Nebula.UUID)
+  name.vb: OnPeerDisconnected(NetArray(Of T), UUID)
+- uid: Nebula.Serialization.NetArray`1.LastChangeInfo
+  commentId: P:Nebula.Serialization.NetArray`1.LastChangeInfo
+  id: LastChangeInfo
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: LastChangeInfo
+  nameWithType: NetArray<T>.LastChangeInfo
+  fullName: Nebula.Serialization.NetArray<T>.LastChangeInfo
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Information about the most recent network change.
+
+    Populated during deserialization, used by NotifyOnChange callbacks.
+  example: []
+  syntax:
+    content: public NetArrayChangeInfo<T> LastChangeInfo { get; }
+    parameters: []
+    return:
+      type: Nebula.Serialization.NetArrayChangeInfo{{T}}
+    content.vb: Public ReadOnly Property LastChangeInfo As NetArrayChangeInfo(Of T)
+  overload: Nebula.Serialization.NetArray`1.LastChangeInfo*
+  nameWithType.vb: NetArray(Of T).LastChangeInfo
+  fullName.vb: Nebula.Serialization.NetArray(Of T).LastChangeInfo
+- uid: Nebula.Serialization.NetArray`1.Length
+  commentId: P:Nebula.Serialization.NetArray`1.Length
+  id: Length
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: Length
+  nameWithType: NetArray<T>.Length
+  fullName: Nebula.Serialization.NetArray<T>.Length
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Number of elements currently in the array.
+  example: []
+  syntax:
+    content: public int Length { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Length As Integer
+  overload: Nebula.Serialization.NetArray`1.Length*
+  nameWithType.vb: NetArray(Of T).Length
+  fullName.vb: Nebula.Serialization.NetArray(Of T).Length
+- uid: Nebula.Serialization.NetArray`1.Capacity
+  commentId: P:Nebula.Serialization.NetArray`1.Capacity
+  id: Capacity
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: Capacity
+  nameWithType: NetArray<T>.Capacity
+  fullName: Nebula.Serialization.NetArray<T>.Capacity
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Maximum capacity of the array.
+  example: []
+  syntax:
+    content: public int Capacity { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Capacity As Integer
+  overload: Nebula.Serialization.NetArray`1.Capacity*
+  nameWithType.vb: NetArray(Of T).Capacity
+  fullName.vb: Nebula.Serialization.NetArray(Of T).Capacity
+- uid: Nebula.Serialization.NetArray`1.Item(System.Int32)
+  commentId: P:Nebula.Serialization.NetArray`1.Item(System.Int32)
+  id: Item(System.Int32)
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: this[int]
+  nameWithType: NetArray<T>.this[int]
+  fullName: Nebula.Serialization.NetArray<T>.this[int]
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Gets or sets an element at the specified index.
+
+    Setting marks the index as dirty for network sync.
+  example: []
+  syntax:
+    content: public T this[int index] { get; set; }
+    parameters:
+    - id: index
+      type: System.Int32
+    return:
+      type: '{T}'
+    content.vb: Public Default Property this[](index As Integer) As T
+  overload: Nebula.Serialization.NetArray`1.Item*
+  nameWithType.vb: NetArray(Of T).this[](Integer)
+  fullName.vb: Nebula.Serialization.NetArray(Of T).this[](Integer)
+  name.vb: this[](Integer)
+- uid: Nebula.Serialization.NetArray`1.NeedsFullSync
+  commentId: P:Nebula.Serialization.NetArray`1.NeedsFullSync
+  id: NeedsFullSync
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: NeedsFullSync
+  nameWithType: NetArray<T>.NeedsFullSync
+  fullName: Nebula.Serialization.NetArray<T>.NeedsFullSync
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Returns true if a full sync is needed (after resize or initial sync).
+  example: []
+  syntax:
+    content: public bool NeedsFullSync { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property NeedsFullSync As Boolean
+  overload: Nebula.Serialization.NetArray`1.NeedsFullSync*
+  nameWithType.vb: NetArray(Of T).NeedsFullSync
+  fullName.vb: Nebula.Serialization.NetArray(Of T).NeedsFullSync
+- uid: Nebula.Serialization.NetArray`1.DirtyCount
+  commentId: P:Nebula.Serialization.NetArray`1.DirtyCount
+  id: DirtyCount
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: DirtyCount
+  nameWithType: NetArray<T>.DirtyCount
+  fullName: Nebula.Serialization.NetArray<T>.DirtyCount
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Returns the count of dirty indices.
+  example: []
+  syntax:
+    content: public int DirtyCount { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property DirtyCount As Integer
+  overload: Nebula.Serialization.NetArray`1.DirtyCount*
+  nameWithType.vb: NetArray(Of T).DirtyCount
+  fullName.vb: Nebula.Serialization.NetArray(Of T).DirtyCount
+- uid: Nebula.Serialization.NetArray`1.ElementSize
+  commentId: P:Nebula.Serialization.NetArray`1.ElementSize
+  id: ElementSize
+  parent: Nebula.Serialization.NetArray`1
+  langs:
+  - csharp
+  - vb
+  name: ElementSize
+  nameWithType: NetArray<T>.ElementSize
+  fullName: Nebula.Serialization.NetArray<T>.ElementSize
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/Collections/NetArray.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: Gets the size in bytes of a single element.
+  example: []
+  syntax:
+    content: public static int ElementSize { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Shared ReadOnly Property ElementSize As Integer
+  overload: Nebula.Serialization.NetArray`1.ElementSize*
+  nameWithType.vb: NetArray(Of T).ElementSize
+  fullName.vb: Nebula.Serialization.NetArray(Of T).ElementSize
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}
+  commentId: T:Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}
+  parent: Nebula.Serialization
+  definition: Nebula.Serialization.INetSerializable`1
+  href: Nebula.Serialization.INetSerializable-1.html
+  name: INetSerializable<NetArray<T>>
+  nameWithType: INetSerializable<NetArray<T>>
+  fullName: Nebula.Serialization.INetSerializable<Nebula.Serialization.NetArray<T>>
+  nameWithType.vb: INetSerializable(Of NetArray(Of T))
+  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.Serialization.NetArray(Of T))
+  name.vb: INetSerializable(Of NetArray(Of T))
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable`1
+    name: INetSerializable
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html
+  - name: <
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1
+    name: INetSerializable
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: Nebula.Serialization.INetPropertyBindable
+  commentId: T:Nebula.Serialization.INetPropertyBindable
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.INetPropertyBindable.html
+  name: INetPropertyBindable
+  nameWithType: INetPropertyBindable
+  fullName: Nebula.Serialization.INetPropertyBindable
+- uid: System.Collections.Generic.IEnumerable{{T}}
+  commentId: T:System.Collections.Generic.IEnumerable{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nebula.Serialization.INetSerializable`1
+  commentId: T:Nebula.Serialization.INetSerializable`1
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.html
+  name: INetSerializable<T>
+  nameWithType: INetSerializable<T>
+  fullName: Nebula.Serialization.INetSerializable<T>
+  nameWithType.vb: INetSerializable(Of T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T)
+  name.vb: INetSerializable(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable`1
+    name: INetSerializable
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1
+    name: INetSerializable
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: Nebula.Serialization.NetArray`1.#ctor*
+  commentId: Overload:Nebula.Serialization.NetArray`1.#ctor
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1__ctor_System_Int32_System_Int32_
+  name: NetArray
+  nameWithType: NetArray<T>.NetArray
+  fullName: Nebula.Serialization.NetArray<T>.NetArray
+  nameWithType.vb: NetArray(Of T).New
+  fullName.vb: Nebula.Serialization.NetArray(Of T).New
+  name.vb: New
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: '{T}[]'
+  isExternal: true
+  name: T[]
+  nameWithType: T[]
+  fullName: T[]
+  nameWithType.vb: T()
+  fullName.vb: T()
+  name.vb: T()
+  spec.csharp:
+  - name: T
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: T
+  - name: (
+  - name: )
+- uid: Nebula.Serialization.NetArray`1.BindToNetProperty*
+  commentId: Overload:Nebula.Serialization.NetArray`1.BindToNetProperty
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_BindToNetProperty_System_Action_
+  name: BindToNetProperty
+  nameWithType: NetArray<T>.BindToNetProperty
+  fullName: Nebula.Serialization.NetArray<T>.BindToNetProperty
+  nameWithType.vb: NetArray(Of T).BindToNetProperty
+  fullName.vb: Nebula.Serialization.NetArray(Of T).BindToNetProperty
+- uid: Nebula.Serialization.INetPropertyBindable.BindToNetProperty(System.Action)
+  commentId: M:Nebula.Serialization.INetPropertyBindable.BindToNetProperty(System.Action)
+  parent: Nebula.Serialization.INetPropertyBindable
+  isExternal: true
+  href: Nebula.Serialization.INetPropertyBindable.html#Nebula_Serialization_INetPropertyBindable_BindToNetProperty_System_Action_
+  name: BindToNetProperty(Action)
+  nameWithType: INetPropertyBindable.BindToNetProperty(Action)
+  fullName: Nebula.Serialization.INetPropertyBindable.BindToNetProperty(System.Action)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetPropertyBindable.BindToNetProperty(System.Action)
+    name: BindToNetProperty
+    isExternal: true
+    href: Nebula.Serialization.INetPropertyBindable.html#Nebula_Serialization_INetPropertyBindable_BindToNetProperty_System_Action_
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetPropertyBindable.BindToNetProperty(System.Action)
+    name: BindToNetProperty
+    isExternal: true
+    href: Nebula.Serialization.INetPropertyBindable.html#Nebula_Serialization_INetPropertyBindable_BindToNetProperty_System_Action_
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: Nebula.Serialization.NetArray`1.SetUnchecked*
+  commentId: Overload:Nebula.Serialization.NetArray`1.SetUnchecked
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_SetUnchecked_System_Int32__0_
+  name: SetUnchecked
+  nameWithType: NetArray<T>.SetUnchecked
+  fullName: Nebula.Serialization.NetArray<T>.SetUnchecked
+  nameWithType.vb: NetArray(Of T).SetUnchecked
+  fullName.vb: Nebula.Serialization.NetArray(Of T).SetUnchecked
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Nebula.Serialization.NetArray`1.Add*
+  commentId: Overload:Nebula.Serialization.NetArray`1.Add
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_Add__0_
+  name: Add
+  nameWithType: NetArray<T>.Add
+  fullName: Nebula.Serialization.NetArray<T>.Add
+  nameWithType.vb: NetArray(Of T).Add
+  fullName.vb: Nebula.Serialization.NetArray(Of T).Add
+- uid: Nebula.Serialization.NetArray`1.SetLength*
+  commentId: Overload:Nebula.Serialization.NetArray`1.SetLength
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_SetLength_System_Int32_
+  name: SetLength
+  nameWithType: NetArray<T>.SetLength
+  fullName: Nebula.Serialization.NetArray<T>.SetLength
+  nameWithType.vb: NetArray(Of T).SetLength
+  fullName.vb: Nebula.Serialization.NetArray(Of T).SetLength
+- uid: Nebula.Serialization.NetArray`1.Clear*
+  commentId: Overload:Nebula.Serialization.NetArray`1.Clear
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_Clear
+  name: Clear
+  nameWithType: NetArray<T>.Clear
+  fullName: Nebula.Serialization.NetArray<T>.Clear
+  nameWithType.vb: NetArray(Of T).Clear
+  fullName.vb: Nebula.Serialization.NetArray(Of T).Clear
+- uid: Nebula.Serialization.NetArray`1.AsSpan*
+  commentId: Overload:Nebula.Serialization.NetArray`1.AsSpan
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_AsSpan
+  name: AsSpan
+  nameWithType: NetArray<T>.AsSpan
+  fullName: Nebula.Serialization.NetArray<T>.AsSpan
+  nameWithType.vb: NetArray(Of T).AsSpan
+  fullName.vb: Nebula.Serialization.NetArray(Of T).AsSpan
+- uid: System.ReadOnlySpan{{T}}
+  commentId: T:System.ReadOnlySpan{`0}
+  parent: System
+  definition: System.ReadOnlySpan`1
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<T>
+  nameWithType: ReadOnlySpan<T>
+  fullName: System.ReadOnlySpan<T>
+  nameWithType.vb: ReadOnlySpan(Of T)
+  fullName.vb: System.ReadOnlySpan(Of T)
+  name.vb: ReadOnlySpan(Of T)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.ReadOnlySpan`1
+  commentId: T:System.ReadOnlySpan`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<T>
+  nameWithType: ReadOnlySpan<T>
+  fullName: System.ReadOnlySpan<T>
+  nameWithType.vb: ReadOnlySpan(Of T)
+  fullName.vb: System.ReadOnlySpan(Of T)
+  name.vb: ReadOnlySpan(Of T)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.NetArray`1.CopyTo*
+  commentId: Overload:Nebula.Serialization.NetArray`1.CopyTo
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_CopyTo__0___System_Int32_
+  name: CopyTo
+  nameWithType: NetArray<T>.CopyTo
+  fullName: Nebula.Serialization.NetArray<T>.CopyTo
+  nameWithType.vb: NetArray(Of T).CopyTo
+  fullName.vb: Nebula.Serialization.NetArray(Of T).CopyTo
+- uid: Nebula.Serialization.NetArray`1.HasDirtyElements*
+  commentId: Overload:Nebula.Serialization.NetArray`1.HasDirtyElements
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_HasDirtyElements
+  name: HasDirtyElements
+  nameWithType: NetArray<T>.HasDirtyElements
+  fullName: Nebula.Serialization.NetArray<T>.HasDirtyElements
+  nameWithType.vb: NetArray(Of T).HasDirtyElements
+  fullName.vb: Nebula.Serialization.NetArray(Of T).HasDirtyElements
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Nebula.Serialization.NetArray`1.ClearDirty*
+  commentId: Overload:Nebula.Serialization.NetArray`1.ClearDirty
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_ClearDirty
+  name: ClearDirty
+  nameWithType: NetArray<T>.ClearDirty
+  fullName: Nebula.Serialization.NetArray<T>.ClearDirty
+  nameWithType.vb: NetArray(Of T).ClearDirty
+  fullName.vb: Nebula.Serialization.NetArray(Of T).ClearDirty
+- uid: Nebula.Serialization.NetArray`1.MarkFullDirty*
+  commentId: Overload:Nebula.Serialization.NetArray`1.MarkFullDirty
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_MarkFullDirty
+  name: MarkFullDirty
+  nameWithType: NetArray<T>.MarkFullDirty
+  fullName: Nebula.Serialization.NetArray<T>.MarkFullDirty
+  nameWithType.vb: NetArray(Of T).MarkFullDirty
+  fullName.vb: Nebula.Serialization.NetArray(Of T).MarkFullDirty
+- uid: Nebula.Serialization.NetArray`1.GetEnumerator*
+  commentId: Overload:Nebula.Serialization.NetArray`1.GetEnumerator
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_GetEnumerator
+  name: GetEnumerator
+  nameWithType: NetArray<T>.GetEnumerator
+  fullName: Nebula.Serialization.NetArray<T>.GetEnumerator
+  nameWithType.vb: NetArray(Of T).GetEnumerator
+  fullName.vb: Nebula.Serialization.NetArray(Of T).GetEnumerator
+- uid: System.Collections.Generic.IEnumerable{{T}}.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable{`0}.GetEnumerator
+  parent: System.Collections.Generic.IEnumerable{{T}}
+  definition: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<T>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable{`0}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable{`0}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator{{T}}
+  commentId: T:System.Collections.Generic.IEnumerator{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerator`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<T>
+  nameWithType: IEnumerator<T>
+  fullName: System.Collections.Generic.IEnumerator<T>
+  nameWithType.vb: IEnumerator(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of T)
+  name.vb: IEnumerator(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable`1.GetEnumerator
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<T>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator`1
+  commentId: T:System.Collections.Generic.IEnumerator`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<T>
+  nameWithType: IEnumerator<T>
+  fullName: System.Collections.Generic.IEnumerator<T>
+  nameWithType.vb: IEnumerator(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of T)
+  name.vb: IEnumerator(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.NetArray`1.NetworkSerialize*
+  commentId: Overload:Nebula.Serialization.NetArray`1.NetworkSerialize
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetArray__0__Nebula_Serialization_NetBuffer_System_Int32_
+  name: NetworkSerialize
+  nameWithType: NetArray<T>.NetworkSerialize
+  fullName: Nebula.Serialization.NetArray<T>.NetworkSerialize
+  nameWithType.vb: NetArray(Of T).NetworkSerialize
+  fullName.vb: Nebula.Serialization.NetArray(Of T).NetworkSerialize
+- uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetArray{{T}},Nebula.Serialization.NetBuffer,System.Int32)
+  commentId: M:Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetArray{`0},Nebula.Serialization.NetBuffer,System.Int32)
+  parent: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}
+  definition: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer,System.Int32)
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_System_Int32_
+  name: NetworkSerialize(WorldRunner, Peer, NetArray<T>, NetBuffer, int)
+  nameWithType: INetSerializable<NetArray<T>>.NetworkSerialize(WorldRunner, Peer, NetArray<T>, NetBuffer, int)
+  fullName: Nebula.Serialization.INetSerializable<Nebula.Serialization.NetArray<T>>.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetArray<T>, Nebula.Serialization.NetBuffer, int)
+  nameWithType.vb: INetSerializable(Of NetArray(Of T)).NetworkSerialize(WorldRunner, Peer, NetArray(Of T), NetBuffer, Integer)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.Serialization.NetArray(Of T)).NetworkSerialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetArray(Of T), Nebula.Serialization.NetBuffer, Integer)
+  name.vb: NetworkSerialize(WorldRunner, Peer, NetArray(Of T), NetBuffer, Integer)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetArray{`0},Nebula.Serialization.NetBuffer,System.Int32)
+    name: NetworkSerialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_System_Int32_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetArray{`0},Nebula.Serialization.NetBuffer,System.Int32)
+    name: NetworkSerialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_System_Int32_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Nebula.WorldRunner
+  commentId: T:Nebula.WorldRunner
+  parent: Nebula
+  isExternal: true
+  href: Nebula.WorldRunner.html
+  name: WorldRunner
+  nameWithType: WorldRunner
+  fullName: Nebula.WorldRunner
+- uid: ENet.Peer
+  commentId: T:ENet.Peer
+  parent: ENet
+  isExternal: true
+  name: Peer
+  nameWithType: Peer
+  fullName: ENet.Peer
+- uid: Nebula.Serialization.NetArray`1
+  commentId: T:Nebula.Serialization.NetArray`1
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html
+  name: NetArray<T>
+  nameWithType: NetArray<T>
+  fullName: Nebula.Serialization.NetArray<T>
+  nameWithType.vb: NetArray(Of T)
+  fullName.vb: Nebula.Serialization.NetArray(Of T)
+  name.vb: NetArray(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.NetBuffer
+  commentId: T:Nebula.Serialization.NetBuffer
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetBuffer.html
+  name: NetBuffer
+  nameWithType: NetBuffer
+  fullName: Nebula.Serialization.NetBuffer
+- uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer,System.Int32)
+  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer,System.Int32)
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_System_Int32_
+  name: NetworkSerialize(WorldRunner, Peer, T, NetBuffer, int)
+  nameWithType: INetSerializable<T>.NetworkSerialize(WorldRunner, Peer, T, NetBuffer, int)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer, int)
+  nameWithType.vb: INetSerializable(Of T).NetworkSerialize(WorldRunner, Peer, T, NetBuffer, Integer)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkSerialize(Nebula.WorldRunner, ENet.Peer, T, Nebula.Serialization.NetBuffer, Integer)
+  name.vb: NetworkSerialize(WorldRunner, Peer, T, NetBuffer, Integer)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer,System.Int32)
+    name: NetworkSerialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_System_Int32_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,`0,Nebula.Serialization.NetBuffer,System.Int32)
+    name: NetworkSerialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkSerialize_Nebula_WorldRunner_ENet_Peer__0_Nebula_Serialization_NetBuffer_System_Int32_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
+- uid: ENet
+  commentId: N:ENet
+  isExternal: true
+  name: ENet
+  nameWithType: ENet
+  fullName: ENet
+- uid: Nebula.Serialization.NetArray`1.NetworkDeserialize*
+  commentId: Overload:Nebula.Serialization.NetArray`1.NetworkDeserialize
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer_Nebula_Serialization_NetArray__0__
+  name: NetworkDeserialize
+  nameWithType: NetArray<T>.NetworkDeserialize
+  fullName: Nebula.Serialization.NetArray<T>.NetworkDeserialize
+  nameWithType.vb: NetArray(Of T).NetworkDeserialize
+  fullName.vb: Nebula.Serialization.NetArray(Of T).NetworkDeserialize
+- uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.Serialization.NetArray{{T}})
+  commentId: M:Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.Serialization.NetArray{`0})
+  parent: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}
+  definition: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetArray<T>)
+  nameWithType: INetSerializable<NetArray<T>>.NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetArray<T>)
+  fullName: Nebula.Serialization.INetSerializable<Nebula.Serialization.NetArray<T>>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.Serialization.NetArray<T>)
+  nameWithType.vb: INetSerializable(Of NetArray(Of T)).NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetArray(Of T))
+  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.Serialization.NetArray(Of T)).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, Nebula.Serialization.NetArray(Of T))
+  name.vb: NetworkDeserialize(WorldRunner, Peer, NetBuffer, NetArray(Of T))
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.Serialization.NetArray{`0})
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.Serialization.NetArray{`0})
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  commentId: M:Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  name: NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  nameWithType: INetSerializable<T>.NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  fullName: Nebula.Serialization.INetSerializable<T>.NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, T)
+  nameWithType.vb: INetSerializable(Of T).NetworkDeserialize(WorldRunner, Peer, NetBuffer, T)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).NetworkDeserialize(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, T)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,`0)
+    name: NetworkDeserialize
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_NetworkDeserialize_Nebula_WorldRunner_ENet_Peer_Nebula_Serialization_NetBuffer__0_
+  - name: (
+  - uid: Nebula.WorldRunner
+    name: WorldRunner
+    isExternal: true
+    href: Nebula.WorldRunner.html
+  - name: ','
+  - name: " "
+  - uid: ENet.Peer
+    name: Peer
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Nebula.Serialization.NetBuffer
+    name: NetBuffer
+    isExternal: true
+    href: Nebula.Serialization.NetBuffer.html
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.NetArray`1.OnPeerAcknowledge*
+  commentId: Overload:Nebula.Serialization.NetArray`1.OnPeerAcknowledge
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_OnPeerAcknowledge_Nebula_Serialization_NetArray__0__Nebula_UUID_
+  name: OnPeerAcknowledge
+  nameWithType: NetArray<T>.OnPeerAcknowledge
+  fullName: Nebula.Serialization.NetArray<T>.OnPeerAcknowledge
+  nameWithType.vb: NetArray(Of T).OnPeerAcknowledge
+  fullName.vb: Nebula.Serialization.NetArray(Of T).OnPeerAcknowledge
+- uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.OnPeerAcknowledge(Nebula.Serialization.NetArray{{T}},Nebula.UUID)
+  commentId: M:Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.OnPeerAcknowledge(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+  parent: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}
+  definition: Nebula.Serialization.INetSerializable`1.OnPeerAcknowledge(`0,Nebula.UUID)
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerAcknowledge__0_Nebula_UUID_
+  name: OnPeerAcknowledge(NetArray<T>, UUID)
+  nameWithType: INetSerializable<NetArray<T>>.OnPeerAcknowledge(NetArray<T>, UUID)
+  fullName: Nebula.Serialization.INetSerializable<Nebula.Serialization.NetArray<T>>.OnPeerAcknowledge(Nebula.Serialization.NetArray<T>, Nebula.UUID)
+  nameWithType.vb: INetSerializable(Of NetArray(Of T)).OnPeerAcknowledge(NetArray(Of T), UUID)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.Serialization.NetArray(Of T)).OnPeerAcknowledge(Nebula.Serialization.NetArray(Of T), Nebula.UUID)
+  name.vb: OnPeerAcknowledge(NetArray(Of T), UUID)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.OnPeerAcknowledge(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+    name: OnPeerAcknowledge
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerAcknowledge__0_Nebula_UUID_
+  - name: (
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.OnPeerAcknowledge(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+    name: OnPeerAcknowledge
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerAcknowledge__0_Nebula_UUID_
+  - name: (
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: )
+- uid: Nebula.UUID
+  commentId: T:Nebula.UUID
+  parent: Nebula
+  isExternal: true
+  href: Nebula.UUID.html
+  name: UUID
+  nameWithType: UUID
+  fullName: Nebula.UUID
+- uid: Nebula.Serialization.INetSerializable`1.OnPeerAcknowledge(`0,Nebula.UUID)
+  commentId: M:Nebula.Serialization.INetSerializable`1.OnPeerAcknowledge(`0,Nebula.UUID)
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerAcknowledge__0_Nebula_UUID_
+  name: OnPeerAcknowledge(T, UUID)
+  nameWithType: INetSerializable<T>.OnPeerAcknowledge(T, UUID)
+  fullName: Nebula.Serialization.INetSerializable<T>.OnPeerAcknowledge(T, Nebula.UUID)
+  nameWithType.vb: INetSerializable(Of T).OnPeerAcknowledge(T, UUID)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).OnPeerAcknowledge(T, Nebula.UUID)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable`1.OnPeerAcknowledge(`0,Nebula.UUID)
+    name: OnPeerAcknowledge
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerAcknowledge__0_Nebula_UUID_
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1.OnPeerAcknowledge(`0,Nebula.UUID)
+    name: OnPeerAcknowledge
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerAcknowledge__0_Nebula_UUID_
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: )
+- uid: Nebula.Serialization.NetArray`1.OnPeerDisconnected*
+  commentId: Overload:Nebula.Serialization.NetArray`1.OnPeerDisconnected
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_OnPeerDisconnected_Nebula_Serialization_NetArray__0__Nebula_UUID_
+  name: OnPeerDisconnected
+  nameWithType: NetArray<T>.OnPeerDisconnected
+  fullName: Nebula.Serialization.NetArray<T>.OnPeerDisconnected
+  nameWithType.vb: NetArray(Of T).OnPeerDisconnected
+  fullName.vb: Nebula.Serialization.NetArray(Of T).OnPeerDisconnected
+- uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.OnPeerDisconnected(Nebula.Serialization.NetArray{{T}},Nebula.UUID)
+  commentId: M:Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.OnPeerDisconnected(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+  parent: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}
+  definition: Nebula.Serialization.INetSerializable`1.OnPeerDisconnected(`0,Nebula.UUID)
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerDisconnected__0_Nebula_UUID_
+  name: OnPeerDisconnected(NetArray<T>, UUID)
+  nameWithType: INetSerializable<NetArray<T>>.OnPeerDisconnected(NetArray<T>, UUID)
+  fullName: Nebula.Serialization.INetSerializable<Nebula.Serialization.NetArray<T>>.OnPeerDisconnected(Nebula.Serialization.NetArray<T>, Nebula.UUID)
+  nameWithType.vb: INetSerializable(Of NetArray(Of T)).OnPeerDisconnected(NetArray(Of T), UUID)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of Nebula.Serialization.NetArray(Of T)).OnPeerDisconnected(Nebula.Serialization.NetArray(Of T), Nebula.UUID)
+  name.vb: OnPeerDisconnected(NetArray(Of T), UUID)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.OnPeerDisconnected(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+    name: OnPeerDisconnected
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerDisconnected__0_Nebula_UUID_
+  - name: (
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable{Nebula.Serialization.NetArray`1}.OnPeerDisconnected(Nebula.Serialization.NetArray{`0},Nebula.UUID)
+    name: OnPeerDisconnected
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerDisconnected__0_Nebula_UUID_
+  - name: (
+  - uid: Nebula.Serialization.NetArray`1
+    name: NetArray
+    isExternal: true
+    href: Nebula.Serialization.NetArray-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: )
+- uid: Nebula.Serialization.INetSerializable`1.OnPeerDisconnected(`0,Nebula.UUID)
+  commentId: M:Nebula.Serialization.INetSerializable`1.OnPeerDisconnected(`0,Nebula.UUID)
+  isExternal: true
+  href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerDisconnected__0_Nebula_UUID_
+  name: OnPeerDisconnected(T, UUID)
+  nameWithType: INetSerializable<T>.OnPeerDisconnected(T, UUID)
+  fullName: Nebula.Serialization.INetSerializable<T>.OnPeerDisconnected(T, Nebula.UUID)
+  nameWithType.vb: INetSerializable(Of T).OnPeerDisconnected(T, UUID)
+  fullName.vb: Nebula.Serialization.INetSerializable(Of T).OnPeerDisconnected(T, Nebula.UUID)
+  spec.csharp:
+  - uid: Nebula.Serialization.INetSerializable`1.OnPeerDisconnected(`0,Nebula.UUID)
+    name: OnPeerDisconnected
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerDisconnected__0_Nebula_UUID_
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: )
+  spec.vb:
+  - uid: Nebula.Serialization.INetSerializable`1.OnPeerDisconnected(`0,Nebula.UUID)
+    name: OnPeerDisconnected
+    isExternal: true
+    href: Nebula.Serialization.INetSerializable-1.html#Nebula_Serialization_INetSerializable_1_OnPeerDisconnected__0_Nebula_UUID_
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: Nebula.UUID
+    name: UUID
+    isExternal: true
+    href: Nebula.UUID.html
+  - name: )
+- uid: Nebula.Serialization.NetArray`1.LastChangeInfo*
+  commentId: Overload:Nebula.Serialization.NetArray`1.LastChangeInfo
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_LastChangeInfo
+  name: LastChangeInfo
+  nameWithType: NetArray<T>.LastChangeInfo
+  fullName: Nebula.Serialization.NetArray<T>.LastChangeInfo
+  nameWithType.vb: NetArray(Of T).LastChangeInfo
+  fullName.vb: Nebula.Serialization.NetArray(Of T).LastChangeInfo
+- uid: Nebula.Serialization.NetArrayChangeInfo{{T}}
+  commentId: T:Nebula.Serialization.NetArrayChangeInfo{`0}
+  parent: Nebula.Serialization
+  definition: Nebula.Serialization.NetArrayChangeInfo`1
+  href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  name: NetArrayChangeInfo<T>
+  nameWithType: NetArrayChangeInfo<T>
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>
+  nameWithType.vb: NetArrayChangeInfo(Of T)
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T)
+  name.vb: NetArrayChangeInfo(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.NetArrayChangeInfo`1
+    name: NetArrayChangeInfo
+    isExternal: true
+    href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.NetArrayChangeInfo`1
+    name: NetArrayChangeInfo
+    isExternal: true
+    href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.NetArrayChangeInfo`1
+  commentId: T:Nebula.Serialization.NetArrayChangeInfo`1
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  name: NetArrayChangeInfo<T>
+  nameWithType: NetArrayChangeInfo<T>
+  fullName: Nebula.Serialization.NetArrayChangeInfo<T>
+  nameWithType.vb: NetArrayChangeInfo(Of T)
+  fullName.vb: Nebula.Serialization.NetArrayChangeInfo(Of T)
+  name.vb: NetArrayChangeInfo(Of T)
+  spec.csharp:
+  - uid: Nebula.Serialization.NetArrayChangeInfo`1
+    name: NetArrayChangeInfo
+    isExternal: true
+    href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nebula.Serialization.NetArrayChangeInfo`1
+    name: NetArrayChangeInfo
+    isExternal: true
+    href: Nebula.Serialization.NetArrayChangeInfo-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nebula.Serialization.NetArray`1.Length*
+  commentId: Overload:Nebula.Serialization.NetArray`1.Length
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_Length
+  name: Length
+  nameWithType: NetArray<T>.Length
+  fullName: Nebula.Serialization.NetArray<T>.Length
+  nameWithType.vb: NetArray(Of T).Length
+  fullName.vb: Nebula.Serialization.NetArray(Of T).Length
+- uid: Nebula.Serialization.NetArray`1.Capacity*
+  commentId: Overload:Nebula.Serialization.NetArray`1.Capacity
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_Capacity
+  name: Capacity
+  nameWithType: NetArray<T>.Capacity
+  fullName: Nebula.Serialization.NetArray<T>.Capacity
+  nameWithType.vb: NetArray(Of T).Capacity
+  fullName.vb: Nebula.Serialization.NetArray(Of T).Capacity
+- uid: Nebula.Serialization.NetArray`1.Item*
+  commentId: Overload:Nebula.Serialization.NetArray`1.Item
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_Item_System_Int32_
+  name: this
+  nameWithType: NetArray<T>.this
+  fullName: Nebula.Serialization.NetArray<T>.this
+  nameWithType.vb: NetArray(Of T).this[]
+  fullName.vb: Nebula.Serialization.NetArray(Of T).this[]
+  name.vb: this[]
+- uid: Nebula.Serialization.NetArray`1.NeedsFullSync*
+  commentId: Overload:Nebula.Serialization.NetArray`1.NeedsFullSync
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_NeedsFullSync
+  name: NeedsFullSync
+  nameWithType: NetArray<T>.NeedsFullSync
+  fullName: Nebula.Serialization.NetArray<T>.NeedsFullSync
+  nameWithType.vb: NetArray(Of T).NeedsFullSync
+  fullName.vb: Nebula.Serialization.NetArray(Of T).NeedsFullSync
+- uid: Nebula.Serialization.NetArray`1.DirtyCount*
+  commentId: Overload:Nebula.Serialization.NetArray`1.DirtyCount
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_DirtyCount
+  name: DirtyCount
+  nameWithType: NetArray<T>.DirtyCount
+  fullName: Nebula.Serialization.NetArray<T>.DirtyCount
+  nameWithType.vb: NetArray(Of T).DirtyCount
+  fullName.vb: Nebula.Serialization.NetArray(Of T).DirtyCount
+- uid: Nebula.Serialization.NetArray`1.ElementSize*
+  commentId: Overload:Nebula.Serialization.NetArray`1.ElementSize
+  isExternal: true
+  href: Nebula.Serialization.NetArray-1.html#Nebula_Serialization_NetArray_1_ElementSize
+  name: ElementSize
+  nameWithType: NetArray<T>.ElementSize
+  fullName: Nebula.Serialization.NetArray<T>.ElementSize
+  nameWithType.vb: NetArray(Of T).ElementSize
+  fullName.vb: Nebula.Serialization.NetArray(Of T).ElementSize

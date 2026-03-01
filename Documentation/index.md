@@ -12,7 +12,7 @@ Get up and running with Nebula in minutes:
 
 1. [Introduction](getting-started/introduction.md) - Learn the core concepts
 2. [Network Lifecycle](getting-started/network-lifecycle.md) - Understand how data flows
-3. [Tutorials](tutorials/snake/create-a-snake.md) - Build your first networked game
+3. [Tutorials](tutorials/big-chungus-online/chapter-1-getting-started.md) - Build your first networked game
 
 ## What Makes Nebula Different?
 

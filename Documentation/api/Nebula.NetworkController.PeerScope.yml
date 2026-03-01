@@ -1,29 +1,26 @@
 ### YamlMime:ManagedReference
 items:
-- uid: Nebula.Testing.Integration.DebugEvent
-  commentId: T:Nebula.Testing.Integration.DebugEvent
-  id: DebugEvent
-  parent: Nebula.Testing.Integration
+- uid: Nebula.NetworkController.PeerScope
+  commentId: T:Nebula.NetworkController.PeerScope
+  id: NetworkController.PeerScope
+  parent: Nebula
   children:
-  - Nebula.Testing.Integration.DebugEvent.Category
-  - Nebula.Testing.Integration.DebugEvent.Message
+  - Nebula.NetworkController.PeerScope.Dispose
   langs:
   - csharp
   - vb
-  name: DebugEvent
-  nameWithType: DebugEvent
-  fullName: Nebula.Testing.Integration.DebugEvent
+  name: NetworkController.PeerScope
+  nameWithType: NetworkController.PeerScope
+  fullName: Nebula.NetworkController.PeerScope
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetworkController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
-  namespace: Nebula.Testing.Integration
-  summary: Represents a debug event received from the Godot process.
-  example: []
+  namespace: Nebula
   syntax:
-    content: public struct DebugEvent
-    content.vb: Public Structure DebugEvent
+    content: public ref struct NetworkController.PeerScope
+    content.vb: Public Structure NetworkController.PeerScope
   inheritedMembers:
   - System.ValueType.Equals(System.Object)
   - System.ValueType.GetHashCode
@@ -31,90 +28,34 @@ items:
   - System.Object.GetType
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.ReferenceEquals(System.Object,System.Object)
-- uid: Nebula.Testing.Integration.DebugEvent.Category
-  commentId: P:Nebula.Testing.Integration.DebugEvent.Category
-  id: Category
-  parent: Nebula.Testing.Integration.DebugEvent
+- uid: Nebula.NetworkController.PeerScope.Dispose
+  commentId: M:Nebula.NetworkController.PeerScope.Dispose
+  id: Dispose
+  parent: Nebula.NetworkController.PeerScope
   langs:
   - csharp
   - vb
-  name: Category
-  nameWithType: DebugEvent.Category
-  fullName: Nebula.Testing.Integration.DebugEvent.Category
-  type: Property
+  name: Dispose()
+  nameWithType: NetworkController.PeerScope.Dispose()
+  fullName: Nebula.NetworkController.PeerScope.Dispose()
+  type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/GodotProcess.cs
+    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Core/NetworkController.cs
   assemblies:
   - Nebula
-  namespace: Nebula.Testing.Integration
+  namespace: Nebula
   syntax:
-    content: public string Category { readonly get; set; }
-    parameters: []
-    return:
-      type: System.String
-    content.vb: Public Property Category As String
-  overload: Nebula.Testing.Integration.DebugEvent.Category*
-- uid: Nebula.Testing.Integration.DebugEvent.Message
-  commentId: P:Nebula.Testing.Integration.DebugEvent.Message
-  id: Message
-  parent: Nebula.Testing.Integration.DebugEvent
-  langs:
-  - csharp
-  - vb
-  name: Message
-  nameWithType: DebugEvent.Message
-  fullName: Nebula.Testing.Integration.DebugEvent.Message
-  type: Property
-  source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/GodotProcess.cs
-  assemblies:
-  - Nebula
-  namespace: Nebula.Testing.Integration
-  syntax:
-    content: public string Message { readonly get; set; }
-    parameters: []
-    return:
-      type: System.String
-    content.vb: Public Property Message As String
-  overload: Nebula.Testing.Integration.DebugEvent.Message*
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: Nebula.NetworkController.PeerScope.Dispose*
 references:
-- uid: Nebula.Testing.Integration
-  commentId: N:Nebula.Testing.Integration
+- uid: Nebula
+  commentId: N:Nebula
   isExternal: true
   href: Nebula.html
-  name: Nebula.Testing.Integration
-  nameWithType: Nebula.Testing.Integration
-  fullName: Nebula.Testing.Integration
-  spec.csharp:
-  - uid: Nebula
-    name: Nebula
-    isExternal: true
-    href: Nebula.html
-  - name: .
-  - uid: Nebula.Testing
-    name: Testing
-    isExternal: true
-    href: Nebula.Testing.html
-  - name: .
-  - uid: Nebula.Testing.Integration
-    name: Integration
-    isExternal: true
-    href: Nebula.Testing.Integration.html
-  spec.vb:
-  - uid: Nebula
-    name: Nebula
-    isExternal: true
-    href: Nebula.html
-  - name: .
-  - uid: Nebula.Testing
-    name: Testing
-    isExternal: true
-    href: Nebula.Testing.html
-  - name: .
-  - uid: Nebula.Testing.Integration
-    name: Integration
-    isExternal: true
-    href: Nebula.Testing.Integration.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula
 - uid: System.ValueType.Equals(System.Object)
   commentId: M:System.ValueType.Equals(System.Object)
   parent: System.ValueType
@@ -332,28 +273,10 @@ references:
   name: System
   nameWithType: System
   fullName: System
-- uid: Nebula.Testing.Integration.DebugEvent.Category*
-  commentId: Overload:Nebula.Testing.Integration.DebugEvent.Category
+- uid: Nebula.NetworkController.PeerScope.Dispose*
+  commentId: Overload:Nebula.NetworkController.PeerScope.Dispose
   isExternal: true
-  href: Nebula.Testing.Integration.DebugEvent.html#Nebula_Testing_Integration_DebugEvent_Category
-  name: Category
-  nameWithType: DebugEvent.Category
-  fullName: Nebula.Testing.Integration.DebugEvent.Category
-- uid: System.String
-  commentId: T:System.String
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.string
-  name: string
-  nameWithType: string
-  fullName: string
-  nameWithType.vb: String
-  fullName.vb: String
-  name.vb: String
-- uid: Nebula.Testing.Integration.DebugEvent.Message*
-  commentId: Overload:Nebula.Testing.Integration.DebugEvent.Message
-  isExternal: true
-  href: Nebula.Testing.Integration.DebugEvent.html#Nebula_Testing_Integration_DebugEvent_Message
-  name: Message
-  nameWithType: DebugEvent.Message
-  fullName: Nebula.Testing.Integration.DebugEvent.Message
+  href: Nebula.NetworkController.PeerScope.html#Nebula_NetworkController_PeerScope_Dispose
+  name: Dispose
+  nameWithType: NetworkController.PeerScope.Dispose
+  fullName: Nebula.NetworkController.PeerScope.Dispose

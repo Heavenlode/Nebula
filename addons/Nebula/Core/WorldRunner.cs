@@ -717,15 +717,16 @@ namespace Nebula
                 var netController = _ownedEntities[i];
                 if (netController == null || netController.IsMarkedForDeletion) continue;
 
+                // Restore latest client input before prediction — reconciliation's
+                // SetInputBytes may have overwritten _inputData with stale buffered input
+                RestoreClientInputsForEntity(netController);
+
                 netController.IsPredicting = true;
                 netController._NetworkProcess(_clientPredictedTick);
                 netController.StorePredictedState(_clientPredictedTick);
                 netController.IsPredicting = false;
-
-                // Send input with redundancy
                 SendInput(netController);
 
-                // Also handle static children
                 foreach (var staticChild in netController.StaticNetworkChildren)
                 {
                     if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
@@ -735,7 +736,6 @@ namespace Nebula
                     staticChild._NetworkProcess(_clientPredictedTick);
                     staticChild.StorePredictedState(_clientPredictedTick);
                     staticChild.IsPredicting = false;
-
                     SendInput(staticChild);
                 }
             }
@@ -764,21 +764,42 @@ namespace Nebula
             // Reconcile compares predicted vs confirmed and restores mispredicted properties
             // Returns true if any misprediction occurred (or if forceRestoreAll is set)
             bool parentMispredicted = netController.Reconcile(incomingTick, forceRestoreAll);
-            bool childMispredicted = false;
+            bool anyChildMispredicted = false;
 
-            foreach (var staticChild in netController.StaticNetworkChildren)
+            var children = netController.StaticNetworkChildren;
+            Span<bool> childMispredicted = stackalloc bool[children.Length];
+            for (int i = 0; i < children.Length; i++)
             {
+                var staticChild = children[i];
                 if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
                 if (!staticChild.IsCurrentOwner) continue;
                 
-                if (staticChild.Reconcile(incomingTick, forceRestoreAll))
+                childMispredicted[i] = staticChild.Reconcile(incomingTick, forceRestoreAll);
+                if (childMispredicted[i])
                 {
-                    childMispredicted = true;
+                    anyChildMispredicted = true;
                 }
             }
 
-            if (parentMispredicted || childMispredicted)
+            if (parentMispredicted || anyChildMispredicted)
             {
+                // Restore non-mispredicted nodes to incomingTick so resimulation
+                // starts from a temporally consistent baseline
+                if (!parentMispredicted)
+                {
+                    netController.RestoreToPredictedState(incomingTick);
+                }
+                for (int i = 0; i < children.Length; i++)
+                {
+                    var staticChild = children[i];
+                    if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                    if (!staticChild.IsCurrentOwner) continue;
+                    if (!childMispredicted[i])
+                    {
+                        staticChild.RestoreToPredictedState(incomingTick);
+                    }
+                }
+
                 // Misprediction detected - resimulate
                 netController.IsResimulating = true;
                 foreach (var staticChild in netController.StaticNetworkChildren)
@@ -796,37 +817,8 @@ namespace Nebula
                 // Resimulate from confirmed tick to predicted tick
                 for (var resimTick = incomingTick + 1; resimTick <= _clientPredictedTick; resimTick++)
                 {
-                    // Phase 1: Apply all buffered inputs
-                    var bufferedInput = netController.GetBufferedInput(resimTick);
-                    if (bufferedInput != null)
-                    {
-                        netController.SetInputBytes(bufferedInput);
-                    }
-
-                    foreach (var staticChild in netController.StaticNetworkChildren)
-                    {
-                        if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
-                        if (!staticChild.IsCurrentOwner) continue;
-
-                        var childInput = staticChild.GetBufferedInput(resimTick);
-                        if (childInput != null)
-                        {
-                            staticChild.SetInputBytes(childInput);
-                        }
-                    }
-
-                    // Phase 2: Run simulations
-                    netController._NetworkProcess(resimTick);
-                    netController.StorePredictedState(resimTick);
-
-                    foreach (var staticChild in netController.StaticNetworkChildren)
-                    {
-                        if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
-                        if (!staticChild.IsCurrentOwner) continue;
-
-                        staticChild._NetworkProcess(resimTick);
-                        staticChild.StorePredictedState(resimTick);
-                    }
+                    ApplyClientBufferedInputsForEntity(netController, resimTick);
+                    SimulateAndStoreOwnedEntity(netController, resimTick);
                 }
 
                 netController.IsResimulating = false;
@@ -844,6 +836,59 @@ namespace Nebula
                 // and import didn't modify predicted properties for owned entities.
                 // Do NOT call RestoreToPredictedState(incomingTick) here - that would
                 // reset the entity to an old tick's state, causing visual jumps.
+            }
+        }
+
+        /// <summary>
+        /// Restores the latest client input (from SetInput) for an entity and its owned static
+        /// children, undoing any SetInputBytes overwrites that reconciliation may have applied.
+        /// Call this once per prediction tick, before running _NetworkProcess.
+        /// </summary>
+        private void RestoreClientInputsForEntity(NetworkController netController)
+        {
+            netController.RestorePendingClientInput();
+            foreach (var staticChild in netController.StaticNetworkChildren)
+            {
+                if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                if (!staticChild.IsCurrentOwner) continue;
+                staticChild.RestorePendingClientInput();
+            }
+        }
+
+        /// <summary>
+        /// Applies client-side buffered inputs for an entity and its owned static children.
+        /// Used during resimulation to replay the recorded inputs for a given tick.
+        /// </summary>
+        private void ApplyClientBufferedInputsForEntity(NetworkController netController, int tick)
+        {
+            var bufferedInput = netController.GetBufferedInput(tick);
+            if (bufferedInput != null) netController.SetInputBytes(bufferedInput);
+
+            foreach (var staticChild in netController.StaticNetworkChildren)
+            {
+                if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                if (!staticChild.IsCurrentOwner) continue;
+                var childInput = staticChild.GetBufferedInput(tick);
+                if (childInput != null) staticChild.SetInputBytes(childInput);
+            }
+        }
+
+        /// <summary>
+        /// Simulates one tick for an owned entity and its owned static children (root first, then
+        /// children), and stores the predicted state for each. The caller is responsible for setting
+        /// IsResimulating or IsPredicting flags before calling this method.
+        /// </summary>
+        private void SimulateAndStoreOwnedEntity(NetworkController netController, int tick)
+        {
+            netController._NetworkProcess(tick);
+            netController.StorePredictedState(tick);
+
+            foreach (var staticChild in netController.StaticNetworkChildren)
+            {
+                if (staticChild == null || staticChild.IsMarkedForDeletion) continue;
+                if (!staticChild.IsCurrentOwner) continue;
+                staticChild._NetworkProcess(tick);
+                staticChild.StorePredictedState(tick);
             }
         }
 
@@ -1079,42 +1124,35 @@ namespace Nebula
                 {
                     continue;
                 }
+                // Phase 1: Apply all buffered inputs (root first, then children — must match simulation order)
+                if (netController.HasInputSupport)
+                {
+                    var rootInput = GetServerBufferedInput(new InputBufferKey(netController.NetId), CurrentTick);
+                    if (rootInput != null) netController.SetInputBytes(rootInput);
+                }
                 foreach (var networkChild in netController.StaticNetworkChildren)
                 {
                     if (networkChild == null) continue;
                     if (networkChild.RawNode == null)
                     {
                         Log(Debugger.DebugLevel.ERROR, $"Network child node is unexpectedly null: {netController.RawNode.SceneFilePath}");
-                    }
-                    if (networkChild.RawNode.ProcessMode == ProcessModeEnum.Disabled)
-                    {
                         continue;
                     }
-                    
-                    // Apply buffered input for this tick before processing
-                    if (networkChild.HasInputSupport)
-                    {
-                        var bufferedInput = GetServerBufferedInput(new InputBufferKey(netController.NetId, networkChild.StaticChildId), CurrentTick);
-                        if (bufferedInput != null)
-                        {
-                            networkChild.SetInputBytes(bufferedInput);
-                        }
-                    }
-                    
+                    if (networkChild.RawNode.ProcessMode == ProcessModeEnum.Disabled) continue;
+                    if (!networkChild.HasInputSupport) continue;
+                    var bufferedInput = GetServerBufferedInput(new InputBufferKey(netController.NetId, networkChild.StaticChildId), CurrentTick);
+                    if (bufferedInput != null) networkChild.SetInputBytes(bufferedInput);
+                }
+
+                // Phase 2: Simulate (root first, then children — must match client prediction/resim order)
+                netController._NetworkProcess(CurrentTick);
+                foreach (var networkChild in netController.StaticNetworkChildren)
+                {
+                    if (networkChild == null) continue;
+                    if (networkChild.RawNode == null) continue;
+                    if (networkChild.RawNode.ProcessMode == ProcessModeEnum.Disabled) continue;
                     networkChild._NetworkProcess(CurrentTick);
                 }
-                
-                // Apply input for the root netController if it has input support
-                if (netController.HasInputSupport)
-                {
-                    var rootInput = GetServerBufferedInput(new InputBufferKey(netController.NetId), CurrentTick);
-                    if (rootInput != null)
-                    {
-                        netController.SetInputBytes(rootInput);
-                    }
-                }
-                
-                netController._NetworkProcess(CurrentTick);
             }
             _isProcessingNetScenes = false;
             FlushPendingNetSceneChanges();
@@ -2364,7 +2402,9 @@ namespace Nebula
             // Get current input
             var inputBytes = netNode.GetInputBytes();
 
-            // Buffer this input for the predicted tick (for redundancy and rollback)
+            // Buffer input for the current tick only.
+            // During resimulation, each tick uses the input that was actually active at that time.
+            // This matches server behavior where inputs arrive and are applied at specific ticks.
             netNode.BufferInput(_clientPredictedTick, inputBytes);
 
             // Only send if input has changed (but always buffer)

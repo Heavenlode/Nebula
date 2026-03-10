@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using Nebula.Utility.Tools;
 
 namespace Nebula.Utility.Nodes
@@ -35,6 +34,12 @@ namespace Nebula.Utility.Nodes
         /// </summary>
         [Export]
         public float VisualInterpolateSpeed { get; set; } = 20f;
+
+        /// <summary>
+        /// When true, skips _NetworkProcess entirely and disables reconciliation hooks.
+        /// Not exported - controlled programmatically at runtime only.
+        /// </summary>
+        public bool SyncPaused { get; set; } = false;
 
         [NetProperty(NotifyOnChange = true)]
         public bool IsTeleporting { get; set; }
@@ -178,14 +183,14 @@ namespace Nebula.Utility.Nodes
         /// </summary>
         partial void OnConfirmedStateRestored()
         {
+            if (SyncPaused) return;
+
             if (SourceNode != null)
             {
-                // Sync position from the (just restored) property
-                SourceNode.Position = NetPosition;
-
-                // Sync rotation with normalization and hemisphere check
                 var confirmedRot = SafeNormalize(NetRotation);
                 var currentRot = SafeNormalize(SourceNode.Quaternion);
+
+                SourceNode.Position = NetPosition;
                 SourceNode.Quaternion = EnsureSameHemisphere(confirmedRot, currentRot);
             }
         }
@@ -196,14 +201,15 @@ namespace Nebula.Utility.Nodes
         /// </summary>
         partial void OnPredictedStateRestored()
         {
-            // Ensure restored rotation is normalized
+            if (SyncPaused) return;
+
             NetRotation = SafeNormalize(NetRotation);
 
             if (SourceNode != null)
             {
-                SourceNode.Position = NetPosition;
-                // Ensure same hemisphere as current SourceNode to avoid "long way around" rotation
                 var currentRot = SafeNormalize(SourceNode.Quaternion);
+
+                SourceNode.Position = NetPosition;
                 SourceNode.Quaternion = EnsureSameHemisphere(NetRotation, currentRot);
             }
         }
@@ -228,6 +234,19 @@ namespace Nebula.Utility.Nodes
         public override void _NetworkProcess(int tick)
         {
             base._NetworkProcess(tick);
+
+            if (SyncPaused)
+            {
+                // Server: skip entirely — no need to serialize global transform during matched state.
+                // Owned client: still read from SourceNode to keep the prediction buffer current,
+                // so RestoreToPredictedState always has valid values.
+                if (Network.IsClient && Network.IsCurrentOwner && SourceNode != null)
+                {
+                    NetPosition = SourceNode.Position;
+                    NetRotation = SafeNormalize(SourceNode.Quaternion);
+                }
+                return;
+            }
 
             // Non-owned clients don't run simulation - interpolation handles them
             if (Network.IsClient && !Network.IsCurrentOwner) return;

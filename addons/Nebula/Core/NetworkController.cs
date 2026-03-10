@@ -928,6 +928,7 @@ namespace Nebula
 
 		private byte[] _inputData;
 		private byte[] _previousInputData;
+		private byte[] _pendingClientInput;
 		private bool _inputChanged;
 
 		/// <summary>
@@ -975,6 +976,7 @@ namespace Nebula
 			var size = Unsafe.SizeOf<TInput>();
 			_inputData = new byte[size];
 			_previousInputData = new byte[size];
+			_pendingClientInput = new byte[size];
 		}
 
 		/// <summary>
@@ -995,9 +997,23 @@ namespace Nebula
 			// Write new input to current
 			MemoryMarshal.Write(_inputData, in input);
 
+			// Save a copy that won't be overwritten by reconciliation's SetInputBytes
+			_inputData.CopyTo(_pendingClientInput, 0);
+
 			// Check if changed from last SENT input (previousInputData is only updated on send)
 			// Use OR to preserve the flag - it's cleared when SendInput actually sends
 			_inputChanged = _inputChanged || !_inputData.AsSpan().SequenceEqual(_previousInputData);
+		}
+
+		/// <summary>
+		/// Restores _inputData from the latest SetInput call. Called before prediction
+		/// to undo any overwrites from reconciliation's SetInputBytes during resimulation.
+		/// No-op if this node has no input support.
+		/// </summary>
+		internal void RestorePendingClientInput()
+		{
+			if (!HasInputSupport) return;
+			_pendingClientInput.CopyTo(_inputData, 0);
 		}
 
 		/// <summary>
@@ -1092,7 +1108,9 @@ namespace Nebula
 
 			int slot = (int)(tick & (INPUT_BUFFER_SIZE - 1));
 			if (_inputBufferTicks[slot] == tick)
+			{
 				return _inputBuffer[slot];
+			}
 			return null;  // Input not found (too old or never stored)
 		}
 

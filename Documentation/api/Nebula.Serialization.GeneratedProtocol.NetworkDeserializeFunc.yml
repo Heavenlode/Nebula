@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc
   type: Delegate
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -49,7 +49,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc.NetworkDeserializeFunc(object, nint)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -77,7 +77,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc.Invoke(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -111,7 +111,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc.BeginInvoke(Nebula.WorldRunner, ENet.Peer, Nebula.Serialization.NetBuffer, object, System.AsyncCallback, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -149,7 +149,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.NetworkDeserializeFunc.EndInvoke(System.IAsyncResult)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization

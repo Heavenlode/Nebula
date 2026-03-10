@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler
   type: Delegate
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -55,7 +55,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.LogEventHandler(object, nint)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -83,7 +83,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.Invoke(int, string, string, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -115,7 +115,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.BeginInvoke(int, string, string, string, System.AsyncCallback, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor
@@ -153,7 +153,7 @@ items:
   fullName: Nebula.Internal.Editor.WorldDebug.LogEventHandler.EndInvoke(System.IAsyncResult)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Internal.Editor.WorldDebug_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Internal.Editor

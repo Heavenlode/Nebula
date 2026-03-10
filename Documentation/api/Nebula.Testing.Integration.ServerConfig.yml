@@ -18,7 +18,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -49,7 +49,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig.ServerConfig()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -72,7 +72,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig.InitialWorldScene
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -95,7 +95,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig.WorldId
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -118,7 +118,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig.DebugPort
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -143,7 +143,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerConfig.ExtraArgs
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/IntegrationTestBase.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration

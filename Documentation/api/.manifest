@@ -1028,6 +1028,7 @@
   "Nebula.Utility.Nodes.NetTransform3D.OnNetRotationChanged(Godot.Quaternion,Godot.Quaternion)": "Nebula.Utility.Nodes.NetTransform3D.yml",
   "Nebula.Utility.Nodes.NetTransform3D.SetBsonPropertyByName(System.String,System.Object)": "Nebula.Utility.Nodes.NetTransform3D.yml",
   "Nebula.Utility.Nodes.NetTransform3D.SourceNode": "Nebula.Utility.Nodes.NetTransform3D.yml",
+  "Nebula.Utility.Nodes.NetTransform3D.SyncPaused": "Nebula.Utility.Nodes.NetTransform3D.yml",
   "Nebula.Utility.Nodes.NetTransform3D.TargetNode": "Nebula.Utility.Nodes.NetTransform3D.yml",
   "Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3)": "Nebula.Utility.Nodes.NetTransform3D.yml",
   "Nebula.Utility.Nodes.NetTransform3D.Teleport(Godot.Vector3,Godot.Quaternion)": "Nebula.Utility.Nodes.NetTransform3D.yml",

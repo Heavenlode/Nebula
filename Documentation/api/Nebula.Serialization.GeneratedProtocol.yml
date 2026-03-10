@@ -29,7 +29,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -63,7 +63,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.StaticMethods
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -84,7 +84,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.ScenesMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -105,7 +105,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.ScenesPack
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -126,7 +126,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.SceneInterestMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -147,7 +147,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -168,7 +168,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.StaticNetworkNodePathsPack
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -189,7 +189,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.PropertiesMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -210,7 +210,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.PropertiesLookup
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -231,7 +231,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.PropertiesByStaticChildId
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -252,7 +252,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.FunctionsMap
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -273,7 +273,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.FunctionsLookup
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -294,7 +294,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.SerialTypePack
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -315,7 +315,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.Deserializers
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -336,7 +336,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.Serializers
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -357,7 +357,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFuncs
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -378,7 +378,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.OnPeerDisconnectedFuncs
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization

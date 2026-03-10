@@ -19,7 +19,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -47,7 +47,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.NodePath
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -68,7 +68,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.Name
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -89,7 +89,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.Index
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -110,7 +110,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.Arguments
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -131,7 +131,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.Sources
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -152,7 +152,7 @@ items:
   fullName: Nebula.Serialization.ProtocolNetFunction.ProtocolNetFunction(string, string, byte, Nebula.Serialization.NetFunctionArgument[], Nebula.Serialization.NetworkSources)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization

@@ -1062,6 +1062,13 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine("        int slot = tick & (PREDICTION_BUFFER_SIZE - 1);");
                 sb.AppendLine("        bool anyMispredicted = false;");
                 sb.AppendLine();
+                // Emit per-property misprediction flags
+                foreach (var prop in predictedProps)
+                {
+                    sb.AppendLine($"        bool _miss_{prop!.PropertyName} = false;");
+                }
+                sb.AppendLine();
+                sb.AppendLine("        // Phase 1: Detect per-property misprediction");
                 foreach (var prop in predictedProps)
                 {
                     var compareExpr = GetPredictionCompareExpression(prop!, "predicted", "confirmed", "tolerance");
@@ -1072,13 +1079,24 @@ public class NetPropertyGenerator : IIncrementalGenerator
                     sb.AppendLine($"            var confirmed = _confirmed_{prop.PropertyName};");
                     sb.AppendLine($"            if (!({compareExpr}))");
                     sb.AppendLine("            {");
-                    sb.AppendLine($"                {prop.PropertyName} = confirmed;");
+                    sb.AppendLine($"                _miss_{prop.PropertyName} = true;");
                     sb.AppendLine("                anyMispredicted = true;");
                     sb.AppendLine("            }");
                     sb.AppendLine("        }");
                 }
                 sb.AppendLine();
-                sb.AppendLine("        if (anyMispredicted) OnConfirmedStateRestored();");
+                sb.AppendLine("        // Phase 2: If any misprediction, restore all properties to incomingTick state.");
+                sb.AppendLine("        // Mispredicted properties get the confirmed (server) value.");
+                sb.AppendLine("        // Non-mispredicted properties get their predicted value at incomingTick,");
+                sb.AppendLine("        // maintaining temporal consistency while preserving correct client predictions.");
+                sb.AppendLine("        if (anyMispredicted)");
+                sb.AppendLine("        {");
+                foreach (var prop in predictedProps)
+                {
+                    sb.AppendLine($"            {prop!.PropertyName} = _miss_{prop.PropertyName} ? _confirmed_{prop.PropertyName} : _predicted_{prop.PropertyName}[slot];");
+                }
+                sb.AppendLine("            OnConfirmedStateRestored();");
+                sb.AppendLine("        }");
                 sb.AppendLine("        return anyMispredicted;");
                 sb.AppendLine("    }");
                 sb.AppendLine();

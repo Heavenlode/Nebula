@@ -9,7 +9,7 @@ namespace Nebula.Utility.Tools
     public partial class Env : Node
     {
         public static Env Instance { get; private set; }
-        private bool initialized = false;
+        private string initializedFilename = null;
         private Dictionary<string, string> env = new Dictionary<string, string>();
 
         public Dictionary<string, string> StartArgs = [];
@@ -127,11 +127,17 @@ namespace Nebula.Utility.Tools
 
         private Dictionary<string, string> Parse(string filename)
         {
-            if (initialized) return env;
+            if (initializedFilename == filename) return env;
 
             if (!FileAccess.FileExists(filename))
             {
                 return new Dictionary<string, string>();
+            }
+
+            // Clear any previously cached env if switching files
+            if (initializedFilename != null)
+            {
+                env.Clear();
             }
 
             var file = FileAccess.Open(filename, FileAccess.ModeFlags.Read);
@@ -146,7 +152,7 @@ namespace Nebula.Utility.Tools
                 }
             }
 
-            initialized = true;
+            initializedFilename = filename;
             return env;
         }
     }

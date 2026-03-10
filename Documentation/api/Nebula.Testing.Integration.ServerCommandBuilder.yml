@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerCommandBuilder
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -48,7 +48,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.ServerCommandBuilder(Nebula.Testing.Integration.GodotProcess, Nebula.Testing.Integration.GodotProcess)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -76,7 +76,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.Spawn(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -107,7 +107,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.Input(byte, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration
@@ -141,7 +141,7 @@ items:
   fullName: Nebula.Testing.Integration.ServerCommandBuilder.Custom(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/20dda02da4604ba8810f2d7f6d2af4c812bdd32b/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
+    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Testing/Integration/ServerCommandBuilder.cs
   assemblies:
   - Nebula
   namespace: Nebula.Testing.Integration

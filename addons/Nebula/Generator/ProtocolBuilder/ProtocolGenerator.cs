@@ -432,7 +432,10 @@ namespace Nebula.Generators
                         {
                             funcData.Arguments.Add(new ArgumentData
                             {
-                                TypeFullName = param.TypeFullName
+                                TypeFullName = param.TypeFullName,
+                                IsEnum = param.IsEnum,
+                                EnumUnderlyingTypeName = param.EnumUnderlyingTypeName,
+                                SubtypeIdentifier = param.IsEnum ? param.EnumUnderlyingTypeName : null
                             });
                         }
 

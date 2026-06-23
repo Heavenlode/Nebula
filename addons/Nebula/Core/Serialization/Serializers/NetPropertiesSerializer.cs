@@ -605,79 +605,12 @@ namespace Nebula.Serialization.Serializers
 
         /// <summary>
         /// Reads an absolute property value (no delta).
+        /// Delegates to NetReader.ReadAbsoluteValue for reuse.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void ReadAbsoluteValue(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache cache)
         {
-            switch (type)
-            {
-                case SerialVariantType.Bool:
-                    cache.BoolValue = NetReader.ReadBool(buffer);
-                    break;
-                case SerialVariantType.Int:
-                    // Check subtype for sized integer types (enums, byte, short, int, long)
-                    // Clear LongValue first to ensure upper bytes are zero
-                    cache.LongValue = 0;
-                    switch (subtype)
-                    {
-                        case "byte":
-                        case "System.Byte":
-                            cache.ByteValue = NetReader.ReadByte(buffer);
-                            break;
-                        case "sbyte":
-                        case "System.SByte":
-                            cache.ByteValue = NetReader.ReadByte(buffer);
-                            break;
-                        case "short":
-                        case "System.Int16":
-                            cache.IntValue = NetReader.ReadInt16(buffer);
-                            break;
-                        case "ushort":
-                        case "System.UInt16":
-                            cache.IntValue = NetReader.ReadUInt16(buffer);
-                            break;
-                        case "int":
-                        case "Int":
-                        case "System.Int32":
-                            cache.IntValue = NetReader.ReadInt32(buffer);
-                            break;
-                        case "uint":
-                        case "System.UInt32":
-                            cache.IntValue = (int)NetReader.ReadUInt32(buffer);
-                            break;
-                        default:
-                            // Default to Int64 for long, ulong, or unknown subtypes
-                            cache.LongValue = NetReader.ReadInt64(buffer);
-                            break;
-                    }
-                    break;
-                case SerialVariantType.Float:
-                    cache.FloatValue = NetReader.ReadFloat(buffer);
-                    break;
-                case SerialVariantType.String:
-                    cache.StringValue = NetReader.ReadString(buffer);
-                    break;
-                case SerialVariantType.Vector2:
-                    cache.Vec2Value = NetReader.ReadVector2(buffer);
-                    break;
-                case SerialVariantType.Vector3:
-                    cache.Vec3Value = NetReader.ReadVector3(buffer);
-                    break;
-                case SerialVariantType.Quaternion:
-                    cache.QuatValue = NetReader.ReadQuaternion(buffer);
-                    break;
-                case SerialVariantType.PackedByteArray:
-                    cache.RefValue = NetReader.ReadBytesWithLength(buffer);
-                    break;
-                case SerialVariantType.PackedInt32Array:
-                    cache.RefValue = NetReader.ReadInt32Array(buffer);
-                    break;
-                case SerialVariantType.PackedInt64Array:
-                    cache.RefValue = NetReader.ReadInt64Array(buffer);
-                    break;
-                default:
-                    throw new NotSupportedException($"Unsupported property type: {type}");
-            }
+            NetReader.ReadAbsoluteValue(buffer, type, subtype, ref cache);
         }
 
         /// <summary>

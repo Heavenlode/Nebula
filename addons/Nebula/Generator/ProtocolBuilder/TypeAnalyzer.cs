@@ -54,6 +54,8 @@ namespace Nebula.Generators
         public sealed class ParameterInfo
         {
             public string TypeFullName { get; init; } = "";
+            public bool IsEnum { get; init; } = false;
+            public string? EnumUnderlyingTypeName { get; init; }
         }
 
         public sealed class NetworkTypeInfo
@@ -388,7 +390,18 @@ namespace Nebula.Generators
                     {
                         Name = method.Name,
                         Parameters = method.Parameters
-                            .Select(p => new ParameterInfo { TypeFullName = GetFullTypeName(p.Type) })
+                            .Select(p => {
+                                var isEnum = p.Type.TypeKind == TypeKind.Enum;
+                                string? enumUnderlying = null;
+                                if (isEnum && p.Type is INamedTypeSymbol enumType)
+                                    enumUnderlying = enumType.EnumUnderlyingType?.ToDisplayString();
+                                return new ParameterInfo 
+                                { 
+                                    TypeFullName = GetFullTypeName(p.Type),
+                                    IsEnum = isEnum,
+                                    EnumUnderlyingTypeName = enumUnderlying
+                                };
+                            })
                             .ToList(),
                         Sources = GetNamedArgument(netFuncAttr, "Source", 3), // Default All = 3
                     };

@@ -67,35 +67,8 @@ namespace Nebula
                 {
                     throw new Exception($"Function {args.Method.Name} not found in network scene {networkScene}");
                 }
-                netNode.Network.CurrentWorld
-                    .SendNetFunction(netId, functionInfo.Index, args.Arguments.ToList().Select((x, index) =>
-                    {
-                        switch (functionInfo.Arguments[index].VariantType)
-                        {
-                            case SerialVariantType.Int:
-                                if (functionInfo.Arguments[index].Metadata.TypeIdentifier == "Int")
-                                    return Variant.From((int)x);
-                                else if (functionInfo.Arguments[index].Metadata.TypeIdentifier == "Byte")
-                                    return Variant.From((byte)x);
-                                else
-                                    return Variant.From((long)x);
-                            case SerialVariantType.Float:
-                                return Variant.From((float)x);
-                            case SerialVariantType.String:
-                                return Variant.From((string)x);
-                            case SerialVariantType.Vector2:
-                                return Variant.From((Vector2)x);
-                            case SerialVariantType.Vector3:
-                                return Variant.From((Vector3)x);
-                            case SerialVariantType.Quaternion:
-                                return Variant.From((Quaternion)x);
-                            case SerialVariantType.Color:
-                                return Variant.From((Color)x);
-                            default:
-                                throw new Exception($"Unsupported argument type {functionInfo.Arguments[index].VariantType}");
-                        }
-                    }).ToArray()
-                    );
+                // Pass object[] directly with protocol metadata - no Variant conversion
+                netNode.Network.CurrentWorld.SendNetFunction(netId, functionInfo, args.Arguments);
             }
             else
             {

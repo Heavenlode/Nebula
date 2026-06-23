@@ -408,7 +408,17 @@ namespace Nebula.Generators
             
             foreach (var arg in args)
             {
-                var variantType = MapTypeToVariant(arg.TypeFullName, out var subtype);
+                string variantType;
+                string? subtype = null;
+                if (arg.IsEnum)
+                {
+                    variantType = "Int";
+                    subtype = "Enum";
+                }
+                else
+                {
+                    variantType = MapTypeToVariant(arg.TypeFullName, out subtype);
+                }
                 var actualSubtype = arg.SubtypeIdentifier ?? subtype ?? "None";
                 sb.AppendLine($"{indent}    new NetFunctionArgument(SerialVariantType.{variantType}, new SerialMetadata(\"{Escape(actualSubtype)}\")),");
             }

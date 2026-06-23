@@ -76,6 +76,8 @@ namespace Nebula.Generators
     {
         public string TypeFullName { get; set; } = "";
         public string? SubtypeIdentifier { get; set; }
+        public bool IsEnum { get; set; } = false;
+        public string? EnumUnderlyingTypeName { get; set; }
     }
 
     /// <summary>

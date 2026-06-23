@@ -688,9 +688,19 @@ namespace Nebula
 				return;
 			}
 
-			// Broadcast path - update global dirty mask and cached value
+			// Broadcast path - update global dirty mask
 			DirtyMask |= (1L << prop.Index);
-			SetCachedValue(prop.Index, prop.VariantType, value);
+			
+			// Skip caching for predicted properties on owned clients.
+			// This prevents client predictions from contaminating CachedProperties,
+			// which StoreConfirmedState reads to get the server's confirmed values.
+			bool isOwnedPredictedOnClient = NetRunner.Instance.IsClient
+				&& sourceNode.Network.IsCurrentOwner
+				&& prop.Predicted;
+			if (!isOwnedPredictedOnClient)
+			{
+				SetCachedValue(prop.Index, prop.VariantType, value);
+			}
 		}
 
 		/// <summary>

@@ -96,7 +96,7 @@ namespace Nebula
         {
             public Node Node;
             public ProtocolNetFunction FunctionInfo;
-            public object[] Args;
+            public PropertyCache[] Args;
             public NetPeer Sender;
         }
 
@@ -1175,14 +1175,14 @@ namespace Nebula
                     Caller = queuedFunction.Sender,
                 };
                 functionNode.Network.IsInboundCall = true;
-                // Convert object[] back to Variant[] at Godot boundary
-                // Note: Godot's Call() requires Variant[], allocation is unavoidable here
-                var variantArgs = new Variant[queuedFunction.Args.Length];
-                for (int i = 0; i < queuedFunction.Args.Length; i++)
-                {
-                    variantArgs[i] = Variant.From(queuedFunction.Args[i]);
-                }
-                functionNode.Network.RawNode.Call(queuedFunction.FunctionInfo.Name, variantArgs);
+                // Use source-generated dispatch - no Variant conversion, no Godot boundary crossing
+                var rawNode = functionNode.Network.RawNode;
+                if (rawNode is NetNode3D n3d)
+                    n3d.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
+                else if (rawNode is NetNode2D n2d)
+                    n2d.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
+                else if (rawNode is NetNode n)
+                    n.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
                 functionNode.Network.IsInboundCall = false;
                 NetFunctionContext = new NetFunctionCtx { };
 
@@ -1193,11 +1193,11 @@ namespace Nebula
                     NetWriter.WriteByte(debugBuffer, (byte)DebugDataType.CALLS);
                     NetWriter.WriteString(debugBuffer, queuedFunction.FunctionInfo.Name);
                     NetWriter.WriteByte(debugBuffer, (byte)queuedFunction.Args.Length);
-                    foreach (var arg in queuedFunction.Args)
+                    for (int i = 0; i < queuedFunction.Args.Length; i++)
                     {
-                        // Args are already C# objects, determine type and write
-                        var serialType = GetSerialTypeFromObject(arg);
-                        NetWriter.WriteWithType(debugBuffer, serialType, arg);
+                        var cache = queuedFunction.Args[i];
+                        NetWriter.WriteByte(debugBuffer, (byte)cache.Type);
+                        WriteFromPropertyCache(debugBuffer, queuedFunction.FunctionInfo.Arguments[i], ref cache);
                     }
                     SendToDebugClients(CreateFramedPacket(debugBuffer));
                 }
@@ -1352,6 +1352,61 @@ namespace Nebula
                 long[] => SerialVariantType.PackedInt64Array,
                 _ => SerialVariantType.Object
             };
+        }
+
+        /// <summary>
+        /// Writes a PropertyCache value to a buffer using the function argument metadata.
+        /// </summary>
+        private static void WriteFromPropertyCache(NetBuffer buffer, NetFunctionArgument argInfo, ref PropertyCache cache)
+        {
+            switch (cache.Type)
+            {
+                case SerialVariantType.Bool:
+                    NetWriter.WriteBool(buffer, cache.BoolValue);
+                    break;
+                case SerialVariantType.Int:
+                    switch (argInfo.Metadata.TypeIdentifier)
+                    {
+                        case "Byte":
+                            NetWriter.WriteByte(buffer, cache.ByteValue);
+                            break;
+                        case "Short":
+                            NetWriter.WriteInt16(buffer, (short)cache.IntValue);
+                            break;
+                        case "Int":
+                        case "Enum":
+                            NetWriter.WriteInt32(buffer, cache.IntValue);
+                            break;
+                        default:
+                            NetWriter.WriteInt64(buffer, cache.LongValue);
+                            break;
+                    }
+                    break;
+                case SerialVariantType.Float:
+                    NetWriter.WriteFloat(buffer, cache.FloatValue);
+                    break;
+                case SerialVariantType.String:
+                    NetWriter.WriteString(buffer, cache.StringValue);
+                    break;
+                case SerialVariantType.Vector2:
+                    NetWriter.WriteVector2(buffer, cache.Vec2Value);
+                    break;
+                case SerialVariantType.Vector3:
+                    NetWriter.WriteVector3(buffer, cache.Vec3Value);
+                    break;
+                case SerialVariantType.Quaternion:
+                    NetWriter.WriteQuaternion(buffer, cache.QuatValue);
+                    break;
+                case SerialVariantType.PackedByteArray:
+                    NetWriter.WriteBytesWithLength(buffer, (byte[])cache.RefValue);
+                    break;
+                case SerialVariantType.PackedInt32Array:
+                    NetWriter.WriteInt32Array(buffer, (int[])cache.RefValue);
+                    break;
+                case SerialVariantType.PackedInt64Array:
+                    NetWriter.WriteInt64Array(buffer, (long[])cache.RefValue);
+                    break;
+            }
         }
 
         internal HashSet<NetworkController> QueueDespawnedNodes = [];
@@ -1919,7 +1974,7 @@ namespace Nebula
         // Pooled dictionary for ImportState - avoids per-tick allocation
         private Dictionary<ushort, byte> _importNodeSerializerMap = new();
         // Pooled list for net function args - avoids per-call allocation
-        private List<object> _netFunctionArgsPool = new(8);
+        private List<PropertyCache> _netFunctionArgsPool = new(8);
 
         internal Dictionary<UUID, NetBuffer> ExportState(List<NetPeer> peers)
         {
@@ -2333,12 +2388,14 @@ namespace Nebula
                     Caller = queuedFunction.Sender,
                 };
                 functionNode.Network.IsInboundCall = true;
-                var variantArgs = new Variant[queuedFunction.Args.Length];
-                for (int i = 0; i < queuedFunction.Args.Length; i++)
-                {
-                    variantArgs[i] = Variant.From(queuedFunction.Args[i]);
-                }
-                functionNode.Network.RawNode.Call(queuedFunction.FunctionInfo.Name, variantArgs);
+                // Use source-generated dispatch - no Variant conversion, no Godot boundary crossing
+                var rawNode = functionNode.Network.RawNode;
+                if (rawNode is NetNode3D n3d)
+                    n3d.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
+                else if (rawNode is NetNode2D n2d)
+                    n2d.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
+                else if (rawNode is NetNode n)
+                    n.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
                 functionNode.Network.IsInboundCall = false;
                 NetFunctionContext = new NetFunctionCtx { };
             }
@@ -2516,7 +2573,7 @@ namespace Nebula
         }
 
         // WARNING: These are not exactly tick-aligned for state reconcilliation. Could cause state issues because the assumed tick is when it is received?
-        internal void SendNetFunction(NetId netId, byte functionId, Variant[] args)
+        internal void SendNetFunction(NetId netId, ProtocolNetFunction functionInfo, object[] args)
         {
             if (NetRunner.Instance.IsServer)
             {
@@ -2527,11 +2584,11 @@ namespace Nebula
                     using var buffer = new NetBuffer();
                     NetId.NetworkSerialize(this, NetRunner.Instance.Peers[peer], netId, buffer);
                     NetWriter.WriteUInt16(buffer, GetPeerNodeId(NetRunner.Instance.Peers[peer], node));
-                    NetWriter.WriteByte(buffer, functionId);
-                    foreach (var arg in args)
+                    NetWriter.WriteByte(buffer, functionInfo.Index);
+                    for (int i = 0; i < args.Length; i++)
                     {
-                        var serialType = Protocol.FromGodotVariantType(arg.VariantType);
-                        NetWriter.WriteByType(buffer, serialType, VariantToObject(arg));
+                        // Use protocol metadata directly, no Variant conversion
+                        NetWriter.WriteByType(buffer, functionInfo.Arguments[i].VariantType, args[i]);
                     }
                     NetRunner.SendReliable(NetRunner.Instance.Peers[peer], (byte)NetRunner.ENetChannelId.Function, buffer);
                 }
@@ -2540,11 +2597,11 @@ namespace Nebula
             {
                 using var buffer = new NetBuffer();
                 NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netId, buffer);
-                NetWriter.WriteByte(buffer, functionId);
-                foreach (var arg in args)
+                NetWriter.WriteByte(buffer, functionInfo.Index);
+                for (int i = 0; i < args.Length; i++)
                 {
-                    var serialType = Protocol.FromGodotVariantType(arg.VariantType);
-                    NetWriter.WriteByType(buffer, serialType, VariantToObject(arg));
+                    // Use protocol metadata directly, no Variant conversion
+                    NetWriter.WriteByType(buffer, functionInfo.Arguments[i].VariantType, args[i]);
                 }
                 NetRunner.SendReliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Function, buffer);
             }
@@ -2562,10 +2619,12 @@ namespace Nebula
             }
             _netFunctionArgsPool.Clear();
             var functionInfo = Protocol.UnpackFunction(netController.RawNode.SceneFilePath, functionId);
-            foreach (var arg in functionInfo.Arguments)
+            for (int i = 0; i < functionInfo.Arguments.Length; i++)
             {
-                var value = NetReader.ReadByType(buffer, arg.VariantType);
-                _netFunctionArgsPool.Add(value);
+                var arg = functionInfo.Arguments[i];
+                var cache = new PropertyCache { Type = arg.VariantType };
+                NetReader.ReadAbsoluteValue(buffer, arg.VariantType, arg.Metadata.TypeIdentifier, ref cache);
+                _netFunctionArgsPool.Add(cache);
             }
             if (NetRunner.Instance.IsServer && (functionInfo.Sources & NetworkSources.Client) == 0)
             {

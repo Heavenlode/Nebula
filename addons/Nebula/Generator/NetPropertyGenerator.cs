@@ -41,32 +41,6 @@ public class NetPropertyGenerator : IIncrementalGenerator
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
-    // Maps C# types to their PropertyCache field names
-    private static readonly Dictionary<string, string> TypeToPropertyCacheField = new()
-    {
-        { "bool", "BoolValue" },
-        { "System.Boolean", "BoolValue" },
-        { "byte", "ByteValue" },
-        { "System.Byte", "ByteValue" },
-        { "int", "IntValue" },
-        { "System.Int32", "IntValue" },
-        { "long", "LongValue" },
-        { "System.Int64", "LongValue" },
-        { "ulong", "LongValue" },
-        { "System.UInt64", "LongValue" },
-        { "float", "FloatValue" },
-        { "System.Single", "FloatValue" },
-        { "double", "DoubleValue" },
-        { "System.Double", "DoubleValue" },
-        { "Godot.Vector2", "Vec2Value" },
-        { "Vector2", "Vec2Value" },
-        { "Godot.Vector3", "Vec3Value" },
-        { "Vector3", "Vec3Value" },
-        { "Godot.Quaternion", "QuatValue" },
-        { "Quaternion", "QuatValue" },
-        { "string", "StringValue" },
-        { "System.String", "StringValue" },
-    };
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -233,22 +207,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
 
     private static string GetPropertyCacheFieldName(string propertyType)
     {
-        // Check direct mapping
-        if (TypeToPropertyCacheField.TryGetValue(propertyType, out var fieldName))
-        {
-            return fieldName;
-        }
-
-        // For custom value types (INetValue<T>), use {TypeName}Value
-        // Extract the simple type name from fully qualified name
-        var simpleName = propertyType.Split('.').Last();
-        if (simpleName.EndsWith("?"))
-        {
-            simpleName = simpleName.TrimEnd('?');
-        }
-
-        // Reference types use RefValue
-        return $"{simpleName}Value";
+        return GeneratorUtils.GetPropertyCacheFieldName(propertyType);
     }
 
     /// <summary>
@@ -257,28 +216,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
     /// </summary>
     private static string GetCacheReadExpression(PropertyInfo prop, string cacheVar)
     {
-        var cacheField = GetPropertyCacheFieldName(prop.PropertyType);
-
-        if (prop.IsEnum)
-        {
-            // Enums are stored as IntValue, need to cast
-            return $"({prop.PropertyType}){cacheVar}.IntValue";
-        }
-        else if (prop.PropertyType is "ulong" or "System.UInt64")
-        {
-            // ulong is stored in LongValue but needs explicit cast
-            return $"(ulong){cacheVar}.LongValue";
-        }
-        else if (!prop.IsValueType && cacheField != "StringValue")
-        {
-            // Reference types (except string) use RefValue with cast
-            return $"({prop.PropertyType}){cacheVar}.RefValue!";
-        }
-        else
-        {
-            // Direct field access for known types
-            return $"{cacheVar}.{cacheField}";
-        }
+        return GeneratorUtils.GetCacheReadExpression(prop.PropertyType, prop.IsEnum, prop.IsValueType, cacheVar);
     }
 
     /// <summary>
@@ -570,6 +508,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
 
                 sb.AppendLine($"    public void On{prop.PropertyName}Changed({prop.FullyQualifiedPropertyType} oldVal, {prop.FullyQualifiedPropertyType} newVal)");
                 sb.AppendLine("    {");
+                sb.AppendLine("        if (Engine.IsEditorHint()) return;");
                 sb.AppendLine($"        Network.{markDirtyMethod}(this, \"{prop.PropertyName}\", newVal);");
                 
                 // If the property type implements INetPropertyBindable, bind the callback
@@ -595,6 +534,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine("    internal override void InitializeNetPropertyBindings()");
                 sb.AppendLine("    {");
                 sb.AppendLine("        base.InitializeNetPropertyBindings();");
+                sb.AppendLine("        if (Engine.IsEditorHint()) return;");
                 
                 for (int i = 0; i < propList.Count; i++)
                 {
@@ -1087,7 +1027,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine();
                 sb.AppendLine("        // Phase 2: If any misprediction, restore all properties to incomingTick state.");
                 sb.AppendLine("        // Mispredicted properties get the confirmed (server) value.");
-                sb.AppendLine("        // Non-mispredicted properties get their predicted value at incomingTick,");
+                sb.AppendLine("        // Non-mispredicted properties get their predicted value,");
                 sb.AppendLine("        // maintaining temporal consistency while preserving correct client predictions.");
                 sb.AppendLine("        if (anyMispredicted)");
                 sb.AppendLine("        {");

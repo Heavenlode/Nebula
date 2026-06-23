@@ -4,6 +4,23 @@ using Nebula.Utility.Tools;
 namespace Nebula.Utility.Nodes
 {
     /// <summary>
+    /// Visual interpolation mode for owned entities.
+    /// </summary>
+    public enum VisualInterpolationMode
+    {
+        /// <summary>
+        /// Exponential smoothing (legacy). Fast response but can show micro-jitter at high speeds.
+        /// </summary>
+        Exponential,
+
+        /// <summary>
+        /// Hermite extrapolation. Zero-latency smooth motion using velocity data.
+        /// Requires SourceNode to implement IInterpolationVelocitySource.
+        /// </summary>
+        Hermite
+    }
+
+    /// <summary>
     /// Synchronizes a Node3D's transform over the network with support for:
     /// - Server authoritative state
     /// - Client-side prediction for owned entities
@@ -31,9 +48,25 @@ namespace Nebula.Utility.Nodes
         /// <summary>
         /// How fast the TargetNode interpolates toward the source transform.
         /// Higher values = faster/tighter follow, lower = smoother but more lag.
+        /// Only used when InterpolationMode is Exponential.
         /// </summary>
         [Export]
         public float VisualInterpolateSpeed { get; set; } = 20f;
+
+        /// <summary>
+        /// The interpolation mode for owned entities.
+        /// Exponential: classic smooth chase (can show micro-jitter at high speeds).
+        /// Hermite: zero-latency cubic extrapolation using velocity (requires IInterpolationVelocitySource).
+        /// </summary>
+        [Export]
+        public VisualInterpolationMode InterpolationMode { get; set; } = VisualInterpolationMode.Exponential;
+
+        /// <summary>
+        /// When true, smoothly interpolates visual toward physics.
+        /// When false, snaps visual to physics instantly.
+        /// Set to false when source position is already smooth (e.g., computed from visual planet position).
+        /// </summary>
+        public bool VisualSmoothing { get; set; } = true;
 
         /// <summary>
         /// When true, skips _NetworkProcess entirely and disables reconciliation hooks.
@@ -118,6 +151,19 @@ namespace Nebula.Utility.Nodes
 
         private bool _isTeleporting = false;
         private bool teleportExported = false;
+
+        // Hermite interpolation state
+        private const int HERMITE_BUFFER_SIZE = 32;
+        private Vector3[] _hermitePositions;
+        private Quaternion[] _hermiteRotations;
+        private Vector3[] _hermiteVelocities;
+        private int _hermiteLatestTick = -1;
+        private int _hermiteLastProcessedTick = -1;
+        private double _hermiteTimeSincePhysicsUpdate;
+        private IInterpolationVelocitySource _velocitySource;
+        private bool _velocitySourceChecked;
+        private Vector3 _hermiteVisualVelocity;
+        private bool _hermiteInitialized;
 
         protected virtual void OnNetChangeIsTeleporting(int tick, bool oldVal, bool newVal)
         {
@@ -244,6 +290,12 @@ namespace Nebula.Utility.Nodes
                 {
                     NetPosition = SourceNode.Position;
                     NetRotation = SafeNormalize(SourceNode.Quaternion);
+
+                    // Keep Hermite buffer updated so visuals stay smooth during velocity-matched state
+                    if (!Network.IsResimulating && InterpolationMode == VisualInterpolationMode.Hermite)
+                    {
+                        BufferHermiteState(tick);
+                    }
                 }
                 return;
             }
@@ -256,6 +308,13 @@ namespace Nebula.Utility.Nodes
             {
                 NetPosition = SourceNode.Position;
                 NetRotation = SafeNormalize(SourceNode.Quaternion);
+            }
+
+            // Buffer position/velocity for Hermite interpolation (owned client, forward simulation only)
+            if (Network.IsClient && Network.IsCurrentOwner && !Network.IsResimulating
+                && InterpolationMode == VisualInterpolationMode.Hermite && SourceNode != null)
+            {
+                BufferHermiteState(tick);
             }
 
             if (IsTeleporting)
@@ -278,6 +337,53 @@ namespace Nebula.Utility.Nodes
         /// </summary>
         private const float RotationSnapThreshold = Mathf.Pi / 2f; // 90 degrees
 
+        /// <summary>
+        /// Buffers the current position, rotation, and velocity for Hermite extrapolation.
+        /// Called each tick during forward simulation (not during resimulation).
+        /// </summary>
+        private void BufferHermiteState(int tick)
+        {
+            if (_hermitePositions == null)
+            {
+                _hermitePositions = new Vector3[HERMITE_BUFFER_SIZE];
+                _hermiteRotations = new Quaternion[HERMITE_BUFFER_SIZE];
+                _hermiteVelocities = new Vector3[HERMITE_BUFFER_SIZE];
+                for (int i = 0; i < HERMITE_BUFFER_SIZE; i++)
+                    _hermiteRotations[i] = Quaternion.Identity;
+            }
+
+            if (!_velocitySourceChecked)
+            {
+                _velocitySource = SourceNode as IInterpolationVelocitySource;
+                _velocitySourceChecked = true;
+            }
+
+            int slot = tick & (HERMITE_BUFFER_SIZE - 1);
+            _hermitePositions[slot] = SourceNode.Position;
+            _hermiteRotations[slot] = SafeNormalize(SourceNode.Quaternion);
+            _hermiteVelocities[slot] = _velocitySource?.InterpolationLinearVelocity ?? Vector3.Zero;
+            _hermiteLatestTick = tick;
+        }
+
+        /// <summary>
+        /// Resets the Hermite interpolation state after a teleport or initialization.
+        /// </summary>
+        private void ResetHermiteState(Vector3 position, Quaternion rotation, Vector3 velocity = default)
+        {
+            if (_hermitePositions == null) return;
+
+            for (int i = 0; i < HERMITE_BUFFER_SIZE; i++)
+            {
+                _hermitePositions[i] = position;
+                _hermiteRotations[i] = rotation;
+                _hermiteVelocities[i] = velocity;
+            }
+            _hermiteTimeSincePhysicsUpdate = 0;
+            _hermiteLastProcessedTick = _hermiteLatestTick;
+            _hermiteVisualVelocity = velocity;
+            _hermiteInitialized = false;
+        }
+
         /// <inheritdoc/>
         public override void _Process(double delta)
         {
@@ -292,36 +398,122 @@ namespace Nebula.Utility.Nodes
             var target = TargetNode ?? SourceNode;
             if (target == null) return;
 
-            // For owned entities: smoothly lerp visual toward physics using exponential smoothing
+            // For owned entities: update visual from physics
             if (Network.IsCurrentOwner && SourceNode != null)
             {
-                // Frame-rate independent smoothing factor
-                float t = 1f - Mathf.Exp(-VisualInterpolateSpeed * (float)delta);
-
-                // Smooth position
-                target.Position = target.Position.Lerp(SourceNode.Position, t);
-
-                // Smooth rotation with hemisphere check for shortest path
-                var sourceRot = SafeNormalize(SourceNode.Quaternion);
-                var visualRot = SafeNormalize(target.Quaternion);
-                visualRot = EnsureSameHemisphere(visualRot, sourceRot);
-
-                // Check for large rotation error - snap instead of slerp to avoid visual artifacts
-                float angleDiff = visualRot.AngleTo(sourceRot);
-                if (angleDiff > RotationSnapThreshold)
+                if (!VisualSmoothing)
                 {
-                    target.Quaternion = sourceRot;
+                    // Snap directly - source position is already smooth
+                    target.Position = SourceNode.Position;
+                    target.Quaternion = SafeNormalize(SourceNode.Quaternion);
+                }
+                else if (InterpolationMode == VisualInterpolationMode.Hermite && _hermiteLatestTick >= 0)
+                {
+                    int slot = _hermiteLatestTick & (HERMITE_BUFFER_SIZE - 1);
+                    Vector3 physicsPos = _hermitePositions[slot];
+                    Vector3 physicsVel = _hermiteVelocities[slot];
+                    Quaternion physicsRot = _hermiteRotations[slot];
+
+                    // Carry over excess time when ticks advance.
+                    // Hard-resetting to 0 creates a discontinuity in expectedPos
+                    // (the visual jumps backward every tick). Instead, subtract
+                    // the elapsed tick time so expectedPos stays continuous.
+                    if (_hermiteLatestTick != _hermiteLastProcessedTick)
+                    {
+                        if (_hermiteLastProcessedTick < 0)
+                        {
+                            _hermiteTimeSincePhysicsUpdate = 0;
+                        }
+                        else
+                        {
+                            int ticksAdvanced = _hermiteLatestTick - _hermiteLastProcessedTick;
+                            double tickDelta = 1.0 / NetRunner.TPS;
+                            _hermiteTimeSincePhysicsUpdate -= ticksAdvanced * tickDelta;
+                            if (_hermiteTimeSincePhysicsUpdate < 0)
+                                _hermiteTimeSincePhysicsUpdate = 0;
+                        }
+                        _hermiteLastProcessedTick = _hermiteLatestTick;
+                    }
+
+                    if (!_hermiteInitialized)
+                    {
+                        target.Position = physicsPos;
+                        _hermiteVisualVelocity = physicsVel;
+                        _hermiteInitialized = true;
+                    }
+
+                    // Extrapolate physics to current frame time.
+                    // Because we carry over excess time, this line is continuous
+                    // across tick boundaries -- no staircase, no backward jumps.
+                    Vector3 expectedPos = physicsPos + physicsVel * (float)_hermiteTimeSincePhysicsUpdate;
+
+                    Vector3 error = expectedPos - target.Position;
+
+                    // Smoothly track physics velocity
+                    float smoothFactor = 1f - Mathf.Exp(-VisualInterpolateSpeed * (float)delta);
+                    _hermiteVisualVelocity = _hermiteVisualVelocity.Lerp(physicsVel, smoothFactor);
+
+                    // Position = velocity integration + error correction
+                    float errorCorrectionRate = 10f;
+                    target.Position += _hermiteVisualVelocity * (float)delta + error * errorCorrectionRate * (float)delta;
+
+                    _hermiteTimeSincePhysicsUpdate += delta;
+
+                    // Rotation: smooth toward physics rotation
+                    var sourceRot = SafeNormalize(physicsRot);
+                    var visualRot = SafeNormalize(target.Quaternion);
+                    visualRot = EnsureSameHemisphere(visualRot, sourceRot);
+
+                    float angleDiff = visualRot.AngleTo(sourceRot);
+                    if (angleDiff > RotationSnapThreshold)
+                    {
+                        target.Quaternion = sourceRot;
+                    }
+                    else
+                    {
+                        target.Quaternion = visualRot.Slerp(sourceRot, smoothFactor);
+                    }
                 }
                 else
                 {
-                    target.Quaternion = visualRot.Slerp(sourceRot, t);
+                    // Exponential smoothing (legacy): smoothly lerp visual toward physics
+                    float t = 1f - Mathf.Exp(-VisualInterpolateSpeed * (float)delta);
+
+                    // Smooth position
+                    target.Position = target.Position.Lerp(SourceNode.Position, t);
+
+                    // Smooth rotation with hemisphere check for shortest path
+                    var sourceRot = SafeNormalize(SourceNode.Quaternion);
+                    var visualRot = SafeNormalize(target.Quaternion);
+                    visualRot = EnsureSameHemisphere(visualRot, sourceRot);
+
+                    // Check for large rotation error - snap instead of slerp to avoid visual artifacts
+                    float angleDiff = visualRot.AngleTo(sourceRot);
+                    if (angleDiff > RotationSnapThreshold)
+                    {
+                        target.Quaternion = sourceRot;
+                    }
+                    else
+                    {
+                        target.Quaternion = visualRot.Slerp(sourceRot, t);
+                    }
                 }
                 return;
             }
 
             // Non-owned client: use NetPosition/NetRotation directly (network layer already interpolates)
-            target.Position = NetPosition;
-            target.Quaternion = SafeNormalize(NetRotation);
+            // Unless SyncPaused, in which case use SourceNode (physics is being driven externally,
+            // e.g., velocity-matched state where position is computed from relative position + planet)
+            if (SyncPaused && SourceNode != null)
+            {
+                target.Position = SourceNode.Position;
+                target.Quaternion = SafeNormalize(SourceNode.Quaternion);
+            }
+            else
+            {
+                target.Position = NetPosition;
+                target.Quaternion = SafeNormalize(NetRotation);
+            }
         }
 
         /// <summary>
@@ -339,6 +531,7 @@ namespace Nebula.Utility.Nodes
             }
             NetPosition = incoming_position;
             IsTeleporting = true;
+            ResetHermiteState(incoming_position, NetRotation);
         }
 
         /// <summary>
@@ -361,6 +554,7 @@ namespace Nebula.Utility.Nodes
             NetPosition = incoming_position;
             NetRotation = normalizedRotation;
             IsTeleporting = true;
+            ResetHermiteState(incoming_position, normalizedRotation);
         }
     }
 }

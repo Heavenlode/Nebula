@@ -2583,7 +2583,6 @@ namespace Nebula
                 {
                     using var buffer = new NetBuffer();
                     NetId.NetworkSerialize(this, NetRunner.Instance.Peers[peer], netId, buffer);
-                    NetWriter.WriteUInt16(buffer, GetPeerNodeId(NetRunner.Instance.Peers[peer], node));
                     NetWriter.WriteByte(buffer, functionInfo.Index);
                     for (int i = 0; i < args.Length; i++)
                     {

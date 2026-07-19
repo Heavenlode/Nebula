@@ -75,9 +75,36 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
+            // Per-peer HARD despawn: peer-filter enabled and this peer isn't a member.
+            // Unlike interest-layer loss (soft), removing a peer from a restricted InterestPeers
+            // set fully despawns the node on that client, while keeping it alive server-side.
+            bool inPeerSet = !netController.RestrictToInterestPeers
+                             || netController.InterestPeers.Contains(peerId);
+            if (!inPeerSet)
+            {
+                // Only despawn if the peer actually has (or is receiving) the node.
+                // NotSpawned/Despawned: nothing to do, leave state so a future re-add spawns cleanly.
+                if (spawnState is WorldRunner.ClientSpawnState.Spawning
+                    or WorldRunner.ClientSpawnState.Spawned
+                    or WorldRunner.ClientSpawnState.Despawning)
+                {
+                    ExportDespawn(currentWorld, peer, peerId, spawnState, buffer);
+                }
+                return;
+            }
+
+            // Soft path (unchanged): fails interest LAYERS / [NetInterest].
             if (!netController.IsPeerInterested(peer))
             {
                 return;
+            }
+
+            // Interested and in the peer set. If this peer was previously hard-despawned due to
+            // peer-set exclusion, reset so we send a fresh spawn (new local node id + full resync).
+            if (spawnState == WorldRunner.ClientSpawnState.Despawned)
+            {
+                currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.NotSpawned);
+                spawnState = WorldRunner.ClientSpawnState.NotSpawned;
             }
 
             // Check if spawn data has already been sent (Spawning or Spawned state)
@@ -345,8 +372,11 @@ namespace Nebula.Serialization.Serializers
                     // Free the local NetId for this peer so it can be reused
                     currentWorld.DeregisterPeerNode(netController, peer);
 
-                    // Check if all peers have acknowledged despawn
-                    if (currentWorld.AreAllPeersDespawned(netController.NetId))
+                    // Check if all peers have acknowledged despawn.
+                    // Only delete the node globally for a genuine global despawn (IsQueuedForDespawn).
+                    // Interest-driven per-peer despawns must keep the node alive server-side so it
+                    // can re-spawn when the peer regains interest.
+                    if (netController.IsQueuedForDespawn && currentWorld.AreAllPeersDespawned(netController.NetId))
                     {
                         // All peers have despawned, add to pending deletion
                         currentWorld._pendingDeletion.Add(netController);

@@ -1124,6 +1124,32 @@ namespace Nebula
                 {
                     continue;
                 }
+
+                // Auto-despawn nodes that no connected peer is interested in anymore.
+                // Guarded by HadInterestedPeer so a freshly-spawned node isn't despawned before
+                // the granting code (e.g. AddInterestPeer on zone-enter) has had a chance to run.
+                if (netController.DespawnOnNoInterestPeers && !netController.IsQueuedForDespawn)
+                {
+                    bool anyInterested = false;
+                    foreach (var peerState in PeerStates.Values)
+                    {
+                        if (peerState.Status == PeerSyncStatus.DISCONNECTED) continue;
+                        if (netController.IsPeerInterested(peerState.Peer))
+                        {
+                            anyInterested = true;
+                            break;
+                        }
+                    }
+                    if (anyInterested)
+                    {
+                        netController.HadInterestedPeer = true;
+                    }
+                    else if (netController.HadInterestedPeer)
+                    {
+                        QueueDespawn(netController);
+                    }
+                }
+
                 // Phase 1: Apply all buffered inputs (root first, then children — must match simulation order)
                 if (netController.HasInputSupport)
                 {

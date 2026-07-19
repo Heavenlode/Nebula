@@ -60,7 +60,23 @@ namespace Nebula.Utility.Tools
                 }
             }
 
-            InitialWorldScene = StartArgs.GetValueOrDefault("initialWorldScene", ProjectSettings.GetSetting(ProjectSettingKeys[ProjectSettingId.WORLD_DEFAULT_SCENE]).AsString());
+            // Priority: cmdline --initialWorldScene → .env INITIAL_WORLD_SCENE → project default.
+            if (StartArgs.TryGetValue("initialWorldScene", out var argScene) && !string.IsNullOrEmpty(argScene))
+            {
+                InitialWorldScene = argScene;
+            }
+            else
+            {
+                var fromEnv = GetValue("INITIAL_WORLD_SCENE");
+                if (!string.IsNullOrEmpty(fromEnv))
+                {
+                    InitialWorldScene = fromEnv;
+                }
+                else
+                {
+                    InitialWorldScene = ProjectSettings.GetSetting(ProjectSettingKeys[ProjectSettingId.WORLD_DEFAULT_SCENE]).AsString();
+                }
+            }
 
             // Check for worldId with case-insensitive key lookup
             var worldIdKey = StartArgs.Keys.FirstOrDefault(k => k.Equals("worldId", StringComparison.OrdinalIgnoreCase));

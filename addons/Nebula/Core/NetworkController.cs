@@ -293,6 +293,26 @@ namespace Nebula
 		/// If set to true, the node will be automatically despawned on the same tick the server identifies that there are no more peers interested in the node.
 		/// </summary>
 		public bool DespawnOnNoInterestPeers = false;
+
+		/// <summary>
+		/// Gates the <see cref="InterestPeers"/> pre-filter.
+		/// When false (default), <see cref="InterestPeers"/> is ignored entirely and the node is
+		/// visible to all peers (subject to the normal InterestLayers / [NetInterest] filter).
+		/// When true, ONLY peers contained in <see cref="InterestPeers"/> are eligible to see the
+		/// node; an empty set means the node is visible to nobody. Peers removed from the set while
+		/// this is true are hard-despawned on their client (and re-spawned cleanly if re-added).
+		/// Use this for peer-scoped nodes (item drops, personal quest items) without burning an
+		/// interest layer.
+		/// </summary>
+		public bool RestrictToInterestPeers = false;
+
+		/// <summary>
+		/// Server-side latch, set true the first time any peer passes <see cref="IsPeerInterested(UUID)"/>.
+		/// Used by <see cref="DespawnOnNoInterestPeers"/> to avoid despawning a freshly-spawned node
+		/// before the granting code has had a chance to add interested peers.
+		/// </summary>
+		internal bool HadInterestedPeer = false;
+
 		public NetworkController[] StaticNetworkChildren = [];
 
 		/// <summary>
@@ -409,10 +429,89 @@ namespace Nebula
 			SetPeerInterest(peerId, currentInterest & ~interestLayers, recurse);
 		}
 
+		/// <summary>
+		/// Adds a peer to the <see cref="InterestPeers"/> set. Only has an effect on visibility when
+		/// <see cref="RestrictToInterestPeers"/> is true. Recurses to nested children so a scene's
+		/// members match the parent, mirroring <see cref="SetPeerInterest"/>.
+		/// </summary>
+		public void AddInterestPeer(NetPeer peer, bool recurse = true)
+		{
+			AddInterestPeer(NetRunner.Instance.GetPeerId(peer), recurse);
+		}
+
+		public void AddInterestPeer(UUID peerId, bool recurse = true)
+		{
+			InterestPeers.Add(peerId);
+			if (recurse && IsNetScene())
+			{
+				foreach (var child in StaticNetworkChildren)
+					child?.AddInterestPeer(peerId, recurse);
+				foreach (var child in DynamicNetworkChildren)
+					child.AddInterestPeer(peerId, recurse);
+			}
+		}
+
+		/// <summary>
+		/// Removes a peer from the <see cref="InterestPeers"/> set. When
+		/// <see cref="RestrictToInterestPeers"/> is true this hard-despawns the node on that peer's client.
+		/// </summary>
+		public void RemoveInterestPeer(NetPeer peer, bool recurse = true)
+		{
+			RemoveInterestPeer(NetRunner.Instance.GetPeerId(peer), recurse);
+		}
+
+		public void RemoveInterestPeer(UUID peerId, bool recurse = true)
+		{
+			InterestPeers.Remove(peerId);
+			if (recurse && IsNetScene())
+			{
+				foreach (var child in StaticNetworkChildren)
+					child?.RemoveInterestPeer(peerId, recurse);
+				foreach (var child in DynamicNetworkChildren)
+					child.RemoveInterestPeer(peerId, recurse);
+			}
+		}
+
+		/// <summary>
+		/// Replaces the entire <see cref="InterestPeers"/> set with the given peers.
+		/// </summary>
+		public void SetInterestPeers(IEnumerable<UUID> peerIds, bool recurse = true)
+		{
+			InterestPeers.Clear();
+			foreach (var peerId in peerIds)
+				InterestPeers.Add(peerId);
+			if (recurse && IsNetScene())
+			{
+				foreach (var child in StaticNetworkChildren)
+					child?.SetInterestPeers(InterestPeers, recurse);
+				foreach (var child in DynamicNetworkChildren)
+					child.SetInterestPeers(InterestPeers, recurse);
+			}
+		}
+
+		/// <summary>
+		/// Clears the <see cref="InterestPeers"/> set. When <see cref="RestrictToInterestPeers"/> is
+		/// true this makes the node visible to nobody (all peers hard-despawn).
+		/// </summary>
+		public void ClearInterestPeers(bool recurse = true)
+		{
+			InterestPeers.Clear();
+			if (recurse && IsNetScene())
+			{
+				foreach (var child in StaticNetworkChildren)
+					child?.ClearInterestPeers(recurse);
+				foreach (var child in DynamicNetworkChildren)
+					child.ClearInterestPeers(recurse);
+			}
+		}
+
 		public bool IsPeerInterested(UUID peerId)
 		{
 			// Root scene is always visible
 			if (CurrentWorld.RootScene == this) return true;
+
+			// Peer-set pre-filter: when enabled, only members are eligible (empty set => nobody).
+			if (RestrictToInterestPeers && !InterestPeers.Contains(peerId)) return false;
 
 			var peerLayers = InterestLayers.GetValueOrDefault(peerId, 0);
 			if (peerLayers == 0) return false;
@@ -454,6 +553,7 @@ namespace Nebula
 			spawnReady.Remove(peerId);
 			preparingSpawn.Remove(peerId);
 			InterestLayers.Remove(peerId);
+			InterestPeers.Remove(peerId);
 
 			// Clear per-peer property data for this peer
 			if (PerPeerValues != null && _propIsPerPeer != null)

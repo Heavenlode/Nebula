@@ -1,0 +1,109 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Utility.Nodes.IInterpolationVelocitySource
+  commentId: T:Nebula.Utility.Nodes.IInterpolationVelocitySource
+  id: IInterpolationVelocitySource
+  parent: Nebula.Utility.Nodes
+  children:
+  - Nebula.Utility.Nodes.IInterpolationVelocitySource.InterpolationLinearVelocity
+  langs:
+  - csharp
+  - vb
+  name: IInterpolationVelocitySource
+  nameWithType: IInterpolationVelocitySource
+  fullName: Nebula.Utility.Nodes.IInterpolationVelocitySource
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: >-
+    Interface for nodes that can provide velocity data for Hermite interpolation.
+
+    Implement this on any SourceNode that has velocity to enable smooth
+
+    cubic extrapolation in NetTransform3D.
+  example: []
+  syntax:
+    content: public interface IInterpolationVelocitySource
+    content.vb: Public Interface IInterpolationVelocitySource
+- uid: Nebula.Utility.Nodes.IInterpolationVelocitySource.InterpolationLinearVelocity
+  commentId: P:Nebula.Utility.Nodes.IInterpolationVelocitySource.InterpolationLinearVelocity
+  id: InterpolationLinearVelocity
+  parent: Nebula.Utility.Nodes.IInterpolationVelocitySource
+  langs:
+  - csharp
+  - vb
+  name: InterpolationLinearVelocity
+  nameWithType: IInterpolationVelocitySource.InterpolationLinearVelocity
+  fullName: Nebula.Utility.Nodes.IInterpolationVelocitySource.InterpolationLinearVelocity
+  type: Property
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: The current linear velocity used for Hermite extrapolation.
+  example: []
+  syntax:
+    content: Vector3 InterpolationLinearVelocity { get; }
+    parameters: []
+    return:
+      type: Godot.Vector3
+    content.vb: ReadOnly Property InterpolationLinearVelocity As Vector3
+  overload: Nebula.Utility.Nodes.IInterpolationVelocitySource.InterpolationLinearVelocity*
+references:
+- uid: Nebula.Utility.Nodes
+  commentId: N:Nebula.Utility.Nodes
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Utility.Nodes
+  nameWithType: Nebula.Utility.Nodes
+  fullName: Nebula.Utility.Nodes
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes
+    name: Nodes
+    isExternal: true
+    href: Nebula.Utility.Nodes.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes
+    name: Nodes
+    isExternal: true
+    href: Nebula.Utility.Nodes.html
+- uid: Nebula.Utility.Nodes.IInterpolationVelocitySource.InterpolationLinearVelocity*
+  commentId: Overload:Nebula.Utility.Nodes.IInterpolationVelocitySource.InterpolationLinearVelocity
+  isExternal: true
+  href: Nebula.Utility.Nodes.IInterpolationVelocitySource.html#Nebula_Utility_Nodes_IInterpolationVelocitySource_InterpolationLinearVelocity
+  name: InterpolationLinearVelocity
+  nameWithType: IInterpolationVelocitySource.InterpolationLinearVelocity
+  fullName: Nebula.Utility.Nodes.IInterpolationVelocitySource.InterpolationLinearVelocity
+- uid: Godot.Vector3
+  commentId: T:Godot.Vector3
+  parent: Godot
+  isExternal: true
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Godot.Vector3
+- uid: Godot
+  commentId: N:Godot
+  isExternal: true
+  name: Godot
+  nameWithType: Godot
+  fullName: Godot

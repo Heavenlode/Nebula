@@ -1,0 +1,113 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Utility.Nodes.VisualInterpolationMode
+  commentId: T:Nebula.Utility.Nodes.VisualInterpolationMode
+  id: VisualInterpolationMode
+  parent: Nebula.Utility.Nodes
+  children:
+  - Nebula.Utility.Nodes.VisualInterpolationMode.Exponential
+  - Nebula.Utility.Nodes.VisualInterpolationMode.Hermite
+  langs:
+  - csharp
+  - vb
+  name: VisualInterpolationMode
+  nameWithType: VisualInterpolationMode
+  fullName: Nebula.Utility.Nodes.VisualInterpolationMode
+  type: Enum
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Visual interpolation mode for owned entities.
+  example: []
+  syntax:
+    content: public enum VisualInterpolationMode
+    content.vb: Public Enum VisualInterpolationMode
+- uid: Nebula.Utility.Nodes.VisualInterpolationMode.Exponential
+  commentId: F:Nebula.Utility.Nodes.VisualInterpolationMode.Exponential
+  id: Exponential
+  parent: Nebula.Utility.Nodes.VisualInterpolationMode
+  langs:
+  - csharp
+  - vb
+  name: Exponential
+  nameWithType: VisualInterpolationMode.Exponential
+  fullName: Nebula.Utility.Nodes.VisualInterpolationMode.Exponential
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: Exponential smoothing (legacy). Fast response but can show micro-jitter at high speeds.
+  example: []
+  syntax:
+    content: Exponential = 0
+    return:
+      type: Nebula.Utility.Nodes.VisualInterpolationMode
+- uid: Nebula.Utility.Nodes.VisualInterpolationMode.Hermite
+  commentId: F:Nebula.Utility.Nodes.VisualInterpolationMode.Hermite
+  id: Hermite
+  parent: Nebula.Utility.Nodes.VisualInterpolationMode
+  langs:
+  - csharp
+  - vb
+  name: Hermite
+  nameWithType: VisualInterpolationMode.Hermite
+  fullName: Nebula.Utility.Nodes.VisualInterpolationMode.Hermite
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Utility.Nodes
+  summary: >-
+    Hermite extrapolation. Zero-latency smooth motion using velocity data.
+
+    Requires SourceNode to implement IInterpolationVelocitySource.
+  example: []
+  syntax:
+    content: Hermite = 1
+    return:
+      type: Nebula.Utility.Nodes.VisualInterpolationMode
+references:
+- uid: Nebula.Utility.Nodes
+  commentId: N:Nebula.Utility.Nodes
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Utility.Nodes
+  nameWithType: Nebula.Utility.Nodes
+  fullName: Nebula.Utility.Nodes
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes
+    name: Nodes
+    isExternal: true
+    href: Nebula.Utility.Nodes.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes
+    name: Nodes
+    isExternal: true
+    href: Nebula.Utility.Nodes.html
+- uid: Nebula.Utility.Nodes.VisualInterpolationMode
+  commentId: T:Nebula.Utility.Nodes.VisualInterpolationMode
+  parent: Nebula.Utility.Nodes
+  isExternal: true
+  href: Nebula.Utility.Nodes.VisualInterpolationMode.html
+  name: VisualInterpolationMode
+  nameWithType: VisualInterpolationMode
+  fullName: Nebula.Utility.Nodes.VisualInterpolationMode

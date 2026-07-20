@@ -14,6 +14,7 @@ items:
   - Nebula.Serialization.IBsonSerializableBase
   - Nebula.Serialization.IBsonSerializable`1
   - Nebula.Serialization.IBsonValue`1
+  - Nebula.Serialization.INetExportAware
   - Nebula.Serialization.INetPropertyBindable
   - Nebula.Serialization.INetSerializable`1
   - Nebula.Serialization.INetValue`1
@@ -212,6 +213,14 @@ references:
   name: INetPropertyBindable
   nameWithType: INetPropertyBindable
   fullName: Nebula.Serialization.INetPropertyBindable
+- uid: Nebula.Serialization.INetExportAware
+  commentId: T:Nebula.Serialization.INetExportAware
+  parent: Nebula.Serialization
+  isExternal: true
+  href: Nebula.Serialization.INetExportAware.html
+  name: INetExportAware
+  nameWithType: INetExportAware
+  fullName: Nebula.Serialization.INetExportAware
 - uid: Nebula.Serialization.INetValue`1
   commentId: T:Nebula.Serialization.INetValue`1
   isExternal: true

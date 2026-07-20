@@ -16,7 +16,7 @@ items:
   fullName: Nebula.Serialization.ProtocolSceneInterest
   type: Struct
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -44,7 +44,7 @@ items:
   fullName: Nebula.Serialization.ProtocolSceneInterest.InterestAny
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -67,7 +67,7 @@ items:
   fullName: Nebula.Serialization.ProtocolSceneInterest.InterestRequired
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -90,7 +90,7 @@ items:
   fullName: Nebula.Serialization.ProtocolSceneInterest.ProtocolSceneInterest(long, long)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Generator/Shared/ProtocolTypes.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Generator/Shared/ProtocolTypes.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization

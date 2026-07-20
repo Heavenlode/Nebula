@@ -17,7 +17,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -25,6 +25,8 @@ items:
     Controller class to manage Nebula-specific project settings in the Godot editor.
 
     Sets up configuration, networking, and world-related properties for runtime usage.
+
+    All settings live under a single "Nebula/config" group so they show in one tab.
   example: []
   syntax:
     content: >-
@@ -358,7 +360,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController._EnterTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Tools/ProjectSettingsController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Tools/ProjectSettingsController.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -384,14 +386,11 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Tools/ProjectSettingsController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Tools/ProjectSettingsController.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
-  summary: >-
-    Called when the node exits the scene tree.
-
-    Restores original project settings and clears Nebula-specific overrides.
+  summary: Called when the node exits the scene tree.
   example: []
   syntax:
     content: public override void _ExitTree()
@@ -410,7 +409,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController.Build()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Tools/ProjectSettingsController.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Tools/ProjectSettingsController.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools
@@ -435,7 +434,7 @@ items:
   fullName: Nebula.Tools.ProjectSettingsController.ProjectSettingsController()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.Tools.ProjectSettingsController_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula.Tools

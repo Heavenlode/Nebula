@@ -14,17 +14,21 @@ items:
   - Nebula.NetRunner.GetPeerByNativeId(System.UInt32)
   - Nebula.NetRunner.GetPeerId(ENet.Peer)
   - Nebula.NetRunner.Instance
+  - Nebula.NetRunner.LogTickPayloads
   - Nebula.NetRunner.MTU
+  - Nebula.NetRunner.MalformedPacketDisconnectCode
   - Nebula.NetRunner.MaxPeers
   - Nebula.NetRunner.NetStarted
   - Nebula.NetRunner.OnConnectedToServer
   - Nebula.NetRunner.OnPeerConnected
   - Nebula.NetRunner.OnPeerDisconnected
+  - Nebula.NetRunner.OnProtocolMismatch
   - Nebula.NetRunner.OnWorldCreated
   - Nebula.NetRunner.OverridePort(System.Int32)
   - Nebula.NetRunner.PeerJoinWorld(ENet.Peer,Nebula.UUID,System.String)
   - Nebula.NetRunner.PhysicsTicksPerNetworkTick
   - Nebula.NetRunner.Port
+  - Nebula.NetRunner.ProtocolMismatchDisconnectCode
   - Nebula.NetRunner.ReserveChannel(System.Int32,System.Action{ENet.Peer,System.Byte[]})
   - Nebula.NetRunner.SendPacket(ENet.Peer,System.Byte,Nebula.Serialization.NetBuffer,ENet.PacketFlags)
   - Nebula.NetRunner.SendPacket(ENet.Peer,System.Byte,System.Byte[],ENet.PacketFlags)
@@ -54,7 +58,7 @@ items:
   fullName: Nebula.NetRunner
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -383,7 +387,7 @@ items:
   fullName: Nebula.NetRunner.DefaultServerAddress
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -423,7 +427,7 @@ items:
   fullName: Nebula.NetRunner.DebugPort
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -446,7 +450,7 @@ items:
   fullName: Nebula.NetRunner.MaxPeers
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -483,7 +487,7 @@ items:
   fullName: Nebula.NetRunner.PhysicsTicksPerNetworkTick
   type: Field
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -494,6 +498,64 @@ items:
     return:
       type: System.Int32
     content.vb: Public Const PhysicsTicksPerNetworkTick As Integer = 2
+- uid: Nebula.NetRunner.ProtocolMismatchDisconnectCode
+  commentId: F:Nebula.NetRunner.ProtocolMismatchDisconnectCode
+  id: ProtocolMismatchDisconnectCode
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: ProtocolMismatchDisconnectCode
+  nameWithType: NetRunner.ProtocolMismatchDisconnectCode
+  fullName: Nebula.NetRunner.ProtocolMismatchDisconnectCode
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    ENet disconnect reason code the server sends when rejecting a client whose
+
+    protocol hash doesn't match ("PROT" in ASCII). Clients receiving this raise
+
+    <xref href="Nebula.NetRunner.OnProtocolMismatch" data-throw-if-not-resolved="false"></xref> (or throw <xref href="Nebula.ProtocolMismatchException" data-throw-if-not-resolved="false"></xref>
+
+    if no handler is subscribed).
+  example: []
+  syntax:
+    content: public const uint ProtocolMismatchDisconnectCode = 1347571540
+    return:
+      type: System.UInt32
+    content.vb: Public Const ProtocolMismatchDisconnectCode As UInteger = 1347571540
+- uid: Nebula.NetRunner.MalformedPacketDisconnectCode
+  commentId: F:Nebula.NetRunner.MalformedPacketDisconnectCode
+  id: MalformedPacketDisconnectCode
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: MalformedPacketDisconnectCode
+  nameWithType: NetRunner.MalformedPacketDisconnectCode
+  fullName: Nebula.NetRunner.MalformedPacketDisconnectCode
+  type: Field
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    ENet disconnect reason code the server sends when a peer's packet fails to
+
+    deserialize ("MALP" in ASCII). A protocol-compliant client should never produce an
+
+    unparseable packet post-handshake, so we treat it as hostile/broken and drop the peer.
+  example: []
+  syntax:
+    content: public const uint MalformedPacketDisconnectCode = 1296125008
+    return:
+      type: System.UInt32
+    content.vb: Public Const MalformedPacketDisconnectCode As UInteger = 1296125008
 - uid: Nebula.NetRunner.OverridePort(System.Int32)
   commentId: M:Nebula.NetRunner.OverridePort(System.Int32)
   id: OverridePort(System.Int32)
@@ -506,7 +568,7 @@ items:
   fullName: Nebula.NetRunner.OverridePort(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -534,7 +596,7 @@ items:
   fullName: Nebula.NetRunner.GetPeer(Nebula.UUID)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -559,7 +621,7 @@ items:
   fullName: Nebula.NetRunner.GetPeerId(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -584,7 +646,7 @@ items:
   fullName: Nebula.NetRunner.ReserveChannel(int, System.Action<ENet.Peer, byte[]>)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -617,7 +679,7 @@ items:
   fullName: Nebula.NetRunner._EnterTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -639,7 +701,7 @@ items:
   fullName: Nebula.NetRunner._Ready()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -661,7 +723,7 @@ items:
   fullName: Nebula.NetRunner._ExitTree()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -683,7 +745,7 @@ items:
   fullName: Nebula.NetRunner.SetAuthentication(Nebula.Authentication.IAuthenticator)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -706,7 +768,7 @@ items:
   fullName: Nebula.NetRunner.StartServer()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -726,7 +788,7 @@ items:
   fullName: Nebula.NetRunner.StartClient()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -746,7 +808,7 @@ items:
   fullName: Nebula.NetRunner.GetPeerByNativeId(uint)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -776,7 +838,7 @@ items:
   fullName: Nebula.NetRunner._PhysicsProcess(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -804,7 +866,7 @@ items:
   fullName: Nebula.NetRunner.SendPacket(ENet.Peer, byte, byte[], ENet.PacketFlags)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -838,7 +900,7 @@ items:
   fullName: Nebula.NetRunner.SendPacket(ENet.Peer, byte, Nebula.Serialization.NetBuffer, ENet.PacketFlags)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -875,7 +937,7 @@ items:
   fullName: Nebula.NetRunner.SendReliable(ENet.Peer, byte, byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -907,7 +969,7 @@ items:
   fullName: Nebula.NetRunner.SendReliable(ENet.Peer, byte, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -939,7 +1001,7 @@ items:
   fullName: Nebula.NetRunner.SendUnreliable(ENet.Peer, byte, byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -971,7 +1033,7 @@ items:
   fullName: Nebula.NetRunner.SendUnreliable(ENet.Peer, byte, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1003,7 +1065,7 @@ items:
   fullName: Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer, byte, byte[])
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1035,7 +1097,7 @@ items:
   fullName: Nebula.NetRunner.SendUnreliableSequenced(ENet.Peer, byte, Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1067,7 +1129,7 @@ items:
   fullName: Nebula.NetRunner.PeerJoinWorld(ENet.Peer, Nebula.UUID, string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1097,7 +1159,7 @@ items:
   fullName: Nebula.NetRunner.CreateWorld(Nebula.UUID, Godot.PackedScene)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1124,7 +1186,7 @@ items:
   fullName: Nebula.NetRunner.SetupWorldInstance(Nebula.UUID, Nebula.NetworkController)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1151,7 +1213,7 @@ items:
   fullName: Nebula.NetRunner._OnPeerDisconnected(ENet.Peer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1174,7 +1236,7 @@ items:
   fullName: Nebula.NetRunner.NetRunner()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1197,7 +1259,7 @@ items:
   fullName: Nebula.NetRunner.ServerAddress
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1222,7 +1284,7 @@ items:
   fullName: Nebula.NetRunner.Port
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1261,7 +1323,7 @@ items:
   fullName: Nebula.NetRunner.Worlds
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1284,7 +1346,7 @@ items:
   fullName: Nebula.NetRunner.NetStarted
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1309,7 +1371,7 @@ items:
   fullName: Nebula.NetRunner.Instance
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1334,7 +1396,7 @@ items:
   fullName: Nebula.NetRunner.Authentication
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1357,7 +1419,7 @@ items:
   fullName: Nebula.NetRunner.TPS
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1380,7 +1442,7 @@ items:
   fullName: Nebula.NetRunner.MTU
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/NetRunner.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1396,6 +1458,36 @@ items:
       type: System.Int32
     content.vb: Public Shared ReadOnly Property MTU As Integer
   overload: Nebula.NetRunner.MTU*
+- uid: Nebula.NetRunner.LogTickPayloads
+  commentId: P:Nebula.NetRunner.LogTickPayloads
+  id: LogTickPayloads
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: LogTickPayloads
+  nameWithType: NetRunner.LogTickPayloads
+  fullName: Nebula.NetRunner.LogTickPayloads
+  type: Property
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/NetRunner.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Debug: when enabled via the <code>Nebula/config/log_tick_payloads</code> project setting, the
+
+    client logs the full hex of every server tick payload. Cached on first read, so toggling
+
+    it takes effect on the next run.
+  example: []
+  syntax:
+    content: public static bool LogTickPayloads { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Shared ReadOnly Property LogTickPayloads As Boolean
+  overload: Nebula.NetRunner.LogTickPayloads*
 - uid: Nebula.NetRunner.OnPeerConnected
   commentId: E:Nebula.NetRunner.OnPeerConnected
   id: OnPeerConnected
@@ -1408,7 +1500,7 @@ items:
   fullName: Nebula.NetRunner.OnPeerConnected
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1429,7 +1521,7 @@ items:
   fullName: Nebula.NetRunner.OnPeerDisconnected
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1450,7 +1542,7 @@ items:
   fullName: Nebula.NetRunner.OnConnectedToServer
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -1459,6 +1551,34 @@ items:
     return:
       type: System.Action
     content.vb: Public Event OnConnectedToServer As Action
+- uid: Nebula.NetRunner.OnProtocolMismatch
+  commentId: E:Nebula.NetRunner.OnProtocolMismatch
+  id: OnProtocolMismatch
+  parent: Nebula.NetRunner
+  langs:
+  - csharp
+  - vb
+  name: OnProtocolMismatch
+  nameWithType: NetRunner.OnProtocolMismatch
+  fullName: Nebula.NetRunner.OnProtocolMismatch
+  type: Event
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula
+  summary: >-
+    Client-side. Raised when the server rejects the connection due to a protocol
+
+    hash mismatch. Subscribe to handle it gracefully (e.g. an "update required"
+
+    screen); with no subscribers, the exception is thrown from the event pump.
+  example: []
+  syntax:
+    content: public event Action<ProtocolMismatchException> OnProtocolMismatch
+    return:
+      type: System.Action{Nebula.ProtocolMismatchException}
+    content.vb: Public Event OnProtocolMismatch As Action(Of ProtocolMismatchException)
 - uid: Nebula.NetRunner.OnWorldCreated
   commentId: E:Nebula.NetRunner.OnWorldCreated
   id: OnWorldCreated
@@ -1471,7 +1591,7 @@ items:
   fullName: Nebula.NetRunner.OnWorldCreated
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/Nebula.NetRunner_ScriptMethods.generated.cs
   assemblies:
   - Nebula
   namespace: Nebula
@@ -8133,6 +8253,31 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
+- uid: Nebula.NetRunner.OnProtocolMismatch
+  commentId: E:Nebula.NetRunner.OnProtocolMismatch
+  isExternal: true
+  href: Nebula.NetRunner.html#Nebula_NetRunner_OnProtocolMismatch
+  name: OnProtocolMismatch
+  nameWithType: NetRunner.OnProtocolMismatch
+  fullName: Nebula.NetRunner.OnProtocolMismatch
+- uid: Nebula.ProtocolMismatchException
+  commentId: T:Nebula.ProtocolMismatchException
+  isExternal: true
+  href: Nebula.ProtocolMismatchException.html
+  name: ProtocolMismatchException
+  nameWithType: ProtocolMismatchException
+  fullName: Nebula.ProtocolMismatchException
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
 - uid: Nebula.NetRunner.OverridePort*
   commentId: Overload:Nebula.NetRunner.OverridePort
   isExternal: true
@@ -8406,17 +8551,6 @@ references:
   name: GetPeerByNativeId
   nameWithType: NetRunner.GetPeerByNativeId
   fullName: Nebula.NetRunner.GetPeerByNativeId
-- uid: System.UInt32
-  commentId: T:System.UInt32
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.uint32
-  name: uint
-  nameWithType: uint
-  fullName: uint
-  nameWithType.vb: UInteger
-  fullName.vb: UInteger
-  name.vb: UInteger
 - uid: Godot.Node._PhysicsProcess(System.Double)
   commentId: M:Godot.Node._PhysicsProcess(System.Double)
   parent: Godot.Node
@@ -8866,6 +9000,13 @@ references:
   name: MTU
   nameWithType: NetRunner.MTU
   fullName: Nebula.NetRunner.MTU
+- uid: Nebula.NetRunner.LogTickPayloads*
+  commentId: Overload:Nebula.NetRunner.LogTickPayloads
+  isExternal: true
+  href: Nebula.NetRunner.html#Nebula_NetRunner_LogTickPayloads
+  name: LogTickPayloads
+  nameWithType: NetRunner.LogTickPayloads
+  fullName: Nebula.NetRunner.LogTickPayloads
 - uid: System.Action{System.UInt32}
   commentId: T:System.Action{System.UInt32}
   parent: System
@@ -8937,6 +9078,41 @@ references:
   name: Action
   nameWithType: Action
   fullName: System.Action
+- uid: System.Action{Nebula.ProtocolMismatchException}
+  commentId: T:System.Action{Nebula.ProtocolMismatchException}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<ProtocolMismatchException>
+  nameWithType: Action<ProtocolMismatchException>
+  fullName: System.Action<Nebula.ProtocolMismatchException>
+  nameWithType.vb: Action(Of ProtocolMismatchException)
+  fullName.vb: System.Action(Of Nebula.ProtocolMismatchException)
+  name.vb: Action(Of ProtocolMismatchException)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: Nebula.ProtocolMismatchException
+    name: ProtocolMismatchException
+    isExternal: true
+    href: Nebula.ProtocolMismatchException.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Nebula.ProtocolMismatchException
+    name: ProtocolMismatchException
+    isExternal: true
+    href: Nebula.ProtocolMismatchException.html
+  - name: )
 - uid: System.Action{Nebula.WorldRunner}
   commentId: T:System.Action{Nebula.WorldRunner}
   parent: System

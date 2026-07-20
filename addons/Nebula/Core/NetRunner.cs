@@ -291,7 +291,9 @@ namespace Nebula
             address.SetHost(ServerAddress);
             address.Port = (ushort)Port;
 
-            ServerPeer = ENetHost.Connect(address, MaxChannels);
+            // The connect packet carries our protocol hash; the server validates it before
+            // admitting the peer and rejects mismatched builds (see ProtocolMismatchException)
+            ServerPeer = ENetHost.Connect(address, MaxChannels, Protocol.HandshakeHash);
 
             if (!ServerPeer.IsSet)
             {
@@ -328,7 +330,16 @@ namespace Nebula
         /// Maximum Transferrable Unit. The maximum number of bytes that should be sent in a single ENet UDP Packet (i.e. a single tick)
         /// Not a hard limit.
         /// </summary>
-        public static int MTU => ProjectSettings.GetSetting("Nebula/network/mtu", 1400).AsInt32();
+        public static int MTU => ProjectSettings.GetSetting("Nebula/config/mtu", 1400).AsInt32();
+
+        private static bool? _logTickPayloads;
+        /// <summary>
+        /// Debug: when enabled via the <c>Nebula/config/log_tick_payloads</c> project setting, the
+        /// client logs the full hex of every server tick payload. Cached on first read, so toggling
+        /// it takes effect on the next run.
+        /// </summary>
+        public static bool LogTickPayloads =>
+            _logTickPayloads ??= ProjectSettings.GetSetting("Nebula/config/log_tick_payloads", false).AsBool();
 
         private void _debugService()
         {
@@ -365,6 +376,28 @@ namespace Nebula
         public event Action<uint> OnPeerDisconnected;
 
         public event Action OnConnectedToServer;
+
+        /// <summary>
+        /// ENet disconnect reason code the server sends when rejecting a client whose
+        /// protocol hash doesn't match ("PROT" in ASCII). Clients receiving this raise
+        /// <see cref="OnProtocolMismatch"/> (or throw <see cref="ProtocolMismatchException"/>
+        /// if no handler is subscribed).
+        /// </summary>
+        public const uint ProtocolMismatchDisconnectCode = 0x50524F54;
+
+        /// <summary>
+        /// ENet disconnect reason code the server sends when a peer's packet fails to
+        /// deserialize ("MALP" in ASCII). A protocol-compliant client should never produce an
+        /// unparseable packet post-handshake, so we treat it as hostile/broken and drop the peer.
+        /// </summary>
+        public const uint MalformedPacketDisconnectCode = 0x4D414C50;
+
+        /// <summary>
+        /// Client-side. Raised when the server rejects the connection due to a protocol
+        /// hash mismatch. Subscribe to handle it gracefully (e.g. an "update required"
+        /// screen); with no subscribers, the exception is thrown from the event pump.
+        /// </summary>
+        public event Action<ProtocolMismatchException> OnProtocolMismatch;
 
         /// <summary>
         /// Get a peer by its native ENet ID (used for signal handling).
@@ -405,6 +438,17 @@ namespace Nebula
                     case EventType.Connect:
                         if (IsServer)
                         {
+                            // Protocol handshake: the connect packet's data field carries the
+                            // client's protocol hash. Reject mismatched builds before auth or
+                            // world admission - a mismatched client would misparse everything.
+                            if (netEvent.Data != Protocol.HandshakeHash)
+                            {
+                                Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
+                                    $"Rejecting peer {netEvent.Peer.ID}: protocol hash mismatch (server 0x{Protocol.HandshakeHash:X8}, client 0x{netEvent.Data:X8}). Client is running a different build.");
+                                netEvent.Peer.Disconnect(ProtocolMismatchDisconnectCode);
+                                break;
+                            }
+
                             Debugger.Instance.Log("Peer connected");
                             PeersByNativeId[netEvent.Peer.ID] = netEvent.Peer;
                             OnPeerConnected?.Invoke(netEvent.Peer.ID);
@@ -418,6 +462,21 @@ namespace Nebula
 
                     case EventType.Disconnect:
                     case EventType.Timeout:
+                        if (!IsServer
+                            && netEvent.Type == EventType.Disconnect
+                            && netEvent.Data == ProtocolMismatchDisconnectCode)
+                        {
+                            _OnPeerDisconnected(netEvent.Peer);
+
+                            var mismatch = new ProtocolMismatchException(Protocol.Hash, Protocol.HandshakeHash);
+                            Debugger.Instance.Log(mismatch.Message, Debugger.DebugLevel.ERROR);
+                            if (OnProtocolMismatch != null)
+                            {
+                                OnProtocolMismatch.Invoke(mismatch);
+                                break;
+                            }
+                            throw mismatch;
+                        }
                         _OnPeerDisconnected(netEvent.Peer);
                         break;
 
@@ -430,11 +489,20 @@ namespace Nebula
 
                         using var data = new NetBuffer(packetData);
 
+                        // A malformed packet must never abort the event pump: an unhandled
+                        // exception here would drop every remaining queued event this frame for
+                        // ALL peers. Catch per-packet so one bad sender can't stall everyone.
+                        try
+                        {
                         switch ((ENetChannelId)channel)
                         {
                             case ENetChannelId.Tick:
                                 if (IsServer)
                                 {
+                                    if (packetData.Length == 0)
+                                    {
+                                        break;
+                                    }
                                     var tick = NetReader.ReadInt32(data);
                                     var peerId = GetPeerId(netEvent.Peer);
                                     if (PeerWorldMap.TryGetValue(peerId, out var world))
@@ -450,6 +518,13 @@ namespace Nebula
                                     }
                                     var tick = NetReader.ReadInt32(data);
                                     var bytes = NetReader.ReadRemainingBytes(data);
+                                    // Debug: dump the full payload hex for every server tick
+                                    // (gated behind the Nebula/config/log_tick_payloads setting).
+                                    if (LogTickPayloads)
+                                    {
+                                        Debugger.Instance.Log(Debugger.DebugLevel.INFO,
+                                            $"[Nebula][TickPayload] tick={tick} ({bytes.Length} bytes) {Convert.ToHexString(bytes)}");
+                                    }
                                     WorldRunner.CurrentWorld.ClientProcessTick(tick, bytes);
                                 }
                                 break;
@@ -492,10 +567,23 @@ namespace Nebula
                                 }
                                 break;
                         }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Server: drop the offending peer (see MalformedPacketDisconnectCode).
+                            // Client: the server is trusted, so a malformed packet is a bug, not
+                            // an attack - log it but stay connected.
+                            Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
+                                $"[Nebula][MalformedPacket] Failed to parse packet on channel {channel} from peer {netEvent.Peer.ID}: {ex.Message}");
+                            if (IsServer)
+                            {
+                                netEvent.Peer.Disconnect(MalformedPacketDisconnectCode);
+                            }
+                        }
                         break;
                     }
                 }
-                
+
                 // Check for more events
                 checkResult = ENetHost.CheckEvents(out netEvent);
                 if (checkResult <= 0)

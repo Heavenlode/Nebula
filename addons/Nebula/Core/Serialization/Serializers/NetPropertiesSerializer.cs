@@ -33,14 +33,44 @@ namespace Nebula.Serialization.Serializers
         }
 
         /// <summary>
-        /// Per-peer property state for delta encoding.
+        /// A record of which primitive properties were included in the export at a given tick.
+        /// Ring-indexed by tick % SNAPSHOT_RING_SIZE; Tick disambiguates stale slots.
+        /// </summary>
+        private struct SentRecord
+        {
+            public Tick Tick;
+            public long SentMask;
+        }
+
+        /// <summary>
+        /// A snapshot of all property values at a given tick.
+        /// Server: values as exported. Client: values as applied.
+        /// Ring-indexed by tick % SNAPSHOT_RING_SIZE; Tick disambiguates stale slots.
+        /// </summary>
+        private struct TickSnapshot
+        {
+            public Tick Tick;
+            public PropertyCache[] Values;
+        }
+
+        /// <summary>
+        /// Per-peer property state for snapshot-delta encoding.
+        ///
+        /// Correctness invariant: pending (unacked) dirty properties are re-included in
+        /// EVERY export until acked. So when a peer acks tick N, the tick-N packet
+        /// contained the tick-N value of every then-unacked property, and every other
+        /// acked property was unchanged at N — meaning the client's applied state at any
+        /// acked send-tick exactly equals the server's snapshot at that tick. Deltas are
+        /// therefore computed against the snapshot at the latest acked send-tick, and the
+        /// client applies them against its own recorded state at that tick.
         /// </summary>
         private struct PeerPropertyState
         {
-            public PropertyCache[] LastAcked;      // Last acknowledged values (swapped on ACK)
-            public PropertyCache[] Pending;        // Currently in-flight values
-            public byte[] AckedMask;               // Bit mask: has peer ever acked this property?
+            public byte[] AckedMask;               // Bit mask: has an ack confirmed the peer received this property?
             public byte[] PendingDirtyMask;        // Properties sent but not yet acked (for re-sending)
+            public SentRecord[] SentHistory;       // Which props were sent at each recent tick
+            public Tick LatestAckedTick;           // Latest acked tick at which this node sent data (-1 = none)
+            public byte[] DeltaChain;              // Consecutive delta sends per prop; forces periodic absolute refresh
             public bool IsInitialized;
         }
 
@@ -86,12 +116,56 @@ namespace Nebula.Serialization.Serializers
         /// <summary>Pre-cached: is this property a per-peer property (different value for each peer)?</summary>
         private readonly bool[] _propIsPerPeer;
 
+        /// <summary>Pre-cached: does this scene have any object (INetSerializable) properties?</summary>
+        private readonly bool _hasObjectProps;
+
         /// <summary>
         /// Small delta threshold - deltas below this use half-float encoding.
         /// Based on half-float precision (~0.1 unit at magnitude 1024).
         /// </summary>
         private const float SmallDeltaThreshold = 1024f;
         private const float SmallDeltaThresholdSq = SmallDeltaThreshold * SmallDeltaThreshold;
+
+        /// <summary>
+        /// Depth of the tick snapshot rings (server value history / client applied history).
+        /// Must exceed MAX_DELTA_AGE so any baseline the server picks is still resolvable.
+        /// </summary>
+        private const int SNAPSHOT_RING_SIZE = 32;
+
+        /// <summary>
+        /// Oldest baseline (in ticks) the server will delta against. Older acks (stalled
+        /// peer, interest regain after a long gap) fall back to absolute values. ~1s at 30Hz.
+        /// </summary>
+        private const int MAX_DELTA_AGE = 30;
+
+        /// <summary>
+        /// After this many consecutive delta sends of a property, force one absolute send.
+        /// Bounds accumulated half-float quantization drift on the client.
+        /// </summary>
+        private const int REFRESH_CHAIN = 30;
+
+        /// <summary>
+        /// Server: ring of property value snapshots per exported tick, shared by all peers.
+        /// Captured in Begin(). Indexed by tick % SNAPSHOT_RING_SIZE.
+        /// </summary>
+        private TickSnapshot[] _tickValueRing;
+
+        /// <summary>
+        /// Client: ring of applied server state per received tick. Written after each import.
+        /// Indexed by tick % SNAPSHOT_RING_SIZE.
+        /// </summary>
+        private TickSnapshot[] _appliedRing;
+
+        /// <summary>
+        /// Client: the most recent tick written to _appliedRing (-1 = none).
+        /// New entries copy forward from this one so unsent properties carry their values.
+        /// </summary>
+        private Tick _lastAppliedTick = -1;
+
+        /// <summary>
+        /// Scratch cache handed to ReadDeltaOrAbsolute when a payload has no baseline.
+        /// </summary>
+        private static PropertyCache _dummyBaseline;
 
         public NetPropertiesSerializer(NetworkController _network)
         {
@@ -113,6 +187,18 @@ namespace Nebula.Serialization.Serializers
 
             // Pre-cache property metadata for zero-allocation hot path
             _propertyCount = Protocol.GetPropertyCount(_cachedSceneFilePath);
+
+            // Defense in depth behind the NEBULA004 build-time check: the 64-bit dirty
+            // mask and fixed-size CachedProperties cannot represent more properties, and
+            // exceeding the limit silently corrupts sync (bit 64 aliases bit 0). Fail
+            // loudly at scene setup rather than desyncing at runtime.
+            if (_propertyCount > BitConstants.MaxSceneProperties)
+            {
+                throw new InvalidOperationException(
+                    $"NetScene '{_cachedSceneFilePath}' has {_propertyCount} networked properties, exceeding the maximum of {BitConstants.MaxSceneProperties} per scene. " +
+                    "Move properties onto nested NetScenes (which have their own limit), or aggregate related values into a single property such as a NetArray or a custom INetSerializable type.");
+            }
+
             _propSupportsDelta = new bool[_propertyCount];
             _propTypes = new SerialVariantType[_propertyCount];
             _propIsObject = new bool[_propertyCount];
@@ -127,6 +213,7 @@ namespace Nebula.Serialization.Serializers
                 _propIsObject[i] = prop.IsObjectProperty;
                 _propClassIndex[i] = prop.ClassIndex;
                 _propIsPerPeer[i] = prop.IsPerPeer;
+                if (prop.IsObjectProperty) _hasObjectProps = true;
             }
 
             int byteCount = GetByteCountOfProperties();
@@ -209,23 +296,34 @@ namespace Nebula.Serialization.Serializers
             {
                 var state = _statePool.Pop();
                 // Clear the arrays for reuse
-                Array.Clear(state.LastAcked, 0, state.LastAcked.Length);
-                Array.Clear(state.Pending, 0, state.Pending.Length);
                 Array.Clear(state.AckedMask, 0, state.AckedMask.Length);
                 Array.Clear(state.PendingDirtyMask, 0, state.PendingDirtyMask.Length);
+                Array.Clear(state.SentHistory, 0, state.SentHistory.Length);
+                for (int i = 0; i < state.SentHistory.Length; i++)
+                {
+                    state.SentHistory[i].Tick = -1;
+                }
+                Array.Clear(state.DeltaChain, 0, state.DeltaChain.Length);
+                state.LatestAckedTick = -1;
                 state.IsInitialized = true;
                 return state;
             }
 
             int byteCount = GetByteCountOfProperties();
-            return new PeerPropertyState
+            var fresh = new PeerPropertyState
             {
-                LastAcked = new PropertyCache[_propertyCount],
-                Pending = new PropertyCache[_propertyCount],
                 AckedMask = new byte[byteCount],
                 PendingDirtyMask = new byte[byteCount],
+                SentHistory = new SentRecord[SNAPSHOT_RING_SIZE],
+                LatestAckedTick = -1,
+                DeltaChain = new byte[_propertyCount],
                 IsInitialized = true
             };
+            for (int i = 0; i < fresh.SentHistory.Length; i++)
+            {
+                fresh.SentHistory[i].Tick = -1;
+            }
+            return fresh;
         }
 
         /// <summary>
@@ -404,7 +502,7 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        private Data Deserialize(NetBuffer buffer)
+        private Data Deserialize(NetBuffer buffer, Tick currentTick)
         {
             int startPos = buffer.ReadPosition;
             int byteCount = GetByteCountOfProperties();
@@ -420,7 +518,38 @@ namespace Nebula.Serialization.Serializers
                 data.propertiesUpdated[i] = NetReader.ReadByte(buffer);
             }
 
-            // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[Props.Import] NetId={network.NetId} mask=[{string.Join(",", data.propertiesUpdated.Select(b => $"0x{b:X2}"))}] startPos={startPos}");
+            // ============================================================
+            // BASELINE RESOLUTION (snapshot-delta)
+            // ============================================================
+            // Deltas in this payload were computed by the server against its value
+            // snapshot at baselineTick - a tick this client received, applied, and acked.
+            // They must be applied against OUR recorded state at that same tick, never
+            // against the running value (which may include newer in-flight updates).
+            int baselineAge = NetReader.ReadByte(buffer);
+            PropertyCache[] baselineValues = null;
+            bool discardPayload = false;
+            if (baselineAge > 0)
+            {
+                Tick baselineTick = currentTick - baselineAge;
+                if (_appliedRing != null)
+                {
+                    ref var baseEntry = ref _appliedRing[baselineTick % SNAPSHOT_RING_SIZE];
+                    if (baseEntry.Values != null && baseEntry.Tick == baselineTick)
+                    {
+                        baselineValues = baseEntry.Values;
+                    }
+                }
+
+                if (baselineValues == null)
+                {
+                    // Should be unreachable: the server only picks acked send-ticks within
+                    // MAX_DELTA_AGE, and we record an entry for every applied payload.
+                    // Parse the payload to keep the stream aligned, but discard the values.
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
+                        $"[NetPropertiesSerializer.Deserialize] NetId={network.NetId} missing applied-state baseline for tick {baselineTick} (age {baselineAge}). Discarding payload.");
+                    discardPayload = true;
+                }
+            }
 
             // ============================================================
             // TWO-PASS DESERIALIZATION (must match server Export order)
@@ -495,13 +624,26 @@ namespace Nebula.Serialization.Serializers
                     }
                     else
                     {
-                        // Read delta-encoded property (pass subtype for sized int types)
-                        ReadDeltaOrAbsolute(buffer, prop.VariantType, prop.Metadata.TypeIdentifier, ref existingCache, ref cache);
+                        // Read the value, applying deltas against the baseline snapshot
+                        // (pass subtype for sized int types). With no baseline (absolute
+                        // payload or discard mode) a dummy is passed - deltas can't occur
+                        // in a well-formed absolute payload.
+                        if (baselineValues != null)
+                        {
+                            ReadDeltaOrAbsolute(buffer, prop.VariantType, prop.Metadata.TypeIdentifier, ref baselineValues[propertyIndex], ref cache);
+                        }
+                        else
+                        {
+                            ReadDeltaOrAbsolute(buffer, prop.VariantType, prop.Metadata.TypeIdentifier, ref _dummyBaseline, ref cache);
+                        }
                     }
 
                     // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[Props.R] idx={propertyIndex} '{prop.NodePath}.{prop.Name}' type={prop.VariantType} bytes={buffer.ReadPosition - propStartPos}");
 
-                    data.properties[propertyIndex] = cache;
+                    if (!discardPayload)
+                    {
+                        data.properties[propertyIndex] = cache;
+                    }
                 }
             }
 
@@ -556,15 +698,54 @@ namespace Nebula.Serialization.Serializers
                 }
             }
 
+            // ============================================================
+            // RECORD APPLIED STATE (snapshot-delta)
+            // ============================================================
+            // Store this tick's post-apply state so future payloads can delta against it.
+            // Entries copy forward from the previous one (or CachedProperties for the
+            // first), so properties not in this payload keep their carried values - which,
+            // by the resend-until-acked invariant, match the server's snapshot exactly.
+            if (!discardPayload && _propertyCount > 0)
+            {
+                _appliedRing ??= new TickSnapshot[SNAPSHOT_RING_SIZE];
+                ref var entry = ref _appliedRing[currentTick % SNAPSHOT_RING_SIZE];
+                entry.Values ??= new PropertyCache[_propertyCount];
+
+                if (_lastAppliedTick >= 0)
+                {
+                    ref var prevEntry = ref _appliedRing[_lastAppliedTick % SNAPSHOT_RING_SIZE];
+                    if (prevEntry.Values != null && prevEntry.Tick == _lastAppliedTick && _lastAppliedTick != currentTick)
+                    {
+                        Array.Copy(prevEntry.Values, entry.Values, _propertyCount);
+                    }
+                }
+                else
+                {
+                    Array.Copy(network.CachedProperties, entry.Values, _propertyCount);
+                }
+
+                foreach (var propIndex in data.properties.Keys)
+                {
+                    if (propIndex >= _propertyCount) continue;
+                    ref var decoded = ref CollectionsMarshal.GetValueRefOrNullRef(data.properties, propIndex);
+                    entry.Values[propIndex] = decoded;
+                }
+
+                entry.Tick = currentTick;
+                _lastAppliedTick = currentTick;
+            }
+
             // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[Props.Import] NetId={network.NetId} total={buffer.ReadPosition - startPos} endPos={buffer.ReadPosition}");
             return data;
         }
 
         /// <summary>
-        /// Reads a property value with delta decoding support.
+        /// Reads a property value with delta decoding support. Deltas are applied against
+        /// the baseline snapshot value (the client's recorded state at the packet's
+        /// declared baseline tick), never against the running value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ReadDeltaOrAbsolute(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache existing, ref PropertyCache cache)
+        private static void ReadDeltaOrAbsolute(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache baseline, ref PropertyCache cache)
         {
             var flags = (DeltaEncodingFlags)NetReader.ReadByte(buffer);
             cache.Type = type;
@@ -588,12 +769,12 @@ namespace Nebula.Serialization.Serializers
 
                 case DeltaEncodingFlags.DeltaSmall:
                     // Small delta (half-float/short encoding)
-                    ReadSmallDelta(buffer, type, subtype, ref existing, ref cache);
+                    ReadSmallDelta(buffer, type, subtype, ref baseline, ref cache);
                     break;
 
                 case DeltaEncodingFlags.DeltaFull:
                     // Full delta (same type as property)
-                    ReadFullDelta(buffer, type, subtype, ref existing, ref cache);
+                    ReadFullDelta(buffer, type, subtype, ref baseline, ref cache);
                     break;
 
                 default:
@@ -614,16 +795,16 @@ namespace Nebula.Serialization.Serializers
         }
 
         /// <summary>
-        /// Reads a small delta (half-float/short) and applies to existing value.
+        /// Reads a small delta (half-float/short) and applies it to the baseline value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ReadSmallDelta(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache existing, ref PropertyCache cache)
+        private static void ReadSmallDelta(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache baseline, ref PropertyCache cache)
         {
             switch (type)
             {
                 case SerialVariantType.Float:
                     float deltaF = NetReader.ReadHalfFloat(buffer);
-                    cache.FloatValue = existing.FloatValue + deltaF;
+                    cache.FloatValue = baseline.FloatValue + deltaF;
                     break;
 
                 case SerialVariantType.Int:
@@ -637,7 +818,7 @@ namespace Nebula.Serialization.Serializers
                         case "System.Byte":
                         case "sbyte":
                         case "System.SByte":
-                            cache.ByteValue = (byte)(existing.ByteValue + deltaS);
+                            cache.ByteValue = (byte)(baseline.ByteValue + deltaS);
                             break;
                         case "short":
                         case "System.Int16":
@@ -648,10 +829,10 @@ namespace Nebula.Serialization.Serializers
                         case "System.Int32":
                         case "uint":
                         case "System.UInt32":
-                            cache.IntValue = existing.IntValue + deltaS;
+                            cache.IntValue = baseline.IntValue + deltaS;
                             break;
                         default:
-                            cache.LongValue = existing.LongValue + deltaS;
+                            cache.LongValue = baseline.LongValue + deltaS;
                             break;
                     }
                     break;
@@ -659,7 +840,7 @@ namespace Nebula.Serialization.Serializers
                 case SerialVariantType.Vector2:
                     float dx2 = NetReader.ReadHalfFloat(buffer);
                     float dy2 = NetReader.ReadHalfFloat(buffer);
-                    cache.Vec2Value = new Vector2(existing.Vec2Value.X + dx2, existing.Vec2Value.Y + dy2);
+                    cache.Vec2Value = new Vector2(baseline.Vec2Value.X + dx2, baseline.Vec2Value.Y + dy2);
                     break;
 
                 case SerialVariantType.Vector3:
@@ -667,9 +848,9 @@ namespace Nebula.Serialization.Serializers
                     float dy3 = NetReader.ReadHalfFloat(buffer);
                     float dz3 = NetReader.ReadHalfFloat(buffer);
                     cache.Vec3Value = new Vector3(
-                        existing.Vec3Value.X + dx3,
-                        existing.Vec3Value.Y + dy3,
-                        existing.Vec3Value.Z + dz3);
+                        baseline.Vec3Value.X + dx3,
+                        baseline.Vec3Value.Y + dy3,
+                        baseline.Vec3Value.Z + dz3);
                     break;
 
                 default:
@@ -681,16 +862,16 @@ namespace Nebula.Serialization.Serializers
         }
 
         /// <summary>
-        /// Reads a full delta and applies to existing value.
+        /// Reads a full delta and applies it to the baseline value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ReadFullDelta(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache existing, ref PropertyCache cache)
+        private static void ReadFullDelta(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache baseline, ref PropertyCache cache)
         {
             switch (type)
             {
                 case SerialVariantType.Float:
                     float deltaF = NetReader.ReadFloat(buffer);
-                    cache.FloatValue = existing.FloatValue + deltaF;
+                    cache.FloatValue = baseline.FloatValue + deltaF;
                     break;
 
                 case SerialVariantType.Int:
@@ -704,14 +885,14 @@ namespace Nebula.Serialization.Serializers
                         case "System.SByte":
                             // Byte types use Int16 for full delta (more range than byte)
                             short deltaB = NetReader.ReadInt16(buffer);
-                            cache.ByteValue = (byte)(existing.ByteValue + deltaB);
+                            cache.ByteValue = (byte)(baseline.ByteValue + deltaB);
                             break;
                         case "short":
                         case "System.Int16":
                         case "ushort":
                         case "System.UInt16":
                             short deltaS = NetReader.ReadInt16(buffer);
-                            cache.IntValue = existing.IntValue + deltaS;
+                            cache.IntValue = baseline.IntValue + deltaS;
                             break;
                         case "int":
                         case "Int":
@@ -719,24 +900,24 @@ namespace Nebula.Serialization.Serializers
                         case "uint":
                         case "System.UInt32":
                             int deltaI = NetReader.ReadInt32(buffer);
-                            cache.IntValue = existing.IntValue + deltaI;
+                            cache.IntValue = baseline.IntValue + deltaI;
                             break;
                         default:
                             // Default to Int64 for long, ulong, or unknown subtypes
                             long deltaL = NetReader.ReadInt64(buffer);
-                            cache.LongValue = existing.LongValue + deltaL;
+                            cache.LongValue = baseline.LongValue + deltaL;
                             break;
                     }
                     break;
 
                 case SerialVariantType.Vector2:
                     Vector2 deltaV2 = NetReader.ReadVector2(buffer);
-                    cache.Vec2Value = existing.Vec2Value + deltaV2;
+                    cache.Vec2Value = baseline.Vec2Value + deltaV2;
                     break;
 
                 case SerialVariantType.Vector3:
                     Vector3 deltaV3 = NetReader.ReadVector3(buffer);
-                    cache.Vec3Value = existing.Vec3Value + deltaV3;
+                    cache.Vec3Value = baseline.Vec3Value + deltaV3;
                     break;
 
                 default:
@@ -808,13 +989,26 @@ namespace Nebula.Serialization.Serializers
                     nonDefaultProperties.Add(i);
                 }
             }
+
+            // Capture this tick's property values for delta baselines. Runs once per node
+            // per tick, before any per-peer Export. All peers' deltas for this tick are
+            // computed against entries of this ring at their respective acked ticks.
+            if (_propertyCount > 0 && NetRunner.Instance.IsServer && network.CurrentWorld != null)
+            {
+                _tickValueRing ??= new TickSnapshot[SNAPSHOT_RING_SIZE];
+                Tick tick = network.CurrentWorld.CurrentTick;
+                ref var entry = ref _tickValueRing[tick % SNAPSHOT_RING_SIZE];
+                entry.Values ??= new PropertyCache[_propertyCount];
+                Array.Copy(network.CachedProperties, entry.Values, _propertyCount);
+                entry.Tick = tick;
+            }
         }
 
         public void Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController nodeOut)
         {
             nodeOut = network;
 
-            var data = Deserialize(buffer);
+            var data = Deserialize(buffer, currentWorld.CurrentTick);
 
             // Cache IsNodeReady() once before the loop to avoid repeated Godot calls
             bool isReady = network.RawNode.IsNodeReady();
@@ -1011,6 +1205,29 @@ namespace Nebula.Serialization.Serializers
             }
 
             // ============================================================
+            // BASELINE SELECTION (snapshot-delta)
+            // ============================================================
+            // Delta against the server's value snapshot at the peer's latest acked
+            // send-tick. The client applies deltas against its own recorded state at
+            // that same tick, so in-flight packets can never compound.
+            Tick currentTick = currentWorld.CurrentTick;
+            int baselineAge = 0;
+            PropertyCache[] baselineValues = null;
+            if (state.LatestAckedTick >= 0 && _tickValueRing != null)
+            {
+                int age = currentTick - state.LatestAckedTick;
+                if (age >= 1 && age <= MAX_DELTA_AGE)
+                {
+                    ref var baseEntry = ref _tickValueRing[state.LatestAckedTick % SNAPSHOT_RING_SIZE];
+                    if (baseEntry.Values != null && baseEntry.Tick == state.LatestAckedTick)
+                    {
+                        baselineAge = age;
+                        baselineValues = baseEntry.Values;
+                    }
+                }
+            }
+
+            // ============================================================
             // RESERVE-AND-BACKFILL PATTERN
             // ============================================================
 
@@ -1020,6 +1237,9 @@ namespace Nebula.Serialization.Serializers
             {
                 NetWriter.WriteByte(buffer, 0); // Placeholder
             }
+
+            // Baseline age header: 0 = every property in this payload is absolute
+            NetWriter.WriteByte(buffer, (byte)baselineAge);
 
             // Track which properties actually got written (for combined mask)
             // Start with primitive mask
@@ -1040,6 +1260,7 @@ namespace Nebula.Serialization.Serializers
                     // Skip object properties - handled in next loop
                     if (_propIsObject[propIndex]) continue;
 
+                    int propStartPos = buffer.WritePosition;
                     try
                     {
                         // Get current value - for per-peer properties, look up in per-peer storage
@@ -1057,26 +1278,37 @@ namespace Nebula.Serialization.Serializers
                             current = network.CachedProperties[propIndex];
                         }
 
-                        ref var acked = ref state.LastAcked[propIndex];
                         bool hasAcked = (state.AckedMask[i] & (1 << j)) != 0;
 
-                        // int propStartPos = buffer.WritePosition;
-                        // Write with delta encoding
-                        WriteDeltaOrAbsolute(currentWorld, peer, buffer, propIndex, ref current, ref acked, hasAcked);
+                        // Delta requires: a resolvable baseline, a confirmed-received prop,
+                        // and not a per-peer prop (their values have no shared snapshot).
+                        // DeltaChain forces a periodic absolute refresh to bound drift.
+                        bool useDelta = baselineValues != null
+                            && hasAcked
+                            && !_propIsPerPeer[propIndex]
+                            && _propSupportsDelta[propIndex]
+                            && state.DeltaChain[propIndex] < REFRESH_CHAIN;
 
-                        // var propInfo = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-                        // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[Props.W] idx={propIndex} '{propInfo.NodePath}.{propInfo.Name}' type={_propTypes[propIndex]} bytes={buffer.WritePosition - propStartPos}");
-
-                        // Track in pending state
-                        state.Pending[propIndex] = current;
+                        if (useDelta)
+                        {
+                            WriteDelta(buffer, propIndex, ref current, ref baselineValues[propIndex]);
+                            state.DeltaChain[propIndex]++;
+                        }
+                        else
+                        {
+                            WriteAbsolute(currentWorld, peer, buffer, propIndex, ref current);
+                            state.DeltaChain[propIndex] = 0;
+                        }
                     }
                     catch (Exception ex)
                     {
                         var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                         Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
                             $"Error serializing property {prop.NodePath}.{prop.Name}: {ex.InnerException?.Message ?? ex.Message}");
-                        // Clear the bit since we failed to write
+                        // Clear the bit AND rewind - stray partial bytes would desync the
+                        // whole stream for every property and node after this one
                         actualMask[i] &= (byte)~(1 << j);
+                        buffer.WritePosition = propStartPos;
                     }
                 }
             }
@@ -1115,9 +1347,6 @@ namespace Nebula.Serialization.Serializers
                         int byteIdx = propIndex / 8;
                         int bitIdx = propIndex % 8;
                         actualMask[byteIdx] |= (byte)(1 << bitIdx);
-
-                        // Track in pending state
-                        state.Pending[propIndex] = cache;
                     }
                     else
                     {
@@ -1152,14 +1381,34 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
-            // Update tracking state
+            // Update tracking state. PendingDirtyMask and SentHistory only track PRIMITIVE
+            // properties - object properties (INetSerializable) manage their own per-peer
+            // pending/resend state and are acked through their own tick-gated callbacks.
+            long primitiveSentMask = 0;
             for (var byteIdx = 0; byteIdx < byteCount; byteIdx++)
             {
                 var b = actualMask[byteIdx];
                 if (b == 0) continue;
                 initialSync[byteIdx] |= b;
-                state.PendingDirtyMask[byteIdx] |= b;
+
+                for (int bit = 0; bit < 8; bit++)
+                {
+                    if ((b & (1 << bit)) == 0) continue;
+                    int propIdx = byteIdx * 8 + bit;
+                    if (propIdx >= _propertyCount || _propIsObject[propIdx]) continue;
+                    state.PendingDirtyMask[byteIdx] |= (byte)(1 << bit);
+                    if (propIdx < 64)
+                    {
+                        primitiveSentMask |= 1L << propIdx;
+                    }
+                }
             }
+
+            // Record what was sent at this tick so a future ack can be matched to exactly
+            // the values the peer received (the heart of tick-correlated acknowledgment)
+            ref var sentRecord = ref state.SentHistory[currentTick % SNAPSHOT_RING_SIZE];
+            sentRecord.Tick = currentTick;
+            sentRecord.SentMask = primitiveSentMask;
 
             // BACKFILL: Go back and write the actual mask
             // We need to overwrite the placeholder bytes we wrote earlier
@@ -1176,42 +1425,40 @@ namespace Nebula.Serialization.Serializers
         }
 
         /// <summary>
-        /// Writes a property value with delta encoding when applicable.
+        /// Writes an absolute property value with its encoding flag byte.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void WriteDeltaOrAbsolute(
-            WorldRunner currentWorld,
-            NetPeer peer,
+        private void WriteAbsolute(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int propIndex, ref PropertyCache current)
+        {
+            // Quaternion: use smallest-three compression
+            if (_propTypes[propIndex] == SerialVariantType.Quaternion)
+            {
+                NetWriter.WriteByte(buffer, (byte)(DeltaEncodingFlags.Absolute | DeltaEncodingFlags.QuatCompressed));
+                NetWriter.WriteQuatSmallestThree(buffer, current.QuatValue);
+            }
+            else
+            {
+                NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.Absolute);
+                WriteAbsoluteValue(currentWorld, peer, buffer, propIndex, ref current);
+            }
+        }
+
+        /// <summary>
+        /// Writes a property value as a delta against the snapshot value at the peer's
+        /// acked baseline tick. Caller guarantees the type supports delta encoding.
+        /// </summary>
+        private void WriteDelta(
             NetBuffer buffer,
             int propIndex,
             ref PropertyCache current,
-            ref PropertyCache acked,
-            bool hasAcked)
+            ref PropertyCache baseline)
         {
             var type = _propTypes[propIndex];
 
-            // Non-delta types or first sync: send absolute
-            if (!hasAcked || !_propSupportsDelta[propIndex])
-            {
-                // Quaternion: use smallest-three compression
-                if (type == SerialVariantType.Quaternion)
-                {
-                    NetWriter.WriteByte(buffer, (byte)(DeltaEncodingFlags.Absolute | DeltaEncodingFlags.QuatCompressed));
-                    NetWriter.WriteQuatSmallestThree(buffer, current.QuatValue);
-                }
-                else
-                {
-                    NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.Absolute);
-                    WriteAbsoluteValue(currentWorld, peer, buffer, propIndex, ref current);
-                }
-                return;
-            }
-
-            // Delta encoding path
             switch (type)
             {
                 case SerialVariantType.Float:
-                    float deltaF = current.FloatValue - acked.FloatValue;
+                    float deltaF = current.FloatValue - baseline.FloatValue;
                     if (MathF.Abs(deltaF) < SmallDeltaThreshold)
                     {
                         NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
@@ -1228,9 +1475,9 @@ namespace Nebula.Serialization.Serializers
                     // Get the property subtype to read from the correct field
                     var intProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                     var intSubtype = intProp.Metadata.TypeIdentifier;
-                    long currentVal, ackedVal;
+                    long currentVal, baselineVal;
 
-                    // Read current and acked values from the appropriate field
+                    // Read current and baseline values from the appropriate field
                     switch (intSubtype)
                     {
                         case "byte":
@@ -1238,7 +1485,7 @@ namespace Nebula.Serialization.Serializers
                         case "sbyte":
                         case "System.SByte":
                             currentVal = current.ByteValue;
-                            ackedVal = acked.ByteValue;
+                            baselineVal = baseline.ByteValue;
                             break;
                         case "short":
                         case "System.Int16":
@@ -1250,15 +1497,15 @@ namespace Nebula.Serialization.Serializers
                         case "uint":
                         case "System.UInt32":
                             currentVal = current.IntValue;
-                            ackedVal = acked.IntValue;
+                            baselineVal = baseline.IntValue;
                             break;
                         default:
                             currentVal = current.LongValue;
-                            ackedVal = acked.LongValue;
+                            baselineVal = baseline.LongValue;
                             break;
                     }
 
-                    long deltaL = currentVal - ackedVal;
+                    long deltaL = currentVal - baselineVal;
                     // Use small encoding for deltas that fit in short range
                     if (deltaL >= short.MinValue && deltaL <= short.MaxValue)
                     {
@@ -1296,7 +1543,7 @@ namespace Nebula.Serialization.Serializers
                     break;
 
                 case SerialVariantType.Vector2:
-                    Vector2 deltaV2 = current.Vec2Value - acked.Vec2Value;
+                    Vector2 deltaV2 = current.Vec2Value - baseline.Vec2Value;
                     float mag2 = deltaV2.LengthSquared();
                     if (mag2 < SmallDeltaThresholdSq)
                     {
@@ -1312,7 +1559,7 @@ namespace Nebula.Serialization.Serializers
                     break;
 
                 case SerialVariantType.Vector3:
-                    Vector3 deltaV3 = current.Vec3Value - acked.Vec3Value;
+                    Vector3 deltaV3 = current.Vec3Value - baseline.Vec3Value;
                     float mag3 = deltaV3.LengthSquared();
                     if (mag3 < SmallDeltaThresholdSq)
                     {
@@ -1329,10 +1576,8 @@ namespace Nebula.Serialization.Serializers
                     break;
 
                 default:
-                    // Fallback to absolute for any other types
-                    NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.Absolute);
-                    WriteAbsoluteValue(currentWorld, peer, buffer, propIndex, ref current);
-                    break;
+                    // Caller gates on _propSupportsDelta, so this is unreachable; guard anyway
+                    throw new NotSupportedException($"WriteDelta: type {type} does not support delta encoding");
             }
         }
 
@@ -1422,6 +1667,19 @@ namespace Nebula.Serialization.Serializers
             // NOTE: This is called every tick after ExportState(), NOT when the object is destroyed.
             // Do not clear per-peer caches here - that would break state synchronization!
             // Use CleanupPeer() for per-peer cleanup on disconnect instead.
+
+            // End-of-tick hook for object properties with global dirty state (e.g. NetArray):
+            // every peer's Export has now absorbed the global dirty bits into per-peer
+            // pending state, so the object can safely clear its global set.
+            if (!_hasObjectProps || !NetRunner.Instance.IsServer) return;
+            for (int i = 0; i < _propertyCount; i++)
+            {
+                if (!_propIsObject[i]) continue;
+                if (network.CachedProperties[i].RefValue is INetExportAware exportAware)
+                {
+                    exportAware.OnExportComplete();
+                }
+            }
         }
 
         /// <summary>
@@ -1458,30 +1716,11 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick latestAck)
+        public bool Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick latestAck)
         {
             var peerId = NetRunner.Instance.GetPeerId(peer);
 
-            // Zero-alloc ref access
-            ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
-            if (Unsafe.IsNullRef(ref state) || !state.IsInitialized)
-            {
-                return;
-            }
-
-            // O(1) array swap - Pending becomes LastAcked
-            (state.LastAcked, state.Pending) = (state.Pending, state.LastAcked);
-
-            // Mark all pending properties as acked (for delta encoding initial sync detection)
-            for (int i = 0; i < state.AckedMask.Length && i < state.PendingDirtyMask.Length; i++)
-            {
-                state.AckedMask[i] |= state.PendingDirtyMask[i];
-            }
-
-            // Clear pending dirty mask - these properties are now acknowledged
-            Array.Clear(state.PendingDirtyMask, 0, state.PendingDirtyMask.Length);
-
-            // Call OnPeerAcknowledge on all object properties
+            // Call OnPeerAcknowledge on all object properties (they gate on the tick themselves)
             for (int i = 0; i < _propertyCount; i++)
             {
                 if (!_propIsObject[i]) continue;
@@ -1495,9 +1734,73 @@ namespace Nebula.Serialization.Serializers
                 ref var cache = ref network.CachedProperties[i];
                 if (cache.RefValue != null)
                 {
-                    onAck(cache.RefValue, peerId);
+                    onAck(cache.RefValue, peerId, latestAck);
                 }
             }
+
+            // Zero-alloc ref access
+            ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
+            if (Unsafe.IsNullRef(ref state) || !state.IsInitialized)
+            {
+                // No primitive state yet; object props were still notified above
+                return _hasObjectProps;
+            }
+
+            // An ack for tick N proves the peer received the packet exported at N, which
+            // contained the tick-N value of every then-pending property. It proves nothing
+            // about sends at later ticks, so only the tick-N record is committed.
+            ref var ackedRecord = ref state.SentHistory[latestAck % SNAPSHOT_RING_SIZE];
+            if (ackedRecord.Tick == latestAck)
+            {
+                long ackedSent = ackedRecord.SentMask;
+
+                if (ackedSent != 0)
+                {
+                    // Mark these props as confirmed-received (enables delta encoding)
+                    for (int i = 0; i < state.AckedMask.Length; i++)
+                    {
+                        int shift = i * 8;
+                        if (shift >= 64) break;
+                        state.AckedMask[i] |= (byte)((ackedSent >> shift) & 0xFF);
+                    }
+
+                    // Stop resending only props NOT re-sent after the acked tick - a prop
+                    // sent again later carries a newer value the client may not have yet
+                    long laterSent = 0;
+                    for (int i = 0; i < state.SentHistory.Length; i++)
+                    {
+                        if (state.SentHistory[i].Tick > latestAck)
+                        {
+                            laterSent |= state.SentHistory[i].SentMask;
+                        }
+                    }
+
+                    long clearMask = ackedSent & ~laterSent;
+                    for (int i = 0; i < state.PendingDirtyMask.Length; i++)
+                    {
+                        int shift = i * 8;
+                        if (shift >= 64) break;
+                        state.PendingDirtyMask[i] &= (byte)~((clearMask >> shift) & 0xFF);
+                    }
+                }
+
+                // The baseline must be a tick at which THIS node's data was received, so
+                // the client is guaranteed to have a matching applied-state ring entry.
+                // Only advance on ticks with a SentHistory record (node exported that tick).
+                if (latestAck > state.LatestAckedTick)
+                {
+                    state.LatestAckedTick = latestAck;
+                }
+            }
+
+            // Still pending if any primitive props await an ack (object props conservatively
+            // keep the node in the pending set; re-adding on next export is cheap)
+            if (_hasObjectProps) return true;
+            for (int i = 0; i < state.PendingDirtyMask.Length; i++)
+            {
+                if (state.PendingDirtyMask[i] != 0) return true;
+            }
+            return false;
         }
 
     }

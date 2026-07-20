@@ -73,7 +73,12 @@ namespace Nebula.Serialization
         /// </summary>
         public ReadOnlySpan<byte> GetReadSpan(int length)
         {
-            if (ReadPosition + length > WritePosition)
+            // Reject negative lengths explicitly, and compare against Remaining rather than
+            // `ReadPosition + length` so a hostile length (e.g. int.MaxValue) cannot overflow
+            // past the guard and reach AsSpan with an out-of-range value.
+            if (length < 0)
+                throw new InvalidOperationException($"Cannot read negative length {length}");
+            if (length > WritePosition - ReadPosition)
                 throw new InvalidOperationException($"Cannot read {length} bytes, only {Remaining} remaining");
             return _buffer.AsSpan(ReadPosition, length);
         }

@@ -100,13 +100,36 @@ namespace Nebula.Serialization
         /// </summary>
         public bool HasPendingChunk;
 
+        /// <summary>
+        /// Per-peer copy of dirty element bits that have been sent to this peer but not
+        /// yet acknowledged. Global dirty bits are merged in at each export, so a single
+        /// peer's ack can no longer erase resend state that other peers still need.
+        /// Lazily allocated on first merge.
+        /// </summary>
+        public ulong[] PendingDirty;
+
+        /// <summary>
+        /// Tick of the last export that included PendingDirty elements for this peer.
+        /// An ack only clears PendingDirty when it covers this tick — an older ack proves
+        /// nothing about packets still in flight.
+        /// </summary>
+        public Tick LastSendTick;
+
+        /// <summary>
+        /// Tick of the last chunk send. Chunk progress only commits on an ack covering it.
+        /// </summary>
+        public Tick ChunkSentTick;
+
         public static PeerSyncState Create() => new PeerSyncState
         {
             AckedUpToIndex = 0,
             PendingSyncIndex = 0,
             LastSyncedLength = 0,
             InitialSyncComplete = false,
-            HasPendingChunk = false
+            HasPendingChunk = false,
+            PendingDirty = null,
+            LastSendTick = -1,
+            ChunkSentTick = -1
         };
     }
 
@@ -116,7 +139,7 @@ namespace Nebula.Serialization
     /// Implements INetPropertyBindable to notify parent NetworkController on internal mutations.
     /// </summary>
     /// <typeparam name="T">Element type (must be a supported primitive or Godot struct)</typeparam>
-    public sealed class NetArray<T> : INetSerializable<NetArray<T>>, INetPropertyBindable, IEnumerable<T> where T : struct
+    public sealed class NetArray<T> : INetSerializable<NetArray<T>>, INetExportAware, INetPropertyBindable, IEnumerable<T> where T : struct
     {
         private T[] _data;
         private ulong[] _dirtyMask; // Bit array for tracking dirty indices
@@ -369,6 +392,17 @@ namespace Nebula.Serialization
         }
 
         /// <summary>
+        /// Called once per server tick after Export has run for every peer.
+        /// By this point each exported peer has absorbed the global dirty bits into its
+        /// own PendingDirty, so the global set can be cleared. Peers that join later get
+        /// a full chunked sync and don't rely on these bits.
+        /// </summary>
+        public void OnExportComplete()
+        {
+            ClearDirty();
+        }
+
+        /// <summary>
         /// Marks the entire array as needing a full sync.
         /// </summary>
         public void MarkFullDirty()
@@ -472,6 +506,12 @@ namespace Nebula.Serialization
 
             var peerId = NetRunner.Instance.GetPeerId(peer);
             ref var state = ref obj.GetOrCreatePeerState(peerId);
+            Tick currentTick = currentWorld.CurrentTick;
+
+            // Merge global dirty bits into this peer's pending set. Every connected peer
+            // is exported each tick, so each absorbs the bits before OnExportComplete
+            // clears the global mask at end of tick.
+            obj.MergeDirtyIntoPending(ref state);
 
             // Check if we need to restart initial sync (array was resized or marked for full sync)
             if (state.InitialSyncComplete && (obj._length != state.LastSyncedLength || obj._isFullDirty))
@@ -480,37 +520,83 @@ namespace Nebula.Serialization
                 state.AckedUpToIndex = 0;
                 state.PendingSyncIndex = 0;
                 state.HasPendingChunk = false;
+                // Full resync supersedes any pending element resends
+                if (state.PendingDirty != null)
+                    Array.Clear(state.PendingDirty, 0, state.PendingDirty.Length);
             }
 
             // Initial sync not complete - send chunked
             if (!state.InitialSyncComplete)
             {
-                return WriteChunkedSync(obj, buffer, ref state, maxBytes);
+                return WriteChunkedSync(obj, buffer, ref state, maxBytes, currentTick);
             }
 
-            // Initial sync complete - check if we have dirty elements (individual changes only)
-            if (obj.DirtyCount == 0)
+            // Initial sync complete - check if we have pending elements for this peer
+            if (CountPendingBits(state.PendingDirty, obj._length) == 0)
             {
                 return false; // Nothing to send
             }
 
             // Send delta sync
-            WriteDeltaSync(obj, buffer, ref state);
+            WriteDeltaSync(obj, buffer, ref state, currentTick);
             return true;
         }
 
-        private static bool WriteChunkedSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, int maxBytes)
+        /// <summary>
+        /// ORs the global dirty mask into the peer's pending set (lazy-allocating it).
+        /// </summary>
+        private void MergeDirtyIntoPending(ref PeerSyncState state)
+        {
+            bool hasGlobalDirty = false;
+            for (int i = 0; i < _dirtyMask.Length; i++)
+            {
+                if (_dirtyMask[i] != 0) { hasGlobalDirty = true; break; }
+            }
+            if (!hasGlobalDirty) return;
+
+            state.PendingDirty ??= new ulong[_dirtyMask.Length];
+            for (int i = 0; i < _dirtyMask.Length; i++)
+            {
+                state.PendingDirty[i] |= _dirtyMask[i];
+            }
+        }
+
+        /// <summary>
+        /// Counts set bits within [0, length) in a pending mask. Null mask counts as 0.
+        /// </summary>
+        private static int CountPendingBits(ulong[] mask, int length)
+        {
+            if (mask == null) return 0;
+
+            int count = 0;
+            for (int block = 0; block < mask.Length; block++)
+            {
+                var bits = mask[block];
+                int maxBitInBlock = Math.Min(64, length - block * 64);
+                if (maxBitInBlock <= 0) break;
+                if (maxBitInBlock < 64)
+                {
+                    bits &= (1UL << maxBitInBlock) - 1;
+                }
+                count += BitOperations.PopCount(bits);
+            }
+            return count;
+        }
+
+        private static bool WriteChunkedSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, int maxBytes, Tick currentTick)
         {
             // If we have a pending (unacked) chunk, re-send from the acked position
             int startIndex = state.AckedUpToIndex;
             int elementSize = ElementSize;
 
-            // First, collect dirty indices BELOW startIndex (already sent in previous chunks)
-            // These need to be re-sent as delta updates
+            // First, collect pending indices BELOW startIndex (already sent in previous chunks)
+            // These need to be re-sent as delta updates. Reads this PEER's pending set, not
+            // the global dirty mask, so other peers' acks can't erase them.
             List<int> dirtyResendIndices = null;
-            for (int block = 0; block < obj._dirtyMask.Length; block++)
+            int pendingBlockCount = state.PendingDirty?.Length ?? 0;
+            for (int block = 0; block < pendingBlockCount; block++)
             {
-                var mask = obj._dirtyMask[block];
+                var mask = state.PendingDirty[block];
                 if (mask == 0) continue;
 
                 int baseIndex = block * 64;
@@ -563,9 +649,8 @@ namespace Nebula.Serialization
             }
 
             // Write dirty resends if any
-            // NOTE: We do NOT clear dirty bits here - they will be cleared by ClearDirty() 
-            // when the peer acks. This ensures packet loss recovery works and other peers
-            // (if any) still receive delta updates.
+            // NOTE: We do NOT clear pending bits here - they are cleared when an ack
+            // covering this send tick arrives. This ensures packet loss recovery works.
             if (hasDirtyResends)
             {
                 NetWriter.WriteUInt16(buffer, (ushort)dirtyResendCount);
@@ -574,6 +659,7 @@ namespace Nebula.Serialization
                     NetWriter.WriteUInt16(buffer, (ushort)index);
                     WriteElement(buffer, obj._data[index]);
                 }
+                state.LastSendTick = currentTick;
             }
 
             // Mark this chunk as pending (awaiting ack)
@@ -581,6 +667,7 @@ namespace Nebula.Serialization
             {
                 state.PendingSyncIndex = startIndex + elementsToSend;
                 state.HasPendingChunk = true;
+                state.ChunkSentTick = currentTick;
             }
             state.LastSyncedLength = obj._length;
 
@@ -593,11 +680,11 @@ namespace Nebula.Serialization
             return true; // We wrote data
         }
 
-        private static void WriteDeltaSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state)
+        private static void WriteDeltaSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, Tick currentTick)
         {
-            int dirtyCount = obj.DirtyCount;
+            int pendingCount = CountPendingBits(state.PendingDirty, obj._length);
 
-            if (dirtyCount == 0)
+            if (pendingCount == 0)
             {
                 // No changes - write empty delta
                 NetWriter.WriteByte(buffer, (byte)NetArraySyncFlags.Delta);
@@ -607,17 +694,17 @@ namespace Nebula.Serialization
 
             // Write delta header
             NetWriter.WriteByte(buffer, (byte)NetArraySyncFlags.Delta);
-            NetWriter.WriteUInt16(buffer, (ushort)Math.Min(dirtyCount, ushort.MaxValue));
+            NetWriter.WriteUInt16(buffer, (ushort)Math.Min(pendingCount, ushort.MaxValue));
 
-            // Write changed indices and values - iterate without LINQ
+            // Write this peer's pending indices and values - iterate without LINQ
             int written = 0;
-            for (int block = 0; block < obj._dirtyMask.Length && written < dirtyCount; block++)
+            for (int block = 0; block < state.PendingDirty.Length && written < pendingCount; block++)
             {
-                var mask = obj._dirtyMask[block];
+                var mask = state.PendingDirty[block];
                 if (mask == 0) continue;
 
                 int baseIndex = block * 64;
-                while (mask != 0 && written < dirtyCount)
+                while (mask != 0 && written < pendingCount)
                 {
                     int bit = BitOperations.TrailingZeroCount(mask);
                     int index = baseIndex + bit;
@@ -630,6 +717,8 @@ namespace Nebula.Serialization
                     mask &= mask - 1; // Clear lowest set bit
                 }
             }
+
+            state.LastSendTick = currentTick;
         }
 
         /// <summary>
@@ -1047,15 +1136,17 @@ namespace Nebula.Serialization
         }
 
         /// <summary>
-        /// Called when peer acknowledges receipt. Commits pending state to confirmed.
+        /// Called when peer acknowledges receipt of the packet exported at <paramref name="tick"/>.
+        /// Only commits state that was sent at or before that tick — an older ack proves
+        /// nothing about sends still in flight (fixes lost updates from stale acks).
         /// </summary>
-        public static void OnPeerAcknowledge(NetArray<T> obj, UUID peerId)
+        public static void OnPeerAcknowledge(NetArray<T> obj, UUID peerId, Tick tick)
         {
             if (obj == null || obj._peerState == null) return;
             if (!obj._peerState.TryGetValue(peerId, out var state)) return;
 
-            // Commit pending chunk progress
-            if (state.HasPendingChunk)
+            // Commit pending chunk progress, but only if this ack covers the chunk send
+            if (state.HasPendingChunk && state.ChunkSentTick >= 0 && tick >= state.ChunkSentTick)
             {
                 state.AckedUpToIndex = state.PendingSyncIndex;
                 state.HasPendingChunk = false;
@@ -1067,11 +1158,16 @@ namespace Nebula.Serialization
                 }
             }
 
+            // Clear this peer's pending element bits only if the ack covers the last send
+            // that included them. Bits merged after that send stay pending and get resent.
+            if (state.PendingDirty != null && state.LastSendTick >= 0 && tick >= state.LastSendTick)
+            {
+                Array.Clear(state.PendingDirty, 0, state.PendingDirty.Length);
+                state.LastSendTick = -1;
+            }
+
             // Write back the modified struct
             obj._peerState[peerId] = state;
-
-            // Clear dirty flags after successful ack (elements have been confirmed received)
-            obj.ClearDirty();
         }
 
         /// <summary>

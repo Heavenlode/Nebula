@@ -82,9 +82,46 @@ namespace Nebula.Generators
                 fileContents,
                 analysisResult);
 
+            // Enforce the per-scene property limit before emitting anything. The runtime
+            // tracks dirty properties in a single 64-bit mask (NetworkController.DirtyMask)
+            // and sizes CachedProperties to 64 - a 65th property would silently alias bit 0
+            // (C# masks shift counts) and index out of bounds. Fail the build instead.
+            ReportPropertyLimitViolations(context, protocolData);
+
             // Emit code
             var code = CodeEmitter.Emit(protocolData);
             context.AddSource("Protocol.g.cs", SourceText.From(code, Encoding.UTF8));
+        }
+
+        /// <summary>
+        /// Maximum networked properties per NetScene, including properties rolled up from
+        /// static children and nested non-NetScene instances. Bound by the 64-bit dirty
+        /// mask in NetworkController. Mirrored at runtime by BitConstants.MaxSceneProperties.
+        /// </summary>
+        private const int MaxSceneProperties = 64;
+
+        private static readonly DiagnosticDescriptor PropertyLimitDescriptor = new(
+            "NEBULA004",
+            "NetScene exceeds the 64-property limit",
+            "NetScene '{0}' has {1} networked properties, exceeding the maximum of {2} per scene (dirty tracking uses a 64-bit mask). Move properties onto nested NetScenes (which have their own limit), or aggregate related values into a single property such as a NetArray or a custom INetSerializable type.",
+            "Nebula.Generator",
+            DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
+
+        private static void ReportPropertyLimitViolations(SourceProductionContext context, ProtocolData data)
+        {
+            foreach (var sceneEntry in data.PropertiesLookup)
+            {
+                if (sceneEntry.Value.Count > MaxSceneProperties)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        PropertyLimitDescriptor,
+                        Location.None,
+                        sceneEntry.Key,
+                        sceneEntry.Value.Count,
+                        MaxSceneProperties));
+                }
+            }
         }
 
         private static ProtocolData BuildProtocol(

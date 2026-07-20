@@ -194,7 +194,7 @@ namespace Nebula
             return true;
         }
 
-        public static void OnPeerAcknowledge(NetNode obj, UUID peerId)
+        public static void OnPeerAcknowledge(NetNode obj, UUID peerId, Tick tick)
         {
             // No-op: NetNode doesn't track per-peer state
         }

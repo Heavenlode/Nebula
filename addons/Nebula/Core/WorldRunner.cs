@@ -345,10 +345,10 @@ namespace Nebula
             // Debug TCP server is opt-in (dedicated servers should not start it by default).
             // Enable via either:
             // - command line: --debugPort=XXXX
-            // - project setting: Nebula/debug/enable_tcp = true
+            // - project setting: Nebula/config/enable_tcp = true
             bool enableDebugTcp =
                 DebugPort > 0 ||
-                ProjectSettings.GetSetting("Nebula/debug/enable_tcp", false).AsBool();
+                ProjectSettings.GetSetting("Nebula/config/enable_tcp", false).AsBool();
 
             if (enableDebugTcp)
             {
@@ -2147,7 +2147,13 @@ namespace Nebula
             return _exportPeerBuffers;
         }
 
-        internal void ImportState(NetBuffer stateBytes)
+        /// <summary>
+        /// Client-side. Imports a full tick's state payload.
+        /// Returns true if the whole payload was applied; false if import aborted partway
+        /// (corrupt buffer). A failed import must NOT be acked - the server would mark the
+        /// data as delivered and never resend it.
+        /// </summary>
+        internal bool ImportState(NetBuffer stateBytes)
         {
             // Read hierarchical bitmask: groupMask (1 byte) + nodeMasks for active groups
             var groupMask = NetReader.ReadByte(stateBytes);
@@ -2237,7 +2243,7 @@ namespace Nebula
                             var nodeType = netController?.RawNode?.GetType().Name ?? "(null)";
                             var nodeName = netController?.RawNode?.Name ?? "(null)";
                             Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[ImportState ERROR] Failed to import node {localNodeId} serializer {serializerIdx}: {ex.Message}. Buffer pos={stateBytes.ReadPosition}/{stateBytes.Length}. Node info: scenePath='{scenePath}', type={nodeType}, name={nodeName}, isNewNode={isNewNode}. Aborting tick import.\nStack trace:\n{ex.StackTrace}");
-                            return; // Don't continue processing - buffer position is corrupted
+                            return false; // Don't continue processing - buffer position is corrupted
                         }
                     }
                 }
@@ -2261,6 +2267,8 @@ namespace Nebula
                     }
                 }
             }
+
+            return true;
         }
 
         // Reusable list for objects that had all data acked (avoids modifying HashSet during iteration)
@@ -2268,6 +2276,15 @@ namespace Nebula
 
         public void PeerAcknowledge(NetPeer peer, Tick tick)
         {
+            // A peer cannot legitimately acknowledge a tick the server hasn't produced yet, nor a
+            // negative one. Without this, a hostile ack (e.g. int.MaxValue) would set peerState.Tick
+            // to a huge value and make every serializer believe all pending state was delivered.
+            if (tick < 0 || tick > CurrentTick)
+            {
+                Log(Debugger.DebugLevel.ERROR, $"[Nebula][InvalidAck] Peer acknowledged out-of-range tick {tick} (currentTick {CurrentTick})");
+                return;
+            }
+
             var peerId = NetRunner.Instance.GetPeerId(peer);
 
             // Fix #7: Use TryGetValue
@@ -2310,14 +2327,22 @@ namespace Nebula
                     continue;
                 }
 
+                bool stillPending = false;
                 for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                 {
                     var serializer = netController.NetNode.Serializers[serializerIdx];
-                    serializer.Acknowledge(this, peer, tick);
+                    stillPending |= serializer.Acknowledge(this, peer, tick);
+                }
+
+                // Fully acked - remove from the pending set so future acks skip this node.
+                // It re-enters via pendingAcks.Add() the next time it exports data.
+                if (!stillPending)
+                {
+                    _ackedObjects.Add(netController);
                 }
             }
 
-            // Remove invalid entries
+            // Remove invalid and fully-acked entries
             foreach (var obj in _ackedObjects)
             {
                 pendingAcks.Remove(obj);
@@ -2340,16 +2365,17 @@ namespace Nebula
 
             CurrentTick = incomingTick;
             OnWorldTickReceived(incomingTick); // Reset time accumulator for snapshot interpolation
+            bool importSucceeded = false;
             try
             {
                 // Log(Debugger.DebugLevel.VERBOSE, $"Importing state bytes of size {stateBytes.Length}");
                 using var stateBuffer = new NetBuffer(stateBytes);
-                ImportState(stateBuffer);
+                importSucceeded = ImportState(stateBuffer);
             }
             catch (Exception ex)
             {
                 Log(Debugger.DebugLevel.ERROR, $"[ImportState FAILED] tick {incomingTick}: {ex.Message}");
-                // Still continue - send ack so server doesn't think we're dead
+                // Still continue processing the tick locally, but do NOT ack it (below)
             }
 
             // Rebuild owned entities cache if needed
@@ -2440,10 +2466,17 @@ namespace Nebula
             // ============================================================
             // ACKNOWLEDGE TICK (pooled buffer)
             // ============================================================
-            _ackBuffer ??= new NetBuffer();
-            _ackBuffer.Reset();
-            NetWriter.WriteInt32(_ackBuffer, incomingTick);
-            NetRunner.SendUnreliableSequenced(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Tick, _ackBuffer);
+            // Only ack fully-applied imports. An ack tells the server "I have this tick's
+            // data" - acking a failed import would disarm the resend machinery and lose
+            // the state permanently. If failures persist, the server's ack-timeout will
+            // eventually drop this peer, which is the correct outcome for a broken stream.
+            if (importSucceeded)
+            {
+                _ackBuffer ??= new NetBuffer();
+                _ackBuffer.Reset();
+                NetWriter.WriteInt32(_ackBuffer, incomingTick);
+                NetRunner.SendUnreliableSequenced(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Tick, _ackBuffer);
+            }
         }
 
         /// <summary>
@@ -2584,6 +2617,17 @@ namespace Nebula
                 var tick = NetReader.ReadInt32(buffer);
                 var inputSize = NetReader.ReadInt32(buffer);
                 var inputBytes = NetReader.ReadBytes(buffer, inputSize);
+
+                // Clients run ahead of the server, so input ticks are legitimately in the future,
+                // but only up to the ring-buffer depth (anything beyond aliases onto occupied
+                // slots). Reject out-of-range ticks - a far-future/negative tick would otherwise
+                // poison a ring slot (buffer.Ticks[slot] < tick) so real inputs are dropped forever.
+                // Read fields first (above) so buffer alignment for later inputs is preserved.
+                if (tick < 0 || tick > CurrentTick + SERVER_INPUT_BUFFER_SIZE)
+                {
+                    Log(Debugger.DebugLevel.ERROR, $"[Nebula][InvalidInput] Ignoring out-of-range input tick {tick} (currentTick {CurrentTick}) for node {worldNetId}");
+                    continue;
+                }
 
                 // Buffer the input for this tick using composite key (parentNetId, staticChildId)
                 BufferServerInput(new InputBufferKey(worldNetId, staticChildId), tick, inputBytes);

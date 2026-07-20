@@ -354,7 +354,7 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick)
+        public bool Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick)
         {
             var peerId = NetRunner.Instance.GetPeerId(peer);
 
@@ -384,7 +384,7 @@ namespace Nebula.Serialization.Serializers
                 }
                 // If despawn is pending (tick < despawnTick), don't process spawn ACK
                 // The node is being despawned, so transitioning to Spawned would be wrong
-                return;
+                return despawnTicks.ContainsKey(peerId) || setupTicks.ContainsKey(peerId);
             }
 
             // Handle spawn acknowledgment (only if no despawn is pending)
@@ -396,6 +396,9 @@ namespace Nebula.Serialization.Serializers
                     setupTicks.Remove(peerId); // Clean up after successful ack
                 }
             }
+
+            // Still pending while an unacked spawn or despawn send exists for this peer
+            return setupTicks.ContainsKey(peerId) || despawnTicks.ContainsKey(peerId);
         }
 
         // Import is client-only and infrequent, less critical to optimize

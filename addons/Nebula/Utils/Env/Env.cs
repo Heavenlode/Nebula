@@ -40,7 +40,7 @@ namespace Nebula.Utility.Tools
         }
 
         public static Dictionary<ProjectSettingId, string> ProjectSettingKeys = new Dictionary<ProjectSettingId, string> {
-            { ProjectSettingId.WORLD_DEFAULT_SCENE, "Nebula/world/default_scene" }
+            { ProjectSettingId.WORLD_DEFAULT_SCENE, "Nebula/config/default_scene" }
         };
 
         public override void _Ready()

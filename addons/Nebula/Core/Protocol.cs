@@ -18,9 +18,15 @@ namespace Nebula.Serialization
         #region Protocol Identity
 
         /// <summary>
-        /// Deterministic 64-bit hash of the entire generated protocol (scenes, properties,
-        /// functions, serializable types, wire format version). Identical across builds
-        /// generated from identical protocol source.
+        /// The Nebula version this build was compiled against, read from plugin.cfg at
+        /// generation time. Part of <see cref="Hash"/>.
+        /// </summary>
+        public static string NebulaVersion => GeneratedProtocol.NebulaVersion;
+
+        /// <summary>
+        /// Deterministic 64-bit hash of the entire generated protocol (Nebula version,
+        /// scenes, properties, functions, serializable types). Identical across builds of
+        /// the same Nebula version generated from identical protocol source.
         /// </summary>
         public static ulong Hash => GeneratedProtocol.ProtocolHash;
 

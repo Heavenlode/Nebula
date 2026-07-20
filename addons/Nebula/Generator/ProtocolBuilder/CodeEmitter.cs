@@ -70,17 +70,18 @@ namespace Nebula.Generators
         }
 
         /// <summary>
-        /// Bump this whenever the runtime wire format changes in a way the protocol data
-        /// itself doesn't capture (serializer encoding, packet framing, handshake shape).
-        /// It is folded into ProtocolHash so old and new builds refuse to talk.
-        /// </summary>
-        private const int WireFormatVersion = 2; // v2: snapshot-delta baselineAge header
-
-        /// <summary>
-        /// Emits a deterministic 64-bit FNV-1a hash of the entire protocol: scene ids and
-        /// paths, static node paths, every property (order, type, flags), every function
-        /// signature, and all serializable types. Two builds produce the same hash iff
-        /// their protocols are identical, so it serves as a connection handshake token.
+        /// Emits a deterministic 64-bit FNV-1a hash of the entire protocol: the Nebula
+        /// version, scene ids and paths, static node paths, every property (order, type,
+        /// flags), every function signature, and all serializable types. Two builds produce
+        /// the same hash iff they run the same Nebula version over an identical protocol,
+        /// so it serves as a connection handshake token.
+        ///
+        /// The Nebula version stands in for the runtime wire format: changes to serializer
+        /// encoding, packet framing, or handshake shape aren't visible in the protocol data
+        /// above, and folding the version in means any release that alters them
+        /// automatically stops old and new builds from talking. The cost is that a release
+        /// which changes nothing on the wire also invalidates compatibility - deliberate,
+        /// since a false "compatible" is far worse than a false "incompatible".
         /// </summary>
         private static void EmitProtocolHash(StringBuilder sb, ProtocolData data)
         {
@@ -101,7 +102,7 @@ namespace Nebula.Generators
             }
 
             Mix("NEBULA_PROTOCOL");
-            Mix(WireFormatVersion.ToString(CultureInfo.InvariantCulture));
+            Mix(data.NebulaVersion);
 
             // Scenes, in id order (dictionaries are sorted explicitly for determinism)
             var sceneIds = new List<byte>(data.ScenesMap.Keys);
@@ -192,8 +193,14 @@ namespace Nebula.Generators
             }
 
             sb.AppendLine("        /// <summary>");
-            sb.AppendLine("        /// Deterministic hash of the entire protocol (scenes, properties, functions,");
-            sb.AppendLine("        /// serializable types, wire format version). Used as a connection handshake");
+            sb.AppendLine("        /// The Nebula version this protocol was generated against, from addons/Nebula/plugin.cfg.");
+            sb.AppendLine("        /// Folded into ProtocolHash, so builds on different Nebula versions never interoperate.");
+            sb.AppendLine("        /// </summary>");
+            sb.AppendLine($"        public const string NebulaVersion = \"{data.NebulaVersion}\";");
+            sb.AppendLine();
+            sb.AppendLine("        /// <summary>");
+            sb.AppendLine("        /// Deterministic hash of the entire protocol (Nebula version, scenes, properties,");
+            sb.AppendLine("        /// functions, serializable types). Used as a connection handshake");
             sb.AppendLine("        /// token: clients whose hash differs from the server's are rejected.");
             sb.AppendLine("        /// </summary>");
             sb.AppendLine($"        public const ulong ProtocolHash = 0x{hash.ToString("X16", CultureInfo.InvariantCulture)}UL;");

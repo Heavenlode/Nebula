@@ -998,10 +998,47 @@ namespace Nebula
                 peer.Disconnect(0);
             }
 
+            // forgetIdentity: true — the peer is leaving for good, so also drop its global
+            // ENet identity (Peers/PeerIds) alongside its per-world state.
+            // despawnOwnedNodes: false — preserve DespawnOnUnowned semantics on disconnect
+            // (nodes flagged to persist stay in the world, unowned).
+            TeardownPeer(peer, peerId, forgetIdentity: true, despawnOwnedNodes: false);
+        }
+
+        /// <summary>
+        /// Removes a peer from THIS world without disconnecting the ENet connection or forgetting the
+        /// peer's global identity. Used for live cross-world migration (see <see cref="NetRunner.MigratePeerToWorld"/>):
+        /// frees the peer's owned nodes here and cleans per-peer state, but keeps the connection alive so the
+        /// peer can immediately <see cref="JoinPeer"/> into the destination world over the same socket.
+        /// The hub world itself keeps running for other/returning players.
+        /// </summary>
+        public void PreparePeerDeparture(NetPeer peer)
+        {
+            if (!NetRunner.Instance.IsServer) return;
+
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            if (!PeerStates.ContainsKey(peerId)) return;
+
+            // forgetIdentity: false — keep Peers/PeerIds so the same connection migrates worlds.
+            // despawnOwnedNodes: true — the peer is leaving THIS world entirely and re-spawns fresh in
+            // the destination, so its owned nodes (the Player and its subtree) must be removed from this
+            // world's tree regardless of DespawnOnUnowned (which defaults false).
+            TeardownPeer(peer, peerId, forgetIdentity: false, despawnOwnedNodes: true);
+        }
+
+        /// <summary>
+        /// Shared teardown of a peer's presence in this world: frees owned nodes, clears per-peer
+        /// serializer/controller caches, reconciles pending despawns, and removes per-world routing.
+        /// <paramref name="forgetIdentity"/> additionally drops the peer's global ENet identity
+        /// (used by full disconnect, NOT by migration). <paramref name="despawnOwnedNodes"/> forces the
+        /// peer's owned nodes to despawn even when their DespawnOnUnowned is false (used by migration).
+        /// </summary>
+        private void TeardownPeer(NetPeer peer, UUID peerId, bool forgetIdentity, bool despawnOwnedNodes)
+        {
             var peerState = PeerStates[peerId];
             foreach (var netController in peerState.OwnedNodes)
             {
-                if (netController.DespawnOnUnowned)
+                if (despawnOwnedNodes || netController.DespawnOnUnowned)
                 {
                     netController.QueueNodeForDeletion();
                 }
@@ -1028,8 +1065,8 @@ namespace Nebula
                     }
                 }
             }
-            
-            // When a peer disconnects, treat any pending despawns as acknowledged
+
+            // Treat any pending despawns as acknowledged for the departing peer.
             // Check if any nodes queued for despawn can now be deleted
             foreach (var netController in QueueDespawnedNodes)
             {
@@ -1038,7 +1075,7 @@ namespace Nebula
                 bool allRemainingDespawned = true;
                 foreach (var otherPeerState in PeerStates.Values)
                 {
-                    if (otherPeerState.Id == peerId) continue; // Skip the disconnecting peer
+                    if (otherPeerState.Id == peerId) continue; // Skip the departing peer
                     var state = GetClientSpawnState(netController.NetId, otherPeerState.Peer);
                     if (state != ClientSpawnState.Despawned && state != ClientSpawnState.NotSpawned)
                     {
@@ -1046,7 +1083,7 @@ namespace Nebula
                         break;
                     }
                 }
-                
+
                 if (allRemainingDespawned)
                 {
                     _pendingDeletion.Add(netController);
@@ -1058,10 +1095,13 @@ namespace Nebula
             _peerPendingAcks.Remove(peerId); // Fix #5: Clean up pending acks tracking
             _peerNetBufferPool.Remove(peerId); // Clean up pooled export buffer
             _peerListDirty = true; // Fix #1: Mark peer list as dirty
-            NetRunner.Instance.Peers.Remove(peerId);
             NetRunner.Instance.WorldPeerMap.Remove(peerId);
             NetRunner.Instance.PeerWorldMap.Remove(peerId);
-            NetRunner.Instance.PeerIds.Remove(peer.ID);
+            if (forgetIdentity)
+            {
+                NetRunner.Instance.Peers.Remove(peerId);
+                NetRunner.Instance.PeerIds.Remove(peer.ID);
+            }
             OnPlayerCleanup?.Invoke(peerId);
         }
 
@@ -1626,6 +1666,92 @@ namespace Nebula
             netController._NetworkPrepare(this);
             netController._WorldReady();
             Debug?.Send("WorldJoined", netController.RawNode.SceneFilePath);
+        }
+
+        // Reusable free-list for ResetForWorldChange (avoids allocating while iterating NetScenes).
+        // Sized to the per-peer node cap so a full world never reallocates during reset.
+        private readonly List<NetworkController> _worldChangeFreeList = new(NodeIdUtils.MAX_NETWORK_NODES);
+
+        /// <summary>
+        /// Client-only. Raised at the start of <see cref="ResetForWorldChange"/>, before any node is
+        /// freed, so game-side singletons can drop cached references to nodes in the outgoing world
+        /// (e.g. a "current player" pointer) and avoid touching disposed objects.
+        /// </summary>
+        public event Action OnWorldReset;
+
+        /// <summary>
+        /// Client-only. Fully resets this world container so the client can receive a brand-new world
+        /// (a different root scene) over the same connection — used for live world migration
+        /// (see <see cref="NetRunner.MigratePeerToWorld"/> and the World ENet channel).
+        ///
+        /// The client keeps a single persistent WorldRunner (<see cref="CurrentWorld"/>); when the
+        /// server moves the peer to another world, that world hands out fresh local node ids starting
+        /// at 1, which would collide with the stale entries left behind by the previous world. This
+        /// flushes every client-side node and all per-world bookkeeping so the incoming spawn stream
+        /// rebuilds cleanly. Allocation-free: iterates existing collections into a reused free-list.
+        /// </summary>
+        internal void ResetForWorldChange()
+        {
+            if (NetRunner.Instance.IsServer) return;
+
+            // Let game-side singletons drop cached references to nodes we're about to free
+            // (e.g. WorldPlayers.CurrentPlayer) before the nodes are disposed.
+            OnWorldReset?.Invoke();
+
+            // Collect first, then free — freeing mutates the tree, and QueueNodeForDeletion may touch
+            // NetScenes, so we must not free while enumerating it.
+            _worldChangeFreeList.Clear();
+            foreach (var netController in NetScenes.Values)
+            {
+                if (netController != null)
+                {
+                    _worldChangeFreeList.Add(netController);
+                }
+            }
+            for (int i = 0; i < _worldChangeFreeList.Count; i++)
+            {
+                var raw = _worldChangeFreeList[i].RawNode;
+                // QueueFree defers to end of frame and is subtree-safe, so freeing a parent and a
+                // descendant here is fine — Godot frees the whole subtree once.
+                if (raw != null && IsInstanceValid(raw))
+                {
+                    raw.QueueFree();
+                }
+            }
+            _worldChangeFreeList.Clear();
+
+            // Defensive: free the root if it somehow wasn't registered in NetScenes.
+            if (RootScene != null && RootScene.RawNode != null && IsInstanceValid(RootScene.RawNode))
+            {
+                RootScene.RawNode.QueueFree();
+            }
+
+            // Clear all per-world bookkeeping so the destination world starts from a blank slate.
+            NetScenes.Clear();
+            networkIds.Clear();
+            networkIdCounter = 1;
+            Array.Clear(ClientAvailableNodes, 0, ClientAvailableNodes.Length);
+            RootScene = null;
+
+            // Drop any queued work that referenced the old world's nodes: a stale net function would
+            // resolve against a freed node, and a stale pending-despawn could kill a new-world node that
+            // happens to reuse the same local id.
+            queuedNetFunctions.Clear();
+            _pendingClientDespawns.Clear();
+            _pendingNetSceneAdds.Clear();
+
+            // Reset the tick stream. The destination world's tick counter starts low (near 0), so without
+            // this the "skip old/duplicate ticks" guard in ClientProcessTick (incomingTick <= CurrentTick)
+            // would reject every tick from the new world and it would never load. -1 lets tick 0 through;
+            // the first accepted tick re-runs InitializeClientPrediction.
+            CurrentTick = -1;
+            _predictionInitialized = false;
+            _clientPredictedTick = -1;
+            TimeSinceLastTick = 0f;
+            _ownedEntities.Clear();
+            _ownedEntitiesDirty = true;
+
+            Debug?.Send("WorldReset", WorldId.ToString());
         }
 
         public PeerState? GetPeerWorldState(UUID peerId)
@@ -2643,37 +2769,65 @@ namespace Nebula
         }
 
         // WARNING: These are not exactly tick-aligned for state reconcilliation. Could cause state issues because the assumed tick is when it is received?
-        internal void SendNetFunction(NetId netId, ProtocolNetFunction functionInfo, object[] args)
+        /// <summary>
+        /// Sends a network function. On the server, <paramref name="targetPeers"/> (when non-null)
+        /// restricts delivery to those specific peers instead of broadcasting to every interested peer
+        /// — used by generated peer-targeted overloads. Peers that don't have the node (no interest)
+        /// are skipped, since the peer-local netId wouldn't resolve on their client.
+        /// </summary>
+        internal void SendNetFunction(NetId netId, ProtocolNetFunction functionInfo, object[] args, UUID[] targetPeers = null)
         {
             if (NetRunner.Instance.IsServer)
             {
                 var node = GetNodeFromNetId(netId);
-                // TODO: Apply interest layers for network function, like network property
-                foreach (var peer in node.InterestLayers.Keys)
+                if (targetPeers == null)
                 {
-                    using var buffer = new NetBuffer();
-                    NetId.NetworkSerialize(this, NetRunner.Instance.Peers[peer], netId, buffer);
-                    NetWriter.WriteByte(buffer, functionInfo.Index);
-                    for (int i = 0; i < args.Length; i++)
+                    // Default: broadcast to all interested peers.
+                    // TODO: Apply interest layers for network function, like network property
+                    foreach (var peerId in node.InterestLayers.Keys)
                     {
-                        // Use protocol metadata directly, no Variant conversion
-                        NetWriter.WriteByType(buffer, functionInfo.Arguments[i].VariantType, args[i]);
+                        if (NetRunner.Instance.Peers.TryGetValue(peerId, out var peer))
+                        {
+                            SendNetFunctionToPeer(netId, functionInfo, args, peer);
+                        }
                     }
-                    NetRunner.SendReliable(NetRunner.Instance.Peers[peer], (byte)NetRunner.ENetChannelId.Function, buffer);
+                }
+                else
+                {
+                    // Peer-targeted: only the listed peers, and only those that actually have the node.
+                    for (int i = 0; i < targetPeers.Length; i++)
+                    {
+                        var peerId = targetPeers[i];
+                        if (!node.InterestLayers.ContainsKey(peerId))
+                        {
+                            Log(Debugger.DebugLevel.WARN, $"SendNetFunction: target peer {peerId} has no interest in node {netId} for {functionInfo.Name}; skipping (node not spawned for them).");
+                            continue;
+                        }
+                        if (NetRunner.Instance.Peers.TryGetValue(peerId, out var peer))
+                        {
+                            SendNetFunctionToPeer(netId, functionInfo, args, peer);
+                        }
+                    }
                 }
             }
             else
             {
-                using var buffer = new NetBuffer();
-                NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netId, buffer);
-                NetWriter.WriteByte(buffer, functionInfo.Index);
-                for (int i = 0; i < args.Length; i++)
-                {
-                    // Use protocol metadata directly, no Variant conversion
-                    NetWriter.WriteByType(buffer, functionInfo.Arguments[i].VariantType, args[i]);
-                }
-                NetRunner.SendReliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Function, buffer);
+                // A client only ever sends to the server; targetPeers is meaningless here and ignored.
+                SendNetFunctionToPeer(netId, functionInfo, args, NetRunner.Instance.ServerPeer);
             }
+        }
+
+        private void SendNetFunctionToPeer(NetId netId, ProtocolNetFunction functionInfo, object[] args, NetPeer peer)
+        {
+            using var buffer = new NetBuffer();
+            NetId.NetworkSerialize(this, peer, netId, buffer);
+            NetWriter.WriteByte(buffer, functionInfo.Index);
+            for (int i = 0; i < args.Length; i++)
+            {
+                // Use protocol metadata directly, no Variant conversion
+                NetWriter.WriteByType(buffer, functionInfo.Arguments[i].VariantType, args[i]);
+            }
+            NetRunner.SendReliable(peer, (byte)NetRunner.ENetChannelId.Function, buffer);
         }
 
         internal void ReceiveNetFunction(NetPeer peer, NetBuffer buffer)

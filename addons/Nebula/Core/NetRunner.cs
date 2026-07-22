@@ -122,6 +122,14 @@ namespace Nebula
             /// NetFunction call.
             /// </summary>
             Function = 3,
+
+            /// <summary>
+            /// World-transfer control (reliable). Server→client "change world" and client→server
+            /// "ready" ack for live cross-world migration. Kept off the tick stream so it is
+            /// guaranteed-delivered and never bundled with per-tick state.
+            /// See <see cref="MigratePeerToWorld"/>.
+            /// </summary>
+            World = 4,
         }
 
         /// <summary>
@@ -556,6 +564,10 @@ namespace Nebula
                                 }
                                 break;
 
+                            case ENetChannelId.World:
+                                HandleWorldChannel(netEvent.Peer, packetData);
+                                break;
+
                             default:
                                 if (ReservedChannels.TryGetValue(channel, out var handler))
                                 {
@@ -668,6 +680,117 @@ namespace Nebula
             Peers[peerId] = peer;
             PeerIds[peer.ID] = peerId;
             Worlds[worldId].JoinPeer(peer, token);
+        }
+
+        // --- Live cross-world migration (World ENet channel) ---
+
+        private const byte WorldMsgChangeWorld = 0x00; // server -> client: reset and expect <worldId>
+        private const byte WorldMsgReady = 0x01;       // client -> server: reset done, ready to join
+
+        private readonly struct PendingHandoff
+        {
+            public readonly WorldRunner Target;
+            public readonly string Token;
+            public PendingHandoff(WorldRunner target, string token) { Target = target; Token = token; }
+        }
+
+        // Peers awaiting a world handoff (sent ChangeWorld, waiting for the client's ready ack).
+        private readonly Dictionary<UUID, PendingHandoff> _pendingHandoffs = new();
+
+        // Reused buffer for the tiny 17-byte World-channel messages (no per-send allocation).
+        private NetBuffer _worldChannelBuffer;
+
+        /// <summary>
+        /// Server-only. Migrates a connected peer from its current world to <paramref name="target"/>
+        /// over the SAME connection. The source (hub) world keeps running for other/returning players.
+        /// The peer's owned nodes are freed from the source; the client is told to reset (World channel),
+        /// and only once it acks is the peer admitted to the target — so the target streams no state into
+        /// a not-yet-reset client (the World channel and the tick channel are not cross-channel ordered).
+        /// The peer joins the target as INITIAL and transitions to IN_WORLD on its first tick ack, which
+        /// fires the target's PlayerSpawnManager to (re)spawn the player under the same identity.
+        /// </summary>
+        public void MigratePeerToWorld(NetPeer peer, WorldRunner target)
+        {
+            if (!IsServer || target == null) return;
+
+            var peerId = GetPeerId(peer);
+            if (!PeerWorldMap.TryGetValue(peerId, out var source) || source == null)
+            {
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"MigratePeerToWorld: peer {peerId} is not in any world.");
+                return;
+            }
+            if (source == target) return;
+
+            // Capture the token before the source clears the peer's state — the destination reuses it
+            // to load the same character (identity persists; no re-auth in this path).
+            var sourceState = source.GetPeerWorldState(peerId);
+            var token = sourceState.HasValue ? sourceState.Value.Token : "";
+
+            source.PreparePeerDeparture(peer);
+            _pendingHandoffs[peerId] = new PendingHandoff(target, token);
+
+            SendWorldMessage(peer, WorldMsgChangeWorld, target.WorldId);
+        }
+
+        private void HandleWorldChannel(NetPeer peer, byte[] data)
+        {
+            // Message format: [opcode:1B][worldId:16B]
+            if (data.Length < 1)
+            {
+                Debugger.Instance.Log($"[WorldMigration] HandleWorldChannel: empty packet from peer {peer.ID}", Debugger.DebugLevel.WARN);
+                return;
+            }
+            var opcode = data[0];
+
+            if (IsServer)
+            {
+                if (opcode == WorldMsgReady)
+                {
+                    CompletePeerHandoff(peer);
+                }
+                return;
+            }
+
+            if (opcode == WorldMsgChangeWorld)
+            {
+                UUID worldId = default;
+                if (data.Length >= 17)
+                {
+                    worldId = new UUID(new Guid(new ReadOnlySpan<byte>(data, 1, 16)));
+                }
+                // Reset the single client world container, then ack with the same worldId so the
+                // server can match this peer's pending handoff.
+                WorldRunner.CurrentWorld?.ResetForWorldChange();
+                SendWorldMessage(ServerPeer, WorldMsgReady, worldId);
+            }
+            else
+            {
+                Debugger.Instance.Log($"[WorldMigration][Client] Unexpected World-channel opcode={opcode}", Debugger.DebugLevel.WARN);
+            }
+        }
+
+        private void CompletePeerHandoff(NetPeer peer)
+        {
+            var peerId = GetPeerId(peer);
+            if (!_pendingHandoffs.TryGetValue(peerId, out var handoff))
+            {
+                Debugger.Instance.Log($"[WorldMigration][Server] CompletePeerHandoff: no pending handoff for peer={peerId} (peer.ID={peer.ID})", Debugger.DebugLevel.WARN);
+                return;
+            }
+            _pendingHandoffs.Remove(peerId);
+            // JoinPeer sets PeerWorldMap[peerId] = target and creates the peer's world state (INITIAL).
+            handoff.Target.JoinPeer(peer, handoff.Token);
+        }
+
+        private void SendWorldMessage(NetPeer peer, byte opcode, in UUID worldId)
+        {
+            _worldChannelBuffer ??= new NetBuffer();
+            _worldChannelBuffer.Reset();
+            NetWriter.WriteByte(_worldChannelBuffer, opcode);
+            Span<byte> guidBytes = stackalloc byte[16];
+            worldId.Guid.TryWriteBytes(guidBytes);
+            NetWriter.WriteBytes(_worldChannelBuffer, (ReadOnlySpan<byte>)guidBytes);
+            SendReliable(peer, (byte)ENetChannelId.World, _worldChannelBuffer);
         }
 
         public event Action<WorldRunner> OnWorldCreated;

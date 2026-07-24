@@ -372,7 +372,13 @@ public class NetPropertyGenerator : IIncrementalGenerator
         {
             "Vector3" => $"({predictedVar} - {confirmedVar}).LengthSquared() <= {toleranceVar} * {toleranceVar}",
             "Vector2" => $"({predictedVar} - {confirmedVar}).LengthSquared() <= {toleranceVar} * {toleranceVar}",
-            "Quaternion" => $"Godot.Mathf.Abs({predictedVar}.Dot({confirmedVar})) >= 1.0f - {toleranceVar}",
+            // Angle-based (radians): callers author tolerances like 0.1 meaning ~5.7°. The previous
+            // dot-based form (|dot| >= 1 - tolerance) silently tolerated 2*acos(1 - tolerance) of
+            // divergence — 51.7° at tolerance 0.1 — letting rotation state drift far apart without
+            // reconciliation while everything derived from it (movement bases) split client/server.
+            // AngleTo is hemisphere-safe, and NaN/zero quaternions compare false → treated as
+            // mispredicted → restored, which is the safe direction.
+            "Quaternion" => $"{predictedVar}.AngleTo({confirmedVar}) <= {toleranceVar}",
             "float" or "System.Single" => $"Godot.Mathf.Abs({predictedVar} - {confirmedVar}) <= {toleranceVar}",
             "double" or "System.Double" => $"System.Math.Abs({predictedVar} - {confirmedVar}) <= {toleranceVar}",
             "int" or "System.Int32" or "long" or "System.Int64" or "byte" or "System.Byte" => $"{predictedVar} == {confirmedVar}",

@@ -610,17 +610,34 @@ namespace Nebula
                 return buffer.LastFallbackInput;
             }
 
-            // Search for most recent input
+            // Search for the most recent input before this tick; failing that, the nearest future
+            // input. When the client's stamps have run ahead of consumption, every slot holds a
+            // future tick — returning null there would leave _inputData frozen on the last applied
+            // input, silently replaying stale held keys until the stream realigns.
             byte[] fallback = null;
             Tick bestTick = -1;
+            byte[] nearestFuture = null;
+            Tick bestFutureTick = -1;
             for (int i = 0; i < SERVER_INPUT_BUFFER_SIZE; i++)
             {
-                if (buffer.Ticks[i] >= 0 && buffer.Ticks[i] < tick && buffer.Ticks[i] > bestTick)
+                if (buffer.Ticks[i] < 0) continue;
+                if (buffer.Ticks[i] < tick)
                 {
-                    bestTick = buffer.Ticks[i];
-                    fallback = buffer.Inputs[i];
+                    if (buffer.Ticks[i] > bestTick)
+                    {
+                        bestTick = buffer.Ticks[i];
+                        fallback = buffer.Inputs[i];
+                    }
+                }
+                else if (buffer.Ticks[i] > tick
+                    && (bestFutureTick < 0 || buffer.Ticks[i] < bestFutureTick))
+                {
+                    bestFutureTick = buffer.Ticks[i];
+                    nearestFuture = buffer.Inputs[i];
                 }
             }
+            if (fallback == null)
+                fallback = nearestFuture;
 
             // Cache the fallback for this tick (modified via ref, no copy needed)
             buffer.LastFallbackTick = tick;
@@ -645,6 +662,13 @@ namespace Nebula
         /// The client's predicted tick (ahead of last received server tick).
         /// </summary>
         private Tick _clientPredictedTick = -1;
+
+        /// <summary>
+        /// Read-only view of the client's predicted tick, for diagnostics and for game code that
+        /// needs to reason about the gap between prediction and confirmed state (-1 on the server
+        /// or before prediction initializes).
+        /// </summary>
+        public Tick PredictedTick => _clientPredictedTick;
 
         /// <summary>
         /// Whether prediction has been initialized on the client.
@@ -703,8 +727,27 @@ namespace Nebula
         /// Runs one prediction tick for all owned entities.
         /// Called from the independent client tick loop in _PhysicsProcess.
         /// </summary>
+        /// <summary>
+        /// Hard ceiling on how far prediction may run ahead of the confirmed tick. The lead only
+        /// ever grows (confirmed ticks stall during hitches or import errors while prediction
+        /// free-runs), and past SERVER_INPUT_BUFFER_SIZE (64) the server's input ring evicts
+        /// stamped inputs before consuming them — movement then runs on frozen stale inputs.
+        /// Throttling here lets the confirmed timeline catch up instead.
+        /// </summary>
+        private const int MaxPredictionLeadTicks = 30;
+
+        private int _predictionThrottleLogCounter = 0;
+
         private void RunClientPredictionTick()
         {
+            if (_clientPredictedTick - CurrentTick >= MaxPredictionLeadTicks)
+            {
+                if ((_predictionThrottleLogCounter++ % 30) == 0)
+                    Log(Debugger.DebugLevel.WARN,
+                        $"[Prediction] Throttled: predicted tick {_clientPredictedTick} is {_clientPredictedTick - CurrentTick} ahead of confirmed {CurrentTick}");
+                return;
+            }
+
             if (_ownedEntitiesDirty)
             {
                 RebuildOwnedEntitiesCache();
@@ -1775,6 +1818,19 @@ namespace Nebula
         private Dictionary<UUID, Tick> _peerLastAckTick = new();
 
         /// <summary>
+        /// Server-side: the last tick this peer acknowledged receiving, or -1 if none yet.
+        /// Approximates the peer's confirmed tick — useful for bounding how far behind a client's
+        /// view of non-owned entities can legitimately be (its prediction lead free-runs and
+        /// varies per session, so measuring beats guessing).
+        /// </summary>
+        public Tick GetPeerLastAckedTick(UUID peerId)
+        {
+            if (_peerLastAckTick.TryGetValue(peerId, out var acked))
+                return acked;
+            return -1;
+        }
+
+        /// <summary>
         /// Reusable list for peers to disconnect (avoids allocation each tick).
         /// </summary>
         private List<NetPeer> _peersToDisconnect = new(32);
@@ -2100,7 +2156,7 @@ namespace Nebula
             // can be exported on the same tick as the spawn
             if (RootScene != null)
             {
-                RootScene._OnPeerConnected(peerId);
+                RootScene._OnPeerConnected(WorldId, peerId);
             }
         }
 
@@ -2649,8 +2705,13 @@ namespace Nebula
             // This matches server behavior where inputs arrive and are applied at specific ticks.
             netNode.BufferInput(_clientPredictedTick, inputBytes);
 
-            // Only send if input has changed (but always buffer)
-            if (!netNode.HasInputChanged)
+            // Only send if input has changed (but always buffer) — with a periodic keepalive.
+            // Packets are unreliable, and the redundancy window only protects a change that is
+            // followed by more sends within 8 ticks. Without a keepalive, losing the single packet
+            // that carried the *last* change (e.g. releasing a strafe key before holding steady
+            // thrust) leaves the server's input fallback replaying the previous held keys until
+            // the next change.
+            if (!netNode.HasInputChanged && ((int)(_clientPredictedTick & 3)) != 0)
             {
                 return;
             }

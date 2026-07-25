@@ -653,9 +653,6 @@ namespace Nebula.Generators
         /// </summary>
         private static void EmitDeserializersDictionary(StringBuilder sb, ProtocolData data)
         {
-            // Collect concrete generic types (same as serializers)
-            var concreteGenerics = CollectConcreteGenericTypes(data);
-            
             sb.AppendLine("        public static readonly FrozenDictionary<int, NetworkDeserializeFunc> Deserializers =");
             sb.AppendLine("            new Dictionary<int, NetworkDeserializeFunc>");
             sb.AppendLine("            {");
@@ -684,19 +681,6 @@ namespace Nebula.Generators
                 }
             }
             
-            // Add concrete generic types (e.g., NetArray<Vector3>)
-            foreach (var (classIndex, concreteType, isValueType) in concreteGenerics)
-            {
-                if (isValueType)
-                {
-                    sb.AppendLine($"                [{classIndex}] = (world, peer, buffer, existing) => {concreteType}.NetworkDeserialize(world, peer, buffer),");
-                }
-                else
-                {
-                    sb.AppendLine($"                [{classIndex}] = (world, peer, buffer, existing) => {concreteType}.NetworkDeserialize(world, peer, buffer, existing as {concreteType}),");
-                }
-            }
-            
             sb.AppendLine("            }.ToFrozenDictionary();");
             sb.AppendLine();
         }
@@ -707,10 +691,6 @@ namespace Nebula.Generators
         /// </summary>
         private static void EmitSerializersDictionary(StringBuilder sb, ProtocolData data)
         {
-            // Collect concrete generic types from properties
-            // These need serializers generated even though their open generic definitions are skipped
-            var concreteGenerics = CollectConcreteGenericTypes(data);
-            
             // First, emit all the static serializer methods
             sb.AppendLine("        #region Serializer Methods");
             sb.AppendLine();
@@ -748,28 +728,6 @@ namespace Nebula.Generators
                 sb.AppendLine();
             }
             
-            // Emit serializers for concrete generic types (e.g., NetArray<Vector3>)
-            foreach (var (classIndex, concreteType, isValueType) in concreteGenerics)
-            {
-                var methodName = $"Serializer_{classIndex}";
-                
-                if (isValueType)
-                {
-                    var shortName = GetShortTypeName(concreteType);
-                    sb.AppendLine($"        private static bool {methodName}(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer, int maxBytes)");
-                    sb.AppendLine("        {");
-                    sb.AppendLine($"            {concreteType}.NetworkSerialize(world, peer, in cache.{shortName}Value, buffer);");
-                    sb.AppendLine("            return true;");
-                    sb.AppendLine("        }");
-                }
-                else
-                {
-                    sb.AppendLine($"        private static bool {methodName}(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer, int maxBytes)");
-                    sb.AppendLine($"            => {concreteType}.NetworkSerialize(world, peer, ({concreteType})cache.RefValue, buffer, maxBytes);");
-                }
-                sb.AppendLine();
-            }
-            
             sb.AppendLine("        #endregion");
             sb.AppendLine();
             
@@ -799,17 +757,6 @@ namespace Nebula.Generators
                 sb.AppendLine();
             }
 
-            // Emit OnPeerAcknowledge for concrete generic types (reference types only)
-            foreach (var (classIndex, concreteType, isValueType) in concreteGenerics)
-            {
-                if (isValueType) continue;
-
-                var methodName = $"OnPeerAcknowledge_{classIndex}";
-                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId, Tick tick)");
-                sb.AppendLine($"            => {concreteType}.OnPeerAcknowledge(({concreteType})obj, peerId, tick);");
-                sb.AppendLine();
-            }
-            
             sb.AppendLine("        #endregion");
             sb.AppendLine();
             
@@ -839,17 +786,6 @@ namespace Nebula.Generators
                 sb.AppendLine();
             }
             
-            // Emit OnPeerDisconnected for concrete generic types (reference types only)
-            foreach (var (classIndex, concreteType, isValueType) in concreteGenerics)
-            {
-                if (isValueType) continue;
-                
-                var methodName = $"OnPeerDisconnected_{classIndex}";
-                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId)");
-                sb.AppendLine($"            => {concreteType}.OnPeerDisconnected(({concreteType})obj, peerId);");
-                sb.AppendLine();
-            }
-            
             sb.AppendLine("        #endregion");
             sb.AppendLine();
             
@@ -873,15 +809,9 @@ namespace Nebula.Generators
                 sb.AppendLine($"                [{kvp.Key}] = Serializer_{kvp.Key},");
             }
             
-            // Include concrete generic types in the dictionary
-            foreach (var (classIndex, _, _) in concreteGenerics)
-            {
-                sb.AppendLine($"                [{classIndex}] = Serializer_{classIndex},");
-            }
-            
             sb.AppendLine("            }.ToFrozenDictionary();");
             sb.AppendLine();
-            
+
             // Emit OnPeerAcknowledge dictionary (only reference types)
             sb.AppendLine("        public static readonly FrozenDictionary<int, OnPeerAcknowledgeFunc> OnPeerAcknowledgeFuncs =");
             sb.AppendLine("            new Dictionary<int, OnPeerAcknowledgeFunc>");
@@ -898,13 +828,6 @@ namespace Nebula.Generators
                     continue;
                 
                 sb.AppendLine($"                [{kvp.Key}] = OnPeerAcknowledge_{kvp.Key},");
-            }
-            
-            // Include concrete generic reference types
-            foreach (var (classIndex, _, isValueType) in concreteGenerics)
-            {
-                if (!isValueType)
-                    sb.AppendLine($"                [{classIndex}] = OnPeerAcknowledge_{classIndex},");
             }
             
             sb.AppendLine("            }.ToFrozenDictionary();");
@@ -928,13 +851,6 @@ namespace Nebula.Generators
                 sb.AppendLine($"                [{kvp.Key}] = OnPeerDisconnected_{kvp.Key},");
             }
             
-            // Include concrete generic reference types
-            foreach (var (classIndex, _, isValueType) in concreteGenerics)
-            {
-                if (!isValueType)
-                    sb.AppendLine($"                [{classIndex}] = OnPeerDisconnected_{classIndex},");
-            }
-            
             sb.AppendLine("            }.ToFrozenDictionary();");
             sb.AppendLine();
         }
@@ -953,7 +869,7 @@ namespace Nebula.Generators
         /// Checks if a type name represents an open generic type (e.g., "LazyPeerState&lt;T&gt;").
         /// Open generic types cannot be used directly in generated code.
         /// </summary>
-        private static bool IsOpenGenericType(string typeName)
+        internal static bool IsOpenGenericType(string typeName)
         {
             // Check if the type has generic parameters
             var genericStart = typeName.IndexOf('<');
@@ -982,73 +898,6 @@ namespace Nebula.Generators
             }
             
             return false;
-        }
-        
-        /// <summary>
-        /// Collects concrete generic types used in properties that need serializers generated.
-        /// For example, if a property uses NetArray&lt;Vector3&gt;, we need to generate a serializer for it
-        /// even though the open generic NetArray&lt;T&gt; is registered in StaticMethods.
-        /// </summary>
-        private static List<(int classIndex, string concreteType, bool isValueType)> CollectConcreteGenericTypes(ProtocolData data)
-        {
-            var result = new List<(int, string, bool)>();
-            var seen = new HashSet<int>();
-            
-            // Find all open generic types with their class indices
-            var openGenericIndices = new Dictionary<string, (int index, bool isValueType)>();
-            foreach (var kvp in data.StaticMethods)
-            {
-                var typeName = kvp.Value.TypeFullName;
-                if (IsOpenGenericType(typeName))
-                {
-                    // Extract the base name (e.g., "Nebula.Serialization.NetArray" from "Nebula.Serialization.NetArray<T>")
-                    var genericStart = typeName.IndexOf('<');
-                    if (genericStart > 0)
-                    {
-                        var baseName = typeName.Substring(0, genericStart);
-                        openGenericIndices[baseName] = (kvp.Key, kvp.Value.IsValueType);
-                    }
-                }
-            }
-            
-            // Scan PropertiesLookup: scenePath -> propertyIndex -> PropertyData
-            foreach (var sceneKvp in data.PropertiesLookup)
-            {
-                foreach (var propKvp in sceneKvp.Value)
-                {
-                    var prop = propKvp.Value;
-                    ScanPropertyForConcreteGeneric(prop, openGenericIndices, seen, result);
-                }
-            }
-            
-            return result;
-        }
-        
-        private static void ScanPropertyForConcreteGeneric(
-            PropertyData prop,
-            Dictionary<string, (int index, bool isValueType)> openGenericIndices,
-            HashSet<int> seen,
-            List<(int classIndex, string concreteType, bool isValueType)> result)
-        {
-            var typeName = prop.TypeFullName;
-            
-            // Skip if not a generic type or if it's an open generic
-            if (string.IsNullOrEmpty(typeName) || typeName.IndexOf('<') < 0 || IsOpenGenericType(typeName))
-                return;
-            
-            // Extract base name
-            var genericStart = typeName.IndexOf('<');
-            var baseName = typeName.Substring(0, genericStart);
-            
-            // Check if this is a concrete version of a known open generic
-            if (openGenericIndices.TryGetValue(baseName, out var info))
-            {
-                if (!seen.Contains(info.index))
-                {
-                    seen.Add(info.index);
-                    result.Add((info.index, typeName, info.isValueType));
-                }
-            }
         }
     }
 }

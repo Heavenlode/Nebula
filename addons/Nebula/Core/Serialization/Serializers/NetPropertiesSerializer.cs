@@ -1365,8 +1365,6 @@ namespace Nebula.Serialization.Serializers
 
                     if (wroteData)
                     {
-                        // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[Props.W] idx={propIndex} '{prop.NodePath}.{prop.Name}' type=Object bytes={buffer.WritePosition - startPos}");
-
                         // Set the bit in the actual mask
                         int byteIdx = propIndex / 8;
                         int bitIdx = propIndex % 8;

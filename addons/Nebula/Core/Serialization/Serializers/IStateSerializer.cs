@@ -25,7 +25,17 @@ namespace Nebula.Serialization.Serializers
         /// <param name="buffer">Buffer to write serialized data into</param>
         public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer);
 
-        public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick);
+        /// <summary>
+        /// Server-side only. Called when a peer acknowledges the packet exported at
+        /// <paramref name="tick"/>. Implementations must only commit state that was sent
+        /// at or before that tick.
+        /// </summary>
+        /// <returns>
+        /// True if this serializer still has unacknowledged data for the peer; false when
+        /// fully acked. When every serializer of a node returns false, the node is removed
+        /// from the per-peer pending-ack set (it re-enters on its next export).
+        /// </returns>
+        public bool Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick);
 
         public void Cleanup();
         

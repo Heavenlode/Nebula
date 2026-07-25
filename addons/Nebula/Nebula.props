@@ -19,6 +19,8 @@
       ReferenceOutputAssembly="false" />
     <AdditionalFiles Include="**/*.tscn" />
     <AdditionalFiles Include="project.godot" />
+    <!-- Source of the Nebula version folded into the protocol handshake hash -->
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)plugin.cfg" />
 
     <!-- Shared types -->
     <Compile Include="$(MSBuildThisFileDirectory)Generator\Shared\ProtocolTypes.cs" Link="Nebula\ProtocolTypes.cs" />

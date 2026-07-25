@@ -30,17 +30,44 @@ namespace Nebula.Generators
                 ))
                 .Collect();
 
-            // Combine compilation, project root, and tscn files
+            // Nebula's own version, from the addon's plugin.cfg. Folded into the protocol
+            // hash so builds on different Nebula versions refuse to connect.
+            var nebulaVersion = context.AdditionalTextsProvider
+                .Where(static file => NormalizePath(file.Path).EndsWith("addons/Nebula/plugin.cfg"))
+                .Select(static (file, ct) => ParsePluginVersion(file.GetText(ct)?.ToString() ?? ""))
+                .Collect()
+                .Select(static (versions, ct) => versions.FirstOrDefault(v => !string.IsNullOrEmpty(v)) ?? "");
+
+            // Combine compilation, project root, tscn files, and Nebula version
             var combined = context.CompilationProvider
                 .Combine(projectRoot)
-                .Combine(tscnFiles);
+                .Combine(tscnFiles)
+                .Combine(nebulaVersion);
 
             // Generate the protocol
             context.RegisterSourceOutput(combined, static (spc, source) =>
             {
-                var ((compilation, projectRoot), files) = source;
-                Execute(spc, compilation, projectRoot, files);
+                var (((compilation, projectRoot), files), nebulaVersion) = source;
+                Execute(spc, compilation, projectRoot, files, nebulaVersion);
             });
+        }
+
+        /// <summary>
+        /// Extracts the <c>version="..."</c> value from a Godot plugin.cfg. Returns an empty
+        /// string if the key is absent, which Execute turns into a build error - a silently
+        /// missing version would weaken the protocol hash rather than fail loudly.
+        /// </summary>
+        private static string ParsePluginVersion(string cfgContents)
+        {
+            foreach (var rawLine in cfgContents.Split('\n'))
+            {
+                var line = rawLine.Trim();
+                var equals = line.IndexOf('=');
+                if (equals < 0) continue;
+                if (line.Substring(0, equals).Trim() != "version") continue;
+                return line.Substring(equals + 1).Trim().Trim('"');
+            }
+            return "";
         }
 
         private static string GetDirectoryPath(string filePath)
@@ -54,7 +81,8 @@ namespace Nebula.Generators
             SourceProductionContext context,
             Compilation compilation,
             string projectRoot,
-            ImmutableArray<(string Path, string Content)> tscnFiles)
+            ImmutableArray<(string Path, string Content)> tscnFiles,
+            string nebulaVersion)
         {
             // Analyze types from compilation, passing project root for path resolution
             var analysisResult = TypeAnalyzer.Analyze(compilation, projectRoot);
@@ -82,9 +110,65 @@ namespace Nebula.Generators
                 fileContents,
                 analysisResult);
 
+            protocolData.NebulaVersion = nebulaVersion;
+
+            // The version is a hash input, not decoration: without it the hash would no
+            // longer separate builds whose wire format changed but whose protocol data
+            // didn't. Fail the build rather than emit a weaker hash.
+            if (string.IsNullOrEmpty(nebulaVersion))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(MissingVersionDescriptor, Location.None));
+                return;
+            }
+
+            // Enforce the per-scene property limit before emitting anything. The runtime
+            // tracks dirty properties in a single 64-bit mask (NetworkController.DirtyMask)
+            // and sizes CachedProperties to 64 - a 65th property would silently alias bit 0
+            // (C# masks shift counts) and index out of bounds. Fail the build instead.
+            ReportPropertyLimitViolations(context, protocolData);
+
             // Emit code
             var code = CodeEmitter.Emit(protocolData);
             context.AddSource("Protocol.g.cs", SourceText.From(code, Encoding.UTF8));
+        }
+
+        /// <summary>
+        /// Maximum networked properties per NetScene, including properties rolled up from
+        /// static children and nested non-NetScene instances. Bound by the 64-bit dirty
+        /// mask in NetworkController. Mirrored at runtime by BitConstants.MaxSceneProperties.
+        /// </summary>
+        private const int MaxSceneProperties = 64;
+
+        private static readonly DiagnosticDescriptor MissingVersionDescriptor = new(
+            "NEBULA005",
+            "Nebula version could not be determined",
+            "Could not read version from addons/Nebula/plugin.cfg. The Nebula version is folded into the protocol handshake hash, so it must be resolvable at build time. Ensure Nebula.props includes plugin.cfg in <AdditionalFiles> and that the file declares a version key.",
+            "Nebula.Generator",
+            DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
+
+        private static readonly DiagnosticDescriptor PropertyLimitDescriptor = new(
+            "NEBULA004",
+            "NetScene exceeds the 64-property limit",
+            "NetScene '{0}' has {1} networked properties, exceeding the maximum of {2} per scene (dirty tracking uses a 64-bit mask). Move properties onto nested NetScenes (which have their own limit), or aggregate related values into a single property such as a NetArray or a custom INetSerializable type.",
+            "Nebula.Generator",
+            DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
+
+        private static void ReportPropertyLimitViolations(SourceProductionContext context, ProtocolData data)
+        {
+            foreach (var sceneEntry in data.PropertiesLookup)
+            {
+                if (sceneEntry.Value.Count > MaxSceneProperties)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        PropertyLimitDescriptor,
+                        Location.None,
+                        sceneEntry.Key,
+                        sceneEntry.Value.Count,
+                        MaxSceneProperties));
+                }
+            }
         }
 
         private static ProtocolData BuildProtocol(

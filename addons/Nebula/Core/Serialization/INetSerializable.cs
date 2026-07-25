@@ -3,17 +3,15 @@ using System;
 namespace Nebula.Serialization
 {
     /// <summary>
-    /// Interface for types that need to notify their parent NetworkController when internal state mutates.
-    /// Used by NetArray to signal that element-level changes need to trigger serialization.
+    /// Optional interface for INetSerializable reference types that keep a global
+    /// (cross-peer) dirty set. OnExportComplete is invoked once per node per server tick,
+    /// after Export has run for every peer, so the type can fold global dirty state into
+    /// per-peer pending state and clear it. Without this, clearing global dirty flags on a
+    /// single peer's ack would drop resends for the remaining peers.
     /// </summary>
-    public interface INetPropertyBindable
+    public interface INetExportAware
     {
-        /// <summary>
-        /// Bind a callback to be invoked when internal state changes.
-        /// The callback should mark the property dirty in the NetworkController.
-        /// </summary>
-        /// <param name="onMutated">Callback to invoke on internal mutation</param>
-        void BindToNetProperty(Action onMutated);
+        void OnExportComplete();
     }
 
     /// <summary>
@@ -68,12 +66,15 @@ namespace Nebula.Serialization
 
         /// <summary>
         /// Called when peer acknowledges receipt of data.
-        /// Complex types should commit pending state to confirmed state.
+        /// Complex types should commit pending state to confirmed state, but only
+        /// state that was sent at or before <paramref name="tick"/> — an ack only proves
+        /// the peer received the packet exported at that tick, not anything sent later.
         /// Simple types should no-op.
         /// </summary>
         /// <param name="obj">The object instance</param>
         /// <param name="peerId">The peer that acknowledged</param>
-        public static abstract void OnPeerAcknowledge(T obj, UUID peerId);
+        /// <param name="tick">The tick the peer acknowledged</param>
+        public static abstract void OnPeerAcknowledge(T obj, UUID peerId, Tick tick);
 
         /// <summary>
         /// Called when a peer disconnects. Clean up any per-peer state.

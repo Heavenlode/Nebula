@@ -9,7 +9,6 @@ items:
   - Nebula.INetNodeBase
   - Nebula.INetNode`1
   - Nebula.ITransformable
-  - Nebula.NativeBridge
   - Nebula.NetFunction
   - Nebula.NetFunction.NetworkSources
   - Nebula.NetId
@@ -24,6 +23,7 @@ items:
   - Nebula.NetworkController
   - Nebula.NetworkController.PeerScope
   - Nebula.PropertyCache
+  - Nebula.ProtocolMismatchException
   - Nebula.UUID
   - Nebula.WorldRunner
   - Nebula.WorldRunner.ClientSpawnState
@@ -92,13 +92,6 @@ references:
   name: ITransformable
   nameWithType: ITransformable
   fullName: Nebula.ITransformable
-- uid: Nebula.NativeBridge
-  commentId: T:Nebula.NativeBridge
-  isExternal: true
-  href: Nebula.NativeBridge.html
-  name: NativeBridge
-  nameWithType: NativeBridge
-  fullName: Nebula.NativeBridge
 - uid: Nebula.NetFunction
   commentId: T:Nebula.NetFunction
   isExternal: true
@@ -281,6 +274,13 @@ references:
     name: PeerScope
     isExternal: true
     href: Nebula.NetworkController.PeerScope.html
+- uid: Nebula.ProtocolMismatchException
+  commentId: T:Nebula.ProtocolMismatchException
+  isExternal: true
+  href: Nebula.ProtocolMismatchException.html
+  name: ProtocolMismatchException
+  nameWithType: ProtocolMismatchException
+  fullName: Nebula.ProtocolMismatchException
 - uid: Nebula.UUID
   commentId: T:Nebula.UUID
   parent: Nebula

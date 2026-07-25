@@ -345,10 +345,10 @@ namespace Nebula
             // Debug TCP server is opt-in (dedicated servers should not start it by default).
             // Enable via either:
             // - command line: --debugPort=XXXX
-            // - project setting: Nebula/debug/enable_tcp = true
+            // - project setting: Nebula/config/enable_tcp = true
             bool enableDebugTcp =
                 DebugPort > 0 ||
-                ProjectSettings.GetSetting("Nebula/debug/enable_tcp", false).AsBool();
+                ProjectSettings.GetSetting("Nebula/config/enable_tcp", false).AsBool();
 
             if (enableDebugTcp)
             {
@@ -610,17 +610,34 @@ namespace Nebula
                 return buffer.LastFallbackInput;
             }
 
-            // Search for most recent input
+            // Search for the most recent input before this tick; failing that, the nearest future
+            // input. When the client's stamps have run ahead of consumption, every slot holds a
+            // future tick — returning null there would leave _inputData frozen on the last applied
+            // input, silently replaying stale held keys until the stream realigns.
             byte[] fallback = null;
             Tick bestTick = -1;
+            byte[] nearestFuture = null;
+            Tick bestFutureTick = -1;
             for (int i = 0; i < SERVER_INPUT_BUFFER_SIZE; i++)
             {
-                if (buffer.Ticks[i] >= 0 && buffer.Ticks[i] < tick && buffer.Ticks[i] > bestTick)
+                if (buffer.Ticks[i] < 0) continue;
+                if (buffer.Ticks[i] < tick)
                 {
-                    bestTick = buffer.Ticks[i];
-                    fallback = buffer.Inputs[i];
+                    if (buffer.Ticks[i] > bestTick)
+                    {
+                        bestTick = buffer.Ticks[i];
+                        fallback = buffer.Inputs[i];
+                    }
+                }
+                else if (buffer.Ticks[i] > tick
+                    && (bestFutureTick < 0 || buffer.Ticks[i] < bestFutureTick))
+                {
+                    bestFutureTick = buffer.Ticks[i];
+                    nearestFuture = buffer.Inputs[i];
                 }
             }
+            if (fallback == null)
+                fallback = nearestFuture;
 
             // Cache the fallback for this tick (modified via ref, no copy needed)
             buffer.LastFallbackTick = tick;
@@ -645,6 +662,13 @@ namespace Nebula
         /// The client's predicted tick (ahead of last received server tick).
         /// </summary>
         private Tick _clientPredictedTick = -1;
+
+        /// <summary>
+        /// Read-only view of the client's predicted tick, for diagnostics and for game code that
+        /// needs to reason about the gap between prediction and confirmed state (-1 on the server
+        /// or before prediction initializes).
+        /// </summary>
+        public Tick PredictedTick => _clientPredictedTick;
 
         /// <summary>
         /// Whether prediction has been initialized on the client.
@@ -703,8 +727,27 @@ namespace Nebula
         /// Runs one prediction tick for all owned entities.
         /// Called from the independent client tick loop in _PhysicsProcess.
         /// </summary>
+        /// <summary>
+        /// Hard ceiling on how far prediction may run ahead of the confirmed tick. The lead only
+        /// ever grows (confirmed ticks stall during hitches or import errors while prediction
+        /// free-runs), and past SERVER_INPUT_BUFFER_SIZE (64) the server's input ring evicts
+        /// stamped inputs before consuming them — movement then runs on frozen stale inputs.
+        /// Throttling here lets the confirmed timeline catch up instead.
+        /// </summary>
+        private const int MaxPredictionLeadTicks = 30;
+
+        private int _predictionThrottleLogCounter = 0;
+
         private void RunClientPredictionTick()
         {
+            if (_clientPredictedTick - CurrentTick >= MaxPredictionLeadTicks)
+            {
+                if ((_predictionThrottleLogCounter++ % 30) == 0)
+                    Log(Debugger.DebugLevel.WARN,
+                        $"[Prediction] Throttled: predicted tick {_clientPredictedTick} is {_clientPredictedTick - CurrentTick} ahead of confirmed {CurrentTick}");
+                return;
+            }
+
             if (_ownedEntitiesDirty)
             {
                 RebuildOwnedEntitiesCache();
@@ -968,8 +1011,8 @@ namespace Nebula
         /// <summary>
         /// Invoked when a player joins the world (sync status becomes IN_WORLD).
         /// </summary>
-        public event Action<UUID> OnPlayerJoined;
-        public event Action<UUID> OnPlayerCleanup;
+        public event Action<UUID, UUID> OnPlayerJoined;
+        public event Action<UUID, UUID> OnPlayerCleanup;
 
 
         /// <summary>
@@ -998,10 +1041,47 @@ namespace Nebula
                 peer.Disconnect(0);
             }
 
+            // forgetIdentity: true — the peer is leaving for good, so also drop its global
+            // ENet identity (Peers/PeerIds) alongside its per-world state.
+            // despawnOwnedNodes: false — preserve DespawnOnUnowned semantics on disconnect
+            // (nodes flagged to persist stay in the world, unowned).
+            TeardownPeer(peer, peerId, forgetIdentity: true, despawnOwnedNodes: false);
+        }
+
+        /// <summary>
+        /// Removes a peer from THIS world without disconnecting the ENet connection or forgetting the
+        /// peer's global identity. Used for live cross-world migration (see <see cref="NetRunner.MigratePeerToWorld"/>):
+        /// frees the peer's owned nodes here and cleans per-peer state, but keeps the connection alive so the
+        /// peer can immediately <see cref="JoinPeer"/> into the destination world over the same socket.
+        /// The hub world itself keeps running for other/returning players.
+        /// </summary>
+        public void PreparePeerDeparture(NetPeer peer)
+        {
+            if (!NetRunner.Instance.IsServer) return;
+
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            if (!PeerStates.ContainsKey(peerId)) return;
+
+            // forgetIdentity: false — keep Peers/PeerIds so the same connection migrates worlds.
+            // despawnOwnedNodes: true — the peer is leaving THIS world entirely and re-spawns fresh in
+            // the destination, so its owned nodes (the Player and its subtree) must be removed from this
+            // world's tree regardless of DespawnOnUnowned (which defaults false).
+            TeardownPeer(peer, peerId, forgetIdentity: false, despawnOwnedNodes: true);
+        }
+
+        /// <summary>
+        /// Shared teardown of a peer's presence in this world: frees owned nodes, clears per-peer
+        /// serializer/controller caches, reconciles pending despawns, and removes per-world routing.
+        /// <paramref name="forgetIdentity"/> additionally drops the peer's global ENet identity
+        /// (used by full disconnect, NOT by migration). <paramref name="despawnOwnedNodes"/> forces the
+        /// peer's owned nodes to despawn even when their DespawnOnUnowned is false (used by migration).
+        /// </summary>
+        private void TeardownPeer(NetPeer peer, UUID peerId, bool forgetIdentity, bool despawnOwnedNodes)
+        {
             var peerState = PeerStates[peerId];
             foreach (var netController in peerState.OwnedNodes)
             {
-                if (netController.DespawnOnUnowned)
+                if (despawnOwnedNodes || netController.DespawnOnUnowned)
                 {
                     netController.QueueNodeForDeletion();
                 }
@@ -1028,8 +1108,8 @@ namespace Nebula
                     }
                 }
             }
-            
-            // When a peer disconnects, treat any pending despawns as acknowledged
+
+            // Treat any pending despawns as acknowledged for the departing peer.
             // Check if any nodes queued for despawn can now be deleted
             foreach (var netController in QueueDespawnedNodes)
             {
@@ -1038,7 +1118,7 @@ namespace Nebula
                 bool allRemainingDespawned = true;
                 foreach (var otherPeerState in PeerStates.Values)
                 {
-                    if (otherPeerState.Id == peerId) continue; // Skip the disconnecting peer
+                    if (otherPeerState.Id == peerId) continue; // Skip the departing peer
                     var state = GetClientSpawnState(netController.NetId, otherPeerState.Peer);
                     if (state != ClientSpawnState.Despawned && state != ClientSpawnState.NotSpawned)
                     {
@@ -1046,7 +1126,7 @@ namespace Nebula
                         break;
                     }
                 }
-                
+
                 if (allRemainingDespawned)
                 {
                     _pendingDeletion.Add(netController);
@@ -1058,11 +1138,14 @@ namespace Nebula
             _peerPendingAcks.Remove(peerId); // Fix #5: Clean up pending acks tracking
             _peerNetBufferPool.Remove(peerId); // Clean up pooled export buffer
             _peerListDirty = true; // Fix #1: Mark peer list as dirty
-            NetRunner.Instance.Peers.Remove(peerId);
             NetRunner.Instance.WorldPeerMap.Remove(peerId);
             NetRunner.Instance.PeerWorldMap.Remove(peerId);
-            NetRunner.Instance.PeerIds.Remove(peer.ID);
-            OnPlayerCleanup?.Invoke(peerId);
+            if (forgetIdentity)
+            {
+                NetRunner.Instance.Peers.Remove(peerId);
+                NetRunner.Instance.PeerIds.Remove(peer.ID);
+            }
+            OnPlayerCleanup?.Invoke(WorldId, peerId);
         }
 
         private int _frameCounter = 0;
@@ -1124,6 +1207,32 @@ namespace Nebula
                 {
                     continue;
                 }
+
+                // Auto-despawn nodes that no connected peer is interested in anymore.
+                // Guarded by HadInterestedPeer so a freshly-spawned node isn't despawned before
+                // the granting code (e.g. AddInterestPeer on zone-enter) has had a chance to run.
+                if (netController.DespawnOnNoInterestPeers && !netController.IsQueuedForDespawn)
+                {
+                    bool anyInterested = false;
+                    foreach (var peerState in PeerStates.Values)
+                    {
+                        if (peerState.Status == PeerSyncStatus.DISCONNECTED) continue;
+                        if (netController.IsPeerInterested(peerState.Peer))
+                        {
+                            anyInterested = true;
+                            break;
+                        }
+                    }
+                    if (anyInterested)
+                    {
+                        netController.HadInterestedPeer = true;
+                    }
+                    else if (netController.HadInterestedPeer)
+                    {
+                        QueueDespawn(netController);
+                    }
+                }
+
                 // Phase 1: Apply all buffered inputs (root first, then children — must match simulation order)
                 if (netController.HasInputSupport)
                 {
@@ -1602,6 +1711,92 @@ namespace Nebula
             Debug?.Send("WorldJoined", netController.RawNode.SceneFilePath);
         }
 
+        // Reusable free-list for ResetForWorldChange (avoids allocating while iterating NetScenes).
+        // Sized to the per-peer node cap so a full world never reallocates during reset.
+        private readonly List<NetworkController> _worldChangeFreeList = new(NodeIdUtils.MAX_NETWORK_NODES);
+
+        /// <summary>
+        /// Client-only. Raised at the start of <see cref="ResetForWorldChange"/>, before any node is
+        /// freed, so game-side singletons can drop cached references to nodes in the outgoing world
+        /// (e.g. a "current player" pointer) and avoid touching disposed objects.
+        /// </summary>
+        public event Action OnWorldReset;
+
+        /// <summary>
+        /// Client-only. Fully resets this world container so the client can receive a brand-new world
+        /// (a different root scene) over the same connection — used for live world migration
+        /// (see <see cref="NetRunner.MigratePeerToWorld"/> and the World ENet channel).
+        ///
+        /// The client keeps a single persistent WorldRunner (<see cref="CurrentWorld"/>); when the
+        /// server moves the peer to another world, that world hands out fresh local node ids starting
+        /// at 1, which would collide with the stale entries left behind by the previous world. This
+        /// flushes every client-side node and all per-world bookkeeping so the incoming spawn stream
+        /// rebuilds cleanly. Allocation-free: iterates existing collections into a reused free-list.
+        /// </summary>
+        internal void ResetForWorldChange()
+        {
+            if (NetRunner.Instance.IsServer) return;
+
+            // Let game-side singletons drop cached references to nodes we're about to free
+            // (e.g. WorldPlayers.CurrentPlayer) before the nodes are disposed.
+            OnWorldReset?.Invoke();
+
+            // Collect first, then free — freeing mutates the tree, and QueueNodeForDeletion may touch
+            // NetScenes, so we must not free while enumerating it.
+            _worldChangeFreeList.Clear();
+            foreach (var netController in NetScenes.Values)
+            {
+                if (netController != null)
+                {
+                    _worldChangeFreeList.Add(netController);
+                }
+            }
+            for (int i = 0; i < _worldChangeFreeList.Count; i++)
+            {
+                var raw = _worldChangeFreeList[i].RawNode;
+                // QueueFree defers to end of frame and is subtree-safe, so freeing a parent and a
+                // descendant here is fine — Godot frees the whole subtree once.
+                if (raw != null && IsInstanceValid(raw))
+                {
+                    raw.QueueFree();
+                }
+            }
+            _worldChangeFreeList.Clear();
+
+            // Defensive: free the root if it somehow wasn't registered in NetScenes.
+            if (RootScene != null && RootScene.RawNode != null && IsInstanceValid(RootScene.RawNode))
+            {
+                RootScene.RawNode.QueueFree();
+            }
+
+            // Clear all per-world bookkeeping so the destination world starts from a blank slate.
+            NetScenes.Clear();
+            networkIds.Clear();
+            networkIdCounter = 1;
+            Array.Clear(ClientAvailableNodes, 0, ClientAvailableNodes.Length);
+            RootScene = null;
+
+            // Drop any queued work that referenced the old world's nodes: a stale net function would
+            // resolve against a freed node, and a stale pending-despawn could kill a new-world node that
+            // happens to reuse the same local id.
+            queuedNetFunctions.Clear();
+            _pendingClientDespawns.Clear();
+            _pendingNetSceneAdds.Clear();
+
+            // Reset the tick stream. The destination world's tick counter starts low (near 0), so without
+            // this the "skip old/duplicate ticks" guard in ClientProcessTick (incomingTick <= CurrentTick)
+            // would reject every tick from the new world and it would never load. -1 lets tick 0 through;
+            // the first accepted tick re-runs InitializeClientPrediction.
+            CurrentTick = -1;
+            _predictionInitialized = false;
+            _clientPredictedTick = -1;
+            TimeSinceLastTick = 0f;
+            _ownedEntities.Clear();
+            _ownedEntitiesDirty = true;
+
+            Debug?.Send("WorldReset", WorldId.ToString());
+        }
+
         public PeerState? GetPeerWorldState(UUID peerId)
         {
             // Fix #7: Use TryGetValue
@@ -1621,6 +1816,19 @@ namespace Nebula
         /// Tracks the last tick each peer acknowledged. Used for timeout detection.
         /// </summary>
         private Dictionary<UUID, Tick> _peerLastAckTick = new();
+
+        /// <summary>
+        /// Server-side: the last tick this peer acknowledged receiving, or -1 if none yet.
+        /// Approximates the peer's confirmed tick — useful for bounding how far behind a client's
+        /// view of non-owned entities can legitimately be (its prediction lead free-runs and
+        /// varies per session, so measuring beats guessing).
+        /// </summary>
+        public Tick GetPeerLastAckedTick(UUID peerId)
+        {
+            if (_peerLastAckTick.TryGetValue(peerId, out var acked))
+                return acked;
+            return -1;
+        }
 
         /// <summary>
         /// Reusable list for peers to disconnect (avoids allocation each tick).
@@ -1731,7 +1939,7 @@ namespace Nebula
 
             foreach (var peerId in _pendingPlayerJoined)
             {
-                OnPlayerJoined?.Invoke(peerId);
+                OnPlayerJoined?.Invoke(WorldId, peerId);
             }
 
             _pendingPlayerJoined.Clear();
@@ -1948,7 +2156,7 @@ namespace Nebula
             // can be exported on the same tick as the spawn
             if (RootScene != null)
             {
-                RootScene._OnPeerConnected(peerId);
+                RootScene._OnPeerConnected(WorldId, peerId);
             }
         }
 
@@ -2121,7 +2329,13 @@ namespace Nebula
             return _exportPeerBuffers;
         }
 
-        internal void ImportState(NetBuffer stateBytes)
+        /// <summary>
+        /// Client-side. Imports a full tick's state payload.
+        /// Returns true if the whole payload was applied; false if import aborted partway
+        /// (corrupt buffer). A failed import must NOT be acked - the server would mark the
+        /// data as delivered and never resend it.
+        /// </summary>
+        internal bool ImportState(NetBuffer stateBytes)
         {
             // Read hierarchical bitmask: groupMask (1 byte) + nodeMasks for active groups
             var groupMask = NetReader.ReadByte(stateBytes);
@@ -2211,7 +2425,7 @@ namespace Nebula
                             var nodeType = netController?.RawNode?.GetType().Name ?? "(null)";
                             var nodeName = netController?.RawNode?.Name ?? "(null)";
                             Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[ImportState ERROR] Failed to import node {localNodeId} serializer {serializerIdx}: {ex.Message}. Buffer pos={stateBytes.ReadPosition}/{stateBytes.Length}. Node info: scenePath='{scenePath}', type={nodeType}, name={nodeName}, isNewNode={isNewNode}. Aborting tick import.\nStack trace:\n{ex.StackTrace}");
-                            return; // Don't continue processing - buffer position is corrupted
+                            return false; // Don't continue processing - buffer position is corrupted
                         }
                     }
                 }
@@ -2235,6 +2449,8 @@ namespace Nebula
                     }
                 }
             }
+
+            return true;
         }
 
         // Reusable list for objects that had all data acked (avoids modifying HashSet during iteration)
@@ -2242,6 +2458,15 @@ namespace Nebula
 
         public void PeerAcknowledge(NetPeer peer, Tick tick)
         {
+            // A peer cannot legitimately acknowledge a tick the server hasn't produced yet, nor a
+            // negative one. Without this, a hostile ack (e.g. int.MaxValue) would set peerState.Tick
+            // to a huge value and make every serializer believe all pending state was delivered.
+            if (tick < 0 || tick > CurrentTick)
+            {
+                Log(Debugger.DebugLevel.ERROR, $"[Nebula][InvalidAck] Peer acknowledged out-of-range tick {tick} (currentTick {CurrentTick})");
+                return;
+            }
+
             var peerId = NetRunner.Instance.GetPeerId(peer);
 
             // Fix #7: Use TryGetValue
@@ -2284,14 +2509,22 @@ namespace Nebula
                     continue;
                 }
 
+                bool stillPending = false;
                 for (var serializerIdx = 0; serializerIdx < netController.NetNode.Serializers.Length; serializerIdx++)
                 {
                     var serializer = netController.NetNode.Serializers[serializerIdx];
-                    serializer.Acknowledge(this, peer, tick);
+                    stillPending |= serializer.Acknowledge(this, peer, tick);
+                }
+
+                // Fully acked - remove from the pending set so future acks skip this node.
+                // It re-enters via pendingAcks.Add() the next time it exports data.
+                if (!stillPending)
+                {
+                    _ackedObjects.Add(netController);
                 }
             }
 
-            // Remove invalid entries
+            // Remove invalid and fully-acked entries
             foreach (var obj in _ackedObjects)
             {
                 pendingAcks.Remove(obj);
@@ -2314,16 +2547,17 @@ namespace Nebula
 
             CurrentTick = incomingTick;
             OnWorldTickReceived(incomingTick); // Reset time accumulator for snapshot interpolation
+            bool importSucceeded = false;
             try
             {
                 // Log(Debugger.DebugLevel.VERBOSE, $"Importing state bytes of size {stateBytes.Length}");
                 using var stateBuffer = new NetBuffer(stateBytes);
-                ImportState(stateBuffer);
+                importSucceeded = ImportState(stateBuffer);
             }
             catch (Exception ex)
             {
                 Log(Debugger.DebugLevel.ERROR, $"[ImportState FAILED] tick {incomingTick}: {ex.Message}");
-                // Still continue - send ack so server doesn't think we're dead
+                // Still continue processing the tick locally, but do NOT ack it (below)
             }
 
             // Rebuild owned entities cache if needed
@@ -2414,10 +2648,17 @@ namespace Nebula
             // ============================================================
             // ACKNOWLEDGE TICK (pooled buffer)
             // ============================================================
-            _ackBuffer ??= new NetBuffer();
-            _ackBuffer.Reset();
-            NetWriter.WriteInt32(_ackBuffer, incomingTick);
-            NetRunner.SendUnreliableSequenced(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Tick, _ackBuffer);
+            // Only ack fully-applied imports. An ack tells the server "I have this tick's
+            // data" - acking a failed import would disarm the resend machinery and lose
+            // the state permanently. If failures persist, the server's ack-timeout will
+            // eventually drop this peer, which is the correct outcome for a broken stream.
+            if (importSucceeded)
+            {
+                _ackBuffer ??= new NetBuffer();
+                _ackBuffer.Reset();
+                NetWriter.WriteInt32(_ackBuffer, incomingTick);
+                NetRunner.SendUnreliableSequenced(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Tick, _ackBuffer);
+            }
         }
 
         /// <summary>
@@ -2464,8 +2705,13 @@ namespace Nebula
             // This matches server behavior where inputs arrive and are applied at specific ticks.
             netNode.BufferInput(_clientPredictedTick, inputBytes);
 
-            // Only send if input has changed (but always buffer)
-            if (!netNode.HasInputChanged)
+            // Only send if input has changed (but always buffer) — with a periodic keepalive.
+            // Packets are unreliable, and the redundancy window only protects a change that is
+            // followed by more sends within 8 ticks. Without a keepalive, losing the single packet
+            // that carried the *last* change (e.g. releasing a strafe key before holding steady
+            // thrust) leaves the server's input fallback replaying the previous held keys until
+            // the next change.
+            if (!netNode.HasInputChanged && ((int)(_clientPredictedTick & 3)) != 0)
             {
                 return;
             }
@@ -2559,6 +2805,17 @@ namespace Nebula
                 var inputSize = NetReader.ReadInt32(buffer);
                 var inputBytes = NetReader.ReadBytes(buffer, inputSize);
 
+                // Clients run ahead of the server, so input ticks are legitimately in the future,
+                // but only up to the ring-buffer depth (anything beyond aliases onto occupied
+                // slots). Reject out-of-range ticks - a far-future/negative tick would otherwise
+                // poison a ring slot (buffer.Ticks[slot] < tick) so real inputs are dropped forever.
+                // Read fields first (above) so buffer alignment for later inputs is preserved.
+                if (tick < 0 || tick > CurrentTick + SERVER_INPUT_BUFFER_SIZE)
+                {
+                    Log(Debugger.DebugLevel.ERROR, $"[Nebula][InvalidInput] Ignoring out-of-range input tick {tick} (currentTick {CurrentTick}) for node {worldNetId}");
+                    continue;
+                }
+
                 // Buffer the input for this tick using composite key (parentNetId, staticChildId)
                 BufferServerInput(new InputBufferKey(worldNetId, staticChildId), tick, inputBytes);
 
@@ -2573,37 +2830,65 @@ namespace Nebula
         }
 
         // WARNING: These are not exactly tick-aligned for state reconcilliation. Could cause state issues because the assumed tick is when it is received?
-        internal void SendNetFunction(NetId netId, ProtocolNetFunction functionInfo, object[] args)
+        /// <summary>
+        /// Sends a network function. On the server, <paramref name="targetPeers"/> (when non-null)
+        /// restricts delivery to those specific peers instead of broadcasting to every interested peer
+        /// — used by generated peer-targeted overloads. Peers that don't have the node (no interest)
+        /// are skipped, since the peer-local netId wouldn't resolve on their client.
+        /// </summary>
+        internal void SendNetFunction(NetId netId, ProtocolNetFunction functionInfo, object[] args, UUID[] targetPeers = null)
         {
             if (NetRunner.Instance.IsServer)
             {
                 var node = GetNodeFromNetId(netId);
-                // TODO: Apply interest layers for network function, like network property
-                foreach (var peer in node.InterestLayers.Keys)
+                if (targetPeers == null)
                 {
-                    using var buffer = new NetBuffer();
-                    NetId.NetworkSerialize(this, NetRunner.Instance.Peers[peer], netId, buffer);
-                    NetWriter.WriteByte(buffer, functionInfo.Index);
-                    for (int i = 0; i < args.Length; i++)
+                    // Default: broadcast to all interested peers.
+                    // TODO: Apply interest layers for network function, like network property
+                    foreach (var peerId in node.InterestLayers.Keys)
                     {
-                        // Use protocol metadata directly, no Variant conversion
-                        NetWriter.WriteByType(buffer, functionInfo.Arguments[i].VariantType, args[i]);
+                        if (NetRunner.Instance.Peers.TryGetValue(peerId, out var peer))
+                        {
+                            SendNetFunctionToPeer(netId, functionInfo, args, peer);
+                        }
                     }
-                    NetRunner.SendReliable(NetRunner.Instance.Peers[peer], (byte)NetRunner.ENetChannelId.Function, buffer);
+                }
+                else
+                {
+                    // Peer-targeted: only the listed peers, and only those that actually have the node.
+                    for (int i = 0; i < targetPeers.Length; i++)
+                    {
+                        var peerId = targetPeers[i];
+                        if (!node.InterestLayers.ContainsKey(peerId))
+                        {
+                            Log(Debugger.DebugLevel.WARN, $"SendNetFunction: target peer {peerId} has no interest in node {netId} for {functionInfo.Name}; skipping (node not spawned for them).");
+                            continue;
+                        }
+                        if (NetRunner.Instance.Peers.TryGetValue(peerId, out var peer))
+                        {
+                            SendNetFunctionToPeer(netId, functionInfo, args, peer);
+                        }
+                    }
                 }
             }
             else
             {
-                using var buffer = new NetBuffer();
-                NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netId, buffer);
-                NetWriter.WriteByte(buffer, functionInfo.Index);
-                for (int i = 0; i < args.Length; i++)
-                {
-                    // Use protocol metadata directly, no Variant conversion
-                    NetWriter.WriteByType(buffer, functionInfo.Arguments[i].VariantType, args[i]);
-                }
-                NetRunner.SendReliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Function, buffer);
+                // A client only ever sends to the server; targetPeers is meaningless here and ignored.
+                SendNetFunctionToPeer(netId, functionInfo, args, NetRunner.Instance.ServerPeer);
             }
+        }
+
+        private void SendNetFunctionToPeer(NetId netId, ProtocolNetFunction functionInfo, object[] args, NetPeer peer)
+        {
+            using var buffer = new NetBuffer();
+            NetId.NetworkSerialize(this, peer, netId, buffer);
+            NetWriter.WriteByte(buffer, functionInfo.Index);
+            for (int i = 0; i < args.Length; i++)
+            {
+                // Use protocol metadata directly, no Variant conversion
+                NetWriter.WriteByType(buffer, functionInfo.Arguments[i].VariantType, args[i]);
+            }
+            NetRunner.SendReliable(peer, (byte)NetRunner.ENetChannelId.Function, buffer);
         }
 
         internal void ReceiveNetFunction(NetPeer peer, NetBuffer buffer)

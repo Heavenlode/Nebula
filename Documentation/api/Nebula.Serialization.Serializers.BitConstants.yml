@@ -9,6 +9,7 @@ items:
   - Nebula.Serialization.Serializers.BitConstants.BitsInInt
   - Nebula.Serialization.Serializers.BitConstants.BitsInLong
   - Nebula.Serialization.Serializers.BitConstants.BitsInShort
+  - Nebula.Serialization.Serializers.BitConstants.MaxSceneProperties
   langs:
   - csharp
   - vb
@@ -108,6 +109,34 @@ items:
     return:
       type: System.Int32
     content.vb: Public Const BitsInLong As Integer = 64
+- uid: Nebula.Serialization.Serializers.BitConstants.MaxSceneProperties
+  commentId: F:Nebula.Serialization.Serializers.BitConstants.MaxSceneProperties
+  id: MaxSceneProperties
+  parent: Nebula.Serialization.Serializers.BitConstants
+  langs:
+  - csharp
+  - vb
+  name: MaxSceneProperties
+  nameWithType: BitConstants.MaxSceneProperties
+  fullName: Nebula.Serialization.Serializers.BitConstants.MaxSceneProperties
+  type: Field
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization.Serializers
+  summary: >-
+    Maximum networked properties per NetScene (including rolled-up static children).
+
+    Bound by the 64-bit dirty mask in NetworkController and the fixed size of
+
+    CachedProperties. Enforced at build time by the protocol generator (NEBULA004)
+
+    and at runtime by NetPropertiesSerializer's constructor.
+  example: []
+  syntax:
+    content: public const int MaxSceneProperties = 64
+    return:
+      type: System.Int32
+    content.vb: Public Const MaxSceneProperties As Integer = 64
 references:
 - uid: Nebula.Serialization.Serializers
   commentId: N:Nebula.Serialization.Serializers

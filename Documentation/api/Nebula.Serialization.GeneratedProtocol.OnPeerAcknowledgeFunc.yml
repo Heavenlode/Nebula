@@ -6,9 +6,9 @@ items:
   parent: Nebula.Serialization
   children:
   - Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.#ctor(System.Object,System.IntPtr)
-  - Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(System.Object,Nebula.UUID,System.AsyncCallback,System.Object)
+  - Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(System.Object,Nebula.UUID,System.Int32,System.AsyncCallback,System.Object)
   - Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.EndInvoke(System.IAsyncResult)
-  - Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(System.Object,Nebula.UUID)
+  - Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(System.Object,Nebula.UUID,System.Int32)
   langs:
   - csharp
   - vb
@@ -17,20 +17,22 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
   type: Delegate
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
-  summary: Delegate for peer acknowledgment callback on INetSerializable types.
+  summary: Delegate for peer acknowledgment callback on INetSerializable types. Tick is the acknowledged tick.
   example: []
   syntax:
-    content: public delegate void GeneratedProtocol.OnPeerAcknowledgeFunc(object obj, UUID peerId)
+    content: public delegate void GeneratedProtocol.OnPeerAcknowledgeFunc(object obj, UUID peerId, int tick)
     parameters:
     - id: obj
       type: System.Object
     - id: peerId
       type: Nebula.UUID
-    content.vb: Public Delegate Sub GeneratedProtocol.OnPeerAcknowledgeFunc(obj As Object, peerId As UUID)
+    - id: tick
+      type: System.Int32
+    content.vb: Public Delegate Sub GeneratedProtocol.OnPeerAcknowledgeFunc(obj As Object, peerId As UUID, tick As Integer)
 - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.#ctor(System.Object,System.IntPtr)
   commentId: M:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.#ctor(System.Object,System.IntPtr)
   id: '#ctor(System.Object,System.IntPtr)'
@@ -43,7 +45,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.OnPeerAcknowledgeFunc(object, nint)
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -59,68 +61,72 @@ items:
   nameWithType.vb: GeneratedProtocol.OnPeerAcknowledgeFunc.New(Object, IntPtr)
   fullName.vb: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.New(Object, System.IntPtr)
   name.vb: New(Object, IntPtr)
-- uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(System.Object,Nebula.UUID)
-  commentId: M:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(System.Object,Nebula.UUID)
-  id: Invoke(System.Object,Nebula.UUID)
+- uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(System.Object,Nebula.UUID,System.Int32)
+  commentId: M:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(System.Object,Nebula.UUID,System.Int32)
+  id: Invoke(System.Object,Nebula.UUID,System.Int32)
   parent: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
   langs:
   - csharp
   - vb
-  name: Invoke(object, UUID)
-  nameWithType: GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(object, UUID)
-  fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(object, Nebula.UUID)
+  name: Invoke(object, UUID, int)
+  nameWithType: GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(object, UUID, int)
+  fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(object, Nebula.UUID, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
   syntax:
-    content: public virtual void Invoke(object obj, UUID peerId)
+    content: public virtual void Invoke(object obj, UUID peerId, int tick)
     parameters:
     - id: obj
       type: System.Object
     - id: peerId
       type: Nebula.UUID
-    content.vb: Public Overridable Sub Invoke(obj As Object, peerId As UUID)
+    - id: tick
+      type: System.Int32
+    content.vb: Public Overridable Sub Invoke(obj As Object, peerId As UUID, tick As Integer)
   overload: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke*
-  nameWithType.vb: GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(Object, UUID)
-  fullName.vb: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(Object, Nebula.UUID)
-  name.vb: Invoke(Object, UUID)
-- uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(System.Object,Nebula.UUID,System.AsyncCallback,System.Object)
-  commentId: M:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(System.Object,Nebula.UUID,System.AsyncCallback,System.Object)
-  id: BeginInvoke(System.Object,Nebula.UUID,System.AsyncCallback,System.Object)
+  nameWithType.vb: GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(Object, UUID, Integer)
+  fullName.vb: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke(Object, Nebula.UUID, Integer)
+  name.vb: Invoke(Object, UUID, Integer)
+- uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(System.Object,Nebula.UUID,System.Int32,System.AsyncCallback,System.Object)
+  commentId: M:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(System.Object,Nebula.UUID,System.Int32,System.AsyncCallback,System.Object)
+  id: BeginInvoke(System.Object,Nebula.UUID,System.Int32,System.AsyncCallback,System.Object)
   parent: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc
   langs:
   - csharp
   - vb
-  name: BeginInvoke(object, UUID, AsyncCallback, object)
-  nameWithType: GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(object, UUID, AsyncCallback, object)
-  fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(object, Nebula.UUID, System.AsyncCallback, object)
+  name: BeginInvoke(object, UUID, int, AsyncCallback, object)
+  nameWithType: GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(object, UUID, int, AsyncCallback, object)
+  fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(object, Nebula.UUID, int, System.AsyncCallback, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
   syntax:
-    content: public virtual IAsyncResult BeginInvoke(object obj, UUID peerId, AsyncCallback callback, object @object)
+    content: public virtual IAsyncResult BeginInvoke(object obj, UUID peerId, int tick, AsyncCallback callback, object @object)
     parameters:
     - id: obj
       type: System.Object
     - id: peerId
       type: Nebula.UUID
+    - id: tick
+      type: System.Int32
     - id: callback
       type: System.AsyncCallback
     - id: object
       type: System.Object
     return:
       type: System.IAsyncResult
-    content.vb: Public Overridable Function BeginInvoke(obj As Object, peerId As UUID, callback As AsyncCallback, [object] As Object) As IAsyncResult
+    content.vb: Public Overridable Function BeginInvoke(obj As Object, peerId As UUID, tick As Integer, callback As AsyncCallback, [object] As Object) As IAsyncResult
   overload: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke*
-  nameWithType.vb: GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(Object, UUID, AsyncCallback, Object)
-  fullName.vb: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(Object, Nebula.UUID, System.AsyncCallback, Object)
-  name.vb: BeginInvoke(Object, UUID, AsyncCallback, Object)
+  nameWithType.vb: GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(Object, UUID, Integer, AsyncCallback, Object)
+  fullName.vb: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke(Object, Nebula.UUID, Integer, System.AsyncCallback, Object)
+  name.vb: BeginInvoke(Object, UUID, Integer, AsyncCallback, Object)
 - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.EndInvoke(System.IAsyncResult)
   commentId: M:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.EndInvoke(System.IAsyncResult)
   id: EndInvoke(System.IAsyncResult)
@@ -133,7 +139,7 @@ items:
   fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.EndInvoke(System.IAsyncResult)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generators.ProtocolGenerator/Protocol.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -191,6 +197,17 @@ references:
   name: UUID
   nameWithType: UUID
   fullName: Nebula.UUID
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
 - uid: System
   commentId: N:System
   isExternal: true
@@ -229,14 +246,14 @@ references:
 - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke*
   commentId: Overload:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke
   isExternal: true
-  href: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.html#Nebula_Serialization_GeneratedProtocol_OnPeerAcknowledgeFunc_Invoke_System_Object_Nebula_UUID_
+  href: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.html#Nebula_Serialization_GeneratedProtocol_OnPeerAcknowledgeFunc_Invoke_System_Object_Nebula_UUID_System_Int32_
   name: Invoke
   nameWithType: GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke
   fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.Invoke
 - uid: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke*
   commentId: Overload:Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke
   isExternal: true
-  href: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.html#Nebula_Serialization_GeneratedProtocol_OnPeerAcknowledgeFunc_BeginInvoke_System_Object_Nebula_UUID_System_AsyncCallback_System_Object_
+  href: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.html#Nebula_Serialization_GeneratedProtocol_OnPeerAcknowledgeFunc_BeginInvoke_System_Object_Nebula_UUID_System_Int32_System_AsyncCallback_System_Object_
   name: BeginInvoke
   nameWithType: GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke
   fullName: Nebula.Serialization.GeneratedProtocol.OnPeerAcknowledgeFunc.BeginInvoke

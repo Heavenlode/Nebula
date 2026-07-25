@@ -7,10 +7,24 @@ using Godot;
 /// <summary>
 /// Controller class to manage Nebula-specific project settings in the Godot editor.
 /// Sets up configuration, networking, and world-related properties for runtime usage.
+/// All settings live under a single "Nebula/config" group so they show in one tab.
 /// </summary>
 [Tool]
 public partial class ProjectSettingsController : Node
 {
+    /// <summary>
+    /// Registers a single Nebula project setting: seeds its current/initial value, marks it as
+    /// basic (visible without Advanced Settings), and attaches editor property info. The
+    /// property info dict's "name" is filled in automatically.
+    /// </summary>
+    private static void Register(string name, Variant defaultValue, Godot.Collections.Dictionary propertyInfo)
+    {
+        ProjectSettings.SetSetting(name, ProjectSettings.GetSetting(name, defaultValue));
+        ProjectSettings.SetInitialValue(name, defaultValue);
+        ProjectSettings.SetAsBasic(name, true);
+        propertyInfo["name"] = name;
+        ProjectSettings.AddPropertyInfo(propertyInfo);
+    }
 
     /// <summary>
     /// Called when the node enters the scene tree.
@@ -18,73 +32,49 @@ public partial class ProjectSettingsController : Node
     /// </summary>
     public override void _EnterTree()
     {
-
-        // Log level setting
-        ProjectSettings.SetSetting("Nebula/config/log_level", ProjectSettings.GetSetting("Nebula/config/log_level", 0));
-        ProjectSettings.SetInitialValue("Nebula/config/log_level", 0);
-        ProjectSettings.SetAsBasic("Nebula/config/log_level", true);
-        ProjectSettings.AddPropertyInfo(new(){
-            {"name", "Nebula/config/log_level"},
-            {"type", (int)Variant.Type.Int},
-            { "hint", (int)PropertyHint.Enum},
-            { "hint_string", "Error:1,Warn:2,Info:4,Verbose:8"}
-        });
-
-        // Network Settings - IP
-        ProjectSettings.SetSetting("Nebula/network/IP", ProjectSettings.GetSetting("Nebula/network/IP", "127.0.0.1"));
-        ProjectSettings.SetInitialValue("Nebula/network/IP", "127.0.0.1");
-        ProjectSettings.SetAsBasic("Nebula/network/IP", true);
-        ProjectSettings.AddPropertyInfo(new(){
-            {"name", "Nebula/network/IP"},
+        // Server IP address
+        Register("Nebula/config/ip", "127.0.0.1", new(){
             {"type", (int)Variant.Type.String},
         });
 
-        // Network Settings - Default Port
-        ProjectSettings.SetSetting("Nebula/network/default_port", ProjectSettings.GetSetting("Nebula/network/default_port", 8888));
-        ProjectSettings.SetInitialValue("Nebula/network/default_port", 8888);
-        ProjectSettings.SetAsBasic("Nebula/network/default_port", true);
-        ProjectSettings.AddPropertyInfo(new(){
-            {"name", "Nebula/network/default_port"},
+        // Default port
+        Register("Nebula/config/default_port", 8888, new(){
             {"type", (int)Variant.Type.Int},
             {"hint", (int)PropertyHint.Range},
             {"hint_string", "1000,65535,1"},
         });
 
-        // Network Settings - MTU
-        ProjectSettings.SetSetting("Nebula/network/MTU", ProjectSettings.GetSetting("Nebula/network/MTU", 1400));
-        ProjectSettings.SetInitialValue("Nebula/network/MTU", 1400);
-        ProjectSettings.SetAsBasic("Nebula/network/MTU", true);
-        ProjectSettings.AddPropertyInfo(new(){
-            {"name", "Nebula/network/MTU"},
+        // MTU
+        Register("Nebula/config/mtu", 1400, new(){
             {"type", (int)Variant.Type.Int},
             {"hint", (int)PropertyHint.Range},
             {"hint_string", "100,65535,1"},
         });
 
-        // World Settings - Default Scene
-        ProjectSettings.SetSetting("Nebula/world/default_scene",
-            ProjectSettings.GetSetting("Nebula/world/default_scene", ProjectSettings.GetSetting("application/run/main_scene", "")));
-        ProjectSettings.SetInitialValue("Nebula/world/default_scene", ProjectSettings.GetSetting("application/run/main_scene", ""));
-        ProjectSettings.SetAsBasic("Nebula/world/default_scene", true);
-        ProjectSettings.AddPropertyInfo(new(){
-            {"name", "Nebula/world/default_scene"},
+        // Default world scene
+        var defaultScene = ProjectSettings.GetSetting("application/run/main_scene", "");
+        Register("Nebula/config/default_scene", defaultScene, new(){
             {"type", (int)Variant.Type.String},
             {"hint", (int)PropertyHint.File},
             {"hint_string", "*.tscn"},
         });
 
-        // World Settings - Managed Entrypoint
-        // ProjectSettings.SetSetting("Nebula/world/managed_entrypoint", ProjectSettings.GetSetting("Nebula/world/managed_entrypoint", false));
-        // ProjectSettings.SetInitialValue("Nebula/world/managed_entrypoint", false);
-        // ProjectSettings.SetAsBasic("Nebula/world/managed_entrypoint", true);
-        // ProjectSettings.AddPropertyInfo(new(){
-        //     {"name", "Nebula/world/managed_entrypoint"},
-        //     {"type", (int)Variant.Type.Bool},
-        // });
+        // Log level
+        Register("Nebula/config/log_level", 0, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Enum},
+            {"hint_string", "Error:1,Warn:2,Info:4,Verbose:8"},
+        });
 
-        // // Override main_scene if managed_entrypoint is enabled
-        // if (ProjectSettings.GetSetting("Nebula/world/managed_entrypoint", true).AsBool())
-        //     ProjectSettings.SetSetting("application/run/main_scene", "res://addons/Nebula/Utils/ServerClientConnector/default_server_client_connector.tscn");
+        // NOTE: Nebula/config/enable_tcp is deliberately NOT registered here. The debug TCP
+        // channel is pending rework, so we keep it out of the editor UI to avoid it being
+        // flipped on and shipped. It's still readable at runtime (defaults to false), so
+        // --debugPort=XXXX and a manual project.godot entry both still work.
+
+        // Debug: log the full hex of every server tick payload on the client
+        Register("Nebula/config/log_tick_payloads", false, new(){
+            {"type", (int)Variant.Type.Bool},
+        });
 
         // Save project settings after modification
         ProjectSettings.Save();
@@ -92,23 +82,9 @@ public partial class ProjectSettingsController : Node
 
     /// <summary>
     /// Called when the node exits the scene tree.
-    /// Restores original project settings and clears Nebula-specific overrides.
     /// </summary>
     public override void _ExitTree()
     {
-
-        // Restore main_scene to user-defined default
-        // ProjectSettings.SetSetting("application/run/main_scene", ProjectSettings.GetSetting("Nebula/world/default_scene"));
-
-        // Clear Nebula-specific settings from ProjectSettings
-        // ProjectSettings.Clear("Nebula/config/log_level");
-        // ProjectSettings.Clear("Nebula/network/IP");
-        // ProjectSettings.Clear("Nebula/network/default_port");
-        // ProjectSettings.Clear("Nebula/network/MTU");
-        // ProjectSettings.Clear("Nebula/world/default_scene");
-        // ProjectSettings.Clear("Nebula/world/managed_entrypoint");
-
-        // Save after cleanup
         ProjectSettings.Save();
     }
 
@@ -119,10 +95,10 @@ public partial class ProjectSettingsController : Node
     public bool Build()
     {
         // Override the port for the networking runner
-        NetRunner.Instance.OverridePort(ProjectSettings.GetSetting("Nebula/network/default_port").AsInt32());
+        NetRunner.Instance.OverridePort(ProjectSettings.GetSetting("Nebula/config/default_port").AsInt32());
 
         // Apply the server IP address (sets the default, can be overridden by SERVER_ADDRESS env var)
-        NetRunner.Instance.DefaultServerAddress = ProjectSettings.GetSetting("Nebula/network/IP").AsString();
+        NetRunner.Instance.DefaultServerAddress = ProjectSettings.GetSetting("Nebula/config/ip").AsString();
 
         return true;
     }

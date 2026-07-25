@@ -31,6 +31,9 @@ namespace Nebula.Generators
             sb.AppendLine("    public static class GeneratedProtocol");
             sb.AppendLine("    {");
 
+            // Protocol identity hash (must be first so it's easy to eyeball in the generated file)
+            EmitProtocolHash(sb, data);
+
             // Static methods (serializable types)
             EmitStaticMethods(sb, data);
             
@@ -64,6 +67,144 @@ namespace Nebula.Generators
             sb.AppendLine("}");
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Emits a deterministic 64-bit FNV-1a hash of the entire protocol: the Nebula
+        /// version, scene ids and paths, static node paths, every property (order, type,
+        /// flags), every function signature, and all serializable types. Two builds produce
+        /// the same hash iff they run the same Nebula version over an identical protocol,
+        /// so it serves as a connection handshake token.
+        ///
+        /// The Nebula version stands in for the runtime wire format: changes to serializer
+        /// encoding, packet framing, or handshake shape aren't visible in the protocol data
+        /// above, and folding the version in means any release that alters them
+        /// automatically stops old and new builds from talking. The cost is that a release
+        /// which changes nothing on the wire also invalidates compatibility - deliberate,
+        /// since a false "compatible" is far worse than a false "incompatible".
+        /// </summary>
+        private static void EmitProtocolHash(StringBuilder sb, ProtocolData data)
+        {
+            const ulong FnvOffset = 14695981039346656037UL;
+            const ulong FnvPrime = 1099511628211UL;
+            ulong hash = FnvOffset;
+
+            void Mix(string s)
+            {
+                if (s == null) s = "";
+                for (int i = 0; i < s.Length; i++)
+                {
+                    hash ^= s[i];
+                    hash *= FnvPrime;
+                }
+                hash ^= 0x1F; // Unit separator between fields
+                hash *= FnvPrime;
+            }
+
+            Mix("NEBULA_PROTOCOL");
+            Mix(data.NebulaVersion);
+
+            // Scenes, in id order (dictionaries are sorted explicitly for determinism)
+            var sceneIds = new List<byte>(data.ScenesMap.Keys);
+            sceneIds.Sort();
+            foreach (var sceneId in sceneIds)
+            {
+                var scenePath = data.ScenesMap[sceneId];
+                Mix("scene");
+                Mix(sceneId.ToString(CultureInfo.InvariantCulture));
+                Mix(scenePath);
+
+                if (data.SceneInterestMap.TryGetValue(scenePath, out var interest))
+                {
+                    Mix(interest.InterestAny.ToString(CultureInfo.InvariantCulture));
+                    Mix(interest.InterestRequired.ToString(CultureInfo.InvariantCulture));
+                }
+
+                if (data.StaticNetworkNodePathsMap.TryGetValue(scenePath, out var nodeMap))
+                {
+                    var nodeIds = new List<byte>(nodeMap.Keys);
+                    nodeIds.Sort();
+                    foreach (var nodeId in nodeIds)
+                    {
+                        Mix("node");
+                        Mix(nodeId.ToString(CultureInfo.InvariantCulture));
+                        Mix(nodeMap[nodeId]);
+                    }
+                }
+
+                if (data.PropertiesLookup.TryGetValue(scenePath, out var props))
+                {
+                    var propIndices = new List<int>(props.Keys);
+                    propIndices.Sort();
+                    foreach (var propIndex in propIndices)
+                    {
+                        var prop = props[propIndex];
+                        Mix("prop");
+                        Mix(prop.Index.ToString(CultureInfo.InvariantCulture));
+                        Mix(prop.LocalIndex.ToString(CultureInfo.InvariantCulture));
+                        Mix(prop.NodePath);
+                        Mix(prop.Name);
+                        Mix(prop.TypeFullName);
+                        Mix(prop.SubtypeIdentifier ?? "");
+                        Mix(prop.ClassIndex.ToString(CultureInfo.InvariantCulture));
+                        Mix(prop.InterestMask.ToString(CultureInfo.InvariantCulture));
+                        Mix(prop.InterestRequired.ToString(CultureInfo.InvariantCulture));
+                        Mix(prop.IsObjectProperty ? "1" : "0");
+                        Mix(prop.IsPerPeer ? "1" : "0");
+                        Mix(prop.IsEnum ? "1" : "0");
+                        Mix(prop.ChunkBudget.ToString(CultureInfo.InvariantCulture));
+                    }
+                }
+
+                if (data.FunctionsLookup.TryGetValue(scenePath, out var funcs))
+                {
+                    var funcIndices = new List<int>(funcs.Keys);
+                    funcIndices.Sort();
+                    foreach (var funcIndex in funcIndices)
+                    {
+                        var func = funcs[funcIndex];
+                        Mix("func");
+                        Mix(func.Index.ToString(CultureInfo.InvariantCulture));
+                        Mix(func.NodePath);
+                        Mix(func.Name);
+                        Mix(func.Sources.ToString(CultureInfo.InvariantCulture));
+                        foreach (var arg in func.Arguments)
+                        {
+                            Mix("arg");
+                            Mix(arg.TypeFullName);
+                            Mix(arg.SubtypeIdentifier ?? "");
+                            Mix(arg.EnumUnderlyingTypeName ?? "");
+                        }
+                    }
+                }
+            }
+
+            // Serializable types, in class-index order
+            var methodIndices = new List<int>(data.StaticMethods.Keys);
+            methodIndices.Sort();
+            foreach (var classIndex in methodIndices)
+            {
+                var method = data.StaticMethods[classIndex];
+                Mix("type");
+                Mix(classIndex.ToString(CultureInfo.InvariantCulture));
+                Mix(method.TypeFullName);
+                Mix(method.MethodType.ToString(CultureInfo.InvariantCulture));
+                Mix(method.IsValueType ? "1" : "0");
+            }
+
+            sb.AppendLine("        /// <summary>");
+            sb.AppendLine("        /// The Nebula version this protocol was generated against, from addons/Nebula/plugin.cfg.");
+            sb.AppendLine("        /// Folded into ProtocolHash, so builds on different Nebula versions never interoperate.");
+            sb.AppendLine("        /// </summary>");
+            sb.AppendLine($"        public const string NebulaVersion = \"{data.NebulaVersion}\";");
+            sb.AppendLine();
+            sb.AppendLine("        /// <summary>");
+            sb.AppendLine("        /// Deterministic hash of the entire protocol (Nebula version, scenes, properties,");
+            sb.AppendLine("        /// functions, serializable types). Used as a connection handshake");
+            sb.AppendLine("        /// token: clients whose hash differs from the server's are rejected.");
+            sb.AppendLine("        /// </summary>");
+            sb.AppendLine($"        public const ulong ProtocolHash = 0x{hash.ToString("X16", CultureInfo.InvariantCulture)}UL;");
+            sb.AppendLine();
         }
 
         private static void EmitStaticMethods(StringBuilder sb, ProtocolData data)
@@ -497,8 +638,8 @@ namespace Nebula.Generators
             sb.AppendLine("        /// <summary>Delegate for reflection-free network serialization. Returns true if data was written.</summary>");
             sb.AppendLine("        public delegate bool NetworkSerializeFunc(WorldRunner world, NetPeer peer, ref PropertyCache cache, NetBuffer buffer, int maxBytes);");
             sb.AppendLine();
-            sb.AppendLine("        /// <summary>Delegate for peer acknowledgment callback on INetSerializable types.</summary>");
-            sb.AppendLine("        public delegate void OnPeerAcknowledgeFunc(object obj, UUID peerId);");
+            sb.AppendLine("        /// <summary>Delegate for peer acknowledgment callback on INetSerializable types. Tick is the acknowledged tick.</summary>");
+            sb.AppendLine("        public delegate void OnPeerAcknowledgeFunc(object obj, UUID peerId, Tick tick);");
             sb.AppendLine();
             sb.AppendLine("        /// <summary>Delegate for peer disconnect callback on INetSerializable types.</summary>");
             sb.AppendLine("        public delegate void OnPeerDisconnectedFunc(object obj, UUID peerId);");
@@ -653,19 +794,19 @@ namespace Nebula.Generators
                     continue;
                 
                 var methodName = $"OnPeerAcknowledge_{kvp.Key}";
-                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId)");
-                sb.AppendLine($"            => {typeName}.OnPeerAcknowledge(({typeName})obj, peerId);");
+                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId, Tick tick)");
+                sb.AppendLine($"            => {typeName}.OnPeerAcknowledge(({typeName})obj, peerId, tick);");
                 sb.AppendLine();
             }
-            
+
             // Emit OnPeerAcknowledge for concrete generic types (reference types only)
             foreach (var (classIndex, concreteType, isValueType) in concreteGenerics)
             {
                 if (isValueType) continue;
-                
+
                 var methodName = $"OnPeerAcknowledge_{classIndex}";
-                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId)");
-                sb.AppendLine($"            => {concreteType}.OnPeerAcknowledge(({concreteType})obj, peerId);");
+                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId, Tick tick)");
+                sb.AppendLine($"            => {concreteType}.OnPeerAcknowledge(({concreteType})obj, peerId, tick);");
                 sb.AppendLine();
             }
             

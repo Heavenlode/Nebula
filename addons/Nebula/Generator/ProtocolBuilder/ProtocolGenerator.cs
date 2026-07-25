@@ -291,7 +291,76 @@ namespace Nebula.Generators
                 }
             }
 
+            RegisterConcreteGenericTypes(data);
+
             return data;
+        }
+
+        /// <summary>
+        /// Registers each distinct CONCRETE generic instantiation (e.g. NetArray&lt;Vector3&gt;) as its
+        /// own serializable type with a unique class index, and repoints the properties that use it.
+        ///
+        /// Why: a property whose type is a concrete generic is resolved by <see cref="LookupClassIndex"/>
+        /// to the OPEN generic's single class index (NetArray&lt;T&gt;). Without this, every element type
+        /// shares one index → one serializer, and a second element type is dispatched through the wrong
+        /// serializer (InvalidCastException). Giving each concrete type its own index makes the existing
+        /// StaticMethods-walking emitters generate a correct serializer per element type.
+        ///
+        /// Deterministic: concrete types are sorted by name before index assignment so server and client
+        /// (which compile the same protocol) derive identical indices — the handshake hash folds in both
+        /// prop.ClassIndex and the StaticMethods entries.
+        /// </summary>
+        private static void RegisterConcreteGenericTypes(ProtocolData data)
+        {
+            // Find concrete-generic properties that fell back to an OPEN generic index, and the open
+            // generic they resolved to (whose MethodType/IsValueType the concrete type inherits).
+            var concreteToOpen = new Dictionary<string, SerializableMethodData>();
+            foreach (var sceneProps in data.PropertiesLookup.Values)
+            {
+                foreach (var prop in sceneProps.Values)
+                {
+                    if (prop.ClassIndex < 0) continue;
+                    if (!data.StaticMethods.TryGetValue(prop.ClassIndex, out var resolved)) continue;
+                    if (!CodeEmitter.IsOpenGenericType(resolved.TypeFullName)) continue; // resolved to the open generic
+
+                    var concrete = prop.TypeFullName;
+                    if (string.IsNullOrEmpty(concrete) || concrete.IndexOf('<') < 0 || CodeEmitter.IsOpenGenericType(concrete))
+                        continue; // property type must itself be a concrete generic
+
+                    concreteToOpen[concrete] = resolved;
+                }
+            }
+
+            if (concreteToOpen.Count == 0)
+                return;
+
+            // Deterministic assignment: sort by name, continue the class-index counter.
+            var sortedConcrete = new List<string>(concreteToOpen.Keys);
+            sortedConcrete.Sort(System.StringComparer.Ordinal);
+            var nextIndex = data.StaticMethods.Count == 0 ? 0 : data.StaticMethods.Keys.Max() + 1;
+
+            var concreteToIndex = new Dictionary<string, int>();
+            foreach (var concrete in sortedConcrete)
+            {
+                var openGen = concreteToOpen[concrete];
+                data.StaticMethods[nextIndex] = new SerializableMethodData
+                {
+                    MethodType = openGen.MethodType,
+                    TypeFullName = concrete,
+                    IsValueType = openGen.IsValueType
+                };
+                data.SerialTypePack[concrete] = nextIndex;
+                concreteToIndex[concrete] = nextIndex;
+                nextIndex++;
+            }
+
+            // Repoint every property using a now-registered concrete type. PropertyData is a shared
+            // reference, so patching via PropertiesLookup also updates PropertiesMap /
+            // PropertiesByStaticChildId (same objects) and the protocol hash (reads prop.ClassIndex).
+            foreach (var sceneProps in data.PropertiesLookup.Values)
+                foreach (var prop in sceneProps.Values)
+                    if (concreteToIndex.TryGetValue(prop.TypeFullName, out var concreteIndex))
+                        prop.ClassIndex = concreteIndex;
         }
 
         private static SceneBytecode GenerateSceneBytecode(

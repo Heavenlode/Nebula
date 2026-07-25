@@ -81,6 +81,7 @@ namespace Nebula.Serialization
         {
             return value switch
             {
+                bool bl => bl,
                 int i => i,
                 float f => (double)f,
                 byte b => (int)b,
@@ -219,6 +220,11 @@ namespace Nebula.Serialization
         /// </summary>
         private static T BsonToElement<T>(BsonValue value) where T : struct
         {
+            if (typeof(T) == typeof(bool))
+            {
+                var v = value.AsBoolean;
+                return Unsafe.As<bool, T>(ref v);
+            }
             if (typeof(T) == typeof(int))
             {
                 var v = value.AsInt32;

@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Script" uid="uid://cu0n2ru5xt41c" path="res://addons/Nebula/Testing/NetSync/NetArraySyncTestConnector.cs" id="1_boot"]
-
-[node name="NetArraySyncBootstrap" type="Node"]
-script = ExtResource("1_boot")

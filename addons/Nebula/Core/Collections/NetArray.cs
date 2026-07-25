@@ -152,7 +152,12 @@ namespace Nebula.Serialization
     public sealed class NetArray<T> : INetSerializable<NetArray<T>>, INetExportAware, IEnumerable<T> where T : struct
     {
         private T[] _data;
-        private ulong[] _dirtyMask; // Bit array for tracking dirty indices
+        // BOOL SPECIALIZATION: when T == bool, elements are bit-packed into _bits (64 bools/word, ~128 B
+        // for 1024) and _data stays null. All bool branches key on `typeof(T) == typeof(bool)`, a JIT
+        // compile-time constant per instantiation, so the branch is eliminated for non-bool T (zero cost)
+        // and the element machinery below is byte-for-byte unchanged.
+        private ulong[] _bits;
+        private ulong[] _dirtyMask; // Bit array for tracking dirty indices (per-element, valid for bool too)
         private int _length;
         private bool _isFullDirty; // True if entire array needs sync (e.g., after resize)
 
@@ -186,7 +191,10 @@ namespace Nebula.Serialization
             if (initialLength < 0 || initialLength > capacity)
                 throw new ArgumentOutOfRangeException(nameof(initialLength), "Initial length must be between 0 and capacity");
 
-            _data = new T[capacity];
+            if (typeof(T) == typeof(bool))
+                _bits = new ulong[(capacity + 63) / 64];
+            else
+                _data = new T[capacity];
             _dirtyMask = new ulong[(capacity + 63) / 64]; // Round up to nearest 64-bit block
             _length = initialLength;
             _isFullDirty = initialLength > 0; // Mark dirty if we have initial data
@@ -200,11 +208,24 @@ namespace Nebula.Serialization
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            _data = new T[source.Length];
-            Array.Copy(source, _data, source.Length);
             _dirtyMask = new ulong[(source.Length + 63) / 64];
             _length = source.Length;
             _isFullDirty = true; // Mark all as dirty for initial sync
+
+            if (typeof(T) == typeof(bool))
+            {
+                _bits = new ulong[(source.Length + 63) / 64];
+                for (int i = 0; i < source.Length; i++)
+                {
+                    if (Unsafe.As<T, bool>(ref source[i]))
+                        _bits[i >> 6] |= 1UL << (i & 63);
+                }
+            }
+            else
+            {
+                _data = new T[source.Length];
+                Array.Copy(source, _data, source.Length);
+            }
         }
 
         /// <summary>
@@ -215,7 +236,7 @@ namespace Nebula.Serialization
         /// <summary>
         /// Maximum capacity of the array.
         /// </summary>
-        public int Capacity => _data.Length;
+        public int Capacity => typeof(T) == typeof(bool) ? _bits.Length * 64 : _data.Length;
 
         /// <summary>
         /// Gets or sets an element at the specified index.
@@ -228,6 +249,11 @@ namespace Nebula.Serialization
             {
                 if ((uint)index >= (uint)_length)
                     throw new IndexOutOfRangeException($"Index {index} out of range [0, {_length})");
+                if (typeof(T) == typeof(bool))
+                {
+                    bool b = (_bits[index >> 6] & (1UL << (index & 63))) != 0;
+                    return Unsafe.As<bool, T>(ref b);
+                }
                 return _data[index];
             }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -235,6 +261,19 @@ namespace Nebula.Serialization
             {
                 if ((uint)index >= (uint)_length)
                     throw new IndexOutOfRangeException($"Index {index} out of range [0, {_length})");
+
+                if (typeof(T) == typeof(bool))
+                {
+                    bool nv = Unsafe.As<T, bool>(ref value);
+                    int w = index >> 6;
+                    ulong m = 1UL << (index & 63);
+                    if (((_bits[w] & m) != 0) != nv) // only mark dirty on real change
+                    {
+                        if (nv) _bits[w] |= m; else _bits[w] &= ~m;
+                        MarkDirty(index);
+                    }
+                    return;
+                }
 
                 // Only mark dirty if value actually changed
                 if (!EqualityComparer<T>.Default.Equals(_data[index], value))
@@ -255,7 +294,10 @@ namespace Nebula.Serialization
             if ((uint)index >= (uint)_length)
                 throw new IndexOutOfRangeException($"Index {index} out of range [0, {_length})");
 
-            _data[index] = value;
+            if (typeof(T) == typeof(bool))
+                WriteBit(index, Unsafe.As<T, bool>(ref value));
+            else
+                _data[index] = value;
             MarkDirty(index);
         }
 
@@ -264,10 +306,13 @@ namespace Nebula.Serialization
         /// </summary>
         public void Add(T item)
         {
-            if (_length >= _data.Length)
-                throw new InvalidOperationException($"Array is at capacity ({_data.Length})");
+            if (_length >= Capacity)
+                throw new InvalidOperationException($"Array is at capacity ({Capacity})");
 
-            _data[_length] = item;
+            if (typeof(T) == typeof(bool))
+                WriteBit(_length, Unsafe.As<T, bool>(ref item));
+            else
+                _data[_length] = item;
             MarkDirty(_length);
             _length++;
             _isFullDirty = true; // Length changed
@@ -280,7 +325,7 @@ namespace Nebula.Serialization
         /// </summary>
         public void SetLength(int newLength)
         {
-            if (newLength < 0 || newLength > _data.Length)
+            if (newLength < 0 || newLength > Capacity)
                 throw new ArgumentOutOfRangeException(nameof(newLength));
 
             if (newLength != _length)
@@ -288,7 +333,10 @@ namespace Nebula.Serialization
                 // Clear removed elements
                 if (newLength < _length)
                 {
-                    Array.Clear(_data, newLength, _length - newLength);
+                    if (typeof(T) == typeof(bool))
+                        ClearBitRange(newLength, _length);
+                    else
+                        Array.Clear(_data, newLength, _length - newLength);
                 }
 
                 _length = newLength;
@@ -303,7 +351,10 @@ namespace Nebula.Serialization
         {
             if (_length > 0)
             {
-                Array.Clear(_data, 0, _length);
+                if (typeof(T) == typeof(bool))
+                    Array.Clear(_bits, 0, _bits.Length);
+                else
+                    Array.Clear(_data, 0, _length);
                 Array.Clear(_dirtyMask, 0, _dirtyMask.Length);
                 _length = 0;
                 _isFullDirty = true;
@@ -313,13 +364,20 @@ namespace Nebula.Serialization
         /// <summary>
         /// Gets a span of the current elements (read-only access, doesn't mark dirty).
         /// </summary>
-        public ReadOnlySpan<T> AsSpan() => _data.AsSpan(0, _length);
+        public ReadOnlySpan<T> AsSpan()
+        {
+            if (typeof(T) == typeof(bool))
+                throw new NotSupportedException("AsSpan is not supported for NetArray<bool> (bit-packed); use the indexer.");
+            return _data.AsSpan(0, _length);
+        }
 
         /// <summary>
         /// Copies elements to a destination array.
         /// </summary>
         public void CopyTo(T[] destination, int startIndex = 0)
         {
+            if (typeof(T) == typeof(bool))
+                throw new NotSupportedException("CopyTo is not supported for NetArray<bool> (bit-packed); use the indexer.");
             Array.Copy(_data, 0, destination, startIndex, _length);
         }
 
@@ -332,9 +390,36 @@ namespace Nebula.Serialization
         {
             if ((uint)index < (uint)_length)
             {
-                _data[index] = value;
+                if (typeof(T) == typeof(bool))
+                    WriteBit(index, Unsafe.As<T, bool>(ref value));
+                else
+                    _data[index] = value;
             }
         }
+
+        #region Bit Backing (bool only)
+
+        // These operate on the packed _bits store; only ever called when T == bool.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool ReadBit(int index) => (_bits[index >> 6] & (1UL << (index & 63))) != 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void WriteBit(int index, bool value)
+        {
+            int w = index >> 6;
+            ulong m = 1UL << (index & 63);
+            if (value) _bits[w] |= m; else _bits[w] &= ~m;
+        }
+
+        // Clears bits in [from, to). Word-aligned interior clears could be bulkier, but this only runs on
+        // resize/shrink (cold path).
+        private void ClearBitRange(int from, int to)
+        {
+            for (int i = from; i < to; i++)
+                _bits[i >> 6] &= ~(1UL << (i & 63));
+        }
+
+        #endregion
 
         #region Dirty Tracking
 
@@ -431,6 +516,15 @@ namespace Nebula.Serialization
 
         public IEnumerator<T> GetEnumerator()
         {
+            if (typeof(T) == typeof(bool))
+            {
+                for (int i = 0; i < _length; i++)
+                {
+                    bool b = ReadBit(i);
+                    yield return Unsafe.As<bool, T>(ref b);
+                }
+                yield break;
+            }
             for (int i = 0; i < _length; i++)
                 yield return _data[i];
         }
@@ -496,7 +590,7 @@ namespace Nebula.Serialization
             // Merge global dirty bits into this peer's pending set. Every connected peer
             // is exported each tick, so each absorbs the bits before OnExportComplete
             // clears the global mask at end of tick.
-            obj.MergeDirtyIntoPending(ref state);
+            obj.MergeDirtyIntoPending(ref state, currentTick);
 
             // Check if we need to restart initial sync (array was resized or marked for full sync)
             if (state.InitialSyncComplete && (obj._length != state.LastSyncedLength || obj._isFullDirty))
@@ -508,6 +602,7 @@ namespace Nebula.Serialization
                 // Full resync supersedes any pending element resends
                 if (state.PendingDirty != null)
                     Array.Clear(state.PendingDirty, 0, state.PendingDirty.Length);
+                state.LastSendTick = -1; // pending queue emptied
             }
 
             // Initial sync not complete - send chunked
@@ -529,8 +624,12 @@ namespace Nebula.Serialization
 
         /// <summary>
         /// ORs the global dirty mask into the peer's pending set (lazy-allocating it).
+        /// Stamps LastSendTick = currentTick whenever it enqueues NEW work: the ack that clears
+        /// PendingDirty gates on this tick, so it must mark when work entered the queue, NOT the last
+        /// resend. Bumping it on every resend (as the writers used to) let the lagging ack never catch
+        /// up, so a changed-once array resent its delta forever.
         /// </summary>
-        private void MergeDirtyIntoPending(ref PeerSyncState state)
+        internal void MergeDirtyIntoPending(ref PeerSyncState state, Tick currentTick)
         {
             bool hasGlobalDirty = false;
             for (int i = 0; i < _dirtyMask.Length; i++)
@@ -544,6 +643,7 @@ namespace Nebula.Serialization
             {
                 state.PendingDirty[i] |= _dirtyMask[i];
             }
+            state.LastSendTick = currentTick; // new bits enqueued this tick
         }
 
         /// <summary>
@@ -583,6 +683,9 @@ namespace Nebula.Serialization
         /// </summary>
         internal static bool WriteChunkedSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, int maxBytes, Tick currentTick)
         {
+            if (typeof(T) == typeof(bool))
+                return WriteChunkedSyncBool(obj, buffer, ref state, maxBytes, currentTick);
+
             // If we have a pending (unacked) chunk, re-send from the acked position
             int startIndex = state.AckedUpToIndex;
             int elementSize = ElementSize;
@@ -681,9 +784,11 @@ namespace Nebula.Serialization
                 }
             }
 
-            // Write dirty resends if any
-            // NOTE: We do NOT clear pending bits here - they are cleared when an ack
-            // covering this send tick arrives. This ensures packet loss recovery works.
+            // Write dirty resends if any.
+            // NOTE: We do NOT clear pending bits here - they are cleared when an ack covering the tick
+            // they were ENQUEUED (MergeDirtyIntoPending stamps LastSendTick) arrives. We must not stamp
+            // LastSendTick here: these bits were already stamped at merge, and re-stamping on every
+            // resend would let the lagging ack never catch up (perpetual resend).
             if (hasDirtyResends)
             {
                 NetWriter.WriteUInt16(buffer, (ushort)dirtyResendCount);
@@ -692,7 +797,6 @@ namespace Nebula.Serialization
                     NetWriter.WriteUInt16(buffer, (ushort)index);
                     WriteElement(buffer, obj._data[index]);
                 }
-                state.LastSendTick = currentTick;
             }
 
             // Mark this chunk as pending (awaiting ack). Gate on the FRONTIER advancing, not entry
@@ -700,9 +804,12 @@ namespace Nebula.Serialization
             // a resend-only send (windowEnd == startIndex) advances nothing (matches dense).
             if (windowEnd > startIndex)
             {
+                // Stamp ChunkSentTick only when the frontier reaches NEW ground; a pure resend of the
+                // same unacked window keeps the original first-send tick so a lagging ack can catch up.
+                bool newGround = windowEnd > state.PendingSyncIndex;
                 state.PendingSyncIndex = windowEnd;
                 state.HasPendingChunk = true;
-                state.ChunkSentTick = currentTick;
+                if (newGround) state.ChunkSentTick = currentTick;
             }
             state.LastSyncedLength = obj._length;
 
@@ -715,8 +822,14 @@ namespace Nebula.Serialization
             return true; // We wrote data
         }
 
-        private static void WriteDeltaSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, Tick currentTick)
+        internal static void WriteDeltaSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, Tick currentTick)
         {
+            if (typeof(T) == typeof(bool))
+            {
+                WriteDeltaSyncBool(obj, buffer, ref state, currentTick);
+                return;
+            }
+
             int pendingCount = CountPendingBits(state.PendingDirty, obj._length);
 
             if (pendingCount == 0)
@@ -752,9 +865,276 @@ namespace Nebula.Serialization
                     mask &= mask - 1; // Clear lowest set bit
                 }
             }
-
-            state.LastSendTick = currentTick;
+            // LastSendTick is stamped at enqueue (MergeDirtyIntoPending), not on this resend.
         }
+
+        #region Bool (bit-packed) Wire Format
+
+        // BOOL SPECIALIZATION of the sync path. Elements are bits; the wire carries 64-bit WORDS, and the
+        // per-peer PeerSyncState frontier (AckedUpToIndex/PendingSyncIndex) counts WORDS here, not elements.
+        // Fast paths: an all-false array sends a header-only window (no words); a fully-populated 1024-bit
+        // array caps at ~130 B; steady-state changes send only the touched words (~10 B each). Unlike the
+        // element path there is no ChunkedWithDelta -- below-frontier changes made during the (typically
+        // single-chunk) initial sync stay in PendingDirty and are flushed by the first delta.
+
+        // Chunked initial sync: a word window [startWord, endWord) written as 8-word groups, each a 1-byte
+        // presence mask followed by the non-zero words it flags. The client zero-fills the window.
+        internal static bool WriteChunkedSyncBool(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, int maxBytes, Tick currentTick)
+        {
+            int startWord = state.AckedUpToIndex;
+            int wordCount = (obj._length + 63) >> 6;
+
+            // Completion keys on the WORD frontier covering the array (the window carries the array length
+            // even when all-false).
+            if (startWord >= wordCount)
+            {
+                state.InitialSyncComplete = true;
+                state.LastSyncedLength = obj._length;
+                return false;
+            }
+
+            // Pick endWord greedily under budget. Fixed header = 1(flags)+4(len)+4(start)+4(end) = 13.
+            // Covering word w costs ~1 mask bit (1 byte per 8 words) + 8 bytes if the word is non-zero.
+            int available = maxBytes - 13;
+            int endWord = startWord;
+            int payloadBytes = 0;
+            for (int w = startWord; w < wordCount; w++)
+            {
+                int windowWords = (w - startWord) + 1;
+                int maskBytes = (windowWords + 7) >> 3;
+                int wordBytes = obj._bits[w] != 0 ? 8 : 0;
+                if (maskBytes + payloadBytes + wordBytes > available && w > startWord)
+                    break;
+                payloadBytes += wordBytes;
+                endWord = w + 1;
+            }
+            if (endWord == startWord) endWord = startWord + 1; // always advance at least one word
+
+            NetWriter.WriteByte(buffer, (byte)NetArraySyncFlags.Chunked);
+            NetWriter.WriteInt32(buffer, obj._length);  // totalLength (bits)
+            NetWriter.WriteInt32(buffer, startWord);
+            NetWriter.WriteInt32(buffer, endWord);
+
+            // 8-word groups: [maskByte][non-zero words...]. Interleaved so the reader is single-pass and
+            // never buffers an attacker-controlled mask length.
+            for (int groupBase = startWord; groupBase < endWord; groupBase += 8)
+            {
+                int groupEnd = Math.Min(groupBase + 8, endWord);
+                byte mask = 0;
+                for (int w = groupBase; w < groupEnd; w++)
+                    if (obj._bits[w] != 0) mask |= (byte)(1 << (w - groupBase));
+                NetWriter.WriteByte(buffer, mask);
+                for (int w = groupBase; w < groupEnd; w++)
+                    if (obj._bits[w] != 0) NetWriter.WriteUInt64(buffer, obj._bits[w]);
+            }
+
+            // Mark chunk pending (awaiting ack). Initial sync completes when an ack covers the frontier
+            // reaching wordCount (see OnPeerAcknowledge), mirroring the element path. Stamp ChunkSentTick
+            // only when the frontier reaches NEW ground; a pure resend of the same unacked window keeps
+            // the original first-send tick so a lagging ack can catch up.
+            bool newGround = endWord > state.PendingSyncIndex;
+            state.PendingSyncIndex = endWord;
+            state.HasPendingChunk = true;
+            if (newGround) state.ChunkSentTick = currentTick;
+            state.LastSyncedLength = obj._length;
+            return true;
+        }
+
+        // Delta: only words that have a pending-dirty bit, sent whole as (wordIndex, word).
+        internal static void WriteDeltaSyncBool(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, Tick currentTick)
+        {
+            int wordCount = (obj._length + 63) >> 6;
+            int pendingLen = state.PendingDirty?.Length ?? 0;
+
+            int changedWords = 0;
+            for (int w = 0; w < wordCount && w < pendingLen; w++)
+                if (state.PendingDirty[w] != 0) changedWords++;
+
+            NetWriter.WriteByte(buffer, (byte)NetArraySyncFlags.Delta);
+            NetWriter.WriteUInt16(buffer, (ushort)Math.Min(changedWords, ushort.MaxValue));
+
+            int written = 0;
+            for (int w = 0; w < wordCount && w < pendingLen && written < changedWords; w++)
+            {
+                if (state.PendingDirty[w] == 0) continue;
+                NetWriter.WriteUInt16(buffer, (ushort)w);
+                NetWriter.WriteUInt64(buffer, obj._bits[w]);
+                written++;
+            }
+            // LastSendTick is stamped at enqueue (MergeDirtyIntoPending), not on this resend.
+        }
+
+        // Creates/resizes the client array to hold totalLength bits (mirrors the element read helpers).
+        private static NetArray<T> GetOrCreateBoolResult(NetArray<T> existing, int totalLength)
+        {
+            if (existing == null || existing.Capacity < totalLength)
+                return new NetArray<T>(Math.Max(totalLength, 64), totalLength);
+
+            NetArray<T> result = existing;
+            if (result._length != totalLength)
+            {
+                if (totalLength < result._length)
+                    result.ClearBitRange(totalLength, result._length);
+                result._length = totalLength;
+            }
+            return result;
+        }
+
+        internal static NetArray<T> ReadChunkedSyncBool(NetBuffer buffer, NetArray<T> existing)
+        {
+            int totalLength = NetReader.ReadInt32(buffer);  // bits
+            int startWord = NetReader.ReadInt32(buffer);
+            int endWord = NetReader.ReadInt32(buffer);
+
+            int totalWords = (totalLength + 63) >> 6;
+            if (totalLength < 0 || startWord < 0 || endWord < startWord || endWord > totalWords)
+                return existing ?? new NetArray<T>(64);
+
+            // Capture deleted values (shrink) before resizing.
+            int existingLength = existing?._length ?? 0;
+            T[] deletedValues = Array.Empty<T>();
+            if (existing != null && existingLength > totalLength)
+            {
+                int deleteCount = existingLength - totalLength;
+                deletedValues = new T[deleteCount];
+                for (int i = 0; i < deleteCount; i++)
+                {
+                    bool b = existing.ReadBit(totalLength + i);
+                    deletedValues[i] = Unsafe.As<bool, T>(ref b);
+                }
+            }
+
+            // Original populated length distinguishes "added" (>= it) from "changed" (< it).
+            int originalPopulatedLength;
+            if (startWord == 0)
+                originalPopulatedLength = existing?._length ?? 0;
+            else if (existing != null && existing._clientReceivedUpTo >= 0)
+                originalPopulatedLength = existing._clientReceivedUpTo;
+            else
+                originalPopulatedLength = existing?._length ?? 0;
+
+            NetArray<T> result = GetOrCreateBoolResult(existing, totalLength);
+            if (startWord == 0) result._clientReceivedUpTo = originalPopulatedLength;
+
+            var changedList = new List<int>();
+            var addedList = new List<T>();
+
+            // Apply 8-word groups; diff old vs new per word to build change-info. Setting every window word
+            // to its received value (0 for non-flagged words) is equivalent to zero-fill + apply.
+            for (int groupBase = startWord; groupBase < endWord; groupBase += 8)
+            {
+                int groupEnd = Math.Min(groupBase + 8, endWord);
+                byte mask = NetReader.ReadByte(buffer);
+                for (int w = groupBase; w < groupEnd; w++)
+                {
+                    ulong newWord = ((mask >> (w - groupBase)) & 1) != 0 ? NetReader.ReadUInt64(buffer) : 0UL;
+                    ulong oldWord = result._bits[w];
+                    if (oldWord == newWord) continue;
+                    result._bits[w] = newWord;
+
+                    ulong diff = oldWord ^ newWord;
+                    while (diff != 0)
+                    {
+                        int bit = BitOperations.TrailingZeroCount(diff);
+                        diff &= diff - 1;
+                        int index = (w << 6) + bit;
+                        if (index >= result._length) continue;
+                        if (index >= originalPopulatedLength)
+                        {
+                            bool nv = (newWord & (1UL << bit)) != 0;
+                            addedList.Add(Unsafe.As<bool, T>(ref nv));
+                        }
+                        else
+                        {
+                            changedList.Add(index);
+                        }
+                    }
+                }
+            }
+
+            if (endWord >= totalWords)
+                result._clientReceivedUpTo = -1;
+
+            result.LastChangeInfo = new NetArrayChangeInfo<T>(
+                deletedValues,
+                changedList.Count > 0 ? changedList.ToArray() : Array.Empty<int>(),
+                addedList.Count > 0 ? addedList.ToArray() : Array.Empty<T>()
+            );
+            result.ClearDirty();
+            return result;
+        }
+
+        private static NetArray<T> ReadDeltaSyncBool(NetBuffer buffer, NetArray<T> existing)
+        {
+            int changedWords = NetReader.ReadUInt16(buffer);
+
+            if (existing == null)
+            {
+                for (int i = 0; i < changedWords; i++)
+                {
+                    NetReader.ReadUInt16(buffer);
+                    NetReader.ReadUInt64(buffer);
+                }
+                var empty = new NetArray<T>(64);
+                empty.LastChangeInfo = NetArrayChangeInfo<T>.Empty;
+                return empty;
+            }
+
+            var changedList = new List<int>();
+            for (int i = 0; i < changedWords; i++)
+            {
+                int w = NetReader.ReadUInt16(buffer);
+                ulong newWord = NetReader.ReadUInt64(buffer);
+                if ((uint)w >= (uint)existing._bits.Length) continue;
+
+                ulong oldWord = existing._bits[w];
+                if (oldWord == newWord) continue;
+                existing._bits[w] = newWord;
+
+                ulong diff = oldWord ^ newWord;
+                while (diff != 0)
+                {
+                    int bit = BitOperations.TrailingZeroCount(diff);
+                    diff &= diff - 1;
+                    int index = (w << 6) + bit;
+                    if (index < existing._length) changedList.Add(index);
+                }
+            }
+
+            existing.LastChangeInfo = new NetArrayChangeInfo<T>(
+                Array.Empty<T>(),
+                changedList.Count > 0 ? changedList.ToArray() : Array.Empty<int>(),
+                Array.Empty<T>());
+            return existing;
+        }
+
+        // Bool Full is only emitted for a null array (length 0); it carries no word payload.
+        private static NetArray<T> ReadFullSyncBool(NetBuffer buffer, NetArray<T> existing)
+        {
+            int length = NetReader.ReadInt32(buffer);
+            if (length < 0)
+                return existing ?? new NetArray<T>(64);
+
+            int previousLength = existing?._length ?? 0;
+            T[] deletedValues = Array.Empty<T>();
+            if (existing != null && previousLength > length)
+            {
+                int deleteCount = previousLength - length;
+                deletedValues = new T[deleteCount];
+                for (int i = 0; i < deleteCount; i++)
+                {
+                    bool b = existing.ReadBit(length + i);
+                    deletedValues[i] = Unsafe.As<bool, T>(ref b);
+                }
+            }
+
+            NetArray<T> result = GetOrCreateBoolResult(existing, length); // clears bits on shrink
+            result.LastChangeInfo = new NetArrayChangeInfo<T>(deletedValues, Array.Empty<int>(), Array.Empty<T>());
+            result.ClearDirty();
+            return result;
+        }
+
+        #endregion
 
         /// <summary>
         /// Deserializes the array from the network buffer.
@@ -785,6 +1165,9 @@ namespace Nebula.Serialization
 
         internal static NetArray<T> ReadChunkedSync(NetBuffer buffer, NetArray<T> existing)
         {
+            if (typeof(T) == typeof(bool))
+                return ReadChunkedSyncBool(buffer, existing);
+
             int totalLength = NetReader.ReadInt32(buffer);
             int windowStart = NetReader.ReadInt32(buffer);
             int windowEnd = NetReader.ReadInt32(buffer);
@@ -981,6 +1364,9 @@ namespace Nebula.Serialization
 
         private static NetArray<T> ReadFullSync(NetBuffer buffer, NetArray<T> existing)
         {
+            if (typeof(T) == typeof(bool))
+                return ReadFullSyncBool(buffer, existing);
+
             int length = NetReader.ReadInt32(buffer);
 
             // Validate network data
@@ -1069,6 +1455,9 @@ namespace Nebula.Serialization
 
         private static NetArray<T> ReadDeltaSync(NetBuffer buffer, NetArray<T> existing)
         {
+            if (typeof(T) == typeof(bool))
+                return ReadDeltaSyncBool(buffer, existing);
+
             int count = NetReader.ReadUInt16(buffer);
 
             if (existing == null)
@@ -1127,8 +1516,12 @@ namespace Nebula.Serialization
                 state.AckedUpToIndex = state.PendingSyncIndex;
                 state.HasPendingChunk = false;
 
-                // Check if initial sync is now complete
-                if (state.AckedUpToIndex >= state.LastSyncedLength && state.LastSyncedLength > 0)
+                // Check if initial sync is now complete. For bool the frontier counts WORDS, so the
+                // completion threshold is the word count, not the bit length.
+                int completeThreshold = typeof(T) == typeof(bool)
+                    ? (state.LastSyncedLength + 63) >> 6
+                    : state.LastSyncedLength;
+                if (state.AckedUpToIndex >= completeThreshold && state.LastSyncedLength > 0)
                 {
                     state.InitialSyncComplete = true;
                 }
@@ -1174,6 +1567,11 @@ namespace Nebula.Serialization
             else if (typeof(T) == typeof(byte))
             {
                 NetWriter.WriteByte(buffer, Unsafe.As<T, byte>(ref value));
+            }
+            else if (typeof(T) == typeof(bool))
+            {
+                // Safety fallback only: the bool sync path is word-packed and never routes here.
+                NetWriter.WriteByte(buffer, Unsafe.As<T, bool>(ref value) ? (byte)1 : (byte)0);
             }
             else if (typeof(T) == typeof(long))
             {
@@ -1243,6 +1641,11 @@ namespace Nebula.Serialization
                 byte val = NetReader.ReadByte(buffer);
                 return Unsafe.As<byte, T>(ref val);
             }
+            else if (typeof(T) == typeof(bool))
+            {
+                bool val = NetReader.ReadByte(buffer) != 0; // safety fallback (see WriteElement)
+                return Unsafe.As<bool, T>(ref val);
+            }
             else if (typeof(T) == typeof(long))
             {
                 long val = NetReader.ReadInt64(buffer);
@@ -1311,6 +1714,7 @@ namespace Nebula.Serialization
                 if (typeof(T) == typeof(int)) return 4;
                 if (typeof(T) == typeof(float)) return 4;
                 if (typeof(T) == typeof(byte)) return 1;
+                if (typeof(T) == typeof(bool)) return 1; // safety fallback (bool sync is word-packed)
                 if (typeof(T) == typeof(long)) return 8;
                 if (typeof(T) == typeof(short)) return 2;
                 if (typeof(T) == typeof(Vector2)) return 4; // Half precision

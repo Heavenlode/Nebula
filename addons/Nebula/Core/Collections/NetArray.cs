@@ -27,6 +27,14 @@ namespace Nebula.Serialization
     /// <summary>
     /// Information about what changed in a NetArray during a network update.
     /// Used for NotifyOnChange callbacks on NetArray properties.
+    ///
+    /// SPARSE-SYNC SEMANTICS: for the initial (chunked) sync, this enumerates ONLY the explicitly-sent
+    /// non-default entries. Indices covered by an initial-sync window but left at their default value
+    /// (including an index the server reset from non-default → default) are applied to the array via a
+    /// window zero-fill but are NOT listed in <see cref="ChangedIndices"/>/<see cref="AddedValues"/>.
+    /// A consumer that must observe complete state therefore has to reconcile from the array itself,
+    /// not diff this ChangeInfo — a diff-based handler will miss default-valued and reverted indices.
+    /// Delta (post-initial) syncs are unaffected: they enumerate every changed index as before.
     /// </summary>
     public readonly struct NetArrayChangeInfo<T> where T : struct
     {
@@ -100,23 +108,48 @@ namespace Nebula.Serialization
         /// </summary>
         public bool HasPendingChunk;
 
+        /// <summary>
+        /// Per-peer copy of dirty element bits that have been sent to this peer but not
+        /// yet acknowledged. Global dirty bits are merged in at each export, so a single
+        /// peer's ack can no longer erase resend state that other peers still need.
+        /// Lazily allocated on first merge.
+        /// </summary>
+        public ulong[] PendingDirty;
+
+        /// <summary>
+        /// Tick of the last export that included PendingDirty elements for this peer.
+        /// An ack only clears PendingDirty when it covers this tick — an older ack proves
+        /// nothing about packets still in flight.
+        /// </summary>
+        public Tick LastSendTick;
+
+        /// <summary>
+        /// Tick of the last chunk send. Chunk progress only commits on an ack covering it.
+        /// </summary>
+        public Tick ChunkSentTick;
+
         public static PeerSyncState Create() => new PeerSyncState
         {
             AckedUpToIndex = 0,
             PendingSyncIndex = 0,
             LastSyncedLength = 0,
             InitialSyncComplete = false,
-            HasPendingChunk = false
+            HasPendingChunk = false,
+            PendingDirty = null,
+            LastSendTick = -1,
+            ChunkSentTick = -1
         };
     }
 
     /// <summary>
     /// A network-synchronized array that tracks element-level changes for efficient delta sync.
     /// Only modified indices are sent over the network, significantly reducing bandwidth for large arrays.
-    /// Implements INetPropertyBindable to notify parent NetworkController on internal mutations.
+    /// As an INetSerializable object it owns its per-peer sync state and self-filters each tick, so it
+    /// needs no per-mutation dirty callback; the generator seeds its reference into the property cache
+    /// at init (inline initialization bypasses the property setter).
     /// </summary>
     /// <typeparam name="T">Element type (must be a supported primitive or Godot struct)</typeparam>
-    public sealed class NetArray<T> : INetSerializable<NetArray<T>>, INetPropertyBindable, IEnumerable<T> where T : struct
+    public sealed class NetArray<T> : INetSerializable<NetArray<T>>, INetExportAware, IEnumerable<T> where T : struct
     {
         private T[] _data;
         private ulong[] _dirtyMask; // Bit array for tracking dirty indices
@@ -129,12 +162,6 @@ namespace Nebula.Serialization
         /// Reset to -1 when not in chunked sync.
         /// </summary>
         private int _clientReceivedUpTo = -1;
-
-        /// <summary>
-        /// Callback to notify parent NetworkController when internal state changes.
-        /// Set via BindToNetProperty.
-        /// </summary>
-        private Action _onMutated;
 
         /// <summary>
         /// Per-peer synchronization state. Keyed by peer UUID.
@@ -190,19 +217,6 @@ namespace Nebula.Serialization
         /// </summary>
         public int Capacity => _data.Length;
 
-        #region INetPropertyBindable
-
-        /// <summary>
-        /// Binds a callback to be invoked when internal state changes.
-        /// Called by the source generator when the property is set.
-        /// </summary>
-        public void BindToNetProperty(Action onMutated)
-        {
-            _onMutated = onMutated;
-        }
-
-        #endregion
-
         /// <summary>
         /// Gets or sets an element at the specified index.
         /// Setting marks the index as dirty for network sync.
@@ -227,7 +241,6 @@ namespace Nebula.Serialization
                 {
                     _data[index] = value;
                     MarkDirty(index);
-                    _onMutated?.Invoke();
                 }
             }
         }
@@ -244,7 +257,6 @@ namespace Nebula.Serialization
 
             _data[index] = value;
             MarkDirty(index);
-            _onMutated?.Invoke();
         }
 
         /// <summary>
@@ -259,7 +271,6 @@ namespace Nebula.Serialization
             MarkDirty(_length);
             _length++;
             _isFullDirty = true; // Length changed
-            _onMutated?.Invoke();
         }
 
         /// <summary>
@@ -282,7 +293,6 @@ namespace Nebula.Serialization
 
                 _length = newLength;
                 _isFullDirty = true; // Length changed, need full sync
-                _onMutated?.Invoke();
             }
         }
 
@@ -297,7 +307,6 @@ namespace Nebula.Serialization
                 Array.Clear(_dirtyMask, 0, _dirtyMask.Length);
                 _length = 0;
                 _isFullDirty = true;
-                _onMutated?.Invoke();
             }
         }
 
@@ -369,12 +378,22 @@ namespace Nebula.Serialization
         }
 
         /// <summary>
+        /// Called once per server tick after Export has run for every peer.
+        /// By this point each exported peer has absorbed the global dirty bits into its
+        /// own PendingDirty, so the global set can be cleared. Peers that join later get
+        /// a full chunked sync and don't rely on these bits.
+        /// </summary>
+        public void OnExportComplete()
+        {
+            ClearDirty();
+        }
+
+        /// <summary>
         /// Marks the entire array as needing a full sync.
         /// </summary>
         public void MarkFullDirty()
         {
             _isFullDirty = true;
-            _onMutated?.Invoke();
         }
 
         /// <summary>
@@ -426,7 +445,7 @@ namespace Nebula.Serialization
         /// Gets or creates the sync state for a specific peer.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private ref PeerSyncState GetOrCreatePeerState(UUID peerId)
+        internal ref PeerSyncState GetOrCreatePeerState(UUID peerId)
         {
             _peerState ??= new Dictionary<UUID, PeerSyncState>();
 
@@ -472,6 +491,12 @@ namespace Nebula.Serialization
 
             var peerId = NetRunner.Instance.GetPeerId(peer);
             ref var state = ref obj.GetOrCreatePeerState(peerId);
+            Tick currentTick = currentWorld.CurrentTick;
+
+            // Merge global dirty bits into this peer's pending set. Every connected peer
+            // is exported each tick, so each absorbs the bits before OnExportComplete
+            // clears the global mask at end of tick.
+            obj.MergeDirtyIntoPending(ref state);
 
             // Check if we need to restart initial sync (array was resized or marked for full sync)
             if (state.InitialSyncComplete && (obj._length != state.LastSyncedLength || obj._isFullDirty))
@@ -480,37 +505,96 @@ namespace Nebula.Serialization
                 state.AckedUpToIndex = 0;
                 state.PendingSyncIndex = 0;
                 state.HasPendingChunk = false;
+                // Full resync supersedes any pending element resends
+                if (state.PendingDirty != null)
+                    Array.Clear(state.PendingDirty, 0, state.PendingDirty.Length);
             }
 
             // Initial sync not complete - send chunked
             if (!state.InitialSyncComplete)
             {
-                return WriteChunkedSync(obj, buffer, ref state, maxBytes);
+                return WriteChunkedSync(obj, buffer, ref state, maxBytes, currentTick);
             }
 
-            // Initial sync complete - check if we have dirty elements (individual changes only)
-            if (obj.DirtyCount == 0)
+            // Initial sync complete - check if we have pending elements for this peer
+            if (CountPendingBits(state.PendingDirty, obj._length) == 0)
             {
                 return false; // Nothing to send
             }
 
             // Send delta sync
-            WriteDeltaSync(obj, buffer, ref state);
+            WriteDeltaSync(obj, buffer, ref state, currentTick);
             return true;
         }
 
-        private static bool WriteChunkedSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, int maxBytes)
+        /// <summary>
+        /// ORs the global dirty mask into the peer's pending set (lazy-allocating it).
+        /// </summary>
+        private void MergeDirtyIntoPending(ref PeerSyncState state)
+        {
+            bool hasGlobalDirty = false;
+            for (int i = 0; i < _dirtyMask.Length; i++)
+            {
+                if (_dirtyMask[i] != 0) { hasGlobalDirty = true; break; }
+            }
+            if (!hasGlobalDirty) return;
+
+            state.PendingDirty ??= new ulong[_dirtyMask.Length];
+            for (int i = 0; i < _dirtyMask.Length; i++)
+            {
+                state.PendingDirty[i] |= _dirtyMask[i];
+            }
+        }
+
+        /// <summary>
+        /// Counts set bits within [0, length) in a pending mask. Null mask counts as 0.
+        /// </summary>
+        private static int CountPendingBits(ulong[] mask, int length)
+        {
+            if (mask == null) return 0;
+
+            int count = 0;
+            for (int block = 0; block < mask.Length; block++)
+            {
+                var bits = mask[block];
+                int maxBitInBlock = Math.Min(64, length - block * 64);
+                if (maxBitInBlock <= 0) break;
+                if (maxBitInBlock < 64)
+                {
+                    bits &= (1UL << maxBitInBlock) - 1;
+                }
+                count += BitOperations.PopCount(bits);
+            }
+            return count;
+        }
+
+        // Cached comparer for the sparse initial-sync default test (mirrors the indexer setter's use).
+        private static readonly EqualityComparer<T> _defaultComparer = EqualityComparer<T>.Default;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsDefault(T value) => _defaultComparer.Equals(value, default);
+
+        /// <summary>
+        /// SPARSE initial sync. A chunk still advances a contiguous array-index frontier
+        /// (<see cref="PeerSyncState.AckedUpToIndex"/> → <c>windowEnd</c>), so the ack machinery is
+        /// unchanged, but within the covered window <c>[startIndex, windowEnd)</c> only the
+        /// non-default elements are transmitted as (index, value) pairs; the client zero-fills the
+        /// window. An all-default array collapses to a single header-only window (zero entries).
+        /// </summary>
+        internal static bool WriteChunkedSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, int maxBytes, Tick currentTick)
         {
             // If we have a pending (unacked) chunk, re-send from the acked position
             int startIndex = state.AckedUpToIndex;
             int elementSize = ElementSize;
 
-            // First, collect dirty indices BELOW startIndex (already sent in previous chunks)
-            // These need to be re-sent as delta updates
+            // First, collect pending indices BELOW startIndex (already sent in previous chunks)
+            // These need to be re-sent as delta updates. Reads this PEER's pending set, not
+            // the global dirty mask, so other peers' acks can't erase them.
             List<int> dirtyResendIndices = null;
-            for (int block = 0; block < obj._dirtyMask.Length; block++)
+            int pendingBlockCount = state.PendingDirty?.Length ?? 0;
+            for (int block = 0; block < pendingBlockCount; block++)
             {
-                var mask = obj._dirtyMask[block];
+                var mask = state.PendingDirty[block];
                 if (mask == 0) continue;
 
                 int baseIndex = block * 64;
@@ -532,40 +616,74 @@ namespace Nebula.Serialization
             int dirtyResendCount = dirtyResendIndices?.Count ?? 0;
             bool hasDirtyResends = dirtyResendCount > 0;
 
-            // Calculate how many elements fit in the budget
-            // Header for Chunked: 1 (flags) + 4 (total length) + 4 (start index) + 2 (chunk count) = 11 bytes
-            // Additional for ChunkedWithDelta: 2 (delta count) + (2 + elementSize) per delta entry
-            int headerSize = hasDirtyResends ? 13 : 11; // +2 for delta count if needed
-            int deltaBytes = hasDirtyResends ? dirtyResendCount * (2 + elementSize) : 0;
+            // Budget in ENTRIES (index + value), not dense elements.
+            // Sparse Chunked header: 1(flags)+4(totalLength)+4(windowStart)+4(windowEnd)+2(entryCount) = 15.
+            // ChunkedWithDelta adds 2(resendCount) = 17, plus (2 + elementSize) per resend entry.
+            int entrySize = 2 + elementSize;
+            int headerSize = hasDirtyResends ? 17 : 15;
+            int deltaBytes = hasDirtyResends ? dirtyResendCount * entrySize : 0;
             int availableBytes = maxBytes - headerSize - deltaBytes;
-            int maxElements = Math.Max(1, availableBytes / elementSize);
-            int elementsToSend = Math.Min(maxElements, obj._length - startIndex);
+            int maxEntries = Math.Max(1, availableBytes / entrySize);
 
-            if (elementsToSend <= 0 && !hasDirtyResends)
+            // Completion keys on the FRONTIER, not entry count: a length-N all-default array has zero
+            // entries but must still send its covering window (the only carrier of the array length).
+            if (startIndex >= obj._length && !hasDirtyResends)
             {
-                // We've sent everything, mark as complete
                 state.InitialSyncComplete = true;
                 state.LastSyncedLength = obj._length;
-                return false; // Nothing to send
+                return false; // Truly nothing left to cover
+            }
+
+            // Pass 1 (count, allocation-free): non-default entries from startIndex up to the budget,
+            // then extend windowEnd greedily over the trailing default run (free -- zero payload).
+            int entryCount = 0;
+            int windowEnd = startIndex;
+            {
+                int i = startIndex;
+                for (; i < obj._length && entryCount < maxEntries; i++)
+                {
+                    if (!IsDefault(obj._data[i]))
+                    {
+                        entryCount++;
+                        windowEnd = i + 1;
+                    }
+                }
+                if (entryCount < maxEntries)
+                {
+                    // Ran off the end without filling the budget -> cover everything remaining.
+                    windowEnd = obj._length;
+                }
+                else
+                {
+                    // Budget filled -> extend the window over any immediately-following defaults.
+                    int j = windowEnd;
+                    while (j < obj._length && IsDefault(obj._data[j])) j++;
+                    windowEnd = j;
+                }
             }
 
             // Write header - use ChunkedWithDelta if we have dirty resends
             var flags = hasDirtyResends ? NetArraySyncFlags.ChunkedWithDelta : NetArraySyncFlags.Chunked;
             NetWriter.WriteByte(buffer, (byte)flags);
-            NetWriter.WriteInt32(buffer, obj._length);
-            NetWriter.WriteInt32(buffer, startIndex);
-            NetWriter.WriteUInt16(buffer, (ushort)elementsToSend);
+            NetWriter.WriteInt32(buffer, obj._length);  // totalLength
+            NetWriter.WriteInt32(buffer, startIndex);   // windowStart
+            NetWriter.WriteInt32(buffer, windowEnd);    // windowEnd (client zero-fills [windowStart, windowEnd))
+            NetWriter.WriteUInt16(buffer, (ushort)entryCount);
 
-            // Write chunk elements
-            for (int i = 0; i < elementsToSend; i++)
+            // Pass 2 (write): only the non-default elements in the window, each with its index.
+            // The two passes see the same immutable _data, so the count matches exactly.
+            for (int i = startIndex; i < windowEnd; i++)
             {
-                WriteElement(buffer, obj._data[startIndex + i]);
+                if (!IsDefault(obj._data[i]))
+                {
+                    NetWriter.WriteUInt16(buffer, (ushort)i);
+                    WriteElement(buffer, obj._data[i]);
+                }
             }
 
             // Write dirty resends if any
-            // NOTE: We do NOT clear dirty bits here - they will be cleared by ClearDirty() 
-            // when the peer acks. This ensures packet loss recovery works and other peers
-            // (if any) still receive delta updates.
+            // NOTE: We do NOT clear pending bits here - they are cleared when an ack
+            // covering this send tick arrives. This ensures packet loss recovery works.
             if (hasDirtyResends)
             {
                 NetWriter.WriteUInt16(buffer, (ushort)dirtyResendCount);
@@ -574,13 +692,17 @@ namespace Nebula.Serialization
                     NetWriter.WriteUInt16(buffer, (ushort)index);
                     WriteElement(buffer, obj._data[index]);
                 }
+                state.LastSendTick = currentTick;
             }
 
-            // Mark this chunk as pending (awaiting ack)
-            if (elementsToSend > 0)
+            // Mark this chunk as pending (awaiting ack). Gate on the FRONTIER advancing, not entry
+            // count -- a zero-entry all-default window still advances windowEnd and must be tracked;
+            // a resend-only send (windowEnd == startIndex) advances nothing (matches dense).
+            if (windowEnd > startIndex)
             {
-                state.PendingSyncIndex = startIndex + elementsToSend;
+                state.PendingSyncIndex = windowEnd;
                 state.HasPendingChunk = true;
+                state.ChunkSentTick = currentTick;
             }
             state.LastSyncedLength = obj._length;
 
@@ -593,11 +715,11 @@ namespace Nebula.Serialization
             return true; // We wrote data
         }
 
-        private static void WriteDeltaSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state)
+        private static void WriteDeltaSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, Tick currentTick)
         {
-            int dirtyCount = obj.DirtyCount;
+            int pendingCount = CountPendingBits(state.PendingDirty, obj._length);
 
-            if (dirtyCount == 0)
+            if (pendingCount == 0)
             {
                 // No changes - write empty delta
                 NetWriter.WriteByte(buffer, (byte)NetArraySyncFlags.Delta);
@@ -607,17 +729,17 @@ namespace Nebula.Serialization
 
             // Write delta header
             NetWriter.WriteByte(buffer, (byte)NetArraySyncFlags.Delta);
-            NetWriter.WriteUInt16(buffer, (ushort)Math.Min(dirtyCount, ushort.MaxValue));
+            NetWriter.WriteUInt16(buffer, (ushort)Math.Min(pendingCount, ushort.MaxValue));
 
-            // Write changed indices and values - iterate without LINQ
+            // Write this peer's pending indices and values - iterate without LINQ
             int written = 0;
-            for (int block = 0; block < obj._dirtyMask.Length && written < dirtyCount; block++)
+            for (int block = 0; block < state.PendingDirty.Length && written < pendingCount; block++)
             {
-                var mask = obj._dirtyMask[block];
+                var mask = state.PendingDirty[block];
                 if (mask == 0) continue;
 
                 int baseIndex = block * 64;
-                while (mask != 0 && written < dirtyCount)
+                while (mask != 0 && written < pendingCount)
                 {
                     int bit = BitOperations.TrailingZeroCount(mask);
                     int index = baseIndex + bit;
@@ -630,6 +752,8 @@ namespace Nebula.Serialization
                     mask &= mask - 1; // Clear lowest set bit
                 }
             }
+
+            state.LastSendTick = currentTick;
         }
 
         /// <summary>
@@ -659,37 +783,27 @@ namespace Nebula.Serialization
             }
         }
 
-        private static NetArray<T> ReadChunkedSync(NetBuffer buffer, NetArray<T> existing)
+        internal static NetArray<T> ReadChunkedSync(NetBuffer buffer, NetArray<T> existing)
         {
             int totalLength = NetReader.ReadInt32(buffer);
-            int startIndex = NetReader.ReadInt32(buffer);
-            int chunkCount = NetReader.ReadUInt16(buffer);
+            int windowStart = NetReader.ReadInt32(buffer);
+            int windowEnd = NetReader.ReadInt32(buffer);
+            int entryCount = NetReader.ReadUInt16(buffer);
 
-            // Validate network data to prevent crashes from corrupted packets
-            if (totalLength < 0 || startIndex < 0 || chunkCount < 0)
+            // Validate network data to prevent crashes from corrupted packets.
+            if (totalLength < 0 || windowStart < 0 || windowEnd < windowStart || windowEnd > totalLength || entryCount < 0)
             {
                 return existing ?? new NetArray<T>(64);
             }
 
-            // For determining "added" vs "changed", we need to know the ORIGINAL length
-            // before any chunks in this sync were received. Use _clientReceivedUpTo to track this.
-            // If startIndex == 0, this is the first chunk - capture the original state.
+            // For "added" vs "changed", we need the ORIGINAL length before this sync's first window.
             int originalPopulatedLength;
-            if (startIndex == 0)
-            {
-                // First chunk - capture the true previous length
+            if (windowStart == 0)
                 originalPopulatedLength = existing?.Length ?? 0;
-            }
             else if (existing != null && existing._clientReceivedUpTo >= 0)
-            {
-                // Continuation chunk - use the tracked original length
                 originalPopulatedLength = existing._clientReceivedUpTo;
-            }
             else
-            {
-                // Fallback (shouldn't happen normally)
                 originalPopulatedLength = existing?.Length ?? 0;
-            }
 
             // Capture deleted values before they're removed (if array is shrinking)
             T[] deletedValues = Array.Empty<T>();
@@ -699,189 +813,43 @@ namespace Nebula.Serialization
                 int deleteCount = existingLength - totalLength;
                 deletedValues = new T[deleteCount];
                 for (int i = 0; i < deleteCount; i++)
-                {
                     deletedValues[i] = existing._data[totalLength + i];
-                }
             }
 
             // Create or resize array as needed
             NetArray<T> result;
             if (existing == null || existing.Capacity < totalLength)
             {
-                // Create with totalLength as initial length (not 0)
                 result = new NetArray<T>(Math.Max(totalLength, 64), totalLength);
             }
             else
             {
                 result = existing;
-                // Set length (this may shrink or grow the array)
-                // Do this without triggering _onMutated since this is from network
                 if (result._length != totalLength)
                 {
                     if (totalLength < result._length)
-                    {
                         Array.Clear(result._data, totalLength, result._length - totalLength);
-                    }
                     result._length = totalLength;
                 }
             }
 
-            // Track the original populated length for subsequent chunks
-            if (startIndex == 0)
-            {
+            if (windowStart == 0)
                 result._clientReceivedUpTo = originalPopulatedLength;
-            }
 
-            // Track changed indices and added values - pre-allocate to avoid List resizing
-            int changedCount = 0;
-            int addedCount = 0;
+            // Zero-fill the covered window UNCONDITIONALLY: the window declares [windowStart, windowEnd)
+            // default except for the sparse entries below, so any index the server reset to default
+            // (or never set) must be cleared here -- sparse only carries non-defaults.
+            if (windowEnd > windowStart)
+                Array.Clear(result._data, windowStart, windowEnd - windowStart);
 
-            // First pass: count using originalPopulatedLength (not current _length)
-            for (int i = 0; i < chunkCount; i++)
-            {
-                int index = startIndex + i;
-                if (index < totalLength)
-                {
-                    if (index >= originalPopulatedLength) addedCount++;
-                    else changedCount++;
-                }
-            }
-
-            // Nebula.Utility.Tools.Debugger.Instance.Log(Nebula.Utility.Tools.Debugger.DebugLevel.INFO,
-            //     $"[NetArray.ReadChunkedSync] totalLen={totalLength}, start={startIndex}, chunkCount={chunkCount}, originalPopulatedLen={originalPopulatedLength}, changedCount={changedCount}, addedCount={addedCount}");
-
-            var changedIndices = changedCount > 0 ? new int[changedCount] : Array.Empty<int>();
-            var addedValues = addedCount > 0 ? new T[addedCount] : Array.Empty<T>();
+            // Apply the sparse entries. Change-info enumerates only these explicitly-sent non-default
+            // values (see NetArrayChangeInfo docs) -- allocation is proportional to entries, not window.
+            var changedIndices = entryCount > 0 ? new int[entryCount] : Array.Empty<int>();
+            var addedValues = entryCount > 0 ? new T[entryCount] : Array.Empty<T>();
             int changedIdx = 0;
             int addedIdx = 0;
 
-            // Read chunk elements
-            for (int i = 0; i < chunkCount; i++)
-            {
-                int index = startIndex + i;
-                T value = ReadElement(buffer);
-
-                if (index < result._length)
-                {
-                    result._data[index] = value;
-
-                    if (index >= originalPopulatedLength)
-                    {
-                        addedValues[addedIdx++] = value;
-                    }
-                    else
-                    {
-                        changedIndices[changedIdx++] = index;
-                    }
-                }
-            }
-
-            // Check if chunked sync is complete (we've received all elements)
-            int receivedUpTo = startIndex + chunkCount;
-            if (receivedUpTo >= totalLength)
-            {
-                // Sync complete - reset the tracking
-                result._clientReceivedUpTo = -1;
-            }
-
-            result.LastChangeInfo = new NetArrayChangeInfo<T>(deletedValues, changedIndices, addedValues);
-            result.ClearDirty();
-            return result;
-        }
-
-        private static NetArray<T> ReadChunkedWithDeltaSync(NetBuffer buffer, NetArray<T> existing)
-        {
-            int totalLength = NetReader.ReadInt32(buffer);
-            int startIndex = NetReader.ReadInt32(buffer);
-            int chunkCount = NetReader.ReadUInt16(buffer);
-
-            // Validate network data to prevent crashes from corrupted packets
-            if (totalLength < 0 || startIndex < 0 || chunkCount < 0)
-            {
-                return existing ?? new NetArray<T>(64);
-            }
-
-            // For determining "added" vs "changed", we need to know the ORIGINAL length
-            int originalPopulatedLength;
-            if (startIndex == 0)
-            {
-                originalPopulatedLength = existing?.Length ?? 0;
-            }
-            else if (existing != null && existing._clientReceivedUpTo >= 0)
-            {
-                originalPopulatedLength = existing._clientReceivedUpTo;
-            }
-            else
-            {
-                originalPopulatedLength = existing?.Length ?? 0;
-            }
-
-            // Capture deleted values before they're removed (if array is shrinking)
-            T[] deletedValues = Array.Empty<T>();
-            int existingLength = existing?.Length ?? 0;
-            if (existing != null && existingLength > totalLength)
-            {
-                int deleteCount = existingLength - totalLength;
-                deletedValues = new T[deleteCount];
-                for (int i = 0; i < deleteCount; i++)
-                {
-                    deletedValues[i] = existing._data[totalLength + i];
-                }
-            }
-
-            // Create or resize array as needed
-            NetArray<T> result;
-            if (existing == null || existing.Capacity < totalLength)
-            {
-                result = new NetArray<T>(Math.Max(totalLength, 64), totalLength);
-            }
-            else
-            {
-                result = existing;
-                if (result._length != totalLength)
-                {
-                    if (totalLength < result._length)
-                    {
-                        Array.Clear(result._data, totalLength, result._length - totalLength);
-                    }
-                    result._length = totalLength;
-                }
-            }
-
-            // Track the original populated length for subsequent chunks
-            if (startIndex == 0)
-            {
-                result._clientReceivedUpTo = originalPopulatedLength;
-            }
-
-            // Track changed indices - we'll add both chunk changes and delta changes
-            var changedIndicesList = new List<int>();
-            var addedValuesList = new List<T>();
-
-            // Read chunk elements
-            for (int i = 0; i < chunkCount; i++)
-            {
-                int index = startIndex + i;
-                T value = ReadElement(buffer);
-
-                if (index < result._length)
-                {
-                    result._data[index] = value;
-
-                    if (index >= originalPopulatedLength)
-                    {
-                        addedValuesList.Add(value);
-                    }
-                    else
-                    {
-                        changedIndicesList.Add(index);
-                    }
-                }
-            }
-
-            // Read delta updates (changes to already-sent chunks)
-            int deltaCount = NetReader.ReadUInt16(buffer);
-            for (int i = 0; i < deltaCount; i++)
+            for (int e = 0; e < entryCount; e++)
             {
                 int index = NetReader.ReadUInt16(buffer);
                 T value = ReadElement(buffer);
@@ -889,21 +857,118 @@ namespace Nebula.Serialization
                 if (index < result._length)
                 {
                     result._data[index] = value;
-                    // Delta updates are always to existing indices (< originalPopulatedLength)
-                    // Add to changed list if not already there
-                    if (!changedIndicesList.Contains(index))
-                    {
-                        changedIndicesList.Add(index);
-                    }
+                    if (index >= originalPopulatedLength)
+                        addedValues[addedIdx++] = value;
+                    else
+                        changedIndices[changedIdx++] = index;
                 }
             }
 
-            // Check if chunked sync is complete
-            int receivedUpTo = startIndex + chunkCount;
-            if (receivedUpTo >= totalLength)
-            {
+            if (changedIdx < changedIndices.Length) Array.Resize(ref changedIndices, changedIdx);
+            if (addedIdx < addedValues.Length) Array.Resize(ref addedValues, addedIdx);
+
+            // Sync is complete once the covered frontier reaches the end.
+            if (windowEnd >= totalLength)
                 result._clientReceivedUpTo = -1;
+
+            result.LastChangeInfo = new NetArrayChangeInfo<T>(deletedValues, changedIndices, addedValues);
+            result.ClearDirty();
+            return result;
+        }
+
+        internal static NetArray<T> ReadChunkedWithDeltaSync(NetBuffer buffer, NetArray<T> existing)
+        {
+            int totalLength = NetReader.ReadInt32(buffer);
+            int windowStart = NetReader.ReadInt32(buffer);
+            int windowEnd = NetReader.ReadInt32(buffer);
+            int entryCount = NetReader.ReadUInt16(buffer);
+
+            // Validate network data to prevent crashes from corrupted packets.
+            if (totalLength < 0 || windowStart < 0 || windowEnd < windowStart || windowEnd > totalLength || entryCount < 0)
+            {
+                return existing ?? new NetArray<T>(64);
             }
+
+            // For "added" vs "changed", we need the ORIGINAL length before this sync's first window.
+            int originalPopulatedLength;
+            if (windowStart == 0)
+                originalPopulatedLength = existing?.Length ?? 0;
+            else if (existing != null && existing._clientReceivedUpTo >= 0)
+                originalPopulatedLength = existing._clientReceivedUpTo;
+            else
+                originalPopulatedLength = existing?.Length ?? 0;
+
+            // Capture deleted values before they're removed (if array is shrinking)
+            T[] deletedValues = Array.Empty<T>();
+            int existingLength = existing?.Length ?? 0;
+            if (existing != null && existingLength > totalLength)
+            {
+                int deleteCount = existingLength - totalLength;
+                deletedValues = new T[deleteCount];
+                for (int i = 0; i < deleteCount; i++)
+                    deletedValues[i] = existing._data[totalLength + i];
+            }
+
+            // Create or resize array as needed
+            NetArray<T> result;
+            if (existing == null || existing.Capacity < totalLength)
+            {
+                result = new NetArray<T>(Math.Max(totalLength, 64), totalLength);
+            }
+            else
+            {
+                result = existing;
+                if (result._length != totalLength)
+                {
+                    if (totalLength < result._length)
+                        Array.Clear(result._data, totalLength, result._length - totalLength);
+                    result._length = totalLength;
+                }
+            }
+
+            if (windowStart == 0)
+                result._clientReceivedUpTo = originalPopulatedLength;
+
+            // Zero-fill the covered window (see ReadChunkedSync), then apply the sparse window entries.
+            if (windowEnd > windowStart)
+                Array.Clear(result._data, windowStart, windowEnd - windowStart);
+
+            var changedIndicesList = new List<int>();
+            var addedValuesList = new List<T>();
+
+            for (int e = 0; e < entryCount; e++)
+            {
+                int index = NetReader.ReadUInt16(buffer);
+                T value = ReadElement(buffer);
+
+                if (index < result._length)
+                {
+                    result._data[index] = value;
+                    if (index >= originalPopulatedLength)
+                        addedValuesList.Add(value);
+                    else
+                        changedIndicesList.Add(index);
+                }
+            }
+
+            // Read resend updates (changes to already-sent, below-frontier indices). These target
+            // indices < windowStart, disjoint from the window above, so no dedup is needed.
+            int resendCount = NetReader.ReadUInt16(buffer);
+            for (int i = 0; i < resendCount; i++)
+            {
+                int index = NetReader.ReadUInt16(buffer);
+                T value = ReadElement(buffer);
+
+                if (index < result._length)
+                {
+                    result._data[index] = value;
+                    changedIndicesList.Add(index);
+                }
+            }
+
+            // Sync is complete once the covered frontier reaches the end.
+            if (windowEnd >= totalLength)
+                result._clientReceivedUpTo = -1;
 
             result.LastChangeInfo = new NetArrayChangeInfo<T>(
                 deletedValues,
@@ -1047,15 +1112,17 @@ namespace Nebula.Serialization
         }
 
         /// <summary>
-        /// Called when peer acknowledges receipt. Commits pending state to confirmed.
+        /// Called when peer acknowledges receipt of the packet exported at <paramref name="tick"/>.
+        /// Only commits state that was sent at or before that tick — an older ack proves
+        /// nothing about sends still in flight (fixes lost updates from stale acks).
         /// </summary>
-        public static void OnPeerAcknowledge(NetArray<T> obj, UUID peerId)
+        public static void OnPeerAcknowledge(NetArray<T> obj, UUID peerId, Tick tick)
         {
             if (obj == null || obj._peerState == null) return;
             if (!obj._peerState.TryGetValue(peerId, out var state)) return;
 
-            // Commit pending chunk progress
-            if (state.HasPendingChunk)
+            // Commit pending chunk progress, but only if this ack covers the chunk send
+            if (state.HasPendingChunk && state.ChunkSentTick >= 0 && tick >= state.ChunkSentTick)
             {
                 state.AckedUpToIndex = state.PendingSyncIndex;
                 state.HasPendingChunk = false;
@@ -1067,11 +1134,16 @@ namespace Nebula.Serialization
                 }
             }
 
+            // Clear this peer's pending element bits only if the ack covers the last send
+            // that included them. Bits merged after that send stay pending and get resent.
+            if (state.PendingDirty != null && state.LastSendTick >= 0 && tick >= state.LastSendTick)
+            {
+                Array.Clear(state.PendingDirty, 0, state.PendingDirty.Length);
+                state.LastSendTick = -1;
+            }
+
             // Write back the modified struct
             obj._peerState[peerId] = state;
-
-            // Clear dirty flags after successful ack (elements have been confirmed received)
-            obj.ClearDirty();
         }
 
         /// <summary>
@@ -1087,7 +1159,7 @@ namespace Nebula.Serialization
         /// Writes a single element based on type T.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void WriteElement(NetBuffer buffer, T value)
+        internal static void WriteElement(NetBuffer buffer, T value)
         {
             // Use pattern matching to write the correct type
             // This gets optimized by JIT for concrete T
@@ -1154,7 +1226,7 @@ namespace Nebula.Serialization
         /// Reads a single element based on type T.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static T ReadElement(NetBuffer buffer)
+        internal static T ReadElement(NetBuffer buffer)
         {
             if (typeof(T) == typeof(int))
             {

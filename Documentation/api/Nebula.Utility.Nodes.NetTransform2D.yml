@@ -34,7 +34,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -73,7 +73,7 @@ items:
   - Nebula.NetNode2D._Despawn
   - Nebula.NetNode2D._Process(System.Double)
   - Nebula.NetNode2D.NetworkSerialize(Nebula.WorldRunner,ENet.Peer,Nebula.NetNode2D,Nebula.Serialization.NetBuffer,System.Int32)
-  - Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D,Nebula.UUID)
+  - Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D,Nebula.UUID,System.Int32)
   - Nebula.NetNode2D.OnPeerDisconnected(Nebula.NetNode2D,Nebula.UUID)
   - Nebula.NetNode2D.NetworkDeserialize(Nebula.WorldRunner,ENet.Peer,Nebula.Serialization.NetBuffer,Nebula.NetNode2D)
   - Nebula.NetNode2D.BsonSerialize(Nebula.Serialization.NetBsonContext)
@@ -517,7 +517,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.OnNetChangeIsTeleporting(int, bool, bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -547,7 +547,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D._WorldReady()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -570,7 +570,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.GetParent2D()
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -592,7 +592,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D._NetworkProcess(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -622,7 +622,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.NetworkLerpNetPosition(Godot.Variant, Godot.Variant, double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -654,7 +654,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.NetworkLerpNetRotation(Godot.Variant, Godot.Variant, double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -686,7 +686,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D._PhysicsProcess(double)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -714,7 +714,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.Teleport(Godot.Vector2)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -737,7 +737,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.OnIsTeleportingChanged(bool, bool)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -765,7 +765,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.OnNetPositionChanged(Godot.Vector2, Godot.Vector2)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -790,7 +790,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.OnNetRotationChanged(float, float)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -818,7 +818,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.GetNetPropertyIndex(string)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -848,7 +848,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.HasPropertyChangeHandler(int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -878,7 +878,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.SetBsonPropertyByName(string, object)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -910,7 +910,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.NetTransform2D()
   type: Constructor
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -933,7 +933,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.SourceNode
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -970,7 +970,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.TargetNode
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1007,7 +1007,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.IsTeleporting
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1044,7 +1044,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.NetPosition
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1077,7 +1077,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.NetRotation
   type: Property
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Nodes/NetTransform/NetTransform2D.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1110,7 +1110,7 @@ items:
   fullName: Nebula.Utility.Nodes.NetTransform2D.NetChangeListenerIsTeleporting
   type: Event
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/.godot/mono/temp/obj/Debug/Generator/Nebula.Generator.NetPropertyGenerator/NetTransform2D.NetProperties.g.cs
   assemblies:
   - Nebula
   namespace: Nebula.Utility.Nodes
@@ -1558,19 +1558,22 @@ references:
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.int32
   - name: )
-- uid: Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D,Nebula.UUID)
-  commentId: M:Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D,Nebula.UUID)
+- uid: Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D,Nebula.UUID,System.Int32)
+  commentId: M:Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D,Nebula.UUID,System.Int32)
   parent: Nebula.NetNode2D
   isExternal: true
-  href: Nebula.NetNode2D.html#Nebula_NetNode2D_OnPeerAcknowledge_Nebula_NetNode2D_Nebula_UUID_
-  name: OnPeerAcknowledge(NetNode2D, UUID)
-  nameWithType: NetNode2D.OnPeerAcknowledge(NetNode2D, UUID)
-  fullName: Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D, Nebula.UUID)
+  href: Nebula.NetNode2D.html#Nebula_NetNode2D_OnPeerAcknowledge_Nebula_NetNode2D_Nebula_UUID_System_Int32_
+  name: OnPeerAcknowledge(NetNode2D, UUID, int)
+  nameWithType: NetNode2D.OnPeerAcknowledge(NetNode2D, UUID, int)
+  fullName: Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D, Nebula.UUID, int)
+  nameWithType.vb: NetNode2D.OnPeerAcknowledge(NetNode2D, UUID, Integer)
+  fullName.vb: Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D, Nebula.UUID, Integer)
+  name.vb: OnPeerAcknowledge(NetNode2D, UUID, Integer)
   spec.csharp:
-  - uid: Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D,Nebula.UUID)
+  - uid: Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D,Nebula.UUID,System.Int32)
     name: OnPeerAcknowledge
     isExternal: true
-    href: Nebula.NetNode2D.html#Nebula_NetNode2D_OnPeerAcknowledge_Nebula_NetNode2D_Nebula_UUID_
+    href: Nebula.NetNode2D.html#Nebula_NetNode2D_OnPeerAcknowledge_Nebula_NetNode2D_Nebula_UUID_System_Int32_
   - name: (
   - uid: Nebula.NetNode2D
     name: NetNode2D
@@ -1582,12 +1585,18 @@ references:
     name: UUID
     isExternal: true
     href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
   - name: )
   spec.vb:
-  - uid: Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D,Nebula.UUID)
+  - uid: Nebula.NetNode2D.OnPeerAcknowledge(Nebula.NetNode2D,Nebula.UUID,System.Int32)
     name: OnPeerAcknowledge
     isExternal: true
-    href: Nebula.NetNode2D.html#Nebula_NetNode2D_OnPeerAcknowledge_Nebula_NetNode2D_Nebula_UUID_
+    href: Nebula.NetNode2D.html#Nebula_NetNode2D_OnPeerAcknowledge_Nebula_NetNode2D_Nebula_UUID_System_Int32_
   - name: (
   - uid: Nebula.NetNode2D
     name: NetNode2D
@@ -1599,6 +1608,12 @@ references:
     name: UUID
     isExternal: true
     href: Nebula.UUID.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
   - name: )
 - uid: Nebula.NetNode2D.OnPeerDisconnected(Nebula.NetNode2D,Nebula.UUID)
   commentId: M:Nebula.NetNode2D.OnPeerDisconnected(Nebula.NetNode2D,Nebula.UUID)

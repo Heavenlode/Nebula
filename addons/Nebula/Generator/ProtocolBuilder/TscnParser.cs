@@ -51,7 +51,13 @@ namespace Nebula.Generators
         }
 
         private static readonly Regex ExtResourceRegex = new(@"ExtResource\(""([^""]+)""\)", RegexOptions.Compiled);
-        private static readonly Regex IdRegex = new(@"id=""?([^""\]]+)""?", RegexOptions.Compiled);
+        /// <summary>
+        /// Matches key="quoted value" or key=unquotedToken on a .tscn header line.
+        /// Quoted values may contain spaces (e.g. path="res://NPC/Big Fooder/X.cs").
+        /// </summary>
+        private static readonly Regex AttributeRegex = new(
+            @"(\w+)=(""[^""]*""|[^\s\]]+)",
+            RegexOptions.Compiled);
 
         public ParsedTscn Parse(string fileText)
         {
@@ -139,119 +145,87 @@ namespace Nebula.Generators
         private static GdScene ParseGdScene(string line)
         {
             var scene = new GdScene();
-            var parts = line.Split(' ');
-            
-            foreach (var part in parts)
+            foreach (var (key, value) in ExtractAttributes(line))
             {
-                if (part.StartsWith("load_steps="))
-                {
-                    if (int.TryParse(ExtractValue(part), out var steps))
-                        scene.LoadSteps = steps;
-                }
-                else if (part.StartsWith("format="))
-                {
-                    if (int.TryParse(ExtractValue(part), out var format))
-                        scene.Format = format;
-                }
-                else if (part.StartsWith("uid="))
-                {
-                    scene.Uid = ExtractValue(part);
-                }
+                if (key == "load_steps" && int.TryParse(value, out var steps))
+                    scene.LoadSteps = steps;
+                else if (key == "format" && int.TryParse(value, out var format))
+                    scene.Format = format;
+                else if (key == "uid")
+                    scene.Uid = value;
             }
-            
             return scene;
         }
 
         private static ExtResource ParseExtResource(string line)
         {
             var resource = new ExtResource();
-            var parts = line.Split(' ');
-            
-            foreach (var part in parts)
+            foreach (var (key, value) in ExtractAttributes(line))
             {
-                if (part.StartsWith("type="))
-                {
-                    resource.Type = ExtractValue(part);
-                }
-                else if (part.StartsWith("path="))
-                {
-                    resource.Path = ExtractValue(part);
-                }
-                else if (part.StartsWith("id="))
-                {
-                    var match = IdRegex.Match(part);
-                    if (match.Success)
-                    {
-                        resource.Id = match.Groups[1].Value;
-                    }
-                }
+                if (key == "type")
+                    resource.Type = value;
+                else if (key == "path")
+                    resource.Path = value;
+                else if (key == "id")
+                    resource.Id = value;
             }
-            
             return resource;
         }
 
         private static SubResource ParseSubResource(string line)
         {
             var resource = new SubResource();
-            var parts = line.Split(' ');
-            
-            foreach (var part in parts)
+            foreach (var (key, value) in ExtractAttributes(line))
             {
-                if (part.StartsWith("type="))
-                {
-                    resource.Type = ExtractValue(part);
-                }
-                else if (part.StartsWith("id="))
-                {
-                    resource.Id = ExtractValue(part);
-                }
+                if (key == "type")
+                    resource.Type = value;
+                else if (key == "id")
+                    resource.Id = value;
             }
-            
             return resource;
         }
 
         private TscnNode ParseNode(string line)
         {
             var node = new TscnNode();
-            var parts = line.Split(' ');
-            
-            foreach (var part in parts)
+            foreach (var (key, value) in ExtractAttributes(line))
             {
-                if (part.StartsWith("name="))
+                if (key == "name")
+                    node.Name = value;
+                else if (key == "type")
+                    node.Type = value;
+                else if (key == "parent")
+                    node.Parent = value;
+                else if (key == "instance")
                 {
-                    node.Name = ExtractValue(part);
-                }
-                else if (part.StartsWith("type="))
-                {
-                    node.Type = ExtractValue(part);
-                }
-                else if (part.StartsWith("parent="))
-                {
-                    node.Parent = ExtractValue(part);
-                }
-                else if (part.StartsWith("instance="))
-                {
-                    var instValue = part.Substring("instance=".Length).Trim('"', ']');
-                    var match = ExtResourceRegex.Match(instValue);
+                    var match = ExtResourceRegex.Match(value);
                     if (match.Success)
                     {
                         var resourceId = match.Groups[1].Value;
                         if (_resourceToPathMap.TryGetValue(resourceId, out var path) && path.EndsWith(".tscn"))
-                        {
                             node.Instance = path;
-                        }
                     }
                 }
             }
-            
             return node;
         }
 
-        private static string ExtractValue(string part)
+        /// <summary>
+        /// Yields (key, unquotedValue) pairs from a .tscn header line such as
+        /// [ext_resource type="Script" path="res://foo bar/x.cs" id="1_abc"].
+        /// Does not split inside double-quoted values, so paths with spaces parse correctly.
+        /// </summary>
+        private static IEnumerable<(string Key, string Value)> ExtractAttributes(string line)
         {
-            var eqIndex = part.IndexOf('=');
-            if (eqIndex < 0) return "";
-            return part.Substring(eqIndex + 1).Trim('"', ']', ' ');
+            foreach (Match match in AttributeRegex.Matches(line))
+            {
+                var key = match.Groups[1].Value;
+                var raw = match.Groups[2].Value;
+                var value = raw.Length >= 2 && raw[0] == '"' && raw[raw.Length - 1] == '"'
+                    ? raw.Substring(1, raw.Length - 2)
+                    : raw.TrimEnd(']');
+                yield return (key, value);
+            }
         }
     }
 }

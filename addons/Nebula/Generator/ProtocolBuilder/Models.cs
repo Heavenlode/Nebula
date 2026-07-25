@@ -104,6 +104,11 @@ namespace Nebula.Generators
         /// Scene-level interest requirements: scenePath -> (InterestAny, InterestRequired)
         /// </summary>
         public Dictionary<string, SceneInterestData> SceneInterestMap { get; } = new();
+        /// <summary>
+        /// Nebula's own version, read from addons/Nebula/plugin.cfg. Folded into the
+        /// protocol hash so builds on different Nebula versions refuse to connect.
+        /// </summary>
+        public string NebulaVersion { get; set; } = "";
     }
 
     internal sealed class SceneInterestData

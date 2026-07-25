@@ -1,0 +1,85 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nebula.Serialization.INetExportAware
+  commentId: T:Nebula.Serialization.INetExportAware
+  id: INetExportAware
+  parent: Nebula.Serialization
+  children:
+  - Nebula.Serialization.INetExportAware.OnExportComplete
+  langs:
+  - csharp
+  - vb
+  name: INetExportAware
+  nameWithType: INetExportAware
+  fullName: Nebula.Serialization.INetExportAware
+  type: Interface
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Optional interface for INetSerializable reference types that keep a global
+
+    (cross-peer) dirty set. OnExportComplete is invoked once per node per server tick,
+
+    after Export has run for every peer, so the type can fold global dirty state into
+
+    per-peer pending state and clear it. Without this, clearing global dirty flags on a
+
+    single peer's ack would drop resends for the remaining peers.
+  example: []
+  syntax:
+    content: public interface INetExportAware
+    content.vb: Public Interface INetExportAware
+- uid: Nebula.Serialization.INetExportAware.OnExportComplete
+  commentId: M:Nebula.Serialization.INetExportAware.OnExportComplete
+  id: OnExportComplete
+  parent: Nebula.Serialization.INetExportAware
+  langs:
+  - csharp
+  - vb
+  name: OnExportComplete()
+  nameWithType: INetExportAware.OnExportComplete()
+  fullName: Nebula.Serialization.INetExportAware.OnExportComplete()
+  type: Method
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  syntax:
+    content: void OnExportComplete()
+    content.vb: Sub OnExportComplete()
+  overload: Nebula.Serialization.INetExportAware.OnExportComplete*
+references:
+- uid: Nebula.Serialization
+  commentId: N:Nebula.Serialization
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Serialization
+  nameWithType: Nebula.Serialization
+  fullName: Nebula.Serialization
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Serialization
+    name: Serialization
+    isExternal: true
+    href: Nebula.Serialization.html
+- uid: Nebula.Serialization.INetExportAware.OnExportComplete*
+  commentId: Overload:Nebula.Serialization.INetExportAware.OnExportComplete
+  isExternal: true
+  href: Nebula.Serialization.INetExportAware.html#Nebula_Serialization_INetExportAware_OnExportComplete
+  name: OnExportComplete
+  nameWithType: INetExportAware.OnExportComplete
+  fullName: Nebula.Serialization.INetExportAware.OnExportComplete

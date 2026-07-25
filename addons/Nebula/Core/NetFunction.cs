@@ -21,7 +21,6 @@ namespace Nebula
             All = Client | Server,
         }
 
-        // TODO: Ensure this is used in WorldRunner to correctly filter out invalid calls
         public NetworkSources Source { get; set; } = NetworkSources.All;
         public bool ExecuteOnCaller { get; set; } = true;
         public override void OnEntry(MethodExecutionArgs args)
@@ -67,13 +66,32 @@ namespace Nebula
                 {
                     throw new Exception($"Function {args.Method.Name} not found in network scene {networkScene}");
                 }
+                // Peer-targeted variants (generated *ForPeers overloads) stash the recipient set in a
+                // thread-static right before invoking the woven method. Consume it here so the send
+                // targets only those peers, and clear it immediately so a nested RPC fired from the
+                // body (when ExecuteOnCaller is true) doesn't inherit the same targets.
+                var targetPeers = NetFunctionCall.TargetPeers;
+                NetFunctionCall.TargetPeers = null;
+
                 // Pass object[] directly with protocol metadata - no Variant conversion
-                netNode.Network.CurrentWorld.SendNetFunction(netId, functionInfo, args.Arguments);
+                netNode.Network.CurrentWorld.SendNetFunction(netId, functionInfo, args.Arguments, targetPeers);
             }
             else
             {
                 throw new Exception("NetFunction attribute can only be used on INetNode");
             }
         }
+    }
+
+    /// <summary>
+    /// Carries the recipient set for a peer-targeted NetFunction call from a generated *ForPeers
+    /// overload into <see cref="NetFunction.OnEntry"/>. Thread-static because the send happens
+    /// synchronously on the calling thread; <see cref="NetFunction.OnEntry"/> consumes and clears it
+    /// so it never leaks into nested calls.
+    /// </summary>
+    internal static class NetFunctionCall
+    {
+        [ThreadStatic]
+        internal static UUID[] TargetPeers;
     }
 }

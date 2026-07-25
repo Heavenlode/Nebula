@@ -15,6 +15,29 @@ namespace Nebula.Serialization
         private static readonly Dictionary<(string TypeName, string MethodName), MethodInfo> _methodCache = new();
         private static readonly Dictionary<string, Type> _typeCache = new();
 
+        #region Protocol Identity
+
+        /// <summary>
+        /// The Nebula version this build was compiled against, read from plugin.cfg at
+        /// generation time. Part of <see cref="Hash"/>.
+        /// </summary>
+        public static string NebulaVersion => GeneratedProtocol.NebulaVersion;
+
+        /// <summary>
+        /// Deterministic 64-bit hash of the entire generated protocol (Nebula version,
+        /// scenes, properties, functions, serializable types). Identical across builds of
+        /// the same Nebula version generated from identical protocol source.
+        /// </summary>
+        public static ulong Hash => GeneratedProtocol.ProtocolHash;
+
+        /// <summary>
+        /// 32-bit fold of <see cref="Hash"/>, sized to fit ENet's connect-data field.
+        /// Sent by clients in the connection handshake and validated by the server.
+        /// </summary>
+        public static uint HandshakeHash => unchecked((uint)(GeneratedProtocol.ProtocolHash ^ (GeneratedProtocol.ProtocolHash >> 32)));
+
+        #endregion
+
         #region Property Lookups
 
         /// <summary>

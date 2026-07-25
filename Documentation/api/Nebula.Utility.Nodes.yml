@@ -4,9 +4,11 @@ items:
   commentId: N:Nebula.Utility.Nodes
   id: Nebula.Utility.Nodes
   children:
+  - Nebula.Utility.Nodes.IInterpolationVelocitySource
   - Nebula.Utility.Nodes.InterestArea3D
   - Nebula.Utility.Nodes.NetTransform2D
   - Nebula.Utility.Nodes.NetTransform3D
+  - Nebula.Utility.Nodes.VisualInterpolationMode
   langs:
   - csharp
   - vb
@@ -24,6 +26,13 @@ references:
   name: InterestArea3D
   nameWithType: InterestArea3D
   fullName: Nebula.Utility.Nodes.InterestArea3D
+- uid: Nebula.Utility.Nodes.IInterpolationVelocitySource
+  commentId: T:Nebula.Utility.Nodes.IInterpolationVelocitySource
+  isExternal: true
+  href: Nebula.Utility.Nodes.IInterpolationVelocitySource.html
+  name: IInterpolationVelocitySource
+  nameWithType: IInterpolationVelocitySource
+  fullName: Nebula.Utility.Nodes.IInterpolationVelocitySource
 - uid: Nebula.Utility.Nodes.NetTransform2D
   commentId: T:Nebula.Utility.Nodes.NetTransform2D
   isExternal: true
@@ -31,6 +40,14 @@ references:
   name: NetTransform2D
   nameWithType: NetTransform2D
   fullName: Nebula.Utility.Nodes.NetTransform2D
+- uid: Nebula.Utility.Nodes.VisualInterpolationMode
+  commentId: T:Nebula.Utility.Nodes.VisualInterpolationMode
+  parent: Nebula.Utility.Nodes
+  isExternal: true
+  href: Nebula.Utility.Nodes.VisualInterpolationMode.html
+  name: VisualInterpolationMode
+  nameWithType: VisualInterpolationMode
+  fullName: Nebula.Utility.Nodes.VisualInterpolationMode
 - uid: Nebula.Utility.Nodes.NetTransform3D
   commentId: T:Nebula.Utility.Nodes.NetTransform3D
   isExternal: true
@@ -38,3 +55,40 @@ references:
   name: NetTransform3D
   nameWithType: NetTransform3D
   fullName: Nebula.Utility.Nodes.NetTransform3D
+- uid: Nebula.Utility.Nodes
+  commentId: N:Nebula.Utility.Nodes
+  isExternal: true
+  href: Nebula.html
+  name: Nebula.Utility.Nodes
+  nameWithType: Nebula.Utility.Nodes
+  fullName: Nebula.Utility.Nodes
+  spec.csharp:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes
+    name: Nodes
+    isExternal: true
+    href: Nebula.Utility.Nodes.html
+  spec.vb:
+  - uid: Nebula
+    name: Nebula
+    isExternal: true
+    href: Nebula.html
+  - name: .
+  - uid: Nebula.Utility
+    name: Utility
+    isExternal: true
+    href: Nebula.Utility.html
+  - name: .
+  - uid: Nebula.Utility.Nodes
+    name: Nodes
+    isExternal: true
+    href: Nebula.Utility.Nodes.html

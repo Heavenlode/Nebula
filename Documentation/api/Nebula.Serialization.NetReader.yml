@@ -5,6 +5,7 @@ items:
   id: NetReader
   parent: Nebula.Serialization
   children:
+  - Nebula.Serialization.NetReader.ReadAbsoluteValue(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.String,Nebula.PropertyCache@)
   - Nebula.Serialization.NetReader.ReadAsVariant(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType)
   - Nebula.Serialization.NetReader.ReadBool(Nebula.Serialization.NetBuffer)
   - Nebula.Serialization.NetReader.ReadByType(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType)
@@ -41,7 +42,7 @@ items:
   fullName: Nebula.Serialization.NetReader
   type: Class
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -75,7 +76,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadByte(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -100,7 +101,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadBool(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -125,7 +126,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadInt16(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -150,7 +151,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadUInt16(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -175,7 +176,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadInt32(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -200,7 +201,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadUInt32(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -225,7 +226,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadInt64(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -250,7 +251,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadUInt64(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -275,7 +276,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadFloat(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -300,7 +301,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadDouble(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -325,7 +326,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadHalf(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -350,7 +351,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadHalfFloat(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -380,7 +381,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadVector2(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -405,7 +406,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadVector2Full(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -430,7 +431,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadVector3(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -455,7 +456,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadVector3Half(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -480,7 +481,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadQuaternion(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -505,7 +506,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadQuaternionFull(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -530,7 +531,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadQuatSmallestThree(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -560,7 +561,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadBytes(Nebula.Serialization.NetBuffer, int)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -592,7 +593,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadBytesWithLength(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -619,7 +620,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadRemainingBytes(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -646,7 +647,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadString(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -673,7 +674,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadInt32Array(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -698,7 +699,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadInt64Array(Nebula.Serialization.NetBuffer)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -723,7 +724,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadWithType(Nebula.Serialization.NetBuffer, out Nebula.Serialization.SerialVariantType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -758,7 +759,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadByType(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -787,7 +788,7 @@ items:
   fullName: Nebula.Serialization.NetReader.ReadAsVariant(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType)
   type: Method
   source:
-    href: https://github.com/Heavenlode/Nebula/blob/0a228a59d86a7196f2fa1594ae7bf3888b3d5d46/addons/Nebula/Core/Serialization/NetReader.cs
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
   assemblies:
   - Nebula
   namespace: Nebula.Serialization
@@ -807,6 +808,43 @@ items:
       type: Godot.Variant
     content.vb: Public Shared Function ReadAsVariant(buffer As NetBuffer, type As SerialVariantType) As [Variant]
   overload: Nebula.Serialization.NetReader.ReadAsVariant*
+- uid: Nebula.Serialization.NetReader.ReadAbsoluteValue(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.String,Nebula.PropertyCache@)
+  commentId: M:Nebula.Serialization.NetReader.ReadAbsoluteValue(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.String,Nebula.PropertyCache@)
+  id: ReadAbsoluteValue(Nebula.Serialization.NetBuffer,Nebula.Serialization.SerialVariantType,System.String,Nebula.PropertyCache@)
+  parent: Nebula.Serialization.NetReader
+  langs:
+  - csharp
+  - vb
+  name: ReadAbsoluteValue(NetBuffer, SerialVariantType, string, ref PropertyCache)
+  nameWithType: NetReader.ReadAbsoluteValue(NetBuffer, SerialVariantType, string, ref PropertyCache)
+  fullName: Nebula.Serialization.NetReader.ReadAbsoluteValue(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType, string, ref Nebula.PropertyCache)
+  type: Method
+  source:
+    href: https://github.com/Heavenlode/Nebula/blob/020003aa6e3ee9345d4a07737ef69324abd3d5ed/addons/Nebula/Core/Serialization/NetReader.cs
+  assemblies:
+  - Nebula
+  namespace: Nebula.Serialization
+  summary: >-
+    Reads an absolute property value into a PropertyCache (no delta encoding).
+
+    This method has zero allocations for value types.
+  example: []
+  syntax:
+    content: public static void ReadAbsoluteValue(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache cache)
+    parameters:
+    - id: buffer
+      type: Nebula.Serialization.NetBuffer
+    - id: type
+      type: Nebula.Serialization.SerialVariantType
+    - id: subtype
+      type: System.String
+    - id: cache
+      type: Nebula.PropertyCache
+    content.vb: Public Shared Sub ReadAbsoluteValue(buffer As NetBuffer, type As SerialVariantType, subtype As String, cache As PropertyCache)
+  overload: Nebula.Serialization.NetReader.ReadAbsoluteValue*
+  nameWithType.vb: NetReader.ReadAbsoluteValue(NetBuffer, SerialVariantType, String, PropertyCache)
+  fullName.vb: Nebula.Serialization.NetReader.ReadAbsoluteValue(Nebula.Serialization.NetBuffer, Nebula.Serialization.SerialVariantType, String, Nebula.PropertyCache)
+  name.vb: ReadAbsoluteValue(NetBuffer, SerialVariantType, String, PropertyCache)
 references:
 - uid: Nebula.Serialization
   commentId: N:Nebula.Serialization
@@ -1516,3 +1554,25 @@ references:
   name: Variant
   nameWithType: Variant
   fullName: Godot.Variant
+- uid: Nebula.Serialization.NetReader.ReadAbsoluteValue*
+  commentId: Overload:Nebula.Serialization.NetReader.ReadAbsoluteValue
+  isExternal: true
+  href: Nebula.Serialization.NetReader.html#Nebula_Serialization_NetReader_ReadAbsoluteValue_Nebula_Serialization_NetBuffer_Nebula_Serialization_SerialVariantType_System_String_Nebula_PropertyCache__
+  name: ReadAbsoluteValue
+  nameWithType: NetReader.ReadAbsoluteValue
+  fullName: Nebula.Serialization.NetReader.ReadAbsoluteValue
+- uid: Nebula.PropertyCache
+  commentId: T:Nebula.PropertyCache
+  parent: Nebula
+  isExternal: true
+  href: Nebula.PropertyCache.html
+  name: PropertyCache
+  nameWithType: PropertyCache
+  fullName: Nebula.PropertyCache
+- uid: Nebula
+  commentId: N:Nebula
+  isExternal: true
+  href: Nebula.html
+  name: Nebula
+  nameWithType: Nebula
+  fullName: Nebula

@@ -297,6 +297,13 @@ namespace Nebula.Serialization
             int count = ReadInt32(buffer);
             if (count == 0) return Array.Empty<int>();
 
+            // Guard the network-supplied count before allocating: reject negatives and cap at
+            // the number of elements that could physically fit in the remaining bytes. This
+            // prevents a tiny hostile packet from forcing a huge (or negative) allocation.
+            if (count < 0 || count > buffer.Remaining / sizeof(int))
+                throw new InvalidOperationException(
+                    $"NetReader.ReadInt32Array: invalid element count {count} ({buffer.Remaining} bytes remaining)");
+
             var result = new int[count];
             for (int i = 0; i < count; i++)
             {
@@ -309,6 +316,13 @@ namespace Nebula.Serialization
         {
             int count = ReadInt32(buffer);
             if (count == 0) return Array.Empty<long>();
+
+            // Guard the network-supplied count before allocating: reject negatives and cap at
+            // the number of elements that could physically fit in the remaining bytes. This
+            // prevents a tiny hostile packet from forcing a huge (or negative) allocation.
+            if (count < 0 || count > buffer.Remaining / sizeof(long))
+                throw new InvalidOperationException(
+                    $"NetReader.ReadInt64Array: invalid element count {count} ({buffer.Remaining} bytes remaining)");
 
             var result = new long[count];
             for (int i = 0; i < count; i++)

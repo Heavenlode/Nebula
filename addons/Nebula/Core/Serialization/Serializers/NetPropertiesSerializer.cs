@@ -472,6 +472,10 @@ namespace Nebula.Serialization.Serializers
                     {
                         netCharacterBody3D.SetNetPropertyByIndex(prop.LocalIndex, ref newValue);
                     }
+                    else if (propNode is NetStaticBody3D netStaticBody3D)
+                    {
+                        netStaticBody3D.SetNetPropertyByIndex(prop.LocalIndex, ref newValue);
+                    }
                     // Debugger.Instance.Log($"[ImportProperty] SetNetPropertyByIndex completed successfully");
                 }
                 catch (System.Exception ex)
@@ -515,6 +519,10 @@ namespace Nebula.Serialization.Serializers
             else if (propNode is NetCharacterBody3D ncb3d)
             {
                 ncb3d.InvokePropertyChangeHandler(localIndex, tick, ref oldValue, ref newValue);
+            }
+            else if (propNode is NetStaticBody3D nsb3d)
+            {
+                nsb3d.InvokePropertyChangeHandler(localIndex, tick, ref oldValue, ref newValue);
             }
         }
 

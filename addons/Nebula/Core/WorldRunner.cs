@@ -1296,6 +1296,8 @@ namespace Nebula
                     nrb3d.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
                 else if (rawNode is NetCharacterBody3D ncb3d)
                     ncb3d.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
+                else if (rawNode is NetStaticBody3D nsb3d)
+                    nsb3d.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
                 functionNode.Network.IsInboundCall = false;
                 NetFunctionContext = new NetFunctionCtx { };
 
@@ -2638,6 +2640,8 @@ namespace Nebula
                     nrb3d.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
                 else if (rawNode is NetCharacterBody3D ncb3d)
                     ncb3d.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
+                else if (rawNode is NetStaticBody3D nsb3d)
+                    nsb3d.InvokeNetFunctionByName(queuedFunction.FunctionInfo.Name, queuedFunction.Args);
                 functionNode.Network.IsInboundCall = false;
                 NetFunctionContext = new NetFunctionCtx { };
             }

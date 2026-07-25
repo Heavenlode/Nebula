@@ -11,7 +11,7 @@ namespace Nebula
 {
 	/**
 		<summary>
-		Manages the network state of a <see cref="Nebula.NetNode"/> (including <see cref="NetNode2D"/>, <see cref="NetNode3D"/>, <see cref="NetRigidBody3D"/>, and <see cref="NetCharacterBody3D"/>).
+		Manages the network state of a <see cref="Nebula.NetNode"/> (including <see cref="NetNode2D"/>, <see cref="NetNode3D"/>, <see cref="NetRigidBody3D"/>, <see cref="NetStaticBody3D"/>, and <see cref="NetCharacterBody3D"/>).
 		</summary>
 	*/
 	public partial class NetworkController : RefCounted
@@ -1393,6 +1393,8 @@ namespace Nebula
 				nrb3d.InitializeNetPropertyBindings();
 			else if (RawNode is NetCharacterBody3D ncb3d)
 				ncb3d.InitializeNetPropertyBindings();
+			else if (RawNode is NetStaticBody3D nsb3d)
+				nsb3d.InitializeNetPropertyBindings();
 			if (IsNetScene())
 			{
 				if (IsServer)

@@ -3,20 +3,6 @@ using System;
 namespace Nebula.Serialization
 {
     /// <summary>
-    /// Interface for types that need to notify their parent NetworkController when internal state mutates.
-    /// Used by NetArray to signal that element-level changes need to trigger serialization.
-    /// </summary>
-    public interface INetPropertyBindable
-    {
-        /// <summary>
-        /// Bind a callback to be invoked when internal state changes.
-        /// The callback should mark the property dirty in the NetworkController.
-        /// </summary>
-        /// <param name="onMutated">Callback to invoke on internal mutation</param>
-        void BindToNetProperty(Action onMutated);
-    }
-
-    /// <summary>
     /// Optional interface for INetSerializable reference types that keep a global
     /// (cross-peer) dirty set. OnExportComplete is invoked once per node per server tick,
     /// after Export has run for every peer, so the type can fold global dirty state into

@@ -1657,7 +1657,8 @@ namespace Nebula.Serialization.Serializers
                     WriteCustomTypeFromCache(currentWorld, peer, buffer, prop, ref cache);
                     break;
                 default:
-                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Unsupported cache type: {cache.Type}");
+                    var nilProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Unsupported cache type: {cache.Type} for property '{nilProp.NodePath}.{nilProp.Name}' (scene '{_cachedSceneFilePath}'). An uninitialized/absolute-written property here writes no value but its presence bit is set, desyncing the whole tick stream.");
                     break;
             }
         }

@@ -95,16 +95,18 @@ public class NetPropertyGenerator : IIncrementalGenerator
 
         // Check if the property type implements IBsonValue<T> or IBsonSerializable<T>
         bool isBsonSerializable = false;
-        bool implementsINetPropertyBindable = false;
+        bool implementsINetSerializable = false;
         if (propertySymbol.Type is INamedTypeSymbol namedType)
         {
             isBsonSerializable = namedType.AllInterfaces.Any(i =>
                 i.IsGenericType && (i.OriginalDefinition.Name == "IBsonValue" ||
                                     i.OriginalDefinition.Name == "IBsonSerializable"));
-            
-            // Check if the type implements INetPropertyBindable
-            implementsINetPropertyBindable = namedType.AllInterfaces.Any(i =>
-                i.Name == "INetPropertyBindable");
+
+            // Serializable object types (NetArray, CargoState, ...) are mutated in place, so the
+            // property setter never fires -- their reference must be seeded into the cache at init
+            // (see InitializeNetPropertyBindings) or the every-tick object serializer ships empty.
+            implementsINetSerializable = namedType.AllInterfaces.Any(i =>
+                i.IsGenericType && i.OriginalDefinition.Name == "INetSerializable");
         }
 
         // Simple name for internal lookups (PropertyCache field mapping)
@@ -166,7 +168,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
             propertyLocation,
             predicted,
             hasToleranceProperty,
-            implementsINetPropertyBindable);
+            implementsINetSerializable);
     }
 
     /// <summary>
@@ -505,55 +507,47 @@ public class NetPropertyGenerator : IIncrementalGenerator
             sb.AppendLine($"partial class {className}");
             sb.AppendLine("{");
 
-            // Generate On{PropertyName}Changed methods (existing functionality)
+            // Generate On{PropertyName}Changed methods
             for (int i = 0; i < propList.Count; i++)
             {
                 var prop = propList[i]!;
                 var markDirtyMethod = prop.IsValueType ? "MarkDirty" : "MarkDirtyRef";
-                var globalPropIndex = baseOffset + i;
 
                 sb.AppendLine($"    public void On{prop.PropertyName}Changed({prop.FullyQualifiedPropertyType} oldVal, {prop.FullyQualifiedPropertyType} newVal)");
                 sb.AppendLine("    {");
                 sb.AppendLine("        if (Engine.IsEditorHint()) return;");
                 sb.AppendLine($"        Network.{markDirtyMethod}(this, \"{prop.PropertyName}\", newVal);");
-                
-                // If the property type implements INetPropertyBindable, bind the callback
-                // This allows types like NetArray to notify when internal state changes
-                if (prop.ImplementsINetPropertyBindable)
-                {
-                    sb.AppendLine($"        (newVal as Nebula.Serialization.INetPropertyBindable)?.BindToNetProperty(() => Network.MarkDirtyByIndex({globalPropIndex}));");
-                }
-                
                 sb.AppendLine("    }");
                 sb.AppendLine();
             }
 
-            // Generate InitializeNetPropertyBindings for INetPropertyBindable properties
-            // This is called from _NetworkPrepare to bind callbacks for properties initialized inline
-            var bindableProps = propList.Where(p => p!.ImplementsINetPropertyBindable).ToList();
-            if (bindableProps.Count > 0)
+            // Seed the property cache for INetSerializable object properties initialized inline.
+            // Called from _NetworkPrepare. Automatic (based on the type implementing INetSerializable),
+            // so a mutable object NetProperty can no longer silently "replicate empty" by forgetting a marker.
+            var serializableObjectProps = propList.Where(p => p!.ImplementsINetSerializable).ToList();
+            if (serializableObjectProps.Count > 0)
             {
                 sb.AppendLine("    /// <summary>");
-                sb.AppendLine("    /// Initializes network property bindings for INetPropertyBindable properties.");
-                sb.AppendLine("    /// Called from _NetworkPrepare to bind callbacks for properties initialized inline.");
+                sb.AppendLine("    /// Seeds the network property cache for INetSerializable object properties initialized inline.");
+                sb.AppendLine("    /// Inline initialization bypasses the property setter, so without this the every-tick");
+                sb.AppendLine("    /// object serializer would read a null cache and ship empty. Called from _NetworkPrepare.");
                 sb.AppendLine("    /// </summary>");
                 sb.AppendLine("    internal override void InitializeNetPropertyBindings()");
                 sb.AppendLine("    {");
                 sb.AppendLine("        base.InitializeNetPropertyBindings();");
                 sb.AppendLine("        if (Engine.IsEditorHint()) return;");
-                
+
                 for (int i = 0; i < propList.Count; i++)
                 {
                     var prop = propList[i]!;
-                    if (!prop.ImplementsINetPropertyBindable) continue;
-                    
-                    var globalPropIndex = baseOffset + i;
-                    // Bind mutation callback for future changes
-                    sb.AppendLine($"        ({prop.PropertyName} as Nebula.Serialization.INetPropertyBindable)?.BindToNetProperty(() => Network.MarkDirtyByIndex({globalPropIndex}));");
-                    // Also cache the initial value so serializer can find it (inline initialization bypasses property setter)
+                    if (!prop.ImplementsINetSerializable) continue;
+
+                    // Cache the initial reference so the serializer can find it. There is deliberately
+                    // no per-mutation callback: object properties self-filter every tick (their per-peer
+                    // sync state lives in the serializer).
                     sb.AppendLine($"        if ({prop.PropertyName} != null) Network.MarkDirtyRef(this, \"{prop.PropertyName}\", {prop.PropertyName});");
                 }
-                
+
                 sb.AppendLine("    }");
                 sb.AppendLine();
             }
@@ -1111,6 +1105,6 @@ public class NetPropertyGenerator : IIncrementalGenerator
         // Prediction fields
         bool Predicted,
         bool HasToleranceProperty,
-        // INetPropertyBindable support
-        bool ImplementsINetPropertyBindable);
+        // True for INetSerializable object properties (need their ref seeded into the cache at init)
+        bool ImplementsINetSerializable);
 }

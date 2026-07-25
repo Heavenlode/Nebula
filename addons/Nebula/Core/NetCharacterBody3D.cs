@@ -194,7 +194,7 @@ namespace Nebula
             return true;
         }
 
-        public static void OnPeerAcknowledge(NetCharacterBody3D obj, UUID peerId)
+        public static void OnPeerAcknowledge(NetCharacterBody3D obj, UUID peerId, int tick)
         {
             // No-op: NetNode3D doesn't track per-peer state
         }

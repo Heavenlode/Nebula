@@ -842,21 +842,6 @@ namespace Nebula
 			}
 		}
 
-		/// <summary>
-		/// Marks a property as dirty by its global property index.
-		/// Used by INetPropertyBindable types (like NetArray) when internal state changes.
-		/// </summary>
-		public void MarkDirtyByIndex(int globalPropertyIndex)
-		{
-			// Static children propagate to parent net scene
-			if (!IsNetScene())
-			{
-				NetParent?.MarkDirtyByIndex(globalPropertyIndex);
-				return;
-			}
-
-			DirtyMask |= (1L << globalPropertyIndex);
-		}
 
 		/// <summary>
 		/// Sets a cached property value based on its type. Uses pattern matching to avoid boxing.
@@ -1395,9 +1380,8 @@ namespace Nebula
 
 			CurrentWorld = world;
 
-			// Initialize bindings for INetPropertyBindable properties (like NetArray)
-			// This ensures properties initialized inline get their mutation callbacks bound
-			// and their initial values cached for network serialization
+			// Seed the property cache for INetSerializable object properties (like NetArray) that were
+			// initialized inline -- inline init bypasses the setter, so their reference is cached here.
 			// Must call through concrete type for polymorphic dispatch (interface has default empty impl)
 			if (RawNode is NetNode3D n3d)
 				n3d.InitializeNetPropertyBindings();

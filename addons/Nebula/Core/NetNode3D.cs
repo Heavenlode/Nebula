@@ -52,7 +52,11 @@ namespace Nebula
             var spawnSerializer = new SpawnSerializer(Network);
             var propertySerializer = new NetPropertiesSerializer(Network);
             var interestResyncSerializer = new InterestResyncSerializer(Network);
-            Serializers = [spawnSerializer, propertySerializer, interestResyncSerializer];
+            Serializers = [
+                spawnSerializer,
+                propertySerializer,
+                interestResyncSerializer
+            ];
         }
 
         public virtual void _WorldReady() { }

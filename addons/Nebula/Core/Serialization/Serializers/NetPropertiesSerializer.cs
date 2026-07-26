@@ -1394,8 +1394,15 @@ namespace Nebula.Serialization.Serializers
             }
 
             // Zero-alloc dictionary access via ref for delta state
-            ref var state = ref CollectionsMarshal.GetValueRefOrAddDefault(_peerStates, peerId, out bool isNew);
-            if (isNew || !state.IsInitialized)
+            // NOTE: GetValueRefOrAddDefault's out parameter is `exists` - true when the key was
+            // ALREADY in the dictionary - not `isNew`. Reading it the other way round meant this
+            // block recreated the peer's state on every export after the first, wiping AckedMask,
+            // PendingDirtyMask, SentHistory and LatestAckedTick every single tick. Consequences:
+            // delta encoding could never engage (no baseline ever survived to be used), acks could
+            // never commit (SentHistory was blank by the time the ack arrived), and every export
+            // allocated a fresh set of state arrays.
+            ref var state = ref CollectionsMarshal.GetValueRefOrAddDefault(_peerStates, peerId, out bool exists);
+            if (!exists || !state.IsInitialized)
             {
                 state = CreateOrGetPooledState();
             }

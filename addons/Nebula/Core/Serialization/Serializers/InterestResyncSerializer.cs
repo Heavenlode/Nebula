@@ -11,9 +11,9 @@ namespace Nebula.Serialization.Serializers
     public partial class InterestResyncSerializer : RefCounted, IStateSerializer
     {
         private const int SYNC_INTERVAL = 3; // ~10hz at 30 TPS
-        
+
         private NetworkController network;
-        
+
         // Client-side: tracks current interest state
         private bool clientHasInterest = false;
 
@@ -34,14 +34,14 @@ namespace Nebula.Serialization.Serializers
             {
                 return;
             }
-            
+
             // Stagger by node ID so not all nodes sync on same tick
             int tickOffset = (int)(network.NetId.Value % SYNC_INTERVAL);
             if ((currentWorld.CurrentTick + tickOffset) % SYNC_INTERVAL != 0)
             {
                 return;
             }
-            
+
             bool isInterested = network.IsPeerInterested(peer);
             NetWriter.WriteByte(buffer, isInterested ? (byte)1 : (byte)0);
         }
@@ -50,10 +50,10 @@ namespace Nebula.Serialization.Serializers
         {
             nodeOut = network;
             if (network == null) return;
-            
+
             byte interestByte = NetReader.ReadByte(buffer);
             bool hasInterest = interestByte == 1;
-            
+
             // Only fire event if state actually changed
             if (hasInterest != clientHasInterest)
             {

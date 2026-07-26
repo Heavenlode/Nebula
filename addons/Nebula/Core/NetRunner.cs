@@ -349,6 +349,28 @@ namespace Nebula
         public static bool LogTickPayloads =>
             _logTickPayloads ??= ProjectSettings.GetSetting("Nebula/config/log_tick_payloads", false).AsBool();
 
+        private static bool? _packEnabled;
+        /// <summary>
+        /// When enabled via <c>Nebula/config/pack_enabled</c>, the server delta-compresses tick
+        /// payloads against a baseline the peer has acknowledged (see NebulaPack).
+        ///
+        /// This is a server-side, per-packet decision — every packet says whether it is a delta or
+        /// raw — so clients decode both regardless of their own setting and no handshake is needed.
+        /// Cached on first read; toggling takes effect on the next run.
+        /// </summary>
+        public static bool PackEnabled =>
+            _packEnabled ??= ProjectSettings.GetSetting("Nebula/config/pack_enabled", false).AsBool();
+
+        private static bool? _packValidate;
+        /// <summary>
+        /// When enabled via <c>Nebula/config/pack_validate</c>, the server appends a checksum of the
+        /// raw payload and the client verifies it after decoding. Costs 2 bytes per packet and
+        /// catches any window divergence immediately instead of letting it corrupt state silently.
+        /// Recommended on in development.
+        /// </summary>
+        public static bool PackValidate =>
+            _packValidate ??= ProjectSettings.GetSetting("Nebula/config/pack_validate", false).AsBool();
+
         private void _debugService()
         {
             if (debugEnet == null) return;

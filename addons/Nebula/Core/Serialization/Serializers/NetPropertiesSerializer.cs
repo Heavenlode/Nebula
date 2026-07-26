@@ -51,10 +51,26 @@ namespace Nebula.Serialization.Serializers
 
     public partial class NetPropertiesSerializer : RefCounted, IStateSerializer
     {
-        private struct Data
+        /// <summary>
+        /// Decoded values from a single received payload.
+        ///
+        /// The decoded set lives in the serializer's <see cref="_decodedMask"/> /
+        /// <see cref="_decodedValues"/> scratch rather than in a per-packet Dictionary, so
+        /// importing a packet allocates nothing. Consumers iterate set bits of the mask in
+        /// property-index order and read the value out of the array; there is no hashing.
+        /// </summary>
+        private readonly struct Data
         {
-            public byte[] propertiesUpdated;
-            public Dictionary<int, PropertyCache> properties;
+            /// <summary>Which property indices this payload actually decoded a value for.</summary>
+            public readonly byte[] DecodedMask;
+            /// <summary>Values by property index; only indices set in DecodedMask are meaningful.</summary>
+            public readonly PropertyCache[] Values;
+
+            public Data(byte[] decodedMask, PropertyCache[] values)
+            {
+                DecodedMask = decodedMask;
+                Values = values;
+            }
         }
 
         /// <summary>
@@ -112,6 +128,10 @@ namespace Nebula.Serialization.Serializers
 
         // Cached node lookups to avoid GetNode() allocations
         private Dictionary<StringName, Node> _nodePathCache = new();
+
+        // Cached StringName -> NodePath conversions. Kept separate from _nodePathCache so
+        // that re-resolving a stale node does not re-allocate the path.
+        private Dictionary<StringName, NodePath> _nodePathConversionCache = new();
 
         // ============================================================
         // DELTA ENCODING STATE
@@ -236,6 +256,10 @@ namespace Nebula.Serialization.Serializers
                 _propIntWidth = Array.Empty<IntWidth>();
                 _propChunkBudget = Array.Empty<int>();
                 _propertiesUpdated = Array.Empty<byte>();
+                _actualMask = Array.Empty<byte>();
+                _decodedMask = Array.Empty<byte>();
+                _decodedValues = Array.Empty<PropertyCache>();
+                _incomingMask = Array.Empty<byte>();
                 return;
             }
 
@@ -280,6 +304,10 @@ namespace Nebula.Serialization.Serializers
 
             _byteCount = (_propertyCount + BitConstants.BitsInByte - 1) / BitConstants.BitsInByte;
             _propertiesUpdated = new byte[_byteCount];
+            _actualMask = new byte[_byteCount];
+            _decodedMask = new byte[_byteCount];
+            _decodedValues = new PropertyCache[_propertyCount];
+            _incomingMask = new byte[_byteCount];
 
             if (NetRunner.Instance.IsServer)
             {
@@ -489,15 +517,41 @@ namespace Nebula.Serialization.Serializers
 
         /// <summary>
         /// Gets a node by path with caching to avoid GetNode() allocations.
+        ///
+        /// Three things the naive cache got wrong:
+        /// - A freed or reparented node left a dangling entry that was handed out forever.
+        ///   Entries are revalidated with IsInstanceValid and re-resolved when stale.
+        /// - A failed lookup was cached as null, so the property could never recover even
+        ///   once the node existed - and the caller re-logged the failure every tick.
+        ///   Misses are no longer cached.
+        /// - The StringName -> NodePath conversion (which allocates a string and a NodePath)
+        ///   ran on every miss. It is cached separately so a re-resolve reuses it.
         /// </summary>
         private Node GetCachedNode(StringName nodePath)
         {
-            if (!_nodePathCache.TryGetValue(nodePath, out var node))
+            if (_nodePathCache.TryGetValue(nodePath, out var node))
             {
-                // Convert StringName to NodePath for GetNode - this allocates once per unique path
-                node = network.RawNode.GetNode(new NodePath(nodePath.ToString()));
+                if (GodotObject.IsInstanceValid(node))
+                {
+                    return node;
+                }
+                // Node was freed or replaced - drop the stale entry and resolve again.
+                _nodePathCache.Remove(nodePath);
+            }
+
+            if (!_nodePathConversionCache.TryGetValue(nodePath, out var path))
+            {
+                path = new NodePath(nodePath.ToString());
+                _nodePathConversionCache[nodePath] = path;
+            }
+
+            node = network.RawNode.GetNodeOrNull(path);
+            if (node != null)
+            {
                 _nodePathCache[nodePath] = node;
             }
+            // Misses are deliberately not cached: the node may be added later, and caching
+            // null would pin the failure permanently.
             return node;
         }
 
@@ -644,15 +698,14 @@ namespace Nebula.Serialization.Serializers
             int startPos = buffer.ReadPosition;
             int byteCount = _byteCount;
 
-            var data = new Data
-            {
-                propertiesUpdated = new byte[byteCount],
-                properties = new()
-            };
+            // Decode into reusable scratch. _incomingMask is fully overwritten by the read
+            // below; _decodedMask must be cleared because it accumulates as we decode.
+            byte[] propertiesUpdated = _incomingMask;
+            Array.Clear(_decodedMask, 0, byteCount);
 
-            for (byte i = 0; i < data.propertiesUpdated.Length; i++)
+            for (int i = 0; i < byteCount; i++)
             {
-                data.propertiesUpdated[i] = NetReader.ReadByte(buffer);
+                propertiesUpdated[i] = NetReader.ReadByte(buffer);
             }
 
             // ============================================================
@@ -702,9 +755,9 @@ namespace Nebula.Serialization.Serializers
             // Pass 1: Read PRIMITIVE properties (non-IsObjectProperty)
             // Note: We use IsObjectProperty (INetSerializable vs INetValue) NOT VariantType
             // to match the server's Export order which uses _propIsObject[]
-            for (byte propertyByteIndex = 0; propertyByteIndex < data.propertiesUpdated.Length; propertyByteIndex++)
+            for (int propertyByteIndex = 0; propertyByteIndex < byteCount; propertyByteIndex++)
             {
-                var propertyByte = data.propertiesUpdated[propertyByteIndex];
+                var propertyByte = propertiesUpdated[propertyByteIndex];
                 for (byte propertyBit = 0; propertyBit < BitConstants.BitsInByte; propertyBit++)
                 {
                     if ((propertyByte & (1 << propertyBit)) == 0)
@@ -788,15 +841,16 @@ namespace Nebula.Serialization.Serializers
 
                     if (!discardPayload)
                     {
-                        data.properties[propertyIndex] = cache;
+                        _decodedValues[propertyIndex] = cache;
+                        _decodedMask[propertyByteIndex] |= (byte)(1 << propertyBit);
                     }
                 }
             }
 
             // Pass 2: Read OBJECT properties (IsObjectProperty = INetSerializable types)
-            for (byte propertyByteIndex = 0; propertyByteIndex < data.propertiesUpdated.Length; propertyByteIndex++)
+            for (int propertyByteIndex = 0; propertyByteIndex < byteCount; propertyByteIndex++)
             {
-                var propertyByte = data.propertiesUpdated[propertyByteIndex];
+                var propertyByte = propertiesUpdated[propertyByteIndex];
                 for (byte propertyBit = 0; propertyBit < BitConstants.BitsInByte; propertyBit++)
                 {
                     if ((propertyByte & (1 << propertyBit)) == 0)
@@ -840,7 +894,11 @@ namespace Nebula.Serialization.Serializers
 
                     // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[Props.R] idx={propertyIndex} '{prop.NodePath}.{prop.Name}' type=Object bytes={buffer.ReadPosition - propStartPos}");
 
-                    data.properties[propertyIndex] = cache;
+                    // Object properties are recorded even when discardPayload is set: they
+                    // are deserialized in place and carry no delta baseline, so the decode
+                    // has already mutated the live object regardless.
+                    _decodedValues[propertyIndex] = cache;
+                    _decodedMask[propertyByteIndex] |= (byte)(1 << propertyBit);
                 }
             }
 
@@ -870,11 +928,17 @@ namespace Nebula.Serialization.Serializers
                     Array.Copy(network.CachedProperties, entry.Values, _propertyCount);
                 }
 
-                foreach (var propIndex in data.properties.Keys)
+                for (int byteIdx = 0; byteIdx < byteCount; byteIdx++)
                 {
-                    if (propIndex >= _propertyCount) continue;
-                    ref var decoded = ref CollectionsMarshal.GetValueRefOrNullRef(data.properties, propIndex);
-                    entry.Values[propIndex] = decoded;
+                    var decodedByte = _decodedMask[byteIdx];
+                    if (decodedByte == 0) continue;
+                    for (int bit = 0; bit < BitConstants.BitsInByte; bit++)
+                    {
+                        if ((decodedByte & (1 << bit)) == 0) continue;
+                        int propIndex = byteIdx * BitConstants.BitsInByte + bit;
+                        if (propIndex >= _propertyCount) continue;
+                        entry.Values[propIndex] = _decodedValues[propIndex];
+                    }
                 }
 
                 entry.Tick = currentTick;
@@ -882,7 +946,7 @@ namespace Nebula.Serialization.Serializers
             }
 
             // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[Props.Import] NetId={network.NetId} total={buffer.ReadPosition - startPos} endPos={buffer.ReadPosition}");
-            return data;
+            return new Data(_decodedMask, _decodedValues);
         }
 
         /// <summary>
@@ -1177,19 +1241,44 @@ namespace Nebula.Serialization.Serializers
                 network.BeginSnapshotForTick(currentWorld.CurrentTick);
             }
 
-            foreach (var propIndex in data.properties.Keys)
-            {
-                var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-                // Get a ref to the value in the dictionary for zero-copy
-                ref var propValue = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(data.properties, propIndex);
+            // Apply primitives first, then object properties. This mirrors the order the
+            // old Dictionary happened to yield (insertion order: decode pass 1, then pass 2),
+            // so any OnNetworkChange handler that observes a sibling property still sees the
+            // same ordering it did before.
+            ApplyDecoded(data, currentWorld.CurrentTick, isReady, objectPass: false);
+            ApplyDecoded(data, currentWorld.CurrentTick, isReady, objectPass: true);
+        }
 
-                if (isReady)
+        /// <summary>
+        /// Applies one class of decoded properties (primitives or objects) in index order.
+        /// Values are read by ref straight out of the scratch array - no copy, no hashing.
+        /// </summary>
+        private void ApplyDecoded(Data data, Tick tick, bool isReady, bool objectPass)
+        {
+            for (int byteIdx = 0; byteIdx < _byteCount; byteIdx++)
+            {
+                var decodedByte = data.DecodedMask[byteIdx];
+                if (decodedByte == 0) continue;
+
+                for (int bit = 0; bit < BitConstants.BitsInByte; bit++)
                 {
-                    ImportProperty(prop, currentWorld.CurrentTick, ref propValue);
-                }
-                else
-                {
-                    cachedPropertyChanges[propIndex] = propValue;
+                    if ((decodedByte & (1 << bit)) == 0) continue;
+
+                    int propIndex = byteIdx * BitConstants.BitsInByte + bit;
+                    if (propIndex >= _propertyCount) continue;
+                    if (_propIsObject[propIndex] != objectPass) continue;
+
+                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                    ref var propValue = ref data.Values[propIndex];
+
+                    if (isReady)
+                    {
+                        ImportProperty(prop, tick, ref propValue);
+                    }
+                    else
+                    {
+                        cachedPropertyChanges[propIndex] = propValue;
+                    }
                 }
             }
         }
@@ -1234,6 +1323,33 @@ namespace Nebula.Serialization.Serializers
         }
 
         private byte[] _propertiesUpdated;
+
+        /// <summary>
+        /// Scratch mask of properties actually written by the current Export. Instance
+        /// scratch rather than a per-call allocation; safe because Export is driven
+        /// serially by WorldRunner.ExportState (one peer, one node at a time).
+        /// </summary>
+        private byte[] _actualMask;
+
+        /// <summary>
+        /// Scratch for the payload currently being imported: which property indices decoded
+        /// a value, and the values themselves.
+        ///
+        /// Same serial-access assumption as _actualMask, and one step stronger: the values
+        /// are still being read while ImportProperty fires OnNetworkChange handlers, so a
+        /// handler that synchronously drove another Import of THIS node would overwrite the
+        /// buffer mid-apply. WorldRunner applies packets one node at a time off the network
+        /// tick and nothing re-enters it, so this holds - but it is the reason this scratch
+        /// is per-serializer rather than shared across serializers.
+        ///
+        /// _decodedValues is intentionally not cleared between packets; entries whose
+        /// _decodedMask bit is unset are never read.
+        /// </summary>
+        private byte[] _decodedMask;
+        private PropertyCache[] _decodedValues;
+
+        /// <summary>Scratch for the incoming presence mask read off the wire.</summary>
+        private byte[] _incomingMask;
 
         public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
@@ -1402,9 +1518,11 @@ namespace Nebula.Serialization.Serializers
             // Baseline age header: 0 = every property in this payload is absolute
             NetWriter.WriteByte(buffer, (byte)baselineAge);
 
-            // Track which properties actually got written (for combined mask)
-            // Start with primitive mask
-            byte[] actualMask = new byte[byteCount];
+            // Track which properties actually got written (for combined mask).
+            // Reused scratch, not a fresh array: Export runs once per peer per node per
+            // tick, so allocating here was one of the largest per-tick GC sources in the
+            // netcode. Fully overwritten by the copy below, so no clear is needed.
+            byte[] actualMask = _actualMask;
             Array.Copy(_propertiesUpdated, actualMask, byteCount);
 
             // Write PRIMITIVE properties (only dirty ones)

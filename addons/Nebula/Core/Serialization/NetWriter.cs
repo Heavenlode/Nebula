@@ -343,16 +343,21 @@ namespace Nebula.Serialization
         /// Writes a type tag followed by the value. Used for polymorphic serialization
         /// where the type isn't known at compile time.
         /// </summary>
-        public static void WriteWithType(NetBuffer buffer, SerialVariantType type, object value)
+        public static void WriteWithType(NetBuffer buffer, SerialVariantType type, object value, string subtype = null)
         {
             WriteByte(buffer, (byte)type);
-            WriteByType(buffer, type, value);
+            WriteByType(buffer, type, value, subtype);
         }
 
         /// <summary>
         /// Writes a value based on its SerialVariantType without writing the type tag.
         /// </summary>
-        public static void WriteByType(NetBuffer buffer, SerialVariantType type, object value)
+        /// <param name="subtype">
+        /// The declared type identifier for this value (<c>SerialMetadata.TypeIdentifier</c>). Integers
+        /// are written at the width it implies — see <see cref="WriteSizedInt"/>. Callers that have it
+        /// MUST pass it.
+        /// </param>
+        public static void WriteByType(NetBuffer buffer, SerialVariantType type, object value, string subtype = null)
         {
             switch (type)
             {
@@ -360,7 +365,7 @@ namespace Nebula.Serialization
                     WriteBool(buffer, (bool)value);
                     break;
                 case SerialVariantType.Int:
-                    WriteInt64(buffer, Convert.ToInt64(value));
+                    WriteSizedInt(buffer, subtype, Convert.ToInt64(value));
                     break;
                 case SerialVariantType.Float:
                     WriteFloat(buffer, Convert.ToSingle(value));
@@ -388,6 +393,50 @@ namespace Nebula.Serialization
                     break;
                 default:
                     throw new NotSupportedException($"NetWriter.WriteByType: Unsupported type {type}");
+            }
+        }
+
+        /// <summary>
+        /// Writes an integer at the width its declared subtype implies.
+        ///
+        /// This MUST mirror <c>NetReader.ReadAbsoluteValue</c>'s Int case exactly. The reader chooses
+        /// its width from the subtype, so a writer that always emits 64 bits leaves the stream
+        /// misaligned: the first value still decodes (its low bytes sit where the reader looks) and
+        /// every value after it is read from the wrong offset. A single-argument payload hides this
+        /// completely — the surplus bytes are simply never read — which is why it only surfaces once
+        /// a second argument is added.
+        /// </summary>
+        private static void WriteSizedInt(NetBuffer buffer, string subtype, long value)
+        {
+            switch (subtype)
+            {
+                case "byte":
+                case "System.Byte":
+                case "sbyte":
+                case "System.SByte":
+                    WriteByte(buffer, unchecked((byte)value));
+                    break;
+                case "short":
+                case "System.Int16":
+                    WriteInt16(buffer, unchecked((short)value));
+                    break;
+                case "ushort":
+                case "System.UInt16":
+                    WriteUInt16(buffer, unchecked((ushort)value));
+                    break;
+                case "int":
+                case "Int":
+                case "System.Int32":
+                    WriteInt32(buffer, unchecked((int)value));
+                    break;
+                case "uint":
+                case "System.UInt32":
+                    WriteUInt32(buffer, unchecked((uint)value));
+                    break;
+                default:
+                    // long, ulong, or an unrecognised subtype — the reader's default is Int64 too.
+                    WriteInt64(buffer, value);
+                    break;
             }
         }
 

@@ -76,6 +76,20 @@ public partial class ProjectSettingsController : Node
             {"type", (int)Variant.Type.Bool},
         });
 
+        // NebulaPack: delta-compress tick payloads against a baseline the peer has acknowledged.
+        // Server-side and per-packet - every packet says whether it is a delta or raw - so clients
+        // decode both regardless and no handshake is involved.
+        Register("Nebula/config/pack_enabled", true, new(){
+            {"type", (int)Variant.Type.Bool},
+        });
+
+        // NebulaPack: append a checksum of the raw payload and verify it after decoding. Costs 2
+        // bytes per packet and turns any window divergence into an immediate, loud failure rather
+        // than silently corrupted state. Worth leaving on until the feature has real mileage.
+        Register("Nebula/config/pack_validate", true, new(){
+            {"type", (int)Variant.Type.Bool},
+        });
+
         // Save project settings after modification
         ProjectSettings.Save();
     }

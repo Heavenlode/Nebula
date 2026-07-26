@@ -687,6 +687,19 @@ namespace Nebula
         private NetBuffer _ackBuffer;
 
         /// <summary>
+        /// A tick the client has applied but not yet acknowledged, held so it can ride along on the
+        /// next outgoing input packet instead of costing its own datagram. -1 when nothing is
+        /// waiting. Never held longer than one physics frame — _PhysicsProcess flushes it.
+        /// </summary>
+        private Tick _pendingAckTick = -1;
+
+        /// <summary>
+        /// Whether this prediction tick already attached the pending ack to an input packet.
+        /// SendInput runs once per owned node, and only the first should carry it.
+        /// </summary>
+        private bool _ackAttachedThisFrame;
+
+        /// <summary>
         /// Initializes client prediction state from the first received server tick.
         /// </summary>
         private void InitializeClientPrediction(Tick serverTick)
@@ -1135,6 +1148,8 @@ namespace Nebula
 
             PeerStates.Remove(peerId);
             _peerLastAckTick.Remove(peerId);
+            ResetPackState(peerId);
+            _peerPackWindows.Remove(peerId);
             _peerPendingAcks.Remove(peerId); // Fix #5: Clean up pending acks tracking
             _peerNetBufferPool.Remove(peerId); // Clean up pooled export buffer
             _peerListDirty = true; // Fix #1: Mark peer list as dirty
@@ -1362,16 +1377,29 @@ namespace Nebula
                             continue;
                         }
 
+                        var packPayload = peerStateBuffer.WrittenSpan;
+
                         using var buffer = new NetBuffer();
                         NetWriter.WriteInt32(buffer, CurrentTick);
-                        NetWriter.WriteBytes(buffer, peerStateBuffer.WrittenSpan);
-                        var size = buffer.Length;
-                        if (size > NetRunner.MTU)
+                        _peerPackWindows.TryGetValue(peerId, out var packWindow);
+                        NebulaPack.WritePacket(
+                            buffer, packPayload, packWindow, CurrentTick,
+                            NetRunner.PackEnabled, NetRunner.PackValidate);
+
+                        // Check the UNCOMPRESSED size against the MTU. Checking the compressed size
+                        // would let compression mask a genuinely oversized world, and the payload
+                        // still has to fit whenever no baseline is available.
+                        var rawSize = sizeof(int) + 1 + packPayload.Length;
+                        if (rawSize > NetRunner.MTU)
                         {
-                            Log(Debugger.DebugLevel.ERROR, $"[MTU EXCEEDED] Peer {peer.ID} tick {CurrentTick}: Data size {size} exceeds MTU {NetRunner.MTU} - PACKET MAY BE CORRUPTED!");
+                            Log(Debugger.DebugLevel.ERROR, $"[MTU EXCEEDED] Peer {peer.ID} tick {CurrentTick}: Uncompressed size {rawSize} exceeds MTU {NetRunner.MTU} (on wire {buffer.Length}) - PACKET MAY BE CORRUPTED!");
                         }
 
                         NetRunner.SendUnreliableSequenced(peer, (byte)NetRunner.ENetChannelId.Tick, buffer);
+
+                        // Remember what we sent; it becomes a delta baseline once this peer acks it.
+                        RecordPackPayload(peerId, peerStateBuffer.WrittenSpan);
+
                         if (DebugTcpListener != null && DebugTcpClients.Count > 0)
                         {
                             using var debugBuffer = new NetBuffer();
@@ -1637,15 +1665,42 @@ namespace Nebula
             }
 
             // CLIENT: Independent prediction tick loop
-            if (NetRunner.Instance.IsClient && _predictionInitialized)
+            if (NetRunner.Instance.IsClient)
             {
-                _clientFrameCounter += 1;
-                if (_clientFrameCounter >= NetRunner.PhysicsTicksPerNetworkTick)
+                if (_predictionInitialized)
                 {
-                    _clientFrameCounter = 0;
-                    RunClientPredictionTick();
+                    _clientFrameCounter += 1;
+                    if (_clientFrameCounter >= NetRunner.PhysicsTicksPerNetworkTick)
+                    {
+                        _clientFrameCounter = 0;
+                        _ackAttachedThisFrame = false;
+                        RunClientPredictionTick();
+                    }
+                }
+
+                // Anything RunClientPredictionTick didn't manage to attach to an input packet goes
+                // out on its own. This sits OUTSIDE the _predictionInitialized check on purpose:
+                // PeerAcknowledge is what moves a peer from INITIAL to IN_WORLD, and before
+                // prediction starts the client owns nothing, so there is no input packet to ride
+                // on. Gating this would deadlock the join.
+                if (_pendingAckTick >= 0)
+                {
+                    SendStandaloneAck(_pendingAckTick);
+                    _pendingAckTick = -1;
                 }
             }
+        }
+
+        /// <summary>
+        /// Sends a tick acknowledgement as its own packet, the way every ack used to go out.
+        /// Used when no input packet was available to carry it.
+        /// </summary>
+        private void SendStandaloneAck(Tick tick)
+        {
+            _ackBuffer ??= new NetBuffer();
+            _ackBuffer.Reset();
+            NetWriter.WriteInt32(_ackBuffer, tick);
+            NetRunner.SendUnreliableSequenced(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Tick, _ackBuffer);
         }
 
         /// <summary>
@@ -1796,6 +1851,11 @@ namespace Nebula
             CurrentTick = -1;
             _predictionInitialized = false;
             _clientPredictedTick = -1;
+
+            // Node ids are per-peer-per-world, so a payload captured in the old world would decode
+            // into entirely the wrong nodes. The destination world also restarts near tick 0, which
+            // would otherwise collide with retained ring slots.
+            _clientPackWindow.Reset();
             TimeSinceLastTick = 0f;
             _ownedEntities.Clear();
             _ownedEntitiesDirty = true;
@@ -1822,6 +1882,49 @@ namespace Nebula
         /// Tracks the last tick each peer acknowledged. Used for timeout detection.
         /// </summary>
         private Dictionary<UUID, Tick> _peerLastAckTick = new();
+
+        /// <summary>
+        /// NebulaPack, server side: the recent payloads sent to each peer. Each entry is marked
+        /// acked as that peer's ack for it arrives, and only marked entries may be used as a delta
+        /// baseline.
+        ///
+        /// Don't try to drive this off <see cref="_peerLastAckTick"/> above. That tracks only the
+        /// newest ack, which is fine for timeout detection but says nothing about whether any
+        /// particular older tick arrived.
+        /// </summary>
+        private Dictionary<UUID, NebulaPackWindow> _peerPackWindows = new();
+
+        /// <summary>
+        /// NebulaPack, client side: the payloads this client has applied and acked, which is exactly
+        /// the set the server is allowed to delta against.
+        /// </summary>
+        private readonly NebulaPackWindow _clientPackWindow = new();
+        private NetBuffer _clientPackBuffer;
+
+        /// <summary>
+        /// Remembers the payload just sent to a peer, so it can be used as a delta baseline once
+        /// that peer acknowledges the tick.
+        /// </summary>
+        private void RecordPackPayload(UUID peerId, ReadOnlySpan<byte> payload)
+        {
+            if (!_peerPackWindows.TryGetValue(peerId, out var window))
+            {
+                window = new NebulaPackWindow();
+                _peerPackWindows[peerId] = window;
+            }
+            window.Record(CurrentTick, payload);
+        }
+
+
+        /// <summary>
+        /// Drops NebulaPack state for a peer. Called on disconnect, and on world migration where
+        /// node ids are reassigned — a payload from the previous world would decode into the wrong
+        /// nodes entirely.
+        /// </summary>
+        private void ResetPackState(UUID peerId)
+        {
+            if (_peerPackWindows.TryGetValue(peerId, out var window)) window.Reset();
+        }
 
         /// <summary>
         /// Server-side: the last tick this peer acknowledged receiving, or -1 if none yet.
@@ -2490,6 +2593,11 @@ namespace Nebula
             // Update last ack tick for timeout tracking
             _peerLastAckTick[peerId] = tick;
 
+            // Mark this exact tick as received, so NebulaPack may use it as a delta baseline.
+            // Per-tick on purpose: acks are lossy too, so "everything below the newest ack" is not
+            // a safe assumption (see NebulaPackWindow.MarkAcked).
+            if (_peerPackWindows.TryGetValue(peerId, out var packWindow)) packWindow.MarkAcked(tick);
+
             var isFirstAck = peerState.Status == PeerSyncStatus.INITIAL;
             if (isFirstAck)
             {
@@ -2537,6 +2645,28 @@ namespace Nebula
             }
         }
 
+        /// <summary>
+        /// Client-side. Turns a received tick body back into the raw payload ImportState expects.
+        /// Returns false if the packet can't be trusted, in which case the caller must neither
+        /// apply nor acknowledge the tick — that is what makes the server fall back to raw.
+        /// </summary>
+        private bool TryUnpackTickPayload(Tick tick, byte[] wire, out NetBuffer payload)
+        {
+            _clientPackBuffer ??= new NetBuffer(NetRunner.MTU + 64, usePool: true);
+
+            var result = NebulaPack.ReadPacket(wire, tick, _clientPackWindow, _clientPackBuffer);
+            if (result != PackResult.Ok)
+            {
+                payload = null;
+                Log(Debugger.DebugLevel.ERROR, $"[Nebula][Pack] tick {tick} rejected: {result}");
+                return false;
+            }
+
+            payload = _clientPackBuffer;
+            return true;
+        }
+
+
         public void ClientProcessTick(int incomingTick, byte[] stateBytes)
         {
             // Skip old/duplicate ticks
@@ -2557,8 +2687,17 @@ namespace Nebula
             try
             {
                 // Log(Debugger.DebugLevel.VERBOSE, $"Importing state bytes of size {stateBytes.Length}");
-                using var stateBuffer = new NetBuffer(stateBytes);
-                importSucceeded = ImportState(stateBuffer);
+                if (TryUnpackTickPayload(incomingTick, stateBytes, out var stateBuffer))
+                {
+                    importSucceeded = ImportState(stateBuffer);
+
+                    // Only an applied-and-acked payload may serve as a future baseline, so this is
+                    // gated on exactly the same condition as the ack below.
+                    if (importSucceeded)
+                    {
+                        _clientPackWindow.Record(incomingTick, stateBuffer.WrittenSpan);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -2666,10 +2805,15 @@ namespace Nebula
             // eventually drop this peer, which is the correct outcome for a broken stream.
             if (importSucceeded)
             {
-                _ackBuffer ??= new NetBuffer();
-                _ackBuffer.Reset();
-                NetWriter.WriteInt32(_ackBuffer, incomingTick);
-                NetRunner.SendUnreliableSequenced(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Tick, _ackBuffer);
+                // Don't send yet - hand it to the next outgoing input packet if there is one, so we
+                // pay ~4 bytes inside a packet we're already sending instead of a whole 44-byte
+                // datagram (a 4-byte payload in 40 bytes of IPv4 + UDP + ENet framing).
+                //
+                // If an ack is already waiting, this frame received two state packets. Flush the
+                // older one standalone rather than overwriting it: the server marks baselines
+                // per-tick, so dropping one would cost NebulaPack a baseline it could have used.
+                if (_pendingAckTick >= 0) SendStandaloneAck(_pendingAckTick);
+                _pendingAckTick = incomingTick;
             }
         }
 
@@ -2697,6 +2841,61 @@ namespace Nebula
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Input packet flags. The packet carries the client's tick acknowledgement when
+        /// <see cref="InputFlagHasAck"/> is set, so a 4-byte ack rides inside a packet already
+        /// being sent rather than costing its own 44-byte datagram.
+        ///
+        /// Layout:
+        /// <code>
+        ///   [flags u8][ackTick i32 if HasAck][netId u16][staticChildId u8]
+        ///   [inputSize u16][count u8][baseTick i32]  then count x [tickDelta u8][payload]
+        /// </code>
+        /// </summary>
+        private const byte InputFlagHasAck = 0x01;
+        private const byte InputFlagMask = InputFlagHasAck;
+
+        /// <summary>
+        /// Writes the redundant-input section: <c>[count u8][baseTick i32]</c> then one
+        /// <c>[tickDelta u8][payload]</c> per record. Returns how many records were written.
+        ///
+        /// <paramref name="records"/> comes from GetRecentInputs, which is newest-first and may
+        /// skip gaps in the input ring, so a tick can fall further back than a single byte can
+        /// express. Everything after the newest record is pure redundancy, so the tail is simply
+        /// dropped when that happens rather than falling back to wider ticks.
+        ///
+        /// The count is backfilled because how many records fit isn't known until the deltas have
+        /// been walked.
+        /// </summary>
+        internal static byte WriteInputRecords(NetBuffer buffer, List<(Tick, byte[])> records, int inputSize)
+        {
+            Tick baseTick = records.Count > 0 ? records[0].Item1 : 0;
+
+            int countPos = buffer.WritePosition;
+            NetWriter.WriteByte(buffer, 0);
+            NetWriter.WriteInt32(buffer, baseTick);
+
+            byte written = 0;
+            for (int i = 0; i < records.Count; i++)
+            {
+                var (tick, input) = records[i];
+                long delta = (long)baseTick - tick;
+
+                if (delta < 0 || delta > byte.MaxValue) break;
+                if (input == null || input.Length != inputSize) break;  // size is sent once; must agree
+
+                NetWriter.WriteByte(buffer, (byte)delta);
+                NetWriter.WriteBytes(buffer, input);
+                written++;
+            }
+
+            int endPos = buffer.WritePosition;
+            buffer.WritePosition = countPos;
+            NetWriter.WriteByte(buffer, written);
+            buffer.WritePosition = endPos;
+            return written;
         }
 
         internal void SendInput(NetworkController netNode)
@@ -2731,6 +2930,17 @@ namespace Nebula
             // Get pooled buffer to avoid allocation
             var inputBuffer = netNode.GetPooledInputBuffer();
 
+            // Carry the pending tick ack if nothing else has this frame. Only the first input
+            // packet takes it - SendInput runs once per owned node, and the ack is per-peer.
+            bool carriesAck = _pendingAckTick >= 0 && !_ackAttachedThisFrame;
+            NetWriter.WriteByte(inputBuffer, carriesAck ? InputFlagHasAck : (byte)0);
+            if (carriesAck)
+            {
+                NetWriter.WriteInt32(inputBuffer, _pendingAckTick);
+                _pendingAckTick = -1;
+                _ackAttachedThisFrame = true;
+            }
+
             // Static children don't have their own NetId - use parent's NetId + StaticChildId
             bool isStaticChild = netNode.StaticChildId > 0 && netNode.NetParent != null;
             if (isStaticChild)
@@ -2747,16 +2957,11 @@ namespace Nebula
             // Get recent inputs for redundancy
             var recentInputs = netNode.GetRecentInputs(NetworkController.INPUT_REDUNDANCY_COUNT);
 
-            // Write input count and all recent inputs
-            NetWriter.WriteByte(inputBuffer, (byte)recentInputs.Count);
+            // Every record has the same length (the input struct is fixed size per node), so send it
+            // once rather than repeating a 4-byte length on all 8 redundant copies.
+            NetWriter.WriteUInt16(inputBuffer, (ushort)inputBytes.Length);
 
-            for (int i = 0; i < recentInputs.Count; i++)
-            {
-                var (tick, input) = recentInputs[i];
-                NetWriter.WriteInt32(inputBuffer, tick);
-                NetWriter.WriteInt32(inputBuffer, input.Length);
-                NetWriter.WriteBytes(inputBuffer, input);
-            }
+            WriteInputRecords(inputBuffer, recentInputs, inputBytes.Length);
 
             // Send unreliable - input redundancy handles packet loss
             NetRunner.SendUnreliable(NetRunner.Instance.ServerPeer, (byte)NetRunner.ENetChannelId.Input, inputBuffer);
@@ -2766,6 +2971,20 @@ namespace Nebula
         internal void ReceiveInput(NetPeer peer, NetBuffer buffer)
         {
             if (NetRunner.Instance.IsClient) return;
+
+            // Read the ack FIRST. Every guard below returns early, and an acknowledgement must not
+            // be lost just because the input half of the packet was rejected - acks drive the
+            // INITIAL -> IN_WORLD transition, NebulaPack's baselines, and property resend clearing.
+            var inputFlags = NetReader.ReadByte(buffer);
+            if ((inputFlags & ~InputFlagMask) != 0)
+            {
+                Log(Debugger.DebugLevel.ERROR, $"[Nebula][InvalidInput] Unknown input flag bits 0x{inputFlags:X2} from peer {peer.ID}");
+                return;
+            }
+            if ((inputFlags & InputFlagHasAck) != 0)
+            {
+                PeerAcknowledge(peer, NetReader.ReadInt32(buffer));
+            }
 
             var networkId = NetReader.ReadUInt16(buffer);
             var staticChildId = NetReader.ReadByte(buffer);
@@ -2807,14 +3026,28 @@ namespace Nebula
                 return;
             }
 
+            // Input size is sent once for the whole packet - every redundant record is the same
+            // fixed-size input struct. Validate it against what this node actually expects: the
+            // size now drives every subsequent read, so a wrong value would misalign the rest of
+            // the packet rather than just producing one bad record.
+            var inputSize = NetReader.ReadUInt16(buffer);
+            var expectedSize = node.GetInputBytes().Length;
+            if (inputSize != expectedSize)
+            {
+                Log(Debugger.DebugLevel.ERROR, $"[Nebula][InvalidInput] Input size {inputSize} for node {worldNetId} (staticChild={staticChildId}) does not match the expected {expectedSize}");
+                return;
+            }
+
             // Read input count (redundancy - multiple inputs per packet)
             var inputCount = NetReader.ReadByte(buffer);
+
+            // Ticks are sent as one-byte offsets back from the newest.
+            var baseTick = NetReader.ReadInt32(buffer);
 
             // Read each tick-tagged input and buffer it
             for (int i = 0; i < inputCount; i++)
             {
-                var tick = NetReader.ReadInt32(buffer);
-                var inputSize = NetReader.ReadInt32(buffer);
+                var tick = baseTick - NetReader.ReadByte(buffer);
                 var inputBytes = NetReader.ReadBytes(buffer, inputSize);
 
                 // Clients run ahead of the server, so input ticks are legitimately in the future,
@@ -2897,8 +3130,11 @@ namespace Nebula
             NetWriter.WriteByte(buffer, functionInfo.Index);
             for (int i = 0; i < args.Length; i++)
             {
-                // Use protocol metadata directly, no Variant conversion
-                NetWriter.WriteByType(buffer, functionInfo.Arguments[i].VariantType, args[i]);
+                // Use protocol metadata directly, no Variant conversion. The subtype is not optional:
+                // ReceiveNetFunction reads each argument at the width the subtype implies, so
+                // omitting it here misaligns every argument after the first.
+                var argInfo = functionInfo.Arguments[i];
+                NetWriter.WriteByType(buffer, argInfo.VariantType, args[i], argInfo.Metadata.TypeIdentifier);
             }
             NetRunner.SendReliable(peer, (byte)NetRunner.ENetChannelId.Function, buffer);
         }

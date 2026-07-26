@@ -2885,8 +2885,11 @@ namespace Nebula
             NetWriter.WriteByte(buffer, functionInfo.Index);
             for (int i = 0; i < args.Length; i++)
             {
-                // Use protocol metadata directly, no Variant conversion
-                NetWriter.WriteByType(buffer, functionInfo.Arguments[i].VariantType, args[i]);
+                // Use protocol metadata directly, no Variant conversion. The subtype is not optional:
+                // ReceiveNetFunction reads each argument at the width the subtype implies, so
+                // omitting it here misaligns every argument after the first.
+                var argInfo = functionInfo.Arguments[i];
+                NetWriter.WriteByType(buffer, argInfo.VariantType, args[i], argInfo.Metadata.TypeIdentifier);
             }
             NetRunner.SendReliable(peer, (byte)NetRunner.ENetChannelId.Function, buffer);
         }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Godot;
@@ -22,6 +21,32 @@ namespace Nebula.Serialization.Serializers
         DeltaFull = 2,
         /// <summary>Quaternion uses smallest-three encoding (6 bytes)</summary>
         QuatCompressed = 0x80,
+    }
+
+    /// <summary>
+    /// The wire width of an integer property, resolved once from its declared subtype string.
+    ///
+    /// Every read and write path for Int properties used to re-derive this by string-switching
+    /// on ProtocolNetProperty.Metadata.TypeIdentifier, which meant four separate switch blocks
+    /// had to agree on the spelling of every alias ("int" / "Int" / "System.Int32" / ...). One
+    /// missing case in any of them silently picks a different width than its counterpart and
+    /// misaligns the rest of the stream. Resolving to this enum once, in the constructor, gives
+    /// reader and writer a single shared source of truth.
+    /// </summary>
+    public enum IntWidth : byte
+    {
+        /// <summary>long / ulong / unrecognised subtype. Stored in PropertyCache.LongValue.</summary>
+        Int64 = 0,
+        /// <summary>byte / sbyte. Stored in PropertyCache.ByteValue.</summary>
+        Byte,
+        /// <summary>short. Stored in PropertyCache.IntValue.</summary>
+        Int16,
+        /// <summary>ushort. Stored in PropertyCache.IntValue.</summary>
+        UInt16,
+        /// <summary>int. Stored in PropertyCache.IntValue.</summary>
+        Int32,
+        /// <summary>uint. Stored in PropertyCache.IntValue.</summary>
+        UInt32,
     }
 
     public partial class NetPropertiesSerializer : RefCounted, IStateSerializer
@@ -116,8 +141,32 @@ namespace Nebula.Serialization.Serializers
         /// <summary>Pre-cached: is this property a per-peer property (different value for each peer)?</summary>
         private readonly bool[] _propIsPerPeer;
 
+        /// <summary>
+        /// Pre-cached interest metadata. These come from the [NetProperty] attribute and are
+        /// baked into the generated protocol tables at build time - they declare which layers
+        /// a property belongs to and never change at runtime. The mutable half of the interest
+        /// check is the PEER's layers, which Export re-reads every tick via TryGetInterestLayers.
+        /// </summary>
+        private readonly long[] _propInterestMask;
+        private readonly long[] _propInterestRequired;
+
+        /// <summary>Pre-cached: wire width for Int properties, resolved once from the subtype string.</summary>
+        private readonly IntWidth[] _propIntWidth;
+
+        /// <summary>Pre-cached: chunk budget handed to object/custom-type serializers.</summary>
+        private readonly int[] _propChunkBudget;
+
+        /// <summary>Pre-cached size in bytes of the property presence mask.</summary>
+        private readonly int _byteCount;
+
         /// <summary>Pre-cached: does this scene have any object (INetSerializable) properties?</summary>
         private readonly bool _hasObjectProps;
+
+        /// <summary>Handler registered on network.InterestChanged; kept so it can be unsubscribed.</summary>
+        private readonly Action<UUID, long, long> _interestChangedHandler;
+
+        /// <summary>Whether FlushPendingChanges was connected to RawNode.Ready (client only).</summary>
+        private readonly bool _readyHandlerAttached;
 
         /// <summary>
         /// Small delta threshold - deltas below this use half-float encoding.
@@ -162,11 +211,6 @@ namespace Nebula.Serialization.Serializers
         /// </summary>
         private Tick _lastAppliedTick = -1;
 
-        /// <summary>
-        /// Scratch cache handed to ReadDeltaOrAbsolute when a payload has no baseline.
-        /// </summary>
-        private static PropertyCache _dummyBaseline;
-
         public NetPropertiesSerializer(NetworkController _network)
         {
             network = _network;
@@ -176,12 +220,22 @@ namespace Nebula.Serialization.Serializers
 
             if (!network.IsNetScene())
             {
+                // A non-NetScene node has no networked properties, so WorldRunner never
+                // registers it for export and Export/Import are unreachable. Everything is
+                // still initialised to empty rather than left null so that a stray call
+                // degrades to "nothing to send" instead of a NullReferenceException.
                 _propertyCount = 0;
+                _byteCount = 0;
                 _propSupportsDelta = Array.Empty<bool>();
                 _propTypes = Array.Empty<SerialVariantType>();
                 _propIsObject = Array.Empty<bool>();
                 _propClassIndex = Array.Empty<int>();
                 _propIsPerPeer = Array.Empty<bool>();
+                _propInterestMask = Array.Empty<long>();
+                _propInterestRequired = Array.Empty<long>();
+                _propIntWidth = Array.Empty<IntWidth>();
+                _propChunkBudget = Array.Empty<int>();
+                _propertiesUpdated = Array.Empty<byte>();
                 return;
             }
 
@@ -204,6 +258,10 @@ namespace Nebula.Serialization.Serializers
             _propIsObject = new bool[_propertyCount];
             _propClassIndex = new int[_propertyCount];
             _propIsPerPeer = new bool[_propertyCount];
+            _propInterestMask = new long[_propertyCount];
+            _propInterestRequired = new long[_propertyCount];
+            _propIntWidth = new IntWidth[_propertyCount];
+            _propChunkBudget = new int[_propertyCount];
 
             for (int i = 0; i < _propertyCount; i++)
             {
@@ -213,21 +271,22 @@ namespace Nebula.Serialization.Serializers
                 _propIsObject[i] = prop.IsObjectProperty;
                 _propClassIndex[i] = prop.ClassIndex;
                 _propIsPerPeer[i] = prop.IsPerPeer;
+                _propInterestMask[i] = prop.InterestMask;
+                _propInterestRequired[i] = prop.InterestRequired;
+                _propIntWidth[i] = ResolveIntWidth(prop.Metadata.TypeIdentifier);
+                _propChunkBudget[i] = prop.ChunkBudget;
                 if (prop.IsObjectProperty) _hasObjectProps = true;
             }
 
-            int byteCount = GetByteCountOfProperties();
-            if (_propertiesUpdated == null || _propertiesUpdated.Length != byteCount)
-            {
-                _propertiesUpdated = new byte[byteCount];
-            }
+            _byteCount = (_propertyCount + BitConstants.BitsInByte - 1) / BitConstants.BitsInByte;
+            _propertiesUpdated = new byte[_byteCount];
 
             if (NetRunner.Instance.IsServer)
             {
                 // Dirty tracking is now handled by NetworkController.MarkDirty() which sets DirtyMask
                 // and populates CachedProperties. No more Godot signal subscription needed.
 
-                network.InterestChanged += (UUID peerId, long oldInterest, long newInterest) =>
+                _interestChangedHandler = (UUID peerId, long oldInterest, long newInterest) =>
                 {
                     // Handle interest changes for peerInitialPropSync
                     if (!peerInitialPropSync.TryGetValue(peerId, out var syncMask))
@@ -235,12 +294,15 @@ namespace Nebula.Serialization.Serializers
 
                     foreach (var propIndex in nonDefaultProperties)
                     {
-                        var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                        if (propIndex >= _propertyCount) continue;
 
-                        bool wasVisible = (prop.InterestMask & oldInterest) != 0
-                            && (prop.InterestRequired & oldInterest) == prop.InterestRequired;
-                        bool isNowVisible = (prop.InterestMask & newInterest) != 0
-                            && (prop.InterestRequired & newInterest) == prop.InterestRequired;
+                        long interestMask = _propInterestMask[propIndex];
+                        long interestRequired = _propInterestRequired[propIndex];
+
+                        bool wasVisible = (interestMask & oldInterest) != 0
+                            && (interestRequired & oldInterest) == interestRequired;
+                        bool isNowVisible = (interestMask & newInterest) != 0
+                            && (interestRequired & newInterest) == interestRequired;
 
                         if (!wasVisible && isNowVisible)
                         {
@@ -256,15 +318,75 @@ namespace Nebula.Serialization.Serializers
                         }
                     }
                 };
+                network.InterestChanged += _interestChangedHandler;
             }
             else
             {
-                foreach (var propIndex in cachedPropertyChanges.Keys)
+                // Properties can arrive before RawNode._Ready has run; Import stashes them
+                // in cachedPropertyChanges. The tick is acked regardless, so the server
+                // never resends them — flushing when the node becomes ready is the only
+                // delivery path for those values.
+                network.RawNode.Ready += FlushPendingChanges;
+                _readyHandlerAttached = true;
+            }
+        }
+
+        /// <summary>
+        /// Detaches from NetworkController/RawNode events.
+        ///
+        /// The serializer normally dies with its node, but a NetworkController can outlive
+        /// a serializer instance (world migration rebuilds the serializer array), and a
+        /// closure left subscribed would keep firing against dead per-peer state - and
+        /// accumulate one more handler per rebuild.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && network != null)
+            {
+                if (_interestChangedHandler != null)
                 {
-                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-                    ref var cachedValue = ref CollectionsMarshal.GetValueRefOrNullRef(cachedPropertyChanges, propIndex);
-                    ImportProperty(prop, network.CurrentWorld.CurrentTick, ref cachedValue);
+                    network.InterestChanged -= _interestChangedHandler;
                 }
+                // Only detach what was actually attached - Godot logs an error when asked to
+                // disconnect a connection that was never made.
+                if (_readyHandlerAttached && network.RawNode != null && GodotObject.IsInstanceValid(network.RawNode))
+                {
+                    network.RawNode.Ready -= FlushPendingChanges;
+                }
+            }
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Resolves the declared subtype string of an Int property to its wire width. Called
+        /// once per property at construction; every hot path reads <see cref="_propIntWidth"/>.
+        /// The alias set must stay in sync with NetReader.ReadAbsoluteValue's Int case.
+        /// </summary>
+        private static IntWidth ResolveIntWidth(string subtype)
+        {
+            switch (subtype)
+            {
+                case "byte":
+                case "System.Byte":
+                case "sbyte":
+                case "System.SByte":
+                    return IntWidth.Byte;
+                case "short":
+                case "System.Int16":
+                    return IntWidth.Int16;
+                case "ushort":
+                case "System.UInt16":
+                    return IntWidth.UInt16;
+                case "int":
+                case "Int":
+                case "System.Int32":
+                    return IntWidth.Int32;
+                case "uint":
+                case "System.UInt32":
+                    return IntWidth.UInt32;
+                default:
+                    // long, ulong, or an unrecognised subtype - the reader's default is Int64 too.
+                    return IntWidth.Int64;
             }
         }
 
@@ -309,11 +431,10 @@ namespace Nebula.Serialization.Serializers
                 return state;
             }
 
-            int byteCount = GetByteCountOfProperties();
             var fresh = new PeerPropertyState
             {
-                AckedMask = new byte[byteCount],
-                PendingDirtyMask = new byte[byteCount],
+                AckedMask = new byte[_byteCount],
+                PendingDirtyMask = new byte[_byteCount],
                 SentHistory = new SentRecord[SNAPSHOT_RING_SIZE],
                 LatestAckedTick = -1,
                 DeltaChain = new byte[_propertyCount],
@@ -327,6 +448,16 @@ namespace Nebula.Serialization.Serializers
         }
 
         /// <summary>
+        /// Float equality that treats NaN as equal to itself.
+        ///
+        /// Plain == reports NaN != NaN, so a property that ever goes NaN would be seen as
+        /// "changed" on every single import forever, re-firing NotifyOnChange handlers each
+        /// tick. Single.Equals is the standard reflexive comparison (it also folds -0 and +0).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool FloatEquals(float a, float b) => a.Equals(b);
+
+        /// <summary>
         /// Compares two PropertyCache values for equality based on their type.
         /// </summary>
         private static bool PropertyCacheEquals(ref PropertyCache a, ref PropertyCache b)
@@ -337,11 +468,17 @@ namespace Nebula.Serialization.Serializers
             {
                 SerialVariantType.Bool => a.BoolValue == b.BoolValue,
                 SerialVariantType.Int => a.LongValue == b.LongValue,
-                SerialVariantType.Float => a.FloatValue == b.FloatValue,
+                SerialVariantType.Float => FloatEquals(a.FloatValue, b.FloatValue),
                 SerialVariantType.String => a.StringValue == b.StringValue,
-                SerialVariantType.Vector2 => a.Vec2Value == b.Vec2Value,
-                SerialVariantType.Vector3 => a.Vec3Value == b.Vec3Value,
-                SerialVariantType.Quaternion => a.QuatValue == b.QuatValue,
+                SerialVariantType.Vector2 => FloatEquals(a.Vec2Value.X, b.Vec2Value.X)
+                    && FloatEquals(a.Vec2Value.Y, b.Vec2Value.Y),
+                SerialVariantType.Vector3 => FloatEquals(a.Vec3Value.X, b.Vec3Value.X)
+                    && FloatEquals(a.Vec3Value.Y, b.Vec3Value.Y)
+                    && FloatEquals(a.Vec3Value.Z, b.Vec3Value.Z),
+                SerialVariantType.Quaternion => FloatEquals(a.QuatValue.X, b.QuatValue.X)
+                    && FloatEquals(a.QuatValue.Y, b.QuatValue.Y)
+                    && FloatEquals(a.QuatValue.Z, b.QuatValue.Z)
+                    && FloatEquals(a.QuatValue.W, b.QuatValue.W),
                 SerialVariantType.PackedByteArray => ReferenceEquals(a.RefValue, b.RefValue) || (a.RefValue is byte[] ba && b.RefValue is byte[] bb && ba.AsSpan().SequenceEqual(bb)),
                 SerialVariantType.PackedInt32Array => ReferenceEquals(a.RefValue, b.RefValue) || (a.RefValue is int[] ia && b.RefValue is int[] ib && ia.AsSpan().SequenceEqual(ib)),
                 SerialVariantType.PackedInt64Array => ReferenceEquals(a.RefValue, b.RefValue) || (a.RefValue is long[] la && b.RefValue is long[] lb && la.AsSpan().SequenceEqual(lb)),
@@ -505,7 +642,7 @@ namespace Nebula.Serialization.Serializers
         private Data Deserialize(NetBuffer buffer, Tick currentTick)
         {
             int startPos = buffer.ReadPosition;
-            int byteCount = GetByteCountOfProperties();
+            int byteCount = _byteCount;
 
             var data = new Data
             {
@@ -528,6 +665,11 @@ namespace Nebula.Serialization.Serializers
             int baselineAge = NetReader.ReadByte(buffer);
             PropertyCache[] baselineValues = null;
             bool discardPayload = false;
+
+            // Scratch baseline handed to ReadDeltaOrAbsolute when this payload has no
+            // resolvable baseline. A local (not a shared static) so that a future edit which
+            // writes through the ref cannot leak state across nodes or across ticks.
+            PropertyCache noBaseline = default;
             if (baselineAge > 0)
             {
                 Tick baselineTick = currentTick - baselineAge;
@@ -584,9 +726,12 @@ namespace Nebula.Serialization.Serializers
                         continue;
                     }
 
-                    if (propertyIndex >= network.CachedProperties.Length)
+                    // Bounded by _propertyCount, not CachedProperties.Length: the latter is a
+                    // fixed 64 regardless of how many properties this scene declares, so it
+                    // would admit indices that have no entry in the pre-cached metadata arrays.
+                    if (propertyIndex >= _propertyCount)
                     {
-                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[NetPropertiesSerializer.Deserialize] propertyIndex {propertyIndex} >= CachedProperties.Length {network.CachedProperties.Length}! Skipping property.");
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[NetPropertiesSerializer.Deserialize] propertyIndex {propertyIndex} >= property count {_propertyCount}! Skipping property.");
                         continue;
                     }
                     ref var existingCache = ref network.CachedProperties[propertyIndex];
@@ -624,17 +769,18 @@ namespace Nebula.Serialization.Serializers
                     }
                     else
                     {
-                        // Read the value, applying deltas against the baseline snapshot
-                        // (pass subtype for sized int types). With no baseline (absolute
-                        // payload or discard mode) a dummy is passed - deltas can't occur
-                        // in a well-formed absolute payload.
+                        // Read the value, applying deltas against the baseline snapshot.
+                        // With no baseline (absolute payload or discard mode) a scratch
+                        // default is passed - deltas can't occur in a well-formed absolute
+                        // payload. The absolute path still needs the raw subtype string,
+                        // since NetReader.ReadAbsoluteValue is shared with other call sites.
                         if (baselineValues != null)
                         {
-                            ReadDeltaOrAbsolute(buffer, prop.VariantType, prop.Metadata.TypeIdentifier, ref baselineValues[propertyIndex], ref cache);
+                            ReadDeltaOrAbsolute(buffer, prop.VariantType, _propIntWidth[propertyIndex], prop.Metadata.TypeIdentifier, ref baselineValues[propertyIndex], ref cache);
                         }
                         else
                         {
-                            ReadDeltaOrAbsolute(buffer, prop.VariantType, prop.Metadata.TypeIdentifier, ref _dummyBaseline, ref cache);
+                            ReadDeltaOrAbsolute(buffer, prop.VariantType, _propIntWidth[propertyIndex], prop.Metadata.TypeIdentifier, ref noBaseline, ref cache);
                         }
                     }
 
@@ -672,9 +818,9 @@ namespace Nebula.Serialization.Serializers
                         continue;
                     }
 
-                    if (propertyIndex >= network.CachedProperties.Length)
+                    if (propertyIndex >= _propertyCount)
                     {
-                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[NetPropertiesSerializer.Deserialize] propertyIndex {propertyIndex} >= CachedProperties.Length {network.CachedProperties.Length}! Skipping property.");
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"[NetPropertiesSerializer.Deserialize] propertyIndex {propertyIndex} >= property count {_propertyCount}! Skipping property.");
                         continue;
                     }
                     ref var existingCache = ref network.CachedProperties[propertyIndex];
@@ -745,7 +891,7 @@ namespace Nebula.Serialization.Serializers
         /// declared baseline tick), never against the running value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ReadDeltaOrAbsolute(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache baseline, ref PropertyCache cache)
+        private static void ReadDeltaOrAbsolute(NetBuffer buffer, SerialVariantType type, IntWidth intWidth, string subtype, ref PropertyCache baseline, ref PropertyCache cache)
         {
             var flags = (DeltaEncodingFlags)NetReader.ReadByte(buffer);
             cache.Type = type;
@@ -769,12 +915,12 @@ namespace Nebula.Serialization.Serializers
 
                 case DeltaEncodingFlags.DeltaSmall:
                     // Small delta (half-float/short encoding)
-                    ReadSmallDelta(buffer, type, subtype, ref baseline, ref cache);
+                    ReadSmallDelta(buffer, type, intWidth, subtype, ref baseline, ref cache);
                     break;
 
                 case DeltaEncodingFlags.DeltaFull:
                     // Full delta (same type as property)
-                    ReadFullDelta(buffer, type, subtype, ref baseline, ref cache);
+                    ReadFullDelta(buffer, type, intWidth, subtype, ref baseline, ref cache);
                     break;
 
                 default:
@@ -798,7 +944,7 @@ namespace Nebula.Serialization.Serializers
         /// Reads a small delta (half-float/short) and applies it to the baseline value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ReadSmallDelta(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache baseline, ref PropertyCache cache)
+        private static void ReadSmallDelta(NetBuffer buffer, SerialVariantType type, IntWidth intWidth, string subtype, ref PropertyCache baseline, ref PropertyCache cache)
         {
             switch (type)
             {
@@ -810,29 +956,18 @@ namespace Nebula.Serialization.Serializers
                 case SerialVariantType.Int:
                     // Small delta uses Int16 for all integer types
                     short deltaS = NetReader.ReadInt16(buffer);
-                    // Store result in the appropriate field based on subtype
+                    // Store result in the field this width uses (see IntWidth)
                     cache.LongValue = 0; // Clear first
-                    switch (subtype)
+                    switch (intWidth)
                     {
-                        case "byte":
-                        case "System.Byte":
-                        case "sbyte":
-                        case "System.SByte":
+                        case IntWidth.Byte:
                             cache.ByteValue = (byte)(baseline.ByteValue + deltaS);
                             break;
-                        case "short":
-                        case "System.Int16":
-                        case "ushort":
-                        case "System.UInt16":
-                        case "int":
-                        case "Int":
-                        case "System.Int32":
-                        case "uint":
-                        case "System.UInt32":
-                            cache.IntValue = baseline.IntValue + deltaS;
+                        case IntWidth.Int64:
+                            cache.LongValue = baseline.LongValue + deltaS;
                             break;
                         default:
-                            cache.LongValue = baseline.LongValue + deltaS;
+                            cache.IntValue = baseline.IntValue + deltaS;
                             break;
                     }
                     break;
@@ -865,7 +1000,7 @@ namespace Nebula.Serialization.Serializers
         /// Reads a full delta and applies it to the baseline value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ReadFullDelta(NetBuffer buffer, SerialVariantType type, string subtype, ref PropertyCache baseline, ref PropertyCache cache)
+        private static void ReadFullDelta(NetBuffer buffer, SerialVariantType type, IntWidth intWidth, string subtype, ref PropertyCache baseline, ref PropertyCache cache)
         {
             switch (type)
             {
@@ -875,35 +1010,28 @@ namespace Nebula.Serialization.Serializers
                     break;
 
                 case SerialVariantType.Int:
-                    // Full delta uses the same size as the property type for larger deltas
+                    // Full delta uses the same size as the property type for larger deltas.
+                    // Must mirror WriteDelta's Int case exactly - see IntWidth.
                     cache.LongValue = 0; // Clear first
-                    switch (subtype)
+                    switch (intWidth)
                     {
-                        case "byte":
-                        case "System.Byte":
-                        case "sbyte":
-                        case "System.SByte":
+                        case IntWidth.Byte:
                             // Byte types use Int16 for full delta (more range than byte)
                             short deltaB = NetReader.ReadInt16(buffer);
                             cache.ByteValue = (byte)(baseline.ByteValue + deltaB);
                             break;
-                        case "short":
-                        case "System.Int16":
-                        case "ushort":
-                        case "System.UInt16":
+                        case IntWidth.Int16:
+                        case IntWidth.UInt16:
                             short deltaS = NetReader.ReadInt16(buffer);
                             cache.IntValue = baseline.IntValue + deltaS;
                             break;
-                        case "int":
-                        case "Int":
-                        case "System.Int32":
-                        case "uint":
-                        case "System.UInt32":
+                        case IntWidth.Int32:
+                        case IntWidth.UInt32:
                             int deltaI = NetReader.ReadInt32(buffer);
                             cache.IntValue = baseline.IntValue + deltaI;
                             break;
                         default:
-                            // Default to Int64 for long, ulong, or unknown subtypes
+                            // Int64: long, ulong, or an unrecognised subtype
                             long deltaL = NetReader.ReadInt64(buffer);
                             cache.LongValue = baseline.LongValue + deltaL;
                             break;
@@ -957,12 +1085,13 @@ namespace Nebula.Serialization.Serializers
         /// Writes a custom type from the cache using a generated serializer delegate.
         /// The delegate knows which PropertyCache field to access (no type-specific code needed here).
         /// </summary>
-        private void WriteCustomTypeFromCache(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, ProtocolNetProperty prop, ref PropertyCache cache)
+        private void WriteCustomTypeFromCache(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int propIndex, ref PropertyCache cache)
         {
-            var serializer = Protocol.GetSerializer(prop.ClassIndex);
+            var serializer = Protocol.GetSerializer(_propClassIndex[propIndex]);
             if (serializer == null)
             {
-                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"No serializer found for {prop.NodePath}.{prop.Name}");
+                var missing = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"No serializer found for {missing.NodePath}.{missing.Name}");
                 return;
             }
 
@@ -971,7 +1100,7 @@ namespace Nebula.Serialization.Serializers
             _customTypeBuffer.Reset();
             // Note: For object types, the serializer returns bool (true if wrote data)
             // But here we're in the absolute value path, so we always expect data to be written
-            serializer(currentWorld, peer, ref cache, _customTypeBuffer, prop.ChunkBudget);
+            serializer(currentWorld, peer, ref cache, _customTypeBuffer, _propChunkBudget[propIndex]);
             NetWriter.WriteBytes(buffer, _customTypeBuffer.WrittenSpan);
         }
 
@@ -981,8 +1110,10 @@ namespace Nebula.Serialization.Serializers
             processingDirtyMask = network.DirtyMask;
             network.ClearDirtyMask();
 
-            // Track which properties have ever been set (for initial sync to new peers)
-            for (int i = 0; i < 64; i++)
+            // Track which properties have ever been set (for initial sync to new peers).
+            // Bounded by _propertyCount, not the mask width: indices at or above it have no
+            // metadata and would fault the pre-cached arrays if a stray bit ever set one.
+            for (int i = 0; i < _propertyCount; i++)
             {
                 if ((processingDirtyMask & (1L << i)) != 0)
                 {
@@ -1004,6 +1135,26 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
+        /// <summary>
+        /// Applies property values that arrived while RawNode was not yet ready.
+        /// Invoked via RawNode.Ready and defensively from Import. Must run before any
+        /// newer payload is applied so stashed (older) values cannot overwrite it.
+        /// </summary>
+        private void FlushPendingChanges()
+        {
+            if (cachedPropertyChanges.Count == 0)
+                return;
+
+            Tick tick = network.CurrentWorld != null ? network.CurrentWorld.CurrentTick : 0;
+            foreach (var propIndex in cachedPropertyChanges.Keys)
+            {
+                var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                ref var cachedValue = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrNullRef(cachedPropertyChanges, propIndex);
+                ImportProperty(prop, tick, ref cachedValue);
+            }
+            cachedPropertyChanges.Clear();
+        }
+
         public void Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController nodeOut)
         {
             nodeOut = network;
@@ -1012,6 +1163,13 @@ namespace Nebula.Serialization.Serializers
 
             // Cache IsNodeReady() once before the loop to avoid repeated Godot calls
             bool isReady = network.RawNode.IsNodeReady();
+
+            // If the node became ready between packets, apply any stashed pre-ready
+            // values before this payload so the newer values win.
+            if (isReady)
+            {
+                FlushPendingChanges();
+            }
 
             // Begin snapshot for this tick (client-side only, for interpolation)
             if (NetRunner.Instance.IsClient && network.IsWorldReady)
@@ -1036,11 +1194,6 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        private int GetByteCountOfProperties()
-        {
-            return (Protocol.GetPropertyCount(_cachedSceneFilePath) / BitConstants.BitsInByte) + 1;
-        }
-
         private HashSet<int> nonDefaultProperties = new();
 
         // Pooled buffer for custom type serialization
@@ -1054,11 +1207,19 @@ namespace Nebula.Serialization.Serializers
             return layers != 0;
         }
 
+        /// <summary>
+        /// Tests a property's build-time interest declaration against a peer's CURRENT layers.
+        /// <paramref name="peerInterestLayers"/> is read fresh from network.InterestLayers on
+        /// every export, so gaining or losing interest takes effect immediately; only the
+        /// property-side declaration (constant per scene) comes from the pre-cached arrays.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool PeerHasInterestInProperty(int propIndex, long peerInterestLayers)
         {
-            var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-            bool hasAnyInterest = (prop.InterestMask & peerInterestLayers) != 0;
-            bool hasAllRequired = (prop.InterestRequired & peerInterestLayers) == prop.InterestRequired;
+            if ((uint)propIndex >= (uint)_propertyCount) return false;
+            long interestRequired = _propInterestRequired[propIndex];
+            bool hasAnyInterest = (_propInterestMask[propIndex] & peerInterestLayers) != 0;
+            bool hasAllRequired = (interestRequired & peerInterestLayers) == interestRequired;
             return hasAnyInterest && hasAllRequired;
         }
 
@@ -1098,7 +1259,7 @@ namespace Nebula.Serialization.Serializers
             }
 
             var peerId = NetRunner.Instance.GetPeerId(peer);
-            int byteCount = GetByteCountOfProperties();
+            int byteCount = _byteCount;
 
             // Snapshot AND CLEAR per-peer dirty mask for this peer
             long perPeerDirty = 0;
@@ -1329,7 +1490,6 @@ namespace Nebula.Serialization.Serializers
                 if (serializer == null) continue;
 
                 ref var cache = ref network.CachedProperties[propIndex];
-                var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
 
                 // Remember position in case we need to rewind
                 int startPos = buffer.WritePosition;
@@ -1337,7 +1497,7 @@ namespace Nebula.Serialization.Serializers
                 try
                 {
                     // Object serializers return true if they wrote data
-                    bool wroteData = serializer(currentWorld, peer, ref cache, buffer, prop.ChunkBudget);
+                    bool wroteData = serializer(currentWorld, peer, ref cache, buffer, _propChunkBudget[propIndex]);
 
                     if (wroteData)
                     {
@@ -1354,6 +1514,7 @@ namespace Nebula.Serialization.Serializers
                 }
                 catch (Exception ex)
                 {
+                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                     Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
                         $"Error serializing object property {prop.NodePath}.{prop.Name}: {ex.InnerException?.Message ?? ex.Message}");
                     // Rewind on error
@@ -1470,36 +1631,24 @@ namespace Nebula.Serialization.Serializers
                     break;
 
                 case SerialVariantType.Int:
-                    // Get the property subtype to read from the correct field
-                    var intProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-                    var intSubtype = intProp.Metadata.TypeIdentifier;
+                    // Read current and baseline from the field this width uses (see IntWidth).
+                    // Must mirror ReadSmallDelta/ReadFullDelta's Int cases exactly.
+                    var intWidth = _propIntWidth[propIndex];
                     long currentVal, baselineVal;
 
-                    // Read current and baseline values from the appropriate field
-                    switch (intSubtype)
+                    switch (intWidth)
                     {
-                        case "byte":
-                        case "System.Byte":
-                        case "sbyte":
-                        case "System.SByte":
+                        case IntWidth.Byte:
                             currentVal = current.ByteValue;
                             baselineVal = baseline.ByteValue;
                             break;
-                        case "short":
-                        case "System.Int16":
-                        case "ushort":
-                        case "System.UInt16":
-                        case "int":
-                        case "Int":
-                        case "System.Int32":
-                        case "uint":
-                        case "System.UInt32":
-                            currentVal = current.IntValue;
-                            baselineVal = baseline.IntValue;
-                            break;
-                        default:
+                        case IntWidth.Int64:
                             currentVal = current.LongValue;
                             baselineVal = baseline.LongValue;
+                            break;
+                        default:
+                            currentVal = current.IntValue;
+                            baselineVal = baseline.IntValue;
                             break;
                     }
 
@@ -1512,25 +1661,17 @@ namespace Nebula.Serialization.Serializers
                     }
                     else
                     {
-                        // Full delta - write appropriate size based on subtype
+                        // Full delta - write appropriate size based on width
                         NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
-                        switch (intSubtype)
+                        switch (intWidth)
                         {
-                            case "byte":
-                            case "System.Byte":
-                            case "sbyte":
-                            case "System.SByte":
-                            case "short":
-                            case "System.Int16":
-                            case "ushort":
-                            case "System.UInt16":
+                            case IntWidth.Byte:
+                            case IntWidth.Int16:
+                            case IntWidth.UInt16:
                                 NetWriter.WriteInt16(buffer, (short)deltaL);
                                 break;
-                            case "int":
-                            case "Int":
-                            case "System.Int32":
-                            case "uint":
-                            case "System.UInt32":
+                            case IntWidth.Int32:
+                            case IntWidth.UInt32:
                                 NetWriter.WriteInt32(buffer, (int)deltaL);
                                 break;
                             default:
@@ -1591,37 +1732,28 @@ namespace Nebula.Serialization.Serializers
                     NetWriter.WriteBool(buffer, cache.BoolValue);
                     break;
                 case SerialVariantType.Int:
-                    // Check metadata for sized integer types (enums, byte, short, int, long)
-                    var intProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-                    switch (intProp.Metadata.TypeIdentifier)
+                    // Sized integer types (enums, byte, short, int, long). Must mirror
+                    // NetReader.ReadAbsoluteValue's Int case exactly - a width mismatch
+                    // misaligns every value after this one in the packet.
+                    switch (_propIntWidth[propIndex])
                     {
-                        case "byte":
-                        case "System.Byte":
+                        case IntWidth.Byte:
                             NetWriter.WriteByte(buffer, cache.ByteValue);
                             break;
-                        case "sbyte":
-                        case "System.SByte":
-                            NetWriter.WriteByte(buffer, (byte)cache.ByteValue);
-                            break;
-                        case "short":
-                        case "System.Int16":
+                        case IntWidth.Int16:
                             NetWriter.WriteInt16(buffer, (short)cache.IntValue);
                             break;
-                        case "ushort":
-                        case "System.UInt16":
+                        case IntWidth.UInt16:
                             NetWriter.WriteUInt16(buffer, (ushort)cache.IntValue);
                             break;
-                        case "int":
-                        case "Int":
-                        case "System.Int32":
+                        case IntWidth.Int32:
                             NetWriter.WriteInt32(buffer, cache.IntValue);
                             break;
-                        case "uint":
-                        case "System.UInt32":
+                        case IntWidth.UInt32:
                             NetWriter.WriteUInt32(buffer, (uint)cache.IntValue);
                             break;
                         default:
-                            // Default to Int64 for long, ulong, or unknown subtypes
+                            // Int64: long, ulong, or an unrecognised subtype
                             NetWriter.WriteInt64(buffer, cache.LongValue);
                             break;
                     }
@@ -1651,8 +1783,7 @@ namespace Nebula.Serialization.Serializers
                     NetWriter.WriteInt64Array(buffer, cache.RefValue as long[] ?? Array.Empty<long>());
                     break;
                 case SerialVariantType.Object:
-                    var prop = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-                    WriteCustomTypeFromCache(currentWorld, peer, buffer, prop, ref cache);
+                    WriteCustomTypeFromCache(currentWorld, peer, buffer, propIndex, ref cache);
                     break;
                 default:
                     var nilProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);

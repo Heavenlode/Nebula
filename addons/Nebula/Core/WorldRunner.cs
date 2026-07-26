@@ -1135,6 +1135,8 @@ namespace Nebula
 
             PeerStates.Remove(peerId);
             _peerLastAckTick.Remove(peerId);
+            ResetPackState(peerId);
+            _peerPackWindows.Remove(peerId);
             _peerPendingAcks.Remove(peerId); // Fix #5: Clean up pending acks tracking
             _peerNetBufferPool.Remove(peerId); // Clean up pooled export buffer
             _peerListDirty = true; // Fix #1: Mark peer list as dirty
@@ -1356,16 +1358,29 @@ namespace Nebula
                             continue;
                         }
 
+                        var packPayload = peerStateBuffer.WrittenSpan;
+
                         using var buffer = new NetBuffer();
                         NetWriter.WriteInt32(buffer, CurrentTick);
-                        NetWriter.WriteBytes(buffer, peerStateBuffer.WrittenSpan);
-                        var size = buffer.Length;
-                        if (size > NetRunner.MTU)
+                        _peerPackWindows.TryGetValue(peerId, out var packWindow);
+                        NebulaPack.WritePacket(
+                            buffer, packPayload, packWindow, CurrentTick,
+                            NetRunner.PackEnabled, NetRunner.PackValidate);
+
+                        // Check the UNCOMPRESSED size against the MTU. Checking the compressed size
+                        // would let compression mask a genuinely oversized world, and the payload
+                        // still has to fit whenever no baseline is available.
+                        var rawSize = sizeof(int) + 1 + packPayload.Length;
+                        if (rawSize > NetRunner.MTU)
                         {
-                            Log(Debugger.DebugLevel.ERROR, $"[MTU EXCEEDED] Peer {peer.ID} tick {CurrentTick}: Data size {size} exceeds MTU {NetRunner.MTU} - PACKET MAY BE CORRUPTED!");
+                            Log(Debugger.DebugLevel.ERROR, $"[MTU EXCEEDED] Peer {peer.ID} tick {CurrentTick}: Uncompressed size {rawSize} exceeds MTU {NetRunner.MTU} (on wire {buffer.Length}) - PACKET MAY BE CORRUPTED!");
                         }
 
                         NetRunner.SendUnreliableSequenced(peer, (byte)NetRunner.ENetChannelId.Tick, buffer);
+
+                        // Remember what we sent; it becomes a delta baseline once this peer acks it.
+                        RecordPackPayload(peerId, peerStateBuffer.WrittenSpan);
+
                         if (DebugTcpListener != null && DebugTcpClients.Count > 0)
                         {
                             using var debugBuffer = new NetBuffer();
@@ -1790,6 +1805,11 @@ namespace Nebula
             CurrentTick = -1;
             _predictionInitialized = false;
             _clientPredictedTick = -1;
+
+            // Node ids are per-peer-per-world, so a payload captured in the old world would decode
+            // into entirely the wrong nodes. The destination world also restarts near tick 0, which
+            // would otherwise collide with retained ring slots.
+            _clientPackWindow.Reset();
             TimeSinceLastTick = 0f;
             _ownedEntities.Clear();
             _ownedEntitiesDirty = true;
@@ -1816,6 +1836,49 @@ namespace Nebula
         /// Tracks the last tick each peer acknowledged. Used for timeout detection.
         /// </summary>
         private Dictionary<UUID, Tick> _peerLastAckTick = new();
+
+        /// <summary>
+        /// NebulaPack, server side: the recent payloads sent to each peer. Each entry is marked
+        /// acked as that peer's ack for it arrives, and only marked entries may be used as a delta
+        /// baseline.
+        ///
+        /// Don't try to drive this off <see cref="_peerLastAckTick"/> above. That tracks only the
+        /// newest ack, which is fine for timeout detection but says nothing about whether any
+        /// particular older tick arrived.
+        /// </summary>
+        private Dictionary<UUID, NebulaPackWindow> _peerPackWindows = new();
+
+        /// <summary>
+        /// NebulaPack, client side: the payloads this client has applied and acked, which is exactly
+        /// the set the server is allowed to delta against.
+        /// </summary>
+        private readonly NebulaPackWindow _clientPackWindow = new();
+        private NetBuffer _clientPackBuffer;
+
+        /// <summary>
+        /// Remembers the payload just sent to a peer, so it can be used as a delta baseline once
+        /// that peer acknowledges the tick.
+        /// </summary>
+        private void RecordPackPayload(UUID peerId, ReadOnlySpan<byte> payload)
+        {
+            if (!_peerPackWindows.TryGetValue(peerId, out var window))
+            {
+                window = new NebulaPackWindow();
+                _peerPackWindows[peerId] = window;
+            }
+            window.Record(CurrentTick, payload);
+        }
+
+
+        /// <summary>
+        /// Drops NebulaPack state for a peer. Called on disconnect, and on world migration where
+        /// node ids are reassigned — a payload from the previous world would decode into the wrong
+        /// nodes entirely.
+        /// </summary>
+        private void ResetPackState(UUID peerId)
+        {
+            if (_peerPackWindows.TryGetValue(peerId, out var window)) window.Reset();
+        }
 
         /// <summary>
         /// Server-side: the last tick this peer acknowledged receiving, or -1 if none yet.
@@ -2484,6 +2547,11 @@ namespace Nebula
             // Update last ack tick for timeout tracking
             _peerLastAckTick[peerId] = tick;
 
+            // Mark this exact tick as received, so NebulaPack may use it as a delta baseline.
+            // Per-tick on purpose: acks are lossy too, so "everything below the newest ack" is not
+            // a safe assumption (see NebulaPackWindow.MarkAcked).
+            if (_peerPackWindows.TryGetValue(peerId, out var packWindow)) packWindow.MarkAcked(tick);
+
             var isFirstAck = peerState.Status == PeerSyncStatus.INITIAL;
             if (isFirstAck)
             {
@@ -2531,6 +2599,28 @@ namespace Nebula
             }
         }
 
+        /// <summary>
+        /// Client-side. Turns a received tick body back into the raw payload ImportState expects.
+        /// Returns false if the packet can't be trusted, in which case the caller must neither
+        /// apply nor acknowledge the tick — that is what makes the server fall back to raw.
+        /// </summary>
+        private bool TryUnpackTickPayload(Tick tick, byte[] wire, out NetBuffer payload)
+        {
+            _clientPackBuffer ??= new NetBuffer(NetRunner.MTU + 64, usePool: true);
+
+            var result = NebulaPack.ReadPacket(wire, tick, _clientPackWindow, _clientPackBuffer);
+            if (result != PackResult.Ok)
+            {
+                payload = null;
+                Log(Debugger.DebugLevel.ERROR, $"[Nebula][Pack] tick {tick} rejected: {result}");
+                return false;
+            }
+
+            payload = _clientPackBuffer;
+            return true;
+        }
+
+
         public void ClientProcessTick(int incomingTick, byte[] stateBytes)
         {
             // Skip old/duplicate ticks
@@ -2551,8 +2641,17 @@ namespace Nebula
             try
             {
                 // Log(Debugger.DebugLevel.VERBOSE, $"Importing state bytes of size {stateBytes.Length}");
-                using var stateBuffer = new NetBuffer(stateBytes);
-                importSucceeded = ImportState(stateBuffer);
+                if (TryUnpackTickPayload(incomingTick, stateBytes, out var stateBuffer))
+                {
+                    importSucceeded = ImportState(stateBuffer);
+
+                    // Only an applied-and-acked payload may serve as a future baseline, so this is
+                    // gated on exactly the same condition as the ack below.
+                    if (importSucceeded)
+                    {
+                        _clientPackWindow.Record(incomingTick, stateBuffer.WrittenSpan);
+                    }
+                }
             }
             catch (Exception ex)
             {

@@ -359,7 +359,7 @@ namespace Nebula
         /// Cached on first read; toggling takes effect on the next run.
         /// </summary>
         public static bool PackEnabled =>
-            _packEnabled ??= ProjectSettings.GetSetting("Nebula/config/pack_enabled", false).AsBool();
+            _packEnabled ??= ProjectSettings.GetSetting("Nebula/config/pack_enabled", true).AsBool();
 
         private static bool? _packValidate;
         /// <summary>
@@ -369,7 +369,7 @@ namespace Nebula
         /// Recommended on in development.
         /// </summary>
         public static bool PackValidate =>
-            _packValidate ??= ProjectSettings.GetSetting("Nebula/config/pack_validate", false).AsBool();
+            _packValidate ??= ProjectSettings.GetSetting("Nebula/config/pack_validate", true).AsBool();
 
         private void _debugService()
         {

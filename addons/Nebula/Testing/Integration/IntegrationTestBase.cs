@@ -16,7 +16,9 @@ public class ServerConfig
     public string InitialWorldScene { get; set; }
     public string? WorldId { get; set; }
     /// <summary>
-    /// Port for the debug ENet connection. 0 means use a random available port.
+    /// Port for this instance's debug channel (passed as --debugPort). 0 leaves
+    /// the debug channel disabled. The port is used verbatim — a busy port is an
+    /// error rather than a fallback, so tests always know where to connect.
     /// </summary>
     public int DebugPort { get; set; } = 0;
     public Dictionary<string, string> ExtraArgs { get; set; } = new();
@@ -28,7 +30,9 @@ public class ServerConfig
 public class ClientConfig
 {
     /// <summary>
-    /// Port for the debug ENet connection. 0 means use a random available port.
+    /// Port for this instance's debug channel (passed as --debugPort). 0 leaves
+    /// the debug channel disabled. The port is used verbatim — a busy port is an
+    /// error rather than a fallback, so tests always know where to connect.
     /// </summary>
     public int DebugPort { get; set; } = 0;
     public Dictionary<string, string> ExtraArgs { get; set; } = new();

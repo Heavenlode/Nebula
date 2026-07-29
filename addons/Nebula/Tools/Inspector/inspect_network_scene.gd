@@ -22,6 +22,32 @@ var net_node_details_scene = load("res://addons/Nebula/Tools/Inspector/net_node_
 var child_details: Array[InspectNetScene] = []
 var properties: Dictionary = {}
 
+func _ready() -> void:
+    _apply_bold_title()
+
+
+## Bolds the heading. Prefers the editor's real bold face; falls back to a
+## synthesised weight so this still works outside the editor (and if the theme
+## ever stops exposing that font).
+func _apply_bold_title() -> void:
+    if title_label == null:
+        return
+
+    if Engine.is_editor_hint():
+        var editor_theme := EditorInterface.get_editor_theme()
+        if editor_theme != null and editor_theme.has_font("bold", "EditorFonts"):
+            title_label.add_theme_font_override("font", editor_theme.get_font("bold", "EditorFonts"))
+            return
+
+    var base_font := title_label.get_theme_font("font")
+    if base_font == null:
+        return
+    var bold := FontVariation.new()
+    bold.base_font = base_font
+    bold.variation_embolden = 0.6
+    title_label.add_theme_font_override("font", bold)
+
+
 func set_title(title: String) -> void:
     if title_label == null:
         return

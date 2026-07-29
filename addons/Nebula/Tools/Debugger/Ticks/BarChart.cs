@@ -93,13 +93,16 @@ namespace Nebula.Internal.Editor
             }
             else
             {
+                // maxValue/minValue, not the _-prefixed fields: on a dynamic
+                // chart those are the configured bounds, not the ones the bars
+                // are actually scaled against.
                 if (maxLabel != null)
                 {
-                    maxLabel.Text = _maxValue.ToString();
+                    maxLabel.Text = maxValue.ToString();
                 }
                 if (minLabel != null)
                 {
-                    minLabel.Text = _minValue.ToString();
+                    minLabel.Text = minValue.ToString();
                 }
                 if (medLabel != null)
                 {
@@ -137,11 +140,31 @@ namespace Nebula.Internal.Editor
             scrollContainer.Connect("on_next_page", Callable.From((int startId, int numChildren) => OnNextPage(startId, numChildren)));
             label = GetNode<Label>("Label");
             label.Text = _title;
+
+            // These were declared but never assigned, so the axis kept the
+            // placeholder 100/50/0 baked into the scene no matter what the chart
+            // was actually measuring.
+            maxLabel = GetNodeOrNull<Label>("HBoxContainer/VBoxContainer/MTUMax");
+            medLabel = GetNodeOrNull<Label>("HBoxContainer/VBoxContainer/MTUMed");
+            minLabel = GetNodeOrNull<Label>("HBoxContainer/VBoxContainer/MTUMin");
+
+            // Egress is measured in bytes-on-the-wire, so the MTU is the
+            // meaningful ceiling: a bar at the top of the chart is a packet at
+            // the limit. The other chart types count calls/logs and have no
+            // fixed scale, so they stay dynamic.
+            if (type == BarChartType.Egress)
+            {
+                _maxValue = NetRunner.MTU;
+                _minValue = 0;
+            }
+
             if (_minValue == _maxValue)
             {
                 _dynamicValues = true;
             }
             UpdateMtuValues();
+            Connect(CanvasItem.SignalName.VisibilityChanged,
+                new Callable(this, MethodName.OnChartVisibilityChanged));
             if (liveCheckbox != null)
             {
                 liveCheckbox.Connect("toggled", Callable.From((bool toggled_on) => {
@@ -178,11 +201,46 @@ namespace Nebula.Internal.Editor
             scrollContainer.Call("load_next_page", frameUIs, frames.Count < numChildren);
         }
 
+        /// <summary>Newest tick seen, tracked even while hidden so the chart can backfill.</summary>
+        private int lastFrameId = -1;
+
         public void _OnReceiveFrame(int id)
         {
+            lastFrameId = id;
             if (!IsLive()) return;
+            // Three of the four charts in a world panel live inside the hidden
+            // "View All Frames" window, and every chart in a non-selected world
+            // is hidden too. They were all instantiating a tick-frame scene node
+            // per tick regardless; they now backfill from the database when they
+            // actually become visible.
+            if (!IsVisibleInTree()) return;
             var frameUI = CreateTickFrameUI(id);
             scrollContainer.Call("paginate_child", frameUI);
+        }
+
+        private void OnChartVisibilityChanged()
+        {
+            if (!IsVisibleInTree() || lastFrameId < 0 || tickFrames.Count > 0)
+                return;
+            BackfillRecentFrames();
+        }
+
+        /// <summary>Loads the most recent page of frames from the database.</summary>
+        private void BackfillRecentFrames()
+        {
+            const int Count = 60;
+            var ids = Enumerable.Range(System.Math.Max(0, lastFrameId - Count + 1), Count).ToArray();
+            var frames = debugPanel.GetFrames(ids, false);
+            var frameUIs = new Godot.Collections.Array();
+            foreach (var frame in frames)
+            {
+                var dict = frame.AsGodotDictionary();
+                var frameUI = CreateTickFrameUI(dict["details"].AsGodotDictionary()["Tick"].AsGodotDictionary()["ID"].AsInt32());
+                UpdateFrameSize(frameUI, dict);
+                frameUIs.Add(frameUI);
+            }
+            if (frameUIs.Count > 0)
+                scrollContainer.Call("load_next_page", frameUIs, true);
         }
 
         private Control CreateTickFrameUI(int id) {
@@ -244,9 +302,10 @@ namespace Nebula.Internal.Editor
 
         public virtual void _OnFrameUpdated(int id)
         {
+            if (!IsVisibleInTree()) return;
             if (!tickFrames.ContainsKey(id)) return;
             var tickFrame = tickFrames[id];
-            var frameData = debugPanel.GetFrame(id);
+            var frameData = debugPanel.GetFrameSummary(id);
             UpdateFrameSize(tickFrame, frameData);
         }
 
@@ -265,7 +324,10 @@ namespace Nebula.Internal.Editor
             }
             else
             {
-                tickFrame.Call("set_frame_size", frameSize, (float)frameSize / _maxValue);
+                // Clamped: on the egress chart the ceiling is the MTU, and a tick
+                // that exceeds it would otherwise draw a bar taller than the chart.
+                // It still renders full-height and red, which is the point.
+                tickFrame.Call("set_frame_size", frameSize, Mathf.Min(1f, (float)frameSize / _maxValue));
             }
         }
 

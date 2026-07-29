@@ -61,11 +61,18 @@ namespace Nebula.Internal.Editor
         }
 
         /// <summary>
-        /// Registers the Addons menu item in the Nebula tool submenu.
+        /// Receives the plugin root so this window can be opened from somewhere.
+        ///
+        /// TODO: the Addon Manager currently has NO entry point. It used to be
+        /// opened from a "Nebula" tool submenu, which was removed after it hung
+        /// the editor UI on macOS 15 (commit 4a9bfe5) — and the submenu
+        /// machinery it depended on is now gone entirely, since the debugger
+        /// moved into the main-screen tab. It needs a new home: a button in the
+        /// Network Scenes dock, or a second main-screen tab. Until then the only
+        /// way to open it is to call <see cref="_OnAddonsMenuClicked"/> directly.
         /// </summary>
         public void SetPluginRoot(Main pluginRoot)
         {
-            // pluginRoot.RegisterMenuItem("Addons", _OnAddonsMenuClicked);
         }
 
         /// <summary>

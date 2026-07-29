@@ -25,6 +25,18 @@ namespace Nebula.Serialization
         /// </summary>
         public object CustomContext;
 
+        /// <summary>
+        /// Cycle guard. When non-null, each node is serialized at most once and
+        /// later references emit a <c>$ref</c> placeholder instead of recursing.
+        /// Without it, two NetNodes holding [NetProperty] references to each
+        /// other recurse until the stack overflows and the process dies.
+        ///
+        /// Deliberately a reference type on a by-value struct: the same set is
+        /// shared by every copy of the context made during a traversal.
+        /// Null (the default) preserves the previous unguarded behavior.
+        /// </summary>
+        public System.Collections.Generic.HashSet<Godot.Node> Visited;
+
         public static NetBsonContext Default => new NetBsonContext { Recurse = true };
     }
 

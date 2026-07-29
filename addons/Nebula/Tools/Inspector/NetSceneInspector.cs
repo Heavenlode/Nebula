@@ -1,136 +1,93 @@
 #if TOOLS
 using Godot;
 using Nebula.Serialization;
-using System;
 using System.Linq;
 
 namespace Nebula.Internal.Editor
 {
+    /// <summary>
+    /// Adds a "Network Scene" / "Network Node" section to the inspector for
+    /// nodes that carry Nebula network state, listing their [NetProperty]s and
+    /// [NetFunction]s.
+    ///
+    /// <para>Reads the generated protocol tables, which reflect the last
+    /// successful C# build — a [NetProperty] added since then won't appear, and
+    /// a brand-new NetScene won't be handled at all, until a rebuild.</para>
+    /// </summary>
     [Tool]
     public partial class NetSceneInspector : EditorInspectorPlugin
     {
-        PackedScene inspectorScene;
-        private Tree editorSceneTree;
-        private Tree GetEditorSceneTree()
-        {
-            if (editorSceneTree != null)
-            {
-                return editorSceneTree;
-            }
-            var baseControl = EditorInterface.Singleton.GetBaseControl();
-            var sceneTreeDock = baseControl.FindChildren("Scene", "SceneTreeDock", true, false)[0];
-            Control sceneTreeEditor = null;
-            foreach (var child in sceneTreeDock.GetChildren())
-            {
-                if (child.Name.ToString().Contains("SceneTreeEditor"))
-                {
-                    sceneTreeEditor = child as Control;
-                    break;
-                }
-            }
-            if (sceneTreeEditor == null)
-            {
-                GD.PrintErr("Nebula: No scene tree found");
-                return null;
-            }
-            Tree sceneTree = null;
-            foreach (var child in sceneTreeEditor.GetChildren())
-            {
-                if (child.GetType() == typeof(Tree))
-                {
-                    sceneTree = child as Tree;
-                    break;
-                }
-            }
-            if (sceneTree == null)
-            {
-                GD.PrintErr("Nebula: No scene tree found");
-                return null;
-            }
-            editorSceneTree = sceneTree;
-            return editorSceneTree;
-        }
+        private PackedScene inspectorScene;
+
         public override bool _CanHandle(GodotObject obj)
         {
-            base._CanHandle(obj);
-            return false;
-            // if (Protocol.EditorInstance == null)
-            // {
-            //     return false;
-            // }
-            // var sceneRootItem = GetEditorSceneTree().GetRoot();
-            // var selectedNodeItem = GetEditorSceneTree().GetSelected();
-            // if (sceneRootItem == null || selectedNodeItem == null)
-            // {
-            //     return false;
-            // }
-            // var sceneRootNode = GetEditorSceneTree().GetNodeOrNull(sceneRootItem.GetMetadata(0).AsString());
-            // var sceneSelectedNode = GetEditorSceneTree().GetNodeOrNull(selectedNodeItem.GetMetadata(0).AsString());
-            // if (sceneRootNode == null || sceneSelectedNode == null)
-            // {
-            //     return false;
-            // }
-            // var relativeNodePath = sceneRootNode.GetPathTo(sceneSelectedNode);
-            // return Protocol.EditorInstance.PackNode(sceneRootNode.SceneFilePath, relativeNodePath, out _) ||
-            //     Protocol.EditorInstance.IsNetScene(sceneSelectedNode.SceneFilePath);
+            return ResolveTarget(obj, out _, out _, out _);
         }
 
         public override void _ParseBegin(GodotObject obj)
         {
-            // base._ParseBegin(obj);
-            // try
-            // {
-            //     if (inspectorScene == null)
-            //     {
-            //         inspectorScene = GD.Load<PackedScene>("res://addons/Nebula/Tools/Inspector/inspect_network_scene.tscn");
-            //     }
-            //     var sceneRootItem = GetEditorSceneTree().GetRoot();
-            //     var selectedNodeItem = GetEditorSceneTree().GetSelected();
-            //     var sceneRootNode = GetEditorSceneTree().GetNodeOrNull(sceneRootItem.GetMetadata(0).AsString());
-            //     var sceneSelectedNode = GetEditorSceneTree().GetNodeOrNull(selectedNodeItem.GetMetadata(0).AsString());
-            //     if (sceneRootNode == null || sceneSelectedNode == null)
-            //     {
-            //         return;
-            //     }
-            //     var inspector = inspectorScene.Instantiate<Control>();
-            //     AddCustomControl(inspector);
+            if (!ResolveTarget(obj, out _, out string scenePath, out string nodePath))
+                return;
 
-            //     var relativeNodePath = sceneRootNode.GetPathTo(sceneSelectedNode);
-            //     var properties = Protocol.EditorInstance.ListProperties(sceneRootNode.SceneFilePath, relativeNodePath);
-            //     var functions = Protocol.EditorInstance.ListFunctions(sceneRootNode.SceneFilePath, relativeNodePath);
-            //     inspector.Call("set_title", "Network " + (Protocol.EditorInstance.IsNetScene(sceneSelectedNode.SceneFilePath) ? "Scene" : "Node"));
-            //     foreach (var property in properties)
-            //     {
-            //         inspector.Call("add_property", property.Name, property.VariantType.ToString());
-            //     }
-            //     foreach (var function in functions)
-            //     {
-            //         inspector.Call("add_function", function.Name, $"({string.Join(", ", function.Arguments.Select(a => a.VariantType.ToString()))})");
-            //     }
-            //     // if (Protocol.EditorInstance.IsNetScene(sceneSelectedNode.SceneFilePath))
-            //     // {
-            //     //     var staticNodes = Protocol.EditorInstance.ListStaticNodes(sceneSelectedNode.SceneFilePath);
-            //     //     foreach (var node in staticNodes)
-            //     //     {
-            //     //         var id = inspector.Call("add_child_detail", node);
-            //     //         inspector.Call("set_path", node, id);
-            //     //         var staticNodeProperties = Protocol.EditorInstance.ListProperties(sceneSelectedNode.SceneFilePath, node);
-            //     //         foreach (var property in staticNodeProperties)
-            //     //         {
-            //     //             inspector.Call("add_property", property.Name, property.VariantType.ToString(), id);
-            //     //         }
-            //     //         var staticNodeFunctions = Protocol.EditorInstance.ListFunctions(sceneSelectedNode.SceneFilePath, node);
-            //     //         foreach (var function in staticNodeFunctions)
-            //     //         {
-            //     //             inspector.Call("add_function", function.Name, $"({string.Join(", ", function.Arguments.Select(a => a.VariantType.ToString()))})", id);
-            //     //         }
-            //     //     }
-            //     // }
-            // }
-            // catch (Exception _)
-            // {
-            //     return;
-            // }
+            inspectorScene ??= GD.Load<PackedScene>("res://addons/Nebula/Tools/Inspector/inspect_network_scene.tscn");
+            var inspector = inspectorScene.Instantiate<Control>();
+            AddCustomControl(inspector);
+
+            bool isNetScene = nodePath == ".";
+            inspector.Call("set_title", isNetScene ? "NetScene" : "NetNode");
+            inspector.Call("set_path", nodePath);
+
+            foreach (var property in Protocol.ListProperties(scenePath, nodePath))
+                inspector.Call("add_property", property.Name, property.VariantType.ToString());
+
+            foreach (var function in Protocol.ListFunctions(scenePath, nodePath))
+            {
+                inspector.Call("add_function", function.Name,
+                    $"({string.Join(", ", function.Arguments.Select(a => a.VariantType.ToString()))})");
+            }
+        }
+
+        /// <summary>
+        /// Decides whether a node carries network state, and if so which
+        /// (scenePath, nodePath) pair describes it in the protocol tables.
+        ///
+        /// <para>This used to locate the selected node by walking the editor's
+        /// internal SceneTreeDock/SceneTreeEditor controls by class name and
+        /// picking out a Tree child — exactly the kind of thing that breaks
+        /// silently on a Godot upgrade, and unnecessary: the inspected object
+        /// is handed to us.</para>
+        /// </summary>
+        private static bool ResolveTarget(GodotObject obj, out Node node, out string scenePath, out string nodePath)
+        {
+            node = obj as Node;
+            scenePath = "";
+            nodePath = "";
+            if (node is null)
+                return false;
+
+            // An instanced NetScene (including the edited scene's own root)
+            // describes itself under ".".
+            if (Protocol.IsNetScene(node.SceneFilePath))
+            {
+                scenePath = node.SceneFilePath;
+                nodePath = ".";
+                return true;
+            }
+
+            // Otherwise it may be a static child inside the edited NetScene.
+            var root = EditorInterface.Singleton.GetEditedSceneRoot();
+            if (root is null || string.IsNullOrEmpty(root.SceneFilePath))
+                return false;
+            if (!Protocol.IsNetScene(root.SceneFilePath))
+                return false;
+
+            string relative = root.GetPathTo(node);
+            if (!Protocol.PackNode(root.SceneFilePath, relative, out _))
+                return false;
+
+            scenePath = root.SceneFilePath;
+            nodePath = relative;
+            return true;
         }
     }
 }

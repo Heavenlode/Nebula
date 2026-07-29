@@ -14,7 +14,28 @@ const CHANGED_COLOR = Color(1, 0.5, 0)
 signal network_node_inspected(node_data: Dictionary)
 signal network_nodes_changed(state: bool)
 
+## Last rendered world state, kept so the frame-to-frame diff doesn't have to
+## re-read frame N-1 from the database and re-parse its JSON on every update.
+var _previous_world_state: Dictionary = {}
+## Frame that arrived while this view was hidden, rendered when it reappears.
+var _pending_frame_id: int = -1
+
+
+func _ready() -> void:
+    visibility_changed.connect(_on_visibility_changed)
+
+
+func _on_visibility_changed() -> void:
+    if not is_visible_in_tree() or _pending_frame_id < 0:
+        return
+    var id := _pending_frame_id
+    _pending_frame_id = -1
+    update_tree(id, world_debug.call("GetFrame", id))
+
 func _process(delta: float) -> void:
+    if not is_visible_in_tree():
+        return
+
     var items_to_remove = []
     
     for item in transitioning_items:
@@ -44,13 +65,14 @@ func _set_item_color(item: TreeItem, is_changed: bool) -> void:
         transitioning_items[item] = true
 
 func update_tree(frame_id: int, frame_data: Dictionary) -> void:
-    var previous_frame = {}
-    if frame_id > 0:
-        previous_frame = world_debug.call("GetFrame", frame_id - 1)
-
     var world_state: Dictionary = frame_data.get("world_state")
     if world_state.is_empty():
         return
+
+    # Diff against what we last drew rather than re-fetching frame N-1: that was
+    # a second database read plus a full JSON parse of the whole world, on every
+    # single update.
+    var previous_world_state := _previous_world_state
     
     # Create root node if it doesn't exist
     var root = tree.get_root()
@@ -60,17 +82,45 @@ func update_tree(frame_id: int, frame_data: Dictionary) -> void:
     # Update root node text
     root.set_text(0, world_state.get("nodeName", "Root"))
     var root_metadata = root.get_metadata(0)
-    var changed = previous_frame != null and previous_frame.get("world_state", {}).hash() != world_state.hash()
+    var changed = not previous_world_state.is_empty() and previous_world_state.hash() != world_state.hash()
     network_nodes_changed.emit(changed)
     _set_item_color(root, changed)
     root.set_metadata(0, world_state)
 
-    _reconcile_children(root, world_state.get("children", {}), previous_frame.get("world_state", {}).get("children", {}))
+    _reconcile_children(root, world_state.get("children", {}), previous_world_state.get("children", {}))
+    _previous_world_state = world_state
 
     if tree.get_selected() != null:
         network_node_inspected.emit(tree.get_selected().get_metadata(0))
 
-func _reconcile_children(parent_item: TreeItem, children: Dictionary, previous_children: Dictionary) -> void:
+## The exported world state groups children by their parent's relative path:
+##   { "<relative parent path>": [childDoc, ...] }
+## (see NetNodeCommon.ToBSONDocument — FromBSON requires that shape, so it is
+## the persistence format and can't be reshaped server-side for us). The tree
+## reconciles by name, so flatten it into { name: childDoc } first.
+func _flatten_children(children: Dictionary) -> Dictionary:
+    var out := {}
+    for parent_path in children:
+        var bucket = children[parent_path]
+        if not (bucket is Array):
+            continue
+        for child_doc in bucket:
+            if not (child_doc is Dictionary):
+                continue
+            var key: String = str(child_doc.get("nodeName", parent_path))
+            # Keys must match the TreeItem text for reconciliation to reuse
+            # items, so siblings sharing a name get disambiguated rather than
+            # overwriting each other.
+            while out.has(key):
+                key += "'"
+            out[key] = child_doc
+    return out
+
+
+func _reconcile_children(parent_item: TreeItem, raw_children: Dictionary, raw_previous_children: Dictionary) -> void:
+    var children := _flatten_children(raw_children)
+    var previous_children := _flatten_children(raw_previous_children)
+
     var existing_children = {}
     var child = parent_item.get_first_child()
 
@@ -105,9 +155,14 @@ func _on_world_debug_tick_frame_selected(tickFrame: TickFrameUI) -> void:
     update_tree(tickFrame.tick_frame_id, frame_data)
 
 func _on_world_debug_tick_frame_updated(id:int) -> void:
-    if world_debug.get("IsLive"):
-        var frame_data = world_debug.call("GetFrame", id)
-        update_tree(id, frame_data)
+    if not world_debug.get("IsLive"):
+        return
+    # Rebuilding a tree nobody can see (another world selected, or another tab
+    # open) cost exactly as much as a visible one; defer it until it matters.
+    if not is_visible_in_tree():
+        _pending_frame_id = id
+        return
+    update_tree(id, world_debug.call("GetFrame", id))
 
 func _on_tree_item_selected() -> void:
     network_node_inspected.emit(tree.get_selected().get_metadata(0))

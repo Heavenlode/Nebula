@@ -356,14 +356,14 @@ public sealed class GodotProcess : IDisposable
 
         while (offset < data.Length)
         {
-            // Check if we have enough data for header (4 bytes length + 1 byte type)
-            if (offset + 5 > data.Length) break;
+            // Frame: [len:int32][type:byte][worldId:16][payload] — see Core/Debug/DebugFrame.cs
+            if (offset + DebugFrame.PayloadOffset > data.Length) break;
 
             // Read message length (first 4 bytes)
             int msgLen = BitConverter.ToInt32(data, offset);
 
             // Sanity check - message length should be reasonable
-            if (msgLen < 0 || msgLen > 1000000) break;
+            if (msgLen < DebugFrame.HeaderSize || msgLen > 1000000) break;
 
             // Check if we have the full message
             if (offset + 4 + msgLen > data.Length) break;
@@ -372,7 +372,7 @@ public sealed class GodotProcess : IDisposable
             var msgData = new byte[msgLen];
             Array.Copy(data, offset + 4, msgData, 0, msgLen);
 
-            // Parse debug event - Format: [byte type][string category][string message]
+            // Parse debug event - Format: [byte type][worldId:16][string category][string message]
             if (msgData.Length > 0 && msgData[0] == 6) // DEBUG_EVENT = 6
             {
                 var evt = ParseDebugEvent(msgData);
@@ -403,8 +403,8 @@ public sealed class GodotProcess : IDisposable
     {
         try
         {
-            // Skip the type byte
-            int offset = 1;
+            // Skip the type byte and the worldId that follows it
+            int offset = DebugFrame.HeaderSize;
 
             // Read category string (length-prefixed with 4-byte int)
             if (offset + 4 > data.Length) return null;

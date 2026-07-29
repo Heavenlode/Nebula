@@ -101,9 +101,18 @@ namespace Nebula.Serialization.Serializers
         /// EVERY export until acked. So when a peer acks tick N, the tick-N packet
         /// contained the tick-N value of every then-unacked property, and every other
         /// acked property was unchanged at N — meaning the client's applied state at any
-        /// acked send-tick exactly equals the server's snapshot at that tick. Deltas are
-        /// therefore computed against the snapshot at the latest acked send-tick, and the
-        /// client applies them against its own recorded state at that tick.
+        /// acked send-tick equals the server's snapshot at that tick, up to delta rounding.
+        /// Deltas are therefore computed against the snapshot at the latest acked send-tick,
+        /// and the client applies them against its own recorded state at that tick.
+        ///
+        /// Delta rounding is tracked in LossyMask: a small delta encodes half-precision
+        /// components, so the client's reconstructed value can drift a few micro-units from
+        /// the server's. Mid-stream that is invisible, but the LAST send before a property
+        /// goes quiet must not be lossy or the client is stranded off the true value forever
+        /// (e.g. an exact server-side zero reading as ~6e-6). Export therefore schedules one
+        /// forced absolute ("settle absolute") for any lossy-flagged property that stopped
+        /// changing. Quaternions are exempt: their absolute encoding (smallest-three) is
+        /// itself lossy, so exactness on the wire was never available for them.
         /// </summary>
         private struct PeerPropertyState
         {
@@ -112,6 +121,7 @@ namespace Nebula.Serialization.Serializers
             public SentRecord[] SentHistory;       // Which props were sent at each recent tick
             public Tick LatestAckedTick;           // Latest acked tick at which this node sent data (-1 = none)
             public byte[] DeltaChain;              // Consecutive delta sends per prop; forces periodic absolute refresh
+            public byte[] LossyMask;               // Peer's applied value may be inexact (a lossy delta landed since the last absolute)
             public bool IsInitialized;
         }
 
@@ -257,6 +267,7 @@ namespace Nebula.Serialization.Serializers
                 _propChunkBudget = Array.Empty<int>();
                 _propertiesUpdated = Array.Empty<byte>();
                 _actualMask = Array.Empty<byte>();
+                _dirtyOnlyMask = Array.Empty<byte>();
                 _decodedMask = Array.Empty<byte>();
                 _decodedValues = Array.Empty<PropertyCache>();
                 _incomingMask = Array.Empty<byte>();
@@ -305,6 +316,7 @@ namespace Nebula.Serialization.Serializers
             _byteCount = (_propertyCount + BitConstants.BitsInByte - 1) / BitConstants.BitsInByte;
             _propertiesUpdated = new byte[_byteCount];
             _actualMask = new byte[_byteCount];
+            _dirtyOnlyMask = new byte[_byteCount];
             _decodedMask = new byte[_byteCount];
             _decodedValues = new PropertyCache[_propertyCount];
             _incomingMask = new byte[_byteCount];
@@ -454,6 +466,7 @@ namespace Nebula.Serialization.Serializers
                     state.SentHistory[i].Tick = -1;
                 }
                 Array.Clear(state.DeltaChain, 0, state.DeltaChain.Length);
+                Array.Clear(state.LossyMask, 0, state.LossyMask.Length);
                 state.LatestAckedTick = -1;
                 state.IsInitialized = true;
                 return state;
@@ -466,6 +479,7 @@ namespace Nebula.Serialization.Serializers
                 SentHistory = new SentRecord[SNAPSHOT_RING_SIZE],
                 LatestAckedTick = -1,
                 DeltaChain = new byte[_propertyCount],
+                LossyMask = new byte[_byteCount],
                 IsInitialized = true
             };
             for (int i = 0; i < fresh.SentHistory.Length; i++)
@@ -487,8 +501,11 @@ namespace Nebula.Serialization.Serializers
 
         /// <summary>
         /// Compares two PropertyCache values for equality based on their type.
+        /// typeIdentifier (from ProtocolNetProperty.Metadata) disambiguates the
+        /// Object case: custom INetValue structs live in dedicated union fields,
+        /// so RefValue alone cannot tell them apart.
         /// </summary>
-        private static bool PropertyCacheEquals(ref PropertyCache a, ref PropertyCache b)
+        internal static bool PropertyCacheEquals(string typeIdentifier, ref PropertyCache a, ref PropertyCache b)
         {
             if (a.Type != b.Type) return false;
 
@@ -510,9 +527,28 @@ namespace Nebula.Serialization.Serializers
                 SerialVariantType.PackedByteArray => ReferenceEquals(a.RefValue, b.RefValue) || (a.RefValue is byte[] ba && b.RefValue is byte[] bb && ba.AsSpan().SequenceEqual(bb)),
                 SerialVariantType.PackedInt32Array => ReferenceEquals(a.RefValue, b.RefValue) || (a.RefValue is int[] ia && b.RefValue is int[] ib && ia.AsSpan().SequenceEqual(ib)),
                 SerialVariantType.PackedInt64Array => ReferenceEquals(a.RefValue, b.RefValue) || (a.RefValue is long[] la && b.RefValue is long[] lb && la.AsSpan().SequenceEqual(lb)),
-                SerialVariantType.Object => ReferenceEquals(a.RefValue, b.RefValue) || object.Equals(a.RefValue, b.RefValue),
+                SerialVariantType.Object => CustomValueEquals(typeIdentifier, ref a, ref b),
                 _ => false
             };
+        }
+
+        /// <summary>
+        /// Equality for VariantType.Object caches. Must mirror SetDeserializedValueToCache
+        /// and NetworkController.SetCachedValue: UUID and NetId are stored in their union
+        /// fields (RefValue stays null, so comparing it would report all values equal),
+        /// while other custom types are boxed in RefValue.
+        /// </summary>
+        private static bool CustomValueEquals(string typeIdentifier, ref PropertyCache a, ref PropertyCache b)
+        {
+            switch (typeIdentifier)
+            {
+                case "Nebula.UUID":
+                    return a.UUIDValue.Equals(b.UUIDValue);
+                case "Nebula.NetId":
+                    return a.NetIdValue.Equals(b.NetIdValue);
+                default:
+                    return ReferenceEquals(a.RefValue, b.RefValue) || object.Equals(a.RefValue, b.RefValue);
+            }
         }
 
         /// <summary>
@@ -586,12 +622,14 @@ namespace Nebula.Serialization.Serializers
             // Get old value from cache (no Godot boundary crossing)
             ref var oldValue = ref network.CachedProperties[prop.Index];
 
-            // For object types (INetSerializable), always consider them changed when received.
-            // These types (like NetArray) are deserialized in-place and track their own changes
-            // internally. The fact that we received data means something changed.
-            // For value types, do a proper equality check.
-            bool valueChanged = (prop.VariantType == SerialVariantType.Object)
-                || !PropertyCacheEquals(ref oldValue, ref newValue);
+            // For object properties (INetSerializable), always consider them changed when
+            // received. These types (like NetArray) are deserialized in-place and track their
+            // own changes internally. The fact that we received data means something changed.
+            // INetValue types (UUID, NetId, ...) also have VariantType.Object but are plain
+            // values: they get a real equality check, because the server re-sends unacked
+            // properties every tick and duplicates must not re-fire NotifyOnChange handlers.
+            bool valueChanged = prop.IsObjectProperty
+                || !PropertyCacheEquals(prop.Metadata.TypeIdentifier, ref oldValue, ref newValue);
 
             // Copy old value BEFORE updating cache (needed for callback after value changes)
             PropertyCache oldValueSnapshot = oldValue;
@@ -1332,6 +1370,15 @@ namespace Nebula.Serialization.Serializers
         private byte[] _actualMask;
 
         /// <summary>
+        /// Scratch mask of properties that are genuinely dirty THIS tick for the peer being
+        /// exported — captured before the non-default/pending/settle merges widen the send
+        /// set. Deltas are only valid for freshly-changed values: resends and settle
+        /// absolutes must go absolute so the value is exact on arrival. Same serial-access
+        /// assumption as _actualMask.
+        /// </summary>
+        private byte[] _dirtyOnlyMask;
+
+        /// <summary>
         /// Scratch for the payload currently being imported: which property indices decoded
         /// a value, and the values themselves.
         ///
@@ -1439,6 +1486,12 @@ namespace Nebula.Serialization.Serializers
                 }
             }
 
+            // Snapshot the freshly-dirty bits before the merges below widen the send set.
+            // Only these props may be delta-encoded; everything merged in later (initial
+            // sync, pending resends, settle absolutes) carries an unchanged value and must
+            // be written absolute so it is exact on arrival.
+            Array.Copy(_propertiesUpdated, _dirtyOnlyMask, byteCount);
+
             // Include non-default PRIMITIVE properties that haven't been synced yet
             foreach (var propIndex in nonDefaultProperties)
             {
@@ -1468,6 +1521,18 @@ namespace Nebula.Serialization.Serializers
                         _propertiesUpdated[i] |= (byte)(1 << j);
                     }
                 }
+            }
+
+            // SETTLE ABSOLUTE: a property whose last landed encoding included a lossy delta
+            // holds a slightly-wrong value on the peer (half-precision rounding). While it
+            // keeps changing the stream corrects itself; once it goes quiet nothing would
+            // ever fix the residue. Schedule it once more — it is not in _dirtyOnlyMask, so
+            // the write loop sends it absolute, and WriteAbsolute clears its LossyMask bit.
+            for (var i = 0; i < byteCount; i++)
+            {
+                var lossyByte = state.LossyMask[i];
+                if (lossyByte == 0) continue;
+                _propertiesUpdated[i] |= lossyByte;
             }
 
             // Apply interest filter to primitive properties
@@ -1566,24 +1631,48 @@ namespace Nebula.Serialization.Serializers
 
                         bool hasAcked = (state.AckedMask[i] & (1 << j)) != 0;
 
+                        // Deltas are a stream optimization: only worth it mid-streak, where
+                        // the byte savings compound and the settle absolute at the end is
+                        // amortized. A one-shot change or a resend of an unchanged value
+                        // goes absolute — exact on arrival, no settle follow-up needed.
+                        bool dirtyThisTick = (_dirtyOnlyMask[i] & (1 << j)) != 0;
+                        bool sentLastTick = false;
+                        if (propIndex < 64 && currentTick >= 1)
+                        {
+                            ref var prevRecord = ref state.SentHistory[(currentTick - 1) % SNAPSHOT_RING_SIZE];
+                            sentLastTick = prevRecord.Tick == currentTick - 1
+                                && (prevRecord.SentMask & (1L << propIndex)) != 0;
+                        }
+
                         // Delta requires: a resolvable baseline, a confirmed-received prop,
-                        // and not a per-peer prop (their values have no shared snapshot).
-                        // DeltaChain forces a periodic absolute refresh to bound drift.
+                        // a freshly-changed value mid-streak, and not a per-peer prop (their
+                        // values have no shared snapshot). DeltaChain forces a periodic
+                        // absolute refresh to bound drift.
                         bool useDelta = baselineValues != null
                             && hasAcked
+                            && dirtyThisTick
+                            && sentLastTick
                             && !_propIsPerPeer[propIndex]
                             && _propSupportsDelta[propIndex]
                             && state.DeltaChain[propIndex] < REFRESH_CHAIN;
 
                         if (useDelta)
                         {
-                            WriteDelta(buffer, propIndex, ref current, ref baselineValues[propIndex]);
+                            // A lossy delta means the peer's reconstruction is now inexact.
+                            // A later lossless delta does NOT clear the flag: applied to an
+                            // already-drifted base, the result is still drifted. Only an
+                            // absolute restores exactness.
+                            if (WriteDelta(buffer, propIndex, ref current, ref baselineValues[propIndex]))
+                            {
+                                state.LossyMask[i] |= (byte)(1 << j);
+                            }
                             state.DeltaChain[propIndex]++;
                         }
                         else
                         {
                             WriteAbsolute(currentWorld, peer, buffer, propIndex, ref current);
                             state.DeltaChain[propIndex] = 0;
+                            state.LossyMask[i] &= (byte)~(1 << j);
                         }
                     }
                     catch (Exception ex)
@@ -1728,10 +1817,32 @@ namespace Nebula.Serialization.Serializers
         }
 
         /// <summary>
+        /// Mirrors the client's ReadSmallDelta reconstruction for one component: the wire
+        /// carries (Half)delta and the client adds (float)(Half)delta to its recorded
+        /// baseline. True when that reconstruction lands exactly on the current value.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool HalfDeltaIsLossless(float baseline, float delta, float current)
+            => baseline + (float)(Half)delta == current;
+
+        /// <summary>
+        /// Mirrors the client's ReadFullDelta reconstruction for one component. Full deltas
+        /// carry float32, but baseline + delta can still round away from the current value.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool FullDeltaIsLossless(float baseline, float delta, float current)
+            => baseline + delta == current;
+
+        /// <summary>
         /// Writes a property value as a delta against the snapshot value at the peer's
         /// acked baseline tick. Caller guarantees the type supports delta encoding.
+        /// Returns true when the encoding was LOSSY — the peer's reconstruction will not
+        /// exactly equal the current value — so the caller can flag the property for a
+        /// settle absolute once it stops changing. Integer deltas are always exact (the
+        /// client mirrors the same wrapping arithmetic), so only float-family types can
+        /// report lossy.
         /// </summary>
-        private void WriteDelta(
+        private bool WriteDelta(
             NetBuffer buffer,
             int propIndex,
             ref PropertyCache current,
@@ -1747,13 +1858,14 @@ namespace Nebula.Serialization.Serializers
                     {
                         NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
                         NetWriter.WriteHalfFloat(buffer, deltaF);
+                        return !HalfDeltaIsLossless(baseline.FloatValue, deltaF, current.FloatValue);
                     }
                     else
                     {
                         NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
                         NetWriter.WriteFloat(buffer, deltaF);
+                        return !FullDeltaIsLossless(baseline.FloatValue, deltaF, current.FloatValue);
                     }
-                    break;
 
                 case SerialVariantType.Int:
                     // Read current and baseline from the field this width uses (see IntWidth).
@@ -1804,7 +1916,7 @@ namespace Nebula.Serialization.Serializers
                                 break;
                         }
                     }
-                    break;
+                    return false;
 
                 case SerialVariantType.Vector2:
                     Vector2 deltaV2 = current.Vec2Value - baseline.Vec2Value;
@@ -1814,13 +1926,16 @@ namespace Nebula.Serialization.Serializers
                         NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
                         NetWriter.WriteHalfFloat(buffer, deltaV2.X);
                         NetWriter.WriteHalfFloat(buffer, deltaV2.Y);
+                        return !(HalfDeltaIsLossless(baseline.Vec2Value.X, deltaV2.X, current.Vec2Value.X)
+                            && HalfDeltaIsLossless(baseline.Vec2Value.Y, deltaV2.Y, current.Vec2Value.Y));
                     }
                     else
                     {
                         NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
                         NetWriter.WriteVector2(buffer, deltaV2);
+                        return !(FullDeltaIsLossless(baseline.Vec2Value.X, deltaV2.X, current.Vec2Value.X)
+                            && FullDeltaIsLossless(baseline.Vec2Value.Y, deltaV2.Y, current.Vec2Value.Y));
                     }
-                    break;
 
                 case SerialVariantType.Vector3:
                     Vector3 deltaV3 = current.Vec3Value - baseline.Vec3Value;
@@ -1831,13 +1946,18 @@ namespace Nebula.Serialization.Serializers
                         NetWriter.WriteHalfFloat(buffer, deltaV3.X);
                         NetWriter.WriteHalfFloat(buffer, deltaV3.Y);
                         NetWriter.WriteHalfFloat(buffer, deltaV3.Z);
+                        return !(HalfDeltaIsLossless(baseline.Vec3Value.X, deltaV3.X, current.Vec3Value.X)
+                            && HalfDeltaIsLossless(baseline.Vec3Value.Y, deltaV3.Y, current.Vec3Value.Y)
+                            && HalfDeltaIsLossless(baseline.Vec3Value.Z, deltaV3.Z, current.Vec3Value.Z));
                     }
                     else
                     {
                         NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
                         NetWriter.WriteVector3(buffer, deltaV3);
+                        return !(FullDeltaIsLossless(baseline.Vec3Value.X, deltaV3.X, current.Vec3Value.X)
+                            && FullDeltaIsLossless(baseline.Vec3Value.Y, deltaV3.Y, current.Vec3Value.Y)
+                            && FullDeltaIsLossless(baseline.Vec3Value.Z, deltaV3.Z, current.Vec3Value.Z));
                     }
-                    break;
 
                 default:
                     // Caller gates on _propSupportsDelta, so this is unreachable; guard anyway

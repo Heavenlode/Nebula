@@ -16,24 +16,37 @@ namespace Nebula
 	*/
 	public partial class NetworkController : RefCounted
 	{
+		/// <summary>
+		/// Scopes a peer context for per-peer property access. The context is lexical and
+		/// process-wide (thread-static): while a scope is open, reads and writes of ANY
+		/// per-peer property on ANY node target that peer. Scopes nest; disposing restores
+		/// the outer scope's peer.
+		/// </summary>
 		public ref struct PeerScope
 		{
-			private readonly NetworkController _network;
+			private readonly UUID _saved;
 
-			internal PeerScope(NetworkController network, UUID peerId)
+			internal PeerScope(UUID peerId)
 			{
-				_network = network;
-				_network._currentContextPeer = peerId;
+				_saved = _contextPeer;
+				_contextPeer = peerId;
 			}
 
 			public void Dispose()
 			{
-				_network._currentContextPeer = default;
+				_contextPeer = _saved;
 			}
 		}
 
-		public PeerScope ForPeer(UUID peerId) => new PeerScope(this, peerId);
-		private UUID _currentContextPeer = default;
+		public PeerScope ForPeer(UUID peerId) => new PeerScope(peerId);
+
+		[ThreadStatic]
+		private static UUID _contextPeer;
+
+		/// <summary>
+		/// The peer targeted by the innermost open <see cref="ForPeer"/> scope, or default when none.
+		/// </summary>
+		internal static UUID CurrentContextPeer => _contextPeer;
 
 		#region Snapshot Interpolation
 
@@ -230,9 +243,17 @@ namespace Nebula
 				if (_attachedNetNodeSceneFilePath == null)
 				{
 					var rawPath = RawNode.SceneFilePath;
-					_attachedNetNodeSceneFilePath = string.IsNullOrEmpty(rawPath)
+					var resolved = string.IsNullOrEmpty(rawPath)
 						? NetParent?.RawNode?.SceneFilePath ?? ""
 						: rawPath;
+					// Same pre-instantiation guard as IsNetScene(): an empty result means the
+					// node (and its parent) aren't resolvable yet - return it but don't cache,
+					// or the real path could never be observed later.
+					if (string.IsNullOrEmpty(resolved))
+					{
+						return resolved;
+					}
+					_attachedNetNodeSceneFilePath = resolved;
 				}
 				return _attachedNetNodeSceneFilePath;
 			}
@@ -262,11 +283,32 @@ namespace Nebula
 		}
 
 		bool? _isNetScene = null;
+
+		/// <summary>Test seam: exposes the IsNetScene cache state (null = not yet cached).</summary>
+		internal bool? IsNetSceneCacheForTests => _isNetScene;
+
 		public bool IsNetScene()
 		{
 			if (_isNetScene == null)
 			{
-				_isNetScene = Protocol.IsNetScene(RawNode.SceneFilePath);
+				// Don't cache before instantiation completes: constructor-time property writes
+				// (e.g. per-peer ctor defaults routed through MarkDirty) land here while
+				// SceneFilePath is still empty, and caching false would permanently demote a
+				// real NetScene - no serializers, no property sync for the whole scene.
+				// An empty path only becomes trustworthy (a genuine static child) once the
+				// node is in the tree; caching then keeps MarkDirty's hot path free of the
+				// allocating SceneFilePath interop fetch.
+				var scenePath = RawNode.SceneFilePath;
+				if (string.IsNullOrEmpty(scenePath))
+				{
+					if (!RawNode.IsInsideTree())
+					{
+						return false;
+					}
+					_isNetScene = false;
+					return false;
+				}
+				_isNetScene = Protocol.IsNetScene(scenePath);
 			}
 			return _isNetScene.Value;
 		}
@@ -360,6 +402,19 @@ namespace Nebula
 		/// </summary>
 		private bool[] _propIsPerPeer;
 		private int _perPeerPropertyCount;
+
+		/// <summary>
+		/// Cached wire type per property index, used by the per-peer write path
+		/// (which bypasses MarkDirty and so cannot rely on its protocol lookup).
+		/// Allocated only when the scene has per-peer properties.
+		/// </summary>
+		private SerialVariantType[] _propVariantTypes;
+
+		/// <summary>
+		/// Compact list of per-peer property indices, for serializer iteration without
+		/// scanning all 64 slots. Allocated only when the scene has per-peer properties.
+		/// </summary>
+		internal int[] PerPeerPropIndices;
 
 		public HashSet<NetworkController> DynamicNetworkChildren = [];
 
@@ -649,14 +704,165 @@ namespace Nebula
 			// Allocate per-peer storage
 			PerPeerValues = new Dictionary<UUID, PropertyCache>[propCount];
 			PerPeerDirtyMask = new Dictionary<UUID, long>();
+			_propVariantTypes = new SerialVariantType[propCount];
+			PerPeerPropIndices = new int[_perPeerPropertyCount];
 
+			var perPeerSlot = 0;
 			for (int i = 0; i < propCount; i++)
 			{
+				_propVariantTypes[i] = Protocol.UnpackProperty(NetSceneFilePath, i).VariantType;
 				if (_propIsPerPeer[i])
 				{
 					PerPeerValues[i] = new Dictionary<UUID, PropertyCache>();
+					PerPeerPropIndices[perPeerSlot++] = i;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Test seam: initializes per-peer storage directly from the given metadata, bypassing
+		/// protocol registration, and marks this controller as a NetScene root so root
+		/// resolution terminates here. Never call outside tests.
+		/// </summary>
+		internal void InitializePerPeerStorageForTests(bool[] isPerPeer, SerialVariantType[] variantTypes)
+		{
+			_isNetScene = true;
+			_propIsPerPeer = isPerPeer;
+			_propVariantTypes = variantTypes;
+			_perPeerPropertyCount = 0;
+			for (int i = 0; i < isPerPeer.Length; i++)
+			{
+				if (isPerPeer[i]) _perPeerPropertyCount++;
+			}
+
+			PerPeerValues = new Dictionary<UUID, PropertyCache>[isPerPeer.Length];
+			PerPeerDirtyMask = new Dictionary<UUID, long>();
+			PerPeerPropIndices = new int[_perPeerPropertyCount];
+
+			var perPeerSlot = 0;
+			for (int i = 0; i < isPerPeer.Length; i++)
+			{
+				if (isPerPeer[i])
+				{
+					PerPeerValues[i] = new Dictionary<UUID, PropertyCache>();
+					PerPeerPropIndices[perPeerSlot++] = i;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Walks up to the NetScene root that owns per-peer storage. Null when the node
+		/// is not yet registered in a world (NetParent needs CurrentWorld).
+		/// </summary>
+		private NetworkController ResolvePerPeerRoot()
+		{
+			var node = this;
+			while (node != null && !node.IsNetScene())
+			{
+				node = node.NetParent;
+			}
+			return node;
+		}
+
+		/// <summary>
+		/// Reads the current context peer's value for a per-peer property. Called by generated
+		/// property getters. Returns false (caller falls back to the base field) when: not the
+		/// server, no <see cref="ForPeer"/> scope is open, the owning NetScene root cannot be
+		/// resolved yet, storage is absent, or the peer has no override.
+		/// Alloc-free; <paramref name="cachedIndex"/> and <paramref name="cachedRoot"/> are
+		/// resolved once and reused across calls.
+		/// </summary>
+		/// <summary>
+		/// Test seam: lets unit tests exercise the per-peer paths without a live NetRunner.
+		/// Never set outside tests.
+		/// </summary>
+		internal static bool ForcePerPeerServerContextForTests = false;
+
+		/// <summary>
+		/// Null-safe server check for the per-peer accessors. Only evaluated while a ForPeer
+		/// scope is open, but a scope can be opened before/without a NetRunner (tests, tools).
+		/// </summary>
+		private static bool PerPeerServerContext =>
+			ForcePerPeerServerContextForTests || (NetRunner.Instance?.IsServer ?? false);
+
+		public bool TryReadPerPeer(INetNodeBase sourceNode, string propertyName, ref int cachedIndex, ref NetworkController cachedRoot, out PropertyCache value)
+		{
+			value = default;
+			var peerId = _contextPeer;
+			if (peerId == default || !PerPeerServerContext)
+			{
+				return false;
+			}
+
+			var root = cachedRoot ?? ResolvePerPeerRoot();
+			if (root == null || root.PerPeerValues == null)
+			{
+				return false;
+			}
+			cachedRoot = root;
+
+			if (cachedIndex < 0)
+			{
+				var staticChildId = sourceNode.Network.StaticChildId;
+				if (!Protocol.LookupPropertyByStaticChildId(root.NetSceneFilePath, staticChildId, propertyName, out var prop))
+				{
+					return false;
+				}
+				cachedIndex = prop.Index;
+			}
+
+			var peerValues = root.PerPeerValues[cachedIndex];
+			return peerValues != null && peerValues.TryGetValue(peerId, out value);
+		}
+
+		/// <summary>
+		/// Writes the current context peer's value for a per-peer property and marks it dirty
+		/// for that peer only. Called by generated property setters — deliberately without any
+		/// equality short-circuit, so writing a value one peer already holds still delivers it
+		/// to the peer in scope. Returns false (caller falls back to the broadcast path) under
+		/// the same conditions as <see cref="TryReadPerPeer"/>.
+		/// </summary>
+		public bool TryWritePerPeer<T>(INetNodeBase sourceNode, string propertyName, T value, ref int cachedIndex, ref NetworkController cachedRoot) where T : struct
+		{
+			var peerId = _contextPeer;
+			if (peerId == default || !PerPeerServerContext)
+			{
+				return false;
+			}
+
+			var root = cachedRoot ?? ResolvePerPeerRoot();
+			if (root == null || root.PerPeerValues == null)
+			{
+				return false;
+			}
+			cachedRoot = root;
+
+			if (cachedIndex < 0)
+			{
+				var staticChildId = sourceNode.Network.StaticChildId;
+				if (!Protocol.LookupPropertyByStaticChildId(root.NetSceneFilePath, staticChildId, propertyName, out var prop))
+				{
+					return false;
+				}
+				cachedIndex = prop.Index;
+			}
+
+			var peerValues = root.PerPeerValues[cachedIndex];
+			if (peerValues == null)
+			{
+				return false;
+			}
+
+			var cache = new PropertyCache();
+			SetCachedValueToCache(root._propVariantTypes[cachedIndex], value, ref cache);
+			peerValues[peerId] = cache;
+
+			if (!root.PerPeerDirtyMask.TryGetValue(peerId, out var mask))
+			{
+				mask = 0;
+			}
+			root.PerPeerDirtyMask[peerId] = mask | (1L << cachedIndex);
+			return true;
 		}
 
 		/// <summary>
@@ -771,24 +977,8 @@ namespace Nebula
 				return;
 			}
 
-			// Per-peer property with context set?
-			if (_currentContextPeer != default && _propIsPerPeer != null && _propIsPerPeer[prop.Index])
-			{
-				var peerId = _currentContextPeer;
-
-				// Store in per-peer dictionary
-				var cache = new PropertyCache();
-				SetCachedValueToCache(prop.VariantType, value, ref cache);
-				PerPeerValues[prop.Index][peerId] = cache;
-
-				// Update per-peer dirty mask
-				if (!PerPeerDirtyMask.TryGetValue(peerId, out var mask))
-					mask = 0;
-				PerPeerDirtyMask[peerId] = mask | (1L << prop.Index);
-				return;
-			}
-
-			// Broadcast path - update global dirty mask
+			// Broadcast path - update global dirty mask. Per-peer routing happens in the
+			// generated property setter (TryWritePerPeer) before MarkDirty is ever called.
 			DirtyMask |= (1L << prop.Index);
 			
 			// Skip caching for predicted properties on owned clients.

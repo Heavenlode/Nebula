@@ -357,6 +357,37 @@ namespace Nebula.Serialization.Serializers
                             }
                         }
                     }
+
+                    // Per-peer overrides re-ship on visibility gain the same way. They are
+                    // not in nonDefaultProperties (per-peer writes bypass the shared dirty
+                    // mask), so without this a peer regaining interest keeps a stale value.
+                    if (network.PerPeerPropIndices != null && network.PerPeerValues != null)
+                    {
+                        foreach (var propIndex in network.PerPeerPropIndices)
+                        {
+                            if (propIndex >= _propertyCount) continue;
+                            var overrides = network.PerPeerValues[propIndex];
+                            if (overrides == null || !overrides.ContainsKey(peerId)) continue;
+
+                            long interestMask = _propInterestMask[propIndex];
+                            long interestRequired = _propInterestRequired[propIndex];
+
+                            bool wasVisible = (interestMask & oldInterest) != 0
+                                && (interestRequired & oldInterest) == interestRequired;
+                            bool isNowVisible = (interestMask & newInterest) != 0
+                                && (interestRequired & newInterest) == interestRequired;
+
+                            if (!wasVisible && isNowVisible)
+                            {
+                                ClearBit(syncMask, propIndex);
+                                ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
+                                if (!Unsafe.IsNullRef(ref state) && state.IsInitialized)
+                                {
+                                    ClearBit(state.AckedMask, propIndex);
+                                }
+                            }
+                        }
+                    }
                 };
                 network.InterestChanged += _interestChangedHandler;
             }
@@ -1424,14 +1455,6 @@ namespace Nebula.Serialization.Serializers
             var peerId = NetRunner.Instance.GetPeerId(peer);
             int byteCount = _byteCount;
 
-            // Snapshot AND CLEAR per-peer dirty mask for this peer
-            long perPeerDirty = 0;
-            if (network.PerPeerDirtyMask != null &&
-                network.PerPeerDirtyMask.TryGetValue(peerId, out perPeerDirty))
-            {
-                network.PerPeerDirtyMask[peerId] = 0; // Clear after snapshot
-            }
-
             Array.Clear(_propertiesUpdated, 0, byteCount);
 
             if (!peerInitialPropSync.TryGetValue(peerId, out var initialSync))
@@ -1460,6 +1483,13 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
+            // Snapshot the per-peer dirty mask AFTER the interest early-return, and do NOT
+            // clear it here: bits are cleared at the bottom of Export only for properties
+            // that actually shipped, so interest-filtered (or not-yet-visible) changes stay
+            // armed and retry next tick instead of being lost permanently.
+            long perPeerDirty = 0;
+            network.PerPeerDirtyMask?.TryGetValue(peerId, out perPeerDirty);
+
             // Build dirty mask for PRIMITIVE properties only from processingDirtyMask
             // Object properties (INetSerializable) are handled separately - they self-filter
             // Per-peer properties use per-peer dirty mask instead of global
@@ -1473,7 +1503,12 @@ namespace Nebula.Serialization.Serializers
                 bool isDirty;
                 if (_propIsPerPeer[propIndex])
                 {
-                    isDirty = (perPeerDirty & (1L << propIndex)) != 0;
+                    // A base (unscoped) write broadcasts to exactly the peers WITHOUT an
+                    // override; peers with an override keep their per-peer value.
+                    var overrides = network.PerPeerValues?[propIndex];
+                    isDirty = (perPeerDirty & (1L << propIndex)) != 0
+                        || ((processingDirtyMask & (1L << propIndex)) != 0
+                            && (overrides == null || !overrides.ContainsKey(peerId)));
                 }
                 else
                 {
@@ -1503,6 +1538,27 @@ namespace Nebula.Serialization.Serializers
                 if ((initialSync[byteIndex] & propSlot) == 0)
                 {
                     _propertiesUpdated[byteIndex] |= propSlot;
+                }
+            }
+
+            // Per-peer overrides join initial sync directly: per-peer writes never enter the
+            // shared dirty mask, so nonDefaultProperties can't cover them. Without this a
+            // peer that joins (or respawns) after its override was written receives nothing.
+            if (network.PerPeerPropIndices != null && network.PerPeerValues != null)
+            {
+                foreach (var propIndex in network.PerPeerPropIndices)
+                {
+                    if (propIndex >= _propertyCount || _propIsObject[propIndex]) continue;
+
+                    var overrides = network.PerPeerValues[propIndex];
+                    if (overrides == null || !overrides.ContainsKey(peerId)) continue;
+
+                    var byteIndex = propIndex / BitConstants.BitsInByte;
+                    var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
+                    if ((initialSync[byteIndex] & propSlot) == 0)
+                    {
+                        _propertiesUpdated[byteIndex] |= propSlot;
+                    }
                 }
             }
 
@@ -1758,6 +1814,7 @@ namespace Nebula.Serialization.Serializers
             // properties - object properties (INetSerializable) manage their own per-peer
             // pending/resend state and are acked through their own tick-gated callbacks.
             long primitiveSentMask = 0;
+            long perPeerSentMask = 0;
             for (var byteIdx = 0; byteIdx < byteCount; byteIdx++)
             {
                 var b = actualMask[byteIdx];
@@ -1773,8 +1830,21 @@ namespace Nebula.Serialization.Serializers
                     if (propIdx < 64)
                     {
                         primitiveSentMask |= 1L << propIdx;
+                        if (_propIsPerPeer[propIdx])
+                        {
+                            perPeerSentMask |= 1L << propIdx;
+                        }
                     }
                 }
+            }
+
+            // Clear only the per-peer dirty bits that actually shipped this export.
+            // Bits filtered out (interest, budget) stay armed and retry next tick;
+            // loss recovery from here on is PendingDirtyMask's job.
+            if (perPeerSentMask != 0 && network.PerPeerDirtyMask != null &&
+                network.PerPeerDirtyMask.TryGetValue(peerId, out var remainingPerPeerDirty))
+            {
+                network.PerPeerDirtyMask[peerId] = remainingPerPeerDirty & ~perPeerSentMask;
             }
 
             // Record what was sent at this tick so a future ack can be matched to exactly

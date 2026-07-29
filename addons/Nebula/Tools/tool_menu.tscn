@@ -1,5 +1,0 @@
-[gd_scene format=3 uid="uid://doqb86s5puorg"]
-
-[node name="ToolMenu" type="PopupMenu"]
-visible = true
-unfocusable = true

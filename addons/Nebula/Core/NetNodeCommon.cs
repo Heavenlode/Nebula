@@ -26,6 +26,19 @@ namespace Nebula.Utility
             {
                 // Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Only network scenes can be converted to BSON: {network.RawNode.GetPath()} with scene {network.RawNode.SceneFilePath}");
             }
+
+            // Cycle guard (opt-in via context.Visited): mutually-referencing
+            // NetNodes would otherwise recurse forever. Emit a marker so the
+            // reader can still see what was pointed at.
+            if (context.Visited != null && !context.Visited.Add(network.RawNode))
+            {
+                return new BsonDocument
+                {
+                    ["$ref"] = network.RawNode.Name.ToString(),
+                    ["scene"] = network.RawNode.SceneFilePath,
+                };
+            }
+
             BsonDocument result = new BsonDocument();
             result["data"] = new BsonDocument();
             result["scene"] = network.RawNode.SceneFilePath;

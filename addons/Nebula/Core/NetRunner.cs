@@ -191,14 +191,15 @@ namespace Nebula
         public override void _Ready()
         {
             // Protocol is fully static - no initialization needed
+            StartDebugHub();
         }
 
         public override void _ExitTree()
         {
             ENetHost?.Flush();
             ENetHost?.Dispose();
-            debugEnet?.Flush();
-            debugEnet?.Dispose();
+            DebugHub?.Stop();
+            DebugHub = null;
 
             if (_libraryInitialized && Instance == this)
             {
@@ -207,7 +208,42 @@ namespace Nebula
             }
         }
 
-        private Host debugEnet;
+        /// <summary>
+        /// Process-wide debug channel (see <see cref="Nebula.DebugHub"/>), or
+        /// null when debugging wasn't requested. Every world's traffic is
+        /// multiplexed over this one socket.
+        /// </summary>
+        public DebugHub DebugHub { get; private set; }
+
+        /// <summary>
+        /// Opt-in via <c>--debugPort=N</c> only, and deliberately so: a
+        /// dedicated server must not expose an unauthenticated debug port
+        /// because of a setting someone left switched on. The editor's Play
+        /// button assigns one per launched instance and the integration harness
+        /// passes it explicitly; the port is used verbatim, never fallen back.
+        ///
+        /// Parsed here rather than in WorldRunner, where it used to live: that
+        /// ran once per world, so multiple worlds fought over the same port.
+        /// </summary>
+        private void StartDebugHub()
+        {
+            int explicitPort = 0;
+            foreach (var argument in OS.GetCmdlineArgs())
+            {
+                if (!argument.StartsWith("--debugPort="))
+                    continue;
+                if (int.TryParse(argument.Substring("--debugPort=".Length), out int parsedPort))
+                    explicitPort = parsedPort;
+                break;
+            }
+
+            if (explicitPort <= 0)
+                return;
+
+            var hub = new DebugHub();
+            if (hub.Start(explicitPort))
+                DebugHub = hub;
+        }
 
         public IAuthenticator Authentication { get; private set; }
 
@@ -264,23 +300,9 @@ namespace Nebula
             NetStarted = true;
             Debugger.Instance.Log($"Started on port {Port}");
 
-            // Debug server
-            debugEnet = new Host();
-            var debugAddress = new Address();
-            // Note: For server, only set Port. Do NOT call SetHost - this binds to all interfaces
-            debugAddress.Port = (ushort)DebugPort;
-
-            try
-            {
-                debugEnet.Create(debugAddress, MaxPeers, MaxChannels);
-                Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"Started debug server on {ServerAddress}:{DebugPort}");
-            }
-            catch (Exception ex)
-            {
-                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Error starting debug server: {ex.Message}");
-                debugEnet.Dispose();
-                debugEnet = null;
-            }
+            // The debug channel is not started here: it is process-wide (see
+            // StartDebugHub) so that clients get one too, and so it is already
+            // listening before the network starts.
         }
 
         public void StartClient()
@@ -338,20 +360,31 @@ namespace Nebula
         /// Maximum Transferrable Unit. The maximum number of bytes that should be sent in a single ENet UDP Packet (i.e. a single tick)
         /// Not a hard limit.
         /// </summary>
-        public static int MTU => ProjectSettings.GetSetting("Nebula/config/mtu", 1400).AsInt32();
+        public static int MTU => ProjectSettings.GetSetting("Nebula/config/network/mtu", 1400).AsInt32();
 
         private static bool? _logTickPayloads;
         /// <summary>
-        /// Debug: when enabled via the <c>Nebula/config/log_tick_payloads</c> project setting, the
+        /// Debug: when enabled via the <c>Nebula/config/debug/log_tick_payloads</c> project setting, the
         /// client logs the full hex of every server tick payload. Cached on first read, so toggling
         /// it takes effect on the next run.
         /// </summary>
+        private static int? _debugExportInterval;
+        /// <summary>
+        /// How many network ticks between full world-state exports on the debug
+        /// channel (<c>Nebula/config/debug/export_interval</c>). 1 = every tick.
+        /// Raising it is close to free for the editor, which carries the last
+        /// known state forward between exports. Cached on first read.
+        /// </summary>
+        public static int DebugExportInterval =>
+            _debugExportInterval ??= Math.Max(1,
+                ProjectSettings.GetSetting("Nebula/config/debug/export_interval", 1).AsInt32());
+
         public static bool LogTickPayloads =>
-            _logTickPayloads ??= ProjectSettings.GetSetting("Nebula/config/log_tick_payloads", false).AsBool();
+            _logTickPayloads ??= ProjectSettings.GetSetting("Nebula/config/debug/log_tick_payloads", false).AsBool();
 
         private static bool? _packEnabled;
         /// <summary>
-        /// When enabled via <c>Nebula/config/pack_enabled</c>, the server delta-compresses tick
+        /// When enabled via <c>Nebula/config/pack/enabled</c>, the server delta-compresses tick
         /// payloads against a baseline the peer has acknowledged (see NebulaPack).
         ///
         /// This is a server-side, per-packet decision — every packet says whether it is a delta or
@@ -359,46 +392,26 @@ namespace Nebula
         /// Cached on first read; toggling takes effect on the next run.
         /// </summary>
         public static bool PackEnabled =>
-            _packEnabled ??= ProjectSettings.GetSetting("Nebula/config/pack_enabled", true).AsBool();
+            _packEnabled ??= ProjectSettings.GetSetting("Nebula/config/pack/enabled", true).AsBool();
 
         private static bool? _packValidate;
         /// <summary>
-        /// When enabled via <c>Nebula/config/pack_validate</c>, the server appends a checksum of the
+        /// When enabled via <c>Nebula/config/pack/validate</c>, the server appends a checksum of the
         /// raw payload and the client verifies it after decoding. Costs 2 bytes per packet and
         /// catches any window divergence immediately instead of letting it corrupt state silently.
         /// Recommended on in development.
         /// </summary>
         public static bool PackValidate =>
-            _packValidate ??= ProjectSettings.GetSetting("Nebula/config/pack_validate", true).AsBool();
+            _packValidate ??= ProjectSettings.GetSetting("Nebula/config/pack/validate", true).AsBool();
 
-        private void _debugService()
+        /// <summary>
+        /// Accepts debug clients. Runs in _Process rather than _PhysicsProcess
+        /// because _PhysicsProcess bails out until the network has started, and
+        /// both the editor and the test harness attach before that.
+        /// </summary>
+        public override void _Process(double delta)
         {
-            if (debugEnet == null) return;
-
-            Event netEvent;
-            while (debugEnet.CheckEvents(out netEvent) > 0 || debugEnet.Service(0, out netEvent) > 0)
-            {
-                switch (netEvent.Type)
-                {
-                    case EventType.None:
-                        return;
-
-                    case EventType.Connect:
-                        foreach (var worldId in Worlds.Keys)
-                        {
-                            var world = Worlds[worldId];
-                            using var buffer = new NetBuffer();
-                            NetWriter.WriteBytes(buffer, worldId.ToByteArray());
-                            NetWriter.WriteInt32(buffer, world.DebugPort);
-                            SendPacket(netEvent.Peer, 0, buffer, PacketFlags.Reliable);
-                        }
-                        break;
-
-                    case EventType.Receive:
-                        netEvent.Packet.Dispose();
-                        break;
-                }
-            }
+            DebugHub?.Poll();
         }
 
         public event Action<uint> OnPeerConnected;
@@ -446,8 +459,6 @@ namespace Nebula
         {
             if (!NetStarted)
                 return;
-
-            _debugService();
 
             Event netEvent;
             int checkResult = ENetHost.CheckEvents(out netEvent);
@@ -549,7 +560,7 @@ namespace Nebula
                                     var tick = NetReader.ReadInt32(data);
                                     var bytes = NetReader.ReadRemainingBytes(data);
                                     // Debug: dump the full payload hex for every server tick
-                                    // (gated behind the Nebula/config/log_tick_payloads setting).
+                                    // (gated behind the Nebula/config/debug/log_tick_payloads setting).
                                     if (LogTickPayloads)
                                     {
                                         Debugger.Instance.Log(Debugger.DebugLevel.INFO,
@@ -782,6 +793,11 @@ namespace Nebula
                 }
                 // Reset the single client world container, then ack with the same worldId so the
                 // server can match this peer's pending handoff.
+                // Adopt the id too: the client's WorldRunner is constructed in StartClient and
+                // otherwise never learns which world it is in, which left every client-side debug
+                // frame tagged with an empty UUID.
+                if (WorldRunner.CurrentWorld != null)
+                    WorldRunner.CurrentWorld.WorldId = worldId;
                 WorldRunner.CurrentWorld?.ResetForWorldChange();
                 SendWorldMessage(ServerPeer, WorldMsgReady, worldId);
             }

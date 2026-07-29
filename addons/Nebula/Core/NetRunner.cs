@@ -48,11 +48,6 @@ namespace Nebula
         }
 
         /// <summary>
-        /// The port for the debug server to listen on.
-        /// </summary>
-        public const int DebugPort = 59910;
-
-        /// <summary>
         /// The maximum number of allowed connections before the server starts rejecting clients.
         /// </summary>
         [Export] public int MaxPeers = 100;
@@ -216,17 +211,37 @@ namespace Nebula
         public DebugHub DebugHub { get; private set; }
 
         /// <summary>
-        /// Opt-in via <c>--debugPort=N</c> only, and deliberately so: a
-        /// dedicated server must not expose an unauthenticated debug port
-        /// because of a setting someone left switched on. The editor's Play
-        /// button assigns one per launched instance and the integration harness
-        /// passes it explicitly; the port is used verbatim, never fallen back.
+        /// The debug server project setting (<c>Nebula/config/debug/enable_debug_server</c>),
+        /// default on. This is a master OFF switch, ANDed with <c>--debugPort=N</c>
+        /// rather than replacing it: leaving it on never opens a port by itself, so a
+        /// dedicated server still exposes nothing unless it was explicitly launched
+        /// with a debug port. Turning it off makes the whole channel inert — no
+        /// listener, no frames built, no per-tick work anywhere.
+        ///
+        /// Cached on first read, so toggling it takes effect on the next run.
+        /// </summary>
+        public static bool DebugServerEnabled =>
+            _debugServerEnabled ??= ProjectSettings.GetSetting(DEBUG_SERVER_SETTING, true).AsBool();
+
+        private static bool? _debugServerEnabled;
+
+        /// <summary>Project setting key for <see cref="DebugServerEnabled"/>.</summary>
+        public const string DEBUG_SERVER_SETTING = "Nebula/config/debug/enable_debug_server";
+
+        /// <summary>
+        /// Opt-in via <c>--debugPort=N</c>, and gated by
+        /// <see cref="DebugServerEnabled"/>. The editor's Play button assigns a port
+        /// per launched instance and the integration harness passes it explicitly;
+        /// the port is used verbatim, never fallen back.
         ///
         /// Parsed here rather than in WorldRunner, where it used to live: that
         /// ran once per world, so multiple worlds fought over the same port.
         /// </summary>
         private void StartDebugHub()
         {
+            if (!DebugServerEnabled)
+                return;
+
             int explicitPort = 0;
             foreach (var argument in OS.GetCmdlineArgs())
             {

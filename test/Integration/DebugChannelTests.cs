@@ -1,9 +1,10 @@
 #nullable enable
+namespace NebulaTests.Integration;
+
 using System;
 using System.Threading.Tasks;
+using Nebula.Testing.Integration;
 using Xunit;
-
-namespace Nebula.Testing.Integration;
 
 /// <summary>
 /// Smoke coverage for the debug channel itself.
@@ -13,6 +14,11 @@ namespace Nebula.Testing.Integration;
 /// these tests now all ride the same socket. These tests exist so a framing
 /// change (the frame header, the DEBUG_EVENT type byte, the pre-connection
 /// replay buffer) fails loudly instead of silently breaking the debugger.</para>
+///
+/// <para>Lives in the test project rather than alongside the harness in
+/// addons/Nebula/Testing/Integration: it needs a real NetScene to drive, and the
+/// addon ships none. The harness stays in the addon; the tests that use it live
+/// here, next to the scenes they need.</para>
 /// </summary>
 public class DebugChannelTests : IntegrationTestBase
 {
@@ -59,5 +65,11 @@ public class DebugChannelTests : IntegrationTestBase
         await client.ConnectDebug();
     }
 
-    private const string DefaultWorldScene = "res://addons/Nebula/Testing/ProtocolBuilder/ProtocolBuilder.tscn";
+    /// <summary>
+    /// A real NetScene, so SetupWorldInstance actually creates a world. The
+    /// previous ProtocolBuilder.tscn is a plain Node build helper — no world was
+    /// ever created for it, so WorldCreated could never fire and the first test
+    /// could only ever time out.
+    /// </summary>
+    private const string DefaultWorldScene = "res://Integration/Basic/Scene.tscn";
 }

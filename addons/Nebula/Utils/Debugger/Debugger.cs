@@ -77,7 +77,12 @@ namespace Nebula.Utility.Tools
         {
             if (Engine.IsEditorHint())
             {
-                Engine.RegisterSingleton("Debugger", this);
+                // More than one Debugger node can exist in the editor (autoload +
+                // plugin windows); only the first registers the editor singleton.
+                if (!Engine.HasSingleton("Debugger"))
+                {
+                    Engine.RegisterSingleton("Debugger", this);
+                }
                 return;
             }
             if (Instance != null)
@@ -98,7 +103,7 @@ namespace Nebula.Utility.Tools
 
         public static bool IsEnabled(DebugLevel level)
         {
-            return level <= (DebugLevel)ProjectSettings.GetSetting("Nebula/config/log_level", 0).AsInt16();
+            return level <= (DebugLevel)ProjectSettings.GetSetting("Nebula/config/debug/log_level", 0).AsInt16();
         }
 
         public void Log(string msg, DebugLevel level = DebugLevel.INFO)

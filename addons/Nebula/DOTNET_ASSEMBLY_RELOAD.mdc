@@ -1,0 +1,107 @@
+---
+alwaysApply: true
+---
+
+# Godot .NET Assembly Reload — Pitfalls & Required Patterns
+
+Hard-won rules for writing **editor plugin C#** in this project (Nebula addon and
+any other `[Tool]` code). Violating them causes the `godot#78513` failure class:
+
+```
+ERROR: modules/mono/mono_gd/gd_mono.cpp:811 - .NET: Failed to unload assemblies.
+ERROR: modules/mono/csharp_script.cpp:673 - Condition "managed_callable->delegate_handle.value == nullptr" is true.
+ERROR: Error calling from signal 'pressed' to callable: 'ManagedCallableMiddleman::': Method not found.
+```
+
+Symptoms: failed/degraded assembly reloads, dead buttons after a reload, zombie
+editor UI, NullReferenceExceptions in signal handlers. Root causes were found by
+an 8-stage bisection (2026-07); background on the debugging technique:
+https://dev.heavenlode.com/posts/debug-godot-assembly-unloading/
+
+## How assembly reload actually behaves
+
+When the editor hot-reloads C# (triggered by the build step of any editor play
+or the Build button — **never** on window focus):
+
+- Managed instances are **recreated in place**. `_EnterTree` / `_Ready` /
+  `_ExitTree` do **NOT** re-run. Plain (non-`[Export]`) fields come back null.
+- Signal connections backed by managed delegates (`+=`, `Callable.From`,
+  lambdas) **die** — their GCHandles are freed; later invocations print the
+  `managed_callable` / `ManagedCallableMiddleman` errors above. Those errors
+  are residue of freed handles, not the cause of a failed unload.
+- Name-bound callables (`new Callable(this, MethodName.X)`) **survive** and
+  re-resolve against the recreated instance.
+- Because `_ExitTree` never runs on reload, any cleanup that lives there does
+  not happen. Cleanup that must run on reload belongs in `Dispose(bool)`.
+
+## Rule 1 — Never park a delegate Callable on an object without a C# script
+
+`Callable.From(...)` (and `+=` on signal events) creates a delegate-backed
+callable holding a strong GCHandle into the current assembly. If that callable
+is stored on a native singleton (`ProjectSettings`, `EditorSettings`, …) or a
+GDScript node, nothing releases it on reload and it **pins the ALC** →
+`Failed to unload assemblies`. Delegate callables held by C#-scripted nodes
+are cleaned up by the reload machinery; ones on non-C# objects are not.
+
+```csharp
+// WRONG — pins the assembly on every reload:
+ProjectSettings.Singleton.Connect("settings_changed", Callable.From(OnChanged));
+
+// RIGHT — name-bound: no managed state, survives reloads:
+ProjectSettings.Singleton.Connect("settings_changed", new Callable(this, MethodName.OnChanged));
+```
+
+Project policy: **all editor-UI signal connections are name-bound** — never
+`+=` / `Callable.From` — so dead-middleman bugs are structurally impossible.
+Private methods are fine; the source generators expose them.
+
+## Rule 2 — The C# `Callable` struct cannot hold native custom callables
+
+A bound/custom callable (e.g. from GDScript `bind()` or `Expression`) is
+**silently nulled** by `Variant.AsCallable()` — the C# struct can only
+represent object+method pairs and managed delegates. Consequences:
+
+- `Callable.Bind` is not exposed in C#. To attach a bound argument (e.g. a row
+  index) delegate-free, build it with a core `Expression` and keep it a
+  `Variant` end to end, connecting via the Variant call path:
+
+```csharp
+private Variant BindIndex(StringName method, int index)
+{
+    var expression = new Expression();
+    expression.Parse("c.bind(i)", new[] { "c", "i" });
+    return expression.Execute(new Godot.Collections.Array { new Callable(this, method), index });
+}
+// Connect WITHOUT crossing the C# Callable struct:
+button.Call("connect", "pressed", BindIndex(MethodName.OnRowPlayPressed, index));
+```
+
+- Callables read back from `GetSignalConnectionList` suffer the same loss:
+  engine-internal (`callable_mp`) connections arrive null, and disconnect
+  attempts fail. Track your own connections; don't sweep by heuristics.
+
+## Rule 3 — Expect the zombie instance; self-heal
+
+After any reload, an in-place-recreated instance has null fields while its old
+UI nodes still sit in the tree. Patterns used in `Tools/Main.cs` and
+`Tools/MainScreen/NebulaMainScreen.cs`:
+
+- **Self-heal**: `Main._Process` treats `mainScreenInstance == null` as the
+  post-reload signature → sweeps stale nodes by name → rebuilds the UI.
+  (Processing enablement is baked at plugin init, so the first session after
+  adding `_Process` needs an editor restart.)
+- **Zombie guards**: handlers that can fire on a stale instance (surviving
+  name-bound connections) null-check their UI fields and warn instead of
+  throwing.
+- **Reload-surviving state lives outside C#**: `nebula_play_orchestrator.gd`
+  (@tool GDScript parented to the editor base control) owns play-session pids
+  and the log buffer; the C# tab is a thin view that resyncs in `_Ready`.
+
+## Debugging a failed unload
+
+- Trigger reloads deterministically: touch a C# file, build externally, press
+  the editor **Build** button. Reload never happens on focus.
+- Bisect with const-bool kill-switch flags around plugin components; restart
+  the editor between rounds (flag changes are inert without `_EnterTree`).
+- For direct evidence: WinDbg/lldb + dotnet-sos, `dumpheap -type
+  LoaderAllocator`, `gcroot` — see the blog post above.

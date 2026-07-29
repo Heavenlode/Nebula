@@ -650,17 +650,61 @@ Every predicted property requires a corresponding tolerance property. This is en
 ## Debugging Tools
 
 ### Debugger Panel (Editor)
-- Real-time tick inspection
-- Per-peer state viewing
-- Network function call logging
-- Property change history
 
-### TCP Debug Server
-Each `WorldRunner` exposes a TCP debug port for external tools:
-```csharp
-worldRunner.DebugPort  // Port number
-worldRunner.Debug?.Send("EventName", "data");  // Send custom events
+The **Nebula main-screen tab** is the debugger. Press Play in the editor toolbar
+(the button shows the selected play configuration and turns into Stop while a
+session is live) and the tab attaches to every launched instance automatically,
+showing one sub-tab per world:
+
+- Real-time tick inspection and MTU usage
+- Per-peer payload sizes and sync status
+- Network function call logging
+- Live networked-node tree with a property inspector
+- Per-tick logs
+
+The dropdown beside the Play button selects the configuration; its
+*Manage Configurations…* entry adds, edits and removes them. They are stored per
+developer in `user://nebula_config.cfg`.
+
+### Debug Channel
+
+One loopback TCP listener per process carries world announcements and all of
+that process' world traffic, multiplexed by the worldId in each frame header:
+
 ```
+frame := [len:int32 LE] [type:uint8] [worldId:16] [payload]     // len excludes itself
+```
+
+Frame types are `WorldRunner.DebugDataType`. Values are explicit and must not be
+reordered — the integration harness identifies `DEBUG_EVENT` by the literal byte
+6. `Core/Debug/DebugFrame.cs` is the single definition of the format, shared by
+the server, the editor view, and the test harness.
+
+`PAYLOADS` carries `[peerId:16][transmittedSize:int32][stateBytes…]`. The two
+sizes are deliberately distinct: `transmittedSize` is what actually went on the
+wire for that peer (post-pack, and what the Data Frames chart plots against the
+MTU), while `stateBytes` is the pre-pack per-peer state retained for inspection.
+Delta packing makes the difference large — typically ~20 bytes on the wire for
+~200 bytes of state.
+
+Enabled only on request; a dedicated server exposes nothing by default:
+
+| How | Port | Used by |
+|---|---|---|
+| `--debugPort=N` | exactly `N`, never falls back | the editor's Play button (one port per instance), and integration tests |
+
+```csharp
+worldRunner.DebugPort                          // bound port, or 0 when off
+worldRunner.Debug?.Send("EventName", "data");  // send a custom event
+```
+
+Emission is gated on a client actually being attached, so the debug path costs a
+null check when nobody is watching. Full world-state exports are throttled by
+`Nebula/config/debug/export_interval` (ticks between exports; the editor carries
+the last known state forward in between).
+
+Note the channel is loopback-only and unauthenticated — debugging a remote
+server needs an SSH tunnel.
 
 ---
 

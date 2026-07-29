@@ -453,5 +453,76 @@ namespace Nebula.Serialization
         }
 
         #endregion
+
+        #region Tooling / Editor Introspection
+
+        // These enumerate the generated protocol tables for the editor's
+        // inspector and Network Scenes dock. They ALLOCATE and sort, and are
+        // not for runtime use — nothing on a tick path should call them.
+        //
+        // They also reflect the last successful C# build, not the current
+        // editor state: GeneratedProtocol is source-generated from .tscn files
+        // at compile time, so a freshly added [NetProperty] or a brand-new
+        // NetScene does not appear until a rebuild.
+
+        /// <summary>
+        /// All registered network scene paths, sorted.
+        /// </summary>
+        public static IReadOnlyList<string> ListScenes()
+        {
+            var scenes = new List<string>(GeneratedProtocol.ScenesPack.Keys);
+            scenes.Sort(StringComparer.Ordinal);
+            return scenes;
+        }
+
+        /// <summary>
+        /// Node paths within a scene that carry network state, "." first.
+        /// </summary>
+        public static IReadOnlyList<string> ListStaticNodes(string scenePath)
+        {
+            if (!GeneratedProtocol.StaticNetworkNodePathsMap.TryGetValue(scenePath, out var nodeMap))
+                return Array.Empty<string>();
+
+            var paths = new List<string>(nodeMap.Values);
+            paths.Sort(static (a, b) =>
+            {
+                if (a == ".") return b == "." ? 0 : -1;
+                if (b == ".") return 1;
+                return string.CompareOrdinal(a, b);
+            });
+            return paths;
+        }
+
+        /// <summary>
+        /// Network properties declared on a specific node of a scene.
+        /// </summary>
+        public static IReadOnlyList<ProtocolNetProperty> ListProperties(string scenePath, string nodePath)
+        {
+            if (!GeneratedProtocol.PropertiesMap.TryGetValue(scenePath, out var nodeMap))
+                return Array.Empty<ProtocolNetProperty>();
+            if (!nodeMap.TryGetValue(nodePath, out var propertyMap))
+                return Array.Empty<ProtocolNetProperty>();
+
+            var properties = new List<ProtocolNetProperty>(propertyMap.Values);
+            properties.Sort(static (a, b) => a.Index.CompareTo(b.Index));
+            return properties;
+        }
+
+        /// <summary>
+        /// Network functions declared on a specific node of a scene.
+        /// </summary>
+        public static IReadOnlyList<ProtocolNetFunction> ListFunctions(string scenePath, string nodePath)
+        {
+            if (!GeneratedProtocol.FunctionsMap.TryGetValue(scenePath, out var nodeMap))
+                return Array.Empty<ProtocolNetFunction>();
+            if (!nodeMap.TryGetValue(nodePath, out var functionMap))
+                return Array.Empty<ProtocolNetFunction>();
+
+            var functions = new List<ProtocolNetFunction>(functionMap.Values);
+            functions.Sort(static (a, b) => a.Index.CompareTo(b.Index));
+            return functions;
+        }
+
+        #endregion
     }
 }

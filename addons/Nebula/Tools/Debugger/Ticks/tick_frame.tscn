@@ -8,7 +8,7 @@
 custom_minimum_size = Vector2(16, 112)
 layout_mode = 3
 anchors_preset = 0
-size_flags_vertical = 0
+size_flags_vertical = 8
 script = ExtResource("1_luydj")
 
 [node name="Bar" type="Panel" parent="."]

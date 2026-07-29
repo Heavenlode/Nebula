@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c1ngd1goslqvk"]
+[gd_scene load_steps=16 format=3 uid="uid://c1ngd1goslqvk"]
 
 [ext_resource type="Script" uid="uid://xhcdot0vp37x" path="res://addons/Nebula/Tools/Debugger/WorldDebug.cs" id="1_0kcdp"]
 [ext_resource type="StyleBox" uid="uid://dij5gm3vs56w8" path="res://addons/Nebula/Tools/Debugger/world_debug_window.tres" id="1_g7bst"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://ct713ndc1316x" path="res://addons/Nebula/Tools/Debugger/bar_chart.tscn" id="4_sxv4c"]
 [ext_resource type="Script" uid="uid://cuqfftjb4k31x" path="res://addons/Nebula/Tools/Debugger/calls_view.gd" id="5_3hwhb"]
 [ext_resource type="Script" uid="uid://chv6dbu2kiltn" path="res://addons/Nebula/Tools/Debugger/view_all_data_frames.gd" id="12_g7bst"]
+[ext_resource type="Script" path="res://addons/Nebula/Tools/Debugger/peers_view.gd" id="13_peers"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nebq5"]
 bg_color = Color(0.129412, 0.14902, 0.180392, 1)
@@ -163,6 +164,7 @@ script = ExtResource("3_s1nig")
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+script = ExtResource("13_peers")
 metadata/_tab_index = 0
 
 [node name="ItemList" type="ItemList" parent="MarginContainer/VBoxContainer/Detail/TabContainer/Peers"]
@@ -306,6 +308,7 @@ data_frames_window = NodePath("../../../../AllFrames")
 [connection signal="TickFrameUpdated" from="." to="AllFrames/Panel/VBoxContainer/Logs" method="_OnFrameUpdated"]
 [connection signal="TickFrameUpdated" from="." to="MarginContainer/VBoxContainer/Detail/TabContainer/Nodes" method="_on_world_debug_tick_frame_updated"]
 [connection signal="TickFrameUpdated" from="." to="MarginContainer/VBoxContainer/Data" method="_OnFrameUpdated"]
+[connection signal="PeersUpdated" from="." to="MarginContainer/VBoxContainer/Detail/TabContainer/Peers" method="_on_world_debug_peers_updated"]
 [connection signal="close_requested" from="AllLogs" to="AllLogs" method="_on_close_requested"]
 [connection signal="close_requested" from="AllFrames" to="AllFrames" method="_on_close_requested"]
 [connection signal="network_node_inspected" from="MarginContainer/VBoxContainer/Detail/TabContainer/Nodes" to="MarginContainer/VBoxContainer/Detail/TabContainer2/Inspector" method="_OnNetNodeInspected"]

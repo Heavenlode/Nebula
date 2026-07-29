@@ -14,7 +14,14 @@ namespace Nebula.Serialization.Serializers
         /// <param name="currentWorld">The current world runner</param>
         /// <param name="data">The network buffer containing serialized data</param>
         /// <param name="nodeOut">Output network controller</param>
-        public void Import(WorldRunner currentWorld, NetBuffer data, out NetworkController nodeOut);
+        /// <returns>
+        /// True if the payload was fully applied. False if it was parsed but (partly)
+        /// discarded — the stream is still aligned, but the caller must NOT ack this
+        /// tick: an ack tells the server "I have this tick's data", and acking a
+        /// discarded payload permanently latches delta encoding onto a baseline the
+        /// client never recorded.
+        /// </returns>
+        public bool Import(WorldRunner currentWorld, NetBuffer data, out NetworkController nodeOut);
 
         /// <summary>
         /// Server-side only. Serialize and write data to the provided buffer.
@@ -45,5 +52,15 @@ namespace Nebula.Serialization.Serializers
         /// </summary>
         /// <param name="peerId">The UUID of the disconnecting peer</param>
         public void CleanupPeer(UUID peerId) { }
+
+        /// <summary>
+        /// Server-side only. Called when the client is about to receive a fresh copy of this
+        /// node (a spawn or interest-regain respawn). The client rebuilds the node from
+        /// scratch, so any per-peer delta/ack baseline held here describes state the new
+        /// client-side instance does not have and must be forgotten — otherwise the next
+        /// export deltas against a tick the client can never resolve.
+        /// </summary>
+        /// <param name="peerId">The UUID of the peer being (re)sent this node</param>
+        public void ResetPeerBaseline(UUID peerId) { }
     }
 }

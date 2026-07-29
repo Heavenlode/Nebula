@@ -46,10 +46,10 @@ namespace Nebula.Serialization.Serializers
             NetWriter.WriteByte(buffer, isInterested ? (byte)1 : (byte)0);
         }
 
-        public void Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController nodeOut)
+        public bool Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController nodeOut)
         {
             nodeOut = network;
-            if (network == null) return;
+            if (network == null) return true;
 
             byte interestByte = NetReader.ReadByte(buffer);
             bool hasInterest = interestByte == 1;
@@ -60,6 +60,7 @@ namespace Nebula.Serialization.Serializers
                 clientHasInterest = hasInterest;
                 network.FireInterestChanged(hasInterest);
             }
+            return true;
         }
     }
 }

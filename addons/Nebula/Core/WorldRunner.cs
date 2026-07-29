@@ -1923,6 +1923,12 @@ namespace Nebula
             // into entirely the wrong nodes. The destination world also restarts near tick 0, which
             // would otherwise collide with retained ring slots.
             _clientPackWindow.Reset();
+
+            // A parked ack still references an old-world tick. Acks are routed by peer, not by
+            // world, so flushing it after the migration would land it in the destination world's
+            // PeerAcknowledge - and if the tick number happens to be valid there, it marks state
+            // this client never applied as acked (delta baselines, spawn commits).
+            _pendingAckTick = -1;
             TimeSinceLastTick = 0f;
             _ownedEntities.Clear();
             _ownedEntitiesDirty = true;
@@ -2513,6 +2519,13 @@ namespace Nebula
         /// </summary>
         internal bool ImportState(NetBuffer stateBytes)
         {
+            // Set when any serializer parses its payload but reports it was not applied
+            // (e.g. a props delta whose baseline this client doesn't have). The stream stays
+            // aligned - unlike the corrupted-buffer aborts below - but the tick must not be
+            // acked: an ack tells the server "I have this tick's data", and acking a
+            // discarded payload latches delta encoding onto a baseline we never recorded.
+            bool anyDiscarded = false;
+
             // Read hierarchical bitmask: groupMask (1 byte) + nodeMasks for active groups
             var groupMask = NetReader.ReadByte(stateBytes);
             var nodeMasks = new long[NodeIdUtils.NODE_GROUPS];
@@ -2573,19 +2586,28 @@ namespace Nebula
                             // Log($"[ImportState] Node {localNodeId}: Skipping serializer {serializerIdx} (bit not set)");
                             continue;
                         }
-                        
-                        // Skip if node was queued for despawn during import (e.g., by SpawnSerializer handling despawn)
-                        if (netController.IsQueuedForDespawn || netController.IsMarkedForDeletion)
-                        {
-                            break;
-                        }
-                        
+
+                        // A node queued for despawn (mid-import by SpawnSerializer, or earlier by a
+                        // pending client despawn) still has its serializer bytes in this packet -
+                        // the mask bit proves the server wrote them. The serializers must still
+                        // run so those bytes are consumed; breaking out here would leave them in
+                        // the buffer and misalign every node after this one. Applying values to a
+                        // dying node is harmless: QueueDespawnedNodes is drained at the end of
+                        // this same ClientProcessTick and the free is deferred, so the node is
+                        // alive for the duration of the import. We just don't let a discard from
+                        // a doomed node veto the tick ack.
+                        bool nodeIsDoomed = netController.IsQueuedForDespawn || netController.IsMarkedForDeletion;
+
                         var serializerInstance = netController.NetNode.Serializers[serializerIdx];
                         // Log($"[ImportState] Node {localNodeId}: Running serializer {serializerIdx} ({serializerInstance.GetType().Name})");
 
                         try
                         {
-                            serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
+                            bool applied = serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
+                            if (!applied && !nodeIsDoomed)
+                            {
+                                anyDiscarded = true;
+                            }
                             if (netController != nodeOut)
                             {
                                 // Log($"[ImportState] Node {localNodeId}: Serializer {serializerIdx} replaced node, new scenePath='{nodeOut.NetSceneFilePath}', restarting loop");
@@ -2626,7 +2648,7 @@ namespace Nebula
                 }
             }
 
-            return true;
+            return !anyDiscarded;
         }
 
         // Reusable list for objects that had all data acked (avoids modifying HashSet during iteration)

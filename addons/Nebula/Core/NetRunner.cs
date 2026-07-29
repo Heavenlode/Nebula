@@ -354,12 +354,47 @@ namespace Nebula
         }
 
         /// <summary>
-        /// This determines how fast the network sends data. When physics runs at 60 ticks per second, then at 2 PhysicsTicksPerNetworkTick, the network runs at 30hz.
+        /// How many physics ticks elapse per network tick. Derived from the
+        /// <c>Nebula/config/network/ticks_per_second</c> project setting (default 30): the
+        /// network tick fires on whole physics frames, so the divisor is the physics rate
+        /// over the requested rate, rounded to the nearest whole frame count. When the
+        /// requested rate does not divide the physics rate evenly, the nearest achievable
+        /// rate is used and a warning names it.
+        ///
+        /// Server and client must agree; both read the same project.godot, so this holds as
+        /// long as builds ship the same settings. Cached on first read - checked every
+        /// physics frame in WorldRunner, so it must not hit ProjectSettings per frame -
+        /// meaning changes take effect on the next run.
         /// </summary>
-        public const int PhysicsTicksPerNetworkTick = 2;
+        private static int? _physicsTicksPerNetworkTick;
+        public static int PhysicsTicksPerNetworkTick
+        {
+            get
+            {
+                if (_physicsTicksPerNetworkTick == null)
+                {
+                    int physicsRate = Engine.PhysicsTicksPerSecond;
+                    int requested = Math.Max(1,
+                        ProjectSettings.GetSetting("Nebula/config/network/ticks_per_second", 30).AsInt32());
+                    int divisor = Math.Max(1, (int)Math.Round(physicsRate / (double)requested));
+                    int actual = physicsRate / divisor;
+                    if (actual != requested)
+                    {
+                        Debugger.Instance?.Log(
+                            $"Nebula/config/network/ticks_per_second={requested} does not divide the physics rate ({physicsRate}); running at {actual} TPS (one network tick every {divisor} physics ticks).",
+                            Debugger.DebugLevel.WARN);
+                    }
+                    _physicsTicksPerNetworkTick = divisor;
+                }
+                return _physicsTicksPerNetworkTick.Value;
+            }
+        }
 
         /// <summary>
-        /// Ticks Per Second. The number of Ticks which are expected to elapse every second.
+        /// Ticks Per Second: the ACHIEVED network tick rate - engine physics rate divided by
+        /// <see cref="PhysicsTicksPerNetworkTick"/>. Equals the configured
+        /// <c>Nebula/config/network/ticks_per_second</c> whenever that divides the physics
+        /// rate evenly.
         /// </summary>
         private static int? _tps;
         public static int TPS
@@ -396,6 +431,21 @@ namespace Nebula
 
         public static bool LogTickPayloads =>
             _logTickPayloads ??= ProjectSettings.GetSetting("Nebula/config/debug/log_tick_payloads", false).AsBool();
+
+        private static int? _simulateIncomingTickLoss;
+        /// <summary>
+        /// Debug: percentage (0-100) of received tick packets the CLIENT drops before
+        /// processing, via <c>Nebula/config/debug/simulate_incoming_tick_loss</c>. Simulates
+        /// an unreliable link on a lossless LAN so loss-recovery paths (spawn resend-until-
+        /// acked, delta baseline fallback) can be exercised deterministically. Client-side
+        /// only; 0 (default) is a no-op. Cached on first read.
+        /// </summary>
+        public static int SimulateIncomingTickLoss =>
+            _simulateIncomingTickLoss ??= Math.Clamp(
+                ProjectSettings.GetSetting("Nebula/config/debug/simulate_incoming_tick_loss", 0).AsInt32(), 0, 100);
+
+        /// <summary>RNG for <see cref="SimulateIncomingTickLoss"/>. Debug-only, client-local.</summary>
+        private static readonly RandomNumberGenerator _tickLossRng = new();
 
         private static bool? _packEnabled;
         /// <summary>
@@ -580,6 +630,15 @@ namespace Nebula
                                     {
                                         Debugger.Instance.Log(Debugger.DebugLevel.INFO,
                                             $"[Nebula][TickPayload] tick={tick} ({bytes.Length} bytes) {Convert.ToHexString(bytes)}");
+                                    }
+                                    // Debug: simulate packet loss by dropping received ticks before
+                                    // processing. Client-side only, never touches the shared sim -
+                                    // exists to exercise loss-recovery paths (spawn resend, delta
+                                    // baseline fallback) deterministically on a LAN with no real loss.
+                                    if (SimulateIncomingTickLoss > 0
+                                        && _tickLossRng.RandiRange(1, 100) <= SimulateIncomingTickLoss)
+                                    {
+                                        break;
                                     }
                                     WorldRunner.CurrentWorld.ClientProcessTick(tick, bytes);
                                 }

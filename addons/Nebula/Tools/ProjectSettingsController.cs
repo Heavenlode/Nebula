@@ -128,6 +128,14 @@ public partial class ProjectSettingsController : Node
         });
 
         // ── Debug ────────────────────────────────────────────────────────
+        // Master switch for the debug channel. On by default, but it never opens a
+        // port on its own: it is ANDed with --debugPort=N, which the editor's Play
+        // button supplies. Turning it off makes NetRunner/WorldRunner skip the
+        // broadcast path entirely rather than merely muting it.
+        Register(NetRunner.DEBUG_SERVER_SETTING, true, new(){
+            {"type", (int)Variant.Type.Bool},
+        });
+
         // Log level
         Register("Nebula/config/debug/log_level", 0, new(){
             {"type", (int)Variant.Type.Int},

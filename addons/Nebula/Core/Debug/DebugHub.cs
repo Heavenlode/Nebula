@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -15,10 +16,10 @@ namespace Nebula
     /// worldId in each frame header (see <see cref="DebugFrame"/>).
     ///
     /// <para>This replaces two older mechanisms: a separate ENet "discovery"
-    /// host on <see cref="NetRunner.DebugPort"/> that told clients which port
-    /// each world listened on, and a per-world <see cref="TcpListener"/> that
-    /// actually carried the data. One socket per process handles both, and
-    /// works identically on servers and clients.</para>
+    /// host on a fixed port that told clients which port each world listened
+    /// on, and a per-world <see cref="TcpListener"/> that actually carried the
+    /// data. One socket per process handles both, and works identically on
+    /// servers and clients.</para>
     ///
     /// <para>Started only when asked for, via <c>--debugPort=N</c> (what the
     /// editor's Play button passes). Dedicated servers expose nothing.</para>
@@ -35,16 +36,34 @@ namespace Nebula
         /// <summary>Cap on frames buffered before the first client attaches.</summary>
         private const int MaxPendingFrames = 256;
 
+        /// <summary>
+        /// One queued frame. <see cref="Data"/> is rented from
+        /// <see cref="ArrayPool{T}.Shared"/> and is therefore usually LONGER than the
+        /// frame — always write <see cref="Length"/> bytes, never Data.Length.
+        ///
+        /// <para>Ownership passes to the queue on enqueue and back to the pool once the
+        /// frame has been broadcast or dropped, so steady-state framing allocates
+        /// nothing. Every exit path (broadcast, lossy trim, backstop drop, Stop) must
+        /// return the array exactly once.</para>
+        /// </summary>
         private readonly struct QueuedFrame
         {
             public readonly byte[] Data;
+            public readonly int Length;
             public readonly bool Lossy;
 
-            public QueuedFrame(byte[] data, bool lossy)
+            public QueuedFrame(byte[] data, int length, bool lossy)
             {
                 Data = data;
+                Length = length;
                 Lossy = lossy;
             }
+        }
+
+        private static void ReturnFrame(in QueuedFrame frame)
+        {
+            if (frame.Data != null)
+                ArrayPool<byte>.Shared.Return(frame.Data);
         }
 
         private TcpListener _listener;
@@ -53,9 +72,20 @@ namespace Nebula
         private readonly object _clientsLock = new();
         private int _clientCount;
 
+        /// <summary>
+        /// Scratch lists for <see cref="Broadcast"/>, which copies the client list
+        /// out of the lock before writing to it. Reused rather than allocated per
+        /// frame, and touched only by the writer thread, so they need no
+        /// synchronization of their own.
+        /// </summary>
+        private readonly List<TcpClient> _broadcastSnapshot = new();
+        private readonly List<TcpClient> _failedClients = new();
+
         private readonly List<WorldRunner> _worlds = new();
 
         private readonly Queue<QueuedFrame> _queue = new();
+        /// <summary>Reused staging queue for <see cref="TrimLossyFrames"/>. Guarded by <see cref="_queueLock"/>.</summary>
+        private readonly Queue<QueuedFrame> _trimScratch = new();
         private readonly object _queueLock = new();
         private readonly ManualResetEventSlim _queueSignal = new(false);
         private Thread _writerThread;
@@ -66,8 +96,10 @@ namespace Nebula
         /// Frames produced before any client attached. Replayed once to the
         /// first client to connect — the integration harness relies on this,
         /// since spawn events fire long before a test finishes connecting.
+        /// These hold rented arrays too, on the same ownership rules as
+        /// <see cref="_queue"/>.
         /// </summary>
-        private readonly List<byte[]> _pendingFrames = new();
+        private readonly List<QueuedFrame> _pendingFrames = new();
         private bool _hasFlushedPending;
 
         /// <summary>The port actually bound, or 0 when not running.</summary>
@@ -153,7 +185,11 @@ namespace Nebula
 
             lock (_queueLock)
             {
-                _queue.Clear();
+                while (_queue.Count > 0)
+                    ReturnFrame(_queue.Dequeue());
+                foreach (var frame in _pendingFrames)
+                    ReturnFrame(frame);
+                _pendingFrames.Clear();
             }
         }
 
@@ -307,17 +343,23 @@ namespace Nebula
             if (_listener == null)
                 return;
 
-            var frame = DebugFrame.Build((byte)type, worldId.ToByteArray(), payload.WrittenSpan);
+            // Frames that nobody will ever read are not worth building. Lossy frames
+            // are never replayed, so before the first client attaches they cost
+            // nothing at all.
+            if (!HasClients && (lossy || _hasFlushedPending))
+                return;
+
+            var frame = RentFrame(worldId, type, payload.WrittenSpan, lossy);
 
             if (!HasClients)
             {
-                BufferUntilFirstClient(frame, lossy);
+                BufferUntilFirstClient(frame);
                 return;
             }
 
             lock (_queueLock)
             {
-                _queue.Enqueue(new QueuedFrame(frame, lossy));
+                _queue.Enqueue(frame);
                 if (_queue.Count > MaxQueuedFrames)
                     TrimLossyFrames();
 
@@ -327,24 +369,44 @@ namespace Nebula
                 // the reliable frames grow without bound.
                 while (_queue.Count > MaxQueuedFrames * 4)
                 {
-                    _queue.Dequeue();
+                    ReturnFrame(_queue.Dequeue());
                     _droppedFrames++;
                 }
             }
             _queueSignal.Set();
         }
 
-        private void BufferUntilFirstClient(byte[] frame, bool lossy)
+        /// <summary>
+        /// Serializes one frame into a pooled buffer. The only per-frame cost in
+        /// steady state is the copy itself — no allocation.
+        /// </summary>
+        private static QueuedFrame RentFrame(UUID worldId, WorldRunner.DebugDataType type,
+            ReadOnlySpan<byte> payload, bool lossy)
         {
-            // Replaying a backlog of per-tick state to a client that just
-            // attached is worse than useless, so only reliable frames are kept.
-            if (lossy || _hasFlushedPending)
-                return;
+            int frameSize = DebugFrame.FrameSize(payload.Length);
+            var buffer = ArrayPool<byte>.Shared.Rent(frameSize);
+            int written = DebugFrame.Write(buffer, (byte)type, worldId, payload);
+            return new QueuedFrame(buffer, written, lossy);
+        }
 
+        private void BufferUntilFirstClient(in QueuedFrame frame)
+        {
             lock (_queueLock)
             {
+                // Re-checked under the lock: the unsynchronized peek in Enqueue can
+                // race a client attaching, and a frame added after the flush would
+                // never be delivered or returned.
+                if (_hasFlushedPending)
+                {
+                    ReturnFrame(frame);
+                    return;
+                }
+
                 if (_pendingFrames.Count >= MaxPendingFrames)
+                {
+                    ReturnFrame(_pendingFrames[0]);
                     _pendingFrames.RemoveAt(0);
+                }
                 _pendingFrames.Add(frame);
             }
         }
@@ -359,8 +421,10 @@ namespace Nebula
                     return;
                 }
 
+                // Ownership of the rented arrays moves from the pending list to the
+                // queue; the writer returns them once broadcast.
                 foreach (var frame in _pendingFrames)
-                    _queue.Enqueue(new QueuedFrame(frame, lossy: false));
+                    _queue.Enqueue(frame);
                 _pendingFrames.Clear();
                 _hasFlushedPending = true;
             }
@@ -371,26 +435,30 @@ namespace Nebula
         /// Drops the oldest lossy frames until the queue is back under the
         /// watermark, preserving relative order of what survives. Caller holds
         /// <see cref="_queueLock"/>.
+        ///
+        /// <para>Rebuilds in place through a reused scratch queue rather than
+        /// allocating one per trim — this fires exactly when the channel is already
+        /// under pressure, which is the worst moment to add GC work.</para>
         /// </summary>
         private void TrimLossyFrames()
         {
             int toDrop = _queue.Count - MaxQueuedFrames;
-            var kept = new Queue<QueuedFrame>(_queue.Count);
 
-            foreach (var frame in _queue)
+            while (_queue.Count > 0)
             {
+                var frame = _queue.Dequeue();
                 if (toDrop > 0 && frame.Lossy)
                 {
                     toDrop--;
                     _droppedFrames++;
+                    ReturnFrame(frame);
                     continue;
                 }
-                kept.Enqueue(frame);
+                _trimScratch.Enqueue(frame);
             }
 
-            _queue.Clear();
-            foreach (var frame in kept)
-                _queue.Enqueue(frame);
+            while (_trimScratch.Count > 0)
+                _queue.Enqueue(_trimScratch.Dequeue());
         }
 
         private void WriterLoop()
@@ -409,38 +477,84 @@ namespace Nebula
                             break;
                         frame = _queue.Dequeue();
                     }
-                    Broadcast(frame.Data);
+
+                    try
+                    {
+                        Broadcast(frame.Data, frame.Length);
+                    }
+                    finally
+                    {
+                        // The pool must get its array back on every path, or the
+                        // "allocation-free" framing quietly becomes allocating.
+                        ReturnFrame(frame);
+                    }
                 }
             }
         }
 
-        private void Broadcast(byte[] data)
+        /// <summary>
+        /// Sends one frame to every attached client.
+        ///
+        /// <para>The writes deliberately happen OUTSIDE <see cref="_clientsLock"/>.
+        /// The main thread takes that lock every frame in <see cref="Poll"/>, so
+        /// holding it across a blocking socket write (SendTimeout is 1s) would let
+        /// one wedged debug client stall the tick loop for up to a second — exactly
+        /// what this writer thread exists to prevent.</para>
+        /// </summary>
+        /// <param name="length">
+        /// Bytes to send. <paramref name="data"/> is pooled and typically longer.
+        /// </param>
+        private void Broadcast(byte[] data, int length)
         {
+            _broadcastSnapshot.Clear();
             lock (_clientsLock)
             {
-                for (int i = _clients.Count - 1; i >= 0; i--)
-                {
-                    var client = _clients[i];
-                    try
-                    {
-                        if (client.Connected)
-                        {
-                            var stream = client.GetStream();
-                            stream.Write(data, 0, data.Length);
-                            stream.Flush();
-                            continue;
-                        }
-                    }
-                    catch
-                    {
-                        // fall through to removal
-                    }
+                if (_clients.Count == 0)
+                    return;
+                _broadcastSnapshot.AddRange(_clients);
+            }
 
-                    try { client.Close(); } catch { /* already gone */ }
-                    _clients.RemoveAt(i);
+            _failedClients.Clear();
+            foreach (var client in _broadcastSnapshot)
+            {
+                try
+                {
+                    if (client.Connected)
+                    {
+                        var stream = client.GetStream();
+                        stream.Write(data, 0, length);
+                        stream.Flush();
+                        continue;
+                    }
+                }
+                catch
+                {
+                    // Includes the benign race where Stop() or
+                    // PruneDisconnectedClients() closed this socket mid-write.
+                }
+
+                _failedClients.Add(client);
+            }
+            _broadcastSnapshot.Clear();
+
+            if (_failedClients.Count == 0)
+                return;
+
+            lock (_clientsLock)
+            {
+                foreach (var client in _failedClients)
+                {
+                    // Remove-then-close, and only if it's still listed: another
+                    // thread may already have retired and closed it while we were
+                    // writing.
+                    if (_clients.Remove(client))
+                    {
+                        try { client.Close(); } catch { /* already gone */ }
+                    }
                 }
                 Volatile.Write(ref _clientCount, _clients.Count);
             }
+            _failedClients.Clear();
         }
     }
 }

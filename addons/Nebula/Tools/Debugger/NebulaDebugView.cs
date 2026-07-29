@@ -151,7 +151,11 @@ namespace Nebula.Internal.Editor
             targetPorts.Clear();
 
             var orchestrator = EditorInterface.Singleton.GetBaseControl().GetNodeOrNull(ORCHESTRATOR_NODE_NAME);
-            if (orchestrator is not null && orchestrator.Call("is_running").AsBool())
+            // Read live rather than through NetRunner.DebugServerEnabled, which caches
+            // for the lifetime of a run: in the editor the setting can be toggled at
+            // any time and the tab should reflect it immediately.
+            if (IsDebugServerEnabled
+                && orchestrator is not null && orchestrator.Call("is_running").AsBool())
             {
                 foreach (int port in orchestrator.Call("get_debug_ports").AsInt32Array())
                 {
@@ -173,10 +177,25 @@ namespace Nebula.Internal.Editor
             UpdatePlaceholder();
         }
 
+        /// <summary>
+        /// Whether the debug channel is switched on for this project. Uncached so a
+        /// toggle in Project Settings shows up without an editor restart.
+        /// </summary>
+        private static bool IsDebugServerEnabled =>
+            ProjectSettings.GetSetting(NetRunner.DEBUG_SERVER_SETTING, true).AsBool();
+
         public override void _Process(double delta)
         {
             if (!IsVisibleInTree())
                 return;
+
+            if (!IsDebugServerEnabled)
+            {
+                // Nothing is listening, so don't sit in a connect-retry loop. Any
+                // connections from before the toggle are dropped by RefreshSessionTargets.
+                RefreshSessionTargets();
+                return;
+            }
 
             DrainConnections();
 
@@ -288,27 +307,29 @@ namespace Nebula.Internal.Editor
                 offset += consumed;
             }
 
-            // Retain the incomplete tail.
+            // Retain the incomplete tail by sliding it down inside the Inbox's own
+            // buffer, rather than copying it out to a fresh array first — that ran on
+            // every drain that ended mid-frame, which is most of them.
             int remaining = data.Length - offset;
             if (offset > 0)
             {
                 if (remaining > 0)
                 {
-                    var tail = data.Slice(offset, remaining).ToArray();
-                    connection.Inbox.SetLength(0);
-                    connection.Inbox.Write(tail, 0, tail.Length);
+                    // Array.Copy, whose overlapping-range behavior is documented.
+                    var raw = connection.Inbox.GetBuffer();
+                    Array.Copy(raw, offset, raw, 0, remaining);
                 }
-                else
-                {
-                    connection.Inbox.SetLength(0);
-                }
+                connection.Inbox.SetLength(remaining);
+                connection.Inbox.Position = remaining;
             }
         }
 
         private void HandleFrame(ProcessConnection connection, byte type,
             ReadOnlySpan<byte> worldIdBytes, ReadOnlySpan<byte> payload)
         {
-            var worldId = new UUID(worldIdBytes.ToArray());
+            // Span ctor, not ToArray(): this runs for every frame on every
+            // connection, several times per tick.
+            var worldId = new UUID(worldIdBytes);
             string key = worldId.ToString();
             var dataType = (WorldRunner.DebugDataType)type;
 
@@ -340,7 +361,7 @@ namespace Nebula.Internal.Editor
 
             try
             {
-                using var buffer = new NetBuffer(payload, usePool: false);
+                using var buffer = new NetBuffer(payload, usePool: true);
                 panel.HandleFrame(dataType, buffer);
             }
             catch (Exception ex)
@@ -471,6 +492,15 @@ namespace Nebula.Internal.Editor
             panelHost.Visible = !empty;
             if (worldSelector is not null)
                 worldSelector.GetParent<Control>().Visible = !empty;
+
+            // Distinguish "switched off" from "nothing running" — otherwise the tab
+            // tells you to press Play, which would never produce anything.
+            if (empty)
+            {
+                placeholder.Text = IsDebugServerEnabled
+                    ? "No worlds — press Play in the toolbar."
+                    : "Debug Server Disabled";
+            }
         }
 
         // ─── Tick-frame database ─────────────────────────────────────────────

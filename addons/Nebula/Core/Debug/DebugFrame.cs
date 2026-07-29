@@ -39,22 +39,33 @@ namespace Nebula
         public const int MaxLength = 8 * 1024 * 1024;
 
         /// <summary>
-        /// Builds a complete framed packet ready to write to a socket.
+        /// Total bytes a frame carrying <paramref name="payloadLength"/> occupies,
+        /// prefix included. Use this to size the destination for <see cref="Write"/>.
         /// </summary>
-        public static byte[] Build(byte type, ReadOnlySpan<byte> worldId, ReadOnlySpan<byte> payload)
+        public static int FrameSize(int payloadLength) => PayloadOffset + payloadLength;
+
+        /// <summary>
+        /// Writes a complete framed packet into <paramref name="destination"/> and
+        /// returns how many bytes it used.
+        ///
+        /// <para>Span-based and allocation-free by design: this runs once per debug
+        /// frame per tick, so the caller supplies a pooled buffer rather than having
+        /// one allocated per frame (see DebugHub's frame pool).</para>
+        /// </summary>
+        public static int Write(Span<byte> destination, byte type, in UUID worldId, ReadOnlySpan<byte> payload)
         {
-            if (worldId.Length != WorldIdSize)
-                throw new ArgumentException($"worldId must be {WorldIdSize} bytes", nameof(worldId));
-
             int bodyLength = HeaderSize + payload.Length;
-            var frame = new byte[LengthPrefixSize + bodyLength];
+            int frameSize = LengthPrefixSize + bodyLength;
+            if (destination.Length < frameSize)
+                throw new ArgumentException($"destination needs {frameSize} bytes", nameof(destination));
 
-            BitConverter.TryWriteBytes(frame.AsSpan(0, LengthPrefixSize), bodyLength);
-            frame[LengthPrefixSize] = type;
-            worldId.CopyTo(frame.AsSpan(LengthPrefixSize + 1, WorldIdSize));
-            payload.CopyTo(frame.AsSpan(PayloadOffset));
+            BitConverter.TryWriteBytes(destination.Slice(0, LengthPrefixSize), bodyLength);
+            destination[LengthPrefixSize] = type;
+            if (!worldId.TryWriteBytes(destination.Slice(LengthPrefixSize + 1, WorldIdSize)))
+                throw new ArgumentException("failed to write worldId", nameof(worldId));
+            payload.CopyTo(destination.Slice(PayloadOffset));
 
-            return frame;
+            return frameSize;
         }
 
         /// <summary>

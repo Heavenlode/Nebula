@@ -48,6 +48,15 @@ namespace Nebula
         }
 
         /// <summary>
+        /// Creates a UUID from 16 bytes already in a buffer, without the array copy
+        /// <see cref="UUID(byte[])"/> would need. Used on per-frame decode paths.
+        /// </summary>
+        public UUID(ReadOnlySpan<byte> value)
+        {
+            Guid = new Guid(value);
+        }
+
+        /// <summary>
         /// Creates a UUID from an existing Guid.
         /// </summary>
         public UUID(Guid guid)
@@ -79,9 +88,16 @@ namespace Nebula
 
         /// <summary>
         /// Returns the UUID as a 16-byte array. Note: This allocates a new array.
-        /// Prefer using Guid directly when possible.
+        /// Prefer <see cref="TryWriteBytes"/> on any path that runs per tick.
         /// </summary>
         public byte[] ToByteArray() => Guid.ToByteArray();
+
+        /// <summary>
+        /// Writes the same 16 bytes <see cref="ToByteArray"/> would produce directly
+        /// into <paramref name="destination"/>, allocating nothing. Returns false if
+        /// the destination is shorter than 16 bytes.
+        /// </summary>
+        public bool TryWriteBytes(Span<byte> destination) => Guid.TryWriteBytes(destination);
 
         #region Network Serialization
 

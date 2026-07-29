@@ -51,7 +51,7 @@ Nebula is a custom tick-based, server-authoritative networking library for Godot
 - Network runs at `TPS = PhysicsTicksPerSecond / PhysicsTicksPerNetworkTick` (default: 30hz)
 - Every tick, server exports state to all interested peers
 - Clients acknowledge received ticks for reliability tracking
-- Unreliable UDP with manual acknowledgment for state, reliable for spawns/despawns/RPCs
+- Unreliable UDP with manual acknowledgment for state; RPCs ride a reliable channel. Spawns and despawns ride the unreliable tick stream but re-send every tick until acknowledged, so they are effectively reliable (a spawn only commits on an ack of a tick that provably carried it)
 
 ### 3. Network Scenes (NetScenes)
 - A scene whose root node inherits from `NetNode`, `NetNode2D`, or `NetNode3D`

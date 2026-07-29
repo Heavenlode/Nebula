@@ -475,7 +475,10 @@ namespace Nebula
 
 		public void RemovePeerInterest(NetPeer peer, long interestLayers, bool recurse = true)
 		{
-			SetPeerInterest(NetRunner.Instance.GetPeerId(peer), interestLayers, recurse);
+			// Route through the UUID overload: calling SetPeerInterest directly here *assigned* the
+			// mask instead of clearing it, so removing a layer granted the caller's bits and dropped
+			// every other layer the peer held.
+			RemovePeerInterest(NetRunner.Instance.GetPeerId(peer), interestLayers, recurse);
 		}
 
 		public void RemovePeerInterest(UUID peerId, long interestLayers, bool recurse = true)

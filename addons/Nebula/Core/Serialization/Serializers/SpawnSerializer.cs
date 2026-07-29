@@ -36,7 +36,21 @@ namespace Nebula.Serialization.Serializers
         private NetworkController netController;
         private Dictionary<UUID, Tick> setupTicks = new();
         private Dictionary<UUID, Tick> despawnTicks = new(); // Track when despawn was sent per peer
+
+        /// <summary>
+        /// The most recent tick at which spawn data was written for each peer. Spawn data
+        /// re-ships every tick while Spawning (see Export), so together with the soft-interest
+        /// revert this keeps the invariant "spawn rode every exported tick in
+        /// [setupTick, lastSpawnSendTick]" - which is what makes the cumulative ack commit in
+        /// Acknowledge sound: an acked tick inside that range is a packet that provably
+        /// contained the spawn data.
+        /// </summary>
+        private Dictionary<UUID, Tick> lastSpawnSendTicks = new();
+
         private bool hasImported = false; // Track if this serializer has already imported
+
+        /// <summary>One-shot guard so an unpackable spawn path logs once, not every tick.</summary>
+        private bool _loggedUnpackableSpawnPath = false;
 
         /// <summary>
         /// Despawn marker byte - when first byte is 255, it's a despawn message.
@@ -61,6 +75,26 @@ namespace Nebula.Serialization.Serializers
         {
             setupTicks.Remove(peerId);
             despawnTicks.Remove(peerId);
+            lastSpawnSendTicks.Remove(peerId);
+        }
+
+        /// <summary>
+        /// Tells every sibling serializer to forget its per-peer delta/ack baseline. Called at
+        /// each NotSpawned -&gt; Spawning transition: the client is about to build this node from
+        /// scratch (first spawn, or a respawn after interest loss destroyed its copy), so its
+        /// applied-state history is empty. Any baseline retained server-side from a previous
+        /// incarnation would make the next export delta against a tick the fresh client node
+        /// can never resolve - the payload gets discarded, and (before Import reported
+        /// discards) the ack latched the mismatch in place permanently.
+        /// </summary>
+        private static void ResetPeerBaselines(NetworkController controller, UUID peerId)
+        {
+            var serializers = controller.NetNode?.Serializers;
+            if (serializers == null) return;
+            for (int i = 0; i < serializers.Length; i++)
+            {
+                serializers[i].ResetPeerBaseline(peerId);
+            }
         }
 
         public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
@@ -93,9 +127,22 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
-            // Soft path (unchanged): fails interest LAYERS / [NetInterest].
+            // Soft path: fails interest LAYERS / [NetInterest].
             if (!netController.IsPeerInterested(peer))
             {
+                // Interest dropped while the spawn was still in flight. Resends stop here, so
+                // an unacked Spawning state would break the contiguity invariant behind the
+                // Acknowledge commit rule ("spawn rode every tick in [setupTick, lastSent]")
+                // and a later cumulative ack could commit a spawn the client never received.
+                // Revert to never-spawned: on interest regain the node runs a fresh spawn
+                // cycle - same local id (registration is idempotent), and a client that did
+                // receive one of the earlier sends consumes-and-skips the duplicate.
+                if (spawnState == WorldRunner.ClientSpawnState.Spawning && setupTicks.ContainsKey(peerId))
+                {
+                    setupTicks.Remove(peerId);
+                    lastSpawnSendTicks.Remove(peerId);
+                    currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.NotSpawned);
+                }
                 return;
             }
 
@@ -107,12 +154,20 @@ namespace Nebula.Serialization.Serializers
                 spawnState = WorldRunner.ClientSpawnState.NotSpawned;
             }
 
-            // Check if spawn data has already been sent (Spawning or Spawned state)
-            if (spawnState != WorldRunner.ClientSpawnState.NotSpawned)
+            // Fully delivered - the peer acked a packet that contained the spawn data.
+            if (spawnState == WorldRunner.ClientSpawnState.Spawned)
             {
-                // Already sent spawn data (or ACKed), skip
                 return;
             }
+
+            // Spawning falls through: spawn data re-ships every tick until the ack commits it.
+            // The tick channel is unreliable, so a fire-once spawn on a lost packet left the
+            // client with props for a node it never built (a blank NetNode3D whose props
+            // serializer then misreads the stream), while the cumulative ack still marked it
+            // Spawned server-side. Resending until acked is the same contract despawn already
+            // uses (see ExportDespawn's Despawning case). First-send-only side effects below
+            // are gated on this flag.
+            bool firstSend = spawnState == WorldRunner.ClientSpawnState.NotSpawned;
 
             if (netController.NetParent != null && !currentWorld.HasSpawnedForClient(netController.NetParent.NetId, peer))
             {
@@ -142,6 +197,36 @@ namespace Nebula.Serialization.Serializers
                     $"SceneId {sceneId} exceeds safe limit (245). Too many registered scenes.");
             }
 
+            // Child spawns address their attachment point as (parent scene, packed node path).
+            // Resolve it BEFORE writing anything: an unpackable path must not throw out of
+            // Export (that aborts the whole export tick for every node and peer) and must not
+            // leave partial bytes in the buffer. Unpackable happens when the node's Godot
+            // parent is a path the protocol registry doesn't cover - e.g. a node reparented
+            // at runtime under an unregistered container.
+            byte nodePathId = 0;
+            if (netController.NetParent != null)
+            {
+                var relativePath = netController.NetParent.RawNode.GetPathTo(netController.RawNode.GetParent());
+                if (relativePath == "." || relativePath.IsEmpty)
+                {
+                    // Direct child of parent's root - 255 is the special marker
+                    nodePathId = 255;
+                }
+                else if (!Protocol.PackNode(netController.NetParent.RawNode.SceneFilePath, relativePath, out nodePathId))
+                {
+                    // Nothing written; the node simply stays pending and retries next tick
+                    // (delivery becomes possible if the path is registered in a future
+                    // protocol build). Logged once per node, not per tick.
+                    if (!_loggedUnpackableSpawnPath)
+                    {
+                        _loggedUnpackableSpawnPath = true;
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
+                            $"[SpawnSerializer] Cannot spawn {netController.RawNode.GetPath()}: node path '{relativePath}' is not in the protocol registry for scene '{netController.NetParent.RawNode.SceneFilePath}'. Spawn stays pending; further occurrences suppressed.");
+                    }
+                    return;
+                }
+            }
+
             // Only set setupTick on FIRST export - don't overwrite on re-exports
             // Otherwise the ACK can never catch up (setupTick keeps moving forward)
             if (!setupTicks.ContainsKey(peerId))
@@ -158,31 +243,23 @@ namespace Nebula.Serialization.Serializers
                 // Write nested NetScenes for root scene
                 ExportNestedScenes(currentWorld, peer, buffer);
 
+                // Stamped every send (first and resends) - the upper bound of the ack window.
+                lastSpawnSendTicks[peerId] = currentWorld.CurrentTick;
+
                 // Mark spawn as being sent (waiting for ACK)
-                currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
+                if (firstSend)
+                {
+                    ResetPeerBaselines(netController, peerId);
+                    currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
+                }
                 return;
             }
 
             var parentId = currentWorld.GetPeerNodeId(peer, netController.NetParent);
             NetWriter.WriteUInt16(buffer, parentId);
 
-            // Get the path from parent's root to the spawned node's parent
-            byte nodePathId = 0;
-            var relativePath = netController.NetParent.RawNode.GetPathTo(netController.RawNode.GetParent());
-            if (relativePath == "." || relativePath.IsEmpty)
-            {
-                // Direct child of parent's root - use 255 as special marker
-                nodePathId = 255;
-                NetWriter.WriteByte(buffer, 255);
-            }
-            else if (Protocol.PackNode(netController.NetParent.RawNode.SceneFilePath, relativePath, out nodePathId))
-            {
-                NetWriter.WriteByte(buffer, nodePathId);
-            }
-            else
-            {
-                throw new System.Exception($"FAILED TO PACK FOR SPAWN: Node path not found for {netController.RawNode.GetPath()}, relativePath={relativePath}");
-            }
+            // Attachment path within the parent scene, resolved (or bailed on) above.
+            NetWriter.WriteByte(buffer, nodePathId);
 
             // Use ID comparison instead of Equals - more reliable for ENet.Peer structs
             var hasInputAuth = netController.InputAuthority.IsSet && netController.InputAuthority.ID == peer.ID ? (byte)1 : (byte)0;
@@ -191,8 +268,15 @@ namespace Nebula.Serialization.Serializers
             // Write nested NetScenes
             ExportNestedScenes(currentWorld, peer, buffer);
 
+            // Stamped every send (first and resends) - the upper bound of the ack window.
+            lastSpawnSendTicks[peerId] = currentWorld.CurrentTick;
+
             // Mark spawn as being sent (waiting for ACK)
-            currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
+            if (firstSend)
+            {
+                ResetPeerBaselines(netController, peerId);
+                currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
+            }
 
             currentWorld.Debug?.Send("Spawn", $"Exported:{netController.RawNode.SceneFilePath}");
         }
@@ -306,6 +390,24 @@ namespace Nebula.Serialization.Serializers
                     continue;
                 }
 
+                var peerUUID = NetRunner.Instance.GetPeerId(peer);
+
+                // Nested scenes ride along in the parent's spawn data, so the client is about
+                // to build them from scratch - their per-peer baselines must reset like the
+                // parent's own NotSpawned -> Spawning transition. This must cover EVERY state
+                // except Spawning (which means "already in this parent's resend stream" -
+                // resetting per resend would wipe props delta state every tick). Notably it
+                // must cover stale Spawned: a parent that was per-peer despawned takes its
+                // nested subtree down with it CLIENT-side (QueueFree frees children), but
+                // despawn does not cascade server-side, so the nested node still reads
+                // Spawned here while the client is about to rebuild it with an empty applied
+                // ring. Skipping the reset then leaves a delta baseline the rebuilt node can
+                // never resolve ("missing applied-state baseline" bursts on respawn).
+                if (currentWorld.GetClientSpawnState(nested.NetId, peer) != WorldRunner.ClientSpawnState.Spawning)
+                {
+                    ResetPeerBaselines(nested, peerUUID);
+                }
+
                 // IMPORTANT: Set the nested scene's state to Spawning since we're including it in the parent's spawn data.
                 // Without this, despawn logic would see NotSpawned and skip sending despawn data.
                 currentWorld.SetClientSpawnState(nested.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
@@ -314,11 +416,13 @@ namespace Nebula.Serialization.Serializers
                 if (nested.NetNode?.Serializers != null && nested.NetNode.Serializers.Length > 0
                     && nested.NetNode.Serializers[0] is SpawnSerializer nestedSpawnSerializer)
                 {
-                    var peerUUID = NetRunner.Instance.GetPeerId(peer);
                     if (!nestedSpawnSerializer.setupTicks.ContainsKey(peerUUID))
                     {
                         nestedSpawnSerializer.setupTicks[peerUUID] = currentWorld.CurrentTick;
                     }
+                    // Every inclusion (the nested payload rides every parent resend), so the
+                    // nested node's own ack window tracks the parent's resend stream.
+                    nestedSpawnSerializer.lastSpawnSendTicks[peerUUID] = currentWorld.CurrentTick;
                 }
 
                 var nestedSceneId = Protocol.PackScene(nested.NetSceneFilePath);
@@ -368,6 +472,7 @@ namespace Nebula.Serialization.Serializers
                     currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Despawned);
                     despawnTicks.Remove(peerId); // Clean up after successful ack
                     setupTicks.Remove(peerId); // Also clean up spawn tracking since despawn supersedes it
+                    lastSpawnSendTicks.Remove(peerId);
 
                     // Free the local NetId for this peer so it can be reused
                     currentWorld.DeregisterPeerNode(netController, peer);
@@ -387,13 +492,24 @@ namespace Nebula.Serialization.Serializers
                 return despawnTicks.ContainsKey(peerId) || setupTicks.ContainsKey(peerId);
             }
 
-            // Handle spawn acknowledgment (only if no despawn is pending)
+            // Handle spawn acknowledgment (only if no despawn is pending).
+            //
+            // Commit only when the acked tick falls inside [setupTick, lastSpawnSendTick]:
+            // spawn data rides every exported tick in that window (Export resends while
+            // Spawning; the soft-interest revert keeps the window contiguous), so an ack
+            // inside it is a packet that provably contained the spawn data. A bare
+            // `tick >= setupTick` would also commit on acks of ticks that carried only this
+            // node's props - which is exactly how a lost spawn packet used to get marked
+            // Spawned while the client sat on a blank node.
             if (setupTicks.TryGetValue(peerId, out var setupTick) && setupTick != 0)
             {
-                if (tick >= setupTick)
+                if (tick >= setupTick
+                    && lastSpawnSendTicks.TryGetValue(peerId, out var lastSent)
+                    && tick <= lastSent)
                 {
                     currentWorld.SetSpawnedForClient(netController.NetId, peer);
                     setupTicks.Remove(peerId); // Clean up after successful ack
+                    lastSpawnSendTicks.Remove(peerId);
                 }
             }
 
@@ -402,7 +518,7 @@ namespace Nebula.Serialization.Serializers
         }
 
         // Import is client-only and infrequent, less critical to optimize
-        public void Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController controllerOut)
+        public bool Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController controllerOut)
         {
             controllerOut = netController;
 
@@ -411,7 +527,7 @@ namespace Nebula.Serialization.Serializers
             if (firstByte == DESPAWN_MARKER)
             {
                 ImportDespawn(currentWorld, buffer);
-                return;
+                return true;
             }
 
             // Not a despawn - continue with normal spawn import
@@ -421,7 +537,7 @@ namespace Nebula.Serialization.Serializers
             // Skip if this node was already properly imported
             if (hasImported)
             {
-                return;
+                return true;
             }
 
             // Note: The node is already registered by WorldRunner before Import is called.
@@ -437,7 +553,12 @@ namespace Nebula.Serialization.Serializers
             if (data.parentId != 0 && networkParent == null)
             {
                 Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Parent node not found for: {Protocol.UnpackScene(data.classId).ResourcePath} - Parent ID: {data.parentId}");
-                return;
+                // The spawn bytes were consumed but the node was never built. Withholding the
+                // ack keeps this tick out of the delta-baseline bookkeeping, and since the
+                // server resends spawn data every tick until an ack inside its send window
+                // commits it, the spawn simply re-arrives next tick (by which point the
+                // parent may exist).
+                return false;
             }
 
             var newNode = Protocol.UnpackScene(data.classId).Instantiate<INetNodeBase>();
@@ -474,7 +595,7 @@ namespace Nebula.Serialization.Serializers
 
                 // Check for pending despawn after spawn completes
                 CheckPendingDespawn(currentWorld, controllerOut);
-                return;
+                return true;
             }
 
             if (data.hasInputAuthority == 1)
@@ -500,6 +621,7 @@ namespace Nebula.Serialization.Serializers
 
             // Check for pending despawn after spawn completes
             CheckPendingDespawn(currentWorld, controllerOut);
+            return true;
         }
 
         /// <summary>

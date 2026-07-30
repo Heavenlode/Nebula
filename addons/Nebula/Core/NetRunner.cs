@@ -447,6 +447,20 @@ namespace Nebula
         /// <summary>RNG for <see cref="SimulateIncomingTickLoss"/>. Debug-only, client-local.</summary>
         private static readonly RandomNumberGenerator _tickLossRng = new();
 
+        private static bool? _traceSpawnIds;
+        /// <summary>
+        /// Debug: arms the server-side spawn-contract breach detector in ExportState
+        /// ("a packet may carry data without spawn bytes only for a node whose id the
+        /// client provably has or gets") - the export-side counterpart of the client's
+        /// "[ImportState] Data for unknown node" tripwire, catching the leak at the source
+        /// with the node named. Enable via the <c>NEBULA_TRACE_SPAWN_IDS</c> environment
+        /// variable or <c>Nebula/config/debug/trace_spawn_ids</c>. Allocates log strings
+        /// when a breach fires; default off. Cached on first read.
+        /// </summary>
+        public static bool TraceSpawnIds =>
+            _traceSpawnIds ??= OS.HasEnvironment("NEBULA_TRACE_SPAWN_IDS")
+                || ProjectSettings.GetSetting("Nebula/config/debug/trace_spawn_ids", false).AsBool();
+
         private static bool? _packEnabled;
         /// <summary>
         /// When enabled via <c>Nebula/config/pack/enabled</c>, the server delta-compresses tick

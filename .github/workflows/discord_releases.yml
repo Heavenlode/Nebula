@@ -1,0 +1,33 @@
+name: Announce release on Discord
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post to Discord
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          TAG: ${{ github.event.release.tag_name }}
+          NAME: ${{ github.event.release.name }}
+          URL: ${{ github.event.release.html_url }}
+          BODY: ${{ github.event.release.body }}
+          REPO: ${{ github.repository }}
+        run: |
+          jq -n \
+            --arg title "$REPO $TAG" \
+            --arg desc "${BODY:0:4000}" \
+            --arg url "$URL" \
+            '{
+              username: "Releases",
+              embeds: [{
+                title: $title,
+                description: $desc,
+                url: $url,
+                color: 5763719
+              }]
+            }' > payload.json
+          curl -sf -H "Content-Type: application/json" -d @payload.json "$WEBHOOK"

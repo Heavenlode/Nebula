@@ -79,6 +79,70 @@ namespace Nebula.Serialization.Serializers
         }
 
         /// <summary>
+        /// Server-side despawn cascade over every nested NetScene under a despawning parent.
+        /// The client applies a despawn by freeing the parent's whole Godot subtree - nested
+        /// NetScenes included - so their per-peer server state must follow. Runs twice per
+        /// despawn, split by what is safe when:
+        ///
+        /// Send-time (freeIds: false), from ExportDespawn at each transition into despawn:
+        /// marks the children Despawned, which silences their props/resync exporters in the
+        /// same tick the parent's despawn marker first ships. ClientProcessTick's monotonic
+        /// tick guard means the client never applies a packet older than an applied despawn,
+        /// so no packet the client processes after freeing the subtree can carry child data -
+        /// the "props for an unknown node" window is unreachable through this path. Children
+        /// already running their own despawn (IsQueuedForDespawn, or Despawning for this
+        /// peer) are left alone: their exporters are already silenced by their own state, and
+        /// flipping them Despawned here would clear their pending despawn ack and let the
+        /// AreAllPeersDespawned sweep delete them before anything freed their per-peer local
+        /// ids - a permanent id leak against the per-peer node cap.
+        ///
+        /// Ack-time (freeIds: true), from Acknowledge's despawn branch: the ack proves the
+        /// client's subtree is gone, so now - and only now - the children's local ids are
+        /// freed. Freeing at send-time would let TryRegisterPeerNode hand an id to a new node
+        /// while the client's old node still occupies it; the old node's hasImported guard
+        /// would consume-and-skip the new node's spawn, silently binding the stream to the
+        /// wrong node. DeregisterPeerNode is idempotent, so the id sweep runs unconditionally
+        /// - most children were already marked Despawned by the send-time pass and the state
+        /// guard must not skip their deregistration.
+        ///
+        /// Recurses unconditionally: a grandchild can be spawned for the peer even when the
+        /// intermediate child is not (spawn tables collect the whole subtree,
+        /// interest-filtered per node).
+        /// </summary>
+        private static void CascadeDespawnToNestedChildren(WorldRunner currentWorld, NetPeer peer, UUID peerId, NetworkController parent, bool freeIds)
+        {
+            foreach (var child in parent.DynamicNetworkChildren)
+            {
+                var state = currentWorld.GetClientSpawnState(child.NetId, peer);
+                bool active = state != WorldRunner.ClientSpawnState.NotSpawned
+                    && state != WorldRunner.ClientSpawnState.Despawned;
+                bool ownDespawnInFlight = child.IsQueuedForDespawn
+                    || state == WorldRunner.ClientSpawnState.Despawning;
+
+                if (active && (freeIds || !ownDespawnInFlight))
+                {
+                    currentWorld.SetClientSpawnState(child.NetId, peer, WorldRunner.ClientSpawnState.Despawned);
+                    ResetPeerBaselines(child, peerId);
+
+                    if (child.NetNode?.Serializers != null && child.NetNode.Serializers.Length > 0
+                        && child.NetNode.Serializers[0] is SpawnSerializer childSpawn)
+                    {
+                        childSpawn.setupTicks.Remove(peerId);
+                        childSpawn.despawnTicks.Remove(peerId);
+                        childSpawn.lastSpawnSendTicks.Remove(peerId);
+                    }
+                }
+
+                if (freeIds)
+                {
+                    currentWorld.DeregisterPeerNode(child, peer);
+                }
+
+                CascadeDespawnToNestedChildren(currentWorld, peer, peerId, child, freeIds);
+            }
+        }
+
+        /// <summary>
         /// Tells every sibling serializer to forget its per-peer delta/ack baseline. Called at
         /// each NotSpawned -&gt; Spawning transition: the client is about to build this node from
         /// scratch (first spawn, or a respawn after interest loss destroyed its copy), so its
@@ -241,7 +305,7 @@ namespace Nebula.Serialization.Serializers
                 NetWriter.WriteUInt16(buffer, 0);
 
                 // Write nested NetScenes for root scene
-                ExportNestedScenes(currentWorld, peer, buffer);
+                ExportNestedScenes(currentWorld, peer, buffer, firstSend);
 
                 // Stamped every send (first and resends) - the upper bound of the ack window.
                 lastSpawnSendTicks[peerId] = currentWorld.CurrentTick;
@@ -266,7 +330,7 @@ namespace Nebula.Serialization.Serializers
             NetWriter.WriteByte(buffer, hasInputAuth);
 
             // Write nested NetScenes
-            ExportNestedScenes(currentWorld, peer, buffer);
+            ExportNestedScenes(currentWorld, peer, buffer, firstSend);
 
             // Stamped every send (first and resends) - the upper bound of the ack window.
             lastSpawnSendTicks[peerId] = currentWorld.CurrentTick;
@@ -294,8 +358,11 @@ namespace Nebula.Serialization.Serializers
             switch (spawnState)
             {
                 case WorldRunner.ClientSpawnState.NotSpawned:
-                    // Peer never received spawn, mark as despawned immediately (no data to send)
+                    // Peer never received spawn, mark as despawned immediately (no data to send).
+                    // Children can still be Spawning/Spawned via an ancestor's spawn table even
+                    // though this parent never spawned for the peer - silence them too.
                     currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Despawned);
+                    CascadeDespawnToNestedChildren(currentWorld, peer, peerId, netController, freeIds: false);
                     break;
 
                 case WorldRunner.ClientSpawnState.Spawning:
@@ -307,11 +374,15 @@ namespace Nebula.Serialization.Serializers
                         Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
                             $"[SpawnSerializer] BUG: Node {netController.RawNode?.Name} (NetId={netController.NetId}) has state {spawnState} but isn't registered for peer. This indicates a state machine violation.");
                         currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Despawned);
+                        CascadeDespawnToNestedChildren(currentWorld, peer, peerId, netController, freeIds: false);
                         break;
                     }
-                    // Peer received (or is receiving) spawn, send despawn data
+                    // Peer received (or is receiving) spawn, send despawn data. Silence the
+                    // nested subtree in the same tick the marker first ships - this is what
+                    // closes the orphan-props window (see CascadeDespawnToNestedChildren).
                     WriteDespawnData(currentWorld, peer, peerId, localNodeId, buffer);
                     currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Despawning);
+                    CascadeDespawnToNestedChildren(currentWorld, peer, peerId, netController, freeIds: false);
                     break;
 
                 case WorldRunner.ClientSpawnState.Despawning:
@@ -355,21 +426,45 @@ namespace Nebula.Serialization.Serializers
         /// <summary>
         /// Exports all nested NetScenes in the subtree that the peer has interest in.
         /// </summary>
-        private void ExportNestedScenes(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
+        private void ExportNestedScenes(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, bool firstSend)
         {
+            var peerUUID = NetRunner.Instance.GetPeerId(peer);
+
             // Collect nested NetScenes recursively (entire subtree)
             _nestedSceneBuffer.Clear();
-            CollectNestedNetScenesRecursive(netController, _nestedSceneBuffer);
+            CollectNestedNetScenesRecursive(currentWorld, peer, netController, _nestedSceneBuffer);
 
             // Filter to only include scenes the peer has interest in
             _interestedNestedBuffer.Clear();
             for (int i = 0; i < _nestedSceneBuffer.Count; i++)
             {
                 var nested = _nestedSceneBuffer[i];
-                if (nested.IsPeerInterested(peer))
+                if (!nested.IsPeerInterested(peer))
                 {
-                    _interestedNestedBuffer.Add(nested);
+                    continue;
                 }
+
+                // Table membership is FROZEN per peer while this spawn is in flight: on a
+                // resend, only children whose setupTick proves they rode an earlier send of
+                // this table may appear. A client that already imported this spawn consume-
+                // and-skips every resend (hasImported), so a child ADDED to the table
+                // mid-resend rides only payloads that client is guaranteed to discard - it
+                // can never learn the id, and the child's props exporter (switched on by the
+                // Spawning flip below) then feeds it props for an unknown node: tick-import
+                // abort, no acks, and the abort starves the very ack that would commit this
+                // parent and let the child spawn standalone. Deadlock until something else
+                // acks (or the peer times out). New children instead stay NotSpawned (props
+                // gated) and spawn via their own Export once this parent commits.
+                if (!firstSend
+                    && (nested.NetNode?.Serializers == null
+                        || nested.NetNode.Serializers.Length == 0
+                        || nested.NetNode.Serializers[0] is not SpawnSerializer memberCheck
+                        || !memberCheck.setupTicks.ContainsKey(peerUUID)))
+                {
+                    continue;
+                }
+
+                _interestedNestedBuffer.Add(nested);
             }
 
             NetWriter.WriteByte(buffer, (byte)_interestedNestedBuffer.Count);
@@ -389,8 +484,6 @@ namespace Nebula.Serialization.Serializers
                     NetWriter.WriteByte(buffer, 0);
                     continue;
                 }
-
-                var peerUUID = NetRunner.Instance.GetPeerId(peer);
 
                 // Nested scenes ride along in the parent's spawn data, so the client is about
                 // to build them from scratch - their per-peer baselines must reset like the
@@ -446,15 +539,25 @@ namespace Nebula.Serialization.Serializers
         private List<NetworkController> _interestedNestedBuffer = new(64);
 
         /// <summary>
-        /// Recursively collects all nested NetScenes in the subtree.
+        /// Recursively collects all nested NetScenes in the subtree, pruning any scene (and
+        /// everything under it) whose despawn is in flight for this peer. Re-including one
+        /// would flip its per-peer state back to Spawning mid-despawn (ExportNestedScenes
+        /// sets every included scene Spawning), reopening the props exporters the despawn
+        /// cascade just silenced. Stale Despawned with no despawn pending stays included -
+        /// that is the legitimate re-add path when a parent respawns.
         /// </summary>
-        private static void CollectNestedNetScenesRecursive(NetworkController parent, List<NetworkController> results)
+        private static void CollectNestedNetScenesRecursive(WorldRunner currentWorld, NetPeer peer, NetworkController parent, List<NetworkController> results)
         {
             foreach (var child in parent.DynamicNetworkChildren)
             {
+                if (child.IsQueuedForDespawn
+                    || currentWorld.GetClientSpawnState(child.NetId, peer) == WorldRunner.ClientSpawnState.Despawning)
+                {
+                    continue;
+                }
                 results.Add(child);
                 // Recurse into child's nested scenes
-                CollectNestedNetScenesRecursive(child, results);
+                CollectNestedNetScenesRecursive(currentWorld, peer, child, results);
             }
         }
 
@@ -476,6 +579,13 @@ namespace Nebula.Serialization.Serializers
 
                     // Free the local NetId for this peer so it can be reused
                     currentWorld.DeregisterPeerNode(netController, peer);
+
+                    // The acked despawn proves the client freed the whole subtree, so the
+                    // nested children's local ids are now safe to free for reuse. State and
+                    // baselines were already handled by the send-time pass in ExportDespawn;
+                    // this pass is the id sweep plus an idempotent backstop (see
+                    // CascadeDespawnToNestedChildren).
+                    CascadeDespawnToNestedChildren(currentWorld, peer, peerId, netController, freeIds: true);
 
                     // Check if all peers have acknowledged despawn.
                     // Only delete the node globally for a genuine global despawn (IsQueuedForDespawn).

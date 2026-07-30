@@ -51,7 +51,7 @@ Nebula is a custom tick-based, server-authoritative networking library for Godot
 - Network runs at `TPS = PhysicsTicksPerSecond / PhysicsTicksPerNetworkTick` (default: 30hz)
 - Every tick, server exports state to all interested peers
 - Clients acknowledge received ticks for reliability tracking
-- Unreliable UDP with manual acknowledgment for state, reliable for spawns/despawns/RPCs
+- Unreliable UDP with manual acknowledgment for state; RPCs ride a reliable channel. Spawns and despawns ride the unreliable tick stream but re-send every tick until acknowledged, so they are effectively reliable (a spawn only commits on an ack of a tick that provably carried it)
 
 ### 3. Network Scenes (NetScenes)
 - A scene whose root node inherits from `NetNode`, `NetNode2D`, or `NetNode3D`
@@ -233,10 +233,36 @@ Marks a property for network synchronization. Only modified on the server.
 [NetProperty(Interpolate = true, InterpolateSpeed = 20f)]  // Custom lerp speed (default: 15)
 [NetProperty(Predicted = true)]                 // Client-side prediction for owned entities
                                                 // REQUIRES: {PropertyName}PredictionTolerance property
+[NetProperty(PerPeerState = true)]              // Distinct value per peer; property MUST be partial
 ```
 
 **Prediction + Interpolation:**
 When both are enabled, prediction handles owned entities (you control it) and interpolation handles non-owned entities (other players/NPCs smoothly interpolated).
+
+**Per-peer properties (`PerPeerState = true`):**
+Each peer holds (and receives) its own value. The property must be declared `partial` — the
+generator implements peer-aware accessors — and any non-default initial value moves to the
+constructor (partial definitions can't carry initializers):
+
+```csharp
+[NetProperty(PerPeerState = true, NotifyOnChange = true)]
+public partial int ChunkState { get; set; }
+
+public ScrapYard() { ChunkState = -1; }
+
+// Server-side: scope reads/writes to one peer. Reads fall back to the base value
+// when the peer has no override; writes always deliver (no equality short-circuit).
+using (Network.ForPeer(peerId))
+{
+    ChunkState &= ~bit;   // read-modify-write on THIS peer's value
+}
+```
+
+Outside a `ForPeer` scope, accessors target the *base value*; a base write broadcasts to
+exactly the peers without an override. The scope is lexical and process-wide (any per-peer
+property on any node accessed inside it targets that peer), and scopes nest. Value types
+only (NEBULA007); cannot combine with `Predicted`/`Interpolate` (NEBULA008); clients treat
+the property as plain imported state.
 
 **Supported Types:**
 - Primitives: `bool`, `byte`, `int`, `long`, `float`, `double`

@@ -1923,6 +1923,12 @@ namespace Nebula
             // into entirely the wrong nodes. The destination world also restarts near tick 0, which
             // would otherwise collide with retained ring slots.
             _clientPackWindow.Reset();
+
+            // A parked ack still references an old-world tick. Acks are routed by peer, not by
+            // world, so flushing it after the migration would land it in the destination world's
+            // PeerAcknowledge - and if the tick number happens to be valid there, it marks state
+            // this client never applied as acked (delta baselines, spawn commits).
+            _pendingAckTick = -1;
             TimeSinceLastTick = 0f;
             _ownedEntities.Clear();
             _ownedEntitiesDirty = true;
@@ -2435,9 +2441,42 @@ namespace Nebula
                     // Safety check: ensure node is registered before lookup
                     if (!PeerStates[peerId].WorldToPeerNodeMap.TryGetValue(netController.NetId, out var localNodeId))
                     {
-                        Log(Debugger.DebugLevel.ERROR, 
+                        Log(Debugger.DebugLevel.ERROR,
                             $"[ExportState] Node {netController.RawNode?.Name} (NetId={netController.NetId}) wrote data but isn't registered for peer {peerId}.");
                         continue;
+                    }
+
+                    // Spawn-contract breach detector: a packet may carry data WITHOUT the
+                    // spawn bit only for a node whose id the client provably has or gets:
+                    // either its spawn is committed (Spawned = the peer acked a packet that
+                    // contained the spawn data), or an ancestor's spawn is in flight and this
+                    // node rides that ancestor's nested table in this same packet (sound
+                    // because table membership is frozen per peer while a spawn is in flight -
+                    // see ExportNestedScenes). Anything else means the client may not know the
+                    // id, and then the payload length is unknowable client-side - the exact
+                    // precondition of the "[ImportState] Data for unknown node" abort.
+                    // Catching it at the SOURCE names the node and state that leaked.
+                    if (NetRunner.TraceSpawnIds && (serializersRun & 1) == 0)
+                    {
+                        var contractState = GetClientSpawnState(netController.NetId, peer);
+                        if (contractState != ClientSpawnState.Spawned)
+                        {
+                            bool ridesInFlightAncestorTable = false;
+                            for (var ancestor = netController.NetParent; ancestor != null; ancestor = ancestor.NetParent)
+                            {
+                                var ancestorState = GetClientSpawnState(ancestor.NetId, peer);
+                                if (ancestorState == ClientSpawnState.NotSpawned || ancestorState == ClientSpawnState.Spawning)
+                                {
+                                    ridesInFlightAncestorTable = contractState == ClientSpawnState.Spawning;
+                                    break;
+                                }
+                            }
+                            if (!ridesInFlightAncestorTable)
+                            {
+                                Log(Debugger.DebugLevel.ERROR,
+                                    $"[IdTrace] BREACH tick={CurrentTick} peer={peerId} id={localNodeId} NetId={netController.NetId} node={netController.RawNode?.Name} mask=0b{Convert.ToString(serializersRun, 2)} state={contractState}: exported without spawn data while spawn is not committed");
+                            }
+                        }
                     }
                     NodeIdUtils.SetBit(_updatedNodesMask, localNodeId);
                     _peerNodesSerializersList[localNodeId] = serializersRun;
@@ -2513,6 +2552,13 @@ namespace Nebula
         /// </summary>
         internal bool ImportState(NetBuffer stateBytes)
         {
+            // Set when any serializer parses its payload but reports it was not applied
+            // (e.g. a props delta whose baseline this client doesn't have). The stream stays
+            // aligned - unlike the corrupted-buffer aborts below - but the tick must not be
+            // acked: an ack tells the server "I have this tick's data", and acking a
+            // discarded payload latches delta encoding onto a baseline we never recorded.
+            bool anyDiscarded = false;
+
             // Read hierarchical bitmask: groupMask (1 byte) + nodeMasks for active groups
             var groupMask = NetReader.ReadByte(stateBytes);
             var nodeMasks = new long[NodeIdUtils.NODE_GROUPS];
@@ -2555,6 +2601,22 @@ namespace Nebula
 
                     if (netController == null)
                     {
+                        // Data for a node this client doesn't know. Legitimate only when the
+                        // payload carries the node's spawn data (serializer bit 0): the blank
+                        // placeholder below gets replaced by the real scene mid-import and the
+                        // stream stays aligned. Props-only data for an unknown id means state
+                        // desync - the blank node's zero-property serializer would consume the
+                        // wrong byte count and garble every node after it in this packet (the
+                        // "invalid baseline age N" bursts, N being a mask byte misread as an
+                        // age). The payload's length is unknowable here, so abort the tick:
+                        // it is not acked, and resend machinery re-delivers everything.
+                        if ((serializerMask & 1) == 0)
+                        {
+                            Log(Debugger.DebugLevel.ERROR,
+                                $"[ImportState] tick={CurrentTick} Data for unknown node {localNodeId} without spawn data (mask=0b{Convert.ToString(serializerMask, 2)}). Aborting tick import.");
+                            return false;
+                        }
+
                         var blankScene = new NetNode3D();
                         blankScene.Network.NetId = AllocateNetId(localNodeId);
                         blankScene.Network.CurrentWorld = this; // Set CurrentWorld so handleDespawn uses QueueDespawn instead of immediate QueueFree
@@ -2573,19 +2635,28 @@ namespace Nebula
                             // Log($"[ImportState] Node {localNodeId}: Skipping serializer {serializerIdx} (bit not set)");
                             continue;
                         }
-                        
-                        // Skip if node was queued for despawn during import (e.g., by SpawnSerializer handling despawn)
-                        if (netController.IsQueuedForDespawn || netController.IsMarkedForDeletion)
-                        {
-                            break;
-                        }
-                        
+
+                        // A node queued for despawn (mid-import by SpawnSerializer, or earlier by a
+                        // pending client despawn) still has its serializer bytes in this packet -
+                        // the mask bit proves the server wrote them. The serializers must still
+                        // run so those bytes are consumed; breaking out here would leave them in
+                        // the buffer and misalign every node after this one. Applying values to a
+                        // dying node is harmless: QueueDespawnedNodes is drained at the end of
+                        // this same ClientProcessTick and the free is deferred, so the node is
+                        // alive for the duration of the import. We just don't let a discard from
+                        // a doomed node veto the tick ack.
+                        bool nodeIsDoomed = netController.IsQueuedForDespawn || netController.IsMarkedForDeletion;
+
                         var serializerInstance = netController.NetNode.Serializers[serializerIdx];
                         // Log($"[ImportState] Node {localNodeId}: Running serializer {serializerIdx} ({serializerInstance.GetType().Name})");
 
                         try
                         {
-                            serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
+                            bool applied = serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
+                            if (!applied && !nodeIsDoomed)
+                            {
+                                anyDiscarded = true;
+                            }
                             if (netController != nodeOut)
                             {
                                 // Log($"[ImportState] Node {localNodeId}: Serializer {serializerIdx} replaced node, new scenePath='{nodeOut.NetSceneFilePath}', restarting loop");
@@ -2626,7 +2697,32 @@ namespace Nebula
                 }
             }
 
-            return true;
+            return !anyDiscarded;
+        }
+
+        /// <summary>
+        /// Client-side: deregisters a despawned node AND its nested NetScene subtree.
+        /// QueueFree takes the whole Godot subtree with it, nested NetScenes included - but
+        /// nothing despawns those children individually. A stale NetScenes entry for a
+        /// freed child both routes incoming data into a disposed node (aborting the tick
+        /// import) and blocks re-registration of the authored replacement when the parent
+        /// later respawns (client TryRegisterPeerNode refuses ids that appear registered).
+        /// </summary>
+        private void DeregisterDespawnedSubtree(NetworkController netController)
+        {
+            // Safe to iterate directly: nothing below mutates DynamicNetworkChildren
+            // (deregistration and deletion-queueing never touch NetParentId).
+            foreach (var child in netController.DynamicNetworkChildren)
+            {
+                DeregisterDespawnedSubtree(child);
+            }
+            DeregisterPeerNode(netController);
+            // A child that already went through its own despawn may be freed by now -
+            // deregistering is still required, but don't touch the disposed node.
+            if (IsInstanceValid(netController.RawNode))
+            {
+                netController.QueueNodeForDeletion();
+            }
         }
 
         // Reusable list for objects that had all data acked (avoids modifying HashSet during iteration)
@@ -2736,7 +2832,12 @@ namespace Nebula
 
         public void ClientProcessTick(int incomingTick, byte[] stateBytes)
         {
-            // Skip old/duplicate ticks
+            // Skip old/duplicate ticks. Load-bearing beyond dedup: the server stops
+            // exporting a despawned parent's nested children from the tick the despawn
+            // marker first ships (SpawnSerializer's send-time cascade), which only closes
+            // the orphan-props window if a packet older than an applied despawn is never
+            // applied after it. The tick channel's ENet flag is Unsequenced, so this
+            // guard - not the transport - is what enforces send-order apply.
             if (incomingTick <= CurrentTick)
             {
                 return;
@@ -2870,8 +2971,7 @@ namespace Nebula
             // ============================================================
             foreach (var netController in QueueDespawnedNodes)
             {
-                DeregisterPeerNode(netController);
-                netController.QueueNodeForDeletion();
+                DeregisterDespawnedSubtree(netController);
             }
             QueueDespawnedNodes.Clear();
 

@@ -9,7 +9,7 @@ bg_color = Color(0.31175, 0.1935, 0.43, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 
-[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("properties_parent", "properties_container", "functions_parent", "functions_container", "children_parent", "children_container", "title_label", "property_count_label", "function_count_label")]
+[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("properties_parent", "properties_container", "functions_parent", "functions_container", "static_nodes_parent", "static_nodes_container", "title_label", "property_count_label", "function_count_label", "scene_property_row", "scene_property_label", "static_node_count_row", "static_node_count_label", "net_scene_link_row", "net_scene_link_button")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -21,11 +21,17 @@ properties_parent = NodePath("Items/Properties")
 properties_container = NodePath("Items/Properties/Container/Container")
 functions_parent = NodePath("Items/Functions")
 functions_container = NodePath("Items/Functions/Container/Container")
-children_parent = NodePath("Items/Children")
-children_container = NodePath("Items/Children/Container/Container")
+static_nodes_parent = NodePath("Items/StaticNodes")
+static_nodes_container = NodePath("Items/StaticNodes/Container/Container")
 title_label = NodePath("Heading/Label")
 property_count_label = NodePath("Items/PropertyCount/Value")
 function_count_label = NodePath("Items/FunctionCount/Value")
+scene_property_row = NodePath("Items/SceneProperties")
+scene_property_label = NodePath("Items/SceneProperties/Value")
+static_node_count_row = NodePath("Items/StaticNodeCount")
+static_node_count_label = NodePath("Items/StaticNodeCount/Value")
+net_scene_link_row = NodePath("Items/NetSceneLink")
+net_scene_link_button = NodePath("Items/NetSceneLink/Button")
 
 [node name="Heading" type="Panel" parent="."]
 custom_minimum_size = Vector2(0, 57)
@@ -53,6 +59,22 @@ vertical_alignment = 1
 layout_mode = 2
 theme_override_constants/separation = 0
 
+[node name="NetSceneLink" type="HBoxContainer" parent="Items"]
+visible = false
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Items/NetSceneLink"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "NetScene"
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="Items/NetSceneLink"]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = true
+alignment = 0
+
 [node name="PropertyCount" parent="Items" instance=ExtResource("3_gp7ba")]
 layout_mode = 2
 
@@ -71,6 +93,26 @@ text = "Functions"
 [node name="Value" parent="Items/FunctionCount" index="1"]
 text = "0"
 
+[node name="SceneProperties" parent="Items" instance=ExtResource("3_gp7ba")]
+visible = false
+layout_mode = 2
+
+[node name="Name" parent="Items/SceneProperties" index="0"]
+text = "Scene properties"
+
+[node name="Value" parent="Items/SceneProperties" index="1"]
+text = "0 / 64"
+
+[node name="StaticNodeCount" parent="Items" instance=ExtResource("3_gp7ba")]
+visible = false
+layout_mode = 2
+
+[node name="Name" parent="Items/StaticNodeCount" index="0"]
+text = "Static NetNodes"
+
+[node name="Value" parent="Items/StaticNodeCount" index="1"]
+text = "0 / 255"
+
 [node name="Properties" parent="Items" instance=ExtResource("2_w37so")]
 visible = false
 layout_mode = 2
@@ -82,15 +124,17 @@ layout_mode = 2
 [node name="Button" parent="Items/Functions" index="0"]
 text = "▶ Functions"
 
-[node name="Children" parent="Items" instance=ExtResource("2_w37so")]
+[node name="StaticNodes" parent="Items" instance=ExtResource("2_w37so")]
 visible = false
 layout_mode = 2
 
-[node name="Button" parent="Items/Children" index="0"]
-text = "▶ Children"
+[node name="Button" parent="Items/StaticNodes" index="0"]
+text = "▶ Static NetNodes"
 
 [editable path="Items/PropertyCount"]
 [editable path="Items/FunctionCount"]
+[editable path="Items/SceneProperties"]
+[editable path="Items/StaticNodeCount"]
 [editable path="Items/Properties"]
 [editable path="Items/Functions"]
-[editable path="Items/Children"]
+[editable path="Items/StaticNodes"]

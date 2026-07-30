@@ -127,6 +127,10 @@ namespace Nebula.Generators
             // (C# masks shift counts) and index out of bounds. Fail the build instead.
             ReportPropertyLimitViolations(context, protocolData);
 
+            // Enforce the NetScene parenting invariant (NEBULA009): a nested NetScene under
+            // a plain container node is unaddressable by late spawn delivery at runtime.
+            ReportInvalidNestedContainers(context, protocolData);
+
             // Emit code
             var code = CodeEmitter.Emit(protocolData);
             context.AddSource("Protocol.g.cs", SourceText.From(code, Encoding.UTF8));
@@ -154,6 +158,27 @@ namespace Nebula.Generators
             "Nebula.Generator",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true);
+
+        private static readonly DiagnosticDescriptor InvalidNestedContainerDescriptor = new(
+            "NEBULA009",
+            "Nested NetScene under a non-networked container",
+            "Scene '{0}': nested NetScene '{1}' is parented under '{2}', which is neither a NetNode nor the scene root. A NetScene must be a child of another NetScene or a NetNode: late spawn delivery (interest gained after the parent scene committed) addresses the attachment point through the protocol registry, which only contains networked nodes - this spawn would be undeliverable at runtime. Attach a NetNode-derived script to '{2}', or reparent '{1}'.",
+            "Nebula.Generator",
+            DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
+
+        private static void ReportInvalidNestedContainers(SourceProductionContext context, ProtocolData data)
+        {
+            foreach (var violation in data.InvalidNestedContainers)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(
+                    InvalidNestedContainerDescriptor,
+                    Location.None,
+                    violation.ScenePath,
+                    violation.NestedNodePath,
+                    violation.ContainerPath));
+            }
+        }
 
         private static void ReportPropertyLimitViolations(SourceProductionContext context, ProtocolData data)
         {
@@ -211,6 +236,10 @@ namespace Nebula.Generators
                     fileContents,
                     analysisResult,
                     sceneDataCache);
+
+                // Collected before the NetScene filter: a violation inside a rolled-up
+                // (non-NetScene) scene is just as unaddressable at runtime.
+                data.InvalidNestedContainers.AddRange(bytecode.InvalidNestedContainers);
 
                 if (!bytecode.IsNetScene) continue;
 
@@ -403,6 +432,10 @@ namespace Nebula.Generators
             var propertyCount = 0;
             var functionCount = 0;
 
+            // Paths of nested NetScene instances seen so far in this scene - legal parents
+            // for deeper nested NetScenes (tscn orders parents before children).
+            var nestedNetScenePaths = new HashSet<string>();
+
             foreach (var node in parsed.Nodes)
             {
                 var nodePath = node.Parent == null
@@ -428,8 +461,35 @@ namespace Nebula.Generators
                         analysisResult,
                         cache);
 
-                    // Nested network scenes don't roll up
-                    if (nestedBytecode.IsNetScene) continue;
+                    // Nested network scenes don't roll up. Their PLACEMENT is validated
+                    // instead: a NetScene may only be a child of another NetScene, a NetNode,
+                    // or the scene root (architectural invariant). Late spawn delivery
+                    // addresses the attachment point as (parent scene, packed node path), and
+                    // the registry only contains networked nodes - a plain container there
+                    // makes the spawn unaddressable at runtime. Fail the build (NEBULA009)
+                    // rather than let it surface as an undeliverable spawn.
+                    if (nestedBytecode.IsNetScene)
+                    {
+                        var containerPath = node.Parent;
+                        bool legalContainer = string.IsNullOrEmpty(containerPath)
+                            || containerPath == "."
+                            || nestedNetScenePaths.Contains(containerPath)
+                            || HasStaticNetNodePath(result, containerPath);
+                        if (!legalContainer)
+                        {
+                            result.InvalidNestedContainers.Add(new InvalidNestedContainer
+                            {
+                                ScenePath = sceneResPath,
+                                NestedNodePath = nodePath,
+                                ContainerPath = containerPath!
+                            });
+                        }
+
+                        // Legal parent for any deeper nested NetScenes in this scene
+                        // (NetScene-under-NetScene is allowed by the invariant).
+                        nestedNetScenePaths.Add(nodePath);
+                        continue;
+                    }
 
                     // Merge static net nodes
                     foreach (var entry in nestedBytecode.StaticNetNodes)
@@ -599,6 +659,21 @@ namespace Nebula.Generators
 
             cache[sceneResPath] = result;
             return result;
+        }
+
+        /// <summary>
+        /// Whether a path is already registered as a static net node for this scene. Guards
+        /// against duplicate ids when several nested NetScenes share one container, or when
+        /// the container itself is a scripted NetNode (registered when its own tscn entry was
+        /// processed - parents precede children in tscn order).
+        /// </summary>
+        private static bool HasStaticNetNodePath(SceneBytecode result, string path)
+        {
+            for (int i = 0; i < result.StaticNetNodes.Count; i++)
+            {
+                if (result.StaticNetNodes[i].Path == path) return true;
+            }
+            return false;
         }
 
         private static bool IsNetNode(string scriptPath, TypeAnalyzer.AnalysisResult analysis)

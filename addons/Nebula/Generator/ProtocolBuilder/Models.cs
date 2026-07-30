@@ -14,6 +14,20 @@ namespace Nebula.Generators
         public List<StaticNetNode> StaticNetNodes { get; } = new();
         public Dictionary<string, Dictionary<string, PropertyData>> Properties { get; } = new();
         public Dictionary<string, Dictionary<string, FunctionData>> Functions { get; } = new();
+        /// <summary>
+        /// Nested NetScenes authored under containers that violate the parenting invariant
+        /// (a NetScene may only be a child of another NetScene, a NetNode, or the scene
+        /// root). Reported as NEBULA009 build errors.
+        /// </summary>
+        public List<InvalidNestedContainer> InvalidNestedContainers { get; } = new();
+    }
+
+    /// <summary>A nested NetScene placed under a non-networked container node.</summary>
+    internal sealed class InvalidNestedContainer
+    {
+        public string ScenePath { get; set; } = "";
+        public string NestedNodePath { get; set; } = "";
+        public string ContainerPath { get; set; } = "";
     }
 
     internal sealed class StaticNetNode
@@ -109,6 +123,8 @@ namespace Nebula.Generators
         /// protocol hash so builds on different Nebula versions refuse to connect.
         /// </summary>
         public string NebulaVersion { get; set; } = "";
+        /// <summary>All NEBULA009 parenting violations across scenes.</summary>
+        public List<InvalidNestedContainer> InvalidNestedContainers { get; } = new();
     }
 
     internal sealed class SceneInterestData

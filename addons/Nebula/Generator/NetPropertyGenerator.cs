@@ -41,6 +41,33 @@ public class NetPropertyGenerator : IIncrementalGenerator
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
+    // Diagnostic for per-peer properties that are not declared partial
+    private static readonly DiagnosticDescriptor PerPeerNotPartialDiagnostic = new(
+        id: "NEBULA006",
+        title: "Per-peer property must be declared partial",
+        messageFormat: "Property '{0}' has PerPeerState=true and must be declared 'partial' so the generator can implement per-peer accessors, e.g.: public partial {1} {0} {{ get; set; }} (move any initializer into the constructor)",
+        category: "Nebula",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    // Diagnostic for per-peer properties of unsupported types
+    private static readonly DiagnosticDescriptor PerPeerInvalidTypeDiagnostic = new(
+        id: "NEBULA007",
+        title: "Per-peer property type not supported",
+        messageFormat: "Property '{0}' has PerPeerState=true but type '{1}' is not supported. Per-peer properties must be primitive value types (int, bool, long, float, enums, Vector*, UUID, NetId, ...) - reference types, string, INetSerializable and NetArray are not supported",
+        category: "Nebula",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    // Diagnostic for per-peer properties combined with incompatible flags
+    private static readonly DiagnosticDescriptor PerPeerInvalidComboDiagnostic = new(
+        id: "NEBULA008",
+        title: "Per-peer property has incompatible flags",
+        messageFormat: "Property '{0}' has PerPeerState=true which cannot be combined with Predicted or Interpolate",
+        category: "Nebula",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -65,6 +92,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
         bool interpolate = false;
         float interpolateSpeed = 15f;
         bool predicted = false;
+        bool perPeerState = false;
 
         foreach (var attr in propertySymbol.GetAttributes())
         {
@@ -87,11 +115,19 @@ public class NetPropertyGenerator : IIncrementalGenerator
                         case "Predicted" when namedArg.Value.Value is bool b3:
                             predicted = b3;
                             break;
+                        case "PerPeerState" when namedArg.Value.Value is bool b4:
+                            perPeerState = b4;
+                            break;
                     }
                 }
                 break;
             }
         }
+
+        // Partial detection must be syntax-based: IPropertySymbol.IsPartialDefinition is not
+        // available on the Roslyn version this generator compiles against (4.3.0).
+        bool isPartial = context.TargetNode is PropertyDeclarationSyntax propSyntax
+            && propSyntax.Modifiers.Any(m => m.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.PartialKeyword));
 
         // Check if the property type implements IBsonValue<T> or IBsonSerializable<T>
         bool isBsonSerializable = false;
@@ -168,8 +204,34 @@ public class NetPropertyGenerator : IIncrementalGenerator
             propertyLocation,
             predicted,
             hasToleranceProperty,
-            implementsINetSerializable);
+            implementsINetSerializable,
+            perPeerState,
+            isPartial,
+            GetAccessibilityKeyword(propertySymbol.DeclaredAccessibility));
     }
+
+    private static string GetAccessibilityKeyword(Accessibility accessibility) => accessibility switch
+    {
+        Accessibility.Public => "public",
+        Accessibility.Internal => "internal",
+        Accessibility.Protected => "protected",
+        Accessibility.ProtectedOrInternal => "protected internal",
+        Accessibility.ProtectedAndInternal => "private protected",
+        _ => "private",
+    };
+
+    /// <summary>
+    /// True when the generator emits the per-peer partial-property implementation for this
+    /// property (all validity conditions hold; otherwise a NEBULA006-008 diagnostic fired and
+    /// the legacy broadcast hook is emitted so the class still compiles behind the error).
+    /// </summary>
+    private static bool EmitsPerPeerImplementation(PropertyInfo prop) =>
+        prop.IsPerPeer
+        && prop.IsPartial
+        && prop.IsValueType
+        && !prop.ImplementsINetSerializable
+        && !prop.Predicted
+        && !prop.Interpolate;
 
     /// <summary>
     /// Counts the number of [NetProperty] properties in all base classes of the given type.
@@ -492,6 +554,36 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 }
             }
 
+            // Report diagnostics for invalid per-peer property declarations
+            foreach (var prop in propList)
+            {
+                if (!prop!.IsPerPeer || prop.PropertyLocation == null) continue;
+
+                if (!prop.IsValueType || prop.ImplementsINetSerializable)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        PerPeerInvalidTypeDiagnostic,
+                        prop.PropertyLocation,
+                        prop.PropertyName,
+                        prop.PropertyType));
+                }
+                else if (prop.Predicted || prop.Interpolate)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        PerPeerInvalidComboDiagnostic,
+                        prop.PropertyLocation,
+                        prop.PropertyName));
+                }
+                else if (!prop.IsPartial)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        PerPeerNotPartialDiagnostic,
+                        prop.PropertyLocation,
+                        prop.PropertyName,
+                        prop.PropertyType));
+                }
+            }
+
             // Get the base class property count offset - all props in this class have the same value
             var baseOffset = propList.FirstOrDefault()?.BaseClassPropertyCount ?? 0;
 
@@ -507,10 +599,55 @@ public class NetPropertyGenerator : IIncrementalGenerator
             sb.AppendLine($"partial class {className}");
             sb.AppendLine("{");
 
-            // Generate On{PropertyName}Changed methods
+            // Generate On{PropertyName}Changed methods (broadcast properties: Fody-woven setters
+            // call these hooks). Per-peer properties get a generated partial-property
+            // implementation instead - the setter owns dirty routing, with no Fody equality
+            // short-circuit, so writing the same value for a second peer still delivers it.
             for (int i = 0; i < propList.Count; i++)
             {
                 var prop = propList[i]!;
+
+                if (EmitsPerPeerImplementation(prop))
+                {
+                    var readExpr = GetCacheReadExpression(prop, "__cache");
+                    sb.AppendLine($"    private {prop.PropertyType} __netBase_{prop.PropertyName};");
+                    sb.AppendLine($"    private int __netPerPeerIdx_{prop.PropertyName} = -1;");
+                    sb.AppendLine($"    private Nebula.NetworkController __netPerPeerRoot_{prop.PropertyName};");
+                    sb.AppendLine();
+                    sb.AppendLine("    /// <summary>");
+                    sb.AppendLine("    /// Per-peer property: inside Network.ForPeer(peer) accessors target that peer's");
+                    sb.AppendLine("    /// value; outside any scope they target the base value broadcast to peers without");
+                    sb.AppendLine("    /// an override. See NetProperty.PerPeerState.");
+                    sb.AppendLine("    /// </summary>");
+                    sb.AppendLine("    [global::PropertyChanged.DoNotNotify]");
+                    sb.AppendLine($"    {prop.Accessibility} partial {prop.PropertyType} {prop.PropertyName}");
+                    sb.AppendLine("    {");
+                    sb.AppendLine("        get");
+                    sb.AppendLine("        {");
+                    sb.AppendLine("            // Network is null in the editor (node ctors skip controller creation there)");
+                    sb.AppendLine("            if (Network is not null");
+                    sb.AppendLine($"                && Network.TryReadPerPeer(this, \"{prop.PropertyName}\", ref __netPerPeerIdx_{prop.PropertyName}, ref __netPerPeerRoot_{prop.PropertyName}, out var __cache))");
+                    sb.AppendLine("            {");
+                    sb.AppendLine($"                return {readExpr};");
+                    sb.AppendLine("            }");
+                    sb.AppendLine($"            return __netBase_{prop.PropertyName};");
+                    sb.AppendLine("        }");
+                    sb.AppendLine("        set");
+                    sb.AppendLine("        {");
+                    sb.AppendLine("            // Per-peer route first: a write inside ForPeer must not touch the base value");
+                    sb.AppendLine("            if (Network is not null");
+                    sb.AppendLine($"                && Network.TryWritePerPeer(this, \"{prop.PropertyName}\", value, ref __netPerPeerIdx_{prop.PropertyName}, ref __netPerPeerRoot_{prop.PropertyName}))");
+                    sb.AppendLine("            {");
+                    sb.AppendLine("                return;");
+                    sb.AppendLine("            }");
+                    sb.AppendLine($"            __netBase_{prop.PropertyName} = value;");
+                    sb.AppendLine($"            Network?.MarkDirty(this, \"{prop.PropertyName}\", value);");
+                    sb.AppendLine("        }");
+                    sb.AppendLine("    }");
+                    sb.AppendLine();
+                    continue;
+                }
+
                 var markDirtyMethod = prop.IsValueType ? "MarkDirty" : "MarkDirtyRef";
 
                 sb.AppendLine($"    public void On{prop.PropertyName}Changed({prop.FullyQualifiedPropertyType} oldVal, {prop.FullyQualifiedPropertyType} newVal)");
@@ -1106,5 +1243,9 @@ public class NetPropertyGenerator : IIncrementalGenerator
         bool Predicted,
         bool HasToleranceProperty,
         // True for INetSerializable object properties (need their ref seeded into the cache at init)
-        bool ImplementsINetSerializable);
+        bool ImplementsINetSerializable,
+        // Per-peer fields
+        bool IsPerPeer,
+        bool IsPartial,
+        string Accessibility);
 }

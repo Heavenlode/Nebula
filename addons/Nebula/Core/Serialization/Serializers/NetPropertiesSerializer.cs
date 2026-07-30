@@ -357,6 +357,37 @@ namespace Nebula.Serialization.Serializers
                             }
                         }
                     }
+
+                    // Per-peer overrides re-ship on visibility gain the same way. They are
+                    // not in nonDefaultProperties (per-peer writes bypass the shared dirty
+                    // mask), so without this a peer regaining interest keeps a stale value.
+                    if (network.PerPeerPropIndices != null && network.PerPeerValues != null)
+                    {
+                        foreach (var propIndex in network.PerPeerPropIndices)
+                        {
+                            if (propIndex >= _propertyCount) continue;
+                            var overrides = network.PerPeerValues[propIndex];
+                            if (overrides == null || !overrides.ContainsKey(peerId)) continue;
+
+                            long interestMask = _propInterestMask[propIndex];
+                            long interestRequired = _propInterestRequired[propIndex];
+
+                            bool wasVisible = (interestMask & oldInterest) != 0
+                                && (interestRequired & oldInterest) == interestRequired;
+                            bool isNowVisible = (interestMask & newInterest) != 0
+                                && (interestRequired & newInterest) == interestRequired;
+
+                            if (!wasVisible && isNowVisible)
+                            {
+                                ClearBit(syncMask, propIndex);
+                                ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
+                                if (!Unsafe.IsNullRef(ref state) && state.IsInitialized)
+                                {
+                                    ClearBit(state.AckedMask, propIndex);
+                                }
+                            }
+                        }
+                    }
                 };
                 network.InterestChanged += _interestChangedHandler;
             }
@@ -452,23 +483,32 @@ namespace Nebula.Serialization.Serializers
         /// Creates a new PeerPropertyState, either from pool or fresh allocation.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        /// <summary>
+        /// Returns a peer state to "never sent anything, never heard an ack" - the arrays are
+        /// kept (they are peer-size-independent) but every mask, the sent history, and the
+        /// delta baseline are wiped. Shared by pool reuse and <see cref="ResetPeerBaseline"/>.
+        /// </summary>
+        private static void ClearPeerState(ref PeerPropertyState state)
+        {
+            Array.Clear(state.AckedMask, 0, state.AckedMask.Length);
+            Array.Clear(state.PendingDirtyMask, 0, state.PendingDirtyMask.Length);
+            Array.Clear(state.SentHistory, 0, state.SentHistory.Length);
+            for (int i = 0; i < state.SentHistory.Length; i++)
+            {
+                state.SentHistory[i].Tick = -1;
+            }
+            Array.Clear(state.DeltaChain, 0, state.DeltaChain.Length);
+            Array.Clear(state.LossyMask, 0, state.LossyMask.Length);
+            state.LatestAckedTick = -1;
+            state.IsInitialized = true;
+        }
+
         private PeerPropertyState CreateOrGetPooledState()
         {
             if (_statePool.Count > 0)
             {
                 var state = _statePool.Pop();
-                // Clear the arrays for reuse
-                Array.Clear(state.AckedMask, 0, state.AckedMask.Length);
-                Array.Clear(state.PendingDirtyMask, 0, state.PendingDirtyMask.Length);
-                Array.Clear(state.SentHistory, 0, state.SentHistory.Length);
-                for (int i = 0; i < state.SentHistory.Length; i++)
-                {
-                    state.SentHistory[i].Tick = -1;
-                }
-                Array.Clear(state.DeltaChain, 0, state.DeltaChain.Length);
-                Array.Clear(state.LossyMask, 0, state.LossyMask.Length);
-                state.LatestAckedTick = -1;
-                state.IsInitialized = true;
+                ClearPeerState(ref state);
                 return state;
             }
 
@@ -755,7 +795,59 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        private Data Deserialize(NetBuffer buffer, Tick currentTick)
+        // ============================================================
+        // TEST SEAMS (unit tests only - same-assembly access)
+        // ============================================================
+
+        /// <summary>
+        /// Test seam: builds a serializer with hand-supplied property metadata, bypassing the
+        /// Protocol registry (which requires a registered net scene). Only the client-side
+        /// Deserialize paths are exercised on instances built this way; Export/Acknowledge
+        /// depend on Protocol and a live WorldRunner and must not be called.
+        /// </summary>
+        internal NetPropertiesSerializer(NetworkController _network, SerialVariantType[] propTypes)
+        {
+            network = _network;
+            _cachedSceneFilePath = network.RawNode.SceneFilePath;
+
+            _propertyCount = propTypes.Length;
+            _byteCount = (_propertyCount + BitConstants.BitsInByte - 1) / BitConstants.BitsInByte;
+
+            _propTypes = propTypes;
+            _propSupportsDelta = new bool[_propertyCount];
+            _propIsObject = new bool[_propertyCount];
+            _propClassIndex = new int[_propertyCount];
+            for (int i = 0; i < _propertyCount; i++) _propClassIndex[i] = -1;
+            _propIsPerPeer = new bool[_propertyCount];
+            _propInterestMask = new long[_propertyCount];
+            _propInterestRequired = new long[_propertyCount];
+            _propIntWidth = new IntWidth[_propertyCount];
+            _propChunkBudget = new int[_propertyCount];
+
+            _propertiesUpdated = new byte[_byteCount];
+            _actualMask = new byte[_byteCount];
+            _dirtyOnlyMask = new byte[_byteCount];
+            _decodedMask = new byte[_byteCount];
+            _decodedValues = new PropertyCache[_propertyCount];
+            _incomingMask = new byte[_byteCount];
+        }
+
+        /// <summary>Test seam: runs Deserialize and reports whether the payload was applied.</summary>
+        internal bool DeserializeForTests(NetBuffer buffer, Tick currentTick)
+        {
+            Deserialize(buffer, currentTick, out bool discarded);
+            return !discarded;
+        }
+
+        /// <summary>Test seam: whether the applied-state ring holds an entry for this exact tick.</summary>
+        internal bool HasAppliedEntryForTests(Tick tick)
+        {
+            if (_appliedRing == null) return false;
+            ref var entry = ref _appliedRing[tick % SNAPSHOT_RING_SIZE];
+            return entry.Values != null && entry.Tick == tick;
+        }
+
+        private Data Deserialize(NetBuffer buffer, Tick currentTick, out bool discarded)
         {
             int startPos = buffer.ReadPosition;
             int byteCount = _byteCount;
@@ -788,23 +880,40 @@ namespace Nebula.Serialization.Serializers
             if (baselineAge > 0)
             {
                 Tick baselineTick = currentTick - baselineAge;
-                if (_appliedRing != null)
-                {
-                    ref var baseEntry = ref _appliedRing[baselineTick % SNAPSHOT_RING_SIZE];
-                    if (baseEntry.Values != null && baseEntry.Tick == baselineTick)
-                    {
-                        baselineValues = baseEntry.Values;
-                    }
-                }
 
-                if (baselineValues == null)
+                // The age byte comes off the wire unvalidated. A server never writes more
+                // than MAX_DELTA_AGE, so anything larger means a desynced/corrupt stream;
+                // and a negative baselineTick (age exceeding a young world's tick count)
+                // would index the ring with a negative value and throw, aborting the whole
+                // tick import. Both are handled as a discard, same as a missing baseline.
+                if (baselineAge > MAX_DELTA_AGE || baselineTick < 0)
                 {
-                    // Should be unreachable: the server only picks acked send-ticks within
-                    // MAX_DELTA_AGE, and we record an entry for every applied payload.
-                    // Parse the payload to keep the stream aligned, but discard the values.
                     Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
-                        $"[NetPropertiesSerializer.Deserialize] NetId={network.NetId} missing applied-state baseline for tick {baselineTick} (age {baselineAge}). Discarding payload.");
+                        $"[NetPropertiesSerializer.Deserialize] NetId={network.NetId} invalid baseline age {baselineAge} at tick {currentTick}. Discarding payload.");
                     discardPayload = true;
+                }
+                else
+                {
+                    if (_appliedRing != null)
+                    {
+                        ref var baseEntry = ref _appliedRing[baselineTick % SNAPSHOT_RING_SIZE];
+                        if (baseEntry.Values != null && baseEntry.Tick == baselineTick)
+                        {
+                            baselineValues = baseEntry.Values;
+                        }
+                    }
+
+                    if (baselineValues == null)
+                    {
+                        // Reachable when this node was rebuilt client-side (respawn) while the
+                        // server retained a baseline, or when a prior payload was discarded.
+                        // Parse the payload to keep the stream aligned, but discard the values;
+                        // reporting the discard (instead of acking) is what lets the server
+                        // fall back to the last shared baseline or an absolute send.
+                        Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
+                            $"[NetPropertiesSerializer.Deserialize] NetId={network.NetId} missing applied-state baseline for tick {baselineTick} (age {baselineAge}). Discarding payload.");
+                        discardPayload = true;
+                    }
                 }
             }
 
@@ -1008,6 +1117,7 @@ namespace Nebula.Serialization.Serializers
             }
 
             // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[Props.Import] NetId={network.NetId} total={buffer.ReadPosition - startPos} endPos={buffer.ReadPosition}");
+            discarded = discardPayload;
             return new Data(_decodedMask, _decodedValues);
         }
 
@@ -1281,11 +1391,11 @@ namespace Nebula.Serialization.Serializers
             cachedPropertyChanges.Clear();
         }
 
-        public void Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController nodeOut)
+        public bool Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController nodeOut)
         {
             nodeOut = network;
 
-            var data = Deserialize(buffer, currentWorld.CurrentTick);
+            var data = Deserialize(buffer, currentWorld.CurrentTick, out bool discarded);
 
             // Cache IsNodeReady() once before the loop to avoid repeated Godot calls
             bool isReady = network.RawNode.IsNodeReady();
@@ -1307,8 +1417,16 @@ namespace Nebula.Serialization.Serializers
             // old Dictionary happened to yield (insertion order: decode pass 1, then pass 2),
             // so any OnNetworkChange handler that observes a sibling property still sees the
             // same ordering it did before.
+            //
+            // In discard mode the decoded mask only carries object-property bits (primitives
+            // are suppressed at decode; objects still apply - their chunk streams are
+            // self-contained and resend-tolerant), so these calls stay unconditional.
             ApplyDecoded(data, currentWorld.CurrentTick, isReady, objectPass: false);
             ApplyDecoded(data, currentWorld.CurrentTick, isReady, objectPass: true);
+
+            // A discarded payload must not be acked: the applied ring has no entry for this
+            // tick, so an ack would invite the server to delta against it forever.
+            return !discarded;
         }
 
         /// <summary>
@@ -1448,14 +1566,6 @@ namespace Nebula.Serialization.Serializers
             var peerId = NetRunner.Instance.GetPeerId(peer);
             int byteCount = _byteCount;
 
-            // Snapshot AND CLEAR per-peer dirty mask for this peer
-            long perPeerDirty = 0;
-            if (network.PerPeerDirtyMask != null &&
-                network.PerPeerDirtyMask.TryGetValue(peerId, out perPeerDirty))
-            {
-                network.PerPeerDirtyMask[peerId] = 0; // Clear after snapshot
-            }
-
             Array.Clear(_propertiesUpdated, 0, byteCount);
 
             if (!peerInitialPropSync.TryGetValue(peerId, out var initialSync))
@@ -1484,6 +1594,13 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
+            // Snapshot the per-peer dirty mask AFTER the interest early-return, and do NOT
+            // clear it here: bits are cleared at the bottom of Export only for properties
+            // that actually shipped, so interest-filtered (or not-yet-visible) changes stay
+            // armed and retry next tick instead of being lost permanently.
+            long perPeerDirty = 0;
+            network.PerPeerDirtyMask?.TryGetValue(peerId, out perPeerDirty);
+
             // Build dirty mask for PRIMITIVE properties only from processingDirtyMask
             // Object properties (INetSerializable) are handled separately - they self-filter
             // Per-peer properties use per-peer dirty mask instead of global
@@ -1497,7 +1614,12 @@ namespace Nebula.Serialization.Serializers
                 bool isDirty;
                 if (_propIsPerPeer[propIndex])
                 {
-                    isDirty = (perPeerDirty & (1L << propIndex)) != 0;
+                    // A base (unscoped) write broadcasts to exactly the peers WITHOUT an
+                    // override; peers with an override keep their per-peer value.
+                    var overrides = network.PerPeerValues?[propIndex];
+                    isDirty = (perPeerDirty & (1L << propIndex)) != 0
+                        || ((processingDirtyMask & (1L << propIndex)) != 0
+                            && (overrides == null || !overrides.ContainsKey(peerId)));
                 }
                 else
                 {
@@ -1527,6 +1649,27 @@ namespace Nebula.Serialization.Serializers
                 if ((initialSync[byteIndex] & propSlot) == 0)
                 {
                     _propertiesUpdated[byteIndex] |= propSlot;
+                }
+            }
+
+            // Per-peer overrides join initial sync directly: per-peer writes never enter the
+            // shared dirty mask, so nonDefaultProperties can't cover them. Without this a
+            // peer that joins (or respawns) after its override was written receives nothing.
+            if (network.PerPeerPropIndices != null && network.PerPeerValues != null)
+            {
+                foreach (var propIndex in network.PerPeerPropIndices)
+                {
+                    if (propIndex >= _propertyCount || _propIsObject[propIndex]) continue;
+
+                    var overrides = network.PerPeerValues[propIndex];
+                    if (overrides == null || !overrides.ContainsKey(peerId)) continue;
+
+                    var byteIndex = propIndex / BitConstants.BitsInByte;
+                    var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
+                    if ((initialSync[byteIndex] & propSlot) == 0)
+                    {
+                        _propertiesUpdated[byteIndex] |= propSlot;
+                    }
                 }
             }
 
@@ -1782,6 +1925,7 @@ namespace Nebula.Serialization.Serializers
             // properties - object properties (INetSerializable) manage their own per-peer
             // pending/resend state and are acked through their own tick-gated callbacks.
             long primitiveSentMask = 0;
+            long perPeerSentMask = 0;
             for (var byteIdx = 0; byteIdx < byteCount; byteIdx++)
             {
                 var b = actualMask[byteIdx];
@@ -1797,8 +1941,21 @@ namespace Nebula.Serialization.Serializers
                     if (propIdx < 64)
                     {
                         primitiveSentMask |= 1L << propIdx;
+                        if (_propIsPerPeer[propIdx])
+                        {
+                            perPeerSentMask |= 1L << propIdx;
+                        }
                     }
                 }
+            }
+
+            // Clear only the per-peer dirty bits that actually shipped this export.
+            // Bits filtered out (interest, budget) stay armed and retry next tick;
+            // loss recovery from here on is PendingDirtyMask's job.
+            if (perPeerSentMask != 0 && network.PerPeerDirtyMask != null &&
+                network.PerPeerDirtyMask.TryGetValue(peerId, out var remainingPerPeerDirty))
+            {
+                network.PerPeerDirtyMask[peerId] = remainingPerPeerDirty & ~perPeerSentMask;
             }
 
             // Record what was sent at this tick so a future ack can be matched to exactly
@@ -2085,6 +2242,24 @@ namespace Nebula.Serialization.Serializers
         /// Removes all cached data for a specific peer. Call this when a peer disconnects.
         /// Returns the PeerPropertyState to the pool for reuse.
         /// </summary>
+        /// <summary>
+        /// Forget everything ever sent to this peer, because the client is about to rebuild
+        /// this node from scratch (spawn or interest-regain respawn). The fresh client-side
+        /// serializer starts with an empty applied ring, so any delta baseline retained here
+        /// would point at a tick the client can never resolve - the next payload after a
+        /// respawn must be fully absolute, and initial sync must re-ship non-default values.
+        /// </summary>
+        public void ResetPeerBaseline(UUID peerId)
+        {
+            peerInitialPropSync.Remove(peerId);
+
+            ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
+            if (!Unsafe.IsNullRef(ref state) && state.IsInitialized)
+            {
+                ClearPeerState(ref state);
+            }
+        }
+
         public void CleanupPeer(UUID peerId)
         {
             peerInitialPropSync.Remove(peerId);

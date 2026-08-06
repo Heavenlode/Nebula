@@ -34,6 +34,14 @@ public partial class NebulaConfigDialog : AcceptDialog
     // Add/Edit form
     private ConfirmationDialog formDialog;
     private SpinBox clientCountSpin;
+    private SpinBox botCountSpin;
+    private OptionButton botBehaviorPicker;
+    private CheckBox botsHeadlessCheck;
+    /// <summary>
+    /// Behavior type names in <see cref="botBehaviorPicker"/> order, index 0 being "(none)".
+    /// Kept alongside the control because OptionButton only carries the display text.
+    /// </summary>
+    private readonly List<string> botBehaviorNames = new();
     /// <summary>Index being edited, or -1 when the form is adding a new entry.</summary>
     private int editingIndex = -1;
 
@@ -93,7 +101,10 @@ public partial class NebulaConfigDialog : AcceptDialog
         list.Clear();
         foreach (var config in configurations)
         {
-            list.AddItem($"{config.Name}\n    headless server + {config.ClientCount} client instance(s)");
+            string detail = $"    headless server + {config.ClientCount} client instance(s)";
+            if (config.BotCount > 0)
+                detail += $" + {config.BotCount} bot(s) running {BotBehaviorLabel(config.BotBehavior)}";
+            list.AddItem($"{config.Name}\n{detail}");
         }
 
         if (previous >= 0 && previous < configurations.Count)
@@ -154,20 +165,72 @@ public partial class NebulaConfigDialog : AcceptDialog
         EnsureFormDialog();
         editingIndex = index;
 
+        // Rebuilt on every open: the game assembly reloads while the editor is running, so a
+        // behavior added since the dialog was last shown has to appear without an editor restart.
+        RefreshBotBehaviorPicker();
+
         if (index >= 0 && index < configurations.Count)
         {
+            var config = configurations[index];
             formDialog.Title = "Edit Configuration";
-            clientCountSpin.Value = configurations[index].ClientCount;
+            clientCountSpin.Value = config.ClientCount;
+            botCountSpin.Value = config.BotCount;
+            botsHeadlessCheck.ButtonPressed = config.BotsHeadless;
+            SelectBotBehavior(config.BotBehavior);
         }
         else
         {
             formDialog.Title = "Add Configuration";
             clientCountSpin.Value = 1;
+            botCountSpin.Value = 0;
+            botsHeadlessCheck.ButtonPressed = true;
+            botBehaviorPicker.Selected = 0;
         }
 
-        formDialog.PopupCentered(new Vector2I(360, 0));
+        formDialog.PopupCentered(new Vector2I(420, 0));
         clientCountSpin.GrabFocus();
     }
+
+    /// <summary>
+    /// Fills the picker from the BotBehavior subclasses that actually exist, so a configuration
+    /// cannot name one that was never written. A configured behavior that has since been removed
+    /// or renamed is re-added as a "(missing)" entry rather than silently reset to none.
+    /// </summary>
+    private void RefreshBotBehaviorPicker()
+    {
+        botBehaviorPicker.Clear();
+        botBehaviorNames.Clear();
+
+        botBehaviorPicker.AddItem("(none)");
+        botBehaviorNames.Add("");
+
+        foreach (var type in Nebula.Bots.BotRunner.DiscoverBehaviorTypes())
+        {
+            botBehaviorPicker.AddItem(type.Name);
+            botBehaviorNames.Add(type.Name);
+        }
+    }
+
+    private void SelectBotBehavior(string behaviorName)
+    {
+        if (string.IsNullOrEmpty(behaviorName))
+        {
+            botBehaviorPicker.Selected = 0;
+            return;
+        }
+
+        int index = botBehaviorNames.IndexOf(behaviorName);
+        if (index < 0)
+        {
+            botBehaviorPicker.AddItem($"{behaviorName}  (missing)");
+            botBehaviorNames.Add(behaviorName);
+            index = botBehaviorNames.Count - 1;
+        }
+        botBehaviorPicker.Selected = index;
+    }
+
+    private static string BotBehaviorLabel(string behaviorName) =>
+        string.IsNullOrEmpty(behaviorName) ? "no behavior" : behaviorName;
 
     private void EnsureFormDialog()
     {
@@ -197,6 +260,36 @@ public partial class NebulaConfigDialog : AcceptDialog
         };
         grid.AddChild(clientCountSpin);
 
+        grid.AddChild(new Label { Text = "Bot count" });
+        botCountSpin = new SpinBox
+        {
+            MinValue = 0,
+            MaxValue = 64,
+            Value = 0,
+            Rounded = true,
+            CustomMinimumSize = new Vector2(120, 0),
+            TooltipText = "Scripted bot instances launched alongside the clients. Each is a full "
+                + "client process driven by a BotBehavior instead of a keyboard.",
+        };
+        grid.AddChild(botCountSpin);
+
+        grid.AddChild(new Label { Text = "Bot behavior" });
+        botBehaviorPicker = new OptionButton
+        {
+            CustomMinimumSize = new Vector2(220, 0),
+            TooltipText = "The BotBehavior subclass the bots run. Write one in your game project; "
+                + "it is discovered automatically.",
+        };
+        grid.AddChild(botBehaviorPicker);
+
+        grid.AddChild(new Label { Text = "Bots headless" });
+        botsHeadlessCheck = new CheckBox
+        {
+            ButtonPressed = true,
+            TooltipText = "Run bot instances without a window. Turn off to watch a bot directly.",
+        };
+        grid.AddChild(botsHeadlessCheck);
+
         formDialog.Connect(ConfirmationDialog.SignalName.Confirmed, new Callable(this, MethodName.OnFormConfirmed));
         AddChild(formDialog);
     }
@@ -204,11 +297,25 @@ public partial class NebulaConfigDialog : AcceptDialog
     private void OnFormConfirmed()
     {
         int clientCount = (int)clientCountSpin.Value;
+        int botCount = (int)botCountSpin.Value;
+
+        int behaviorIndex = botBehaviorPicker.Selected;
+        string botBehavior = behaviorIndex >= 0 && behaviorIndex < botBehaviorNames.Count
+            ? botBehaviorNames[behaviorIndex]
+            : "";
+        // Bots with no behavior would connect and stand there, which reads as a broken session
+        // rather than a misconfiguration. Treat it as "no bots" instead.
+        if (string.IsNullOrEmpty(botBehavior))
+            botCount = 0;
+
         var edited = new NebulaPlayConfiguration
         {
-            // The client count is the whole configuration, so it is also the name.
-            Name = NebulaPlayConfiguration.DisplayName(clientCount),
+            // The instance counts are the whole configuration, so they are also the name.
+            Name = NebulaPlayConfiguration.DisplayName(clientCount, botCount),
             ClientCount = clientCount,
+            BotCount = botCount,
+            BotBehavior = botBehavior,
+            BotsHeadless = botsHeadlessCheck.ButtonPressed,
         };
 
         if (editingIndex >= 0 && editingIndex < configurations.Count)

@@ -54,7 +54,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
     private static readonly DiagnosticDescriptor PerPeerInvalidTypeDiagnostic = new(
         id: "NEBULA007",
         title: "Per-peer property type not supported",
-        messageFormat: "Property '{0}' has PerPeerState=true but type '{1}' is not supported. Per-peer properties must be primitive value types (int, bool, long, float, enums, Vector*, UUID, NetId, ...) - reference types, string, INetSerializable and NetArray are not supported",
+        messageFormat: "Property '{0}' has PerPeerState=true but type '{1}' is not supported. Per-peer properties must be primitive value types (int, bool, long, float, enums, Vector*, UUID, NetId, ...) or NetArray<T> - other reference types, string and INetSerializable are not supported",
         category: "Nebula",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
@@ -228,10 +228,13 @@ public class NetPropertyGenerator : IIncrementalGenerator
     private static bool EmitsPerPeerImplementation(PropertyInfo prop) =>
         prop.IsPerPeer
         && prop.IsPartial
-        && prop.IsValueType
-        && !prop.ImplementsINetSerializable
         && !prop.Predicted
-        && !prop.Interpolate;
+        && !prop.Interpolate
+        // NetArray is a reference type implementing INetSerializable, but it is the one object
+        // type per-peer state supports: its sync/ack machinery is already keyed by peer, so the
+        // server just hands the peer's forked instance to the existing serializer.
+        && (IsNetArrayType(prop.PropertyType)
+            || (prop.IsValueType && !prop.ImplementsINetSerializable));
 
     /// <summary>
     /// Counts the number of [NetProperty] properties in all base classes of the given type.
@@ -559,7 +562,8 @@ public class NetPropertyGenerator : IIncrementalGenerator
             {
                 if (!prop!.IsPerPeer || prop.PropertyLocation == null) continue;
 
-                if (!prop.IsValueType || prop.ImplementsINetSerializable)
+                // NetArray is the one supported object type - see EmitsPerPeerImplementation.
+                if (!IsNetArrayType(prop.PropertyType) && (!prop.IsValueType || prop.ImplementsINetSerializable))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
                         PerPeerInvalidTypeDiagnostic,
@@ -609,15 +613,27 @@ public class NetPropertyGenerator : IIncrementalGenerator
 
                 if (EmitsPerPeerImplementation(prop))
                 {
-                    var readExpr = GetCacheReadExpression(prop, "__cache");
+                    bool perPeerIsNetArray = IsNetArrayType(prop.PropertyType);
+
                     sb.AppendLine($"    private {prop.PropertyType} __netBase_{prop.PropertyName};");
                     sb.AppendLine($"    private int __netPerPeerIdx_{prop.PropertyName} = -1;");
                     sb.AppendLine($"    private Nebula.NetworkController __netPerPeerRoot_{prop.PropertyName};");
                     sb.AppendLine();
                     sb.AppendLine("    /// <summary>");
-                    sb.AppendLine("    /// Per-peer property: inside Network.ForPeer(peer) accessors target that peer's");
-                    sb.AppendLine("    /// value; outside any scope they target the base value broadcast to peers without");
-                    sb.AppendLine("    /// an override. See NetProperty.PerPeerState.");
+                    if (perPeerIsNetArray)
+                    {
+                        sb.AppendLine("    /// Per-peer array property: inside Network.ForPeer(peer) the getter returns that");
+                        sb.AppendLine("    /// peer's own instance, forking it from the base on first scoped access; outside any");
+                        sb.AppendLine("    /// scope it returns the base instance shared by peers that have not diverged.");
+                        sb.AppendLine("    /// An array is mutated in place, so ANY scoped access forks - including a read.");
+                        sb.AppendLine("    /// See NetProperty.PerPeerState.");
+                    }
+                    else
+                    {
+                        sb.AppendLine("    /// Per-peer property: inside Network.ForPeer(peer) accessors target that peer's");
+                        sb.AppendLine("    /// value; outside any scope they target the base value broadcast to peers without");
+                        sb.AppendLine("    /// an override. See NetProperty.PerPeerState.");
+                    }
                     sb.AppendLine("    /// </summary>");
                     sb.AppendLine("    [global::PropertyChanged.DoNotNotify]");
                     sb.AppendLine($"    {prop.Accessibility} partial {prop.PropertyType} {prop.PropertyName}");
@@ -625,23 +641,46 @@ public class NetPropertyGenerator : IIncrementalGenerator
                     sb.AppendLine("        get");
                     sb.AppendLine("        {");
                     sb.AppendLine("            // Network is null in the editor (node ctors skip controller creation there)");
-                    sb.AppendLine("            if (Network is not null");
-                    sb.AppendLine($"                && Network.TryReadPerPeer(this, \"{prop.PropertyName}\", ref __netPerPeerIdx_{prop.PropertyName}, ref __netPerPeerRoot_{prop.PropertyName}, out var __cache))");
-                    sb.AppendLine("            {");
-                    sb.AppendLine($"                return {readExpr};");
-                    sb.AppendLine("            }");
+                    if (perPeerIsNetArray)
+                    {
+                        sb.AppendLine("            if (Network is not null)");
+                        sb.AppendLine("            {");
+                        sb.AppendLine($"                return Network.TryGetPerPeerArray(this, \"{prop.PropertyName}\", __netBase_{prop.PropertyName}, ref __netPerPeerIdx_{prop.PropertyName}, ref __netPerPeerRoot_{prop.PropertyName});");
+                        sb.AppendLine("            }");
+                    }
+                    else
+                    {
+                        sb.AppendLine("            if (Network is not null");
+                        sb.AppendLine($"                && Network.TryReadPerPeer(this, \"{prop.PropertyName}\", ref __netPerPeerIdx_{prop.PropertyName}, ref __netPerPeerRoot_{prop.PropertyName}, out var __cache))");
+                        sb.AppendLine("            {");
+                        sb.AppendLine($"                return {GetCacheReadExpression(prop, "__cache")};");
+                        sb.AppendLine("            }");
+                    }
                     sb.AppendLine($"            return __netBase_{prop.PropertyName};");
                     sb.AppendLine("        }");
                     sb.AppendLine("        set");
                     sb.AppendLine("        {");
                     sb.AppendLine("            // Per-peer route first: a write inside ForPeer must not touch the base value");
-                    sb.AppendLine("            if (Network is not null");
-                    sb.AppendLine($"                && Network.TryWritePerPeer(this, \"{prop.PropertyName}\", value, ref __netPerPeerIdx_{prop.PropertyName}, ref __netPerPeerRoot_{prop.PropertyName}))");
-                    sb.AppendLine("            {");
-                    sb.AppendLine("                return;");
-                    sb.AppendLine("            }");
-                    sb.AppendLine($"            __netBase_{prop.PropertyName} = value;");
-                    sb.AppendLine($"            Network?.MarkDirty(this, \"{prop.PropertyName}\", value);");
+                    if (perPeerIsNetArray)
+                    {
+                        sb.AppendLine("            if (Network is not null");
+                        sb.AppendLine($"                && Network.TryWritePerPeerRef(this, \"{prop.PropertyName}\", value, ref __netPerPeerIdx_{prop.PropertyName}, ref __netPerPeerRoot_{prop.PropertyName}))");
+                        sb.AppendLine("            {");
+                        sb.AppendLine("                return;");
+                        sb.AppendLine("            }");
+                        sb.AppendLine($"            __netBase_{prop.PropertyName} = value;");
+                        sb.AppendLine($"            Network?.MarkDirtyRef(this, \"{prop.PropertyName}\", value);");
+                    }
+                    else
+                    {
+                        sb.AppendLine("            if (Network is not null");
+                        sb.AppendLine($"                && Network.TryWritePerPeer(this, \"{prop.PropertyName}\", value, ref __netPerPeerIdx_{prop.PropertyName}, ref __netPerPeerRoot_{prop.PropertyName}))");
+                        sb.AppendLine("            {");
+                        sb.AppendLine("                return;");
+                        sb.AppendLine("            }");
+                        sb.AppendLine($"            __netBase_{prop.PropertyName} = value;");
+                        sb.AppendLine($"            Network?.MarkDirty(this, \"{prop.PropertyName}\", value);");
+                    }
                     sb.AppendLine("        }");
                     sb.AppendLine("    }");
                     sb.AppendLine();

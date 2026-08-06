@@ -1846,7 +1846,9 @@ namespace Nebula.Serialization.Serializers
                 var serializer = Protocol.GetSerializer(classIndex);
                 if (serializer == null) continue;
 
-                ref var cache = ref network.CachedProperties[propIndex];
+                // Per-peer array properties serialize this peer's forked instance; everything else
+                // (and any peer that has not diverged) serializes the shared base.
+                ref var cache = ref ResolveObjectCache(propIndex, peerId);
 
                 // Remember position in case we need to rewind
                 int startPos = buffer.WritePosition;
@@ -2194,6 +2196,29 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
+        /// <summary>
+        /// Resolves the cache slot an object property should serialize for one peer. Per-peer array
+        /// properties (NetProperty.PerPeerState) keep a forked instance per diverged peer in
+        /// PerPeerValues; every other object property, and any peer that has not diverged, uses the
+        /// shared base in CachedProperties. Returns by ref and never allocates.
+        /// </summary>
+        private ref PropertyCache ResolveObjectCache(int propIndex, UUID peerId)
+        {
+            if (_propIsPerPeer[propIndex] && network.PerPeerValues != null)
+            {
+                var peerValues = network.PerPeerValues[propIndex];
+                if (peerValues != null)
+                {
+                    ref var perPeer = ref CollectionsMarshal.GetValueRefOrNullRef(peerValues, peerId);
+                    if (!Unsafe.IsNullRef(ref perPeer) && perPeer.RefValue != null)
+                    {
+                        return ref perPeer;
+                    }
+                }
+            }
+            return ref network.CachedProperties[propIndex];
+        }
+
         public void Cleanup()
         {
             // NOTE: This is called every tick after ExportState(), NOT when the object is destroyed.
@@ -2210,6 +2235,20 @@ namespace Nebula.Serialization.Serializers
                 if (network.CachedProperties[i].RefValue is INetExportAware exportAware)
                 {
                     exportAware.OnExportComplete();
+                }
+
+                // Forked per-peer instances carry their own global dirty set and are invisible to
+                // the base slot above. Skipping them would leave a fork's _dirtyMask set forever,
+                // so it would re-merge the same bits into its pending queue every single tick.
+                if (!_propIsPerPeer[i] || network.PerPeerValues == null) continue;
+                var peerValues = network.PerPeerValues[i];
+                if (peerValues == null) continue;
+                foreach (var entry in peerValues)
+                {
+                    if (entry.Value.RefValue is INetExportAware forkExportAware)
+                    {
+                        forkExportAware.OnExportComplete();
+                    }
                 }
             }
         }
@@ -2258,7 +2297,9 @@ namespace Nebula.Serialization.Serializers
                 var onDisconnected = Protocol.GetOnPeerDisconnected(classIndex);
                 if (onDisconnected == null) continue;
 
-                ref var cache = ref network.CachedProperties[i];
+                // Route to the peer's forked instance when it has one - the base array holds no
+                // state for a diverged peer (ForkForPeer moved it across).
+                ref var cache = ref ResolveObjectCache(i, peerId);
                 if (cache.RefValue != null)
                 {
                     onDisconnected(cache.RefValue, peerId);
@@ -2281,7 +2322,10 @@ namespace Nebula.Serialization.Serializers
                 var onAck = Protocol.GetOnPeerAcknowledge(classIndex);
                 if (onAck == null) continue;
 
-                ref var cache = ref network.CachedProperties[i];
+                // Must resolve per peer: an ack delivered to the base array while this peer is
+                // served by a fork would never clear the fork's pending mask, so it would resend
+                // the same delta forever.
+                ref var cache = ref ResolveObjectCache(i, peerId);
                 if (cache.RefValue != null)
                 {
                     onAck(cache.RefValue, peerId, latestAck);

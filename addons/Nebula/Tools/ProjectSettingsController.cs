@@ -192,6 +192,23 @@ public partial class ProjectSettingsController : Node
             {"type", (int)Variant.Type.Bool},
         });
 
+        // ── Threading ────────────────────────────────────────────────────
+        // Give every server world's SubViewport its own ProcessThreadGroup, so worlds run their
+        // ticks concurrently instead of being walked one after another on the main thread.
+        //
+        // Note this parallelizes _process/_physics_process callbacks only. It does NOT parallelize
+        // physics simulation: PhysicsServer3D steps every active space sequentially, so per-world
+        // World3Ds still simulate serially either way. The gain is ServerProcessTick (dominated by
+        // state serialization) and gameplay scripts.
+        //
+        // Off by default. Everything it depends on is written to be correct in both modes, so this
+        // changes timing rather than behavior -- but it does move all gameplay code in a world onto
+        // a worker thread, so anything reaching across worlds or into a mutable autoload needs to
+        // have been audited first. Read once at startup.
+        Register("Nebula/config/threading/per_world_thread_group", false, new(){
+            {"type", (int)Variant.Type.Bool},
+        });
+
         // ── Editor ───────────────────────────────────────────────────────
         // Editor: master switch for the Nebula editor tooling (main-screen tab,
         // play target button, run-bar hiding, headless run-instances config).

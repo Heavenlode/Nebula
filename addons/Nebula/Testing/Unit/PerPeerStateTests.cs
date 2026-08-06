@@ -267,4 +267,192 @@ public class PerPeerStateTests
         nodeA.Free();
         nodeB.Free();
     }
+
+    // ----------------------------------------------------------------------------------------
+    // Per-peer NetArray properties. Unlike a primitive, an array is mutated in place, so the
+    // generated getter routes through TryGetPerPeerArray and forks on any scoped access. All of
+    // this is server-side: the client holds one plain NetArray written by the normal import path.
+    // ----------------------------------------------------------------------------------------
+
+    /// <summary>Creates a node whose controller has one per-peer object (NetArray) prop at index 0.</summary>
+    private static NetNode CreateNodeWithPerPeerArrayStorage()
+    {
+        var node = new NetNode();
+        node.Network.InitializePerPeerStorageForTests(
+            [true],
+            [SerialVariantType.Object]);
+        return node;
+    }
+
+    // A1. Two peers fork from the same base and diverge; the base is untouched by either.
+    [NebulaUnitTest]
+    public void PerPeerArray_TwoPeersDiverge()
+    {
+        var node = CreateNodeWithPerPeerArrayStorage();
+        var net = node.Network;
+        var a = UUID.NewUUID();
+        var b = UUID.NewUUID();
+        var baseArray = new NetArray<byte>(64, 8);
+        for (int i = 0; i < 8; i++) baseArray[i] = 1;
+
+        NetworkController.ForcePerPeerServerContextForTests = true;
+        try
+        {
+            int idx = 0;
+            NetworkController root = null;
+
+            using (net.ForPeer(a))
+                net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root)[2] = 111;
+            using (net.ForPeer(b))
+                net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root)[2] = 222;
+
+            using (net.ForPeer(a))
+                Assert.Equal((byte)111, net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root)[2]);
+            using (net.ForPeer(b))
+                Assert.Equal((byte)222, net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root)[2]);
+
+            Assert.Equal((byte)1, baseArray[2]);
+            Assert.True(net.PerPeerValues[0].ContainsKey(a));
+            Assert.True(net.PerPeerValues[0].ContainsKey(b));
+        }
+        finally
+        {
+            NetworkController.ForcePerPeerServerContextForTests = false;
+        }
+        node.Free();
+    }
+
+    // A2. With no scope open the getter hands back the base instance itself and allocates nothing -
+    //     this is also the client-side path, where per-peer state must never engage.
+    [NebulaUnitTest]
+    public void PerPeerArray_NoScope_ReturnsBaseAndDoesNotFork()
+    {
+        var node = CreateNodeWithPerPeerArrayStorage();
+        var net = node.Network;
+        var baseArray = new NetArray<byte>(64, 8);
+
+        NetworkController.ForcePerPeerServerContextForTests = true;
+        try
+        {
+            int idx = 0;
+            NetworkController root = null;
+
+            Assert.Same(baseArray, net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root));
+            Assert.Empty(net.PerPeerValues[0]);
+
+            // Storage absent (plain node) -> base even inside a scope
+            var bare = new NetNode();
+            int bareIdx = 0;
+            NetworkController bareRoot = null;
+            using (net.ForPeer(UUID.NewUUID()))
+                Assert.Same(baseArray, bare.Network.TryGetPerPeerArray(bare, "Arr", baseArray, ref bareIdx, ref bareRoot));
+            bare.Free();
+        }
+        finally
+        {
+            NetworkController.ForcePerPeerServerContextForTests = false;
+        }
+        node.Free();
+    }
+
+    // A3. Repeated scoped access returns the SAME forked instance - forking happens once per peer.
+    [NebulaUnitTest]
+    public void PerPeerArray_ForksOncePerPeer()
+    {
+        var node = CreateNodeWithPerPeerArrayStorage();
+        var net = node.Network;
+        var peer = UUID.NewUUID();
+        var baseArray = new NetArray<byte>(64, 8);
+
+        NetworkController.ForcePerPeerServerContextForTests = true;
+        try
+        {
+            int idx = 0;
+            NetworkController root = null;
+
+            NetArray<byte> first, second;
+            using (net.ForPeer(peer))
+                first = net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root);
+            using (net.ForPeer(peer))
+                second = net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root);
+
+            Assert.NotSame(baseArray, first);
+            Assert.Same(first, second);
+        }
+        finally
+        {
+            NetworkController.ForcePerPeerServerContextForTests = false;
+        }
+        node.Free();
+    }
+
+    // A4. Disconnect cleanup drops exactly the departing peer's forked instance.
+    [NebulaUnitTest]
+    public void PerPeerArray_CleanupPeerState_EvictsOnlyThatPeer()
+    {
+        var node = CreateNodeWithPerPeerArrayStorage();
+        var net = node.Network;
+        var a = UUID.NewUUID();
+        var b = UUID.NewUUID();
+        var baseArray = new NetArray<byte>(64, 8);
+
+        NetworkController.ForcePerPeerServerContextForTests = true;
+        try
+        {
+            int idx = 0;
+            NetworkController root = null;
+            using (net.ForPeer(a))
+                net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root)[0] = 7;
+            using (net.ForPeer(b))
+                net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root)[0] = 8;
+
+            net.CleanupPeerState(a);
+
+            Assert.False(net.PerPeerValues[0].ContainsKey(a));
+            Assert.True(net.PerPeerValues[0].ContainsKey(b));
+            Assert.Equal((byte)8, ((NetArray<byte>)net.PerPeerValues[0][b].RefValue)[0]);
+        }
+        finally
+        {
+            NetworkController.ForcePerPeerServerContextForTests = false;
+        }
+        node.Free();
+    }
+
+    // A5. Wholesale assignment inside a scope replaces only that peer's instance (the
+    //     TryWritePerPeerRef path - TryWritePerPeer<T> is constrained to value types).
+    [NebulaUnitTest]
+    public void PerPeerArray_WholesaleAssignment_TargetsOnlyThatPeer()
+    {
+        var node = CreateNodeWithPerPeerArrayStorage();
+        var net = node.Network;
+        var a = UUID.NewUUID();
+        var b = UUID.NewUUID();
+        var baseArray = new NetArray<byte>(64, 8);
+        var replacement = new NetArray<byte>(64, 8);
+        replacement[0] = 42;
+
+        NetworkController.ForcePerPeerServerContextForTests = true;
+        try
+        {
+            int idx = 0;
+            NetworkController root = null;
+
+            using (net.ForPeer(a))
+                Assert.True(net.TryWritePerPeerRef(node, "Arr", replacement, ref idx, ref root));
+
+            using (net.ForPeer(a))
+                Assert.Same(replacement, net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root));
+            using (net.ForPeer(b))
+                Assert.NotSame(replacement, net.TryGetPerPeerArray(node, "Arr", baseArray, ref idx, ref root));
+
+            // No scope open -> refused, base assignment is the caller's job
+            Assert.False(net.TryWritePerPeerRef(node, "Arr", replacement, ref idx, ref root));
+        }
+        finally
+        {
+            NetworkController.ForcePerPeerServerContextForTests = false;
+        }
+        node.Free();
+    }
 }

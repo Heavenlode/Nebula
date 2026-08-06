@@ -15,7 +15,7 @@ namespace Nebula.Serialization
         public const int DefaultCapacity = 1536;
 
         private byte[] _buffer;
-        private readonly int _capacity;
+        private int _capacity; // Not readonly: Attach() re-points wrapper instances at new data.
         private bool _disposed;
         private bool _isPooled;
 
@@ -122,6 +122,29 @@ namespace Nebula.Serialization
             _capacity = data.Length;
             _isPooled = false;
             WritePosition = data.Length;
+            ReadPosition = 0;
+        }
+
+        /// <summary>
+        /// Re-points this instance at existing data for reading, without allocating. The inbound
+        /// packet paths parse one packet after another on a single thread; a long-lived wrapper
+        /// re-attached per packet replaces a per-packet <c>new NetBuffer(byte[])</c>.
+        ///
+        /// Only legal on wrapper instances (created via <see cref="NetBuffer(byte[])"/>): a pooled
+        /// instance would leak its rented storage on the first Attach.
+        /// </summary>
+        /// <param name="data">The array to read from. May be longer than <paramref name="length"/>
+        /// (rented pool arrays are oversized); bytes beyond it are never read.</param>
+        /// <param name="length">The number of valid bytes in <paramref name="data"/>.</param>
+        public void Attach(byte[] data, int length)
+        {
+            if (_isPooled)
+            {
+                throw new InvalidOperationException("Attach is only valid on wrapper NetBuffers (created from an existing array).");
+            }
+            _buffer = data;
+            _capacity = length;
+            WritePosition = length;
             ReadPosition = 0;
         }
 

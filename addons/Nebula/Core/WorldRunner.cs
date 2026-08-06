@@ -149,6 +149,34 @@ namespace Nebula
         /// </summary>
         public NetworkController RootScene;
 
+        /// <summary>How far along a world is in coming up. See <see cref="Lifecycle"/>.</summary>
+        public enum WorldLifecycle
+        {
+            /// <summary>Registered and reserving its id, but still being built. Not tickable, not joinable.</summary>
+            Generating,
+
+            /// <summary>Fully built. The only state in which peers may be admitted.</summary>
+            Live,
+
+            /// <summary>Creation threw. The world is being torn down; nothing may reference it.</summary>
+            Failed,
+        }
+
+        /// <summary>
+        /// Where this world is in its creation. A world is registered in
+        /// <see cref="NetRunner.Worlds"/> the instant creation starts -- so that concurrent callers
+        /// resolve to one world rather than racing to build duplicates -- which means "registered"
+        /// no longer implies "ready". This is what distinguishes them.
+        ///
+        /// Ticking is gated separately, by the world SubViewport's ProcessMode, because a
+        /// Lifecycle check inside _PhysicsProcess would still let every gameplay node in a
+        /// half-built world run. This flag is what gates <em>peers</em>: see JoinPeer,
+        /// NetRunner.PeerJoinWorld and NetRunner.MigratePeerToWorld.
+        ///
+        /// Defaults to Generating; creation flips it to Live as its final step.
+        /// </summary>
+        public WorldLifecycle Lifecycle { get; internal set; } = WorldLifecycle.Generating;
+
         internal long networkIdCounter = 1; // Start at 1 because NetId=0 is considered invalid
         private Dictionary<long, NetId> networkIds = [];
         internal Dictionary<NetId, NetworkController> NetScenes = [];
@@ -226,10 +254,6 @@ namespace Nebula
         /// rather than per-world.
         /// </summary>
         public int DebugPort => Hub?.BoundPort ?? 0;
-
-        // Diagnostic counter for RPC calls - remove after debugging
-        public static long TotalRpcCallsProcessed = 0;
-        public static long RpcCallsThisTick = 0;
 
         private List<TickLog> tickLogBuffer = [];
         public void Log(string message, Debugger.DebugLevel level = Debugger.DebugLevel.INFO)
@@ -315,6 +339,7 @@ namespace Nebula
             if (NetRunner.Instance.IsServer)
             {
                 NetRunner.Instance.OnPeerDisconnected -= _onPeerDisconnectedHandler;
+                ReleaseInboundPackets();
             }
         }
 
@@ -732,6 +757,22 @@ namespace Nebula
         }
 
         /// <summary>
+        /// The nodes this client owns. Backed by the same cache prediction uses, and refreshed on
+        /// read when stale — callers outside the prediction loop (a <see cref="Bots.BotBehavior"/>,
+        /// for one) can run before it has rebuilt for this tick and would otherwise see a list that
+        /// is an ownership change behind.
+        /// </summary>
+        public IReadOnlyList<NetworkController> OwnedNodes
+        {
+            get
+            {
+                if (_ownedEntitiesDirty)
+                    RebuildOwnedEntitiesCache();
+                return _ownedEntities;
+            }
+        }
+
+        /// <summary>
         /// Runs one prediction tick for all owned entities.
         /// Called from the independent client tick loop in _PhysicsProcess.
         /// </summary>
@@ -1079,9 +1120,44 @@ namespace Nebula
         }
 
         /// <summary>
+        /// Per-world load instrumentation. Null unless the process was launched with --metrics;
+        /// created on this world's first server tick.
+        /// </summary>
+        private Diagnostics.ServerMetrics _metrics;
+
+        /// <summary>
+        /// Peer count and round-trip spread, for the metrics line. Only called on the tick that
+        /// actually emits, so the scan is once per interval rather than once per tick.
+        /// </summary>
+        private void CollectPeerRtt(out int peers, out double rttMean, out uint rttMax)
+        {
+            peers = 0;
+            rttMax = 0;
+            ulong rttSum = 0;
+            foreach (var peerState in PeerStates.Values)
+            {
+                if (peerState.Status == PeerSyncStatus.DISCONNECTED)
+                    continue;
+                peers++;
+                uint rtt = peerState.Peer.IsSet ? peerState.Peer.RoundTripTime : 0;
+                rttSum += rtt;
+                if (rtt > rttMax) rttMax = rtt;
+            }
+            rttMean = peers > 0 ? rttSum / (double)peers : 0;
+        }
+
+        /// <summary>
         /// Invoked after each network tick completes.
         /// </summary>
         public event Action<Tick> OnAfterNetworkTick;
+
+        /// <summary>
+        /// Client counterpart to <see cref="OnAfterNetworkTick"/>: raised once per network tick,
+        /// immediately before the prediction pass. That placement is the point of it — it is where
+        /// a human's input has just been sampled, so a scripted client acting here produces input
+        /// indistinguishable from a played one.
+        /// </summary>
+        public event Action<Tick> OnClientNetworkTick;
 
         /// <summary>
         /// Invoked when a player joins the world (sync status becomes IN_WORLD).
@@ -1113,7 +1189,7 @@ namespace Nebula
 
             if (peer.State == ENet.PeerState.Connected)
             {
-                peer.Disconnect(0);
+                NetRunner.DisconnectPeer(peer, 0);
             }
 
             // forgetIdentity: true — the peer is leaving for good, so also drop its global
@@ -1153,6 +1229,8 @@ namespace Nebula
         /// </summary>
         private void TeardownPeer(NetPeer peer, UUID peerId, bool forgetIdentity, bool despawnOwnedNodes)
         {
+            // Deliberately NOT asserted main-thread: the ack-timeout sweep calls this from inside
+            // ServerProcessTick. The shared-registry mutations at the end are deferred instead.
             var peerState = PeerStates[peerId];
             foreach (var netController in peerState.OwnedNodes)
             {
@@ -1215,13 +1293,27 @@ namespace Nebula
             _peerPendingAcks.Remove(peerId); // Fix #5: Clean up pending acks tracking
             _peerNetBufferPool.Remove(peerId); // Clean up pooled export buffer
             _peerListDirty = true; // Fix #1: Mark peer list as dirty
-            NetRunner.Instance.WorldPeerMap.Remove(peerId);
-            NetRunner.Instance.PeerWorldMap.Remove(peerId);
-            if (forgetIdentity)
+
+            // Everything above is this world's own state, so it belongs on whichever thread is
+            // running this world. NetRunner's registries are not: the ENet pump reads them every
+            // frame on the main thread, and the ack-timeout sweep reaches here from inside
+            // ServerProcessTick. RunOnMainThread executes inline when already on the main thread,
+            // so with per-world thread groups off this is exactly the previous behavior.
+            //
+            // Deferring by a frame is harmless: a stale PeerWorldMap entry only means the pump
+            // routes one more frame of this peer's packets into this world, where they queue and
+            // then find no PeerState.
+            var nativePeerId = peer.ID;
+            NetRunner.Instance.RunOnMainThread(() =>
             {
-                NetRunner.Instance.Peers.Remove(peerId);
-                NetRunner.Instance.PeerIds.Remove(peer.ID);
-            }
+                NetRunner.Instance.PeerWorldMap.Remove(peerId);
+                if (forgetIdentity)
+                {
+                    NetRunner.Instance.Peers.Remove(peerId);
+                    NetRunner.Instance.PeerIds.Remove(nativePeerId);
+                }
+            });
+
             OnPlayerCleanup?.Invoke(WorldId, peerId);
         }
 
@@ -1258,6 +1350,7 @@ namespace Nebula
                 if (ticksSinceLastAck > ackTimeoutTicks)
                 {
                     Log(Debugger.DebugLevel.WARN, $"[ACK TIMEOUT] Peer {peerId} has not acknowledged for {ticksSinceLastAck} ticks ({ticksSinceLastAck / (float)NetRunner.TPS:F1}s). Force disconnecting.");
+                    _metrics?.RecordAckTimeout();
                     _peersToDisconnect.Add(peerState.Peer);
                 }
             }
@@ -1453,8 +1546,10 @@ namespace Nebula
                         if (rawSize > NetRunner.MTU)
                         {
                             Log(Debugger.DebugLevel.ERROR, $"[MTU EXCEEDED] Peer {peer.ID} tick {CurrentTick}: Uncompressed size {rawSize} exceeds MTU {NetRunner.MTU} (on wire {buffer.Length}) - PACKET MAY BE CORRUPTED!");
+                            _metrics?.RecordMtuExceeded();
                         }
 
+                        _metrics?.RecordPacket(buffer.Length);
                         NetRunner.SendUnreliableSequenced(peer, (byte)NetRunner.ENetChannelId.Tick, buffer);
 
                         // Remember what we sent; it becomes a delta baseline once this peer acks it.
@@ -1678,6 +1773,174 @@ namespace Nebula
             }
         }
 
+        /// <summary>An inbound packet routed to this world, awaiting the world's next physics frame.</summary>
+        private readonly struct InboundPacket
+        {
+            public readonly NetPeer Peer;
+            public readonly byte Channel;
+            /// <summary>Rented from ArrayPool&lt;byte&gt;.Shared and OWNED by this queue from the
+            /// moment of enqueue; returned to the pool on drop, after apply, or at teardown.</summary>
+            public readonly byte[] Payload;
+            /// <summary>Valid byte count -- rented arrays are oversized, only [0, Length) is packet data.</summary>
+            public readonly int Length;
+
+            public InboundPacket(NetPeer peer, byte channel, byte[] payload, int length)
+            {
+                Peer = peer;
+                Channel = channel;
+                Payload = payload;
+                Length = length;
+            }
+        }
+
+        /// <summary>
+        /// Sized for the worst realistic frame: every peer's input plus an ack, with headroom.
+        /// Overflow drops rather than grows -- an unbounded queue turns a burst into a memory
+        /// problem, and this mirrors the pump's existing posture that one misbehaving sender must
+        /// never stall everyone.
+        /// </summary>
+        private const int InboundQueueCapacity = 1024;
+
+        private readonly InboundPacket[] _inboundPackets = new InboundPacket[InboundQueueCapacity];
+        private int _inboundHead;
+        private int _inboundTail;
+        private int _inboundCount;
+        private readonly object _inboundLock = new();
+        private bool _loggedInboundOverflow;
+        private bool _loggedTickThread;
+
+        /// <summary>
+        /// Hands a packet to this world from the ENet pump.
+        ///
+        /// The pump runs on the main thread while this world may be mid-tick on its own thread, so
+        /// packets are queued here instead of being applied inline. Parsing deliberately happens at
+        /// drain time, on the world's thread, so the pump stays a pure router.
+        ///
+        /// Fully allocation-free: <paramref name="payload"/> is RENTED from
+        /// ArrayPool&lt;byte&gt;.Shared by the pump, and this call transfers ownership -- the queue
+        /// returns it to the pool on drop, after apply, or at world teardown. Callers must not
+        /// touch the array after this returns.
+        /// </summary>
+        internal void EnqueueInboundPacket(NetPeer peer, byte channel, byte[] payload, int length)
+        {
+            lock (_inboundLock)
+            {
+                if (_inboundCount == InboundQueueCapacity)
+                {
+                    if (!_loggedInboundOverflow)
+                    {
+                        _loggedInboundOverflow = true;
+                        Log(Debugger.DebugLevel.WARN,
+                            $"Inbound packet queue for world {WorldId} overflowed at {InboundQueueCapacity}; dropping packets. Logged once.");
+                    }
+                    // Dropped, so ownership ends here: the rented payload goes back to the pool.
+                    System.Buffers.ArrayPool<byte>.Shared.Return(payload);
+                    return;
+                }
+
+                _inboundPackets[_inboundTail] = new InboundPacket(peer, channel, payload, length);
+                _inboundTail = (_inboundTail + 1) % InboundQueueCapacity;
+                _inboundCount++;
+            }
+        }
+
+        /// <summary>
+        /// Applies everything queued by <see cref="EnqueueInboundPacket"/>, in arrival order.
+        ///
+        /// Bounded to the count present on entry: the pump can enqueue concurrently, and an
+        /// unbounded loop would let a busy frame of inbound traffic hold this world's thread
+        /// indefinitely.
+        /// </summary>
+        private void DrainInboundPackets()
+        {
+            int pending;
+            lock (_inboundLock)
+            {
+                pending = _inboundCount;
+            }
+
+            while (pending-- > 0)
+            {
+                InboundPacket packet;
+                lock (_inboundLock)
+                {
+                    if (_inboundCount == 0) return;
+                    packet = _inboundPackets[_inboundHead];
+                    // Release the payload reference so a quiet world doesn't pin up to
+                    // InboundQueueCapacity packets until the slot is reused.
+                    _inboundPackets[_inboundHead] = default;
+                    _inboundHead = (_inboundHead + 1) % InboundQueueCapacity;
+                    _inboundCount--;
+                }
+
+                ApplyInboundPacket(packet);
+
+                // Every consumer copies what it keeps (NetReader.ReadBytes materializes copies;
+                // acks are values), so the rented payload can go straight back to the pool.
+                System.Buffers.ArrayPool<byte>.Shared.Return(packet.Payload);
+            }
+        }
+
+        /// <summary>
+        /// Reusable wrapper for parsing queued payloads in place. Re-pointed at each packet via
+        /// <see cref="NetBuffer.Attach"/> -- one long-lived object instead of a NetBuffer
+        /// allocation per packet. Only ever touched by this world's drain (single-threaded).
+        /// </summary>
+        private readonly NetBuffer _inboundParseBuffer = new(System.Array.Empty<byte>());
+
+        private void ApplyInboundPacket(in InboundPacket packet)
+        {
+            // Per-packet catch, matching the pump's original contract: a malformed packet must never
+            // abort the drain and take out every other peer's traffic this frame.
+            try
+            {
+                _inboundParseBuffer.Attach(packet.Payload, packet.Length);
+                switch ((NetRunner.ENetChannelId)packet.Channel)
+                {
+                    case NetRunner.ENetChannelId.Tick:
+                        if (packet.Length == 0) break;
+                        PeerAcknowledge(packet.Peer, NetReader.ReadInt32(_inboundParseBuffer));
+                        break;
+
+                    case NetRunner.ENetChannelId.Input:
+                        ReceiveInput(packet.Peer, _inboundParseBuffer);
+                        break;
+
+                    case NetRunner.ENetChannelId.Function:
+                        ReceiveNetFunction(packet.Peer, _inboundParseBuffer);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(Debugger.DebugLevel.ERROR,
+                    $"[Nebula][MalformedPacket] Failed to parse packet on channel {packet.Channel} from peer {packet.Peer.ID}: {ex.Message}");
+                NetRunner.DisconnectPeer(packet.Peer, NetRunner.MalformedPacketDisconnectCode);
+            }
+        }
+
+        /// <summary>
+        /// Returns any still-queued rented payloads to the pool. Without this, packets that arrived
+        /// after this world's final drain would leak their pool arrays when the world is freed.
+        /// </summary>
+        private void ReleaseInboundPackets()
+        {
+            lock (_inboundLock)
+            {
+                while (_inboundCount > 0)
+                {
+                    var packet = _inboundPackets[_inboundHead];
+                    _inboundPackets[_inboundHead] = default;
+                    _inboundHead = (_inboundHead + 1) % InboundQueueCapacity;
+                    _inboundCount--;
+                    if (packet.Payload != null)
+                    {
+                        System.Buffers.ArrayPool<byte>.Shared.Return(packet.Payload);
+                    }
+                }
+            }
+        }
+
         public override void _PhysicsProcess(double delta)
         {
             base._PhysicsProcess(delta);
@@ -1686,6 +1949,24 @@ namespace Nebula
 
             if (NetRunner.Instance.IsServer)
             {
+                if (!_loggedTickThread)
+                {
+                    // One line per world, on its first server frame, naming the thread it ticks on.
+                    // Whether per-world thread groups actually took effect is otherwise invisible
+                    // until something goes wrong, and "did the flag do anything?" is the first
+                    // question worth being able to answer from a log.
+                    _loggedTickThread = true;
+                    Log(Debugger.DebugLevel.INFO,
+                        $"World {WorldId} ticking on thread {System.Environment.CurrentManagedThreadId}"
+                        + $" ({(NebulaThread.IsMain ? "main" : "worker")}).");
+                }
+
+                // Drained every physics frame, deliberately ahead of the network-tick gate below.
+                // The ENet pump used to apply acks and inputs inline as it read them, so they landed
+                // on the frame they arrived; draining only on tick frames would add up to
+                // PhysicsTicksPerNetworkTick-1 frames of latency to every one of them.
+                DrainInboundPackets();
+
                 _frameCounter += 1;
                 if (_frameCounter < NetRunner.PhysicsTicksPerNetworkTick)
                     return;
@@ -1702,6 +1983,17 @@ namespace Nebula
                 if (elapsedMs > 15)
                 {
                     Log(Debugger.DebugLevel.WARN, $"ServerProcessTick took {elapsedMs:F2} ms");
+                }
+
+                if (Diagnostics.ServerMetrics.Enabled)
+                {
+                    _metrics ??= new Diagnostics.ServerMetrics();
+                    _metrics.RecordTick(elapsedMs);
+                    if (_metrics.IsDue(out double metricsWindow))
+                    {
+                        CollectPeerRtt(out int metricsPeers, out double rttMean, out uint rttMax);
+                        _metrics.Emit(WorldId, CurrentTick, metricsPeers, rttMean, rttMax, metricsWindow);
+                    }
                 }
 #if DEBUG
                 // stopwatch.Stop();
@@ -1723,6 +2015,10 @@ namespace Nebula
                     {
                         _clientFrameCounter = 0;
                         _eligibleFrameIndex++;
+
+                        // Ahead of prediction, so anything a subscriber does to the input state is
+                        // picked up by this tick rather than the next one.
+                        OnClientNetworkTick?.Invoke(CurrentTick);
 
                         // Adaptive lead slew: steer the predicted timeline toward an
                         // RTT-derived lead instead of free-running (see the slew block
@@ -2236,6 +2532,10 @@ namespace Nebula
         {
             if (NetRunner.Instance.IsClient) return null;
 
+            // Live-tree AddChild plus NetId allocation plus a pass over NetRunner.Instance.Peers --
+            // none of which is safe off the main thread.
+            NebulaThread.AssertMain(nameof(Spawn));
+
             if (!node.Network.IsNetScene())
             {
                 Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Only Net Scenes can be spawned (i.e. a scene where the root node is an NetNode). Attempting to spawn node that isn't a Net Scene: {node.Network.RawNode.Name} on {parent.RawNode.Name}/{netNodePath}");
@@ -2312,6 +2612,16 @@ namespace Nebula
 
         internal void JoinPeer(NetPeer peer, string token)
         {
+            // Mutates NetRunner's peer registries, which the ENet pump reads every frame.
+            NebulaThread.AssertMain(nameof(JoinPeer));
+
+            if (Lifecycle != WorldLifecycle.Live)
+            {
+                Log(Debugger.DebugLevel.ERROR,
+                    $"JoinPeer: world {WorldId} is {Lifecycle}, not Live. Refusing to admit peer {peer.ID}.");
+                return;
+            }
+
             var peerId = NetRunner.Instance.GetPeerId(peer);
             NetRunner.Instance.PeerWorldMap[peerId] = this;
             PeerStates[peerId] = new PeerState

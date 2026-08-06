@@ -17,15 +17,46 @@ public sealed class NebulaPlayConfiguration
     public string Name = "";
     public int ClientCount = 1;
 
+    /// <summary>
+    /// Scripted bot instances launched alongside the real clients. Each is a full client process
+    /// driven by <see cref="Nebula.Bots.BotBehavior"/> rather than a keyboard.
+    /// </summary>
+    public int BotCount = 0;
+
+    /// <summary>
+    /// Name of the <see cref="Nebula.Bots.BotBehavior"/> subclass the bots run. Stored as a type
+    /// name rather than a script path — see BotRunner for why. Empty means "no bots", regardless
+    /// of <see cref="BotCount"/>.
+    /// </summary>
+    public string BotBehavior = "";
+
+    /// <summary>
+    /// Whether bot instances get <c>--headless</c>. On by default: bots are usually there to
+    /// populate a world rather than to be watched, and rendering ten of them is pure cost.
+    /// </summary>
+    public bool BotsHeadless = true;
+
     public NebulaPlayConfiguration Clone() => new()
     {
         Name = Name,
         ClientCount = ClientCount,
+        BotCount = BotCount,
+        BotBehavior = BotBehavior,
+        BotsHeadless = BotsHeadless,
     };
 
-    /// <summary>The configuration is just a client count, so name it after one.</summary>
-    public static string DisplayName(int clientCount) =>
-        clientCount == 1 ? "1 client" : $"{clientCount} clients";
+    /// <summary>
+    /// The configuration is just its instance counts, so name it after them. Bots have to appear
+    /// here: the selected target is stored by name, so two configurations differing only in bot
+    /// count would otherwise be indistinguishable.
+    /// </summary>
+    public static string DisplayName(int clientCount, int botCount)
+    {
+        string clients = clientCount == 1 ? "1 client" : $"{clientCount} clients";
+        if (botCount <= 0)
+            return clients;
+        return botCount == 1 ? $"{clients} + 1 bot" : $"{clients} + {botCount} bots";
+    }
 }
 
 /// <summary>
@@ -60,11 +91,17 @@ public static class NebulaPlayConfigStore
                 if (!section.StartsWith(CONFIG_SECTION_PREFIX))
                     continue;
                 int clientCount = file.GetValue(section, "client_count", DEFAULT_CLIENT_COUNT).AsInt32();
+                // Absent bot keys default to "no bots", so files written before bots existed load
+                // unchanged and keep behaving exactly as they did.
+                int botCount = file.GetValue(section, "bot_count", 0).AsInt32();
                 configurations.Add(new NebulaPlayConfiguration
                 {
                     // Older files predate client_count and carried a free-text name.
-                    Name = file.GetValue(section, "name", NebulaPlayConfiguration.DisplayName(clientCount)).AsString(),
+                    Name = file.GetValue(section, "name", NebulaPlayConfiguration.DisplayName(clientCount, botCount)).AsString(),
                     ClientCount = clientCount,
+                    BotCount = botCount,
+                    BotBehavior = file.GetValue(section, "bot_behavior", "").AsString(),
+                    BotsHeadless = file.GetValue(section, "bots_headless", true).AsBool(),
                 });
             }
         }
@@ -73,7 +110,7 @@ public static class NebulaPlayConfigStore
         {
             configurations.Add(new NebulaPlayConfiguration
             {
-                Name = NebulaPlayConfiguration.DisplayName(DEFAULT_CLIENT_COUNT),
+                Name = NebulaPlayConfiguration.DisplayName(DEFAULT_CLIENT_COUNT, 0),
                 ClientCount = DEFAULT_CLIENT_COUNT,
             });
             Save(configurations);
@@ -97,6 +134,9 @@ public static class NebulaPlayConfigStore
             string section = CONFIG_SECTION_PREFIX + i;
             file.SetValue(section, "name", config.Name);
             file.SetValue(section, "client_count", config.ClientCount);
+            file.SetValue(section, "bot_count", config.BotCount);
+            file.SetValue(section, "bot_behavior", config.BotBehavior);
+            file.SetValue(section, "bots_headless", config.BotsHeadless);
         }
         if (selected.Length > 0)
             file.SetValue(META_SECTION, SELECTED_KEY, selected);

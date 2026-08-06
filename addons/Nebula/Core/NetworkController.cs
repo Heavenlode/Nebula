@@ -869,6 +869,122 @@ namespace Nebula
 		}
 
 		/// <summary>
+		/// Resolves the NetArray instance a per-peer array property should expose to the caller,
+		/// forking one for the context peer on first access. Called by generated property getters.
+		///
+		/// Returns <paramref name="baseArray"/> unchanged under the same conditions as
+		/// <see cref="TryReadPerPeer"/> (not the server, no <see cref="ForPeer"/> scope open, the
+		/// owning NetScene root not resolvable yet, or storage absent) — so client-side and
+		/// unscoped server-side access both see the shared base, exactly as before.
+		///
+		/// Inside a scope this returns that peer's own instance, creating it via
+		/// <see cref="NetArray{T}.ForkForPeer"/> if the peer has not diverged yet. Note that an
+		/// array is mutated in place, so this getter cannot distinguish a read from a write: any
+		/// scoped access forks. The fork is content-identical and inherits the peer's sync state,
+		/// so it costs an allocation but no bandwidth.
+		/// </summary>
+		public NetArray<TElem> TryGetPerPeerArray<TElem>(INetNodeBase sourceNode, string propertyName, NetArray<TElem> baseArray, ref int cachedIndex, ref NetworkController cachedRoot) where TElem : struct
+		{
+			var peerId = _contextPeer;
+			if (peerId == default || !PerPeerServerContext)
+			{
+				return baseArray;
+			}
+
+			var root = cachedRoot ?? ResolvePerPeerRoot();
+			if (root == null || root.PerPeerValues == null)
+			{
+				return baseArray;
+			}
+			cachedRoot = root;
+
+			if (cachedIndex < 0)
+			{
+				var staticChildId = sourceNode.Network.StaticChildId;
+				if (!Protocol.LookupPropertyByStaticChildId(root.NetSceneFilePath, staticChildId, propertyName, out var prop))
+				{
+					return baseArray;
+				}
+				cachedIndex = prop.Index;
+			}
+
+			var peerValues = root.PerPeerValues[cachedIndex];
+			if (peerValues == null)
+			{
+				return baseArray;
+			}
+
+			if (peerValues.TryGetValue(peerId, out var existing) && existing.RefValue is NetArray<TElem> forked)
+			{
+				return forked;
+			}
+
+			// A null base cannot be forked; nothing to diverge from yet.
+			if (baseArray == null)
+			{
+				return null;
+			}
+
+			var fork = NetArray<TElem>.ForkForPeer(baseArray, peerId);
+			var cache = new PropertyCache
+			{
+				Type = SerialVariantType.Object,
+				RefValue = fork,
+			};
+			peerValues[peerId] = cache;
+			return fork;
+		}
+
+		/// <summary>
+		/// Writes the context peer's instance for a per-peer reference-typed (object) property —
+		/// the wholesale-assignment counterpart to <see cref="TryWritePerPeer{T}"/>, which is
+		/// constrained to value types and so cannot accept a NetArray.
+		///
+		/// Unlike the primitive path this sets no dirty bit: object properties self-filter every
+		/// tick through their own per-peer sync state rather than through PerPeerDirtyMask. Note
+		/// that assigning a fresh instance discards the peer's sync state along with the old one,
+		/// so the replacement is delivered as a full chunked sync.
+		/// </summary>
+		public bool TryWritePerPeerRef<TObj>(INetNodeBase sourceNode, string propertyName, TObj value, ref int cachedIndex, ref NetworkController cachedRoot) where TObj : class
+		{
+			var peerId = _contextPeer;
+			if (peerId == default || !PerPeerServerContext)
+			{
+				return false;
+			}
+
+			var root = cachedRoot ?? ResolvePerPeerRoot();
+			if (root == null || root.PerPeerValues == null)
+			{
+				return false;
+			}
+			cachedRoot = root;
+
+			if (cachedIndex < 0)
+			{
+				var staticChildId = sourceNode.Network.StaticChildId;
+				if (!Protocol.LookupPropertyByStaticChildId(root.NetSceneFilePath, staticChildId, propertyName, out var prop))
+				{
+					return false;
+				}
+				cachedIndex = prop.Index;
+			}
+
+			var peerValues = root.PerPeerValues[cachedIndex];
+			if (peerValues == null)
+			{
+				return false;
+			}
+
+			peerValues[peerId] = new PropertyCache
+			{
+				Type = SerialVariantType.Object,
+				RefValue = value,
+			};
+			return true;
+		}
+
+		/// <summary>
 		/// Discovers nested NetScenes in the scene tree and populates DynamicNetworkChildren.
 		/// Also sets CachedNodePathIdInParent for spawn serialization.
 		/// Called on server during Setup().

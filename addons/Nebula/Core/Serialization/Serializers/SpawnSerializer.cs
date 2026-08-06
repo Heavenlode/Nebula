@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using Nebula.Utility.Tools;
@@ -27,11 +28,26 @@ namespace Nebula.Serialization.Serializers
             public byte HasInputAuthority;
         }
 
-        // Pre-allocated buffers for nested scene handling (static to avoid per-instance allocation)
-        private static readonly List<NetworkController> _nestedSceneBuffer = new(16);
-        private static readonly NestedSceneData[] _nestedDataBuffer = new NestedSceneData[64];
-        private static int _nestedDataCount;
-        private static readonly List<NetworkController> _allLocalNestedScenes = new(64);
+        // Pre-allocated scratch for nested scene handling, shared across every SpawnSerializer
+        // instance to avoid a per-instance allocation. Each buffer is filled and consumed within a
+        // single Export/Import call chain, so sharing is safe as long as only one such chain runs
+        // at a time.
+        //
+        // [ThreadStatic] is what keeps that true once worlds tick on their own threads (see
+        // NetRunner's per_world_thread_group setting): two worlds exporting concurrently would
+        // otherwise stomp each other's spawn tables, which surfaces as a desync rather than a
+        // crash. Note that [ThreadStatic] and field initializers do NOT mix -- an initializer runs
+        // only on the first thread to touch the type and every other thread silently sees null --
+        // so these are lazily initialized through the properties below and must only ever be
+        // reached that way.
+        [ThreadStatic] private static List<NetworkController> _nestedSceneBuffer;
+        [ThreadStatic] private static NestedSceneData[] _nestedDataBuffer;
+        [ThreadStatic] private static int _nestedDataCount;
+        [ThreadStatic] private static List<NetworkController> _allLocalNestedScenes;
+
+        private static List<NetworkController> NestedSceneBuffer => _nestedSceneBuffer ??= new(16);
+        private static NestedSceneData[] NestedDataBuffer => _nestedDataBuffer ??= new NestedSceneData[64];
+        private static List<NetworkController> AllLocalNestedScenes => _allLocalNestedScenes ??= new(64);
 
         private NetworkController netController;
         private Dictionary<UUID, Tick> setupTicks = new();
@@ -431,14 +447,14 @@ namespace Nebula.Serialization.Serializers
             var peerUUID = NetRunner.Instance.GetPeerId(peer);
 
             // Collect nested NetScenes recursively (entire subtree)
-            _nestedSceneBuffer.Clear();
-            CollectNestedNetScenesRecursive(currentWorld, peer, netController, _nestedSceneBuffer);
+            NestedSceneBuffer.Clear();
+            CollectNestedNetScenesRecursive(currentWorld, peer, netController, NestedSceneBuffer);
 
             // Filter to only include scenes the peer has interest in
             _interestedNestedBuffer.Clear();
-            for (int i = 0; i < _nestedSceneBuffer.Count; i++)
+            for (int i = 0; i < NestedSceneBuffer.Count; i++)
             {
-                var nested = _nestedSceneBuffer[i];
+                var nested = NestedSceneBuffer[i];
                 if (!nested.IsPeerInterested(peer))
                 {
                     continue;
@@ -811,9 +827,9 @@ namespace Nebula.Serialization.Serializers
             CollectAllNestedScenes(nodeOut);
 
             // Match local instances against spawn data
-            for (int i = 0; i < _allLocalNestedScenes.Count; i++)
+            for (int i = 0; i < AllLocalNestedScenes.Count; i++)
             {
-                var local = _allLocalNestedScenes[i];
+                var local = AllLocalNestedScenes[i];
                 var localPathId = local.CachedNodePathIdInParent;
                 var localSceneId = Protocol.PackScene(local.NetSceneFilePath);
 
@@ -821,8 +837,8 @@ namespace Nebula.Serialization.Serializers
                 int matchIndex = -1;
                 for (int j = 0; j < _nestedDataCount; j++)
                 {
-                    if (_nestedDataBuffer[j].NodePathId == localPathId &&
-                        _nestedDataBuffer[j].SceneId == localSceneId)
+                    if (NestedDataBuffer[j].NodePathId == localPathId &&
+                        NestedDataBuffer[j].SceneId == localSceneId)
                     {
                         matchIndex = j;
                         break;
@@ -832,11 +848,11 @@ namespace Nebula.Serialization.Serializers
                 if (matchIndex >= 0)
                 {
                     // Keep local, sync NetId
-                    local.NetId = new NetId(_nestedDataBuffer[matchIndex].NetId);
+                    local.NetId = new NetId(NestedDataBuffer[matchIndex].NetId);
                     local.IsClientSpawn = true;
                     local.CurrentWorld = currentWorld;
                     // Set InputAuthority if this client owns the nested scene
-                    if (_nestedDataBuffer[matchIndex].HasInputAuthority == 1)
+                    if (NestedDataBuffer[matchIndex].HasInputAuthority == 1)
                     {
                         local.InputAuthority = NetRunner.Instance.ServerPeer;
                         currentWorld.MarkOwnedEntitiesDirty();
@@ -851,7 +867,7 @@ namespace Nebula.Serialization.Serializers
                         nestedSpawnSerializer.hasImported = true;
                     }
                     // Mark as processed (use 246 as sentinel, > 245 reserved)
-                    _nestedDataBuffer[matchIndex].SceneId = 246;
+                    NestedDataBuffer[matchIndex].SceneId = 246;
                 }
                 else
                 {
@@ -865,10 +881,10 @@ namespace Nebula.Serialization.Serializers
             // Create any new NetScenes from unmatched spawn data
             for (int i = 0; i < _nestedDataCount; i++)
             {
-                if (_nestedDataBuffer[i].SceneId >= 246 || _nestedDataBuffer[i].SceneId == 0)
+                if (NestedDataBuffer[i].SceneId >= 246 || NestedDataBuffer[i].SceneId == 0)
                     continue;
 
-                var data = _nestedDataBuffer[i];
+                var data = NestedDataBuffer[i];
                 var instance = Protocol.UnpackScene(data.SceneId).Instantiate<INetNodeBase>();
                 instance.Network.NetId = new NetId(data.NetId);
                 instance.Network.IsClientSpawn = true;
@@ -953,7 +969,7 @@ namespace Nebula.Serialization.Serializers
         /// </summary>
         private void CollectAllNestedScenes(NetworkController root)
         {
-            _allLocalNestedScenes.Clear();
+            AllLocalNestedScenes.Clear();
             CollectNestedRecursive(root.RawNode, root.RawNode, root.NetSceneFilePath);
         }
 
@@ -965,7 +981,7 @@ namespace Nebula.Serialization.Serializers
 
                 if (child is INetNodeBase netNode && netNode.Network != null && netNode.Network.IsNetScene())
                 {
-                    _allLocalNestedScenes.Add(netNode.Network);
+                    AllLocalNestedScenes.Add(netNode.Network);
 
                     // Compute and cache the node path ID for matching
                     var relativePath = treeRoot.GetPathTo(child);
@@ -1021,7 +1037,7 @@ namespace Nebula.Serialization.Serializers
         {
             _nestedDataCount = 0;
 
-            for (int i = 0; i < count && i < _nestedDataBuffer.Length; i++)
+            for (int i = 0; i < count && i < NestedDataBuffer.Length; i++)
             {
                 var sceneId = NetReader.ReadByte(buffer);
                 var nodePathId = NetReader.ReadByte(buffer);
@@ -1032,7 +1048,7 @@ namespace Nebula.Serialization.Serializers
                 // Note: sceneId=0 is valid (first registered scene), but netId=0 means no allocation
                 if (netId == 0) continue;
 
-                _nestedDataBuffer[_nestedDataCount++] = new NestedSceneData
+                NestedDataBuffer[_nestedDataCount++] = new NestedSceneData
                 {
                     SceneId = sceneId,
                     NodePathId = nodePathId,

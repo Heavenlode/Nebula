@@ -416,6 +416,30 @@ public partial class Main : EditorPlugin
             });
         }
 
+        // Bots are ordinary client instances with a behavior attached, so they ride the same
+        // orchestrator list rather than needing a launch path of their own. Their clientId
+        // continues the client numbering, keeping debug labels unique across the whole session.
+        for (int i = 0; i < config.BotCount; i++)
+        {
+            int botDebugPort = ReserveLoopbackPort();
+            debugPorts.Add(botDebugPort);
+
+            var botArgs = new List<string>
+            {
+                "--path", projectPath,
+                "--remote-debug", debugUri,
+                $"--debugPort={botDebugPort}",
+                $"--clientId={config.ClientCount + i}",
+                Nebula.Bots.BotRunner.BotArg,
+                $"{Nebula.Bots.BotRunner.BotIdArg}{i}",
+                $"{Nebula.Bots.BotRunner.BotBehaviorArg}{config.BotBehavior}",
+            };
+            if (config.BotsHeadless)
+                botArgs.Add("--headless");
+
+            clientArgsList.Add(botArgs.ToArray());
+        }
+
         GetOrchestrator(createIfMissing: true).Call("launch",
             DEBUG_SESSION_SCENE, exe, serverArgs, clientArgsList, config.Name,
             debugPorts.ToArray());

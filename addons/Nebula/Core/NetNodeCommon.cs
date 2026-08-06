@@ -120,6 +120,16 @@ namespace Nebula.Utility
             // Mark imported nodes accordingly
             if (!node.GetMeta("import_from_external", false).AsBool())
             {
+                // Deserialization reaches here from wherever its caller's awaits happened to resume,
+                // and that is not somewhere this method can afford to guess about: the block below
+                // parents the node into the live SceneTree, which Godot permits only from the main
+                // thread. With per-world thread groups the realistic caller -- a character load
+                // kicked off by OnPlayerJoined at the top of ServerProcessTick -- starts on a world
+                // tick thread, which has no SynchronizationContext, so every continuation after its
+                // first await lands on the ThreadPool. Hopping here rather than asking each caller
+                // to do it keeps the requirement with the code that actually has it.
+                await NetRunner.Instance.SwitchToMainThread();
+
                 var tcs = new TaskCompletionSource<bool>();
                 // Create the event handler as a separate method so we can disconnect it later
                 Action treeEnteredHandler = () =>

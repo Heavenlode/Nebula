@@ -118,6 +118,23 @@ public partial class ProjectSettingsController : Node
             {"hint_string", "100,65535,1"},
         });
 
+        // Liveness cutoff for in-world peers: seconds without a tick ack before the
+        // server force-disconnects.
+        Register(NetRunner.ACK_TIMEOUT_SETTING, NetRunner.DefaultAckTimeoutSeconds, new(){
+            {"type", (int)Variant.Type.Float},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "1,300,0.5"},
+        });
+
+        // Same cutoff for a JOINING peer (never acked yet): its first ack only follows
+        // boot + world-scene load + a successfully imported tick, so it needs far more
+        // headroom than the in-world cutoff.
+        Register(NetRunner.JOIN_ACK_TIMEOUT_SETTING, NetRunner.DefaultJoinAckTimeoutSeconds, new(){
+            {"type", (int)Variant.Type.Float},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "1,300,0.5"},
+        });
+
         // Network tick rate in ticks per second. The network tick fires on whole physics
         // frames, so this should divide physics/common/physics_ticks_per_second evenly
         // (with 60 physics: 60, 30, 20, 15, 12, 10, ...); anything else snaps to the

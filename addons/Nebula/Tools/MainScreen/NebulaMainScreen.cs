@@ -14,11 +14,18 @@ using Nebula.Internal.Editor;
 /// tab body is now the debugger that attaches to whatever the Play button
 /// launched. This class is just the shell; <see cref="NebulaDebugView"/> owns
 /// the connections and the per-world panels.
+///
+/// <para>The body is a Debugger/Performance tab pair. The Performance tab is
+/// always present; whether it has data depends on the servers, which only
+/// collect and report metrics when <see cref="Diagnostics.ServerMetrics.EnableEnvVar"/>
+/// is set for them (process environment or .env.server) — a production instance
+/// spends nothing on metrics unless asked.</para>
 /// </summary>
 [Tool]
 public partial class NebulaMainScreen : Control
 {
     private NebulaDebugView debugView;
+    private NebulaPerformanceView performanceView;
 
     public override void _Ready()
     {
@@ -42,7 +49,27 @@ public partial class NebulaMainScreen : Control
             SizeFlagsHorizontal = SizeFlags.ExpandFill,
             SizeFlagsVertical = SizeFlags.ExpandFill,
         };
-        margin.AddChild(debugView);
+
+        var tabs = new TabContainer
+        {
+            SizeFlagsHorizontal = SizeFlags.ExpandFill,
+            SizeFlagsVertical = SizeFlags.ExpandFill,
+        };
+        margin.AddChild(tabs);
+
+        // Child node names become tab titles.
+        debugView.Name = "Debugger";
+        tabs.AddChild(debugView);
+
+        performanceView = new NebulaPerformanceView();
+        tabs.AddChild(performanceView);
+
+        // Deliberately NO wiring between the two here. Anything established in _Ready
+        // (an event subscription, an injected reference) is lost on the next .NET
+        // assembly reload, which recreates the managed instances without re-running
+        // _Ready — the tabs then look correct while quietly delivering nothing. The
+        // debug view resolves this Performance tab from the tree per frame instead;
+        // see NebulaDebugView.ResolvePerformanceView.
     }
 
     /// <summary>

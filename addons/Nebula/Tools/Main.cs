@@ -402,19 +402,12 @@ public partial class Main : EditorPlugin
             $"--debugPort={serverDebugPort}",
         };
 
+        // List order is spawn order (the orchestrator staggers spawns): bots first, the
+        // player client(s) last. A bot flood saturates the host exactly when a joining
+        // client is doing its heaviest main-thread work (world + player scene builds), and
+        // a client stalled past the server's ack timeout gets force-disconnected - so the
+        // player client only launches once every bot process already exists.
         var clientArgsList = new Godot.Collections.Array();
-        for (int i = 0; i < config.ClientCount; i++)
-        {
-            int clientDebugPort = ReserveLoopbackPort();
-            debugPorts.Add(clientDebugPort);
-            clientArgsList.Add(new[]
-            {
-                "--path", projectPath,
-                "--remote-debug", debugUri,
-                $"--debugPort={clientDebugPort}",
-                $"--clientId={i}",
-            });
-        }
 
         // Bots are ordinary client instances with a behavior attached, so they ride the same
         // orchestrator list rather than needing a launch path of their own. Their clientId
@@ -438,6 +431,19 @@ public partial class Main : EditorPlugin
                 botArgs.Add("--headless");
 
             clientArgsList.Add(botArgs.ToArray());
+        }
+
+        for (int i = 0; i < config.ClientCount; i++)
+        {
+            int clientDebugPort = ReserveLoopbackPort();
+            debugPorts.Add(clientDebugPort);
+            clientArgsList.Add(new[]
+            {
+                "--path", projectPath,
+                "--remote-debug", debugUri,
+                $"--debugPort={clientDebugPort}",
+                $"--clientId={i}",
+            });
         }
 
         GetOrchestrator(createIfMissing: true).Call("launch",

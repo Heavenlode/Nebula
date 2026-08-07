@@ -84,6 +84,24 @@ namespace Nebula
         private readonly List<WorldRunner> _worlds = new();
 
         private readonly Queue<QueuedFrame> _queue = new();
+
+        /// <summary>
+        /// Low-rate telemetry that must not queue behind the tick flood. The main queue
+        /// carries hundreds of frames per second on a busy world (one PAYLOADS frame per
+        /// peer per tick), and past the hard backstop it drops from the front - which is
+        /// exactly where accumulated reliable frames sit. A once-a-second frame parked
+        /// there is starved precisely when the numbers matter. The writer drains this
+        /// first, and it is bounded by its own tiny cap rather than by the trim.
+        /// </summary>
+        private readonly Queue<QueuedFrame> _priorityQueue = new();
+
+        /// <summary>
+        /// Cap on the priority queue. Sized for seconds of buffered telemetry, not
+        /// throughput: anything that produces enough volume to hit this does not belong
+        /// in the priority lane.
+        /// </summary>
+        private const int MaxPriorityFrames = 64;
+
         /// <summary>Reused staging queue for <see cref="TrimLossyFrames"/>. Guarded by <see cref="_queueLock"/>.</summary>
         private readonly Queue<QueuedFrame> _trimScratch = new();
         private readonly object _queueLock = new();
@@ -104,6 +122,19 @@ namespace Nebula
 
         /// <summary>The port actually bound, or 0 when not running.</summary>
         public int BoundPort { get; private set; }
+
+        /// <summary>
+        /// Whether debug-class frames (tick state, per-peer payloads, world exports,
+        /// logs, calls, world announcements) are produced at all.
+        ///
+        /// <para>The socket is a shared transport for two independently switchable
+        /// features: the debugger (<c>NEBULA_DEBUG</c>) and metrics reporting
+        /// (<c>NEBULA_PERFORMANCE</c>). With this false the channel carries metrics
+        /// only — the listener exists, but none of the expensive per-tick debug work
+        /// runs. Emitters check it BEFORE building a frame, so "off" costs nothing
+        /// beyond this property read.</para>
+        /// </summary>
+        public bool DebugFramesEnabled { get; init; } = true;
 
         public bool IsRunning => _listener != null;
 
@@ -187,6 +218,8 @@ namespace Nebula
             {
                 while (_queue.Count > 0)
                     ReturnFrame(_queue.Dequeue());
+                while (_priorityQueue.Count > 0)
+                    ReturnFrame(_priorityQueue.Dequeue());
                 foreach (var frame in _pendingFrames)
                     ReturnFrame(frame);
                 _pendingFrames.Clear();
@@ -236,8 +269,15 @@ namespace Nebula
             // on these sockets. A client that attaches later therefore re-sends
             // announcements to everyone; readers treat a repeat announcement
             // for a known world as a no-op.
-            foreach (var world in _worlds)
-                EnqueueWorldAnnounce(world);
+            //
+            // Skipped entirely on a metrics-only channel: an announcement is what
+            // makes the editor build a debugger panel, and here it would only ever
+            // sit empty (same reasoning as RegisterWorld).
+            if (DebugFramesEnabled)
+            {
+                foreach (var world in _worlds)
+                    EnqueueWorldAnnounce(world);
+            }
 
             FlushPendingFrames();
         }
@@ -284,7 +324,10 @@ namespace Nebula
             if (world == null || _worlds.Contains(world))
                 return;
             _worlds.Add(world);
-            if (HasClients)
+            // Announcements are what make the editor build a debugger panel for a
+            // world. On a metrics-only channel that panel would sit permanently empty,
+            // so the world stays unannounced and the Debugger tab honestly shows none.
+            if (HasClients && DebugFramesEnabled)
                 EnqueueWorldAnnounce(world);
         }
 
@@ -295,7 +338,7 @@ namespace Nebula
         /// </summary>
         public void ReannounceWorld(WorldRunner world, UUID previousId)
         {
-            if (world == null || !_worlds.Contains(world) || !HasClients)
+            if (world == null || !_worlds.Contains(world) || !HasClients || !DebugFramesEnabled)
                 return;
 
             if (!previousId.IsEmpty)
@@ -311,7 +354,7 @@ namespace Nebula
         {
             if (world == null || !_worlds.Remove(world))
                 return;
-            if (!HasClients)
+            if (!HasClients || !DebugFramesEnabled)
                 return;
 
             using var payload = new NetBuffer(16, usePool: false);
@@ -338,7 +381,8 @@ namespace Nebula
         /// dropped oldest-first when the queue backs up; everything else is
         /// guaranteed, in order.
         /// </summary>
-        public void Enqueue(UUID worldId, WorldRunner.DebugDataType type, NetBuffer payload, bool lossy)
+        public void Enqueue(UUID worldId, WorldRunner.DebugDataType type, NetBuffer payload, bool lossy,
+            bool priority = false)
         {
             if (_listener == null)
                 return;
@@ -354,6 +398,20 @@ namespace Nebula
             if (!HasClients)
             {
                 BufferUntilFirstClient(frame);
+                return;
+            }
+
+            if (priority)
+            {
+                lock (_queueLock)
+                {
+                    // Oldest-first eviction: a stalled reader should see the most recent
+                    // telemetry, not a minute-old backlog of it.
+                    while (_priorityQueue.Count >= MaxPriorityFrames)
+                        ReturnFrame(_priorityQueue.Dequeue());
+                    _priorityQueue.Enqueue(frame);
+                }
+                _queueSignal.Set();
                 return;
             }
 
@@ -473,9 +531,20 @@ namespace Nebula
                     QueuedFrame frame;
                     lock (_queueLock)
                     {
-                        if (_queue.Count == 0)
+                        // Priority lane first: its frames are rare and must not wait
+                        // behind a backlog of tick frames.
+                        if (_priorityQueue.Count > 0)
+                        {
+                            frame = _priorityQueue.Dequeue();
+                        }
+                        else if (_queue.Count > 0)
+                        {
+                            frame = _queue.Dequeue();
+                        }
+                        else
+                        {
                             break;
-                        frame = _queue.Dequeue();
+                        }
                     }
 
                     try

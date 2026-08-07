@@ -193,8 +193,9 @@ namespace Nebula
 
         public override void _Ready()
         {
+            _ = MTU;
             // Protocol is fully static - no initialization needed
-            StartDebugHub();
+            StartTelemetryHub();
 
             // No-op unless this process was launched with --bot. Created here rather than added as
             // an autoload so that adopting Nebula's bots costs a project no project.godot changes,
@@ -234,25 +235,44 @@ namespace Nebula
         /// Cached on first read, so toggling it takes effect on the next run.
         /// </summary>
         public static bool DebugServerEnabled =>
-            _debugServerEnabled ??= ProjectSettings.GetSetting(DEBUG_SERVER_SETTING, true).AsBool();
+            _debugServerEnabled ??= ResolveDebugServerEnabled();
 
         private static bool? _debugServerEnabled;
+
+        /// <summary>
+        /// Environment/.env switch for <see cref="DebugServerEnabled"/>, checked before
+        /// the project setting so a deployment can turn the channel off per process kind
+        /// (<c>.env.server</c> vs <c>.env.client</c>) without editing project.godot.
+        /// Off means fully inert: no listener, no frames built, no per-tick debug work.
+        /// </summary>
+        public const string DEBUG_SERVER_ENV_VAR = "NEBULA_DEBUG";
+
+        private static bool ResolveDebugServerEnabled()
+            => Env.TryGetFlag(DEBUG_SERVER_ENV_VAR, out bool fromEnv)
+                ? fromEnv
+                : ProjectSettings.GetSetting(DEBUG_SERVER_SETTING, true).AsBool();
 
         /// <summary>Project setting key for <see cref="DebugServerEnabled"/>.</summary>
         public const string DEBUG_SERVER_SETTING = "Nebula/config/debug/enable_debug_server";
 
         /// <summary>
-        /// Opt-in via <c>--debugPort=N</c>, and gated by
-        /// <see cref="DebugServerEnabled"/>. The editor's Play button assigns a port
-        /// per launched instance and the integration harness passes it explicitly;
-        /// the port is used verbatim, never fallen back.
+        /// Opt-in via <c>--debugPort=N</c>. The editor's Play button assigns a port per
+        /// launched instance and the integration harness passes it explicitly; the port
+        /// is used verbatim, never fallen back.
+        ///
+        /// <para>The socket carries two independently switchable features, so it starts
+        /// when EITHER wants it: the debugger (<see cref="DebugServerEnabled"/>) and
+        /// metrics reporting (<see cref="Diagnostics.ServerMetrics.Enabled"/>). Turning
+        /// the debugger off while metrics are on leaves the listener up but suppresses
+        /// every debug-class frame — see <see cref="DebugHub.DebugFramesEnabled"/>.</para>
         ///
         /// Parsed here rather than in WorldRunner, where it used to live: that
         /// ran once per world, so multiple worlds fought over the same port.
         /// </summary>
-        private void StartDebugHub()
+        private void StartTelemetryHub()
         {
-            if (!DebugServerEnabled)
+            bool debugFrames = DebugServerEnabled;
+            if (!debugFrames && !Diagnostics.ServerMetrics.Enabled)
                 return;
 
             int explicitPort = 0;
@@ -268,7 +288,7 @@ namespace Nebula
             if (explicitPort <= 0)
                 return;
 
-            var hub = new DebugHub();
+            var hub = new DebugHub { DebugFramesEnabled = debugFrames };
             if (hub.Start(explicitPort))
                 DebugHub = hub;
         }
@@ -409,7 +429,7 @@ namespace Nebula
             Debugger.Instance.Log($"Started on port {Port}");
 
             // The debug channel is not started here: it is process-wide (see
-            // StartDebugHub) so that clients get one too, and so it is already
+            // StartTelemetryHub) so that clients get one too, and so it is already
             // listening before the network starts.
         }
 
@@ -506,7 +526,65 @@ namespace Nebula
         /// Maximum Transferrable Unit. The maximum number of bytes that should be sent in a single ENet UDP Packet (i.e. a single tick)
         /// Not a hard limit.
         /// </summary>
-        public static int MTU => ProjectSettings.GetSetting("Nebula/config/network/mtu", 1400).AsInt32();
+        public const string MTU_SETTING = "Nebula/config/network/mtu";
+        public const int DefaultMTU = 1400;
+        private static int _mtu;
+        public static int MTU
+        {
+            get
+            {
+                var cached = _mtu;
+                if (cached != 0) return cached;
+                return _mtu = ProjectSettings.GetSetting(MTU_SETTING, DefaultMTU).AsInt32();
+            }
+        }
+
+        public const string ACK_TIMEOUT_SETTING = "Nebula/config/network/ack_timeout_seconds";
+        public const string JOIN_ACK_TIMEOUT_SETTING = "Nebula/config/network/join_ack_timeout_seconds";
+        public const float DefaultAckTimeoutSeconds = 5.0f;
+        public const float DefaultJoinAckTimeoutSeconds = 30.0f;
+
+        /// <summary>
+        /// Seconds an IN-WORLD peer may go without acknowledging a tick before the server
+        /// force-disconnects it. A healthy peer acks continuously (piggybacked on input or
+        /// standalone), so this is a pure liveness cutoff.
+        /// </summary>
+        public static float AckTimeoutSeconds =>
+            (float)ProjectSettings.GetSetting(ACK_TIMEOUT_SETTING, DefaultAckTimeoutSeconds).AsDouble();
+
+        /// <summary>
+        /// Seconds a JOINING peer (INITIAL status - never acked yet) gets before the same
+        /// cutoff. A client's first ack only follows a successfully imported tick, which is
+        /// after process boot, world-scene load, and spatial-mirror build - easily past the
+        /// in-world cutoff on a loaded machine, so joins need their own, longer window.
+        /// </summary>
+        public static float JoinAckTimeoutSeconds =>
+            (float)ProjectSettings.GetSetting(JOIN_ACK_TIMEOUT_SETTING, DefaultJoinAckTimeoutSeconds).AsDouble();
+
+        /// <summary>Tick-channel packet header: the int32 tick number.</summary>
+        private const int TickHeaderBytes = sizeof(int);
+
+        /// <summary>NebulaPack framing: the flags byte (see NebulaPack.WritePacket).</summary>
+        private const int PackFlagsBytes = 1;
+
+        /// <summary>NebulaPack framing: the optional uint16 checksum, budgeted worst-case.</summary>
+        private const int PackChecksumBytes = sizeof(ushort);
+
+        /// <summary>
+        /// Headroom subtracted from the tick payload budget to absorb small framing
+        /// variations (NebulaPack baseline-age byte, future flags).
+        /// </summary>
+        public const int TickBudgetHeadroom = 16;
+
+        /// <summary>
+        /// Per-peer byte budget for one tick's serialized payload (the ExportState output),
+        /// derived from the MTU: MTU minus the tick header, pack flags, checksum worst
+        /// case, and <see cref="TickBudgetHeadroom"/>. The export path keeps every peer
+        /// payload within this so the packet never exceeds the MTU and the client's decode
+        /// ceiling (MTU + 64) is unreachable.
+        /// </summary>
+        public static int TickPayloadBudget(int mtu)
+            => mtu - TickHeaderBytes - PackFlagsBytes - PackChecksumBytes - TickBudgetHeadroom;
 
         private static bool? _logTickPayloads;
         /// <summary>

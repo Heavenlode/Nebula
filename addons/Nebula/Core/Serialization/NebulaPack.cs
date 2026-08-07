@@ -1,4 +1,7 @@
 using System;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Nebula.Serialization
 {
@@ -121,6 +124,70 @@ namespace Nebula.Serialization
 
     public static class NebulaPack
     {
+        /// <summary>
+        /// Bytes per block digest. 32 gives ~28 digests for a typical payload — fine enough that a
+        /// differing-block count tracks literal volume closely, coarse enough that ranking is a few
+        /// dozen word compares.
+        /// </summary>
+        public const int DigestBlockBytes = 32;
+
+        /// <summary>
+        /// How many of the digest-ranked candidates get an exact measurement. Ranking is a proxy, so
+        /// measuring only the single best would inherit every ranking error; measuring the top few
+        /// recovers most of that for one extra scan each, and the exact sizes still decide the
+        /// winner.
+        /// </summary>
+        private const int TopCandidatesToMeasure = 3;
+
+        /// <summary>
+        /// Digest slots kept on the stack for the outgoing payload. Sized past the MTU-capped
+        /// payload so the heap path is unreachable in practice but still correct if a project
+        /// raises the MTU.
+        /// </summary>
+        private const int MaxStackDigests = 128;
+
+        /// <summary>Digest blocks a payload of this length occupies.</summary>
+        public static int BlockCount(int length)
+            => (length + DigestBlockBytes - 1) / DigestBlockBytes;
+
+        /// <summary>
+        /// Fills <paramref name="into"/> with one digest per block of <paramref name="payload"/>.
+        ///
+        /// <para>Multiply-and-rotate rather than an XOR fold: XOR cancels, so two different blocks
+        /// that happen to contain the same bytes in a different order would collide constantly, and
+        /// ranking would treat unrelated baselines as identical. This is not a hash anyone attacks —
+        /// it only has to separate blocks that differ, and a collision costs a slightly worse
+        /// baseline, never a wrong delta.</para>
+        /// </summary>
+        public static void ComputeDigests(ReadOnlySpan<byte> payload, Span<ulong> into)
+        {
+            const ulong Basis = 0xcbf29ce484222325UL;
+            const ulong Prime = 0x100000001b3UL;
+
+            int blocks = BlockCount(payload.Length);
+            for (int b = 0; b < blocks; b++)
+            {
+                int start = b * DigestBlockBytes;
+                int length = Math.Min(DigestBlockBytes, payload.Length - start);
+                var block = payload.Slice(start, length);
+
+                ulong h = Basis;
+                int offset = 0;
+                while (offset + sizeof(ulong) <= length)
+                {
+                    ulong word = MemoryMarshal.Read<ulong>(block.Slice(offset, sizeof(ulong)));
+                    h = System.Numerics.BitOperations.RotateLeft((h ^ word) * Prime, 31);
+                    offset += sizeof(ulong);
+                }
+                // Tail of a short final block, folded in a byte at a time.
+                for (; offset < length; offset++)
+                {
+                    h = System.Numerics.BitOperations.RotateLeft((h ^ block[offset]) * Prime, 31);
+                }
+                into[b] = h;
+            }
+        }
+
         /// <summary>Body is a delta, not a raw payload.</summary>
         public const byte FlagDelta = 0x01;
 
@@ -150,9 +217,12 @@ namespace Nebula.Serialization
             bool allowDelta,
             bool addChecksum)
         {
+            var profiler = Diagnostics.TickProfiler.Current;
+            var pickTs = Diagnostics.TickProfiler.Now();
             int age = allowDelta
                 ? PickBaseline(payload, window, currentTick, out int deltaSize)
                 : 0;
+            profiler?.Record(Diagnostics.TickProfiler.Phase.PackPick, pickTs);
 
             byte flags = 0;
             if (age > 0) flags |= FlagDelta;
@@ -165,7 +235,9 @@ namespace Nebula.Serialization
             if (age > 0 && window.TryGetAcked(currentTick - age, out var baseline))
             {
                 NetWriter.WriteByte(destination, (byte)age);
+                var encodeTs = Diagnostics.TickProfiler.Now();
                 int written = EncodeDelta(payload, baseline, destination.GetWriteSpan(payload.Length));
+                profiler?.Record(Diagnostics.TickProfiler.Phase.PackEncode, encodeTs);
                 if (written > 0)
                 {
                     destination.AdvanceWrite(written);
@@ -182,10 +254,17 @@ namespace Nebula.Serialization
             if (!wroteDelta)
             {
                 age = 0;
+                var rawTs = Diagnostics.TickProfiler.Now();
                 NetWriter.WriteBytes(destination, payload);
+                profiler?.Record(Diagnostics.TickProfiler.Phase.PackRaw, rawTs);
             }
 
-            if (addChecksum) NetWriter.WriteUInt16(destination, Checksum(payload));
+            if (addChecksum)
+            {
+                var checksumTs = Diagnostics.TickProfiler.Now();
+                NetWriter.WriteUInt16(destination, Checksum(payload));
+                profiler?.Record(Diagnostics.TickProfiler.Phase.PackChecksum, checksumTs);
+            }
 
             return age;
         }
@@ -194,8 +273,20 @@ namespace Nebula.Serialization
         /// Finds the acknowledged baseline that compresses <paramref name="payload"/> smallest.
         /// Returns its age in ticks, or 0 if none beats sending raw.
         ///
-        /// Measuring doesn't write anything, so trying every candidate costs only a few byte
-        /// comparisons each.
+        /// <para>Two-stage, because measuring every candidate exactly was the single most expensive
+        /// thing the server did: ~29 acked baselines each cost a full encode pass over a ~870-byte
+        /// payload, which measured 26% of the entire world tick.</para>
+        ///
+        /// <para><b>Rank</b> every candidate by how many 32-byte blocks differ, comparing digests
+        /// the ring computed once when each payload was stored. Differing-block count tracks literal
+        /// volume closely enough to order candidates, and costs ~28 word compares instead of ~870
+        /// byte comparisons. <b>Then measure</b> only the few best exactly, each bounded by the best
+        /// size found so far so a candidate that cannot win stops partway.</para>
+        ///
+        /// <para>Ranking is a heuristic and may pass over the true optimum, so this can pick a
+        /// slightly larger delta than an exhaustive search would. It cannot pick a WRONG one: the
+        /// winner is always measured exactly before anything is encoded, and any acked baseline is
+        /// legal on the wire regardless.</para>
         /// </summary>
         private static int PickBaseline(
             ReadOnlySpan<byte> payload,
@@ -207,19 +298,81 @@ namespace Nebula.Serialization
             int bestAge = 0;
             if (window == null) return 0;
 
+            var profiler = Diagnostics.TickProfiler.Current;
+
+            // ---- stage 1: rank by differing blocks -------------------------------------------
+            int blocks = BlockCount(payload.Length);
+            Span<ulong> payloadDigests = blocks <= MaxStackDigests
+                ? stackalloc ulong[MaxStackDigests].Slice(0, blocks)
+                : new ulong[blocks];
+            ComputeDigests(payload, payloadDigests);
+
+            // Top-K by differing-block count, kept as a tiny insertion-sorted list. K is 3, so a
+            // heap would be more code than it saves.
+            Span<int> topAges = stackalloc int[TopCandidatesToMeasure];
+            Span<int> topScores = stackalloc int[TopCandidatesToMeasure];
+            int topCount = 0;
+
             for (int age = 1; age <= NebulaPackWindow.MaxPackAge; age++)
             {
                 Tick candidate = currentTick - age;
                 if (candidate < 0) break;
                 // TryGetAcked, not TryGet: only a tick this peer specifically acknowledged.
-                if (!window.TryGetAcked(candidate, out var baseline)) continue;
+                if (!window.TryGetAckedDigests(candidate, out var baselineDigests)) continue;
 
-                int size = MeasureDelta(payload, baseline);
-                if (size < payload.Length && (bestSize < 0 || size < bestSize))
+                if (profiler != null) profiler.Add(Diagnostics.TickProfiler.Counter.PackCandidates, 1);
+
+                // Blocks the baseline does not reach count as differing, which is what a delta would
+                // have to spell out literally anyway.
+                int shared = Math.Min(blocks, baselineDigests.Length);
+                int differing = blocks - shared;
+                for (int b = 0; b < shared; b++)
                 {
-                    bestSize = size;
-                    bestAge = age;
+                    if (payloadDigests[b] != baselineDigests[b]) differing++;
                 }
+
+                for (int slot = 0; slot < TopCandidatesToMeasure; slot++)
+                {
+                    if (slot < topCount && differing >= topScores[slot]) continue;
+                    for (int shift = Math.Min(topCount, TopCandidatesToMeasure - 1); shift > slot; shift--)
+                    {
+                        topAges[shift] = topAges[shift - 1];
+                        topScores[shift] = topScores[shift - 1];
+                    }
+                    topAges[slot] = age;
+                    topScores[slot] = differing;
+                    if (topCount < TopCandidatesToMeasure) topCount++;
+                    break;
+                }
+            }
+
+            // ---- stage 2: measure the finalists exactly --------------------------------------
+            // Bound starts at the raw length, since a delta at or above that is unusable anyway,
+            // and tightens with every candidate that beats it.
+            int bound = payload.Length;
+            for (int i = 0; i < topCount; i++)
+            {
+                if (!window.TryGetAcked(currentTick - topAges[i], out var baseline)) continue;
+
+                if (profiler != null)
+                {
+                    profiler.Add(Diagnostics.TickProfiler.Counter.PackMeasured, 1);
+                    profiler.Add(Diagnostics.TickProfiler.Counter.PackBytesMeasured, payload.Length);
+                }
+
+                int size = MeasureDeltaBounded(payload, baseline, bound);
+                if (size < bound)
+                {
+                    bound = size;
+                    bestSize = size;
+                    bestAge = topAges[i];
+                }
+            }
+
+            if (profiler != null && bestAge > 0)
+            {
+                profiler.Add(Diagnostics.TickProfiler.Counter.PackDeltasChosen, 1);
+                profiler.Add(Diagnostics.TickProfiler.Counter.PackChosenAgeSum, bestAge);
             }
 
             return bestAge;
@@ -304,6 +457,18 @@ namespace Nebula.Serialization
             => Encode(input, window, default, measureOnly: true);
 
         /// <summary>
+        /// <see cref="MeasureDelta"/> that gives up as soon as the delta is provably no better than
+        /// <paramref name="abortAtOrAbove"/>, returning that bound rather than the true size.
+        ///
+        /// <para>Exact, not approximate: the running size only ever grows, so once it reaches the
+        /// bound the finished size cannot come in under it. Feeding the best size found so far as
+        /// the bound therefore preserves the same global minimum an unbounded search would find,
+        /// while letting hopeless candidates stop partway.</para>
+        /// </summary>
+        public static int MeasureDeltaBounded(ReadOnlySpan<byte> input, ReadOnlySpan<byte> window, int abortAtOrAbove)
+            => Encode(input, window, default, measureOnly: true, abortAtOrAbove);
+
+        /// <summary>
         /// Writes the run list. Returns bytes written, or -1 if <paramref name="output"/> is too
         /// small. Note a delta can legitimately be larger than the input when nothing matches —
         /// deciding whether it is worth sending is the caller's job.
@@ -375,7 +540,9 @@ namespace Nebula.Serialization
         /// Each loop consumes at least one input byte: if the skip run is empty then the bytes
         /// differ, which means the literal run that follows is not empty. So it always terminates.
         /// </summary>
-        private static int Encode(ReadOnlySpan<byte> input, ReadOnlySpan<byte> window, Span<byte> output, bool measureOnly)
+        private static int Encode(
+            ReadOnlySpan<byte> input, ReadOnlySpan<byte> window, Span<byte> output, bool measureOnly,
+            int abortAtOrAbove = int.MaxValue)
         {
             int inputLen = input.Length;
             int windowLen = window.Length;
@@ -384,25 +551,69 @@ namespace Nebula.Serialization
             int pos = 0;
             if (!measureOnly && !TryWriteVarint(output, ref pos, (uint)inputLen)) return -1;
 
+            // Past either end there is nothing to compare, so word stepping stops here and the
+            // remainder is literal by definition.
+            int compareLimit = Math.Min(inputLen, windowLen);
+            ref byte inputRef = ref MemoryMarshal.GetReference(input);
+            ref byte windowRef = ref MemoryMarshal.GetReference(window);
+
             int i = 0;
             while (i < inputLen)
             {
-                // How many bytes match the baseline from here? CommonPrefixLength is SIMD-accelerated.
+                // How many bytes match the baseline from here? Compared a machine word at a time:
+                // XOR is zero exactly while the eight bytes agree, and when it isn't, the index of
+                // the first differing byte falls straight out of the trailing-zero count.
+                //
+                // This used to call CommonPrefixLength, whose vectorization is real but is charged
+                // a fixed setup cost. Measured against live traffic the matching runs average under
+                // two bytes, so that setup was the entire cost and the SIMD never had length to
+                // work with.
                 int skipStart = i;
-                if (i < windowLen)
+                while (i + sizeof(ulong) <= compareLimit)
                 {
-                    int compareLen = Math.Min(inputLen - i, windowLen - i);
-                    i += input.Slice(i, compareLen).CommonPrefixLength(window.Slice(i, compareLen));
+                    ulong difference = Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref inputRef, i))
+                                     ^ Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref windowRef, i));
+                    if (difference != 0)
+                    {
+                        i += FirstDifferingByte(difference);
+                        break;
+                    }
+                    i += sizeof(ulong);
                 }
+                while (i < compareLimit && Unsafe.Add(ref inputRef, i) == Unsafe.Add(ref windowRef, i)) i++;
                 int skip = i - skipStart;
 
                 // How many differ before they line up again? Anything past the end of the baseline
                 // counts as differing, so a payload longer than its baseline needs no special case.
+                //
+                // Same word trick inverted: step eight bytes whenever none of them match, which is
+                // the common case here (differing runs average ~15 bytes). HasZeroByte can report a
+                // false positive, never a false negative, so a hit only drops us to the byte loop
+                // rather than ever ending a run early.
                 int literalStart = i;
-                while (i < inputLen && (i >= windowLen || input[i] != window[i])) i++;
+                while (true)
+                {
+                    if (i + sizeof(ulong) <= compareLimit)
+                    {
+                        ulong difference = Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref inputRef, i))
+                                         ^ Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref windowRef, i));
+                        if (!HasZeroByte(difference)) { i += sizeof(ulong); continue; }
+                    }
+                    if (i < inputLen && (i >= windowLen || Unsafe.Add(ref inputRef, i) != Unsafe.Add(ref windowRef, i)))
+                    {
+                        i++;
+                        continue;
+                    }
+                    break;
+                }
                 int literals = i - literalStart;
 
                 size += VarintSize((uint)skip) + VarintSize((uint)literals) + literals;
+
+                // Hopeless already. size only grows, so the finished delta cannot come in under the
+                // bound and the remaining bytes would be scanned for nothing. Measuring only --
+                // a real encode has to write every run.
+                if (measureOnly && size >= abortAtOrAbove) return abortAtOrAbove;
 
                 if (!measureOnly)
                 {
@@ -414,8 +625,39 @@ namespace Nebula.Serialization
                 }
             }
 
+
             return measureOnly ? size : pos;
         }
+
+        /// <summary>
+        /// Index of the first byte (in memory order) set in <paramref name="difference"/>, which for
+        /// an XOR of two words is the first byte at which they disagree. Exact, not a heuristic:
+        /// XOR has no carries between bytes.
+        ///
+        /// <para>Memory order is what matters, so the bit scan direction follows endianness — on a
+        /// little-endian machine the first byte is the least significant. The check folds away at
+        /// JIT time.</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int FirstDifferingByte(ulong difference)
+            // Fully qualified: Nebula has its own internal BitOperations (NetArray.cs) which would
+            // otherwise win name resolution here and does not carry these members.
+            => BitConverter.IsLittleEndian
+                ? System.Numerics.BitOperations.TrailingZeroCount(difference) >> 3
+                : System.Numerics.BitOperations.LeadingZeroCount(difference) >> 3;
+
+        /// <summary>
+        /// True if any byte of <paramref name="value"/> is zero — i.e. for an XOR, whether the two
+        /// words agree anywhere.
+        ///
+        /// <para>The subtraction borrows across byte boundaries, so this can answer true when the
+        /// only zero byte is one the borrow manufactured. That is why callers treat a hit as "look
+        /// closer" rather than "a match starts here": it has no false negatives, so a run is never
+        /// ended early, and a false positive costs at most eight byte comparisons.</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool HasZeroByte(ulong value)
+            => ((value - 0x0101010101010101UL) & ~value & 0x8080808080808080UL) != 0;
 
         // ---------------------------------------------------------------- varints
 
@@ -497,6 +739,23 @@ namespace Nebula.Serialization
         private readonly Tick[] _ticks = new Tick[RingSize];
         private readonly bool[] _acked = new bool[RingSize];
 
+        /// <summary>
+        /// One 64-bit digest per fixed-size block of each stored payload, computed when the payload
+        /// is recorded.
+        ///
+        /// <para>This is what lets baseline selection stop scanning whole payloads. Counting blocks
+        /// whose digests differ is a good proxy for how many literal bytes a delta would carry, and
+        /// it costs ~28 word compares instead of ~872 byte comparisons. Crucially the digest work
+        /// amortizes: it happens once per payload STORED, not once per candidate per packet, so the
+        /// ~29-way search stops multiplying it.</para>
+        ///
+        /// <para>Digests are only a ranking signal — a collision or a weak mix costs a slightly
+        /// worse baseline choice, never a wrong delta, because the winner is still measured exactly
+        /// before anything is encoded.</para>
+        /// </summary>
+        private readonly ulong[][] _digests = new ulong[RingSize][];
+        private readonly int[] _digestCounts = new int[RingSize];
+
         public NebulaPackWindow() => Reset();
 
         /// <summary>
@@ -517,6 +776,31 @@ namespace Nebula.Serialization
             _lengths[idx] = payload.Length;
             _ticks[idx] = tick;
             _acked[idx] = false;
+
+            int blocks = NebulaPack.BlockCount(payload.Length);
+            var digests = _digests[idx];
+            if (digests == null || digests.Length < blocks)
+            {
+                _digests[idx] = digests = new ulong[Math.Max(blocks, 64)];
+            }
+            NebulaPack.ComputeDigests(payload, digests);
+            _digestCounts[idx] = blocks;
+        }
+
+        /// <summary>
+        /// The block digests for an acknowledged tick. Pairs with <see cref="TryGetAcked"/>; kept
+        /// separate so ranking can run without touching the payload bytes at all.
+        /// </summary>
+        internal bool TryGetAckedDigests(Tick tick, out ReadOnlySpan<ulong> digests)
+        {
+            digests = default;
+            if (tick < 0) return false;
+            int idx = tick % RingSize;
+            if (_ticks[idx] != tick || !_acked[idx]) return false;
+            var stored = _digests[idx];
+            if (stored == null) return false;
+            digests = stored.AsSpan(0, _digestCounts[idx]);
+            return true;
         }
 
         /// <summary>

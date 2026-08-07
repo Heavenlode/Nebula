@@ -17,7 +17,16 @@ signal log_line(line: String)
 
 const MAX_LOG_LINES := 200
 
+## Pacing between client spawns: at most 10 instances per second. The C# tab
+## orders client_args_list bots-first / player-clients-last, so this both keeps
+## a bot flood from saturating the host in one burst and guarantees the player
+## client spawns only after every bot process exists.
+const CLIENT_SPAWN_INTERVAL_SEC := 0.1
+
 var _pids: Array[int] = []
+## Bumped by stop() so a staggered launch coroutine that is still awaiting
+## between spawns notices the session ended and stops spawning.
+var _launch_generation := 0
 var _config_name: String = ""
 var _log_lines: PackedStringArray = PackedStringArray()
 ## Nebula debug-channel ports baked into the launch arguments, in spawn order
@@ -52,7 +61,16 @@ func _do_launch(dummy_scene: String, exe: String, server_args: PackedStringArray
 	else:
 		failed = true
 
+	var generation := _launch_generation
+	var first_client := true
 	for client_args in client_args_list:
+		if first_client:
+			first_client = false
+		else:
+			await get_tree().create_timer(CLIENT_SPAWN_INTERVAL_SEC).timeout
+		if generation != _launch_generation:
+			_log("[play] launch cancelled mid-stagger; remaining instances not spawned")
+			return
 		var client_pid := OS.create_process(exe, client_args)
 		_log("[play] client pid %d: %s" % [client_pid, " ".join(client_args)])
 		if client_pid > 0:
@@ -69,6 +87,7 @@ func _do_launch(dummy_scene: String, exe: String, server_args: PackedStringArray
 	state_changed.emit()
 
 func stop() -> void:
+	_launch_generation += 1
 	for pid in _pids:
 		var err := OS.kill(pid)
 		if err == OK:

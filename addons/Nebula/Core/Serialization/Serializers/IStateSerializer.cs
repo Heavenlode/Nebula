@@ -1,7 +1,30 @@
 namespace Nebula.Serialization.Serializers
 {
     /// <summary>
-    /// Defines an object which the server utilizes to serialize and send data to the client, 
+    /// Result of a server-side <see cref="IStateSerializer.Export"/> call.
+    /// </summary>
+    public enum ExportResult : byte
+    {
+        /// <summary>Nothing was written.</summary>
+        None,
+
+        /// <summary>
+        /// Everything the serializer wanted to send was written. A self-limiting
+        /// serializer guarantees the section is within maxBytes; an atomic serializer
+        /// may have exceeded it, in which case the host drops the bytes and never calls
+        /// CommitExport.
+        /// </summary>
+        Written,
+
+        /// <summary>
+        /// The serializer self-limited to maxBytes and has more data queued for this
+        /// peer. The host uses this to place the round-robin cursor.
+        /// </summary>
+        Partial,
+    }
+
+    /// <summary>
+    /// Defines an object which the server utilizes to serialize and send data to the client,
     /// and the client can then receive and deserialize from the server.
     /// </summary>
     public interface IStateSerializer
@@ -26,11 +49,37 @@ namespace Nebula.Serialization.Serializers
         /// <summary>
         /// Server-side only. Serialize and write data to the provided buffer.
         /// Writes nothing if there's no data to export.
+        ///
+        /// Budget contract: <paramref name="maxBytes"/> is the byte budget for this
+        /// section. maxBytes &lt;= 0 means "deferred this tick": write NOTHING, but
+        /// preserve any would-be-sent data for a later tick (e.g. merge dirty bits into
+        /// a pending mask) and still run delivery-independent state transitions.
+        ///
+        /// Side-effect contract: packet-coupled state — anything asserting "these bytes
+        /// rode this tick's packet" (send-tick windows, sent-history records, dirty-bit
+        /// clears) — must NOT be stamped here. It belongs in <see cref="CommitExport"/>,
+        /// which the host calls iff the bytes from the immediately preceding Export on
+        /// this instance were committed to the packet. An atomic serializer (one that
+        /// cannot split its record) may write more than maxBytes; the host then discards
+        /// the bytes and never calls CommitExport — sound only because of this rule.
+        /// A self-limiting serializer must never exceed maxBytes; the host always
+        /// commits what it wrote.
         /// </summary>
         /// <param name="currentWorld">The current world runner</param>
         /// <param name="peer">The target peer</param>
         /// <param name="buffer">Buffer to write serialized data into</param>
-        public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer);
+        /// <param name="maxBytes">Byte budget for this section (see contract above)</param>
+        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes);
+
+        /// <summary>
+        /// Server-side only. The bytes written by the immediately preceding
+        /// <see cref="Export"/> on this instance were committed to the tick packet being
+        /// assembled — stamp packet-coupled state here (send windows, sent history).
+        /// Temporal contract: the host calls this before any other Export on the same
+        /// instance, on the same world tick thread, so instance scratch captured during
+        /// Export is still valid.
+        /// </summary>
+        public void CommitExport(WorldRunner currentWorld, NetPeer peer, Tick tick) { }
 
         /// <summary>
         /// Server-side only. Called when a peer acknowledges the packet exported at

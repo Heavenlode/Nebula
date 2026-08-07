@@ -102,6 +102,33 @@ namespace Nebula.Utility.Tools
             Instance = this;
         }
 
+        /// <summary>
+        /// Reads a boolean switch from the process environment, falling back to this
+        /// process's .env file (<c>.env.server</c> or <c>.env.client</c>). <c>"0"</c> and
+        /// <c>"false"</c> mean off; any other non-empty value means on.
+        /// </summary>
+        /// <returns>
+        /// False when the variable is absent everywhere, leaving <paramref name="value"/>
+        /// untouched — callers use that to fall back to a project setting rather than
+        /// treating "unset" as "off".
+        /// </returns>
+        public static bool TryGetFlag(string name, out bool value)
+        {
+            value = false;
+
+            // Instance is null in contexts that run no autoloads (the editor, bare unit
+            // tests); the process environment is still readable there.
+            string raw = Instance is not null
+                ? Instance.GetValue(name)
+                : (OS.HasEnvironment(name) ? OS.GetEnvironment(name) : "");
+
+            if (string.IsNullOrEmpty(raw))
+                return false;
+
+            value = raw != "0" && !raw.Equals("false", StringComparison.OrdinalIgnoreCase);
+            return true;
+        }
+
         public string GetValue(string valuename)
         {
             if (OS.HasEnvironment(valuename))

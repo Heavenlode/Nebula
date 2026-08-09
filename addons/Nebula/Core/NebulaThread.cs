@@ -19,6 +19,24 @@ namespace Nebula
     /// compile out entirely in release builds, so annotate freely: any method that mutates
     /// cross-world state, touches the SceneTree, or assumes serial execution is a candidate.
     /// </summary>
+    /// <summary>
+    /// Something a long-lived object can hand to <c>NetRunner.RunOnMainThread</c> without allocating.
+    ///
+    /// The point is that the caller IS the work item: it passes <c>this</c>, so there is no delegate to
+    /// construct and no closure to capture. A lambda would allocate on every deferral, which is fine at
+    /// join/leave frequency and is not fine for anything a world tick can reach repeatedly.
+    ///
+    /// Implement it on the object that owns the state being changed, so what runs on the main thread
+    /// stays next to what it touches.
+    /// </summary>
+    public interface IMainThreadWork
+    {
+        /// <param name="tag">Which job, for an implementer that defers more than one kind of work.
+        /// Handed back exactly as it was passed, so no per-job state has to be stored to tell them
+        /// apart.</param>
+        void OnMainThread(int tag);
+    }
+
     public static class NebulaThread
     {
         /// <summary>

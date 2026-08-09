@@ -708,12 +708,42 @@ namespace Nebula
         /// entry allocates a closure, which is fine at join/leave frequency and would not be inside
         /// ExportState. Callers already on the main thread run inline and never queue.
         /// </summary>
-        private readonly Queue<Action> _mainThreadWork = new();
+        private readonly Queue<MainThreadItem> _mainThreadWork = new();
         private readonly object _mainThreadWorkLock = new();
+
+        /// <summary>
+        /// One queued job, in whichever of the two forms the caller had.
+        ///
+        /// A struct so the queue itself never allocates per item, and ONE queue rather than two so
+        /// both forms keep a single, obvious execution order -- a peer join queued as a closure and a
+        /// node's state change queued as an interface still run in the order they were asked for.
+        /// </summary>
+        private readonly struct MainThreadItem
+        {
+            private readonly Action _action;
+            private readonly IMainThreadWork _work;
+            private readonly int _tag;
+
+            internal MainThreadItem(Action action) { _action = action; _work = null; _tag = 0; }
+            internal MainThreadItem(IMainThreadWork work, int tag) { _action = null; _work = work; _tag = tag; }
+
+            internal void Run()
+            {
+                if (_action != null) _action();
+                else _work?.OnMainThread(_tag);
+            }
+        }
 
         /// <summary>
         /// Runs <paramref name="work"/> on the main thread: inline if already there, otherwise
         /// queued for the next <see cref="_PhysicsProcess"/>.
+        ///
+        /// Allocates a delegate (and a display class, if the lambda captures) per call, which is why
+        /// this form is for one-off lifecycle events. A caller that defers REPEATEDLY should implement
+        /// <see cref="IMainThreadWork"/> and use the overload below instead.
+        ///
+        /// This overload cannot go away even so: <c>INotifyCompletion.OnCompleted</c> hands its
+        /// continuation over as an <see cref="Action"/>, so <see cref="SwitchToMainThread"/> needs it.
         /// </summary>
         internal void RunOnMainThread(Action work)
         {
@@ -722,9 +752,36 @@ namespace Nebula
                 work();
                 return;
             }
+            Enqueue(new MainThreadItem(work));
+        }
+
+        /// <summary>
+        /// The same hop, with NOTHING allocated.
+        ///
+        /// The caller is the work: a long-lived object implements <see cref="IMainThreadWork"/> and
+        /// hands over <c>this</c>, so there is no delegate to construct and no closure to capture. Use
+        /// it wherever the deferral happens often enough that a per-call allocation would show up --
+        /// anything reached from a world tick rather than from a join or a world creation.
+        /// </summary>
+        /// <param name="tag">Which job, for an object that defers more than one kind of work. Passed
+        /// straight back, so the callee needs no state to tell them apart.</param>
+        internal void RunOnMainThread(IMainThreadWork work, int tag = 0)
+        {
+            if (work == null) return;
+
+            if (NebulaThread.IsMain)
+            {
+                work.OnMainThread(tag);
+                return;
+            }
+            Enqueue(new MainThreadItem(work, tag));
+        }
+
+        private void Enqueue(in MainThreadItem item)
+        {
             lock (_mainThreadWorkLock)
             {
-                _mainThreadWork.Enqueue(work);
+                _mainThreadWork.Enqueue(item);
             }
         }
 
@@ -791,7 +848,7 @@ namespace Nebula
 
             while (pending-- > 0)
             {
-                Action work;
+                MainThreadItem work;
                 lock (_mainThreadWorkLock)
                 {
                     if (!_mainThreadWork.TryDequeue(out work)) return;
@@ -799,7 +856,7 @@ namespace Nebula
 
                 try
                 {
-                    work();
+                    work.Run();
                 }
                 catch (Exception ex)
                 {
@@ -1242,7 +1299,7 @@ namespace Nebula
         /// and only once it acks is the peer admitted to the target — so the target streams no state into
         /// a not-yet-reset client (the World channel and the tick channel are not cross-channel ordered).
         /// The peer joins the target as INITIAL and transitions to IN_WORLD on its first tick ack, which
-        /// fires the target's PlayerSpawnManager to (re)spawn the player under the same identity.
+        /// raises OnPlayerJoined on the target so it can (re)spawn the player under the same identity.
         /// </summary>
         public void MigratePeerToWorld(NetPeer peer, WorldRunner target)
         {
@@ -1369,8 +1426,7 @@ namespace Nebula
         /// <param name="onTreeReady">
         /// Runs on the main thread once the world is in the tree and network-prepared, but before
         /// it goes Live. This is where per-world infrastructure a caller wants in place before any
-        /// peer can join belongs -- a PlayerSpawnManager, say. Attaching it after awaiting would be
-        /// a race against the first join.
+        /// peer can join belongs. Attaching it after awaiting would be a race against the first join.
         /// </param>
         public async Task<WorldRunner> CreateWorld(
             UUID worldId,

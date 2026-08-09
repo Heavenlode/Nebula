@@ -1113,6 +1113,49 @@ namespace Nebula
 		}
 
 		/// <summary>
+		/// Records a property's starting value in the cache WITHOUT marking it dirty.
+		///
+		/// The cache is otherwise only written by <see cref="MarkDirty"/>, which fires on a CHANGE, so
+		/// a property whose value never differs from its inline initializer is never cached at all and
+		/// the cache reads default(T) for it forever. That is invisible for most properties, because
+		/// both roles run the same initializer and the property itself is correct on both. It is fatal
+		/// for a PREDICTED one: the generated StoreConfirmedState sources the server's confirmed value
+		/// from this cache rather than from the property, so reconciliation compares against default(T)
+		/// on every tick -- and since a miss on any one predicted property restores ALL of them, a
+		/// single such property drags the whole entity backwards at the tick rate.
+		/// PlayerCharacter.HeightAboveTerrain (inline 1f, and 1f at every spawn and while grounded) did
+		/// exactly that.
+		///
+		/// Deliberately does NOT touch <see cref="DirtyMask"/>. Begin() derives nonDefaultProperties --
+		/// "which properties have ever been set", and therefore what a NEW peer is sent -- from the
+		/// dirty mask, on the sound assumption that an unset property is still at its default. Seeding
+		/// through MarkDirty would put every property on that list and change what goes on the wire at
+		/// spawn. The cache is the only thing that was wrong, so the cache is the only thing corrected.
+		///
+		/// Safe to seed identically on both roles, and it must be done on both: the value is the type's
+		/// own initializer, which both sides evaluate the same way, so this leaves the two caches
+		/// agreeing exactly as they did when both held default(T). Any property whose real value
+		/// differs from its initializer goes dirty through the normal path and overwrites this.
+		/// </summary>
+		internal void SeedCachedValue<T>(INetNodeBase sourceNode, string propertyName, T value) where T : struct
+		{
+			// Static children propagate to the parent net scene, which owns the cache.
+			if (!IsNetScene())
+			{
+				NetParent?.SeedCachedValue(sourceNode, propertyName, value);
+				return;
+			}
+
+			var staticChildId = sourceNode.Network.StaticChildId;
+			if (!Protocol.LookupPropertyByStaticChildId(NetSceneFilePath, staticChildId, propertyName, out var prop))
+			{
+				return;
+			}
+
+			SetCachedValue(prop.Index, prop.VariantType, value);
+		}
+
+		/// <summary>
 		/// Marks a reference-type property as dirty and caches its value.
 		/// Called by generated On{Prop}Changed methods.
 		/// </summary>

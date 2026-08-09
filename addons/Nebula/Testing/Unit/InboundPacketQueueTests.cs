@@ -303,4 +303,120 @@ public class MainThreadWorkQueueTests
         // resume the caller ON the draining thread itself.
         Assert.Equal(System.Environment.CurrentManagedThreadId, resumedOnThread);
     }
+
+    // ---- Allocation-free form -------------------------------------------------------------------
+
+    /// <summary>A work item that is also the thing being changed, which is the whole point: handing
+    /// over `this` costs nothing, where a lambda would allocate.</summary>
+    private sealed class Recorder : IMainThreadWork
+    {
+        internal readonly List<int> Tags = new();
+        internal int Thread;
+
+        public void OnMainThread(int tag)
+        {
+            Tags.Add(tag);
+            Thread = System.Environment.CurrentManagedThreadId;
+        }
+    }
+
+    [NebulaUnitTest]
+    public void TestWorkItemRunsInlineWhenAlreadyOnMainThread()
+    {
+        var recorder = new Recorder();
+        NetRunner.Instance.RunOnMainThread(recorder, 7);
+
+        Assert.Equal(new[] { 7 }, recorder.Tags);
+    }
+
+    [NebulaUnitTest]
+    public void TestWorkItemDefersAndCarriesItsTag()
+    {
+        var recorder = new Recorder();
+
+        var worker = new Thread(() => NetRunner.Instance.RunOnMainThread(recorder, 42));
+        worker.Start();
+        Assert.True(worker.Join(10_000), "worker thread did not finish");
+
+        Assert.Empty(recorder.Tags);
+
+        Drain();
+        Assert.Equal(new[] { 42 }, recorder.Tags);
+        Assert.Equal(System.Environment.CurrentManagedThreadId, recorder.Thread);
+    }
+
+    /// <summary>
+    /// The two forms share one queue, so they must also share one order. A closure queued before a
+    /// work item has to run before it -- otherwise a peer join and the node change that depends on it
+    /// could swap places.
+    /// </summary>
+    [NebulaUnitTest]
+    public void TestBothFormsKeepOneOrder()
+    {
+        var order = new List<string>();
+        var recorder = new Recorder();
+
+        var worker = new Thread(() =>
+        {
+            NetRunner.Instance.RunOnMainThread(() => order.Add("action"));
+            NetRunner.Instance.RunOnMainThread(recorder, 1);
+            NetRunner.Instance.RunOnMainThread(() => order.Add("after"));
+        });
+        worker.Start();
+        Assert.True(worker.Join(10_000), "worker thread did not finish");
+
+        Drain();
+
+        Assert.Equal(new[] { "action", "after" }, order);
+        Assert.Equal(new[] { 1 }, recorder.Tags);
+    }
+
+    /// <summary>
+    /// The reason this overload exists: deferring through the work-item form must allocate NOTHING,
+    /// where the closure form allocates a delegate (and a display class) every single time.
+    ///
+    /// Measured on the WORKER, deliberately. The main-thread path short-circuits to an inline call and
+    /// never touches the queue, so measuring there would pass no matter what the queued path did --
+    /// which is exactly the false confidence this test exists to avoid.
+    ///
+    /// The closure figure is asserted too, as the control: if it ever reads zero the measurement itself
+    /// has stopped working, and a green "allocates nothing" would mean nothing.
+    /// </summary>
+    [NebulaUnitTest]
+    public void TestWorkItemFormAllocatesNothing()
+    {
+        var recorder = new Recorder();
+
+        // Grow the queue's backing array first and drain it. Queue<T> keeps its capacity across a
+        // drain, so the measured run below cannot be charged for a resize it did not cause.
+        var warm = new Thread(() =>
+        {
+            for (int i = 0; i < 1024; i++) NetRunner.Instance.RunOnMainThread(recorder, i);
+        });
+        warm.Start();
+        Assert.True(warm.Join(10_000), "warm-up thread did not finish");
+        Drain();
+
+        long workItemBytes = 0;
+        long closureBytes = 0;
+
+        var worker = new Thread(() =>
+        {
+            long before = System.GC.GetAllocatedBytesForCurrentThread();
+            for (int i = 0; i < 256; i++) NetRunner.Instance.RunOnMainThread(recorder, i);
+            workItemBytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
+
+            before = System.GC.GetAllocatedBytesForCurrentThread();
+            for (int i = 0; i < 256; i++) NetRunner.Instance.RunOnMainThread(() => recorder.Thread = i);
+            closureBytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
+        });
+        worker.Start();
+        Assert.True(worker.Join(10_000), "worker thread did not finish");
+        Drain();
+
+        Assert.True(workItemBytes == 0,
+            $"work-item hop allocated {workItemBytes} bytes over 256 deferrals; it must allocate none");
+        Assert.True(closureBytes > 0,
+            "the closure form allocated nothing either, so this measurement is not measuring anything");
+    }
 }

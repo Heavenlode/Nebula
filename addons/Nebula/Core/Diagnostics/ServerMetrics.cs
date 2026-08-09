@@ -256,7 +256,6 @@ namespace Nebula.Diagnostics
             _line.Append(",\"spawn_backlog_max\":").Append(_spawnBacklogMax).Append('}');
             _line.Append('}');
 
-            GD.Print(_line.ToString());
             string json = _line.ToString(LinePrefix.Length, _line.Length - LinePrefix.Length);
 
             _windowStartUsec = Time.GetTicksUsec();

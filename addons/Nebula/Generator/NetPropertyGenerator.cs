@@ -701,12 +701,24 @@ public class NetPropertyGenerator : IIncrementalGenerator
             // Called from _NetworkPrepare. Automatic (based on the type implementing INetSerializable),
             // so a mutable object NetProperty can no longer silently "replicate empty" by forgetting a marker.
             var serializableObjectProps = propList.Where(p => p!.ImplementsINetSerializable).ToList();
-            if (serializableObjectProps.Count > 0)
+
+            // Value properties are seeded CACHE-ONLY -- see NetworkController.SeedCachedValue for why
+            // that must not go through MarkDirty. Per-peer properties are excluded: their storage is
+            // per-peer dictionaries rather than the shared cache.
+            var seedableValueProps = propList
+                .Where(p => p != null && p.IsValueType && !p.ImplementsINetSerializable && !p.IsPerPeer)
+                .ToList();
+
+            if (serializableObjectProps.Count > 0 || seedableValueProps.Count > 0)
             {
                 sb.AppendLine("    /// <summary>");
-                sb.AppendLine("    /// Seeds the network property cache for INetSerializable object properties initialized inline.");
-                sb.AppendLine("    /// Inline initialization bypasses the property setter, so without this the every-tick");
-                sb.AppendLine("    /// object serializer would read a null cache and ship empty. Called from _NetworkPrepare.");
+                sb.AppendLine("    /// Seeds the network property cache for properties initialized inline.");
+                sb.AppendLine("    ///");
+                sb.AppendLine("    /// Inline initialization bypasses the property setter, so the cache never learns the value.");
+                sb.AppendLine("    /// INetSerializable objects are marked dirty here, because the every-tick object serializer");
+                sb.AppendLine("    /// would otherwise read a null cache and ship empty. Value properties are seeded WITHOUT");
+                sb.AppendLine("    /// being marked dirty, so what a new peer receives is unchanged -- see");
+                sb.AppendLine("    /// NetworkController.SeedCachedValue. Called from _NetworkPrepare.");
                 sb.AppendLine("    /// </summary>");
                 sb.AppendLine("    internal override void InitializeNetPropertyBindings()");
                 sb.AppendLine("    {");
@@ -722,6 +734,11 @@ public class NetPropertyGenerator : IIncrementalGenerator
                     // no per-mutation callback: object properties self-filter every tick (their per-peer
                     // sync state lives in the serializer).
                     sb.AppendLine($"        if ({prop.PropertyName} != null) Network.MarkDirtyRef(this, \"{prop.PropertyName}\", {prop.PropertyName});");
+                }
+
+                foreach (var prop in seedableValueProps)
+                {
+                    sb.AppendLine($"        Network.SeedCachedValue(this, \"{prop!.PropertyName}\", {prop.PropertyName});");
                 }
 
                 sb.AppendLine("    }");

@@ -97,6 +97,40 @@ namespace Nebula.Utility
 
         internal static async Task<T> FromBSON<T>(NetBsonContext context, BsonDocument data, T fillNode = null) where T : Node, INetNodeBase
         {
+            // Main thread FIRST, before anything is loaded or instantiated -- not merely before the
+            // AddChild below, which is where this hop used to sit.
+            //
+            // Deserialization reaches here from wherever its caller's awaits happened to resume, and
+            // with per-world thread groups that is never anywhere good: DataBuddyRpc.ImportWorld and
+            // LoadCharacter resume from a gRPC await on the ThreadPool, and a character load kicked
+            // off by OnPlayerJoined starts on a world tick thread. Instantiating a scene there
+            // allocates RenderingServer RIDs (every VisualInstance3D constructor, every ArrayMesh)
+            // from that thread -- and on a HEADLESS server the dummy renderer's RID owners are the
+            // non-thread-safe ones (unlike the RD renderer's), so an instantiate racing any other
+            // thread's allocation corrupts the RID freelist. That surfaced as a burst of
+            // "Attempting to initialize the wrong RID" / "Parameter mem is null" /
+            // "unimplemented base type encountered in renderer scene cull" at the AddChild (where
+            // the queued RID initializations actually run), followed by "Parameter m is null" from
+            // dummy mesh_storage on every later use of the corrupted mesh RIDs.
+            //
+            // The cost of hopping first is that big scenes (a saved world is Backslat-sized) load
+            // and instantiate ON main -- a boot-time hitch. If that hitch ever matters, the shape of
+            // the real fix is known, in two independent halves:
+            //   1. Load: ResourceLoader.LoadThreadedRequest(path, useSubThreads: true) + poll +
+            //      LoadThreadedGet, fired as soon as the scene path is known. Unconditionally safe
+            //      on the CLIENT (real renderers use thread-safe RID owners); on the headless
+            //      server it only narrows this same race, so the idiomatic server answer is the
+            //      dedicated-server export mode (placeholder meshes/textures -- the server's
+            //      collision runs through the spatial mirror, never these meshes).
+            //   2. Instantiate: no partial Instantiate exists, so chunking means decomposing the
+            //      scene (the SphereStructure exported_scene_path split is the existing seam) and
+            //      instantiating N subtrees per frame under a Time.GetTicksMsec budget, gating the
+            //      world's go-Live on completion exactly as IAsyncWorldGenerator already does.
+            //
+            // Hopping here rather than asking each caller to do it keeps the requirement with the
+            // code that actually has it.
+            await NetRunner.Instance.SwitchToMainThread();
+
             T node = fillNode;
             if (fillNode == null)
             {
@@ -120,16 +154,6 @@ namespace Nebula.Utility
             // Mark imported nodes accordingly
             if (!node.GetMeta("import_from_external", false).AsBool())
             {
-                // Deserialization reaches here from wherever its caller's awaits happened to resume,
-                // and that is not somewhere this method can afford to guess about: the block below
-                // parents the node into the live SceneTree, which Godot permits only from the main
-                // thread. With per-world thread groups the realistic caller -- a character load
-                // kicked off by OnPlayerJoined at the top of ServerProcessTick -- starts on a world
-                // tick thread, which has no SynchronizationContext, so every continuation after its
-                // first await lands on the ThreadPool. Hopping here rather than asking each caller
-                // to do it keeps the requirement with the code that actually has it.
-                await NetRunner.Instance.SwitchToMainThread();
-
                 var tcs = new TaskCompletionSource<bool>();
                 // Create the event handler as a separate method so we can disconnect it later
                 Action treeEnteredHandler = () =>

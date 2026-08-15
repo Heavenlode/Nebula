@@ -2225,11 +2225,19 @@ namespace Nebula
                 RootScene.QueueNodeForDeletion();
             }
             Log("Changing scene to " + netController.RawNode.Name);
-            // TODO: Support this more generally
-            GetTree().CurrentScene.AddChild(netController.RawNode);
-            RootScene = netController;
-            netController._NetworkPrepare(this);
-            netController._WorldReady();
+
+            // Timed as one region because it is one: putting a world's root into the tree runs every
+            // _Ready under it, uploads every mesh and hands every collider to the physics server, and
+            // none of that is deferred. On a client arriving in a world this is the frame a loading
+            // screen cannot animate through.
+            using (Nebula.Diagnostics.MainThreadWork.Time($"ChangeScene({netController.RawNode.Name})"))
+            {
+                // TODO: Support this more generally
+                GetTree().CurrentScene.AddChild(netController.RawNode);
+                RootScene = netController;
+                netController._NetworkPrepare(this);
+                netController._WorldReady();
+            }
             Debug?.Send("WorldJoined", netController.RawNode.SceneFilePath);
         }
 
@@ -3252,6 +3260,11 @@ namespace Nebula
             // SpawnSerializer still holds the nested set of its last Export for this
             // peer (valid: phase 1 for this peer ran immediately before this phase), so
             // membership is checked exactly, not inferred from the hierarchy.
+            //
+            // Only AUTHORED nested scenes can answer yes now - runtime spawns no longer ride
+            // an ancestor's table (see SpawnSerializer.CollectNestedNetScenesRecursive) and
+            // reach Spawning through their own record instead, which the check above already
+            // covers. The walk stays because authored nesting is still arbitrarily deep.
             for (var ancestor = netController.NetParent; ancestor != null; ancestor = ancestor.NetParent)
             {
                 if (GetClientSpawnState(ancestor.NetId, peer) != ClientSpawnState.Spawning)
@@ -3591,7 +3604,7 @@ namespace Nebula
                 if (nowMsec - _lastStallLogMsec >= 1000)
                 {
                     _lastStallLogMsec = nowMsec;
-                    Log(Debugger.DebugLevel.WARN,
+                    Log(Debugger.DebugLevel.INFO,
                         $"[Prediction] Confirmed timeline stalled for {TimeSinceLastTick * 1000f:F0}ms " +
                         $"(tick jump {CurrentTick} -> {incomingTick}); prediction lead grew by ~{incomingTick - CurrentTick - 1} ticks");
                 }
@@ -3635,7 +3648,7 @@ namespace Nebula
                 ReconcileOwnedEntity(netController, incomingTick);
             }
 
-            // Process non-owned entities with server state
+            // Process non-owned entities with server state.
             _netIdsToRemove.Clear();
             _isProcessingNetScenes = true;
             foreach (var net_id in NetScenes.Keys)
@@ -3989,6 +4002,17 @@ namespace Nebula
         /// restricts delivery to those specific peers instead of broadcasting to every interested peer
         /// — used by generated peer-targeted overloads. Peers that don't have the node (no interest)
         /// are skipped, since the peer-local netId wouldn't resolve on their client.
+        ///
+        /// <b>An RPC never leaves the world that raised it.</b> Recipients are resolved through THIS
+        /// world's <see cref="PeerStates"/> rather than the global <c>NetRunner.Instance.Peers</c>
+        /// registry, so a peer belonging to another world is not a candidate in the first place. That
+        /// scoping is load-bearing, not defensive: a node's interest is seeded from the GLOBAL peer
+        /// registry (<c>NetworkController._NetworkPrepare</c>), so with more than one world live -- an
+        /// expedition alongside the hub -- every node's InterestLayers names peers that are elsewhere,
+        /// and a peer mid-migration is briefly in no world at all. Addressing one of them is not merely
+        /// wasteful: the recipient's peer-local node id is looked up in the world's own PeerState, which
+        /// a foreign peer does not have, and <see cref="NetId.NetworkSerialize"/> has no graceful failure
+        /// once it starts writing.
         /// </summary>
         internal void SendNetFunction(NetId netId, ProtocolNetFunction functionInfo, object[] args, UUID[] targetPeers = null)
         {
@@ -3997,13 +4021,15 @@ namespace Nebula
                 var node = GetNodeFromNetId(netId);
                 if (targetPeers == null)
                 {
-                    // Default: broadcast to all interested peers.
+                    // Default: broadcast to this world's interested peers. Not logged when a peer is
+                    // skipped -- interest legitimately names every peer on the server, so in a two-world
+                    // session that would be a warning per bystander per RPC.
                     // TODO: Apply interest layers for network function, like network property
                     foreach (var peerId in node.InterestLayers.Keys)
                     {
-                        if (NetRunner.Instance.Peers.TryGetValue(peerId, out var peer))
+                        if (PeerStates.TryGetValue(peerId, out var state))
                         {
-                            SendNetFunctionToPeer(netId, functionInfo, args, peer);
+                            SendNetFunctionToPeer(netId, functionInfo, args, state.Peer);
                         }
                     }
                 }
@@ -4018,10 +4044,14 @@ namespace Nebula
                             Log(Debugger.DebugLevel.WARN, $"SendNetFunction: target peer {peerId} has no interest in node {netId} for {functionInfo.Name}; skipping (node not spawned for them).");
                             continue;
                         }
-                        if (NetRunner.Instance.Peers.TryGetValue(peerId, out var peer))
+                        // Named explicitly by the caller, so being in another world IS worth reporting:
+                        // it means the caller resolved a peer from outside this world's membership.
+                        if (!PeerStates.TryGetValue(peerId, out var state))
                         {
-                            SendNetFunctionToPeer(netId, functionInfo, args, peer);
+                            Log(Debugger.DebugLevel.WARN, $"SendNetFunction: target peer {peerId} is not in world {WorldId} for {functionInfo.Name}; skipping (RPCs are world-scoped).");
+                            continue;
                         }
+                        SendNetFunctionToPeer(netId, functionInfo, args, state.Peer);
                     }
                 }
             }

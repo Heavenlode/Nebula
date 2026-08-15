@@ -248,6 +248,11 @@ namespace Nebula.Generators
                 sceneId++;
 
                 // Scene-level interest requirements
+                if (bytecode.Preload)
+                {
+                    data.PreloadScenes.Add(sceneResPath);
+                }
+
                 if (bytecode.InterestAny != 0 || bytecode.InterestRequired != 0)
                 {
                     data.SceneInterestMap[sceneResPath] = new SceneInterestData
@@ -425,6 +430,7 @@ namespace Nebula.Generators
             {
                 result.InterestAny = rootTypeInfo.InterestAny;
                 result.InterestRequired = rootTypeInfo.InterestRequired;
+                result.Preload = rootTypeInfo.Preload;
             }
 
             // Start at 1 because staticChildId 0 is reserved for the root node (".")

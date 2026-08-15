@@ -27,7 +27,7 @@ namespace Nebula.Utility.Nodes
     /// - Smooth visual interpolation for ALL clients (owned and non-owned)
     /// </summary>
     [GlobalClass]
-    public partial class NetTransform3D : NetNode3D
+    public partial class NetTransform3D : NetNode3D, IPredictionPausable
     {
         /// <summary>
         /// The physics/simulation node to read authoritative transform from.
@@ -69,10 +69,20 @@ namespace Nebula.Utility.Nodes
         public bool VisualSmoothing { get; set; } = true;
 
         /// <summary>
-        /// When true, skips _NetworkProcess entirely and disables reconciliation hooks.
-        /// Not exported - controlled programmatically at runtime only.
+        /// When true, skips _NetworkProcess entirely and suspends reconciliation for this node
+        /// (via <see cref="IPredictionPausable"/> — no predicted-vs-confirmed comparison, no
+        /// restore from either buffer). The exemption is required, not merely convenient: a
+        /// pausing server stops exporting, so the client's confirmed cache freezes at the pose
+        /// where the pause began while the real transform keeps moving (a parked ship riding an
+        /// orbiting planet), and the comparison would mispredict every tick forever — rolling
+        /// back and resimulating the ENTIRE owning entity each time.
+        /// Not exported - controlled programmatically at runtime only. Both roles must derive it
+        /// from the same replicated state (e.g. a replicated docking/velocity-match flag) so the
+        /// client exempts exactly the ticks the server stopped exporting.
         /// </summary>
         public bool SyncPaused { get; set; } = false;
+
+        bool IPredictionPausable.PredictionPaused => SyncPaused;
 
         [NetProperty(NotifyOnChange = true)]
         public bool IsTeleporting { get; set; }
@@ -165,6 +175,34 @@ namespace Nebula.Utility.Nodes
         private Vector3 _hermiteVisualVelocity;
         private bool _hermiteInitialized;
 
+        // Visual discontinuity absorber state. See AbsorbVisualDiscontinuity.
+        private bool _absorbPending;
+        private bool _absorbActive;
+        private Vector3 _absorbCapturedPosition;
+        private Quaternion _absorbCapturedRotation = Quaternion.Identity;
+        private Vector3 _absorbOffsetPosition;
+        private Quaternion _absorbOffsetRotation = Quaternion.Identity;
+        private Vector3 _absorbAppliedPosition;
+        private Quaternion _absorbAppliedRotation = Quaternion.Identity;
+        private float _absorbElapsed;
+        private float _absorbDuration;
+
+        /// <summary>
+        /// Default blend-out time for <see cref="AbsorbVisualDiscontinuity"/>. Long enough that a
+        /// tens-of-units offset bleeds off well under the speed of the thing carrying it, short
+        /// enough that the visual is not meaningfully off its authoritative pose for long.
+        /// </summary>
+        public const float DefaultAbsorbSeconds = 0.45f;
+
+        /// <summary>
+        /// Largest discontinuity worth hiding. A real teleport is not a reference-frame change and
+        /// must not be blended: dragging the visual across the map would trail anything following it
+        /// (a chase camera) through the world for the whole duration, which is worse than the cut.
+        /// Anything beyond this is passed through untouched -- and stays visible, which is the point:
+        /// a jump this size is a bug to find, not a seam to paper over.
+        /// </summary>
+        private const float MaxAbsorbDistance = 250f;
+
         protected virtual void OnNetChangeIsTeleporting(int tick, bool oldVal, bool newVal)
         {
             _isTeleporting = true;
@@ -192,9 +230,27 @@ namespace Nebula.Utility.Nodes
                 SourceNode.Position = NetPosition;
                 SourceNode.Quaternion = SafeNormalize(NetRotation);
             }
-            // Ensure TargetNode has a valid initial quaternion
-            if (Network.IsClient && TargetNode != null)
+            // Seed the VISUAL node from the source, not just tidy up whatever pose it was authored
+            // with. A visual node adopts its first pose; it must never interpolate into it.
+            //
+            // This used to normalise TargetNode's own quaternion and leave its POSITION alone, so a
+            // spawned node's visual sat at its scene-authored origin while the source was already at
+            // the real spawn point -- and the interpolator below then closed that gap over the next
+            // several frames. On a ship spawned ten thousand units out, that is the whole world
+            // sliding into place, and anything following the visual (the flight camera follows
+            // PlayerShip/Models, not the physics node) slides with it.
+            //
+            // Position was the visible half only because rotation was partly covered: it got touched
+            // here, and RotationSnapThreshold catches whatever error survived. Position has no such
+            // threshold, so nothing caught it.
+            if (Network.IsClient && TargetNode != null && SourceNode != null)
             {
+                TargetNode.Position = SourceNode.Position;
+                TargetNode.Quaternion = SafeNormalize(SourceNode.Quaternion);
+            }
+            else if (Network.IsClient && TargetNode != null)
+            {
+                // No source to seed from -- keep the old guarantee that the quaternion is at least valid.
                 TargetNode.Quaternion = SafeNormalize(TargetNode.Quaternion);
             }
         }
@@ -384,19 +440,148 @@ namespace Nebula.Utility.Nodes
             _hermiteInitialized = false;
         }
 
+        /// <summary>
+        /// Hides a change of reference frame from the screen. Captures where the visual node is right
+        /// now; over the next <paramref name="seconds"/> the difference between that pose and wherever
+        /// normal interpolation puts the visual is blended out.
+        ///
+        /// This is not added lag: the visual tracks real motion one-for-one throughout, with a fading
+        /// constant offset laid over it. Use it when the pose is authoritative on both sides of a
+        /// transition but expressed against different references -- a body's tick-evaluated frame
+        /// versus a predicted world frame, say -- so the discontinuity is real, unavoidable, and
+        /// exactly the kind that must not reach a camera following this node.
+        ///
+        /// Call it BEFORE handing the transform back (while the visual still holds the outgoing
+        /// pose); the offset resolves on the next frame, once the interpolator has written the
+        /// incoming one. Calling it again mid-blend composes -- the capture already contains the
+        /// offset still being decayed -- so overlapping transitions cannot double-count.
+        /// </summary>
+        public void AbsorbVisualDiscontinuity(float seconds = DefaultAbsorbSeconds)
+        {
+            if (!Network.IsClient || seconds <= 0f) return;
+
+            var target = TargetNode ?? SourceNode;
+            if (target == null) return;
+
+            _absorbCapturedPosition = target.Position;
+            _absorbCapturedRotation = SafeNormalize(target.Quaternion);
+            _absorbDuration = seconds;
+            _absorbPending = true;
+        }
+
+        /// <summary>
+        /// Hands the visual back to normal interpolation after something else has been driving
+        /// <see cref="SourceNode"/> directly (see <see cref="SyncPaused"/>), without the handover
+        /// showing. Absorbs the pose discontinuity, restores smoothing, and reseeds the Hermite
+        /// history from the source -- the ring is full of samples taken in the frame being left, and
+        /// their stale positions and (typically zero) velocities would otherwise produce a second
+        /// step one tick after the first.
+        /// </summary>
+        /// <param name="velocity">Seed for the visual velocity -- the source's velocity in the frame
+        /// being resumed, so extrapolation starts correct rather than ramping up to it.</param>
+        public void ResumeInterpolation(Vector3 velocity, float seconds = DefaultAbsorbSeconds)
+        {
+            if (!Network.IsClient) return;
+
+            AbsorbVisualDiscontinuity(seconds);
+            VisualSmoothing = true;
+
+            if (SourceNode != null)
+                ResetHermiteState(SourceNode.Position, SafeNormalize(SourceNode.Quaternion), velocity);
+        }
+
+        /// <summary>
+        /// Weight of the captured pose at <paramref name="elapsed"/> into a blend of
+        /// <paramref name="duration"/>: 1 at the capture, 0 at the end, with zero slope at BOTH ends
+        /// so neither starting nor finishing the blend introduces a velocity step of its own.
+        /// </summary>
+        internal static float AbsorbWeight(float elapsed, float duration)
+        {
+            if (duration <= 0f) return 0f;
+            float t = Mathf.Clamp(elapsed / duration, 0f, 1f);
+            return 1f - t * t * (3f - 2f * t);
+        }
+
+        /// <summary>
+        /// Resolves a pending capture and lays the decayed offset over whatever the interpolation
+        /// paths just wrote. Must run last in <see cref="_Process"/>, paired with the strip at the top.
+        /// </summary>
+        private void ApplyAbsorbedOffset(Node3D target, float delta)
+        {
+            if (_absorbPending)
+            {
+                _absorbPending = false;
+                _absorbActive = false;
+
+                var offset = _absorbCapturedPosition - target.Position;
+                if (offset.IsFinite() && offset.LengthSquared() <= MaxAbsorbDistance * MaxAbsorbDistance)
+                {
+                    _absorbOffsetPosition = offset;
+
+                    var landed = SafeNormalize(target.Quaternion);
+                    var captured = EnsureSameHemisphere(_absorbCapturedRotation, landed);
+                    _absorbOffsetRotation = SafeNormalize(captured * landed.Inverse());
+
+                    _absorbElapsed = 0f;
+                    _absorbActive = true;
+                }
+            }
+
+            if (!_absorbActive)
+            {
+                _absorbAppliedPosition = Vector3.Zero;
+                _absorbAppliedRotation = Quaternion.Identity;
+                return;
+            }
+
+            float weight = AbsorbWeight(_absorbElapsed, _absorbDuration);
+            _absorbElapsed += delta;
+
+            _absorbAppliedPosition = _absorbOffsetPosition * weight;
+            _absorbAppliedRotation = Quaternion.Identity.Slerp(_absorbOffsetRotation, weight);
+
+            target.Position += _absorbAppliedPosition;
+            target.Quaternion = SafeNormalize(_absorbAppliedRotation * SafeNormalize(target.Quaternion));
+
+            if (weight <= 0f)
+                _absorbActive = false;
+        }
+
+        /// <summary>
+        /// Drops any in-flight absorption. For discontinuities that are meant to be seen.
+        /// </summary>
+        private void ClearAbsorbedOffset()
+        {
+            _absorbPending = false;
+            _absorbActive = false;
+            _absorbAppliedPosition = Vector3.Zero;
+            _absorbAppliedRotation = Quaternion.Identity;
+        }
+
         /// <inheritdoc/>
         public override void _Process(double delta)
         {
             base._Process(delta);
             if (!Network.IsWorldReady) return;
             if (!Network.IsClient) return;
-            
+
             // Skip visual interpolation during resimulation - physics is replaying history
             if (Network.IsResimulating) return;
 
             // Determine the target node to interpolate (TargetNode if set, otherwise SourceNode)
             var target = TargetNode ?? SourceNode;
             if (target == null) return;
+
+            // Take the absorber's offset back off before interpolating. Every path below except the
+            // snap reads target.Position/Quaternion back and integrates into it, so an offset left in
+            // place would be read as tracking error and corrected away -- and then the decay would
+            // remove it a second time, undershooting and crawling back. The interpolators run against
+            // their own clean state; ApplyAbsorbedOffset re-lays the offset at the bottom.
+            if (_absorbActive)
+            {
+                target.Position -= _absorbAppliedPosition;
+                target.Quaternion = SafeNormalize(_absorbAppliedRotation.Inverse() * SafeNormalize(target.Quaternion));
+            }
 
             // For owned entities: update visual from physics
             if (Network.IsCurrentOwner && SourceNode != null)
@@ -498,13 +683,11 @@ namespace Nebula.Utility.Nodes
                         target.Quaternion = visualRot.Slerp(sourceRot, t);
                     }
                 }
-                return;
             }
-
             // Non-owned client: use NetPosition/NetRotation directly (network layer already interpolates)
             // Unless SyncPaused, in which case use SourceNode (physics is being driven externally,
             // e.g., velocity-matched state where position is computed from relative position + planet)
-            if (SyncPaused && SourceNode != null)
+            else if (SyncPaused && SourceNode != null)
             {
                 target.Position = SourceNode.Position;
                 target.Quaternion = SafeNormalize(SourceNode.Quaternion);
@@ -514,6 +697,8 @@ namespace Nebula.Utility.Nodes
                 target.Position = NetPosition;
                 target.Quaternion = SafeNormalize(NetRotation);
             }
+
+            ApplyAbsorbedOffset(target, (float)delta);
         }
 
         /// <summary>
@@ -531,6 +716,7 @@ namespace Nebula.Utility.Nodes
             }
             NetPosition = incoming_position;
             IsTeleporting = true;
+            ClearAbsorbedOffset();
             ResetHermiteState(incoming_position, NetRotation);
         }
 
@@ -554,6 +740,7 @@ namespace Nebula.Utility.Nodes
             NetPosition = incoming_position;
             NetRotation = normalizedRotation;
             IsTeleporting = true;
+            ClearAbsorbedOffset();
             ResetHermiteState(incoming_position, normalizedRotation);
         }
     }

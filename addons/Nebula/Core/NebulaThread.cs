@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 // System.Diagnostics also defines a Debugger; alias Nebula's so the two can't be confused here.
 using NebulaDebugger = Nebula.Utility.Tools.Debugger;
+// Aliased rather than `using Godot`, which would make every Environment in this file ambiguous.
+using DisplayServer = Godot.DisplayServer;
 
 namespace Nebula
 {
@@ -53,6 +55,28 @@ namespace Nebula
 
         /// <summary>True on Godot's main thread, or before the main thread has been identified.</summary>
         public static bool IsMain => _mainThreadId == 0 || Environment.CurrentManagedThreadId == _mainThreadId;
+
+        /// <summary>
+        /// Whether this process may build RenderingServer-backed resources -- meshes, textures,
+        /// instantiated scenes -- off the main thread.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// The RENDERER decides this, not the network role, and the difference matters: a headless
+        /// process's dummy renderer uses the non-thread-safe RID owners where a real renderer's are
+        /// safe, so an off-main allocation racing any other thread's corrupts the RID freelist. See
+        /// the long note in <c>NetNodeCommon.DeserializeInstance</c>, which is where that was paid for
+        /// once already.
+        ///
+        /// True for every client and for a windowed dev server; false for a dedicated server AND for
+        /// the headless test runner -- which is exactly why asking "am I a client?" is the wrong
+        /// question. A process that answers false is not thereby slow: what it loses is the ability to
+        /// move the work off a thread nobody is watching draw.
+        /// </remarks>
+        public static bool CanBuildResourcesOffMain => DisplayServer.GetName() != HeadlessDisplayDriver;
+
+        /// <summary>Godot's name for the no-op display server, i.e. the dummy renderer.</summary>
+        private const string HeadlessDisplayDriver = "headless";
 
         /// <summary>
         /// Asserts the caller is on Godot's main thread. Use on anything that mutates state shared

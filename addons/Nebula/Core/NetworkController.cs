@@ -419,6 +419,24 @@ namespace Nebula
 		public HashSet<NetworkController> DynamicNetworkChildren = [];
 
 		/// <summary>
+		/// Whether this scene is authored inside its parent's .tscn, i.e. the client gets it for
+		/// free the moment it instantiates the parent. False for anything created by
+		/// <see cref="WorldRunner.Spawn"/> at runtime.
+		///
+		/// This is what decides whether a scene may ride its parent's spawn table. That table is a
+		/// RECONCILIATION mechanism: an entry means "the node you already built from the .tscn is
+		/// this NetId", and the client matches it against a local instance. A runtime spawn has no
+		/// local instance to match, so it has to be CONSTRUCTED - and construction needs a parent,
+		/// which a table entry has no field for. Its own spawn record does carry one.
+		///
+		/// Set where authored nesting is discovered (<see cref="DiscoverDynamicChildrenRecursive"/>,
+		/// from Setup, on both roles). Deliberately NOT <see cref="IsClientSpawn"/>, which is true
+		/// for authored nested scenes on the client too - that flag means "sanctioned by the
+		/// server", not "created at runtime".
+		/// </summary>
+		internal bool ExistsInParentScene;
+
+		/// <summary>
 		/// Invoked when a peer's interest layers change. Parameters: (peerId, oldInterest, newInterest)
 		/// </summary>
 		public event Action<UUID, long, long> InterestChanged;
@@ -1004,6 +1022,11 @@ namespace Nebula
 				if (child is INetNodeBase netNode && netNode.Network != null && netNode.Network.IsNetScene())
 				{
 					DynamicNetworkChildren.Add(netNode.Network);
+
+					// Reached by walking the parent's own instantiated subtree, so by definition
+					// this scene is part of the parent's .tscn and every client builds it for free.
+					// That is what makes it eligible to ride the parent's spawn table.
+					netNode.Network.ExistsInParentScene = true;
 
 					// Compute and cache the node path ID for spawn serialization
 					var relativePath = treeRoot.GetPathTo(child);
@@ -1620,21 +1643,35 @@ namespace Nebula
 		}
 
 		/// <summary>
+		/// True while this node has deliberately suspended its sync (see <see cref="IPredictionPausable"/>).
+		/// The confirmed cache is not tracking the server's live value during a pause, so comparing or
+		/// restoring against it would be comparing against a lie.
+		/// </summary>
+		public bool PredictionSuspended => NetNode is IPredictionPausable pausable && pausable.PredictionPaused;
+
+		/// <summary>
 		/// Compares predicted state with confirmed server state and restores mispredicted properties.
 		/// Returns true if any misprediction was detected (rollback needed), false if all predictions correct.
 		/// If forceRestoreAll is true, skips comparison and restores all properties to confirmed state.
+		/// A node with <see cref="PredictionSuspended"/> set is always clean: its frozen confirmed cache
+		/// would mispredict every tick forever (and force-restore would slam that stale pose over the
+		/// live one), so the pause exempts it from both paths until sync resumes.
 		/// </summary>
 		public bool Reconcile(Tick tick, bool forceRestoreAll = false)
 		{
+			if (PredictionSuspended) return false;
 			return NetNode.Reconcile(tick, forceRestoreAll);
 		}
 
 		/// <summary>
 		/// Restores properties from the prediction buffer for a given tick.
 		/// Used when prediction was correct and we need to continue with predicted values after server state import.
+		/// Skipped while <see cref="PredictionSuspended"/>: when a SIBLING node's rollback rebaselines the
+		/// entity, a paused node must keep its live pose rather than rewind to a buffered one.
 		/// </summary>
 		public void RestoreToPredictedState(Tick tick)
 		{
+			if (PredictionSuspended) return;
 			NetNode.RestoreToPredictedState(tick);
 		}
 

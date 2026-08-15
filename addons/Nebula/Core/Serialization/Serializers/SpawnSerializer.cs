@@ -571,8 +571,14 @@ namespace Nebula.Serialization.Serializers
                 // for an unknown node: tick-import abort, no acks, and the abort starves
                 // the very ack that would commit this parent and let the child spawn
                 // standalone. Deadlock until something else acks (or the peer times out).
-                // New children instead stay NotSpawned (props gated) and spawn via their
-                // own Export once this parent commits.
+                //
+                // The invariant is simply "this table is byte-identical on every resend".
+                // Runtime spawns used to be the way it got violated; they no longer enter the
+                // table at all (see CollectNestedNetScenesRecursive). The live trigger is now
+                // the FIRST-send budget cap below: children truncated off that send get no
+                // spawn window, and this is what keeps them out of a later, roomier resend.
+                // They stay NotSpawned (props gated) and spawn via their own Export once this
+                // parent commits.
                 if (!firstSend
                     && (nested.NetNode?.Serializers == null
                         || nested.NetNode.Serializers.Length == 0
@@ -653,17 +659,40 @@ namespace Nebula.Serialization.Serializers
             => _pendingCommit == PendingCommit.Spawn && _pendingNestedCommit.Contains(nested);
 
         /// <summary>
-        /// Recursively collects all nested NetScenes in the subtree, pruning any scene (and
-        /// everything under it) whose despawn is in flight for this peer. Re-including one
-        /// would flip its per-peer state back to Spawning mid-despawn (ExportNestedScenes
-        /// sets every included scene Spawning), reopening the props exporters the despawn
-        /// cascade just silenced. Stale Despawned with no despawn pending stays included -
-        /// that is the legitimate re-add path when a parent respawns.
+        /// Recursively collects the AUTHORED nested NetScenes in the subtree - the ones the client
+        /// rebuilds for itself from the parent's .tscn (see NetworkController.ExistsInParentScene).
+        /// Runtime spawns are skipped along with everything beneath them; they ship their own
+        /// records.
+        ///
+        /// Also prunes any scene (and everything under it) whose despawn is in flight for this
+        /// peer. Re-including one would flip its per-peer state back to Spawning mid-despawn
+        /// (ExportNestedScenes sets every included scene Spawning), reopening the props exporters
+        /// the despawn cascade just silenced. Stale Despawned with no despawn pending stays
+        /// included - that is the legitimate re-add path when a parent respawns.
         /// </summary>
         private static void CollectNestedNetScenesRecursive(WorldRunner currentWorld, NetPeer peer, NetworkController parent, List<NetworkController> results)
         {
             foreach (var child in parent.DynamicNetworkChildren)
             {
+                // Authored nesting only. A table entry says "the node you already built from the
+                // .tscn is this NetId" - it is matched against a local instance, and carries no
+                // parent field because its parent is implicitly the record being imported. That is
+                // sound for authored scenes at any depth, since the client rebuilds the whole
+                // subtree from the parent's .tscn and every entry is only reconciling ids.
+                //
+                // A runtime spawn has no local instance to match, so the client would have to
+                // CONSTRUCT it - and with no parent field the only place it can go is the record's
+                // own root. For a direct child of the record that happens to be right; for a
+                // grandchild it silently reparents the node up the tree. Runtime spawns therefore
+                // ship their own record, which does carry an explicit parent id.
+                //
+                // Skipping the recursion too, not just the entry: everything under a runtime spawn
+                // belongs to that spawn's record, not to this one.
+                if (!child.ExistsInParentScene)
+                {
+                    continue;
+                }
+
                 if (child.IsQueuedForDespawn
                     || currentWorld.GetClientSpawnState(child.NetId, peer) == WorldRunner.ClientSpawnState.Despawning)
                 {

@@ -40,6 +40,7 @@ namespace Nebula.Generators
             // Scene maps
             EmitScenesMap(sb, data);
             EmitScenesPack(sb, data);
+            EmitPreloadScenes(sb, data);
             EmitSceneInterestMap(sb, data);
             
             // Static network node paths
@@ -249,6 +250,30 @@ namespace Nebula.Generators
             }
             
             sb.AppendLine("            }.ToFrozenDictionary();");
+            sb.AppendLine();
+        }
+
+        /// <summary>
+        /// Scenes whose root class carries [Preload]. An array rather than a dictionary because the
+        /// only thing anyone does with it is walk it once; see Protocol.PreloadScenes.
+        /// </summary>
+        private static void EmitPreloadScenes(StringBuilder sb, ProtocolData data)
+        {
+            sb.AppendLine("        public static readonly string[] PreloadScenes =");
+            sb.AppendLine("        {");
+
+            // Sorted, because scene iteration order is not guaranteed stable across builds and this
+            // text goes into the protocol hash -- an unstable order would make two identical builds
+            // refuse to connect to each other.
+            var sorted = new List<string>(data.PreloadScenes);
+            sorted.Sort(System.StringComparer.Ordinal);
+
+            foreach (var scenePath in sorted)
+            {
+                sb.AppendLine($"            \"{Escape(scenePath)}\",");
+            }
+
+            sb.AppendLine("        };");
             sb.AppendLine();
         }
 

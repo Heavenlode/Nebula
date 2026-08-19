@@ -118,6 +118,23 @@ public partial class ProjectSettingsController : Node
             {"hint_string", "100,65535,1"},
         });
 
+        // Liveness cutoff for in-world peers: seconds without a tick ack before the
+        // server force-disconnects.
+        Register(NetRunner.ACK_TIMEOUT_SETTING, NetRunner.DefaultAckTimeoutSeconds, new(){
+            {"type", (int)Variant.Type.Float},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "1,300,0.5"},
+        });
+
+        // Same cutoff for a JOINING peer (never acked yet): its first ack only follows
+        // boot + world-scene load + a successfully imported tick, so it needs far more
+        // headroom than the in-world cutoff.
+        Register(NetRunner.JOIN_ACK_TIMEOUT_SETTING, NetRunner.DefaultJoinAckTimeoutSeconds, new(){
+            {"type", (int)Variant.Type.Float},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "1,300,0.5"},
+        });
+
         // Network tick rate in ticks per second. The network tick fires on whole physics
         // frames, so this should divide physics/common/physics_ticks_per_second evenly
         // (with 60 physics: 60, 30, 20, 15, 12, 10, ...); anything else snaps to the
@@ -189,6 +206,23 @@ public partial class ProjectSettingsController : Node
         // bytes per packet and turns any window divergence into an immediate, loud failure rather
         // than silently corrupted state. Worth leaving on until the feature has real mileage.
         Register("Nebula/config/pack/validate", true, new(){
+            {"type", (int)Variant.Type.Bool},
+        });
+
+        // ── Threading ────────────────────────────────────────────────────
+        // Give every server world's SubViewport its own ProcessThreadGroup, so worlds run their
+        // ticks concurrently instead of being walked one after another on the main thread.
+        //
+        // Note this parallelizes _process/_physics_process callbacks only. It does NOT parallelize
+        // physics simulation: PhysicsServer3D steps every active space sequentially, so per-world
+        // World3Ds still simulate serially either way. The gain is ServerProcessTick (dominated by
+        // state serialization) and gameplay scripts.
+        //
+        // Off by default. Everything it depends on is written to be correct in both modes, so this
+        // changes timing rather than behavior -- but it does move all gameplay code in a world onto
+        // a worker thread, so anything reaching across worlds or into a mutable autoload needs to
+        // have been audited first. Read once at startup.
+        Register("Nebula/config/threading/per_world_thread_group", false, new(){
             {"type", (int)Variant.Type.Bool},
         });
 

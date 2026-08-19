@@ -78,6 +78,39 @@ namespace Nebula.Internal.Editor
         private readonly byte[] readBuffer = new byte[8192];
         private double sinceConnectAttempt;
         private bool loggedFrameError;
+        private bool loggedMetricsError;
+
+        private NebulaPerformanceView performanceView;
+
+        /// <summary>
+        /// Finds the sibling Performance tab, which receives every METRICS frame. This
+        /// view stays the single owner of the debug-channel connections so a second tab
+        /// doesn't double the hub's traffic.
+        ///
+        /// <para>Resolved from the live scene tree on demand rather than wired once as a
+        /// C# event or an injected reference. A .NET assembly reload — which every Play
+        /// press triggers via its build — recreates the managed side of each node and
+        /// DROPS managed state (event subscriptions, plain fields) WITHOUT re-running
+        /// _Ready. A subscription made in NebulaMainScreen._Ready is therefore silently
+        /// dead for the rest of the session: frames arrived, `subscribers=0`, and the
+        /// Performance tab never updated. Re-resolving is reload-proof.</para>
+        /// </summary>
+        private NebulaPerformanceView ResolvePerformanceView()
+        {
+            if (performanceView is not null && GodotObject.IsInstanceValid(performanceView))
+                return performanceView;
+
+            performanceView = null;
+            foreach (var sibling in GetParent()?.GetChildren() ?? new Godot.Collections.Array<Node>())
+            {
+                if (sibling is NebulaPerformanceView found)
+                {
+                    performanceView = found;
+                    break;
+                }
+            }
+            return performanceView;
+        }
 
         public override void _Ready()
         {
@@ -186,8 +219,11 @@ namespace Nebula.Internal.Editor
 
         public override void _Process(double delta)
         {
-            if (!IsVisibleInTree())
-                return;
+            // Drains regardless of visibility. An attached-but-undrained socket fills
+            // until the server's DebugHub write times out and drops the editor client,
+            // which is unrecoverable for the session — so "the user switched tabs" must
+            // never stop the reader. (This also can't be delegated to a flag set from
+            // outside: assembly reloads reset plain fields without re-running _Ready.)
 
             if (!IsDebugServerEnabled)
             {
@@ -354,6 +390,34 @@ namespace Nebula.Internal.Editor
                     if (connection.Panels.TryGetValue(key, out var removed))
                         removed.MarkDisconnected();
                     return;
+
+                case WorldRunner.DebugDataType.METRICS:
+                {
+                    // Handled before the panel lookup: metrics are process-level data
+                    // for the Performance tab, not per-panel state. Guarded because a
+                    // throwing handler would otherwise escape ConsumeFrames before the
+                    // inbox tail-slide, re-parsing (and re-throwing on) the same frame
+                    // every editor frame.
+                    //
+                    // Its own one-shot flag, NOT the shared loggedFrameError: one
+                    // unrelated panel-frame error would otherwise permanently silence
+                    // every metrics failure after it.
+                    try
+                    {
+                        using var metricsBuffer = new NetBuffer(payload, usePool: false);
+                        ResolvePerformanceView()?.OnMetricsReceived(
+                            connection.Port, NetReader.ReadString(metricsBuffer));
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!loggedMetricsError)
+                        {
+                            loggedMetricsError = true;
+                            GD.PushError($"Nebula: metrics frame failed: {ex}");
+                        }
+                    }
+                    return;
+                }
             }
 
             if (!connection.Panels.TryGetValue(key, out var panel))

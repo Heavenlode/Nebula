@@ -402,7 +402,37 @@ public partial class Main : EditorPlugin
             $"--debugPort={serverDebugPort}",
         };
 
+        // List order is spawn order (the orchestrator staggers spawns): bots first, the
+        // player client(s) last. A bot flood saturates the host exactly when a joining
+        // client is doing its heaviest main-thread work (world + player scene builds), and
+        // a client stalled past the server's ack timeout gets force-disconnected - so the
+        // player client only launches once every bot process already exists.
         var clientArgsList = new Godot.Collections.Array();
+
+        // Bots are ordinary client instances with a behavior attached, so they ride the same
+        // orchestrator list rather than needing a launch path of their own. Their clientId
+        // continues the client numbering, keeping debug labels unique across the whole session.
+        for (int i = 0; i < config.BotCount; i++)
+        {
+            int botDebugPort = ReserveLoopbackPort();
+            debugPorts.Add(botDebugPort);
+
+            var botArgs = new List<string>
+            {
+                "--path", projectPath,
+                "--remote-debug", debugUri,
+                $"--debugPort={botDebugPort}",
+                $"--clientId={config.ClientCount + i}",
+                Nebula.Bots.BotRunner.BotArg,
+                $"{Nebula.Bots.BotRunner.BotIdArg}{i}",
+                $"{Nebula.Bots.BotRunner.BotBehaviorArg}{config.BotBehavior}",
+            };
+            if (config.BotsHeadless)
+                botArgs.Add("--headless");
+
+            clientArgsList.Add(botArgs.ToArray());
+        }
+
         for (int i = 0; i < config.ClientCount; i++)
         {
             int clientDebugPort = ReserveLoopbackPort();

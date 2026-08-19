@@ -107,4 +107,23 @@ namespace Nebula {
     }
 
     public interface INetNode<T> : INetNodeBase, INetSerializable<T>, IBsonSerializable<T> where T : Godot.Node { }
+
+    /// <summary>
+    /// Implemented by net nodes whose sync can be deliberately suspended at runtime (e.g.
+    /// <see cref="NetTransform3D.SyncPaused"/>). While <see cref="PredictionPaused"/> is true,
+    /// the reconciliation machinery treats the node as clean: it is neither compared against
+    /// confirmed state nor restored from either buffer.
+    ///
+    /// This exists because a paused node breaks reconciliation's core assumption — that the
+    /// confirmed cache tracks the server's live value. A pausing server stops exporting, so the
+    /// cache freezes while the real value walks away (a parked ship riding an orbiting planet),
+    /// and the comparison mispredicts on every tick forever, dragging the WHOLE entity through
+    /// a rollback + resimulation each time. The pause state itself must be derived identically
+    /// on both roles (e.g. from a replicated property) for the client to exempt the same ticks
+    /// the server stopped exporting.
+    /// </summary>
+    public interface IPredictionPausable
+    {
+        public bool PredictionPaused { get; }
+    }
 }

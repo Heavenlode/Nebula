@@ -19,7 +19,7 @@ namespace Nebula.Utility.Tools
 			}
 		}
 
-		private void prepareServer()
+		private async void prepareServer()
 		{
 			NetRunner.Instance.StartServer();
 			if (Env.Instance.InitialWorldScene != null)
@@ -27,7 +27,7 @@ namespace Nebula.Utility.Tools
 				Debugger.Instance.Log("Loading initial world scene: " + Env.Instance.InitialWorldScene);
 				Debugger.Instance.Log("No existing World data found. Create fresh World instance.");
 				var InitialWorldScene = GD.Load<PackedScene>(Env.Instance.InitialWorldScene);
-				NetRunner.Instance.CreateWorld(Env.Instance.InitialWorldId, InitialWorldScene);
+				await NetRunner.Instance.CreateWorld(Env.Instance.InitialWorldId, InitialWorldScene);
 				Debugger.Instance.Log("Server ready");
 			}
 			else

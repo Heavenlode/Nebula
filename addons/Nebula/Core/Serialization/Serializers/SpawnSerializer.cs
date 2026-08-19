@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using Nebula.Utility.Tools;
@@ -27,25 +28,64 @@ namespace Nebula.Serialization.Serializers
             public byte HasInputAuthority;
         }
 
-        // Pre-allocated buffers for nested scene handling (static to avoid per-instance allocation)
-        private static readonly List<NetworkController> _nestedSceneBuffer = new(16);
-        private static readonly NestedSceneData[] _nestedDataBuffer = new NestedSceneData[64];
-        private static int _nestedDataCount;
-        private static readonly List<NetworkController> _allLocalNestedScenes = new(64);
+        // Pre-allocated scratch for nested scene handling, shared across every SpawnSerializer
+        // instance to avoid a per-instance allocation. Each buffer is filled and consumed within a
+        // single Export/Import call chain, so sharing is safe as long as only one such chain runs
+        // at a time.
+        //
+        // [ThreadStatic] is what keeps that true once worlds tick on their own threads (see
+        // NetRunner's per_world_thread_group setting): two worlds exporting concurrently would
+        // otherwise stomp each other's spawn tables, which surfaces as a desync rather than a
+        // crash. Note that [ThreadStatic] and field initializers do NOT mix -- an initializer runs
+        // only on the first thread to touch the type and every other thread silently sees null --
+        // so these are lazily initialized through the properties below and must only ever be
+        // reached that way.
+        [ThreadStatic] private static List<NetworkController> _nestedSceneBuffer;
+        [ThreadStatic] private static NestedSceneData[] _nestedDataBuffer;
+        [ThreadStatic] private static int _nestedDataCount;
+        [ThreadStatic] private static List<NetworkController> _allLocalNestedScenes;
+
+        private static List<NetworkController> NestedSceneBuffer => _nestedSceneBuffer ??= new(16);
+        private static NestedSceneData[] NestedDataBuffer => _nestedDataBuffer ??= new NestedSceneData[64];
+        private static List<NetworkController> AllLocalNestedScenes => _allLocalNestedScenes ??= new(64);
 
         private NetworkController netController;
-        private Dictionary<UUID, Tick> setupTicks = new();
-        private Dictionary<UUID, Tick> despawnTicks = new(); // Track when despawn was sent per peer
 
         /// <summary>
-        /// The most recent tick at which spawn data was written for each peer. Spawn data
-        /// re-ships every tick while Spawning (see Export), so together with the soft-interest
-        /// revert this keeps the invariant "spawn rode every exported tick in
-        /// [setupTick, lastSpawnSendTick]" - which is what makes the cumulative ack commit in
-        /// Acknowledge sound: an acked tick inside that range is a packet that provably
-        /// contained the spawn data.
+        /// Per-peer contiguous run of ticks whose packets carried this node's spawn record
+        /// (see SendWindow). Presence in the dictionary means "a spawn send is in flight
+        /// (unacked)"; Acknowledge commits Spawning -> Spawned only for an acked tick the
+        /// window Covers. Budget splitting can defer a resend on any tick - RecordSend's
+        /// gap-restart is what keeps the commit rule sound when that happens.
         /// </summary>
-        private Dictionary<UUID, Tick> lastSpawnSendTicks = new();
+        private Dictionary<UUID, SendWindow> spawnWindows = new();
+
+        /// <summary>Same contract as <see cref="spawnWindows"/>, for despawn markers.</summary>
+        private Dictionary<UUID, SendWindow> despawnWindows = new();
+
+        /// <summary>
+        /// What the bytes of the immediately preceding Export were, so CommitExport knows
+        /// which packet-coupled stamps to apply. Valid only between an Export and its
+        /// commit (host contract: CommitExport runs before any other Export on this
+        /// instance, on the same world tick thread).
+        /// </summary>
+        private enum PendingCommit : byte
+        {
+            None,
+            Spawn,
+            Despawn,
+        }
+
+        private PendingCommit _pendingCommit;
+        private bool _pendingFirstSend;
+
+        /// <summary>
+        /// Nested children whose table entries were written by the preceding Export
+        /// (registration succeeded). Their Spawning flips and window stamps apply in
+        /// CommitExport - stamping at write time would corrupt their ack windows when the
+        /// host drops this record for budget.
+        /// </summary>
+        private List<NetworkController> _pendingNestedCommit = new(64);
 
         private bool hasImported = false; // Track if this serializer has already imported
 
@@ -56,6 +96,15 @@ namespace Nebula.Serialization.Serializers
         /// Despawn marker byte - when first byte is 255, it's a despawn message.
         /// </summary>
         private const byte DESPAWN_MARKER = 255;
+
+        /// <summary>The nested-table count byte preceding the entries.</summary>
+        private const int NESTED_COUNT_BYTES = 1;
+
+        /// <summary>
+        /// One nested-table entry: sceneId (1) + nodePathId (1) + netId (2) +
+        /// hasInputAuthority (1). Must match ExportNestedScenes' writes.
+        /// </summary>
+        private const int NESTED_ENTRY_BYTES = 5;
 
         public SpawnSerializer(NetworkController controller)
         {
@@ -73,9 +122,8 @@ namespace Nebula.Serialization.Serializers
 
         public void CleanupPeer(UUID peerId)
         {
-            setupTicks.Remove(peerId);
-            despawnTicks.Remove(peerId);
-            lastSpawnSendTicks.Remove(peerId);
+            spawnWindows.Remove(peerId);
+            despawnWindows.Remove(peerId);
         }
 
         /// <summary>
@@ -127,9 +175,8 @@ namespace Nebula.Serialization.Serializers
                     if (child.NetNode?.Serializers != null && child.NetNode.Serializers.Length > 0
                         && child.NetNode.Serializers[0] is SpawnSerializer childSpawn)
                     {
-                        childSpawn.setupTicks.Remove(peerId);
-                        childSpawn.despawnTicks.Remove(peerId);
-                        childSpawn.lastSpawnSendTicks.Remove(peerId);
+                        childSpawn.spawnWindows.Remove(peerId);
+                        childSpawn.despawnWindows.Remove(peerId);
                     }
                 }
 
@@ -161,7 +208,92 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
+        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes)
+        {
+            // Atomic serializer: a spawn/despawn record cannot be split, so this may
+            // write more than maxBytes; the host then drops the bytes and skips
+            // CommitExport. Packet-coupled stamps live in CommitExport, so a dropped
+            // record retries cleanly next tick.
+            _pendingCommit = PendingCommit.None;
+            var start = buffer.WritePosition;
+            ExportCore(currentWorld, peer, buffer, maxBytes);
+            return buffer.WritePosition == start ? ExportResult.None : ExportResult.Written;
+        }
+
+        public void CommitExport(WorldRunner currentWorld, NetPeer peer, Tick tick)
+        {
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            switch (_pendingCommit)
+            {
+                case PendingCommit.Spawn:
+                {
+                    spawnWindows.TryGetValue(peerId, out var window);
+                    window.RecordSend(tick);
+                    spawnWindows[peerId] = window;
+
+                    if (_pendingFirstSend)
+                    {
+                        ResetPeerBaselines(netController, peerId);
+                        currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
+                    }
+
+                    // Nested children rode this record's spawn table: flip them Spawning
+                    // and stamp their own windows so their acks track the parent's
+                    // resend stream. States cannot have changed since Export (same
+                    // thread, adjacent calls), so this evaluates as it would have at
+                    // write time. The baseline reset must cover EVERY state except
+                    // Spawning (= "already in this parent's resend stream"; resetting per
+                    // resend would wipe props delta state every tick) - notably stale
+                    // Spawned: a per-peer despawned parent takes its nested subtree down
+                    // client-side (QueueFree frees children) without a server-side
+                    // cascade, so the nested node still reads Spawned while the client is
+                    // about to rebuild it with an empty applied ring. Skipping the reset
+                    // then leaves a delta baseline the rebuilt node can never resolve
+                    // ("missing applied-state baseline" bursts on respawn).
+                    for (int i = 0; i < _pendingNestedCommit.Count; i++)
+                    {
+                        var nested = _pendingNestedCommit[i];
+                        if (currentWorld.GetClientSpawnState(nested.NetId, peer) != WorldRunner.ClientSpawnState.Spawning)
+                        {
+                            ResetPeerBaselines(nested, peerId);
+                        }
+                        currentWorld.SetClientSpawnState(nested.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
+
+                        if (nested.NetNode?.Serializers != null && nested.NetNode.Serializers.Length > 0
+                            && nested.NetNode.Serializers[0] is SpawnSerializer nestedSpawnSerializer)
+                        {
+                            nestedSpawnSerializer.spawnWindows.TryGetValue(peerId, out var nestedWindow);
+                            nestedWindow.RecordSend(tick);
+                            nestedSpawnSerializer.spawnWindows[peerId] = nestedWindow;
+                        }
+                    }
+                    break;
+                }
+
+                case PendingCommit.Despawn:
+                {
+                    despawnWindows.TryGetValue(peerId, out var window);
+                    window.RecordSend(tick);
+                    despawnWindows[peerId] = window;
+
+                    if (_pendingFirstSend)
+                    {
+                        // The marker genuinely shipped: silence the nested subtree in the
+                        // same tick (see CascadeDespawnToNestedChildren). Must not run
+                        // when the record was dropped for budget - the client still has
+                        // a live copy and keeps receiving props until the marker ships.
+                        currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Despawning);
+                        CascadeDespawnToNestedChildren(currentWorld, peer, peerId, netController, freeIds: false);
+                    }
+                    break;
+                }
+            }
+            // _pendingCommit intentionally survives until the next Export (which resets
+            // it on entry): WorldRunner's props phase reads it through
+            // NestedSceneRodeLastSpawnExport after this commit.
+        }
+
+        private void ExportCore(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes)
         {
             var peerId = NetRunner.Instance.GetPeerId(peer);
             var spawnState = currentWorld.GetClientSpawnState(netController.NetId, peer);
@@ -201,10 +333,9 @@ namespace Nebula.Serialization.Serializers
                 // Revert to never-spawned: on interest regain the node runs a fresh spawn
                 // cycle - same local id (registration is idempotent), and a client that did
                 // receive one of the earlier sends consumes-and-skips the duplicate.
-                if (spawnState == WorldRunner.ClientSpawnState.Spawning && setupTicks.ContainsKey(peerId))
+                if (spawnState == WorldRunner.ClientSpawnState.Spawning && spawnWindows.ContainsKey(peerId))
                 {
-                    setupTicks.Remove(peerId);
-                    lastSpawnSendTicks.Remove(peerId);
+                    spawnWindows.Remove(peerId);
                     currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.NotSpawned);
                 }
                 return;
@@ -291,13 +422,6 @@ namespace Nebula.Serialization.Serializers
                 }
             }
 
-            // Only set setupTick on FIRST export - don't overwrite on re-exports
-            // Otherwise the ACK can never catch up (setupTick keeps moving forward)
-            if (!setupTicks.ContainsKey(peerId))
-            {
-                setupTicks[peerId] = currentWorld.CurrentTick;
-            }
-
             NetWriter.WriteByte(buffer, sceneId);
 
             if (netController.NetParent == null)
@@ -305,17 +429,12 @@ namespace Nebula.Serialization.Serializers
                 NetWriter.WriteUInt16(buffer, 0);
 
                 // Write nested NetScenes for root scene
-                ExportNestedScenes(currentWorld, peer, buffer, firstSend);
+                ExportNestedScenes(currentWorld, peer, buffer, firstSend, maxBytes);
 
-                // Stamped every send (first and resends) - the upper bound of the ack window.
-                lastSpawnSendTicks[peerId] = currentWorld.CurrentTick;
-
-                // Mark spawn as being sent (waiting for ACK)
-                if (firstSend)
-                {
-                    ResetPeerBaselines(netController, peerId);
-                    currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
-                }
+                // Window stamp, Spawning flip, and nested-child stamps apply in
+                // CommitExport - only if these bytes actually ride the packet.
+                _pendingCommit = PendingCommit.Spawn;
+                _pendingFirstSend = firstSend;
                 return;
             }
 
@@ -330,17 +449,12 @@ namespace Nebula.Serialization.Serializers
             NetWriter.WriteByte(buffer, hasInputAuth);
 
             // Write nested NetScenes
-            ExportNestedScenes(currentWorld, peer, buffer, firstSend);
+            ExportNestedScenes(currentWorld, peer, buffer, firstSend, maxBytes);
 
-            // Stamped every send (first and resends) - the upper bound of the ack window.
-            lastSpawnSendTicks[peerId] = currentWorld.CurrentTick;
-
-            // Mark spawn as being sent (waiting for ACK)
-            if (firstSend)
-            {
-                ResetPeerBaselines(netController, peerId);
-                currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
-            }
+            // Window stamp, Spawning flip, and nested-child stamps apply in
+            // CommitExport - only if these bytes actually ride the packet.
+            _pendingCommit = PendingCommit.Spawn;
+            _pendingFirstSend = firstSend;
 
             currentWorld.Debug?.Send("Spawn", $"Exported:{netController.RawNode.SceneFilePath}");
         }
@@ -377,12 +491,14 @@ namespace Nebula.Serialization.Serializers
                         CascadeDespawnToNestedChildren(currentWorld, peer, peerId, netController, freeIds: false);
                         break;
                     }
-                    // Peer received (or is receiving) spawn, send despawn data. Silence the
-                    // nested subtree in the same tick the marker first ships - this is what
-                    // closes the orphan-props window (see CascadeDespawnToNestedChildren).
+                    // Peer received (or is receiving) spawn, send despawn data. The
+                    // Despawning flip and the nested-subtree silencing cascade apply in
+                    // CommitExport, in the same tick the marker actually first ships -
+                    // that timing is what closes the orphan-props window (see
+                    // CascadeDespawnToNestedChildren).
                     WriteDespawnData(currentWorld, peer, peerId, localNodeId, buffer);
-                    currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Despawning);
-                    CascadeDespawnToNestedChildren(currentWorld, peer, peerId, netController, freeIds: false);
+                    _pendingCommit = PendingCommit.Despawn;
+                    _pendingFirstSend = true;
                     break;
 
                 case WorldRunner.ClientSpawnState.Despawning:
@@ -394,6 +510,8 @@ namespace Nebula.Serialization.Serializers
                     }
                     // Already sent despawn, resend until ACKed
                     WriteDespawnData(currentWorld, peer, peerId, localNodeId, buffer);
+                    _pendingCommit = PendingCommit.Despawn;
+                    _pendingFirstSend = false;
                     break;
 
                 case WorldRunner.ClientSpawnState.Despawned:
@@ -408,12 +526,6 @@ namespace Nebula.Serialization.Serializers
         /// </summary>
         private void WriteDespawnData(WorldRunner currentWorld, NetPeer peer, UUID peerId, ushort localNodeId, NetBuffer buffer)
         {
-            // Only set despawnTick on FIRST export - don't overwrite on re-exports
-            if (!despawnTicks.ContainsKey(peerId))
-            {
-                despawnTicks[peerId] = currentWorld.CurrentTick;
-            }
-
             // Write despawn marker
             NetWriter.WriteByte(buffer, DESPAWN_MARKER);
 
@@ -425,41 +537,53 @@ namespace Nebula.Serialization.Serializers
 
         /// <summary>
         /// Exports all nested NetScenes in the subtree that the peer has interest in.
+        /// On a FIRST send the table is capped to what fits <paramref name="maxBytes"/>:
+        /// excluded children simply stay NotSpawned - they are never part of the frozen
+        /// membership, so resends stay consistent, and once this parent commits Spawned
+        /// they spawn through their own child-spawn Export. On a resend the frozen table
+        /// rides whole (the host drops the whole record if it no longer fits).
         /// </summary>
-        private void ExportNestedScenes(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, bool firstSend)
+        private void ExportNestedScenes(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, bool firstSend, int maxBytes)
         {
             var peerUUID = NetRunner.Instance.GetPeerId(peer);
 
             // Collect nested NetScenes recursively (entire subtree)
-            _nestedSceneBuffer.Clear();
-            CollectNestedNetScenesRecursive(currentWorld, peer, netController, _nestedSceneBuffer);
+            NestedSceneBuffer.Clear();
+            CollectNestedNetScenesRecursive(currentWorld, peer, netController, NestedSceneBuffer);
 
             // Filter to only include scenes the peer has interest in
             _interestedNestedBuffer.Clear();
-            for (int i = 0; i < _nestedSceneBuffer.Count; i++)
+            for (int i = 0; i < NestedSceneBuffer.Count; i++)
             {
-                var nested = _nestedSceneBuffer[i];
+                var nested = NestedSceneBuffer[i];
                 if (!nested.IsPeerInterested(peer))
                 {
                     continue;
                 }
 
                 // Table membership is FROZEN per peer while this spawn is in flight: on a
-                // resend, only children whose setupTick proves they rode an earlier send of
-                // this table may appear. A client that already imported this spawn consume-
-                // and-skips every resend (hasImported), so a child ADDED to the table
-                // mid-resend rides only payloads that client is guaranteed to discard - it
-                // can never learn the id, and the child's props exporter (switched on by the
-                // Spawning flip below) then feeds it props for an unknown node: tick-import
-                // abort, no acks, and the abort starves the very ack that would commit this
-                // parent and let the child spawn standalone. Deadlock until something else
-                // acks (or the peer times out). New children instead stay NotSpawned (props
-                // gated) and spawn via their own Export once this parent commits.
+                // resend, only children whose spawn window proves they rode an earlier
+                // committed send of this table may appear. A client that already imported
+                // this spawn consume-and-skips every resend (hasImported), so a child ADDED
+                // to the table mid-resend rides only payloads that client is guaranteed to
+                // discard - it can never learn the id, and the child's props exporter
+                // (switched on by the Spawning flip in CommitExport) then feeds it props
+                // for an unknown node: tick-import abort, no acks, and the abort starves
+                // the very ack that would commit this parent and let the child spawn
+                // standalone. Deadlock until something else acks (or the peer times out).
+                //
+                // The invariant is simply "this table is byte-identical on every resend".
+                // Runtime spawns used to be the way it got violated; they no longer enter the
+                // table at all (see CollectNestedNetScenesRecursive). The live trigger is now
+                // the FIRST-send budget cap below: children truncated off that send get no
+                // spawn window, and this is what keeps them out of a later, roomier resend.
+                // They stay NotSpawned (props gated) and spawn via their own Export once this
+                // parent commits.
                 if (!firstSend
                     && (nested.NetNode?.Serializers == null
                         || nested.NetNode.Serializers.Length == 0
                         || nested.NetNode.Serializers[0] is not SpawnSerializer memberCheck
-                        || !memberCheck.setupTicks.ContainsKey(peerUUID)))
+                        || !memberCheck.spawnWindows.ContainsKey(peerUUID)))
                 {
                     continue;
                 }
@@ -467,9 +591,23 @@ namespace Nebula.Serialization.Serializers
                 _interestedNestedBuffer.Add(nested);
             }
 
-            NetWriter.WriteByte(buffer, (byte)_interestedNestedBuffer.Count);
+            var includeCount = _interestedNestedBuffer.Count;
+            if (firstSend)
+            {
+                // Budget cap: entries that don't fit are left out of this first send
+                // entirely (never flipped Spawning, never in the frozen set).
+                var entryBudget = maxBytes - buffer.WritePosition - NESTED_COUNT_BYTES;
+                var maxEntries = entryBudget > 0 ? entryBudget / NESTED_ENTRY_BYTES : 0;
+                if (includeCount > maxEntries)
+                {
+                    includeCount = maxEntries;
+                }
+            }
 
-            for (int i = 0; i < _interestedNestedBuffer.Count; i++)
+            NetWriter.WriteByte(buffer, (byte)includeCount);
+
+            _pendingNestedCommit.Clear();
+            for (int i = 0; i < includeCount; i++)
             {
                 var nested = _interestedNestedBuffer[i];
 
@@ -485,38 +623,11 @@ namespace Nebula.Serialization.Serializers
                     continue;
                 }
 
-                // Nested scenes ride along in the parent's spawn data, so the client is about
-                // to build them from scratch - their per-peer baselines must reset like the
-                // parent's own NotSpawned -> Spawning transition. This must cover EVERY state
-                // except Spawning (which means "already in this parent's resend stream" -
-                // resetting per resend would wipe props delta state every tick). Notably it
-                // must cover stale Spawned: a parent that was per-peer despawned takes its
-                // nested subtree down with it CLIENT-side (QueueFree frees children), but
-                // despawn does not cascade server-side, so the nested node still reads
-                // Spawned here while the client is about to rebuild it with an empty applied
-                // ring. Skipping the reset then leaves a delta baseline the rebuilt node can
-                // never resolve ("missing applied-state baseline" bursts on respawn).
-                if (currentWorld.GetClientSpawnState(nested.NetId, peer) != WorldRunner.ClientSpawnState.Spawning)
-                {
-                    ResetPeerBaselines(nested, peerUUID);
-                }
-
-                // IMPORTANT: Set the nested scene's state to Spawning since we're including it in the parent's spawn data.
-                // Without this, despawn logic would see NotSpawned and skip sending despawn data.
-                currentWorld.SetClientSpawnState(nested.NetId, peer, WorldRunner.ClientSpawnState.Spawning);
-
-                // Also set up the nested scene's SpawnSerializer setupTick for ACK tracking
-                if (nested.NetNode?.Serializers != null && nested.NetNode.Serializers.Length > 0
-                    && nested.NetNode.Serializers[0] is SpawnSerializer nestedSpawnSerializer)
-                {
-                    if (!nestedSpawnSerializer.setupTicks.ContainsKey(peerUUID))
-                    {
-                        nestedSpawnSerializer.setupTicks[peerUUID] = currentWorld.CurrentTick;
-                    }
-                    // Every inclusion (the nested payload rides every parent resend), so the
-                    // nested node's own ack window tracks the parent's resend stream.
-                    nestedSpawnSerializer.lastSpawnSendTicks[peerUUID] = currentWorld.CurrentTick;
-                }
+                // Nested scenes ride along in the parent's spawn data, so the client is
+                // about to build them from scratch. Their baseline resets, Spawning flips,
+                // and window stamps happen in the parent's CommitExport - only when the
+                // table provably rides the packet (see CommitExport for the reset rule).
+                _pendingNestedCommit.Add(nested);
 
                 var nestedSceneId = Protocol.PackScene(nested.NetSceneFilePath);
                 if (nestedSceneId > 245)
@@ -539,17 +650,49 @@ namespace Nebula.Serialization.Serializers
         private List<NetworkController> _interestedNestedBuffer = new(64);
 
         /// <summary>
-        /// Recursively collects all nested NetScenes in the subtree, pruning any scene (and
-        /// everything under it) whose despawn is in flight for this peer. Re-including one
-        /// would flip its per-peer state back to Spawning mid-despawn (ExportNestedScenes
-        /// sets every included scene Spawning), reopening the props exporters the despawn
-        /// cascade just silenced. Stale Despawned with no despawn pending stays included -
-        /// that is the legitimate re-add path when a parent respawns.
+        /// Whether the given nested scene rode the spawn table written by this
+        /// serializer's most recent Export. Only meaningful between that Export and the
+        /// next one on this instance - WorldRunner's props phase queries it right after
+        /// its spawn phase for the same peer, inside that window.
+        /// </summary>
+        internal bool NestedSceneRodeLastSpawnExport(NetworkController nested)
+            => _pendingCommit == PendingCommit.Spawn && _pendingNestedCommit.Contains(nested);
+
+        /// <summary>
+        /// Recursively collects the AUTHORED nested NetScenes in the subtree - the ones the client
+        /// rebuilds for itself from the parent's .tscn (see NetworkController.ExistsInParentScene).
+        /// Runtime spawns are skipped along with everything beneath them; they ship their own
+        /// records.
+        ///
+        /// Also prunes any scene (and everything under it) whose despawn is in flight for this
+        /// peer. Re-including one would flip its per-peer state back to Spawning mid-despawn
+        /// (ExportNestedScenes sets every included scene Spawning), reopening the props exporters
+        /// the despawn cascade just silenced. Stale Despawned with no despawn pending stays
+        /// included - that is the legitimate re-add path when a parent respawns.
         /// </summary>
         private static void CollectNestedNetScenesRecursive(WorldRunner currentWorld, NetPeer peer, NetworkController parent, List<NetworkController> results)
         {
             foreach (var child in parent.DynamicNetworkChildren)
             {
+                // Authored nesting only. A table entry says "the node you already built from the
+                // .tscn is this NetId" - it is matched against a local instance, and carries no
+                // parent field because its parent is implicitly the record being imported. That is
+                // sound for authored scenes at any depth, since the client rebuilds the whole
+                // subtree from the parent's .tscn and every entry is only reconciling ids.
+                //
+                // A runtime spawn has no local instance to match, so the client would have to
+                // CONSTRUCT it - and with no parent field the only place it can go is the record's
+                // own root. For a direct child of the record that happens to be right; for a
+                // grandchild it silently reparents the node up the tree. Runtime spawns therefore
+                // ship their own record, which does carry an explicit parent id.
+                //
+                // Skipping the recursion too, not just the entry: everything under a runtime spawn
+                // belongs to that spawn's record, not to this one.
+                if (!child.ExistsInParentScene)
+                {
+                    continue;
+                }
+
                 if (child.IsQueuedForDespawn
                     || currentWorld.GetClientSpawnState(child.NetId, peer) == WorldRunner.ClientSpawnState.Despawning)
                 {
@@ -567,15 +710,18 @@ namespace Nebula.Serialization.Serializers
 
             // Handle despawn acknowledgment FIRST (takes priority over spawn)
             // If despawn is in progress, we don't want spawn ACK to overwrite the state
-            if (despawnTicks.TryGetValue(peerId, out var despawnTick) && despawnTick != 0)
+            if (despawnWindows.TryGetValue(peerId, out var despawnWindow))
             {
-                if (tick >= despawnTick)
+                // Commit only when the acked tick's packet provably carried the marker.
+                // (The old rule was an unbounded `tick >= despawnTick`, which was only
+                // sound while resends could never skip a tick; budget deferral broke
+                // that assumption, and SendWindow's gap-restart restores it.)
+                if (despawnWindow.Covers(tick))
                 {
                     // Despawn acknowledged
                     currentWorld.SetClientSpawnState(netController.NetId, peer, WorldRunner.ClientSpawnState.Despawned);
-                    despawnTicks.Remove(peerId); // Clean up after successful ack
-                    setupTicks.Remove(peerId); // Also clean up spawn tracking since despawn supersedes it
-                    lastSpawnSendTicks.Remove(peerId);
+                    despawnWindows.Remove(peerId); // Clean up after successful ack
+                    spawnWindows.Remove(peerId); // Also clean up spawn tracking since despawn supersedes it
 
                     // Free the local NetId for this peer so it can be reused
                     currentWorld.DeregisterPeerNode(netController, peer);
@@ -597,34 +743,31 @@ namespace Nebula.Serialization.Serializers
                         currentWorld._pendingDeletion.Add(netController);
                     }
                 }
-                // If despawn is pending (tick < despawnTick), don't process spawn ACK
+                // If the despawn is still unacked, don't process spawn ACK
                 // The node is being despawned, so transitioning to Spawned would be wrong
-                return despawnTicks.ContainsKey(peerId) || setupTicks.ContainsKey(peerId);
+                return despawnWindows.ContainsKey(peerId) || spawnWindows.ContainsKey(peerId);
             }
 
             // Handle spawn acknowledgment (only if no despawn is pending).
             //
-            // Commit only when the acked tick falls inside [setupTick, lastSpawnSendTick]:
-            // spawn data rides every exported tick in that window (Export resends while
-            // Spawning; the soft-interest revert keeps the window contiguous), so an ack
-            // inside it is a packet that provably contained the spawn data. A bare
-            // `tick >= setupTick` would also commit on acks of ticks that carried only this
-            // node's props - which is exactly how a lost spawn packet used to get marked
-            // Spawned while the client sat on a blank node.
-            if (setupTicks.TryGetValue(peerId, out var setupTick) && setupTick != 0)
+            // Commit only when the acked tick is inside the spawn's send window: every
+            // tick in that window carried the spawn data (CommitExport records only
+            // committed sends, and any budget-deferred tick restarts the window), so an
+            // ack inside it is a packet that provably contained the spawn data. A bare
+            // `tick >= firstSend` would also commit on acks of ticks that carried only
+            // this node's props - which is exactly how a lost spawn packet used to get
+            // marked Spawned while the client sat on a blank node.
+            if (spawnWindows.TryGetValue(peerId, out var spawnWindow))
             {
-                if (tick >= setupTick
-                    && lastSpawnSendTicks.TryGetValue(peerId, out var lastSent)
-                    && tick <= lastSent)
+                if (spawnWindow.Covers(tick))
                 {
                     currentWorld.SetSpawnedForClient(netController.NetId, peer);
-                    setupTicks.Remove(peerId); // Clean up after successful ack
-                    lastSpawnSendTicks.Remove(peerId);
+                    spawnWindows.Remove(peerId); // Clean up after successful ack
                 }
             }
 
             // Still pending while an unacked spawn or despawn send exists for this peer
-            return setupTicks.ContainsKey(peerId) || despawnTicks.ContainsKey(peerId);
+            return spawnWindows.ContainsKey(peerId) || despawnWindows.ContainsKey(peerId);
         }
 
         // Import is client-only and infrequent, less critical to optimize
@@ -811,9 +954,9 @@ namespace Nebula.Serialization.Serializers
             CollectAllNestedScenes(nodeOut);
 
             // Match local instances against spawn data
-            for (int i = 0; i < _allLocalNestedScenes.Count; i++)
+            for (int i = 0; i < AllLocalNestedScenes.Count; i++)
             {
-                var local = _allLocalNestedScenes[i];
+                var local = AllLocalNestedScenes[i];
                 var localPathId = local.CachedNodePathIdInParent;
                 var localSceneId = Protocol.PackScene(local.NetSceneFilePath);
 
@@ -821,8 +964,8 @@ namespace Nebula.Serialization.Serializers
                 int matchIndex = -1;
                 for (int j = 0; j < _nestedDataCount; j++)
                 {
-                    if (_nestedDataBuffer[j].NodePathId == localPathId &&
-                        _nestedDataBuffer[j].SceneId == localSceneId)
+                    if (NestedDataBuffer[j].NodePathId == localPathId &&
+                        NestedDataBuffer[j].SceneId == localSceneId)
                     {
                         matchIndex = j;
                         break;
@@ -832,11 +975,11 @@ namespace Nebula.Serialization.Serializers
                 if (matchIndex >= 0)
                 {
                     // Keep local, sync NetId
-                    local.NetId = new NetId(_nestedDataBuffer[matchIndex].NetId);
+                    local.NetId = new NetId(NestedDataBuffer[matchIndex].NetId);
                     local.IsClientSpawn = true;
                     local.CurrentWorld = currentWorld;
                     // Set InputAuthority if this client owns the nested scene
-                    if (_nestedDataBuffer[matchIndex].HasInputAuthority == 1)
+                    if (NestedDataBuffer[matchIndex].HasInputAuthority == 1)
                     {
                         local.InputAuthority = NetRunner.Instance.ServerPeer;
                         currentWorld.MarkOwnedEntitiesDirty();
@@ -851,7 +994,7 @@ namespace Nebula.Serialization.Serializers
                         nestedSpawnSerializer.hasImported = true;
                     }
                     // Mark as processed (use 246 as sentinel, > 245 reserved)
-                    _nestedDataBuffer[matchIndex].SceneId = 246;
+                    NestedDataBuffer[matchIndex].SceneId = 246;
                 }
                 else
                 {
@@ -865,10 +1008,10 @@ namespace Nebula.Serialization.Serializers
             // Create any new NetScenes from unmatched spawn data
             for (int i = 0; i < _nestedDataCount; i++)
             {
-                if (_nestedDataBuffer[i].SceneId >= 246 || _nestedDataBuffer[i].SceneId == 0)
+                if (NestedDataBuffer[i].SceneId >= 246 || NestedDataBuffer[i].SceneId == 0)
                     continue;
 
-                var data = _nestedDataBuffer[i];
+                var data = NestedDataBuffer[i];
                 var instance = Protocol.UnpackScene(data.SceneId).Instantiate<INetNodeBase>();
                 instance.Network.NetId = new NetId(data.NetId);
                 instance.Network.IsClientSpawn = true;
@@ -953,7 +1096,7 @@ namespace Nebula.Serialization.Serializers
         /// </summary>
         private void CollectAllNestedScenes(NetworkController root)
         {
-            _allLocalNestedScenes.Clear();
+            AllLocalNestedScenes.Clear();
             CollectNestedRecursive(root.RawNode, root.RawNode, root.NetSceneFilePath);
         }
 
@@ -965,7 +1108,7 @@ namespace Nebula.Serialization.Serializers
 
                 if (child is INetNodeBase netNode && netNode.Network != null && netNode.Network.IsNetScene())
                 {
-                    _allLocalNestedScenes.Add(netNode.Network);
+                    AllLocalNestedScenes.Add(netNode.Network);
 
                     // Compute and cache the node path ID for matching
                     var relativePath = treeRoot.GetPathTo(child);
@@ -1021,7 +1164,7 @@ namespace Nebula.Serialization.Serializers
         {
             _nestedDataCount = 0;
 
-            for (int i = 0; i < count && i < _nestedDataBuffer.Length; i++)
+            for (int i = 0; i < count && i < NestedDataBuffer.Length; i++)
             {
                 var sceneId = NetReader.ReadByte(buffer);
                 var nodePathId = NetReader.ReadByte(buffer);
@@ -1032,7 +1175,7 @@ namespace Nebula.Serialization.Serializers
                 // Note: sceneId=0 is valid (first registered scene), but netId=0 means no allocation
                 if (netId == 0) continue;
 
-                _nestedDataBuffer[_nestedDataCount++] = new NestedSceneData
+                NestedDataBuffer[_nestedDataCount++] = new NestedSceneData
                 {
                     SceneId = sceneId,
                     NodePathId = nodePathId,

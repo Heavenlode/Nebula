@@ -75,12 +75,29 @@ namespace Nebula
         /// NetChangeListener fire as usual.</item>
         /// </list>
         ///
-        /// Restrictions: primitive value types only (int, bool, long, float, enums, Vector*,
-        /// UUID, NetId, ...) — reference types, string, INetSerializable and NetArray are
-        /// rejected (NEBULA007), as is combining with Predicted or Interpolate (NEBULA008).
-        /// Per-peer values are always sent absolute (never delta-encoded). Per-peer state is
-        /// cleaned up on disconnect; a peer that merely leaves a world keeps its entries on
-        /// that world's nodes until the world is torn down.
+        /// Restrictions: primitive value types (int, bool, long, float, enums, Vector*, UUID,
+        /// NetId, ...) and <c>NetArray&lt;T&gt;</c>. Other reference types, string and
+        /// INetSerializable are rejected (NEBULA007), as is combining with Predicted or
+        /// Interpolate (NEBULA008). Per-peer values are always sent absolute (never
+        /// delta-encoded). Per-peer state is cleaned up on disconnect; a peer that merely leaves
+        /// a world keeps its entries on that world's nodes until the world is torn down.
+        ///
+        /// <para><b>NetArray properties</b> follow the same scoping but differ in three ways,
+        /// because a collection is mutated in place rather than assigned:</para>
+        /// <list type="bullet">
+        /// <item>The server keeps a whole <c>NetArray&lt;T&gt;</c> instance per diverged peer.
+        /// The getter forks one from the base on the first access inside a scope — and since the
+        /// getter cannot tell <c>var x = Arr[3]</c> from <c>Arr[3] = x</c>, ANY scoped access
+        /// forks, including a read. The fork is content-identical and inherits the peer's sync
+        /// state, so it costs a server-side allocation but no bandwidth. Keep scoped access out
+        /// of hot loops.</item>
+        /// <item>Memory is O(peers × array). A 4096-element array across 64 diverged peers is
+        /// ~256 KB on this node alone. Only peers that actually diverge pay.</item>
+        /// <item><b>Once a peer is forked it is divorced from the base</b>: later base mutations
+        /// never reach it. This differs from the primitive contract above, where a base write
+        /// still broadcasts to every peer without an override — there is no cheap base+override
+        /// merge for a collection. Write per-peer arrays through the scope from then on.</item>
+        /// </list>
         /// </summary>
         public bool PerPeerState = false;
     }

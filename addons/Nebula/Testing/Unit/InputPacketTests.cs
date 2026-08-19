@@ -18,7 +18,7 @@ namespace Nebula.Testing.Unit;
 [NebulaUnitTest]
 public class InputPacketTests
 {
-    private const int InputSize = 25;   // PlayerShipInput: 13 bools + a Vector3, Pack = 1
+    private const int InputSize = 26;   // PlayerShipInput: 14 bools + a Vector3, Pack = 1
 
     private static byte[] Payload(byte seed)
     {

@@ -419,6 +419,24 @@ namespace Nebula
 		public HashSet<NetworkController> DynamicNetworkChildren = [];
 
 		/// <summary>
+		/// Whether this scene is authored inside its parent's .tscn, i.e. the client gets it for
+		/// free the moment it instantiates the parent. False for anything created by
+		/// <see cref="WorldRunner.Spawn"/> at runtime.
+		///
+		/// This is what decides whether a scene may ride its parent's spawn table. That table is a
+		/// RECONCILIATION mechanism: an entry means "the node you already built from the .tscn is
+		/// this NetId", and the client matches it against a local instance. A runtime spawn has no
+		/// local instance to match, so it has to be CONSTRUCTED - and construction needs a parent,
+		/// which a table entry has no field for. Its own spawn record does carry one.
+		///
+		/// Set where authored nesting is discovered (<see cref="DiscoverDynamicChildrenRecursive"/>,
+		/// from Setup, on both roles). Deliberately NOT <see cref="IsClientSpawn"/>, which is true
+		/// for authored nested scenes on the client too - that flag means "sanctioned by the
+		/// server", not "created at runtime".
+		/// </summary>
+		internal bool ExistsInParentScene;
+
+		/// <summary>
 		/// Invoked when a peer's interest layers change. Parameters: (peerId, oldInterest, newInterest)
 		/// </summary>
 		public event Action<UUID, long, long> InterestChanged;
@@ -869,6 +887,122 @@ namespace Nebula
 		}
 
 		/// <summary>
+		/// Resolves the NetArray instance a per-peer array property should expose to the caller,
+		/// forking one for the context peer on first access. Called by generated property getters.
+		///
+		/// Returns <paramref name="baseArray"/> unchanged under the same conditions as
+		/// <see cref="TryReadPerPeer"/> (not the server, no <see cref="ForPeer"/> scope open, the
+		/// owning NetScene root not resolvable yet, or storage absent) — so client-side and
+		/// unscoped server-side access both see the shared base, exactly as before.
+		///
+		/// Inside a scope this returns that peer's own instance, creating it via
+		/// <see cref="NetArray{T}.ForkForPeer"/> if the peer has not diverged yet. Note that an
+		/// array is mutated in place, so this getter cannot distinguish a read from a write: any
+		/// scoped access forks. The fork is content-identical and inherits the peer's sync state,
+		/// so it costs an allocation but no bandwidth.
+		/// </summary>
+		public NetArray<TElem> TryGetPerPeerArray<TElem>(INetNodeBase sourceNode, string propertyName, NetArray<TElem> baseArray, ref int cachedIndex, ref NetworkController cachedRoot) where TElem : struct
+		{
+			var peerId = _contextPeer;
+			if (peerId == default || !PerPeerServerContext)
+			{
+				return baseArray;
+			}
+
+			var root = cachedRoot ?? ResolvePerPeerRoot();
+			if (root == null || root.PerPeerValues == null)
+			{
+				return baseArray;
+			}
+			cachedRoot = root;
+
+			if (cachedIndex < 0)
+			{
+				var staticChildId = sourceNode.Network.StaticChildId;
+				if (!Protocol.LookupPropertyByStaticChildId(root.NetSceneFilePath, staticChildId, propertyName, out var prop))
+				{
+					return baseArray;
+				}
+				cachedIndex = prop.Index;
+			}
+
+			var peerValues = root.PerPeerValues[cachedIndex];
+			if (peerValues == null)
+			{
+				return baseArray;
+			}
+
+			if (peerValues.TryGetValue(peerId, out var existing) && existing.RefValue is NetArray<TElem> forked)
+			{
+				return forked;
+			}
+
+			// A null base cannot be forked; nothing to diverge from yet.
+			if (baseArray == null)
+			{
+				return null;
+			}
+
+			var fork = NetArray<TElem>.ForkForPeer(baseArray, peerId);
+			var cache = new PropertyCache
+			{
+				Type = SerialVariantType.Object,
+				RefValue = fork,
+			};
+			peerValues[peerId] = cache;
+			return fork;
+		}
+
+		/// <summary>
+		/// Writes the context peer's instance for a per-peer reference-typed (object) property —
+		/// the wholesale-assignment counterpart to <see cref="TryWritePerPeer{T}"/>, which is
+		/// constrained to value types and so cannot accept a NetArray.
+		///
+		/// Unlike the primitive path this sets no dirty bit: object properties self-filter every
+		/// tick through their own per-peer sync state rather than through PerPeerDirtyMask. Note
+		/// that assigning a fresh instance discards the peer's sync state along with the old one,
+		/// so the replacement is delivered as a full chunked sync.
+		/// </summary>
+		public bool TryWritePerPeerRef<TObj>(INetNodeBase sourceNode, string propertyName, TObj value, ref int cachedIndex, ref NetworkController cachedRoot) where TObj : class
+		{
+			var peerId = _contextPeer;
+			if (peerId == default || !PerPeerServerContext)
+			{
+				return false;
+			}
+
+			var root = cachedRoot ?? ResolvePerPeerRoot();
+			if (root == null || root.PerPeerValues == null)
+			{
+				return false;
+			}
+			cachedRoot = root;
+
+			if (cachedIndex < 0)
+			{
+				var staticChildId = sourceNode.Network.StaticChildId;
+				if (!Protocol.LookupPropertyByStaticChildId(root.NetSceneFilePath, staticChildId, propertyName, out var prop))
+				{
+					return false;
+				}
+				cachedIndex = prop.Index;
+			}
+
+			var peerValues = root.PerPeerValues[cachedIndex];
+			if (peerValues == null)
+			{
+				return false;
+			}
+
+			peerValues[peerId] = new PropertyCache
+			{
+				Type = SerialVariantType.Object,
+				RefValue = value,
+			};
+			return true;
+		}
+
+		/// <summary>
 		/// Discovers nested NetScenes in the scene tree and populates DynamicNetworkChildren.
 		/// Also sets CachedNodePathIdInParent for spawn serialization.
 		/// Called on server during Setup().
@@ -888,6 +1022,11 @@ namespace Nebula
 				if (child is INetNodeBase netNode && netNode.Network != null && netNode.Network.IsNetScene())
 				{
 					DynamicNetworkChildren.Add(netNode.Network);
+
+					// Reached by walking the parent's own instantiated subtree, so by definition
+					// this scene is part of the parent's .tscn and every client builds it for free.
+					// That is what makes it eligible to ride the parent's spawn table.
+					netNode.Network.ExistsInParentScene = true;
 
 					// Compute and cache the node path ID for spawn serialization
 					var relativePath = treeRoot.GetPathTo(child);
@@ -994,6 +1133,49 @@ namespace Nebula
 			{
 				SetCachedValue(prop.Index, prop.VariantType, value);
 			}
+		}
+
+		/// <summary>
+		/// Records a property's starting value in the cache WITHOUT marking it dirty.
+		///
+		/// The cache is otherwise only written by <see cref="MarkDirty"/>, which fires on a CHANGE, so
+		/// a property whose value never differs from its inline initializer is never cached at all and
+		/// the cache reads default(T) for it forever. That is invisible for most properties, because
+		/// both roles run the same initializer and the property itself is correct on both. It is fatal
+		/// for a PREDICTED one: the generated StoreConfirmedState sources the server's confirmed value
+		/// from this cache rather than from the property, so reconciliation compares against default(T)
+		/// on every tick -- and since a miss on any one predicted property restores ALL of them, a
+		/// single such property drags the whole entity backwards at the tick rate.
+		/// PlayerCharacter.HeightAboveTerrain (inline 1f, and 1f at every spawn and while grounded) did
+		/// exactly that.
+		///
+		/// Deliberately does NOT touch <see cref="DirtyMask"/>. Begin() derives nonDefaultProperties --
+		/// "which properties have ever been set", and therefore what a NEW peer is sent -- from the
+		/// dirty mask, on the sound assumption that an unset property is still at its default. Seeding
+		/// through MarkDirty would put every property on that list and change what goes on the wire at
+		/// spawn. The cache is the only thing that was wrong, so the cache is the only thing corrected.
+		///
+		/// Safe to seed identically on both roles, and it must be done on both: the value is the type's
+		/// own initializer, which both sides evaluate the same way, so this leaves the two caches
+		/// agreeing exactly as they did when both held default(T). Any property whose real value
+		/// differs from its initializer goes dirty through the normal path and overwrites this.
+		/// </summary>
+		internal void SeedCachedValue<T>(INetNodeBase sourceNode, string propertyName, T value) where T : struct
+		{
+			// Static children propagate to the parent net scene, which owns the cache.
+			if (!IsNetScene())
+			{
+				NetParent?.SeedCachedValue(sourceNode, propertyName, value);
+				return;
+			}
+
+			var staticChildId = sourceNode.Network.StaticChildId;
+			if (!Protocol.LookupPropertyByStaticChildId(NetSceneFilePath, staticChildId, propertyName, out var prop))
+			{
+				return;
+			}
+
+			SetCachedValue(prop.Index, prop.VariantType, value);
 		}
 
 		/// <summary>
@@ -1461,21 +1643,35 @@ namespace Nebula
 		}
 
 		/// <summary>
+		/// True while this node has deliberately suspended its sync (see <see cref="IPredictionPausable"/>).
+		/// The confirmed cache is not tracking the server's live value during a pause, so comparing or
+		/// restoring against it would be comparing against a lie.
+		/// </summary>
+		public bool PredictionSuspended => NetNode is IPredictionPausable pausable && pausable.PredictionPaused;
+
+		/// <summary>
 		/// Compares predicted state with confirmed server state and restores mispredicted properties.
 		/// Returns true if any misprediction was detected (rollback needed), false if all predictions correct.
 		/// If forceRestoreAll is true, skips comparison and restores all properties to confirmed state.
+		/// A node with <see cref="PredictionSuspended"/> set is always clean: its frozen confirmed cache
+		/// would mispredict every tick forever (and force-restore would slam that stale pose over the
+		/// live one), so the pause exempts it from both paths until sync resumes.
 		/// </summary>
 		public bool Reconcile(Tick tick, bool forceRestoreAll = false)
 		{
+			if (PredictionSuspended) return false;
 			return NetNode.Reconcile(tick, forceRestoreAll);
 		}
 
 		/// <summary>
 		/// Restores properties from the prediction buffer for a given tick.
 		/// Used when prediction was correct and we need to continue with predicted values after server state import.
+		/// Skipped while <see cref="PredictionSuspended"/>: when a SIBLING node's rollback rebaselines the
+		/// entity, a paused node must keep its live pose rather than rewind to a buffered one.
 		/// </summary>
 		public void RestoreToPredictedState(Tick tick)
 		{
+			if (PredictionSuspended) return;
 			NetNode.RestoreToPredictedState(tick);
 		}
 

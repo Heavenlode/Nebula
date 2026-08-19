@@ -12,6 +12,9 @@ namespace Nebula.Utility.Tools
         private string initializedFilename = null;
         private Dictionary<string, string> env = new Dictionary<string, string>();
 
+        /// <summary>Guards <see cref="env"/> and <see cref="initializedFilename"/>. See GetValue.</summary>
+        private readonly object _parseLock = new();
+
         public Dictionary<string, string> StartArgs = [];
 
         public enum DevelopmentModeType {
@@ -99,6 +102,33 @@ namespace Nebula.Utility.Tools
             Instance = this;
         }
 
+        /// <summary>
+        /// Reads a boolean switch from the process environment, falling back to this
+        /// process's .env file (<c>.env.server</c> or <c>.env.client</c>). <c>"0"</c> and
+        /// <c>"false"</c> mean off; any other non-empty value means on.
+        /// </summary>
+        /// <returns>
+        /// False when the variable is absent everywhere, leaving <paramref name="value"/>
+        /// untouched — callers use that to fall back to a project setting rather than
+        /// treating "unset" as "off".
+        /// </returns>
+        public static bool TryGetFlag(string name, out bool value)
+        {
+            value = false;
+
+            // Instance is null in contexts that run no autoloads (the editor, bare unit
+            // tests); the process environment is still readable there.
+            string raw = Instance is not null
+                ? Instance.GetValue(name)
+                : (OS.HasEnvironment(name) ? OS.GetEnvironment(name) : "");
+
+            if (string.IsNullOrEmpty(raw))
+                return false;
+
+            value = raw != "0" && !raw.Equals("false", StringComparison.OrdinalIgnoreCase);
+            return true;
+        }
+
         public string GetValue(string valuename)
         {
             if (OS.HasEnvironment(valuename))
@@ -106,23 +136,16 @@ namespace Nebula.Utility.Tools
                 return OS.GetEnvironment(valuename);
             }
 
-            Dictionary<string, string> parsedEnv;
-
-            if (HasServerFeatures)
+            // The lock spans the lookup, not just the parse: Parse hands back the shared `env`
+            // dictionary, so reading it outside the lock could observe another thread's Clear()
+            // partway through a reparse. Callers reach this from worker threads (world generation,
+            // and any world tick once per-world thread groups are enabled), and it is contended
+            // only on the first access per file -- afterwards Parse returns on its first line.
+            lock (_parseLock)
             {
-                parsedEnv = Parse("res://.env.server");
+                var parsedEnv = Parse(HasServerFeatures ? "res://.env.server" : "res://.env.client");
+                return parsedEnv.TryGetValue(valuename, out var value) ? value : "";
             }
-            else
-            {
-                parsedEnv = Parse("res://.env.client");
-            }
-
-            if (parsedEnv.ContainsKey(valuename))
-            {
-                return parsedEnv[valuename];
-            }
-
-            return "";
         }
 
         public string InitialWorldScene { get; private set; }

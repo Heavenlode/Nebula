@@ -106,6 +106,16 @@ namespace Nebula.Utility.Tools
             return level <= (DebugLevel)ProjectSettings.GetSetting("Nebula/config/debug/log_level", 0).AsInt16();
         }
 
+        /// <summary>
+        /// Callable from any thread, including world tick threads once per-world thread groups are
+        /// enabled. That holds only because this method touches no Node state: ProjectSettings,
+        /// OS.HasFeature, Env's start args (read-only after startup) and GD.Print/PushError/
+        /// PushWarning are all safe off the main thread.
+        ///
+        /// Keep it that way -- Debugger is an autoload and therefore outside every world's thread
+        /// group, so reaching into any node from here would be a cross-group access from the
+        /// callers that need it most.
+        /// </summary>
         public void Log(string msg, DebugLevel level = DebugLevel.INFO)
         {
             if (!IsEnabled(level))

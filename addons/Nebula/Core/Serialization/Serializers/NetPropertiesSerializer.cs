@@ -224,6 +224,19 @@ namespace Nebula.Serialization.Serializers
         private const int REFRESH_CHAIN = 30;
 
         /// <summary>
+        /// The baseline-age header byte written right after the presence mask
+        /// (0 = every property in the payload is absolute).
+        /// </summary>
+        private const int AGE_HEADER_BYTES = 1;
+
+        /// <summary>
+        /// The smallest possible property write: a DeltaEncodingFlags byte plus a
+        /// one-byte value (e.g. bool). A section budget below
+        /// [presence mask + <see cref="AGE_HEADER_BYTES"/> + this] cannot ship anything.
+        /// </summary>
+        private const int MIN_PROPERTY_WRITE_BYTES = 2;
+
+        /// <summary>
         /// Server: ring of property value snapshots per exported tick, shared by all peers.
         /// Captured in Begin(). Indexed by tick % SNAPSHOT_RING_SIZE.
         /// </summary>
@@ -268,6 +281,7 @@ namespace Nebula.Serialization.Serializers
                 _propertiesUpdated = Array.Empty<byte>();
                 _actualMask = Array.Empty<byte>();
                 _dirtyOnlyMask = Array.Empty<byte>();
+                _leftoverMask = Array.Empty<byte>();
                 _decodedMask = Array.Empty<byte>();
                 _decodedValues = Array.Empty<PropertyCache>();
                 _incomingMask = Array.Empty<byte>();
@@ -317,6 +331,7 @@ namespace Nebula.Serialization.Serializers
             _propertiesUpdated = new byte[_byteCount];
             _actualMask = new byte[_byteCount];
             _dirtyOnlyMask = new byte[_byteCount];
+            _leftoverMask = new byte[_byteCount];
             _decodedMask = new byte[_byteCount];
             _decodedValues = new PropertyCache[_propertyCount];
             _incomingMask = new byte[_byteCount];
@@ -777,9 +792,10 @@ namespace Nebula.Serialization.Serializers
 
         /// <summary>
         /// Test seam: builds a serializer with hand-supplied property metadata, bypassing the
-        /// Protocol registry (which requires a registered net scene). Only the client-side
-        /// Deserialize paths are exercised on instances built this way; Export/Acknowledge
-        /// depend on Protocol and a live WorldRunner and must not be called.
+        /// Protocol registry (which requires a registered net scene). Client-side Deserialize
+        /// paths work fully; server-side Export/Acknowledge work for PRIMITIVE properties
+        /// against a WorldRunner prepared with CreatePeerStateForTests (object properties
+        /// need the Protocol serializer registry and must not be used here).
         /// </summary>
         internal NetPropertiesSerializer(NetworkController _network, SerialVariantType[] propTypes)
         {
@@ -796,6 +812,8 @@ namespace Nebula.Serialization.Serializers
             for (int i = 0; i < _propertyCount; i++) _propClassIndex[i] = -1;
             _propIsPerPeer = new bool[_propertyCount];
             _propInterestMask = new long[_propertyCount];
+            // Visible on every interest layer, like a property with no [NetInterest].
+            for (int i = 0; i < _propertyCount; i++) _propInterestMask[i] = -1L;
             _propInterestRequired = new long[_propertyCount];
             _propIntWidth = new IntWidth[_propertyCount];
             _propChunkBudget = new int[_propertyCount];
@@ -803,6 +821,7 @@ namespace Nebula.Serialization.Serializers
             _propertiesUpdated = new byte[_byteCount];
             _actualMask = new byte[_byteCount];
             _dirtyOnlyMask = new byte[_byteCount];
+            _leftoverMask = new byte[_byteCount];
             _decodedMask = new byte[_byteCount];
             _decodedValues = new PropertyCache[_propertyCount];
             _incomingMask = new byte[_byteCount];
@@ -813,6 +832,16 @@ namespace Nebula.Serialization.Serializers
         {
             Deserialize(buffer, currentTick, out bool discarded);
             return !discarded;
+        }
+
+        /// <summary>Test seam: one byte of the peer's resend-until-acked pending mask.</summary>
+        internal byte PendingDirtyByteForTests(UUID peerId, int byteIndex)
+        {
+            if (!_peerStates.TryGetValue(peerId, out var state) || !state.IsInitialized)
+            {
+                return 0;
+            }
+            return state.PendingDirtyMask[byteIndex];
         }
 
         /// <summary>Test seam: whether the applied-state ring holds an entry for this exact tick.</summary>
@@ -1497,6 +1526,14 @@ namespace Nebula.Serialization.Serializers
         private byte[] _dirtyOnlyMask;
 
         /// <summary>
+        /// Scratch mask of primitive properties that were eligible to ship in the current
+        /// Export but were rewound (or never written) for budget. Merged into
+        /// PendingDirtyMask before Export returns, so they retry as absolutes on a later
+        /// tick. Same serial-access assumption as _actualMask.
+        /// </summary>
+        private byte[] _leftoverMask;
+
+        /// <summary>
         /// Scratch for the payload currently being imported: which property indices decoded
         /// a value, and the values themselves.
         ///
@@ -1516,7 +1553,17 @@ namespace Nebula.Serialization.Serializers
         /// <summary>Scratch for the incoming presence mask read off the wire.</summary>
         private byte[] _incomingMask;
 
-        public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
+        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes)
+        {
+            // Self-limiting serializer: never writes more than maxBytes, so the host
+            // always commits what was written (in-write stamps like DeltaChain, LossyMask
+            // and object-prop chunk frontiers stay valid). Packet-coupled stamps
+            // (SentHistory, PendingDirtyMask for shipped bits, initial-sync, per-peer
+            // dirty clears) apply in CommitExport.
+            return ExportCore(currentWorld, peer, buffer, maxBytes);
+        }
+
+        private ExportResult ExportCore(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes)
         {
             // Only export if spawn data has been sent AND not despawning/despawned
             // NotSpawned: SpawnSerializer hasn't written spawn data yet
@@ -1526,7 +1573,7 @@ namespace Nebula.Serialization.Serializers
                 spawnState == WorldRunner.ClientSpawnState.Despawning ||
                 spawnState == WorldRunner.ClientSpawnState.Despawned)
             {
-                return;
+                return ExportResult.None;
             }
 
             // For nested scenes, don't export until parent spawn is at least being sent
@@ -1535,7 +1582,7 @@ namespace Nebula.Serialization.Serializers
                 var parentSpawnState = currentWorld.GetClientSpawnState(network.NetParent.NetId, peer);
                 if (parentSpawnState == WorldRunner.ClientSpawnState.NotSpawned)
                 {
-                    return;
+                    return ExportResult.None;
                 }
             }
 
@@ -1543,6 +1590,7 @@ namespace Nebula.Serialization.Serializers
             int byteCount = _byteCount;
 
             Array.Clear(_propertiesUpdated, 0, byteCount);
+            Array.Clear(_leftoverMask, 0, byteCount);
 
             if (!peerInitialPropSync.TryGetValue(peerId, out var initialSync))
             {
@@ -1567,7 +1615,7 @@ namespace Nebula.Serialization.Serializers
             // Filter against interest layers first
             if (!TryGetInterestLayers(peerId, out var peerInterestLayers))
             {
-                return;
+                return ExportResult.None;
             }
 
             // Snapshot the per-peer dirty mask AFTER the interest early-return, and do NOT
@@ -1697,6 +1745,35 @@ namespace Nebula.Serialization.Serializers
             }
 
             // ============================================================
+            // DEFER (budget)
+            // ============================================================
+            // The section can't fit its fixed overhead (presence mask + age byte) plus
+            // even the smallest property write. Preserve the would-be-shipped primitive
+            // bits in PendingDirtyMask: processingDirtyMask dies at the end of this tick,
+            // and a budget-skipped peer would otherwise silently lose those changes
+            // forever. They ship absolute on a later tick and clear on its ack, exactly
+            // like a loss-recovery resend. Stateful sources merged into the mask above
+            // (initial sync, per-peer overrides, lossy settles, existing pending bits)
+            // re-derive next tick, so over-merging them here is harmless. Object props
+            // keep their own resumable per-peer state and need nothing.
+            if (maxBytes < byteCount + AGE_HEADER_BYTES + MIN_PROPERTY_WRITE_BYTES)
+            {
+                for (var i = 0; i < byteCount; i++)
+                {
+                    var b = _propertiesUpdated[i];
+                    if (b == 0) continue;
+                    for (var j = 0; j < 8; j++)
+                    {
+                        if ((b & (1 << j)) == 0) continue;
+                        var propIndex = i * 8 + j;
+                        if (propIndex >= _propertyCount || _propIsObject[propIndex]) continue;
+                        state.PendingDirtyMask[i] |= (byte)(1 << j);
+                    }
+                }
+                return ExportResult.None;
+            }
+
+            // ============================================================
             // BASELINE SELECTION (snapshot-delta)
             // ============================================================
             // Delta against the server's value snapshot at the peer's latest acked
@@ -1755,6 +1832,10 @@ namespace Nebula.Serialization.Serializers
                     if (_propIsObject[propIndex]) continue;
 
                     int propStartPos = buffer.WritePosition;
+                    // Snapshot the in-write stamps so a budget rewind can restore them -
+                    // a rewound property must leave no trace of the aborted encoding.
+                    var deltaChainBefore = state.DeltaChain[propIndex];
+                    var lossyByteBefore = state.LossyMask[i];
                     try
                     {
                         // Get current value - for per-peer properties, look up in per-peer storage
@@ -1817,6 +1898,19 @@ namespace Nebula.Serialization.Serializers
                             state.DeltaChain[propIndex] = 0;
                             state.LossyMask[i] &= (byte)~(1 << j);
                         }
+
+                        // Budget: the write pushed the section past maxBytes. Rewind it,
+                        // restore its stamps, and defer the bit - smaller later
+                        // properties may still fit (the mask is backfilled below, so the
+                        // wire stays consistent).
+                        if (buffer.WritePosition - maskStartPos > maxBytes)
+                        {
+                            buffer.WritePosition = propStartPos;
+                            state.DeltaChain[propIndex] = deltaChainBefore;
+                            state.LossyMask[i] = lossyByteBefore;
+                            actualMask[i] &= (byte)~(1 << j);
+                            _leftoverMask[i] |= (byte)(1 << j);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1833,6 +1927,7 @@ namespace Nebula.Serialization.Serializers
 
             // Write OBJECT properties (INetSerializable) - always call, they self-filter
             // These return true if they wrote data, false if nothing to send
+            bool objectDeferred = false;
             for (int propIndex = 0; propIndex < _propertyCount; propIndex++)
             {
                 if (!_propIsObject[propIndex]) continue;
@@ -1846,7 +1941,20 @@ namespace Nebula.Serialization.Serializers
                 var serializer = Protocol.GetSerializer(classIndex);
                 if (serializer == null) continue;
 
-                ref var cache = ref network.CachedProperties[propIndex];
+                // Budget: object serializers cannot be rewound (chunk streams stamp their
+                // per-peer frontier state during the write), so one is only invoked while
+                // the section still has room for its full chunk budget - the size the
+                // serializer is designed to respect. A skipped object keeps its own
+                // resumable per-peer state and simply resumes on a later tick.
+                if (maxBytes - (buffer.WritePosition - maskStartPos) < _propChunkBudget[propIndex])
+                {
+                    objectDeferred = true;
+                    continue;
+                }
+
+                // Per-peer array properties serialize this peer's forked instance; everything else
+                // (and any peer that has not diverged) serializes the shared base.
+                ref var cache = ref ResolveObjectCache(propIndex, peerId);
 
                 // Remember position in case we need to rewind
                 int startPos = buffer.WritePosition;
@@ -1890,21 +1998,69 @@ namespace Nebula.Serialization.Serializers
                 }
             }
 
+            // Budget leftovers are delivery-independent: a bit that didn't fit must
+            // survive whether or not this section ships, so it merges into the pending
+            // machinery here rather than in CommitExport. It re-sends absolute on a
+            // later tick and clears on that tick's ack.
+            bool hasLeftover = false;
+            for (var i = 0; i < byteCount; i++)
+            {
+                if (_leftoverMask[i] == 0) continue;
+                hasLeftover = true;
+                state.PendingDirtyMask[i] |= _leftoverMask[i];
+            }
+
             if (!hasAnyData)
             {
                 // Nothing to send - rewind buffer to before mask
                 buffer.WritePosition = maskStartPos;
+                return ExportResult.None;
+            }
+
+            // BACKFILL: Go back and write the actual mask
+            // We need to overwrite the placeholder bytes we wrote earlier
+            // NetWriter writes at WritePosition, so we save it, set to maskStartPos, write, then restore
+            int endPos = buffer.WritePosition;
+            buffer.WritePosition = maskStartPos;
+            for (var i = 0; i < byteCount; i++)
+            {
+                NetWriter.WriteByte(buffer, actualMask[i]);
+            }
+            buffer.WritePosition = endPos;
+
+            // Packet-coupled stamps (SentHistory, shipped-bit pending, initial sync,
+            // per-peer dirty clears) apply in CommitExport once the host commits these
+            // bytes to the packet.
+            return hasLeftover || objectDeferred ? ExportResult.Partial : ExportResult.Written;
+        }
+
+        /// <summary>
+        /// The section written by the immediately preceding Export was committed to the
+        /// tick packet: stamp everything that asserts "these bytes rode tick
+        /// <paramref name="tick"/>". PendingDirtyMask and SentHistory only track
+        /// PRIMITIVE properties - object properties (INetSerializable) manage their own
+        /// per-peer pending/resend state and are acked through their own tick-gated
+        /// callbacks. The host always commits a self-limited section, which is what keeps
+        /// the in-write stamps (DeltaChain, LossyMask, chunk frontiers) valid in Export.
+        /// </summary>
+        public void CommitExport(WorldRunner currentWorld, NetPeer peer, Tick tick)
+        {
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            ref var state = ref CollectionsMarshal.GetValueRefOrAddDefault(_peerStates, peerId, out bool exists);
+            if (!exists || !state.IsInitialized)
+            {
+                return;
+            }
+            if (!peerInitialPropSync.TryGetValue(peerId, out var initialSync))
+            {
                 return;
             }
 
-            // Update tracking state. PendingDirtyMask and SentHistory only track PRIMITIVE
-            // properties - object properties (INetSerializable) manage their own per-peer
-            // pending/resend state and are acked through their own tick-gated callbacks.
             long primitiveSentMask = 0;
             long perPeerSentMask = 0;
-            for (var byteIdx = 0; byteIdx < byteCount; byteIdx++)
+            for (var byteIdx = 0; byteIdx < _byteCount; byteIdx++)
             {
-                var b = actualMask[byteIdx];
+                var b = _actualMask[byteIdx];
                 if (b == 0) continue;
                 initialSync[byteIdx] |= b;
 
@@ -1936,22 +2092,9 @@ namespace Nebula.Serialization.Serializers
 
             // Record what was sent at this tick so a future ack can be matched to exactly
             // the values the peer received (the heart of tick-correlated acknowledgment)
-            ref var sentRecord = ref state.SentHistory[currentTick % SNAPSHOT_RING_SIZE];
-            sentRecord.Tick = currentTick;
+            ref var sentRecord = ref state.SentHistory[tick % SNAPSHOT_RING_SIZE];
+            sentRecord.Tick = tick;
             sentRecord.SentMask = primitiveSentMask;
-
-            // BACKFILL: Go back and write the actual mask
-            // We need to overwrite the placeholder bytes we wrote earlier
-            // NetWriter writes at WritePosition, so we save it, set to maskStartPos, write, then restore
-            int endPos = buffer.WritePosition;
-            buffer.WritePosition = maskStartPos;
-            for (var i = 0; i < byteCount; i++)
-            {
-                NetWriter.WriteByte(buffer, actualMask[i]);
-            }
-            buffer.WritePosition = endPos;
-
-            // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[Props.Export] NetId={network.NetId} mask=[{string.Join(",", actualMask.Select(b => $"0x{b:X2}"))}] total={endPos - maskStartPos}");
         }
 
         /// <summary>
@@ -2194,6 +2337,29 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
+        /// <summary>
+        /// Resolves the cache slot an object property should serialize for one peer. Per-peer array
+        /// properties (NetProperty.PerPeerState) keep a forked instance per diverged peer in
+        /// PerPeerValues; every other object property, and any peer that has not diverged, uses the
+        /// shared base in CachedProperties. Returns by ref and never allocates.
+        /// </summary>
+        private ref PropertyCache ResolveObjectCache(int propIndex, UUID peerId)
+        {
+            if (_propIsPerPeer[propIndex] && network.PerPeerValues != null)
+            {
+                var peerValues = network.PerPeerValues[propIndex];
+                if (peerValues != null)
+                {
+                    ref var perPeer = ref CollectionsMarshal.GetValueRefOrNullRef(peerValues, peerId);
+                    if (!Unsafe.IsNullRef(ref perPeer) && perPeer.RefValue != null)
+                    {
+                        return ref perPeer;
+                    }
+                }
+            }
+            return ref network.CachedProperties[propIndex];
+        }
+
         public void Cleanup()
         {
             // NOTE: This is called every tick after ExportState(), NOT when the object is destroyed.
@@ -2210,6 +2376,20 @@ namespace Nebula.Serialization.Serializers
                 if (network.CachedProperties[i].RefValue is INetExportAware exportAware)
                 {
                     exportAware.OnExportComplete();
+                }
+
+                // Forked per-peer instances carry their own global dirty set and are invisible to
+                // the base slot above. Skipping them would leave a fork's _dirtyMask set forever,
+                // so it would re-merge the same bits into its pending queue every single tick.
+                if (!_propIsPerPeer[i] || network.PerPeerValues == null) continue;
+                var peerValues = network.PerPeerValues[i];
+                if (peerValues == null) continue;
+                foreach (var entry in peerValues)
+                {
+                    if (entry.Value.RefValue is INetExportAware forkExportAware)
+                    {
+                        forkExportAware.OnExportComplete();
+                    }
                 }
             }
         }
@@ -2258,7 +2438,9 @@ namespace Nebula.Serialization.Serializers
                 var onDisconnected = Protocol.GetOnPeerDisconnected(classIndex);
                 if (onDisconnected == null) continue;
 
-                ref var cache = ref network.CachedProperties[i];
+                // Route to the peer's forked instance when it has one - the base array holds no
+                // state for a diverged peer (ForkForPeer moved it across).
+                ref var cache = ref ResolveObjectCache(i, peerId);
                 if (cache.RefValue != null)
                 {
                     onDisconnected(cache.RefValue, peerId);
@@ -2281,7 +2463,10 @@ namespace Nebula.Serialization.Serializers
                 var onAck = Protocol.GetOnPeerAcknowledge(classIndex);
                 if (onAck == null) continue;
 
-                ref var cache = ref network.CachedProperties[i];
+                // Must resolve per peer: an ack delivered to the base array while this peer is
+                // served by a fork would never clear the fork's pending mask, so it would resend
+                // the same delta forever.
+                ref var cache = ref ResolveObjectCache(i, peerId);
                 if (cache.RefValue != null)
                 {
                     onAck(cache.RefValue, peerId, latestAck);

@@ -563,4 +563,205 @@ public class NetArraySyncTests
         for (int i = 0; i < arr.Length; i++)
             Assert.Equal(arr[i], restored[i]);
     }
+
+    // ------------------------------------------------------------------------------------------------
+    // Per-peer forking (NetProperty.PerPeerState on a NetArray). The server keeps one instance per
+    // diverged peer; ForkForPeer clones the contents AND MOVES that peer's PeerSyncState across, so a
+    // peer that forks without mutating is already fully synced and sends nothing. Skipping the move
+    // would leave the fork with InitialSyncComplete == false and re-chunk the entire array to a client
+    // that already holds identical bytes.
+    // ------------------------------------------------------------------------------------------------
+
+    private static bool AnyPendingBits(in PeerSyncState s)
+    {
+        if (s.PendingDirty == null) return false;
+        for (int i = 0; i < s.PendingDirty.Length; i++) if (s.PendingDirty[i] != 0) return true;
+        return false;
+    }
+
+    // F1. THE regression test for the sync-state transplant: fork after a completed sync, change
+    //     nothing, and the fork must have nothing to say.
+    [NebulaUnitTest]
+    public void Fork_AfterInitialSync_SendsNothing()
+    {
+        var server = new NetArray<byte>(1024, 1024);
+        for (int i = 0; i < 1024; i++) server[i] = (byte)((i % 250) + 1);
+
+        var peerId = UUID.NewUUID();
+        var client = new NetArray<byte>(1024);
+        int tick = 1;
+        DrainInitialSync(server, ref client, peerId, ref tick);
+        server.OnExportComplete(); // end-of-tick global clear
+        AssertArraysEqual(server, client);
+
+        var fork = NetArray<byte>.ForkForPeer(server, peerId);
+
+        ref var forkState = ref fork.GetOrCreatePeerState(peerId);
+        Assert.True(forkState.InitialSyncComplete,
+            "fork lost the peer's sync state -> the whole array would be re-chunked to a client that already has it");
+        Assert.False(AnyPendingBits(forkState), "fork has pending elements despite no mutation");
+
+        // And the base no longer tracks a peer it no longer serves.
+        Assert.False(server.HasPeerStateForTests(peerId));
+    }
+
+    // F2. Fork then mutate one element -> an ordinary delta carrying that element, NOT a full resync,
+    //     and the client reconstructs it exactly.
+    [NebulaUnitTest]
+    public void Fork_ThenMutate_SendsDeltaNotResync()
+    {
+        var server = new NetArray<byte>(1024, 1024);
+        for (int i = 0; i < 1024; i++) server[i] = (byte)((i % 250) + 1);
+
+        var peerId = UUID.NewUUID();
+        var client = new NetArray<byte>(1024);
+        int tick = 1;
+        DrainInitialSync(server, ref client, peerId, ref tick);
+        server.OnExportComplete();
+
+        var fork = NetArray<byte>.ForkForPeer(server, peerId);
+        fork[7] = 200; // this peer's secret
+
+        var buf = new NetBuffer(8192, usePool: false);
+        {
+            ref var st = ref fork.GetOrCreatePeerState(peerId);
+            fork.MergeDirtyIntoPending(ref st, tick);
+            Assert.True(st.InitialSyncComplete, "fork fell back to chunked sync");
+            NetArray<byte>.WriteDeltaSync(fork, buf, ref st, tick);
+        }
+
+        // A full 1024-element resync could not fit in a delta this small.
+        Assert.True(buf.Length < 64, $"expected a single-element delta, got {buf.Length} bytes");
+
+        buf.ResetRead();
+        client = NetArray<byte>.NetworkDeserialize(null, default, buf, client);
+        Assert.Equal((byte)200, client[7]);
+        AssertArraysEqual(fork, client);
+    }
+
+    // F3. Two peers forked from the same base diverge independently and each client reconstructs only
+    //     its own view.
+    [NebulaUnitTest]
+    public void Fork_TwoPeers_ReconstructDifferentArrays()
+    {
+        var server = new NetArray<byte>(256, 256);
+        for (int i = 0; i < 256; i++) server[i] = 1;
+
+        var peerA = UUID.NewUUID();
+        var peerB = UUID.NewUUID();
+        var clientA = new NetArray<byte>(256);
+        var clientB = new NetArray<byte>(256);
+        int tickA = 1, tickB = 1;
+        DrainInitialSync(server, ref clientA, peerA, ref tickA);
+        DrainInitialSync(server, ref clientB, peerB, ref tickB);
+        server.OnExportComplete();
+
+        var forkA = NetArray<byte>.ForkForPeer(server, peerA);
+        var forkB = NetArray<byte>.ForkForPeer(server, peerB);
+        forkA[3] = 111;
+        forkB[3] = 222;
+
+        SendDelta(forkA, peerA, ref clientA, tickA);
+        SendDelta(forkB, peerB, ref clientB, tickB);
+
+        Assert.Equal((byte)111, clientA[3]);
+        Assert.Equal((byte)222, clientB[3]);
+        Assert.Equal((byte)1, server[3]); // base untouched by either fork
+    }
+
+    // F4. Acks must land on the fork: routed to the base instead, the fork's pending mask never clears
+    //     and it resends the same delta forever (the NetPropertiesSerializer.Acknowledge routing).
+    [NebulaUnitTest]
+    public void Fork_AckClearsForkPendingMask()
+    {
+        var server = new NetArray<byte>(256, 256);
+        var peerId = UUID.NewUUID();
+        CompleteInitialSync(server, peerId);
+
+        var fork = NetArray<byte>.ForkForPeer(server, peerId);
+        fork[9] = 77;
+
+        {
+            ref var st = ref fork.GetOrCreatePeerState(peerId);
+            fork.MergeDirtyIntoPending(ref st, 5);
+            NetArray<byte>.WriteDeltaSync(fork, new NetBuffer(512, usePool: false), ref st, 5);
+            Assert.True(AnyPendingBits(st));
+        }
+        fork.OnExportComplete();
+
+        NetArray<byte>.OnPeerAcknowledge(fork, peerId, 5);
+
+        Assert.False(AnyPendingBits(fork.GetOrCreatePeerState(peerId)),
+            "ack did not clear the fork's pending mask -> perpetual delta resend");
+    }
+
+    // F5. Bool takes the separate bit-packed path (_bits, not _data), so the clone must carry it.
+    [NebulaUnitTest]
+    public void Fork_Bool_ClonesBitPackedContents()
+    {
+        var server = new NetArray<bool>(256, 256);
+        server[0] = true; server[63] = true; server[64] = true; server[255] = true;
+
+        var peerId = UUID.NewUUID();
+        var fork = NetArray<bool>.ForkForPeer(server, peerId);
+
+        Assert.Equal(server.Length, fork.Length);
+        for (int i = 0; i < server.Length; i++)
+            Assert.Equal(server[i], fork[i]);
+
+        // Diverging the fork leaves the base alone.
+        fork[1] = true;
+        Assert.True(fork[1]);
+        Assert.False(server[1]);
+    }
+
+    // F6. A base mutation made BEFORE the fork (same tick, not yet exported) must survive the fork -
+    //     it is in the copied contents but the peer has not received it, so its dirty bit has to come
+    //     along. (Base mutations AFTER the fork deliberately never reach this peer - see F7.)
+    [NebulaUnitTest]
+    public void Fork_CarriesUnexportedBaseMutation()
+    {
+        var server = new NetArray<byte>(256, 256);
+        var peerId = UUID.NewUUID();
+        CompleteInitialSync(server, peerId);
+        var client = new NetArray<byte>(256, 256);
+
+        server[12] = 55;                 // dirtied this tick, not exported yet
+        var fork = NetArray<byte>.ForkForPeer(server, peerId);
+
+        SendDelta(fork, peerId, ref client, 3);
+        Assert.Equal((byte)55, client[12]);
+    }
+
+    // F7. Once forked, the peer is divorced from the base: later base mutations never reach it.
+    //     This pins the documented contract that differs from per-peer primitives.
+    [NebulaUnitTest]
+    public void Fork_IsDivorcedFromLaterBaseMutations()
+    {
+        var server = new NetArray<byte>(256, 256);
+        var peerId = UUID.NewUUID();
+        CompleteInitialSync(server, peerId);
+        var client = new NetArray<byte>(256, 256);
+
+        var fork = NetArray<byte>.ForkForPeer(server, peerId);
+        server[20] = 99; // base changes AFTER the fork
+
+        SendDelta(fork, peerId, ref client, 3);
+        Assert.Equal((byte)0, client[20]);
+        Assert.Equal((byte)0, fork[20]);
+    }
+
+    // Exports one delta from `arr` for `peerId` into `client`.
+    private static void SendDelta<T>(NetArray<T> arr, UUID peerId, ref NetArray<T> client, int tick) where T : struct
+    {
+        var buf = new NetBuffer(8192, usePool: false);
+        {
+            ref var st = ref arr.GetOrCreatePeerState(peerId);
+            arr.MergeDirtyIntoPending(ref st, tick);
+            NetArray<T>.WriteDeltaSync(arr, buf, ref st, tick);
+        }
+        arr.OnExportComplete();
+        buf.ResetRead();
+        client = NetArray<T>.NetworkDeserialize(null, default, buf, client);
+    }
 }

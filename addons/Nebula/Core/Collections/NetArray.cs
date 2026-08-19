@@ -554,6 +554,54 @@ namespace Nebula.Serialization
         }
 
         /// <summary>
+        /// Creates a content-identical copy of <paramref name="source"/> to serve one peer whose
+        /// view is about to diverge (see NetProperty.PerPeerState). Backs the fork-on-first-scoped-
+        /// access path in NetworkController.TryGetPerPeerArray.
+        ///
+        /// The peer's <see cref="PeerSyncState"/> is MOVED out of <paramref name="source"/> into the
+        /// fork rather than copied. That entry records what the peer has already acked, and because
+        /// the fork's contents are byte-identical to the base at this moment, it remains exactly
+        /// correct: a fork with no subsequent mutation sends nothing, and a fork that is then mutated
+        /// ships an ordinary delta. Without the move the fork would start with an empty _peerState,
+        /// NetworkSerialize would see InitialSyncComplete == false, and the whole array would be
+        /// re-chunked to a client that already holds identical bytes.
+        ///
+        /// Removing the entry from the base also stops the base array from tracking a peer it no
+        /// longer serves.
+        /// </summary>
+        internal static NetArray<T> ForkForPeer(NetArray<T> source, UUID peerId)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            var fork = new NetArray<T>(source.Capacity);
+            fork._length = source._length;
+
+            if (typeof(T) == typeof(bool))
+                Array.Copy(source._bits, fork._bits, Math.Min(source._bits.Length, fork._bits.Length));
+            else
+                Array.Copy(source._data, fork._data, Math.Min(source._data.Length, fork._data.Length));
+
+            // Carry the base's un-exported dirty state across. A base mutation earlier in this same
+            // tick is present in the copied contents but has NOT reached the peer yet, so its dirty
+            // bit has to come along or the fork would silently swallow it. (Base mutations AFTER the
+            // fork are a different matter - those deliberately never reach this peer.)
+            Array.Copy(source._dirtyMask, fork._dirtyMask, Math.Min(source._dirtyMask.Length, fork._dirtyMask.Length));
+            fork._isFullDirty = source._isFullDirty;
+
+            if (source._peerState != null && source._peerState.TryGetValue(peerId, out var state))
+            {
+                source._peerState.Remove(peerId);
+                fork._peerState = new Dictionary<UUID, PeerSyncState> { [peerId] = state };
+            }
+
+            return fork;
+        }
+
+        /// <summary>Test seam: whether this instance still tracks sync state for a peer.</summary>
+        internal bool HasPeerStateForTests(UUID peerId) => _peerState != null && _peerState.ContainsKey(peerId);
+
+        /// <summary>
         /// Checks if we have state for a peer and they've completed initial sync.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

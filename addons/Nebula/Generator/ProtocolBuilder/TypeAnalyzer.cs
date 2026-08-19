@@ -66,6 +66,9 @@ namespace Nebula.Generators
             public List<NetFunctionInfo> Functions { get; init; } = new();
             public long InterestAny { get; init; } = 0;
             public long InterestRequired { get; init; } = 0;
+
+            /// <summary>Class carries [Preload]; see Nebula.Preload.</summary>
+            public bool Preload { get; init; } = false;
         }
 
         public sealed class SerializableTypeInfo
@@ -147,6 +150,11 @@ namespace Nebula.Generators
                 var interestAny = netInterestAttr != null ? GetNamedArgument(netInterestAttr, "Any", 0L) : 0L;
                 var interestRequired = netInterestAttr != null ? GetNamedArgument(netInterestAttr, "Required", 0L) : 0L;
 
+                // Read like [NetInterest] above: a class-level marker the scene pass attributes to
+                // whichever scene has this type on its ROOT node.
+                var isPreload = type.GetAttributes()
+                    .Any(a => a.AttributeClass?.Name == "Preload" || a.AttributeClass?.Name == "PreloadAttribute");
+
                 var netTypeInfo = new NetworkTypeInfo
                 {
                     ScriptPath = scriptPath,
@@ -155,6 +163,7 @@ namespace Nebula.Generators
                     Functions = GetNetFunctions(type).ToList(),
                     InterestAny = interestAny,
                     InterestRequired = interestRequired,
+                    Preload = isPreload,
                 };
 
                 result.NetNodesByScriptPath[scriptPath] = netTypeInfo;

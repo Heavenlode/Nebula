@@ -11,6 +11,8 @@ namespace Nebula.Generators
         public bool IsNetScene { get; set; }
         public long InterestAny { get; set; }
         public long InterestRequired { get; set; }
+        /// <summary>Root node's class carries [Preload]; see Nebula.Preload.</summary>
+        public bool Preload { get; set; }
         public List<StaticNetNode> StaticNetNodes { get; } = new();
         public Dictionary<string, Dictionary<string, PropertyData>> Properties { get; } = new();
         public Dictionary<string, Dictionary<string, FunctionData>> Functions { get; } = new();
@@ -125,6 +127,12 @@ namespace Nebula.Generators
         public string NebulaVersion { get; set; } = "";
         /// <summary>All NEBULA009 parenting violations across scenes.</summary>
         public List<InvalidNestedContainer> InvalidNestedContainers { get; } = new();
+        /// <summary>
+        /// Scenes whose root class carries [Preload], sorted. Built once, early, by
+        /// Protocol.PreloadScenes so a first Instantiate does not land on a frame someone is
+        /// watching.
+        /// </summary>
+        public List<string> PreloadScenes { get; } = new();
     }
 
     internal sealed class SceneInterestData

@@ -27,23 +27,31 @@ namespace Nebula.Serialization.Serializers
         public void CleanupPeer(UUID peerId) { }
         public bool Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick latestAck) => false;
 
-        public void Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
+        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes)
         {
+            // Self-limiting: the section is exactly 1 byte, and a deferred tick is
+            // harmless - there is no ack tracking, the next stagger slot resyncs.
+            if (maxBytes < 1)
+            {
+                return ExportResult.None;
+            }
+
             // Only sync after the node has been spawned for this peer
             if (!currentWorld.HasSpawnedForClient(network.NetId, peer))
             {
-                return;
+                return ExportResult.None;
             }
 
             // Stagger by node ID so not all nodes sync on same tick
             int tickOffset = (int)(network.NetId.Value % SYNC_INTERVAL);
             if ((currentWorld.CurrentTick + tickOffset) % SYNC_INTERVAL != 0)
             {
-                return;
+                return ExportResult.None;
             }
 
             bool isInterested = network.IsPeerInterested(peer);
             NetWriter.WriteByte(buffer, isInterested ? (byte)1 : (byte)0);
+            return ExportResult.Written;
         }
 
         public bool Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController nodeOut)

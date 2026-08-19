@@ -1,6 +1,10 @@
 global using NetPeer = ENet.Peer;
 global using Tick = System.Int32;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using Godot;
 using Nebula.Serialization;
 using System;
@@ -65,7 +69,7 @@ namespace Nebula
         internal Dictionary<UUID, NetPeer> Peers = [];
         internal Dictionary<uint, UUID> PeerIds = [];  // Key is peer.ID (ENet native ID)
         internal Dictionary<uint, NetPeer> PeersByNativeId = [];
-        internal Dictionary<UUID, List<NetPeer>> WorldPeerMap = [];
+        /// <summary>Which world each peer is currently in. Keyed by peer id.</summary>
         internal Dictionary<UUID, WorldRunner> PeerWorldMap = [];
 
         public NetPeer GetPeer(UUID id)
@@ -166,6 +170,10 @@ namespace Nebula
             }
             Instance = this;
 
+            // NetRunner is an autoload, so this is the earliest reliable point at which Godot's
+            // main thread can be identified for NebulaThread's assertions.
+            NebulaThread.CaptureMainThread();
+
             if (!_libraryInitialized)
             {
                 try
@@ -185,13 +193,19 @@ namespace Nebula
 
         public override void _Ready()
         {
+            _ = MTU;
             // Protocol is fully static - no initialization needed
-            StartDebugHub();
+            StartTelemetryHub();
+
+            // No-op unless this process was launched with --bot. Created here rather than added as
+            // an autoload so that adopting Nebula's bots costs a project no project.godot changes,
+            // and so a normal client or server never carries the runtime at all.
+            Bots.BotRunner.TryCreate(this);
         }
 
         public override void _ExitTree()
         {
-            ENetHost?.Flush();
+            lock (EnetLock) { ENetHost?.Flush(); }
             ENetHost?.Dispose();
             DebugHub?.Stop();
             DebugHub = null;
@@ -221,25 +235,44 @@ namespace Nebula
         /// Cached on first read, so toggling it takes effect on the next run.
         /// </summary>
         public static bool DebugServerEnabled =>
-            _debugServerEnabled ??= ProjectSettings.GetSetting(DEBUG_SERVER_SETTING, true).AsBool();
+            _debugServerEnabled ??= ResolveDebugServerEnabled();
 
         private static bool? _debugServerEnabled;
+
+        /// <summary>
+        /// Environment/.env switch for <see cref="DebugServerEnabled"/>, checked before
+        /// the project setting so a deployment can turn the channel off per process kind
+        /// (<c>.env.server</c> vs <c>.env.client</c>) without editing project.godot.
+        /// Off means fully inert: no listener, no frames built, no per-tick debug work.
+        /// </summary>
+        public const string DEBUG_SERVER_ENV_VAR = "NEBULA_DEBUG";
+
+        private static bool ResolveDebugServerEnabled()
+            => Env.TryGetFlag(DEBUG_SERVER_ENV_VAR, out bool fromEnv)
+                ? fromEnv
+                : ProjectSettings.GetSetting(DEBUG_SERVER_SETTING, true).AsBool();
 
         /// <summary>Project setting key for <see cref="DebugServerEnabled"/>.</summary>
         public const string DEBUG_SERVER_SETTING = "Nebula/config/debug/enable_debug_server";
 
         /// <summary>
-        /// Opt-in via <c>--debugPort=N</c>, and gated by
-        /// <see cref="DebugServerEnabled"/>. The editor's Play button assigns a port
-        /// per launched instance and the integration harness passes it explicitly;
-        /// the port is used verbatim, never fallen back.
+        /// Opt-in via <c>--debugPort=N</c>. The editor's Play button assigns a port per
+        /// launched instance and the integration harness passes it explicitly; the port
+        /// is used verbatim, never fallen back.
+        ///
+        /// <para>The socket carries two independently switchable features, so it starts
+        /// when EITHER wants it: the debugger (<see cref="DebugServerEnabled"/>) and
+        /// metrics reporting (<see cref="Diagnostics.ServerMetrics.Enabled"/>). Turning
+        /// the debugger off while metrics are on leaves the listener up but suppresses
+        /// every debug-class frame — see <see cref="DebugHub.DebugFramesEnabled"/>.</para>
         ///
         /// Parsed here rather than in WorldRunner, where it used to live: that
         /// ran once per world, so multiple worlds fought over the same port.
         /// </summary>
-        private void StartDebugHub()
+        private void StartTelemetryHub()
         {
-            if (!DebugServerEnabled)
+            bool debugFrames = DebugServerEnabled;
+            if (!debugFrames && !Diagnostics.ServerMetrics.Enabled)
                 return;
 
             int explicitPort = 0;
@@ -255,9 +288,78 @@ namespace Nebula
             if (explicitPort <= 0)
                 return;
 
-            var hub = new DebugHub();
+            var hub = new DebugHub { DebugFramesEnabled = debugFrames };
             if (hub.Start(explicitPort))
                 DebugHub = hub;
+        }
+
+        /// <summary>
+        /// Peers (by native ENet id) that connected before any world was ready to take them.
+        /// Authenticated as soon as one goes Live; see <see cref="AuthenticateWaitingPeers"/>.
+        /// </summary>
+        private readonly List<uint> _peersAwaitingWorld = [];
+        private readonly List<uint> _waitingPeerScratch = [];
+
+        /// <summary>
+        /// The first world that is built and ready for peers, or null if none is yet.
+        ///
+        /// Prefer this over indexing <see cref="Worlds"/> directly: a world is registered from the
+        /// moment its creation starts, so the registry can contain worlds that are still
+        /// generating and must not be joined.
+        /// </summary>
+        public WorldRunner FirstLiveWorld()
+        {
+            // Enumerated as key-value pairs rather than through .Values: enumeration is a struct
+            // enumerator (allocation-free) either way, but touching .Values would also materialize
+            // the dictionary's cached ValueCollection wrapper on first use.
+            foreach (var pair in Worlds)
+            {
+                var world = pair.Value;
+                if (world != null && world.Lifecycle == WorldRunner.WorldLifecycle.Live)
+                {
+                    return world;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// True when <paramref name="worldId"/> names a world that exists <em>and</em> is ready for
+        /// peers. Registered-but-generating worlds return false.
+        /// </summary>
+        public bool IsWorldLive(UUID worldId) =>
+            Worlds.TryGetValue(worldId, out var world)
+            && world != null
+            && world.Lifecycle == WorldRunner.WorldLifecycle.Live;
+
+        /// <summary>
+        /// Authenticates everything that connected while the server had no world yet.
+        ///
+        /// Called when a world goes Live. World creation is asynchronous, so there is a real window
+        /// between the socket opening and the first world being ready -- clients that connect in it
+        /// wait here rather than being rejected, because from their side the server is simply still
+        /// starting up.
+        /// </summary>
+        private void AuthenticateWaitingPeers()
+        {
+            if (_peersAwaitingWorld.Count == 0 || Authentication == null) return;
+
+            // Drained into scratch first: authenticating a peer can re-enter this list (a rejected
+            // peer disconnecting, say), and mutating it mid-iteration would throw.
+            _waitingPeerScratch.Clear();
+            _waitingPeerScratch.AddRange(_peersAwaitingWorld);
+            _peersAwaitingWorld.Clear();
+
+            Debugger.Instance.Log($"World ready; authenticating {_waitingPeerScratch.Count} peer(s) that connected while it was still generating.");
+
+            foreach (var nativeId in _waitingPeerScratch)
+            {
+                var peer = GetPeerByNativeId(nativeId);
+                if (peer.IsSet)
+                {
+                    Authentication.ServerAuthenticateClient(peer);
+                }
+            }
         }
 
         public IAuthenticator Authentication { get; private set; }
@@ -271,10 +373,21 @@ namespace Nebula
             OnPeerConnected += (uint peerId) =>
             {
                 var peer = GetPeerByNativeId(peerId);
-                if (peer.IsSet)
+                if (!peer.IsSet) return;
+
+                // Authenticators put peers into worlds, so there has to be a world to put them in.
+                // Since world creation is asynchronous the socket can be open before the first one
+                // is ready, and a client launched alongside the server routinely lands in that
+                // window. Hold the peer rather than failing it -- AuthenticateWaitingPeers picks it
+                // up the moment a world goes Live.
+                if (FirstLiveWorld() == null)
                 {
-                    Authentication.ServerAuthenticateClient(peer);
+                    _peersAwaitingWorld.Add(peerId);
+                    Debugger.Instance.Log($"Peer {peerId} connected before any world was ready; holding until one is.");
+                    return;
                 }
+
+                Authentication.ServerAuthenticateClient(peer);
             };
             OnConnectedToServer += () =>
             {
@@ -316,7 +429,7 @@ namespace Nebula
             Debugger.Instance.Log($"Started on port {Port}");
 
             // The debug channel is not started here: it is process-wide (see
-            // StartDebugHub) so that clients get one too, and so it is already
+            // StartTelemetryHub) so that clients get one too, and so it is already
             // listening before the network starts.
         }
 
@@ -347,7 +460,10 @@ namespace Nebula
             }
 
             NetStarted = true;
-            var worldRunner = new WorldRunner();
+            // The client's single WorldRunner is a receiver, not something that gets generated: its
+            // contents arrive over the spawn stream. Lifecycle only gates server-side peer
+            // admission, but leaving it at the Generating default would be misleading here.
+            var worldRunner = new WorldRunner { Lifecycle = WorldRunner.WorldLifecycle.Live };
             WorldRunner.CurrentWorld = worldRunner;
             GetTree().CurrentScene.AddChild(worldRunner);
             Debugger.Instance.Log("Started");
@@ -410,7 +526,65 @@ namespace Nebula
         /// Maximum Transferrable Unit. The maximum number of bytes that should be sent in a single ENet UDP Packet (i.e. a single tick)
         /// Not a hard limit.
         /// </summary>
-        public static int MTU => ProjectSettings.GetSetting("Nebula/config/network/mtu", 1400).AsInt32();
+        public const string MTU_SETTING = "Nebula/config/network/mtu";
+        public const int DefaultMTU = 1400;
+        private static int _mtu;
+        public static int MTU
+        {
+            get
+            {
+                var cached = _mtu;
+                if (cached != 0) return cached;
+                return _mtu = ProjectSettings.GetSetting(MTU_SETTING, DefaultMTU).AsInt32();
+            }
+        }
+
+        public const string ACK_TIMEOUT_SETTING = "Nebula/config/network/ack_timeout_seconds";
+        public const string JOIN_ACK_TIMEOUT_SETTING = "Nebula/config/network/join_ack_timeout_seconds";
+        public const float DefaultAckTimeoutSeconds = 5.0f;
+        public const float DefaultJoinAckTimeoutSeconds = 30.0f;
+
+        /// <summary>
+        /// Seconds an IN-WORLD peer may go without acknowledging a tick before the server
+        /// force-disconnects it. A healthy peer acks continuously (piggybacked on input or
+        /// standalone), so this is a pure liveness cutoff.
+        /// </summary>
+        public static float AckTimeoutSeconds =>
+            (float)ProjectSettings.GetSetting(ACK_TIMEOUT_SETTING, DefaultAckTimeoutSeconds).AsDouble();
+
+        /// <summary>
+        /// Seconds a JOINING peer (INITIAL status - never acked yet) gets before the same
+        /// cutoff. A client's first ack only follows a successfully imported tick, which is
+        /// after process boot, world-scene load, and spatial-mirror build - easily past the
+        /// in-world cutoff on a loaded machine, so joins need their own, longer window.
+        /// </summary>
+        public static float JoinAckTimeoutSeconds =>
+            (float)ProjectSettings.GetSetting(JOIN_ACK_TIMEOUT_SETTING, DefaultJoinAckTimeoutSeconds).AsDouble();
+
+        /// <summary>Tick-channel packet header: the int32 tick number.</summary>
+        private const int TickHeaderBytes = sizeof(int);
+
+        /// <summary>NebulaPack framing: the flags byte (see NebulaPack.WritePacket).</summary>
+        private const int PackFlagsBytes = 1;
+
+        /// <summary>NebulaPack framing: the optional uint16 checksum, budgeted worst-case.</summary>
+        private const int PackChecksumBytes = sizeof(ushort);
+
+        /// <summary>
+        /// Headroom subtracted from the tick payload budget to absorb small framing
+        /// variations (NebulaPack baseline-age byte, future flags).
+        /// </summary>
+        public const int TickBudgetHeadroom = 16;
+
+        /// <summary>
+        /// Per-peer byte budget for one tick's serialized payload (the ExportState output),
+        /// derived from the MTU: MTU minus the tick header, pack flags, checksum worst
+        /// case, and <see cref="TickBudgetHeadroom"/>. The export path keeps every peer
+        /// payload within this so the packet never exceeds the MTU and the client's decode
+        /// ceiling (MTU + 64) is unreachable.
+        /// </summary>
+        public static int TickPayloadBudget(int mtu)
+            => mtu - TickHeaderBytes - PackFlagsBytes - PackChecksumBytes - TickBudgetHeadroom;
 
         private static bool? _logTickPayloads;
         /// <summary>
@@ -483,6 +657,215 @@ namespace Nebula
         public static bool PackValidate =>
             _packValidate ??= ProjectSettings.GetSetting("Nebula/config/pack/validate", true).AsBool();
 
+        private static bool? _perWorldThreadGroup;
+        /// <summary>
+        /// When enabled via <c>Nebula/config/threading/per_world_thread_group</c>, each server
+        /// world's SubViewport gets its own <see cref="Node.ProcessThreadGroupEnum.SubThread"/>
+        /// group, so worlds run their ticks concurrently instead of being walked one after another
+        /// by the SceneTree on the main thread.
+        ///
+        /// What this does and does not do is worth being precise about: Godot's thread groups move
+        /// <c>_process</c>/<c>_physics_process</c> *callbacks* off the main thread. They do not
+        /// parallelize physics simulation -- PhysicsServer3D steps every active space sequentially
+        /// regardless of which thread requested it, so per-world World3Ds still simulate serially.
+        /// The win is ServerProcessTick (state serialization dominates) and gameplay scripts.
+        ///
+        /// Off by default. Everything the flag depends on is written to be correct in both modes --
+        /// an uncontended lock is nearly free and the inbound queue preserves ordering either way --
+        /// so flipping it changes timing, never behavior. Cached on first read.
+        /// </summary>
+        public static bool PerWorldThreadGroup =>
+            _perWorldThreadGroup ??= ProjectSettings.GetSetting("Nebula/config/threading/per_world_thread_group", false).AsBool();
+
+        /// <summary>
+        /// Serializes every touch of the shared ENet <see cref="Host"/>.
+        ///
+        /// One host serves all worlds, but sends originate from inside each world's tick
+        /// (WorldRunner.ExportState, net function dispatch) while the event pump services the same
+        /// host from the main thread. ENet is not thread-safe, so once worlds tick concurrently
+        /// those overlap.
+        ///
+        /// Held as briefly as possible -- around the ENet call itself and nothing else. In
+        /// particular the pump takes it to pull an event and releases it before dispatching, because
+        /// dispatch re-enters world code that sends, and holding it across that would deadlock.
+        /// </summary>
+        internal static readonly object EnetLock = new();
+
+        /// <summary>
+        /// Reusable wrapper for parsing inbound packets in place on the client. Re-pointed at each
+        /// rented payload via <see cref="NetBuffer.Attach"/> -- one long-lived object instead of a
+        /// NetBuffer allocation per packet. Only ever touched by the pump (main thread), and every
+        /// consumer copies what it keeps, so re-attaching for the next packet is safe.
+        /// </summary>
+        private readonly NetBuffer _inboundParseBuffer = new(System.Array.Empty<byte>());
+
+        /// <summary>
+        /// Work deferred from a world thread to the main thread, drained at the top of
+        /// <see cref="_PhysicsProcess"/>.
+        ///
+        /// This is for rare lifecycle events -- peer join/leave mutating the shared registries,
+        /// world creation touching the SceneTree -- NOT for anything on the per-tick path. Each
+        /// entry allocates a closure, which is fine at join/leave frequency and would not be inside
+        /// ExportState. Callers already on the main thread run inline and never queue.
+        /// </summary>
+        private readonly Queue<MainThreadItem> _mainThreadWork = new();
+        private readonly object _mainThreadWorkLock = new();
+
+        /// <summary>
+        /// One queued job, in whichever of the two forms the caller had.
+        ///
+        /// A struct so the queue itself never allocates per item, and ONE queue rather than two so
+        /// both forms keep a single, obvious execution order -- a peer join queued as a closure and a
+        /// node's state change queued as an interface still run in the order they were asked for.
+        /// </summary>
+        private readonly struct MainThreadItem
+        {
+            private readonly Action _action;
+            private readonly IMainThreadWork _work;
+            private readonly int _tag;
+
+            internal MainThreadItem(Action action) { _action = action; _work = null; _tag = 0; }
+            internal MainThreadItem(IMainThreadWork work, int tag) { _action = null; _work = work; _tag = tag; }
+
+            internal void Run()
+            {
+                if (_action != null) _action();
+                else _work?.OnMainThread(_tag);
+            }
+        }
+
+        /// <summary>
+        /// Runs <paramref name="work"/> on the main thread: inline if already there, otherwise
+        /// queued for the next <see cref="_PhysicsProcess"/>.
+        ///
+        /// Allocates a delegate (and a display class, if the lambda captures) per call, which is why
+        /// this form is for one-off lifecycle events. A caller that defers REPEATEDLY should implement
+        /// <see cref="IMainThreadWork"/> and use the overload below instead.
+        ///
+        /// This overload cannot go away even so: <c>INotifyCompletion.OnCompleted</c> hands its
+        /// continuation over as an <see cref="Action"/>, so <see cref="SwitchToMainThread"/> needs it.
+        /// </summary>
+        internal void RunOnMainThread(Action work)
+        {
+            if (NebulaThread.IsMain)
+            {
+                work();
+                return;
+            }
+            Enqueue(new MainThreadItem(work));
+        }
+
+        /// <summary>
+        /// The same hop, with NOTHING allocated.
+        ///
+        /// The caller is the work: a long-lived object implements <see cref="IMainThreadWork"/> and
+        /// hands over <c>this</c>, so there is no delegate to construct and no closure to capture. Use
+        /// it wherever the deferral happens often enough that a per-call allocation would show up --
+        /// anything reached from a world tick rather than from a join or a world creation.
+        /// </summary>
+        /// <param name="tag">Which job, for an object that defers more than one kind of work. Passed
+        /// straight back, so the callee needs no state to tell them apart.</param>
+        internal void RunOnMainThread(IMainThreadWork work, int tag = 0)
+        {
+            if (work == null) return;
+
+            if (NebulaThread.IsMain)
+            {
+                work.OnMainThread(tag);
+                return;
+            }
+            Enqueue(new MainThreadItem(work, tag));
+        }
+
+        private void Enqueue(in MainThreadItem item)
+        {
+            lock (_mainThreadWorkLock)
+            {
+                _mainThreadWork.Enqueue(item);
+            }
+        }
+
+        /// <summary>
+        /// Awaitable hop to the main thread. Completes inline when already there, so awaiting it
+        /// from the main thread costs nothing and never defers by a frame.
+        ///
+        /// A custom awaitable rather than a TaskCompletionSource, deliberately: a task only
+        /// signals completion -- WHERE the awaiter resumes is decided by the scheduler it captured
+        /// at the await, and a world tick thread has no SynchronizationContext, so a TCS completed
+        /// from main would resume the caller on the ThreadPool. This awaitable hands the
+        /// continuation itself to <see cref="RunOnMainThread"/>, so resuming on main is structural
+        /// rather than a scheduling accident.
+        ///
+        /// Used by world creation, which may be initiated from a world tick thread (a
+        /// [NetFunction] is dispatched from inside ServerProcessTick) but has to do its SceneTree
+        /// work on the main thread.
+        /// </summary>
+        internal MainThreadAwaitable SwitchToMainThread() => new(this);
+
+        /// <summary>See <see cref="SwitchToMainThread"/>.</summary>
+        internal readonly struct MainThreadAwaitable
+        {
+            private readonly NetRunner _runner;
+            internal MainThreadAwaitable(NetRunner runner) { _runner = runner; }
+            public Awaiter GetAwaiter() => new(_runner);
+
+            internal readonly struct Awaiter : INotifyCompletion
+            {
+                private readonly NetRunner _runner;
+                internal Awaiter(NetRunner runner) { _runner = runner; }
+
+                /// <summary>Already on main: the await is a no-op and never defers a frame.</summary>
+                public bool IsCompleted => NebulaThread.IsMain;
+
+                /// <summary>
+                /// Only reached off-main (IsCompleted short-circuits otherwise), so this always
+                /// enqueues: the continuation runs during the next <see cref="DrainMainThreadWork"/>.
+                /// </summary>
+                public void OnCompleted(Action continuation) => _runner.RunOnMainThread(continuation);
+
+                public void GetResult()
+                {
+                    // Runs as the resumed continuation's first act. Anything but main here means
+                    // the marshal itself is broken -- fail loudly at the hop, not at whatever
+                    // SceneTree call would have corrupted state three frames later.
+                    NebulaThread.AssertMain(nameof(SwitchToMainThread));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Drains <see cref="_mainThreadWork"/>. Each item runs outside the lock so that work which
+        /// queues more work cannot deadlock, and the drain is bounded to the items present on entry
+        /// so a self-requeueing item cannot spin the frame.
+        /// </summary>
+        private void DrainMainThreadWork()
+        {
+            int pending;
+            lock (_mainThreadWorkLock)
+            {
+                pending = _mainThreadWork.Count;
+            }
+
+            while (pending-- > 0)
+            {
+                MainThreadItem work;
+                lock (_mainThreadWorkLock)
+                {
+                    if (!_mainThreadWork.TryDequeue(out work)) return;
+                }
+
+                try
+                {
+                    work.Run();
+                }
+                catch (Exception ex)
+                {
+                    Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
+                        $"[Nebula] Deferred main-thread work threw: {ex.Message}\n{ex.StackTrace}");
+                }
+            }
+        }
+
         /// <summary>
         /// Accepts debug clients. Runs in _Process rather than _PhysicsProcess
         /// because _PhysicsProcess bails out until the network has started, and
@@ -536,18 +919,28 @@ namespace Nebula
         /// <inheritdoc/>
         public override void _PhysicsProcess(double delta)
         {
+            // Before anything else, and regardless of whether the network is up: work deferred from
+            // world threads (peer registry mutations, world creation) is owed a main-thread turn.
+            DrainMainThreadWork();
+
             if (!NetStarted)
                 return;
 
             Event netEvent;
-            int checkResult = ENetHost.CheckEvents(out netEvent);
+            int checkResult;
             int serviceResult = 0;
-            
-            if (checkResult <= 0)
+
+            // Pull an event under the lock, then release it before dispatching -- dispatch re-enters
+            // world code that sends on this same host.
+            lock (EnetLock)
             {
-                serviceResult = ENetHost.Service(0, out netEvent);
+                checkResult = ENetHost.CheckEvents(out netEvent);
+                if (checkResult <= 0)
+                {
+                    serviceResult = ENetHost.Service(0, out netEvent);
+                }
             }
-            
+
             while (checkResult > 0 || serviceResult > 0)
             {
                 switch (netEvent.Type)
@@ -565,7 +958,7 @@ namespace Nebula
                             {
                                 Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
                                     $"Rejecting peer {netEvent.Peer.ID}: protocol hash mismatch (server 0x{Protocol.HandshakeHash:X8}, client 0x{netEvent.Data:X8}). Client is running a different build.");
-                                netEvent.Peer.Disconnect(ProtocolMismatchDisconnectCode);
+                                DisconnectPeer(netEvent.Peer, ProtocolMismatchDisconnectCode);
                                 break;
                             }
 
@@ -603,11 +996,29 @@ namespace Nebula
                     case EventType.Receive:
                     {
                         var channel = netEvent.ChannelID;
-                        var packetData = new byte[netEvent.Packet.Length];
+                        var packetLength = netEvent.Packet.Length;
+
+                        // The per-tick channels (acks, inputs, functions) arrive every network tick
+                        // from every peer, so their payloads rent from the shared pool instead of
+                        // allocating -- a fresh byte[] per packet was steady-state garbage. The rare
+                        // channels (World handoffs, reserved custom handlers) keep exact-size
+                        // allocations, because their consumers receive a bare byte[] and rely on
+                        // its .Length.
+                        bool pooledPayload = channel == (byte)ENetChannelId.Tick
+                            || channel == (byte)ENetChannelId.Input
+                            || channel == (byte)ENetChannelId.Function;
+                        var packetData = pooledPayload
+                            ? ArrayPool<byte>.Shared.Rent(packetLength)
+                            : new byte[packetLength];
+                        // Packet.CopyTo copies exactly packet-Length bytes, so an oversized rented
+                        // array is fine; only [0, packetLength) is ever read downstream.
                         netEvent.Packet.CopyTo(packetData);
                         netEvent.Packet.Dispose();
 
-                        using var data = new NetBuffer(packetData);
+                        // A rented payload is owned by whoever consumes it: EnqueueInboundPacket
+                        // takes ownership (the world's drain returns it to the pool), everything
+                        // else parses inline here and the finally below returns it.
+                        bool payloadHandedOff = false;
 
                         // A malformed packet must never abort the event pump: an unhandled
                         // exception here would drop every remaining queued event this frame for
@@ -619,25 +1030,24 @@ namespace Nebula
                             case ENetChannelId.Tick:
                                 if (IsServer)
                                 {
-                                    if (packetData.Length == 0)
-                                    {
-                                        break;
-                                    }
-                                    var tick = NetReader.ReadInt32(data);
+                                    // Queued, not applied: this world may be mid-tick on its own
+                                    // thread. See WorldRunner.EnqueueInboundPacket.
                                     var peerId = GetPeerId(netEvent.Peer);
                                     if (PeerWorldMap.TryGetValue(peerId, out var world))
                                     {
-                                        world.PeerAcknowledge(netEvent.Peer, tick);
+                                        world.EnqueueInboundPacket(netEvent.Peer, channel, packetData, packetLength);
+                                        payloadHandedOff = true;
                                     }
                                 }
                                 else
                                 {
-                                    if (packetData.Length == 0)
+                                    if (packetLength == 0)
                                     {
                                         break;
                                     }
-                                    var tick = NetReader.ReadInt32(data);
-                                    var bytes = NetReader.ReadRemainingBytes(data);
+                                    _inboundParseBuffer.Attach(packetData, packetLength);
+                                    var tick = NetReader.ReadInt32(_inboundParseBuffer);
+                                    var bytes = NetReader.ReadRemainingBytes(_inboundParseBuffer);
                                     // Debug: dump the full payload hex for every server tick
                                     // (gated behind the Nebula/config/debug/log_tick_payloads setting).
                                     if (LogTickPayloads)
@@ -664,7 +1074,8 @@ namespace Nebula
                                     var peerId = GetPeerId(netEvent.Peer);
                                     if (PeerWorldMap.TryGetValue(peerId, out var world))
                                     {
-                                        world.ReceiveInput(netEvent.Peer, data);
+                                        world.EnqueueInboundPacket(netEvent.Peer, channel, packetData, packetLength);
+                                        payloadHandedOff = true;
                                     }
                                 }
                                 // Clients should never receive messages on the Input channel
@@ -676,12 +1087,14 @@ namespace Nebula
                                     var peerId = GetPeerId(netEvent.Peer);
                                     if (PeerWorldMap.TryGetValue(peerId, out var world))
                                     {
-                                        world.ReceiveNetFunction(netEvent.Peer, data);
+                                        world.EnqueueInboundPacket(netEvent.Peer, channel, packetData, packetLength);
+                                        payloadHandedOff = true;
                                     }
                                 }
                                 else
                                 {
-                                    WorldRunner.CurrentWorld.ReceiveNetFunction(ServerPeer, data);
+                                    _inboundParseBuffer.Attach(packetData, packetLength);
+                                    WorldRunner.CurrentWorld.ReceiveNetFunction(ServerPeer, _inboundParseBuffer);
                                 }
                                 break;
 
@@ -710,7 +1123,16 @@ namespace Nebula
                                 $"[Nebula][MalformedPacket] Failed to parse packet on channel {channel} from peer {netEvent.Peer.ID}: {ex.Message}");
                             if (IsServer)
                             {
-                                netEvent.Peer.Disconnect(MalformedPacketDisconnectCode);
+                                DisconnectPeer(netEvent.Peer, MalformedPacketDisconnectCode);
+                            }
+                        }
+                        finally
+                        {
+                            // Covers every non-handoff exit: parsed inline, no world found for the
+                            // peer, empty packet, simulated loss, or a parse exception.
+                            if (pooledPayload && !payloadHandedOff)
+                            {
+                                ArrayPool<byte>.Shared.Return(packetData);
                             }
                         }
                         break;
@@ -718,10 +1140,13 @@ namespace Nebula
                 }
 
                 // Check for more events
-                checkResult = ENetHost.CheckEvents(out netEvent);
-                if (checkResult <= 0)
+                lock (EnetLock)
                 {
-                    serviceResult = ENetHost.Service(0, out netEvent);
+                    checkResult = ENetHost.CheckEvents(out netEvent);
+                    if (checkResult <= 0)
+                    {
+                        serviceResult = ENetHost.Service(0, out netEvent);
+                    }
                 }
             }
         }
@@ -731,9 +1156,14 @@ namespace Nebula
         /// </summary>
         public static void SendPacket(Peer peer, byte channelId, byte[] data, PacketFlags flags)
         {
-            var packet = default(Packet);
-            packet.Create(data, flags);
-            peer.Send(channelId, ref packet);
+            // Reached from world tick threads (ExportState, net functions) as well as the main
+            // thread. See EnetLock.
+            lock (EnetLock)
+            {
+                var packet = default(Packet);
+                packet.Create(data, flags);
+                peer.Send(channelId, ref packet);
+            }
         }
 
         /// <summary>
@@ -742,9 +1172,26 @@ namespace Nebula
         /// </summary>
         public static void SendPacket(Peer peer, byte channelId, NetBuffer buffer, PacketFlags flags)
         {
-            var packet = default(Packet);
-            packet.Create(buffer.RawBuffer, buffer.Length, flags);
-            peer.Send(channelId, ref packet);
+            // See EnetLock. packet.Create copies the bytes out of the buffer synchronously, so the
+            // caller's pooled NetBuffer stays reusable the moment this returns.
+            lock (EnetLock)
+            {
+                var packet = default(Packet);
+                packet.Create(buffer.RawBuffer, buffer.Length, flags);
+                peer.Send(channelId, ref packet);
+            }
+        }
+
+        /// <summary>
+        /// Disconnects a peer. Goes through <see cref="EnetLock"/> like every other host touch,
+        /// because the ack-timeout sweep drops peers from inside a world's tick.
+        /// </summary>
+        internal static void DisconnectPeer(Peer peer, uint data)
+        {
+            lock (EnetLock)
+            {
+                peer.Disconnect(data);
+            }
         }
 
         /// <summary>
@@ -797,10 +1244,34 @@ namespace Nebula
 
         public void PeerJoinWorld(NetPeer peer, UUID worldId, string token = "")
         {
+            // Admission mutates the shared peer registries, which belong to the main thread. The
+            // pump-driven callers are already there and run inline; a caller resuming from an await
+            // (whose continuation lands wherever its scheduler chose) is deferred a frame instead.
+            // Same posture as MigratePeerToWorld.
+            if (!NebulaThread.IsMain)
+            {
+                RunOnMainThread(() => PeerJoinWorld(peer, worldId, token));
+                return;
+            }
+
+            if (!Worlds.TryGetValue(worldId, out var world) || world == null)
+            {
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"PeerJoinWorld: no world {worldId}.");
+                return;
+            }
+            if (world.Lifecycle != WorldRunner.WorldLifecycle.Live)
+            {
+                // A world is registered from the moment creation starts, so being findable is not
+                // the same as being ready. Await the creation task instead of joining early.
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
+                    $"PeerJoinWorld: world {worldId} is {world.Lifecycle}, not Live. Refusing to admit peer {peer.ID}.");
+                return;
+            }
+
             var peerId = new UUID();
             Peers[peerId] = peer;
             PeerIds[peer.ID] = peerId;
-            Worlds[worldId].JoinPeer(peer, token);
+            world.JoinPeer(peer, token);
         }
 
         // --- Live cross-world migration (World ENet channel) ---
@@ -828,11 +1299,31 @@ namespace Nebula
         /// and only once it acks is the peer admitted to the target — so the target streams no state into
         /// a not-yet-reset client (the World channel and the tick channel are not cross-channel ordered).
         /// The peer joins the target as INITIAL and transitions to IN_WORLD on its first tick ack, which
-        /// fires the target's PlayerSpawnManager to (re)spawn the player under the same identity.
+        /// raises OnPlayerJoined on the target so it can (re)spawn the player under the same identity.
         /// </summary>
         public void MigratePeerToWorld(NetPeer peer, WorldRunner target)
         {
             if (!IsServer || target == null) return;
+
+            // The documented pattern is "await CreateWorld, then migrate" -- and when that await
+            // was entered on a world tick thread, the continuation resumes wherever the scheduler
+            // put it, not necessarily on main. Everything below touches the shared peer registries
+            // and the source world's peer state, so marshal here rather than trusting every caller
+            // to. Inline when already on main, so the pump-driven paths are unchanged.
+            if (!NebulaThread.IsMain)
+            {
+                RunOnMainThread(() => MigratePeerToWorld(peer, target));
+                return;
+            }
+
+            if (target.Lifecycle != WorldRunner.WorldLifecycle.Live)
+            {
+                // Callers get a Live world by awaiting CreateWorld, so this is a guard against
+                // holding on to a world across a failure rather than a path anyone takes normally.
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
+                    $"MigratePeerToWorld: target world {target.WorldId} is {target.Lifecycle}, not Live. Refusing to migrate peer {peer.ID}.");
+                return;
+            }
 
             var peerId = GetPeerId(peer);
             if (!PeerWorldMap.TryGetValue(peerId, out var source) || source == null)
@@ -921,41 +1412,159 @@ namespace Nebula
 
         public event Action<WorldRunner> OnWorldCreated;
 
-        public WorldRunner CreateWorld(UUID worldId, PackedScene scene)
+        /// <summary>
+        /// Creates a world from a scene, instantiating it off the main thread.
+        ///
+        /// <para>The returned task completes only once the world is fully built and ready for
+        /// peers, including any <see cref="IAsyncWorldGenerator"/> work its root scene does. Await
+        /// it before migrating anyone in.</para>
+        ///
+        /// <para>Safe to call from a world's tick thread -- which is the normal case, since a
+        /// [NetFunction] like "start an expedition" is dispatched from inside ServerProcessTick.
+        /// Everything that touches the SceneTree is marshalled to the main thread internally.</para>
+        /// </summary>
+        /// <param name="onTreeReady">
+        /// Runs on the main thread once the world is in the tree and network-prepared, but before
+        /// it goes Live. This is where per-world infrastructure a caller wants in place before any
+        /// peer can join belongs. Attaching it after awaiting would be a race against the first join.
+        /// </param>
+        public async Task<WorldRunner> CreateWorld(
+            UUID worldId,
+            PackedScene scene,
+            Action<WorldRunner> onTreeReady = null,
+            CancellationToken ct = default)
         {
             if (!IsServer) return null;
-            var node = scene.Instantiate();
+
+            // Off the main thread: instantiating a PackedScene is permitted anywhere, so long as
+            // the result is not added to the tree there (SetupWorldInstance does that on main).
+            //
+            // LongRunning rather than Task.Run deliberately -- it gets a dedicated thread instead of
+            // consuming a ThreadPool worker, and world generation code below this tends to use the
+            // pool itself (Parallel.For, Task.Run), so a pool-bound outer call would sit waiting on
+            // the very pool it is starving.
+            var node = await Task.Factory.StartNew(
+                () => scene.Instantiate(),
+                ct,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
+
             if (node is not INetNodeBase netNodeBase)
             {
+                node?.Free();
                 Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Failed to create world: root node is not a NetworkController");
                 return null;
             }
-            return SetupWorldInstance(worldId, netNodeBase.Network);
+
+            return await SetupWorldInstance(worldId, netNodeBase.Network, onTreeReady, ct);
         }
 
-        public WorldRunner SetupWorldInstance(UUID worldId, NetworkController node)
+        /// <summary>
+        /// Brings up a world around an already-instantiated root scene -- the restored-world path,
+        /// where the node came from deserialization rather than a PackedScene.
+        /// See <see cref="CreateWorld"/> for the contract.
+        /// </summary>
+        public async Task<WorldRunner> SetupWorldInstance(
+            UUID worldId,
+            NetworkController node,
+            Action<WorldRunner> onTreeReady = null,
+            CancellationToken ct = default)
         {
             if (!IsServer) return null;
+
+            // Everything from here to the end of generation touches the SceneTree and the world
+            // registry, so it belongs on the main thread. Completes inline when already there.
+            await SwitchToMainThread();
+            NebulaThread.AssertMain(nameof(SetupWorldInstance));
             var godotPhysicsWorld = new SubViewport
             {
                 OwnWorld3D = true,
                 World3D = new World3D(),
                 Name = worldId.ToString()
             };
+
+            if (PerWorldThreadGroup)
+            {
+                // The whole world -- its WorldRunner and every node in its scene -- processes on
+                // this group's own thread instead of the main SceneTree walk.
+                godotPhysicsWorld.ProcessThreadGroup = Node.ProcessThreadGroupEnum.SubThread;
+
+                // Order 1 puts every world group strictly after the default main-thread group
+                // (order 0), which is where the NetRunner autoload and therefore the ENet pump
+                // live. Worlds share an order, so they run concurrently with each other.
+                //
+                // This is an ordering convenience, not a synchronization mechanism: the inbound
+                // queue is what actually makes pump/tick overlap safe, because the pump is not the
+                // only thing that touches world state (the World channel completes peer handoffs).
+                godotPhysicsWorld.ProcessThreadGroupOrder = 1;
+
+                // Flush CallDeferredThreadGroup work immediately before this group's
+                // _physics_process, so anything marshalled into the group lands before its tick.
+                godotPhysicsWorld.ProcessThreadMessages = Node.ProcessThreadMessagesEnum.MessagesPhysics;
+            }
+
+            // Nothing in a half-built world may tick: not the WorldRunner, and not the gameplay
+            // nodes underneath it. Disabling the SubViewport is what actually achieves that -- a
+            // Lifecycle check inside WorldRunner._PhysicsProcess would only stop the former.
+            godotPhysicsWorld.ProcessMode = ProcessModeEnum.Disabled;
+
             var worldRunner = new WorldRunner
             {
                 WorldId = worldId,
                 RootScene = node,
+                Lifecycle = WorldRunner.WorldLifecycle.Generating,
             };
+
+            // Registered before the first await below, so two callers racing to create the same
+            // world resolve to one entry instead of each building their own.
             Worlds[worldId] = worldRunner;
-            WorldPeerMap[worldId] = [];
-            godotPhysicsWorld.AddChild(worldRunner);
-            godotPhysicsWorld.AddChild(node.RawNode);
-            GetTree().CurrentScene.AddChild(godotPhysicsWorld);
-            node._NetworkPrepare(worldRunner);
-            node._WorldReady();
+            worldRunner.Debug?.Send("WorldGenerating", worldId.ToString());
+
+            try
+            {
+                godotPhysicsWorld.AddChild(worldRunner);
+                godotPhysicsWorld.AddChild(node.RawNode);
+                GetTree().CurrentScene.AddChild(godotPhysicsWorld);
+                node._NetworkPrepare(worldRunner);
+
+                // Before _WorldReady and before the world can go Live, so callers can install
+                // whatever must exist ahead of the first join.
+                onTreeReady?.Invoke(worldRunner);
+
+                node._WorldReady();
+
+                if (node.RawNode is IAsyncWorldGenerator generator)
+                {
+                    await generator.GenerateWorldAsync(ct);
+                    // Generation is free to hop threads; come back before touching the tree again.
+                    await SwitchToMainThread();
+                }
+
+                ct.ThrowIfCancellationRequested();
+            }
+            catch (Exception)
+            {
+                // Registration and its compensating removal live in the same method, so there is no
+                // path that leaves a half-registered world behind for someone to find later.
+                await SwitchToMainThread();
+                worldRunner.Lifecycle = WorldRunner.WorldLifecycle.Failed;
+                Worlds.Remove(worldId);
+                // Frees the WorldRunner, the world's scene and its World3D along with it.
+                godotPhysicsWorld.QueueFree();
+                throw;
+            }
+
+            worldRunner.Lifecycle = WorldRunner.WorldLifecycle.Live;
+            godotPhysicsWorld.ProcessMode = ProcessModeEnum.Inherit;
+
             worldRunner.Debug?.Send("WorldCreated", worldId.ToString());
+            // Fired only once the world is genuinely usable: subscribers include the autosave hook,
+            // which must never serialize a world that is still being built.
             OnWorldCreated?.Invoke(worldRunner);
+
+            // Anyone who connected while this was still generating can now be let in.
+            AuthenticateWaitingPeers();
+
             return worldRunner;
         }
 
@@ -964,6 +1573,9 @@ namespace Nebula
             Debugger.Instance.Log($"Peer disconnected peerId: {peer.ID}");
             OnPeerDisconnected?.Invoke(peer.ID);
             PeersByNativeId.Remove(peer.ID);
+            // A peer that gave up while waiting for the first world must not be authenticated into
+            // it later.
+            _peersAwaitingWorld.Remove(peer.ID);
         }
     }
 }

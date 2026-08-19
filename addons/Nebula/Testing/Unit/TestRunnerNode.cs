@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Nebula.Testing.Unit;
 
@@ -33,10 +34,31 @@ public partial class TestRunnerNode : Node
         if (_discoverOnly)
         {
             DiscoverTests();
+            GetTree().Quit(0);
+            return;
         }
-        else
+
+        RunAllTestsThenQuit();
+    }
+
+    /// <summary>
+    /// async void, deliberately: _Ready cannot await, and the suite must be able to span engine
+    /// frames. Async tests resume on the main thread via Godot's SynchronizationContext between
+    /// frames -- which is also what lets a test run work on a worker thread: synchronous
+    /// RenderingServer/ResourceLoader calls made from a worker are serviced only when the main
+    /// thread pumps, so a runner that blocked the main thread waiting on such a test would
+    /// deadlock the whole suite.
+    /// </summary>
+    private async void RunAllTestsThenQuit()
+    {
+        try
         {
-            RunAllTests();
+            await RunAllTests();
+        }
+        catch (Exception ex)
+        {
+            GD.Print($"[FAIL] TestRunnerNode: runner crashed: {ex.Message}");
+            _failed++;
         }
 
         // Exit with appropriate code
@@ -67,7 +89,7 @@ public partial class TestRunnerNode : Node
         GD.Print("[DISCOVER_END]");
     }
 
-    private void RunAllTests()
+    private async Task RunAllTests()
     {
         GD.Print("[RUN_START]");
 
@@ -81,14 +103,14 @@ public partial class TestRunnerNode : Node
 
         foreach (var testClass in testClasses)
         {
-            RunTestClass(testClass);
+            await RunTestClass(testClass);
         }
 
         GD.Print("[RUN_END]");
         GD.Print($"[SUMMARY] Passed: {_passed}, Failed: {_failed}");
     }
 
-    private void RunTestClass(Type testClass)
+    private async Task RunTestClass(Type testClass)
     {
         // Find all methods with [NebulaUnitTest] attribute
         var testMethods = testClass.GetMethods(BindingFlags.Public | BindingFlags.Instance)
@@ -116,7 +138,7 @@ public partial class TestRunnerNode : Node
 
         foreach (var method in testMethods)
         {
-            RunTestMethod(testClass, instance!, method);
+            await RunTestMethod(testClass, instance!, method);
         }
 
         // Dispose if IDisposable
@@ -126,13 +148,37 @@ public partial class TestRunnerNode : Node
         }
     }
 
-    private void RunTestMethod(Type testClass, object instance, MethodInfo method)
+    /// <summary>
+    /// Ceiling for a single Task-returning test. Generous because async tests exist precisely for
+    /// work that spans frames (worker-thread generation, multi-frame settling); its job is only to
+    /// turn a wedged test into a [FAIL] instead of a suite that never prints a summary.
+    /// </summary>
+    private static readonly TimeSpan AsyncTestTimeout = TimeSpan.FromSeconds(120);
+
+    private async Task RunTestMethod(Type testClass, object instance, MethodInfo method)
     {
         var testName = $"{testClass.Name}.{method.Name}";
 
         try
         {
-            method.Invoke(instance, null);
+            var result = method.Invoke(instance, null);
+
+            // A Task-returning test is awaited here on the main thread, which keeps pumping engine
+            // frames between continuations. Do NOT be tempted to .Wait()/.GetResult() it: a test
+            // whose worker thread makes a synchronous RenderingServer/ResourceLoader call needs a
+            // live main thread to service that call, and blocking here deadlocks the suite.
+            if (result is Task task)
+            {
+                var finished = await Task.WhenAny(task, Task.Delay(AsyncTestTimeout));
+                if (finished != task)
+                {
+                    GD.Print($"[FAIL] {testName}: timed out after {AsyncTestTimeout.TotalSeconds:0}s");
+                    _failed++;
+                    return;
+                }
+                await task; // Propagate the test's exception, if any.
+            }
+
             GD.Print($"[PASS] {testName}");
             _passed++;
         }

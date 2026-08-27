@@ -158,6 +158,12 @@ namespace Nebula.Serialization.Serializers
 
         /// <summary>Pre-cached: does this property type support delta encoding?</summary>
         private readonly bool[] _propSupportsDelta;
+        /// <summary>
+        /// Object properties that hold a NODE REFERENCE rather than in-place-mutated content.
+        /// These are the only object properties whose dirty bit is trustworthy — see
+        /// <see cref="Protocol.IsNodeReferenceClass"/> — so they are the only ones gated on it.
+        /// </summary>
+        private readonly bool[] _propIsNodeRef;
 
         /// <summary>Pre-cached property types</summary>
         private readonly SerialVariantType[] _propTypes;
@@ -270,6 +276,7 @@ namespace Nebula.Serialization.Serializers
                 _propertyCount = 0;
                 _byteCount = 0;
                 _propSupportsDelta = Array.Empty<bool>();
+                _propIsNodeRef = Array.Empty<bool>();
                 _propTypes = Array.Empty<SerialVariantType>();
                 _propIsObject = Array.Empty<bool>();
                 _propClassIndex = Array.Empty<int>();
@@ -303,6 +310,7 @@ namespace Nebula.Serialization.Serializers
             }
 
             _propSupportsDelta = new bool[_propertyCount];
+            _propIsNodeRef = new bool[_propertyCount];
             _propTypes = new SerialVariantType[_propertyCount];
             _propIsObject = new bool[_propertyCount];
             _propClassIndex = new int[_propertyCount];
@@ -317,6 +325,7 @@ namespace Nebula.Serialization.Serializers
                 var prop = Protocol.UnpackProperty(_cachedSceneFilePath, i);
                 _propTypes[i] = prop.VariantType;
                 _propSupportsDelta[i] = SupportsDelta(prop.VariantType);
+                _propIsNodeRef[i] = prop.IsObjectProperty && Protocol.IsNodeReferenceClass(prop.ClassIndex);
                 _propIsObject[i] = prop.IsObjectProperty;
                 _propClassIndex[i] = prop.ClassIndex;
                 _propIsPerPeer[i] = prop.IsPerPeer;
@@ -807,6 +816,7 @@ namespace Nebula.Serialization.Serializers
 
             _propTypes = propTypes;
             _propSupportsDelta = new bool[_propertyCount];
+            _propIsNodeRef = new bool[_propertyCount];
             _propIsObject = new bool[_propertyCount];
             _propClassIndex = new int[_propertyCount];
             for (int i = 0; i < _propertyCount; i++) _propClassIndex[i] = -1;
@@ -1662,11 +1672,13 @@ namespace Nebula.Serialization.Serializers
             // be written absolute so it is exact on arrival.
             Array.Copy(_propertiesUpdated, _dirtyOnlyMask, byteCount);
 
-            // Include non-default PRIMITIVE properties that haven't been synced yet
+            // Include non-default properties that haven't been synced yet. Node references
+            // join the primitives here: their dirty bit is real (MarkDirtyRef sets it), so a
+            // late joiner needs the same initial-sync coverage a primitive gets.
             foreach (var propIndex in nonDefaultProperties)
             {
-                // Skip object properties
-                if (_propIsObject[propIndex]) continue;
+                // Skip object properties whose dirty bit means nothing (in-place mutation).
+                if (_propIsObject[propIndex] && !_propIsNodeRef[propIndex]) continue;
 
                 var byteIndex = propIndex / BitConstants.BitsInByte;
                 var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
@@ -1697,16 +1709,17 @@ namespace Nebula.Serialization.Serializers
                 }
             }
 
-            // Include PRIMITIVE properties that were sent but not yet acknowledged (for re-sending)
+            // Include properties that were sent but not yet acknowledged (for re-sending).
+            // Node references ride this too: once they are only sent on change, this is the
+            // ONLY thing that recovers a reference lost in flight.
             for (var i = 0; i < state.PendingDirtyMask.Length && i < _propertiesUpdated.Length; i++)
             {
-                // Only include primitive properties from pending mask
                 var pendingByte = state.PendingDirtyMask[i];
                 for (int j = 0; j < 8; j++)
                 {
                     int propIndex = i * 8 + j;
                     if (propIndex >= _propertyCount) break;
-                    if (_propIsObject[propIndex]) continue; // Skip objects
+                    if (_propIsObject[propIndex] && !_propIsNodeRef[propIndex]) continue;
                     if ((pendingByte & (1 << j)) != 0)
                     {
                         _propertiesUpdated[i] |= (byte)(1 << j);
@@ -1911,6 +1924,13 @@ namespace Nebula.Serialization.Serializers
                             actualMask[i] &= (byte)~(1 << j);
                             _leftoverMask[i] |= (byte)(1 << j);
                         }
+                        else if (Diagnostics.PayloadCensus.Enabled)
+                        {
+                            var censusProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                            Diagnostics.PayloadCensus.Record(
+                                $"{censusProp.NodePath}.{censusProp.Name}",
+                                buffer.WritePosition - propStartPos, useDelta);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1934,6 +1954,18 @@ namespace Nebula.Serialization.Serializers
 
                 // Check interest for this property
                 if (!PeerHasInterestInProperty(propIndex, peerInterestLayers)) continue;
+
+                // A node reference is only ever ASSIGNED, so MarkDirtyRef has already told us
+                // whether it changed — unlike an in-place-mutated object, whose dirty bit means
+                // nothing and which therefore has to be asked every tick. Gate it on the same
+                // merged mask the primitives use, so it inherits initial sync for late joiners
+                // and resend-until-acked for loss, and costs nothing while it sits unchanged.
+                if (_propIsNodeRef[propIndex]
+                    && (_propertiesUpdated[propIndex / BitConstants.BitsInByte]
+                        & (1 << (propIndex % BitConstants.BitsInByte))) == 0)
+                {
+                    continue;
+                }
 
                 var classIndex = _propClassIndex[propIndex];
                 if (classIndex < 0) continue;
@@ -1970,6 +2002,14 @@ namespace Nebula.Serialization.Serializers
                         int byteIdx = propIndex / 8;
                         int bitIdx = propIndex % 8;
                         actualMask[byteIdx] |= (byte)(1 << bitIdx);
+
+                        if (Diagnostics.PayloadCensus.Enabled)
+                        {
+                            var censusProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
+                            Diagnostics.PayloadCensus.Record(
+                                $"{censusProp.NodePath}.{censusProp.Name} (obj)",
+                                buffer.WritePosition - startPos, false);
+                        }
                     }
                     else
                     {
@@ -2068,7 +2108,10 @@ namespace Nebula.Serialization.Serializers
                 {
                     if ((b & (1 << bit)) == 0) continue;
                     int propIdx = byteIdx * 8 + bit;
-                    if (propIdx >= _propertyCount || _propIsObject[propIdx]) continue;
+                    if (propIdx >= _propertyCount) continue;
+                    // Node references are banked like primitives; other object properties own
+                    // their per-peer resend state inside their own serializer.
+                    if (_propIsObject[propIdx] && !_propIsNodeRef[propIdx]) continue;
                     state.PendingDirtyMask[byteIdx] |= (byte)(1 << bit);
                     if (propIdx < 64)
                     {

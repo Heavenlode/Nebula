@@ -428,6 +428,14 @@ namespace Nebula
             NetStarted = true;
             Debugger.Instance.Log($"Started on port {Port}");
 
+            // A run under synthetic impairment must SAY SO. It is off by default and applies per
+            // process, so without this line a log is indistinguishable from a healthy one and no
+            // measurement taken from it can be attributed to anything.
+            if (Impairment.IsActive)
+            {
+                Debugger.Instance.Log($"Network impairment ACTIVE: {Impairment}");
+            }
+
             // The debug channel is not started here: it is process-wide (see
             // StartTelemetryHub) so that clients get one too, and so it is already
             // listening before the network starts.
@@ -467,6 +475,14 @@ namespace Nebula
             WorldRunner.CurrentWorld = worldRunner;
             GetTree().CurrentScene.AddChild(worldRunner);
             Debugger.Instance.Log("Started");
+
+            // A run under synthetic impairment must SAY SO. It is off by default and applies per
+            // process, so without this line a log is indistinguishable from a healthy one and no
+            // measurement taken from it can be attributed to anything.
+            if (Impairment.IsActive)
+            {
+                Debugger.Instance.Log($"Network impairment ACTIVE: {Impairment}");
+            }
         }
 
         /// <summary>
@@ -606,20 +622,19 @@ namespace Nebula
         public static bool LogTickPayloads =>
             _logTickPayloads ??= ProjectSettings.GetSetting("Nebula/config/debug/log_tick_payloads", false).AsBool();
 
-        private static int? _simulateIncomingTickLoss;
-        /// <summary>
-        /// Debug: percentage (0-100) of received tick packets the CLIENT drops before
-        /// processing, via <c>Nebula/config/debug/simulate_incoming_tick_loss</c>. Simulates
-        /// an unreliable link on a lossless LAN so loss-recovery paths (spawn resend-until-
-        /// acked, delta baseline fallback) can be exercised deterministically. Client-side
-        /// only; 0 (default) is a no-op. Cached on first read.
-        /// </summary>
-        public static int SimulateIncomingTickLoss =>
-            _simulateIncomingTickLoss ??= Math.Clamp(
-                ProjectSettings.GetSetting("Nebula/config/debug/simulate_incoming_tick_loss", 0).AsInt32(), 0, 100);
+        private static Diagnostics.NetworkImpairment _impairment;
 
-        /// <summary>RNG for <see cref="SimulateIncomingTickLoss"/>. Debug-only, client-local.</summary>
-        private static readonly RandomNumberGenerator _tickLossRng = new();
+        /// <summary>
+        /// Synthetic network impairment applied to INBOUND packets -- added latency, jitter and loss.
+        ///
+        /// <para>Exists because everything about the render clock and the interpolation buffer was
+        /// developed on localhost, where jitter is small and loss is zero. A jitter buffer that has
+        /// never seen jitter is a guess. Configured per process (command line first, so one play
+        /// session can run a healthy client beside a bad one), inert when unset, and superseding the
+        /// older <c>simulate_incoming_tick_loss</c> setting, which still feeds its loss knob.</para>
+        /// </summary>
+        public static Diagnostics.NetworkImpairment Impairment =>
+            _impairment ??= Diagnostics.NetworkImpairment.FromProcessConfig();
 
         private static bool? _traceSpawnIds;
         /// <summary>
@@ -916,12 +931,98 @@ namespace Nebula
             return default;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Applies <see cref="Impairment"/> to an outgoing packet.
+        ///
+        /// <para>Deliberately at the LAST possible moment, after the caller has finished building the
+        /// packet and mutating whatever state that took. A packet is lost on the wire, not un-sent:
+        /// an input packet that has already consumed the pending tick ack must lose that ack too, or
+        /// the simulation quietly tests a failure mode the network cannot produce.</para>
+        ///
+        /// <para>Egress covers what ingress structurally cannot. Impairment is per process so one bad
+        /// client can run beside a healthy one, which leaves the SERVER unimpaired -- so without this
+        /// a client kept delivering flawless input straight through a "100% loss" outage.</para>
+        /// </summary>
+        private static bool TrySendOutbound(byte channelId)
+        {
+            if (!Impairment.IsActive) return true;
+            return Impairment.TrySendOutbound(channelId, Godot.Time.GetTicksMsec());
+        }
+
+        /// <summary>
+        /// Applies <see cref="Impairment"/> to an inbound packet destined for a world's queue.
+        /// Returns false when the packet is dropped; otherwise <paramref name="releaseAtMsec"/> is
+        /// when the world may apply it (0 = immediately, the unimpaired path).
+        /// </summary>
+        private static bool TryScheduleInbound(byte channel, out ulong releaseAtMsec)
+        {
+            releaseAtMsec = 0;
+            if (!Impairment.IsActive) return true;
+
+            var now = Time.GetTicksMsec();
+            if (!Impairment.TryScheduleInbound(channel, now, out var releaseAt)) return false;
+            if (releaseAt > now) releaseAtMsec = releaseAt;
+            return true;
+        }
+
+        // ------------------------------------------------------- client-side delayed tick delivery
+
+        /// <summary>
+        /// A server tick held back by synthetic impairment.
+        ///
+        /// <para>The client parses ticks inline in the pump and has no inbound queue of its own -- the
+        /// server's ring cannot be reused here because it is per world and applies server-side
+        /// channels. This is the smallest thing that can hold a tick: the payload is already a
+        /// materialized copy (<c>NetReader.ReadRemainingBytes</c>), so nothing pooled is pinned.</para>
+        /// </summary>
+        private readonly struct DelayedClientTick
+        {
+            public readonly ulong ReleaseAtMsec;
+            public readonly int Tick;
+            public readonly byte[] Payload;
+
+            public DelayedClientTick(ulong releaseAtMsec, int tick, byte[] payload)
+            {
+                ReleaseAtMsec = releaseAtMsec;
+                Tick = tick;
+                Payload = payload;
+            }
+        }
+
+        private readonly List<DelayedClientTick> _delayedClientTicks = new();
+
+        private void EnqueueDelayedClientTick(ulong releaseAtMsec, int tick, byte[] payload)
+            => _delayedClientTicks.Add(new DelayedClientTick(releaseAtMsec, tick, payload));
+
+        /// <summary>
+        /// Delivers held ticks that have come due.
+        ///
+        /// <para>Released in RELEASE order, not arrival order, which is the point: jitter is what
+        /// produces reordering on a real link. On the tick channel a reordered-late tick is then
+        /// discarded by ClientProcessTick's "ignore ticks at or behind the current one" guard, so it
+        /// presents as loss -- again, as in production.</para>
+        /// </summary>
+        private void DrainDelayedClientTicks()
+        {
+            if (_delayedClientTicks.Count == 0) return;
+
+            var now = Time.GetTicksMsec();
+            for (int i = _delayedClientTicks.Count - 1; i >= 0; i--)
+            {
+                var held = _delayedClientTicks[i];
+                if (held.ReleaseAtMsec > now) continue;
+
+                _delayedClientTicks.RemoveAt(i);
+                WorldRunner.CurrentWorld?.ClientProcessTick(held.Tick, held.Payload);
+            }
+        }
+
         public override void _PhysicsProcess(double delta)
         {
             // Before anything else, and regardless of whether the network is up: work deferred from
             // world threads (peer registry mutations, world creation) is owed a main-thread turn.
             DrainMainThreadWork();
+            if (IsClient && Impairment.IsActive) DrainDelayedClientTicks();
 
             if (!NetStarted)
                 return;
@@ -1033,9 +1134,11 @@ namespace Nebula
                                     // Queued, not applied: this world may be mid-tick on its own
                                     // thread. See WorldRunner.EnqueueInboundPacket.
                                     var peerId = GetPeerId(netEvent.Peer);
-                                    if (PeerWorldMap.TryGetValue(peerId, out var world))
+                                    if (PeerWorldMap.TryGetValue(peerId, out var world)
+                                        && TryScheduleInbound(channel, out var ackReleaseAt))
                                     {
-                                        world.EnqueueInboundPacket(netEvent.Peer, channel, packetData, packetLength);
+                                        world.EnqueueInboundPacket(
+                                            netEvent.Peer, channel, packetData, packetLength, ackReleaseAt);
                                         payloadHandedOff = true;
                                     }
                                 }
@@ -1055,14 +1158,21 @@ namespace Nebula
                                         Debugger.Instance.Log(Debugger.DebugLevel.INFO,
                                             $"[Nebula][TickPayload] tick={tick} ({bytes.Length} bytes) {Convert.ToHexString(bytes)}");
                                     }
-                                    // Debug: simulate packet loss by dropping received ticks before
-                                    // processing. Client-side only, never touches the shared sim -
-                                    // exists to exercise loss-recovery paths (spawn resend, delta
-                                    // baseline fallback) deterministically on a LAN with no real loss.
-                                    if (SimulateIncomingTickLoss > 0
-                                        && _tickLossRng.RandiRange(1, 100) <= SimulateIncomingTickLoss)
+                                    // Synthetic impairment: drop, hold, or pass through. `bytes` is
+                                    // already a materialized copy, so holding it is safe and the
+                                    // rented packetData still returns to the pool below.
+                                    if (Impairment.IsActive)
                                     {
-                                        break;
+                                        if (!Impairment.TryScheduleInbound(
+                                                channel, Time.GetTicksMsec(), out var releaseAt))
+                                        {
+                                            break;
+                                        }
+                                        if (releaseAt > Time.GetTicksMsec())
+                                        {
+                                            EnqueueDelayedClientTick(releaseAt, tick, bytes);
+                                            break;
+                                        }
                                     }
                                     WorldRunner.CurrentWorld.ClientProcessTick(tick, bytes);
                                 }
@@ -1074,8 +1184,12 @@ namespace Nebula
                                     var peerId = GetPeerId(netEvent.Peer);
                                     if (PeerWorldMap.TryGetValue(peerId, out var world))
                                     {
-                                        world.EnqueueInboundPacket(netEvent.Peer, channel, packetData, packetLength);
-                                        payloadHandedOff = true;
+                                        if (TryScheduleInbound(channel, out var inputReleaseAt))
+                                        {
+                                            world.EnqueueInboundPacket(
+                                                netEvent.Peer, channel, packetData, packetLength, inputReleaseAt);
+                                            payloadHandedOff = true;
+                                        }
                                     }
                                 }
                                 // Clients should never receive messages on the Input channel
@@ -1087,8 +1201,12 @@ namespace Nebula
                                     var peerId = GetPeerId(netEvent.Peer);
                                     if (PeerWorldMap.TryGetValue(peerId, out var world))
                                     {
-                                        world.EnqueueInboundPacket(netEvent.Peer, channel, packetData, packetLength);
-                                        payloadHandedOff = true;
+                                        if (TryScheduleInbound(channel, out var fnReleaseAt))
+                                        {
+                                            world.EnqueueInboundPacket(
+                                                netEvent.Peer, channel, packetData, packetLength, fnReleaseAt);
+                                            payloadHandedOff = true;
+                                        }
                                     }
                                 }
                                 else
@@ -1156,6 +1274,8 @@ namespace Nebula
         /// </summary>
         public static void SendPacket(Peer peer, byte channelId, byte[] data, PacketFlags flags)
         {
+            if (!TrySendOutbound(channelId)) return;
+
             // Reached from world tick threads (ExportState, net functions) as well as the main
             // thread. See EnetLock.
             lock (EnetLock)
@@ -1172,6 +1292,8 @@ namespace Nebula
         /// </summary>
         public static void SendPacket(Peer peer, byte channelId, NetBuffer buffer, PacketFlags flags)
         {
+            if (!TrySendOutbound(channelId)) return;
+
             // See EnetLock. packet.Create copies the bytes out of the buffer synchronously, so the
             // caller's pooled NetBuffer stays reusable the moment this returns.
             lock (EnetLock)

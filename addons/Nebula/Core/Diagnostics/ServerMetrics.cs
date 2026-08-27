@@ -123,6 +123,12 @@ namespace Nebula.Diagnostics
         private int _gc0, _gc1, _gc2;
         private bool _started;
 
+        /// <summary>
+        /// Ticks counted by the window <see cref="Emit"/> most recently closed, so a
+        /// companion reporter can express its own totals per tick over the same window.
+        /// </summary>
+        public int TicksInLastWindow { get; private set; }
+
         /// <summary>Records one completed server tick. Hot path — no allocation.</summary>
         public void RecordTick(double elapsedMs)
         {
@@ -256,7 +262,14 @@ namespace Nebula.Diagnostics
             _line.Append(",\"spawn_backlog_max\":").Append(_spawnBacklogMax).Append('}');
             _line.Append('}');
 
+            // Stdout, as the class doc promises: the DebugHub copy the caller also ships
+            // only exists while a debugger is attached, so without this a headless soak
+            // (the exact case metrics exist for) produces no metrics at all.
+            Godot.GD.Print(_line.ToString());
+
             string json = _line.ToString(LinePrefix.Length, _line.Length - LinePrefix.Length);
+
+            TicksInLastWindow = _ticksThisWindow;
 
             _windowStartUsec = Time.GetTicksUsec();
             _tickCount = 0;

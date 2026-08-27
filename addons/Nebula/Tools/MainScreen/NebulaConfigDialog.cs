@@ -37,6 +37,13 @@ public partial class NebulaConfigDialog : AcceptDialog
     private SpinBox botCountSpin;
     private OptionButton botBehaviorPicker;
     private CheckBox botsHeadlessCheck;
+    private SpinBox simLatencySpin;
+    private SpinBox simJitterSpin;
+    private SpinBox simLossSpin;
+    private CheckBox impairFirstOnlyCheck;
+    private SpinBox simBurstLossSpin;
+    private SpinBox simBurstEverySpin;
+    private SpinBox simBurstMsSpin;
     /// <summary>
     /// Behavior type names in <see cref="botBehaviorPicker"/> order, index 0 being "(none)".
     /// Kept alongside the control because OptionButton only carries the display text.
@@ -176,6 +183,13 @@ public partial class NebulaConfigDialog : AcceptDialog
             clientCountSpin.Value = config.ClientCount;
             botCountSpin.Value = config.BotCount;
             botsHeadlessCheck.ButtonPressed = config.BotsHeadless;
+            simLatencySpin.Value = config.SimLatencyMs;
+            simJitterSpin.Value = config.SimJitterMs;
+            simLossSpin.Value = config.SimLossPct;
+            simBurstLossSpin.Value = config.SimBurstLossPct;
+            simBurstEverySpin.Value = config.SimBurstEverySec;
+            simBurstMsSpin.Value = config.SimBurstMs;
+            impairFirstOnlyCheck.ButtonPressed = config.ImpairFirstClientOnly;
             SelectBotBehavior(config.BotBehavior);
         }
         else
@@ -185,6 +199,17 @@ public partial class NebulaConfigDialog : AcceptDialog
             botCountSpin.Value = 0;
             botsHeadlessCheck.ButtonPressed = true;
             botBehaviorPicker.Selected = 0;
+
+            // Reset these too. The form's controls are reused across opens, so anything not
+            // explicitly cleared here is inherited from whatever was last EDITED -- which for
+            // impairment means a new configuration silently arrives pre-degraded.
+            simLatencySpin.Value = 0;
+            simJitterSpin.Value = 0;
+            simLossSpin.Value = 0;
+            simBurstLossSpin.Value = 0;
+            simBurstEverySpin.Value = 10;
+            simBurstMsSpin.Value = 0;
+            impairFirstOnlyCheck.ButtonPressed = true;
         }
 
         formDialog.PopupCentered(new Vector2I(420, 0));
@@ -290,6 +315,96 @@ public partial class NebulaConfigDialog : AcceptDialog
         };
         grid.AddChild(botsHeadlessCheck);
 
+        // ── Synthetic network impairment ─────────────────────────────────
+        // Everything about interpolation was developed on localhost, where jitter is small and loss
+        // is zero. These make a bad link something you can produce on purpose.
+        grid.AddChild(new Label { Text = "Sim latency (ms)" });
+        simLatencySpin = new SpinBox
+        {
+            MinValue = 0,
+            MaxValue = 1000,
+            Value = 0,
+            Rounded = true,
+            CustomMinimumSize = new Vector2(120, 0),
+            TooltipText = "One-way delay added to inbound packets. 0 disables impairment entirely.",
+        };
+        grid.AddChild(simLatencySpin);
+
+        grid.AddChild(new Label { Text = "Sim jitter (+/- ms)" });
+        simJitterSpin = new SpinBox
+        {
+            MinValue = 0,
+            MaxValue = 500,
+            Value = 0,
+            Rounded = true,
+            CustomMinimumSize = new Vector2(120, 0),
+            TooltipText = "Random spread around the latency. This is what drives the adaptive "
+                + "interpolation buffer, and what reorders packets.",
+        };
+        grid.AddChild(simJitterSpin);
+
+        grid.AddChild(new Label { Text = "Sim loss (%)" });
+        simLossSpin = new SpinBox
+        {
+            MinValue = 0,
+            MaxValue = 100,
+            Value = 0,
+            Rounded = true,
+            CustomMinimumSize = new Vector2(120, 0),
+            TooltipText = "Percentage of snapshot packets discarded. Reliable channels are never "
+                + "dropped -- ENet has already delivered those, so dropping one loses it for good.",
+        };
+        grid.AddChild(simLossSpin);
+
+        grid.AddChild(new Label { Text = "Burst loss (%)" });
+        simBurstLossSpin = new SpinBox
+        {
+            MinValue = 0,
+            MaxValue = 100,
+            Value = 0,
+            Rounded = true,
+            CustomMinimumSize = new Vector2(120, 0),
+            TooltipText = "Loss during a burst. Real links drop RUNS of packets, not scattered ones, "
+                + "and a run is what actually empties the interpolation buffer. 100 = full dropout. "
+                + "Needs a burst length to do anything.",
+        };
+        grid.AddChild(simBurstLossSpin);
+
+        grid.AddChild(new Label { Text = "Burst every (s)" });
+        simBurstEverySpin = new SpinBox
+        {
+            MinValue = 1,
+            MaxValue = 120,
+            Value = 10,
+            Rounded = true,
+            CustomMinimumSize = new Vector2(120, 0),
+            TooltipText = "Average seconds between bursts. Actual spacing is random around this, "
+                + "because real faults do not arrive on a metronome.",
+        };
+        grid.AddChild(simBurstEverySpin);
+
+        grid.AddChild(new Label { Text = "Burst length (ms)" });
+        simBurstMsSpin = new SpinBox
+        {
+            MinValue = 0,
+            MaxValue = 5000,
+            Value = 0,
+            Rounded = true,
+            CustomMinimumSize = new Vector2(120, 0),
+            TooltipText = "How long each burst lasts. 0 disables bursts. Anything longer than the "
+                + "interpolation buffer (~66ms by default) will starve it, which is the point.",
+        };
+        grid.AddChild(simBurstMsSpin);
+
+        grid.AddChild(new Label { Text = "Impair first client only" });
+        impairFirstOnlyCheck = new CheckBox
+        {
+            ButtonPressed = true,
+            TooltipText = "Degrade only client 0, leaving the rest healthy. This is usually what you "
+                + "want: an impaired peer is only interesting when a healthy one is watching it.",
+        };
+        grid.AddChild(impairFirstOnlyCheck);
+
         formDialog.Connect(ConfirmationDialog.SignalName.Confirmed, new Callable(this, MethodName.OnFormConfirmed));
         AddChild(formDialog);
     }
@@ -316,6 +431,13 @@ public partial class NebulaConfigDialog : AcceptDialog
             BotCount = botCount,
             BotBehavior = botBehavior,
             BotsHeadless = botsHeadlessCheck.ButtonPressed,
+            SimLatencyMs = (int)simLatencySpin.Value,
+            SimJitterMs = (int)simJitterSpin.Value,
+            SimLossPct = (int)simLossSpin.Value,
+            SimBurstLossPct = (int)simBurstLossSpin.Value,
+            SimBurstEverySec = (int)simBurstEverySpin.Value,
+            SimBurstMs = (int)simBurstMsSpin.Value,
+            ImpairFirstClientOnly = impairFirstOnlyCheck.ButtonPressed,
         };
 
         if (editingIndex >= 0 && editingIndex < configurations.Count)

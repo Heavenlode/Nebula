@@ -156,33 +156,14 @@ namespace Nebula
 
         public static bool NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetNode2D obj, NetBuffer buffer, int maxBytes)
         {
-            // maxBytes is ignored - NetNode2D serialization is always small (node reference)
-            if (obj == null)
-            {
-                NetWriter.WriteUInt16(buffer, 0);
-                return true;
-            }
-            NetId targetNetId;
-            byte staticChildId = 0;
-            if (obj.Network.IsNetScene())
-            {
-                targetNetId = obj.Network.NetId;
-            }
-            else
-            {
-                // if (Protocol.PackNode(obj.Network.NetSceneFilePath, obj.Network.NetParent.RawNode.GetPathTo(obj), out staticChildId))
-                // {
-                //     targetNetId = obj.Network.NetParent.NetId;
-                // }
-                // else
-                // {
-                //     throw new Exception($"Failed to pack node: {obj.Network.NetParent.NetSceneFilePath} cannot find static child {obj.Network.NetParent.RawNode.GetPathTo(obj)}: {obj.GetPath()}");
-                // }
-            }
-            // var peerNodeId = currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[targetNetId];
-            // NetWriter.WriteUInt16(buffer, peerNodeId);
-            // NetWriter.WriteByte(buffer, staticChildId);
-            return true;
+            // maxBytes is ignored - a node reference is always small.
+            //
+            // This body used to be commented out below a live `return true`, so a non-null
+            // NetNode2D reference wrote ZERO bytes and claimed success while
+            // NetworkDeserialize read three - desyncing every property after it in the
+            // packet. Sharing the writer with NetNode/NetNode3D is what stops that
+            // recurring.
+            return Nebula.Utility.NetNodeCommon.TryWriteNodeReference(currentWorld, peer, obj, buffer);
         }
 
         public static void OnPeerAcknowledge(NetNode2D obj, UUID peerId, Tick tick)

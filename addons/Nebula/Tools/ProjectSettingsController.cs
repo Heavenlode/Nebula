@@ -194,6 +194,46 @@ public partial class ProjectSettingsController : Node
             {"hint_string", "0,100,1"},
         });
 
+        // Debug: synthetic network impairment applied to INBOUND packets. These are the editor
+        // defaults; the per-instance switches are the --simLatencyMs / --simJitterMs / --simLossPct
+        // command-line args (see Diagnostics/NetworkImpairment.cs), because a project setting is
+        // process-global and would impair every client the Play tab spawns identically. The point of
+        // the feature is one bad client beside a healthy one.
+        Register("Nebula/config/debug/sim_latency_ms", 0, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "0,1000,1"},
+        });
+        Register("Nebula/config/debug/sim_jitter_ms", 0, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "0,500,1"},
+        });
+        Register("Nebula/config/debug/sim_loss_pct", 0, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "0,100,1"},
+        });
+
+        // Debug: BURSTY loss. Independent per-packet loss is the friendly case -- real links drop
+        // RUNS of consecutive packets (handover, congestion, interference), and a run is what actually
+        // empties an interpolation buffer. Set burst_loss_pct to 100 for a full dropout.
+        Register("Nebula/config/debug/sim_burst_loss_pct", 0, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "0,100,1"},
+        });
+        Register("Nebula/config/debug/sim_burst_every_sec", 10, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "1,120,1"},
+        });
+        Register("Nebula/config/debug/sim_burst_ms", 0, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "0,5000,10"},
+        });
+
         // ── Pack ─────────────────────────────────────────────────────────
         // NebulaPack: delta-compress tick payloads against a baseline the peer has acknowledged.
         // Server-side and per-packet - every packet says whether it is a delta or raw - so clients

@@ -539,6 +539,39 @@ namespace Nebula.Serialization
             return method;
         }
 
+        private static readonly Dictionary<int, bool> _nodeRefClassCache = new();
+
+        /// <summary>
+        /// Whether this class index serializes a NODE REFERENCE — an id lookup — rather than
+        /// in-place-mutated content.
+        ///
+        /// <para>The distinction decides whether the property may be gated on its dirty bit.
+        /// Types like <c>NetArray&lt;T&gt;</c> and game snapshot objects are mutated in place, so
+        /// their setter never fires, <c>MarkDirty</c> never runs, and the dirty mask cannot see the
+        /// change — which is why the object write loop calls every object serializer every tick and
+        /// lets each self-filter. A node reference is only ever ASSIGNED, and
+        /// <see cref="NetworkController.MarkDirtyRef"/> already sets its bit, so the every-tick call
+        /// is pure cost.</para>
+        ///
+        /// <para>Resolved from the type rather than a hardcoded list of the three node classes, so a
+        /// property typed as any game subclass is covered — their <c>NetworkSerialize</c> is the
+        /// inherited static one on NetNode/NetNode2D/NetNode3D.</para>
+        /// </summary>
+        public static bool IsNodeReferenceClass(int classIndex)
+        {
+            if (classIndex < 0) return false;
+            if (_nodeRefClassCache.TryGetValue(classIndex, out var cached)) return cached;
+
+            bool isNodeRef = false;
+            if (GeneratedProtocol.StaticMethods.TryGetValue(classIndex, out var info))
+            {
+                var type = GetCachedType(info.TypeFullName);
+                isNodeRef = type != null && typeof(INetNodeBase).IsAssignableFrom(type);
+            }
+            _nodeRefClassCache[classIndex] = isNodeRef;
+            return isNodeRef;
+        }
+
         private static Type GetCachedType(string typeName)
         {
             if (_typeCache.TryGetValue(typeName, out var cached))

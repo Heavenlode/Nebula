@@ -46,6 +46,13 @@ public partial class ProjectSettingsController : Node
         ("Nebula/config/log_tick_payloads",     "Nebula/config/debug/log_tick_payloads"),
         ("Nebula/config/debug_export_interval", "Nebula/config/debug/export_interval"),
         ("Nebula/editor/disable_editor_tooling", "Nebula/config/editor/disable_tooling"),
+        // Narrowed in scope, not just renamed: the switch used to suppress the
+        // whole editor tooling and hide Godot's run bar. It now only suppresses
+        // Nebula's own Play button. Carried across so a project that opted out
+        // still gets no Nebula Play button; the run bar and the debugger tab
+        // come back either way. NOTE: order matters here — this pair consumes
+        // the result of the migration above it.
+        ("Nebula/config/editor/disable_tooling", "Nebula/config/editor/disable_play_button"),
     };
 
     /// <summary>
@@ -54,7 +61,7 @@ public partial class ProjectSettingsController : Node
     /// </summary>
     private static readonly string[] ObsoleteSettings =
     {
-        // Superseded by the editor/disable_tooling master switch.
+        // Superseded by the editor/disable_play_button switch.
         "Nebula/editor/hide_embedded_play_buttons",
         // Never read by anything; the live key is config/world/default_scene,
         // which falls back to application/run/main_scene.
@@ -156,11 +163,13 @@ public partial class ProjectSettingsController : Node
         });
 
         // ── Debug ────────────────────────────────────────────────────────
-        // Master switch for the debug channel. On by default, but it never opens a
-        // port on its own: it is ANDed with --debugPort=N, which the editor's Play
-        // button supplies. Turning it off makes NetRunner/WorldRunner skip the
-        // broadcast path entirely rather than merely muting it.
-        Register(NetRunner.DEBUG_SERVER_SETTING, true, new(){
+        // Master switch for the debug channel. OFF by default: a diagnostic channel
+        // has to be asked for, either here or with NEBULA_DEBUG=1 in the process's
+        // .env. Even on it never opens a port by itself - it is ANDed with
+        // --debugPort=N, which the editor's Play button supplies. Off makes
+        // NetRunner/WorldRunner skip the broadcast path entirely rather than merely
+        // muting it.
+        Register(NetRunner.DEBUG_SERVER_SETTING, false, new(){
             {"type", (int)Variant.Type.Bool},
         });
 
@@ -267,10 +276,11 @@ public partial class ProjectSettingsController : Node
         });
 
         // ── Editor ───────────────────────────────────────────────────────
-        // Editor: master switch for the Nebula editor tooling (main-screen tab,
-        // play target button, run-bar hiding, headless run-instances config).
-        // Requires an editor restart to take full effect.
-        Register(Main.DISABLE_TOOLING_SETTING, false, new(){
+        // Editor: suppress Nebula's toolbar Play button and its configuration
+        // dropdown. Godot's own run bar is always left alone, and the debugger
+        // tab, dock and inspector plugin load regardless. Requires an editor
+        // restart to take effect.
+        Register(Main.DISABLE_PLAY_BUTTON_SETTING, false, new(){
             {"type", (int)Variant.Type.Bool},
         });
 

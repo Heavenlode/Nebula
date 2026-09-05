@@ -18,14 +18,15 @@ using Nebula.Serialization;
 [Tool]
 public partial class Main : EditorPlugin
 {
-    public const string DISABLE_TOOLING_SETTING = "Nebula/config/editor/disable_tooling";
+    public const string DISABLE_PLAY_BUTTON_SETTING = "Nebula/config/editor/disable_play_button";
 
     /// <summary>
-    /// Master switch (project setting): when true, none of the Nebula editor
-    /// tooling is set up — no tab, no play controls, no run-bar hiding,
-    /// no headless run-instances config. Editor restart required to apply.
+    /// Project setting: when true, the Nebula Play button and its configuration
+    /// dropdown are not created. Nothing else is affected — the debugger tab,
+    /// the dock and the inspector plugin still load, and Godot's own run bar is
+    /// always left exactly as the user has it. Editor restart required to apply.
     /// </summary>
-    private static bool ToolingDisabled => ProjectSettings.GetSetting(DISABLE_TOOLING_SETTING, false).AsBool();
+    private static bool PlayButtonDisabled => ProjectSettings.GetSetting(DISABLE_PLAY_BUTTON_SETTING, false).AsBool();
 
     private const string AUTOLOAD_RUNNER = "NetRunner";
     private const string AUTOLOAD_ENV = "Env";
@@ -45,12 +46,27 @@ public partial class Main : EditorPlugin
     private Button playButton;
     private MenuButton configDropdown;
     private NebulaConfigDialog configDialogInstance;
-    private Control editorRunBar;
+
+    /// <summary>
+    /// True when the play bar had to fall back to the documented toolbar
+    /// container because the editor run bar could not be located — teardown has
+    /// to use the matching removal call.
+    /// </summary>
+    private bool playBarUsesToolbarContainer;
 
     /// <summary>How often the play session's running state is re-checked, in seconds.</summary>
     private const double SESSION_POLL_INTERVAL = 0.25;
     private double sinceSessionPoll;
     private bool lastKnownSessionRunning;
+    private bool lastKnownNebulaActive;
+    private bool lastKnownEditorPlaying;
+
+    /// <summary>
+    /// Godot's built-in run bar, cached between visibility updates. Nebula hides
+    /// it only for the duration of a Nebula session — never on the strength of a
+    /// setting — and always puts it back in <see cref="_ExitTree"/>.
+    /// </summary>
+    private Control editorRunBar;
 
     private Control dockNetScenesInstance;
     private NetSceneInspector netSceneInspectorInstance;
@@ -65,7 +81,7 @@ public partial class Main : EditorPlugin
     /// <summary>
     /// Nebula owns a main-screen tab (the live network debugger).
     /// </summary>
-    public override bool _HasMainScreen() => !ToolingDisabled;
+    public override bool _HasMainScreen() => true;
 
     /// <summary>
     /// Shows or hides the Nebula main-screen tab.
@@ -107,33 +123,27 @@ public partial class Main : EditorPlugin
         projectSettingsController = new ProjectSettingsController();
         AddChild(projectSettingsController);
 
-        if (!ToolingDisabled)
-        {
-            // Main-screen tab (live network debugger)
-            CreateMainScreen(visible: false);
+        // Main-screen tab (live network debugger)
+        CreateMainScreen(visible: false);
 
-            // Top-bar play controls (Play/Stop + configuration dropdown)
+        // Top-bar play controls (Play/Stop + configuration dropdown)
+        if (!PlayButtonDisabled)
             CreatePlayBar();
 
-            // Re-attach to a session that outlived a plugin reload.
-            GetOrchestrator(createIfMissing: false);
-        }
+        // Re-attach to a session that outlived a plugin reload.
+        GetOrchestrator(createIfMissing: false);
 
-        // Editor-managed plays are only used to hold the debug server open for
-        // Nebula play sessions, so force a single headless run instance (or
-        // restore vanilla behavior when the tooling is disabled).
-        ApplyRunInstancesConfig();
+        // Deferred: the run bar is only findable once the editor UI is built.
+        CallDeferred(MethodName.ApplyPlayControlVisibility);
 
-        // Hide the built-in run bar (restore it when tooling is disabled);
-        // deferred so the editor UI is fully constructed, live-updated via
-        // settings_changed.
-        // IMPORTANT: name-bound Callable, NOT Callable.From. A delegate-backed
-        // callable parked on the immortal ProjectSettings singleton holds a
-        // GCHandle that pins the assembly on .NET reload (godot#78513): reloads
-        // skip _ExitTree, so such a connection is never released. Name-bound
-        // callables hold no managed state and re-resolve after reloads.
-        CallDeferred(MethodName.ApplyRunBarVisibility);
-        ProjectSettings.Singleton.Connect("settings_changed", new Callable(this, MethodName.ApplyRunBarVisibility));
+        // NOTE: Nebula never touches Godot's run bar or its Run Instances
+        // settings. An earlier version hid the run bar and rewrote the
+        // debug_options metadata on every editor start, which silently wiped
+        // whatever the project had configured under Debug -> Customize Run
+        // Instances. Nebula's own server/client/bot processes are spawned with
+        // OS.create_process and owe nothing to that machinery; the editor-managed
+        // play is only the debug-server holder, and NebulaDebugSession keeps
+        // itself to one visible-free instance on its own.
 
         // Dock: Network Scenes
         dockNetScenesInstance = DockNetScenes.Instantiate<Control>();
@@ -156,11 +166,8 @@ public partial class Main : EditorPlugin
     /// </summary>
     public override void _ExitTree()
     {
-        // Clean up (name-bound callables compare by object+method, so a freshly
-        // constructed one matches the stored connection even across reloads)
-        var settingsCallable = new Callable(this, MethodName.ApplyRunBarVisibility);
-        if (ProjectSettings.Singleton.IsConnected("settings_changed", settingsCallable))
-            ProjectSettings.Singleton.Disconnect("settings_changed", settingsCallable);
+        // Unconditional: the plugin can be disabled mid-session, and a run bar
+        // left hidden would be indistinguishable from a broken editor.
         if (editorRunBar is not null && GodotObject.IsInstanceValid(editorRunBar))
             editorRunBar.Visible = true;
         editorRunBar = null;
@@ -169,7 +176,7 @@ public partial class Main : EditorPlugin
 
         if (playBarInstance is not null)
         {
-            RemoveControlFromContainer(CustomControlContainer.Toolbar, playBarInstance);
+            DetachPlayBar();
             playBarInstance.QueueFree();
             playBarInstance = null;
             playButton = null;
@@ -244,8 +251,62 @@ public partial class Main : EditorPlugin
         popup.Connect(PopupMenu.SignalName.IndexPressed, new Callable(this, MethodName.OnConfigPopupIndexPressed));
         playBarInstance.AddChild(configDropdown);
 
-        AddControlToContainer(CustomControlContainer.Toolbar, playBarInstance);
+        AttachPlayBar();
         UpdatePlayButton();
+    }
+
+    /// <summary>
+    /// Parents the Nebula play bar immediately to the LEFT of Godot's built-in
+    /// run bar, so the two sets of play controls sit together with Nebula's
+    /// first. <c>AddControlToContainer(Toolbar, …)</c> appends to the end of the
+    /// title bar — past the renderer selector — which is why the placement is
+    /// done by hand here; it stays the fallback if the run bar can't be found.
+    /// </summary>
+    private void AttachPlayBar()
+    {
+        var anchor = FindPlayBarAnchor();
+        if (anchor?.GetParent() is not BoxContainer titleBar)
+        {
+            playBarUsesToolbarContainer = true;
+            AddControlToContainer(CustomControlContainer.Toolbar, playBarInstance);
+            return;
+        }
+
+        playBarUsesToolbarContainer = false;
+        titleBar.AddChild(playBarInstance);
+        // The bar was appended after the anchor, so the anchor's index is still
+        // the slot immediately before it.
+        titleBar.MoveChild(playBarInstance, anchor.GetIndex());
+    }
+
+    private void DetachPlayBar()
+    {
+        if (playBarUsesToolbarContainer)
+        {
+            RemoveControlFromContainer(CustomControlContainer.Toolbar, playBarInstance);
+            return;
+        }
+        playBarInstance.GetParent()?.RemoveChild(playBarInstance);
+    }
+
+    /// <summary>
+    /// The node to insert the play bar in front of: the run bar itself, or
+    /// whatever wrapper Godot has put around it, as long as that wrapper still
+    /// sits directly in a horizontal box. Climbing to the box is what keeps this
+    /// from becoming an unexpected second child of a single-child panel — the
+    /// run bar's immediate parent has changed shape between Godot releases.
+    /// </summary>
+    private static Control FindPlayBarAnchor()
+    {
+        const int MAX_WRAPPER_DEPTH = 3;
+        Node anchor = FindEditorRunBar(EditorInterface.Singleton.GetBaseControl());
+        for (int depth = 0; anchor is not null && depth <= MAX_WRAPPER_DEPTH; depth++)
+        {
+            if (anchor.GetParent() is BoxContainer)
+                return anchor as Control;
+            anchor = anchor.GetParent() as Control;
+        }
+        return null;
     }
 
     private void OnPlayBarReady()
@@ -540,34 +601,55 @@ public partial class Main : EditorPlugin
     private void OnOrchestratorStateChanged()
     {
         lastKnownSessionRunning = IsSessionRunning();
+        lastKnownNebulaActive = IsNebulaSessionActive();
+        lastKnownEditorPlaying = EditorInterface.Singleton.IsPlayingScene();
         UpdatePlayButton();
+        ApplyPlayControlVisibility();
         // The debugger tab attaches to / releases the session's debug ports.
         if (mainScreenInstance is not null && GodotObject.IsInstanceValid(mainScreenInstance))
             mainScreenInstance.OnSessionStateChanged();
     }
 
     /// <summary>
-    /// Forces editor-managed play to a single headless instance — its only
-    /// remaining job is the Nebula debug-server dummy session — or restores
-    /// vanilla run-instances behavior when the tooling is disabled. Note the
-    /// Run Instances dialog caches this metadata, so a change converges on the
-    /// next editor start.
+    /// Only one set of play controls is live at a time: a Nebula session hides
+    /// Godot's run bar until Nebula Stop, and a plain editor play hides Nebula's
+    /// bar until it ends. Neither is ever hidden while nothing is running — the
+    /// buttons belong to the user, and this is a transient mode, not a policy.
+    ///
+    /// <para>"The user pressed Godot's Play" has to be read as
+    /// <c>IsPlayingScene() &amp;&amp; !nebulaActive</c>, because a Nebula session
+    /// opens an editor play session of its own to hold the debug server; taking
+    /// IsPlayingScene at face value would hide Nebula's own Stop button the
+    /// instant it launched.</para>
+    ///
+    /// <para>The Nebula side keys off the orchestrator's <c>is_active</c> rather
+    /// than <c>is_running</c>: PlayCustomScene runs the C# build first, so there
+    /// is a multi-second window on a cold build where the session is unmistakably
+    /// a Nebula one but no instance process exists yet.</para>
     /// </summary>
-    private void ApplyRunInstancesConfig()
+    private void ApplyPlayControlVisibility()
     {
-        var editorSettings = EditorInterface.Singleton.GetEditorSettings();
-        bool disabled = ToolingDisabled;
-        var instance = new Godot.Collections.Dictionary
-        {
-            { "arguments", disabled ? "" : "--headless" },
-            { "features", "" },
-            { "override_args", !disabled },
-            { "override_features", false },
-        };
-        editorSettings.SetProjectMetadata("debug_options", "run_instances_config",
-            new Godot.Collections.Array { instance });
-        editorSettings.SetProjectMetadata("debug_options", "run_instance_count", 1);
-        editorSettings.SetProjectMetadata("debug_options", "multiple_instances_enabled", !disabled);
+        bool nebulaActive = IsNebulaSessionActive();
+        bool editorPlaying = EditorInterface.Singleton.IsPlayingScene() && !nebulaActive;
+
+        if (playBarInstance is not null && GodotObject.IsInstanceValid(playBarInstance))
+            playBarInstance.Visible = !editorPlaying;
+
+        if (editorRunBar is null || !GodotObject.IsInstanceValid(editorRunBar))
+            editorRunBar = FindEditorRunBar(EditorInterface.Singleton.GetBaseControl());
+        if (editorRunBar is not null)
+            editorRunBar.Visible = !nebulaActive;
+    }
+
+    /// <summary>
+    /// Whether a Nebula play session is live in the broad sense — launching,
+    /// running, or staggering its instances — as opposed to
+    /// <see cref="IsSessionRunning"/>, which only knows about spawned pids.
+    /// </summary>
+    private bool IsNebulaSessionActive()
+    {
+        var orchestrator = GetOrchestrator(createIfMissing: false);
+        return orchestrator is not null && orchestrator.Call("is_active").AsBool();
     }
 
     /// <summary>
@@ -582,9 +664,6 @@ public partial class Main : EditorPlugin
     /// </summary>
     public override void _Process(double delta)
     {
-        if (ToolingDisabled)
-            return;
-
         if (mainScreenInstance is null)
         {
             RebuildUiAfterAssemblyReload();
@@ -617,10 +696,17 @@ public partial class Main : EditorPlugin
             return;
         sinceSessionPoll = 0;
 
+        // Godot's own Play is pressed behind Nebula's back — there is no editor
+        // signal for it — so the editor's play state is polled alongside the
+        // session's rather than waited on.
         bool running = IsSessionRunning();
-        if (running == lastKnownSessionRunning)
+        bool active = IsNebulaSessionActive();
+        bool editorPlaying = EditorInterface.Singleton.IsPlayingScene();
+        if (running == lastKnownSessionRunning
+            && active == lastKnownNebulaActive
+            && editorPlaying == lastKnownEditorPlaying)
             return;
-        lastKnownSessionRunning = running;
+
         OnOrchestratorStateChanged();
     }
 
@@ -644,9 +730,13 @@ public partial class Main : EditorPlugin
         configDialogInstance = null;
 
         CreateMainScreen(wasVisible);
-        CreatePlayBar();
+        if (!PlayButtonDisabled)
+            CreatePlayBar();
         GetOrchestrator(createIfMissing: false);
-        CallDeferred(MethodName.ApplyRunBarVisibility);
+        // The reload happens INSIDE PlayCustomScene, i.e. exactly while the run
+        // bar is hidden for a launching session, so the rule has to be re-applied
+        // against the surviving orchestrator rather than assumed.
+        ApplyPlayControlVisibility();
     }
 
     private static void CollectNodesByName(Node root, string namePart, List<Node> results)
@@ -658,20 +748,15 @@ public partial class Main : EditorPlugin
     }
 
     /// <summary>
-    /// Shows/hides Godot's built-in run bar (Run … Movie Maker Mode) based on the
-    /// Nebula/config/editor/disable_tooling project setting. The run bar is an
-    /// internal editor node, so this reaches into the editor UI tree — the class
-    /// name check is the only unofficial dependency.
+    /// Locates Godot's built-in run bar (Run … Movie Maker Mode), which Nebula
+    /// parks its own play controls in front of and hides for the duration of a
+    /// Nebula session. It is never hidden on the strength of a project setting —
+    /// an earlier version did that, and the built-in buttons are not Nebula's to
+    /// take away. The run bar is an internal editor node, so this reaches into
+    /// the editor UI tree; the class name check is the only unofficial
+    /// dependency, and a miss costs the play bar its preferred position and
+    /// leaves both sets of controls visible.
     /// </summary>
-    private void ApplyRunBarVisibility()
-    {
-        if (editorRunBar is null || !GodotObject.IsInstanceValid(editorRunBar))
-            editorRunBar = FindEditorRunBar(EditorInterface.Singleton.GetBaseControl());
-        if (editorRunBar is null)
-            return;
-        editorRunBar.Visible = ToolingDisabled;
-    }
-
     private static Control FindEditorRunBar(Node node)
     {
         if (node.GetClass() == "EditorRunBar")

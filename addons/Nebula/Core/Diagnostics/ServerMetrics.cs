@@ -13,23 +13,42 @@ namespace Nebula.Diagnostics
     /// are plain field writes and the tick samples land in a preallocated ring. Only the once-per-
     /// interval emit builds a string, through a reused builder.</para>
     ///
-    /// <para>Goes to stdout rather than the debug channel on purpose: DebugHub only produces frames
-    /// while a debugger is attached and drops lossy ones when its queue backs up, which would lose
-    /// exactly the samples a loaded run exists to capture.</para>
+    /// <para>Collection and REPORTING are separate switches. Every enabled run ships its line to
+    /// any attached debugger for the editor's Performance tab; only a run started with
+    /// <see cref="EnableArg"/> also writes it to stdout. That split exists because the two callers
+    /// want opposite things: a headless soak has no debugger attached and stdout is the only place
+    /// its numbers can land, whereas an editor session has the Performance tab already and does not
+    /// want a line per world per second in its console.</para>
+    ///
+    /// <para>Stdout rather than the debug channel is the right carrier for the soak case: DebugHub
+    /// only produces frames while a debugger is attached and drops lossy ones when its queue backs
+    /// up, which would lose exactly the samples a loaded run exists to capture.</para>
     /// </summary>
     public sealed class ServerMetrics
     {
+        /// <summary>
+        /// Enables metrics AND the stdout line. This is the switch a headless soak wants:
+        /// nothing is attached to read the debug channel, so a line that is not printed is
+        /// a line that does not exist. ImpairedSoakTests scrapes those lines, so removing
+        /// the print from this path breaks a real assertion.
+        /// </summary>
         public const string EnableArg = "--metrics";
+
         public const string IntervalArg = "--metricsInterval=";
 
         /// <summary>
-        /// Environment variable that enables metrics like <see cref="EnableArg"/> does.
-        /// Read through the Env autoload, so it works both as a real process variable
+        /// Environment variable that enables metrics WITHOUT the stdout line — collection
+        /// and the debug-channel copy the editor's Performance tab reads, nothing in the
+        /// console. That is the whole difference from <see cref="EnableArg"/>: this is how
+        /// an ordinary editor session opts in, and one JSON line per world per second is
+        /// noise there, not data.
+        ///
+        /// <para>Read through the Env autoload, so it works both as a real process variable
         /// (spawned processes inherit the editor's environment) and as an entry in the
         /// process's .env file (res://.env.server for servers). This gates the SERVER
         /// only - collection and reporting cost nothing unless it is set, so production
         /// instances leave it off. The editor's Performance tab always exists and simply
-        /// stays empty when no server is reporting.
+        /// stays empty when no server is reporting.</para>
         /// </summary>
         public const string EnableEnvVar = "NEBULA_PERFORMANCE";
 
@@ -41,6 +60,7 @@ namespace Nebula.Diagnostics
 
         private static bool _parsed;
         private static bool _enabled;
+        private static bool _writesToStdout;
         private static double _intervalSeconds = 1.0;
 
         /// <summary>Whether metrics were requested on the command line. Parsed once.</summary>
@@ -50,6 +70,21 @@ namespace Nebula.Diagnostics
             {
                 ParseArgs();
                 return _enabled;
+            }
+        }
+
+        /// <summary>
+        /// Whether the emitted line is also printed to stdout. True only when
+        /// <see cref="EnableArg"/> was passed; enabling through
+        /// <see cref="EnableEnvVar"/> alone keeps the console quiet and reports over the
+        /// debug channel only.
+        /// </summary>
+        public static bool WritesToStdout
+        {
+            get
+            {
+                ParseArgs();
+                return _writesToStdout;
             }
         }
 
@@ -76,6 +111,9 @@ namespace Nebula.Diagnostics
                 if (argument == EnableArg)
                 {
                     _enabled = true;
+                    // The command-line switch is what asks for console output; the env var
+                    // deliberately does not.
+                    _writesToStdout = true;
                 }
                 else if (argument.StartsWith(IntervalArg))
                 {
@@ -275,10 +313,13 @@ namespace Nebula.Diagnostics
             _line.Append(",\"spawn_backlog_max\":").Append(_spawnBacklogMax).Append('}');
             _line.Append('}');
 
-            // Stdout, as the class doc promises: the DebugHub copy the caller also ships
-            // only exists while a debugger is attached, so without this a headless soak
-            // (the exact case metrics exist for) produces no metrics at all.
-            Godot.GD.Print(_line.ToString());
+            // Only for a run started with --metrics. The DebugHub copy the caller ships
+            // exists only while a debugger is attached, so a headless soak - the exact case
+            // that passes --metrics - would otherwise produce no metrics at all. An editor
+            // session enabled through NEBULA_PERFORMANCE has the Performance tab reading
+            // that copy already and gets no console line.
+            if (WritesToStdout)
+                Godot.GD.Print(_line.ToString());
 
             string json = _line.ToString(LinePrefix.Length, _line.Length - LinePrefix.Length);
 

@@ -241,16 +241,21 @@ namespace Nebula
 
         /// <summary>
         /// Environment/.env switch for <see cref="DebugServerEnabled"/>, checked before
-        /// the project setting so a deployment can turn the channel off per process kind
-        /// (<c>.env.server</c> vs <c>.env.client</c>) without editing project.godot.
+        /// the project setting so a deployment can turn the channel on or off per process
+        /// kind (<c>.env.server</c> vs <c>.env.client</c>) without editing project.godot.
         /// Off means fully inert: no listener, no frames built, no per-tick debug work.
+        ///
+        /// <para>OFF unless something says otherwise — <c>NEBULA_DEBUG=1</c>, or the project
+        /// setting turned on deliberately. It used to default ON, which meant every process
+        /// handed a <c>--debugPort</c> got a debug channel whether or not the project had
+        /// ever opted in.</para>
         /// </summary>
         public const string DEBUG_SERVER_ENV_VAR = "NEBULA_DEBUG";
 
         private static bool ResolveDebugServerEnabled()
             => Env.TryGetFlag(DEBUG_SERVER_ENV_VAR, out bool fromEnv)
                 ? fromEnv
-                : ProjectSettings.GetSetting(DEBUG_SERVER_SETTING, true).AsBool();
+                : ProjectSettings.GetSetting(DEBUG_SERVER_SETTING, false).AsBool();
 
         /// <summary>Project setting key for <see cref="DebugServerEnabled"/>.</summary>
         public const string DEBUG_SERVER_SETTING = "Nebula/config/debug/enable_debug_server";

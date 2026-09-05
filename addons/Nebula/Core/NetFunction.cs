@@ -4,6 +4,7 @@ using Godot;
 using Nebula.Serialization;
 using MethodBoundaryAspect.Fody.Attributes;
 using Nebula.Utility.Tools;
+using System.ComponentModel;
 
 namespace Nebula
 {
@@ -23,16 +24,24 @@ namespace Nebula
 
         public NetworkSources Source { get; set; } = NetworkSources.All;
         public bool ExecuteOnCaller { get; set; } = true;
+
+        /// <summary>
+        /// Allows this NetFunction to be called and sent over the network from an inbound call. Server authoritative setups should verify client source calls
+        /// when using this with server source functions.
+        /// </summary>
+        public bool AllowInboundCalls { get; set; } = false;
+        
         public override void OnEntry(MethodExecutionArgs args)
         {
             // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"NetFunction: {args.Method.Name} called on {args.Instance.GetType().Name}");
             if (args.Instance is INetNodeBase netNode)
             {
-                if (netNode.Network.IsInboundCall)
+                if (netNode.Network.IsInboundCall && !AllowInboundCalls)
                 {
                     // We only send a remote call if the incoming call isn't already from remote.
                     return;
                 }
+                
                 if (!ExecuteOnCaller)
                 {
                     args.FlowBehavior = FlowBehavior.Return;

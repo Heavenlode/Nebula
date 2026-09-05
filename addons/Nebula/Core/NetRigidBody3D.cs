@@ -164,33 +164,8 @@ namespace Nebula
 
         public static bool NetworkSerialize(WorldRunner currentWorld, NetPeer peer, NetRigidBody3D obj, NetBuffer buffer, int maxBytes)
         {
-            // maxBytes is ignored - NetNode3D serialization is always small (node reference)
-            if (obj == null)
-            {
-                NetWriter.WriteUInt16(buffer, 0);
-                return true;
-            }
-            NetId targetNetId;
-            byte staticChildId = 0;
-            if (obj.Network.IsNetScene())
-            {
-                targetNetId = obj.Network.NetId;
-            }
-            else
-            {
-                if (Protocol.PackNode(obj.Network.NetSceneFilePath, obj.Network.NetParent.RawNode.GetPathTo(obj), out staticChildId))
-                {
-                    targetNetId = obj.Network.NetParent.NetId;
-                }
-                else
-                {
-                    throw new Exception($"Failed to pack node: {obj.Network.NetSceneFilePath} cannot find static child {obj.Network.NetParent.RawNode.GetPathTo(obj)}: {obj.GetPath()}");
-                }
-            }
-            var peerNodeId = currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[targetNetId];
-            NetWriter.WriteUInt16(buffer, peerNodeId);
-            NetWriter.WriteByte(buffer, staticChildId);
-            return true;
+            // maxBytes is ignored - a node reference is always small.
+            return NetNodeCommon.TryWriteNodeReference(currentWorld, peer, obj, buffer);
         }
 
         public static void OnPeerAcknowledge(NetRigidBody3D obj, UUID peerId, int tick)

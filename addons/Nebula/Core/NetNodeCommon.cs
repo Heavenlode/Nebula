@@ -138,7 +138,28 @@ namespace Nebula.Utility
                 {
                     // Instantiate the scene naturally, then cast to T
                     // This allows the scene to create the correct derived type
-                    var sceneInstance = GD.Load<PackedScene>(data["scene"].AsString).Instantiate();
+                    // Timed: this is a full GD.Load + Instantiate of the character scene, per
+                    // deserialize, on main. A COLD load here pays the whole dependency graph -
+                    // and the server never calls PreloadScenes (ShaderWarmup gates it on
+                    // !HasServerFeatures), so on the server this is cold on first use.
+                    var scenePathForLoad = data["scene"].AsString;
+                    var bsonLoadTs = System.Diagnostics.Stopwatch.GetTimestamp();
+                    var packedForBson = GD.Load<PackedScene>(scenePathForLoad);
+                    var bsonLoadMs = (System.Diagnostics.Stopwatch.GetTimestamp() - bsonLoadTs)
+                        * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
+
+                    var bsonInstTs = System.Diagnostics.Stopwatch.GetTimestamp();
+                    var sceneInstance = packedForBson.Instantiate();
+                    var bsonInstMs = (System.Diagnostics.Stopwatch.GetTimestamp() - bsonInstTs)
+                        * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
+
+                    if (bsonLoadMs + bsonInstMs >= Diagnostics.MainThreadWork.ReportThresholdMs)
+                    {
+                        Debugger.Instance.Log(
+                            $"[BsonSceneBuild] {scenePathForLoad} load={bsonLoadMs:F0}ms "
+                            + $"instantiate={bsonInstMs:F0}ms",
+                            Debugger.DebugLevel.WARN);
+                    }
                     node = sceneInstance as T;
                     if (node == null)
                     {

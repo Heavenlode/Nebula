@@ -174,6 +174,14 @@ namespace Nebula.Diagnostics
 
             /// <summary>Candidates that reached an exact measurement, after digest ranking.</summary>
             PackMeasured,
+            /// <summary>Props sections served from the section memo (bytes shared, writer skipped).</summary>
+            PropsMemoHit,
+            /// <summary>Eligible sections that encoded fresh and seeded a memo entry.</summary>
+            PropsMemoMiss,
+            /// <summary>Sections ineligible for the memo (per-peer/INetValue primitives, empty mask, budget).</summary>
+            PropsMemoSlow,
+            /// <summary>Eligible sections that found the memo full. Nonzero = raise MemoCapacity.</summary>
+            PropsMemoOverflow,
             Count,
         }
 
@@ -181,6 +189,7 @@ namespace Nebula.Diagnostics
         {
             "pk_candidates", "pk_bytes_measured", "pk_deltas_chosen",
             "pk_chosen_age_sum", "pk_measured",
+            "memo_hit", "memo_miss", "memo_slow", "memo_overflow",
         };
         private const int CounterCount = (int)Counter.Count;
 

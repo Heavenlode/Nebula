@@ -32,6 +32,14 @@ namespace Nebula.Serialization.Serializers
         public void Begin();
 
         /// <summary>
+        /// Rotation pre-gate: true when this serializer provably owes the peer nothing
+        /// this tick, letting the host skip its per-node bookkeeping and the Export call
+        /// entirely. Default false - only serializers that track per-peer settledness
+        /// (the props serializer) ever say yes.
+        /// </summary>
+        public bool NothingForPeer(UUID peerId) => false;
+
+        /// <summary>
         /// Client-side only. Receive and deserialize binary received from the server.
         /// </summary>
         /// <param name="currentWorld">The current world runner</param>

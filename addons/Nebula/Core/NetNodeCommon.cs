@@ -144,7 +144,28 @@ namespace Nebula.Utility
                 {
                     // Instantiate the scene naturally, then cast to T
                     // This allows the scene to create the correct derived type
-                    var sceneInstance = GD.Load<PackedScene>(data["scene"].AsString).Instantiate();
+                    // Timed: this is a full GD.Load + Instantiate of the character scene, per
+                    // deserialize, on main. A COLD load here pays the whole dependency graph -
+                    // and the server never calls PreloadScenes (ShaderWarmup gates it on
+                    // !HasServerFeatures), so on the server this is cold on first use.
+                    var scenePathForLoad = data["scene"].AsString;
+                    var bsonLoadTs = System.Diagnostics.Stopwatch.GetTimestamp();
+                    var packedForBson = GD.Load<PackedScene>(scenePathForLoad);
+                    var bsonLoadMs = (System.Diagnostics.Stopwatch.GetTimestamp() - bsonLoadTs)
+                        * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
+
+                    var bsonInstTs = System.Diagnostics.Stopwatch.GetTimestamp();
+                    var sceneInstance = packedForBson.Instantiate();
+                    var bsonInstMs = (System.Diagnostics.Stopwatch.GetTimestamp() - bsonInstTs)
+                        * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
+
+                    if (bsonLoadMs + bsonInstMs >= Diagnostics.MainThreadWork.ReportThresholdMs)
+                    {
+                        Debugger.Instance.Log(
+                            $"[BsonSceneBuild] {scenePathForLoad} load={bsonLoadMs:F0}ms "
+                            + $"instantiate={bsonInstMs:F0}ms",
+                            Debugger.DebugLevel.WARN);
+                    }
                     node = sceneInstance as T;
                     if (node == null)
                     {
@@ -261,5 +282,85 @@ namespace Nebula.Utility
             return node;
         }
 
+        /// <summary>One-shot guard for the "reference can never be packed" diagnostic.</summary>
+        private static bool _loggedUnpackableReference;
+
+        /// <summary>
+        /// Writes a node reference for one peer: the peer-local node id, plus the packed child
+        /// id when the target is a static child. Shared by <see cref="NetNode"/>,
+        /// <see cref="NetNode2D"/> and <see cref="NetNode3D"/>, whose reference serializers are
+        /// otherwise identical and have silently drifted apart before.
+        ///
+        /// <para>Returns false having written NOTHING when the reference cannot be delivered
+        /// yet. The property framework reads that as "nothing to send" and retries on a later
+        /// tick, so a deferred reference costs latency, never correctness.</para>
+        ///
+        /// <para>The spawn gate is the load-bearing part. A peer-local id is assigned inside the
+        /// spawn <c>Export</c>, BEFORE <c>WorldRunner.ExportState</c> decides whether that spawn
+        /// section fits the tick budget — so a registered id is not by itself a promise that the
+        /// client has the node. Shipping one anyway decodes as null on the client. That used to
+        /// self-heal only because references were re-sent every tick; once they are sent on
+        /// change, an ungated id would strand the reference at null permanently. Requiring
+        /// <see cref="WorldRunner.ClientSpawnState.Spawned"/> — the peer ACKED the spawn — is
+        /// what makes send-on-change safe.</para>
+        /// </summary>
+        internal static bool TryWriteNodeReference(
+            WorldRunner currentWorld, NetPeer peer, INetNodeBase obj, NetBuffer buffer)
+        {
+            if (obj == null)
+            {
+                // A null reference is a real value and must be sent, not deferred.
+                NetWriter.WriteUInt16(buffer, 0);
+                return true;
+            }
+
+            var network = obj.Network;
+            NetId targetNetId;
+            byte staticChildId = 0;
+            if (network.IsNetScene())
+            {
+                targetNetId = network.NetId;
+            }
+            else if (Protocol.PackNode(
+                network.NetSceneFilePath,
+                network.NetParent.RawNode.GetPathTo(network.RawNode),
+                out staticChildId))
+            {
+                targetNetId = network.NetParent.NetId;
+            }
+            else
+            {
+                // Previously an exception, which the object-property loop caught and logged
+                // once per node per peer per TICK. It is a build-data fault, not a per-peer
+                // one, so say it once and decline to write.
+                if (!_loggedUnpackableReference)
+                {
+                    _loggedUnpackableReference = true;
+                    Debugger.Instance.Log(
+                        $"[NodeReference] Cannot pack {network.NetParent.NetSceneFilePath} static child "
+                        + $"{network.NetParent.RawNode.GetPathTo(network.RawNode)} ({network.RawNode.GetPath()}); "
+                        + "the reference will never replicate. Further occurrences suppressed.",
+                        Debugger.DebugLevel.ERROR);
+                }
+                return false;
+            }
+
+            // The peer must have ACKED the target's spawn, or it cannot resolve the id.
+            if (currentWorld.GetClientSpawnState(targetNetId, peer) != WorldRunner.ClientSpawnState.Spawned)
+            {
+                return false;
+            }
+
+            var peerState = currentWorld.GetPeerWorldState(peer);
+            if (peerState == null
+                || !peerState.Value.WorldToPeerNodeMap.TryGetValue(targetNetId, out var peerNodeId))
+            {
+                return false;
+            }
+
+            NetWriter.WriteUInt16(buffer, peerNodeId);
+            NetWriter.WriteByte(buffer, staticChildId);
+            return true;
+        }
     }
 }

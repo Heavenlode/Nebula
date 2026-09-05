@@ -85,7 +85,9 @@ public abstract class IntegrationTestBase : IDisposable
 
         foreach (var kvp in config.ExtraArgs)
         {
-            args.Add($"--{kvp.Key}={kvp.Value}");
+            // An empty value means a bare flag (e.g. --metrics), which is what the
+            // flag-style switches actually match on; "--metrics=1" matches nothing.
+            args.Add(string.IsNullOrEmpty(kvp.Value) ? $"--{kvp.Key}" : $"--{kvp.Key}={kvp.Value}");
         }
 
         var process = StartGodot(args.ToArray());
@@ -115,7 +117,9 @@ public abstract class IntegrationTestBase : IDisposable
 
         foreach (var kvp in config.ExtraArgs)
         {
-            args.Add($"--{kvp.Key}={kvp.Value}");
+            // An empty value means a bare flag (e.g. --metrics), which is what the
+            // flag-style switches actually match on; "--metrics=1" matches nothing.
+            args.Add(string.IsNullOrEmpty(kvp.Value) ? $"--{kvp.Key}" : $"--{kvp.Key}={kvp.Value}");
         }
 
         var process = StartGodot(args.ToArray());

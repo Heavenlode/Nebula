@@ -27,7 +27,27 @@ public class ImpairedSoakTests : IntegrationTestBase
     /// and needs five consecutive clean windows before giving a tick back.</summary>
     private static readonly TimeSpan SoakDuration = TimeSpan.FromSeconds(20);
 
-    private const string WorldScene = "res://scenes/structures/Backslat.tscn";
+    /// <summary>The shared integration world, the same one <c>BasicIntegrationTests</c> uses.</summary>
+    private const string WorldScene = "res://Integration/Basic/Scene.tscn";
+
+    /// <summary>Spawned once both clients are in, so the soak has real spawn and props traffic to
+    /// impair rather than an empty tick stream.</summary>
+    private const string PlayerScene = "res://Integration/Basic/Player.tscn";
+
+    /// <summary>
+    /// Synchronisation runs over the debug channel, not stdout. Nebula's INFO logging is gated on
+    /// a project setting the test project does not currently set, so lines like "Server ready"
+    /// never reach stdout; the debug events are what <c>BasicIntegrationTests</c> already waits on.
+    /// </summary>
+    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(60);
+
+    // Distinct per test: the two run back to back in the same collection, and reusing a port means
+    // racing the previous run's process teardown.
+    private const int SoakServerDebugPort = 17890;
+    private const int SoakHealthyDebugPort = 17891;
+    private const int SoakImpairedDebugPort = 17892;
+    private const int ControlServerDebugPort = 17893;
+    private const int ControlClientDebugPort = 17894;
 
     /// <summary>
     /// A healthy client and a badly impaired one in the same session.
@@ -39,18 +59,20 @@ public class ImpairedSoakTests : IntegrationTestBase
     [Fact]
     public Task ASessionSurvivesOneBadlyImpairedClient() => NebulaTest(async () =>
     {
+        var worldId = Guid.NewGuid().ToString();
         var server = StartServer(new ServerConfig
         {
+            WorldId = worldId,
             InitialWorldScene = WorldScene,
+            DebugPort = SoakServerDebugPort,
             // One JSON line per interval on stdout; the assertions below read it.
-            ExtraArgs = { ["metrics"] = "1" },
+            ExtraArgs = { ["metrics"] = "" },
         });
-        await server.WaitForOutput("Server ready", TimeSpan.FromSeconds(60));
 
-        var healthy = StartClient();
-
+        var healthy = StartClient(new ClientConfig { DebugPort = SoakHealthyDebugPort });
         var impaired = StartClient(new ClientConfig
         {
+            DebugPort = SoakImpairedDebugPort,
             ExtraArgs =
             {
                 ["simLatencyMs"] = "80",
@@ -61,6 +83,20 @@ public class ImpairedSoakTests : IntegrationTestBase
             },
         });
 
+        await server.ConnectDebug(SoakServerDebugPort);
+        await healthy.ConnectDebug(SoakHealthyDebugPort);
+        await impaired.ConnectDebug(SoakImpairedDebugPort);
+
+        await server.WaitForDebugEvent("WorldCreated", worldId, ReadyTimeout);
+        await healthy.WaitForDebugEvent("WorldJoined", WorldScene, ReadyTimeout);
+        await impaired.WaitForDebugEvent("WorldJoined", WorldScene, ReadyTimeout);
+
+        // Give the soak something to replicate. Without a spawn the tick stream is empty and the
+        // impairment has nothing to act on, which would make the run pass for the wrong reason.
+        server.SendCommand($"spawn:{PlayerScene}");
+        await healthy.WaitForDebugEvent("Spawn", $"Imported:{PlayerScene}", ReadyTimeout);
+        await impaired.WaitForDebugEvent("Spawn", $"Imported:{PlayerScene}", ReadyTimeout);
+
         await Task.Delay(SoakDuration);
 
         // 1. Nobody fell over. An impaired link must degrade smoothness, never liveness.
@@ -69,7 +105,7 @@ public class ImpairedSoakTests : IntegrationTestBase
         Assert.False(impaired.HasExited, "the impaired client exited during the soak");
 
         // 2. The server kept ticking throughout, rather than stalling behind a struggling peer.
-        var ticks = MetricValues(server.AllOutput, "tickCount");
+        var ticks = MetricValues(server.AllOutput, "tick");
         Assert.True(ticks.Count >= 2, $"expected repeated metrics lines, saw {ticks.Count}");
         Assert.True(ticks.Last() > ticks.First(), "server tick count did not advance during the soak");
 
@@ -89,14 +125,25 @@ public class ImpairedSoakTests : IntegrationTestBase
     [Fact]
     public Task AnUnimpairedSessionIsUnaffected() => NebulaTest(async () =>
     {
+        var worldId = Guid.NewGuid().ToString();
         var server = StartServer(new ServerConfig
         {
+            WorldId = worldId,
             InitialWorldScene = WorldScene,
-            ExtraArgs = { ["metrics"] = "1" },
+            DebugPort = ControlServerDebugPort,
+            ExtraArgs = { ["metrics"] = "" },
         });
-        await server.WaitForOutput("Server ready", TimeSpan.FromSeconds(60));
+        var client = StartClient(new ClientConfig { DebugPort = ControlClientDebugPort });
 
-        var client = StartClient();
+        await server.ConnectDebug(ControlServerDebugPort);
+        await client.ConnectDebug(ControlClientDebugPort);
+
+        await server.WaitForDebugEvent("WorldCreated", worldId, ReadyTimeout);
+        await client.WaitForDebugEvent("WorldJoined", WorldScene, ReadyTimeout);
+
+        server.SendCommand($"spawn:{PlayerScene}");
+        await client.WaitForDebugEvent("Spawn", $"Imported:{PlayerScene}", ReadyTimeout);
+
         await Task.Delay(TimeSpan.FromSeconds(10));
 
         Assert.False(server.HasExited, "server exited during the control run");

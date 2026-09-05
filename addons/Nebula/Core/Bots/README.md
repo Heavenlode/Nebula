@@ -95,3 +95,9 @@ MTU-exceeded / ack-timeout counters. Recording is allocation-free so that measur
 perturb what is measured. This goes to stdout rather than the debug channel deliberately —
 `DebugHub` only produces frames while a debugger is attached and drops lossy frames when its queue
 backs up, which would lose exactly the samples a loaded run exists to capture.
+
+Collection and console output are separate switches. `--metrics` turns on both; the
+`NEBULA_PERFORMANCE` environment variable (or a line in `res://.env.server`) turns on collection
+and the debug-channel copy the editor's **Performance** tab reads, but prints nothing. Use the env
+var in the editor, where a line per world per second is noise; use `--metrics` for a headless soak,
+where nothing is attached to read the debug channel and an unprinted line does not exist.

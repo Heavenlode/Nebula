@@ -107,6 +107,11 @@ namespace Nebula.Diagnostics
         private int _budgetBytes;
         private int _spawnSectionsDeferred;
         private int _propsSectionsDeferred;
+        // Deferrals for nodes the peer has INPUT AUTHORITY over, counted apart from the
+        // totals above. Owner-priority exists to hold these at zero; inside a total that is
+        // dominated by the crowd a regression here would be invisible.
+        private int _ownedSpawnSectionsDeferred;
+        private int _ownedPropsSectionsDeferred;
         private int _spawnBacklogMax;
 
         private readonly double[] _sortScratch = new double[SampleCapacity];
@@ -157,10 +162,13 @@ namespace Nebula.Diagnostics
         }
 
         /// <summary>Records sections dropped or deferred for budget in one per-peer export. Hot path.</summary>
-        public void RecordDeferredSections(int spawnDeferred, int propsDeferred)
+        public void RecordDeferredSections(int spawnDeferred, int propsDeferred,
+            int ownedSpawnDeferred, int ownedPropsDeferred)
         {
             _spawnSectionsDeferred += spawnDeferred;
             _propsSectionsDeferred += propsDeferred;
+            _ownedSpawnSectionsDeferred += ownedSpawnDeferred;
+            _ownedPropsSectionsDeferred += ownedPropsDeferred;
         }
 
         /// <summary>Records a peer's count of in-flight (Spawning) spawn records. Hot path.</summary>
@@ -259,6 +267,11 @@ namespace Nebula.Diagnostics
             _line.Append('}');
             _line.Append(",\"budget\":{\"spawn_deferred\":").Append(_spawnSectionsDeferred);
             _line.Append(",\"props_deferred\":").Append(_propsSectionsDeferred);
+            // Should read 0 in steady state. Non-zero means owner-priority is not holding:
+            // the owner's own spawns crowded their props, an owned node is Spawning with an
+            // uncommitted record, or the owned set genuinely exceeds the budget.
+            _line.Append(",\"owned_spawn_deferred\":").Append(_ownedSpawnSectionsDeferred);
+            _line.Append(",\"owned_props_deferred\":").Append(_ownedPropsSectionsDeferred);
             _line.Append(",\"spawn_backlog_max\":").Append(_spawnBacklogMax).Append('}');
             _line.Append('}');
 
@@ -281,6 +294,8 @@ namespace Nebula.Diagnostics
             _payloadCount = 0;
             _spawnSectionsDeferred = 0;
             _propsSectionsDeferred = 0;
+            _ownedSpawnSectionsDeferred = 0;
+            _ownedPropsSectionsDeferred = 0;
             _spawnBacklogMax = 0;
             CaptureGcBaseline();
 

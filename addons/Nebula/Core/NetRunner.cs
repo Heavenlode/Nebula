@@ -861,6 +861,14 @@ namespace Nebula
                 pending = _mainThreadWork.Count;
             }
 
+            // H8/H1: everything marshalled to main runs HERE, in one frame, however much of it
+            // piled up. A batch of joins each awaiting SwitchToMainThread lands as one long drain,
+            // and on a server that also stops the SceneTree walking - which is what dispatches the
+            // world's SubThread process group. A blocked main thread therefore STARVES the tick
+            // rather than slowing it, which no "ServerProcessTick took Xms" guard can see.
+            int drained = pending;
+            long drainTs = pending > 0 ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
+
             while (pending-- > 0)
             {
                 MainThreadItem work;
@@ -877,6 +885,22 @@ namespace Nebula
                 {
                     Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
                         $"[Nebula] Deferred main-thread work threw: {ex.Message}\n{ex.StackTrace}");
+                }
+            }
+
+            if (drainTs != 0)
+            {
+                var drainMs = (System.Diagnostics.Stopwatch.GetTimestamp() - drainTs)
+                    * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
+                if (drainMs >= Diagnostics.MainThreadWork.ReportThresholdMs)
+                {
+                    int stillQueued;
+                    lock (_mainThreadWorkLock) stillQueued = _mainThreadWork.Count;
+                    Debugger.Instance.Log(
+                        $"[MainThreadDrain] ran {drained} queued item(s) in {drainMs:F0} ms "
+                        + $"({stillQueued} still queued). Nothing else ran on main during this, "
+                        + "including the SceneTree walk that dispatches world tick groups.",
+                        Debugger.DebugLevel.WARN);
                 }
             }
         }

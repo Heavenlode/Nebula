@@ -814,7 +814,20 @@ namespace Nebula.Serialization.Serializers
                 return false;
             }
 
-            var newNode = Protocol.UnpackScene(data.classId).Instantiate<INetNodeBase>();
+            // Timed because this is the client's single biggest per-tick stall risk: both the
+            // resolve and the instantiate run synchronously on the main thread, and every spawn
+            // record riding this tick's packet is built in this one frame. See SpawnImportProfiler.
+            bool sceneWasCached = Protocol.IsSceneCached(data.classId);
+            var spawnLoadTs = System.Diagnostics.Stopwatch.GetTimestamp();
+            var packedScene = Protocol.UnpackScene(data.classId);
+            var spawnLoadMs = Diagnostics.SpawnImportProfiler.Elapsed(spawnLoadTs);
+
+            var spawnInstTs = System.Diagnostics.Stopwatch.GetTimestamp();
+            var newNode = packedScene.Instantiate<INetNodeBase>();
+            Diagnostics.SpawnImportProfiler.Record(
+                packedScene.ResourcePath, spawnLoadMs,
+                Diagnostics.SpawnImportProfiler.Elapsed(spawnInstTs), !sceneWasCached);
+
             newNode.Network.IsClientSpawn = true;
             newNode.Network.NetId = networkId;
             newNode.Network.CurrentWorld = currentWorld;

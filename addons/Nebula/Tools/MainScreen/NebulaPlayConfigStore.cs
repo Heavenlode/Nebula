@@ -36,6 +36,32 @@ public sealed class NebulaPlayConfiguration
     /// </summary>
     public bool BotsHeadless = true;
 
+    /// <summary>
+    /// Synthetic network impairment applied to the launched clients (see
+    /// <see cref="Nebula.Diagnostics.NetworkImpairment"/>). Passed as per-instance command-line args,
+    /// which is the only way to vary it: a project setting would impair every spawned client
+    /// identically.
+    /// </summary>
+    public int SimLatencyMs = 0;
+    public int SimJitterMs = 0;
+    public int SimLossPct = 0;
+
+    /// <summary>
+    /// Bursty loss: a run of consecutive drops rather than scattered ones. This is the case that
+    /// actually empties an interpolation buffer -- uniform loss almost never leaves a hole.
+    /// <see cref="SimBurstLossPct"/> of 100 is a full dropout.
+    /// </summary>
+    public int SimBurstLossPct = 0;
+    public int SimBurstEverySec = 10;
+    public int SimBurstMs = 0;
+
+    /// <summary>
+    /// Impair only the FIRST client instead of all of them. This is the configuration that matters:
+    /// an impaired peer is only interesting when a healthy one is watching it, and a session where
+    /// everyone is equally degraded hides exactly the asymmetries worth seeing.
+    /// </summary>
+    public bool ImpairFirstClientOnly = true;
+
     public NebulaPlayConfiguration Clone() => new()
     {
         Name = Name,
@@ -43,7 +69,19 @@ public sealed class NebulaPlayConfiguration
         BotCount = BotCount,
         BotBehavior = BotBehavior,
         BotsHeadless = BotsHeadless,
+        SimLatencyMs = SimLatencyMs,
+        SimJitterMs = SimJitterMs,
+        SimLossPct = SimLossPct,
+        SimBurstLossPct = SimBurstLossPct,
+        SimBurstEverySec = SimBurstEverySec,
+        SimBurstMs = SimBurstMs,
+        ImpairFirstClientOnly = ImpairFirstClientOnly,
     };
+
+    /// <summary>Whether this configuration impairs anything at all.</summary>
+    public bool HasImpairment =>
+        SimLatencyMs > 0 || SimJitterMs > 0 || SimLossPct > 0
+        || (SimBurstLossPct > 0 && SimBurstMs > 0);
 
     /// <summary>
     /// The configuration is just its instance counts, so name it after them. Bots have to appear
@@ -102,6 +140,14 @@ public static class NebulaPlayConfigStore
                     BotCount = botCount,
                     BotBehavior = file.GetValue(section, "bot_behavior", "").AsString(),
                     BotsHeadless = file.GetValue(section, "bots_headless", true).AsBool(),
+                    // Absent in older files, which simply means "no impairment".
+                    SimLatencyMs = file.GetValue(section, "sim_latency_ms", 0).AsInt32(),
+                    SimJitterMs = file.GetValue(section, "sim_jitter_ms", 0).AsInt32(),
+                    SimLossPct = file.GetValue(section, "sim_loss_pct", 0).AsInt32(),
+                    SimBurstLossPct = file.GetValue(section, "sim_burst_loss_pct", 0).AsInt32(),
+                    SimBurstEverySec = file.GetValue(section, "sim_burst_every_sec", 10).AsInt32(),
+                    SimBurstMs = file.GetValue(section, "sim_burst_ms", 0).AsInt32(),
+                    ImpairFirstClientOnly = file.GetValue(section, "impair_first_client_only", true).AsBool(),
                 });
             }
         }
@@ -137,6 +183,13 @@ public static class NebulaPlayConfigStore
             file.SetValue(section, "bot_count", config.BotCount);
             file.SetValue(section, "bot_behavior", config.BotBehavior);
             file.SetValue(section, "bots_headless", config.BotsHeadless);
+            file.SetValue(section, "sim_latency_ms", config.SimLatencyMs);
+            file.SetValue(section, "sim_jitter_ms", config.SimJitterMs);
+            file.SetValue(section, "sim_loss_pct", config.SimLossPct);
+            file.SetValue(section, "sim_burst_loss_pct", config.SimBurstLossPct);
+            file.SetValue(section, "sim_burst_every_sec", config.SimBurstEverySec);
+            file.SetValue(section, "sim_burst_ms", config.SimBurstMs);
+            file.SetValue(section, "impair_first_client_only", config.ImpairFirstClientOnly);
         }
         if (selected.Length > 0)
             file.SetValue(META_SECTION, SELECTED_KEY, selected);

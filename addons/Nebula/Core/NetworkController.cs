@@ -149,7 +149,9 @@ namespace Nebula
 			to = default;
 			t = 0f;
 
-			if (SnapshotCount < 2) return false;
+			// Nothing to blend between: the caller will snap to the newest value, which is a frozen
+			// entity for as long as it lasts.
+			if (SnapshotCount < 2) { return false; }
 
 			// Use GLOBAL render tick from WorldRunner (not per-entity)
 			float renderTick = CurrentWorld.GetRenderTick();
@@ -165,17 +167,30 @@ namespace Nebula
 					toIdx = idx;
 			}
 
-			// Edge case: render tick is beyond all snapshots - hold last value (no extrapolation)
+			// Edge case: render tick is beyond all snapshots - hold last value (no extrapolation).
 			if (toIdx == -1)
 			{
 				int lastIdx = (SnapshotWriteIndex - 1 + SNAPSHOT_BUFFER_SIZE) % SNAPSHOT_BUFFER_SIZE;
+
+				// DELIBERATELY NOT REPORTED ANYWHERE. Running past the newest snapshot has two
+				// completely different causes and this branch cannot tell them apart: the data may be
+				// LATE (a deeper buffer would absorb it) or simply STOPPED, because the entity has
+				// nothing to say -- a parked ship is not dirty, so no snapshots are produced and the
+				// render clock inevitably walks past the last one. An earlier version counted this as
+				// a buffering failure and an idle world consequently read as a failing link, pinning
+				// the jitter buffer at its ceiling while motion stayed perfectly smooth.
+				//
+				// The buffer is sized from tick ARRIVAL GAPS instead (WorldRunner.RecordTickGap),
+				// which is one level up and unambiguous: an idle entity is quiet while every other
+				// entity keeps arriving, whereas a real dropout stops the whole stream.
 				from = SnapshotBuffer[lastIdx].Properties[propertyIndex];
 				to = from; // Same value = no interpolation
 				t = 0f;
 				return true;
 			}
 
-			// Edge case: render tick is before all snapshots - snap to earliest
+			// Edge case: render tick is before all snapshots - snap to earliest. The opposite
+			// complaint: the buffer is deeper than the clock needs.
 			if (fromIdx == -1)
 			{
 				from = SnapshotBuffer[toIdx].Properties[propertyIndex];

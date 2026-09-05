@@ -437,13 +437,29 @@ public partial class Main : EditorPlugin
         {
             int clientDebugPort = ReserveLoopbackPort();
             debugPorts.Add(clientDebugPort);
-            clientArgsList.Add(new[]
+
+            var clientArgs = new System.Collections.Generic.List<string>
             {
                 "--path", projectPath,
                 "--remote-debug", debugUri,
                 $"--debugPort={clientDebugPort}",
                 $"--clientId={i}",
-            });
+            };
+
+            // Impairment rides as per-instance args because that is the only level at which it can
+            // differ between clients -- a project setting would degrade all of them identically, and
+            // the case worth testing is one bad peer watched by a healthy one.
+            if (config.HasImpairment && (!config.ImpairFirstClientOnly || i == 0))
+            {
+                clientArgs.Add($"--simLatencyMs={config.SimLatencyMs}");
+                clientArgs.Add($"--simJitterMs={config.SimJitterMs}");
+                clientArgs.Add($"--simLossPct={config.SimLossPct}");
+                clientArgs.Add($"--simBurstLossPct={config.SimBurstLossPct}");
+                clientArgs.Add($"--simBurstEverySec={config.SimBurstEverySec}");
+                clientArgs.Add($"--simBurstMs={config.SimBurstMs}");
+            }
+
+            clientArgsList.Add(clientArgs.ToArray());
         }
 
         GetOrchestrator(createIfMissing: true).Call("launch",

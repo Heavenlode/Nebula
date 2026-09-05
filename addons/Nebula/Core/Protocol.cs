@@ -261,6 +261,14 @@ namespace Nebula.Serialization
         }
 
         /// <summary>
+        /// Whether <see cref="UnpackScene"/> would answer from cache. False means the next
+        /// resolve is a synchronous <c>GD.Load</c> of the scene and its whole dependency graph —
+        /// on a client that happens mid-tick, on the main thread, and is the difference between
+        /// a spawn costing a millisecond and costing a visible freeze.
+        /// </summary>
+        public static bool IsSceneCached(byte sceneId) => SceneCache.ContainsKey(sceneId);
+
+        /// <summary>
         /// The scenes marked <see cref="Nebula.Preload"/>, in protocol order.
         /// </summary>
         public static IReadOnlyList<string> ListPreloadScenes() => GeneratedProtocol.PreloadScenes;
@@ -281,10 +289,18 @@ namespace Nebula.Serialization
         /// and the second costs 0.2ms. Call this from a menu, a hub or a loading screen -- anywhere the
         /// player is already waiting -- and arriving in one of those scenes costs a normal frame.
         ///
-        /// Runs on a worker where that is safe, which is any client: a real renderer's RID owners are
-        /// thread-safe, while a HEADLESS server's dummy renderer's are not (see
-        /// <see cref="NebulaThread.CanBuildResourcesOffMain"/>). On a server it runs inline, which
-        /// costs nothing anyone can see because a server draws nothing.
+        /// Thread split, and it is not negotiable: the LOAD runs off main where that is safe (any
+        /// client -- a real renderer's RID owners are thread-safe, a HEADLESS server's dummy
+        /// renderer's are not; see <see cref="NebulaThread.CanBuildResourcesOffMain"/>), through the
+        /// engine's own threaded loader. The INSTANTIATE runs on the main thread, one scene per
+        /// frame. Instantiating on the worker was the original design and it was a launch-time
+        /// crash: building scene nodes issues RenderingServer work (visual instances, particles)
+        /// that raced the main thread's frame -- a FATAL "index 0 of size 0" in engine code, about
+        /// one client launch in three. Worse, a Godot FATAL trap inside a .NET-hosted process is
+        /// intercepted by the runtime's exception dispatcher and re-executed forever, so the client
+        /// did not even crash: its main thread spun silently and it never sent its ENet connect.
+        /// Bisected by launch loop: load-only off main is clean over 10/10; load + instantiate off
+        /// main failed 3/9 and 1/3.
         ///
         /// Nothing is added to the tree, so no _Ready runs and nothing registers itself. The instances
         /// exist only long enough to force their script classes through construction once.
@@ -299,54 +315,29 @@ namespace Nebula.Serialization
             if (System.Threading.Interlocked.Exchange(ref _preloadStarted, 1) != 0) return 0;
 
             var clock = System.Diagnostics.Stopwatch.StartNew();
+            bool offMain = NebulaThread.CanBuildResourcesOffMain;
 
-            var built = NebulaThread.CanBuildResourcesOffMain
-                ? await System.Threading.Tasks.Task.Run(() => BuildPreloadScenes(scenes))
-                : BuildPreloadScenes(scenes);
+            PackedScene[] packed = offMain
+                ? await System.Threading.Tasks.Task.Run(() => LoadPreloadScenesThreaded(scenes))
+                : LoadPreloadScenesInline(scenes);
+            long loadMs = clock.ElapsedMilliseconds;
 
-            Utility.Tools.Debugger.Instance?.Log(
-                $"[Preload] built {built}/{scenes.Length} scene(s) in {clock.ElapsedMilliseconds}ms" +
-                (NebulaThread.CanBuildResourcesOffMain ? " on a worker" : " inline") +
-                "; arriving in one of them is now a normal frame.");
+            // The await above resumes on Godot's synchronization context, i.e. the main thread --
+            // which is where instantiation MUST happen (see the summary). Checked, not assumed.
+            NebulaThread.AssertMain("Protocol.PreloadScenes instantiate");
 
-            return built;
-        }
-
-        /// <summary>
-        /// The body of <see cref="PreloadScenes"/>, split out so it can run on either thread.
-        ///
-        /// Failures are logged and skipped rather than thrown: this is an optimisation, and a game
-        /// that will not start because a preload hint named a scene that no longer loads is a worse
-        /// outcome than one that hitches on arrival.
-        /// </summary>
-        private static int BuildPreloadScenes(string[] scenes)
-        {
-            var built = 0;
-
+            int built = 0;
+            var tree = Engine.GetMainLoop() as SceneTree;
             for (var i = 0; i < scenes.Length; i++)
             {
+                if (packed[i] == null) continue;
+                // One per frame: each first instantiate is a ~100ms hitch, and four back to back
+                // is a visible freeze where four spread out are not.
+                if (built > 0 && offMain && tree != null)
+                    await tree.ToSignal(tree, SceneTree.SignalName.ProcessFrame);
                 try
                 {
-                    var packed = GD.Load<PackedScene>(scenes[i]);
-                    if (packed == null)
-                    {
-                        Utility.Tools.Debugger.Instance?.Log(
-                            $"[Preload] {scenes[i]} did not load; skipping it.",
-                            Utility.Tools.Debugger.DebugLevel.WARN);
-                        continue;
-                    }
-
-                    // HELD, not just loaded. Godot's resource cache keeps weak references, so a
-                    // PackedScene nobody holds is unloaded again the moment this method drops it --
-                    // taking its whole dependency graph with it and leaving the game to reload the lot
-                    // from disk on arrival. Preloading a scene and then letting it evaporate is worse
-                    // than not preloading it: it costs the load twice.
-                    //
-                    // Parked in the same cache UnpackScene reads, so the spawn path that eventually
-                    // needs this scene finds it already there.
-                    if (TryGetSceneId(scenes[i], out var sceneId)) SceneCache.TryAdd(sceneId, packed);
-
-                    var throwaway = packed.Instantiate();
+                    var throwaway = packed[i].Instantiate();
                     throwaway.Free();
                     built++;
                 }
@@ -359,7 +350,83 @@ namespace Nebula.Serialization
                 }
             }
 
+            Utility.Tools.Debugger.Instance?.Log(
+                $"[Preload] built {built}/{scenes.Length} scene(s) in {clock.ElapsedMilliseconds}ms" +
+                (offMain
+                    ? $" (loaded on a worker in {loadMs}ms, instantiated on main one per frame)"
+                    : " inline") +
+                "; arriving in one of them is now a normal frame.");
+
             return built;
+        }
+
+        /// <summary>
+        /// Worker half of <see cref="PreloadScenes"/>: loads through the engine's threaded loader
+        /// (the one off-main load path the engine supports) and parks each scene in
+        /// <see cref="SceneCache"/>. Returns one entry per requested scene, null where it did not load.
+        /// </summary>
+        private static PackedScene[] LoadPreloadScenesThreaded(string[] scenes)
+        {
+            var result = new PackedScene[scenes.Length];
+            for (var i = 0; i < scenes.Length; i++)
+            {
+                try
+                {
+                    var err = ResourceLoader.LoadThreadedRequest(scenes[i]);
+                    var packed = err == Error.Ok
+                        ? ResourceLoader.LoadThreadedGet(scenes[i]) as PackedScene
+                        : null;
+                    result[i] = HoldPreloaded(scenes[i], packed);
+                }
+                catch (Exception ex)
+                {
+                    Utility.Tools.Debugger.Instance?.Log(
+                        $"[Preload] {scenes[i]} threw while loading: {ex.Message}. Skipping it.",
+                        Utility.Tools.Debugger.DebugLevel.WARN);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>Main-thread half for a headless server: a plain synchronous load per scene.</summary>
+        private static PackedScene[] LoadPreloadScenesInline(string[] scenes)
+        {
+            var result = new PackedScene[scenes.Length];
+            for (var i = 0; i < scenes.Length; i++)
+            {
+                try
+                {
+                    result[i] = HoldPreloaded(scenes[i], GD.Load<PackedScene>(scenes[i]));
+                }
+                catch (Exception ex)
+                {
+                    Utility.Tools.Debugger.Instance?.Log(
+                        $"[Preload] {scenes[i]} threw while loading: {ex.Message}. Skipping it.",
+                        Utility.Tools.Debugger.DebugLevel.WARN);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// HELD, not just loaded. Godot's resource cache keeps weak references, so a PackedScene
+        /// nobody holds is unloaded again the moment the loader drops it -- taking its whole
+        /// dependency graph with it and leaving the game to reload the lot from disk on arrival.
+        /// Preloading a scene and then letting it evaporate is worse than not preloading it: it
+        /// costs the load twice. Parked in the same cache UnpackScene reads, so the spawn path that
+        /// eventually needs this scene finds it already there.
+        /// </summary>
+        private static PackedScene HoldPreloaded(string scenePath, PackedScene packed)
+        {
+            if (packed == null)
+            {
+                Utility.Tools.Debugger.Instance?.Log(
+                    $"[Preload] {scenePath} did not load; skipping it.",
+                    Utility.Tools.Debugger.DebugLevel.WARN);
+                return null;
+            }
+            if (TryGetSceneId(scenePath, out var sceneId)) SceneCache.TryAdd(sceneId, packed);
+            return packed;
         }
 
         #endregion
@@ -537,6 +604,64 @@ namespace Nebula.Serialization
             var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             _methodCache[key] = method;
             return method;
+        }
+
+        private static readonly Dictionary<int, bool> _nodeRefClassCache = new();
+
+        /// <summary>
+        /// Whether this class index serializes a NODE REFERENCE — an id lookup — rather than
+        /// in-place-mutated content.
+        ///
+        /// <para>The distinction decides whether the property may be gated on its dirty bit.
+        /// Types like <c>NetArray&lt;T&gt;</c> and game snapshot objects are mutated in place, so
+        /// their setter never fires, <c>MarkDirty</c> never runs, and the dirty mask cannot see the
+        /// change — which is why the object write loop calls every object serializer every tick and
+        /// lets each self-filter. A node reference is only ever ASSIGNED, and
+        /// <see cref="NetworkController.MarkDirtyRef"/> already sets its bit, so the every-tick call
+        /// is pure cost.</para>
+        ///
+        /// <para>Resolved from the type rather than a hardcoded list of the three node classes, so a
+        /// property typed as any game subclass is covered — their <c>NetworkSerialize</c> is the
+        /// inherited static one on NetNode/NetNode2D/NetNode3D.</para>
+        /// </summary>
+        public static bool IsNodeReferenceClass(int classIndex)
+        {
+            if (classIndex < 0) return false;
+            if (_nodeRefClassCache.TryGetValue(classIndex, out var cached)) return cached;
+
+            bool isNodeRef = false;
+            if (GeneratedProtocol.StaticMethods.TryGetValue(classIndex, out var info))
+            {
+                var type = GetCachedType(info.TypeFullName);
+                isNodeRef = type != null && typeof(INetNodeBase).IsAssignableFrom(type);
+            }
+            _nodeRefClassCache[classIndex] = isNodeRef;
+            return isNodeRef;
+        }
+
+        private static readonly Dictionary<int, bool> _netArrayClassCache = new();
+
+        /// <summary>
+        /// Whether this class index is a <c>NetArray&lt;T&gt;</c>. NetArray content changes
+        /// always pass through its indexer, which calls MarkDirty - so unlike other
+        /// in-place-mutated object properties it has a real dirty signal, and a node whose
+        /// only object props are NetArrays may be skipped while clean. (A write that
+        /// bypassed the indexer would already fail to replicate today.)
+        /// </summary>
+        public static bool IsNetArrayClass(int classIndex)
+        {
+            if (classIndex < 0) return false;
+            if (_netArrayClassCache.TryGetValue(classIndex, out var cached)) return cached;
+
+            bool isNetArray = false;
+            if (GeneratedProtocol.StaticMethods.TryGetValue(classIndex, out var info))
+            {
+                var type = GetCachedType(info.TypeFullName);
+                isNetArray = type is { IsGenericType: true }
+                    && type.GetGenericTypeDefinition() == typeof(NetArray<>);
+            }
+            _netArrayClassCache[classIndex] = isNetArray;
+            return isNetArray;
         }
 
         private static Type GetCachedType(string typeName)

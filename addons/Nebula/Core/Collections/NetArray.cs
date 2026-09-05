@@ -124,6 +124,15 @@ namespace Nebula.Serialization
         public Tick LastSendTick;
 
         /// <summary>
+        /// Dirty elements that did not fit in the last delta's byte budget and have NOT been sent.
+        /// Kept apart from <see cref="PendingDirty"/> because an ack clears that set wholesale on the
+        /// assumption everything in it was written by <see cref="LastSendTick"/> -- an unsent element
+        /// left in it would be erased by the first ack and never reach the peer. Merged back into the
+        /// pending set at the next export, where it is re-stamped with that tick.
+        /// </summary>
+        public ulong[] DeferredDirty;
+
+        /// <summary>
         /// Tick of the last chunk send. Chunk progress only commits on an ack covering it.
         /// </summary>
         public Tick ChunkSentTick;
@@ -137,6 +146,7 @@ namespace Nebula.Serialization
             HasPendingChunk = false,
             PendingDirty = null,
             LastSendTick = -1,
+            DeferredDirty = null,
             ChunkSentTick = -1
         };
     }
@@ -665,8 +675,9 @@ namespace Nebula.Serialization
                 return false; // Nothing to send
             }
 
-            // Send delta sync
-            WriteDeltaSync(obj, buffer, ref state, currentTick);
+            // Send delta sync, within the property's byte budget: what does not fit is deferred to
+            // the next tick rather than overrunning the packet.
+            WriteDeltaSync(obj, buffer, ref state, currentTick, maxBytes);
             return true;
         }
 
@@ -684,12 +695,32 @@ namespace Nebula.Serialization
             {
                 if (_dirtyMask[i] != 0) { hasGlobalDirty = true; break; }
             }
-            if (!hasGlobalDirty) return;
+
+            // Elements deferred by the last delta's budget re-enter the queue here, exactly as new
+            // global bits do: stamped with THIS tick, so the ack that clears them has to cover the
+            // send they will actually be in.
+            bool hasDeferred = false;
+            if (state.DeferredDirty != null)
+            {
+                for (int i = 0; i < state.DeferredDirty.Length; i++)
+                {
+                    if (state.DeferredDirty[i] != 0) { hasDeferred = true; break; }
+                }
+            }
+            if (!hasGlobalDirty && !hasDeferred) return;
 
             state.PendingDirty ??= new ulong[_dirtyMask.Length];
             for (int i = 0; i < _dirtyMask.Length; i++)
             {
                 state.PendingDirty[i] |= _dirtyMask[i];
+            }
+            if (hasDeferred)
+            {
+                for (int i = 0; i < state.DeferredDirty.Length && i < state.PendingDirty.Length; i++)
+                {
+                    state.PendingDirty[i] |= state.DeferredDirty[i];
+                }
+                Array.Clear(state.DeferredDirty, 0, state.DeferredDirty.Length);
             }
             state.LastSendTick = currentTick; // new bits enqueued this tick
         }
@@ -870,11 +901,14 @@ namespace Nebula.Serialization
             return true; // We wrote data
         }
 
-        internal static void WriteDeltaSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, Tick currentTick)
+        /// <summary>Delta header: 1 (flags) + 2 (entry count).</summary>
+        private const int DeltaHeaderBytes = 3;
+
+        internal static void WriteDeltaSync(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, Tick currentTick, int maxBytes = int.MaxValue)
         {
             if (typeof(T) == typeof(bool))
             {
-                WriteDeltaSyncBool(obj, buffer, ref state, currentTick);
+                WriteDeltaSyncBool(obj, buffer, ref state, currentTick, maxBytes);
                 return;
             }
 
@@ -888,29 +922,54 @@ namespace Nebula.Serialization
                 return;
             }
 
+            // BUDGETED. A delta used to write every pending element regardless of the budget the
+            // serializer was handed, which was fine for a handful of changed slots and a buffer
+            // overflow for a few hundred -- a water grid draining into a dug pit dirtied thousands of
+            // cells per publish and overran the packet every tick. Elements past the budget are moved
+            // to the peer's deferred set and come back next tick (MergeDirtyIntoPending); the value
+            // sent for a deferred element is whatever it holds when it is finally written, so a slot
+            // that changed again in the meantime costs nothing extra.
+            int entrySize = 2 + ElementSize;
+            int maxEntries = maxBytes == int.MaxValue
+                ? int.MaxValue
+                : Math.Max(1, (maxBytes - DeltaHeaderBytes) / entrySize);
+            int toWrite = Math.Min(pendingCount, Math.Min(maxEntries, ushort.MaxValue));
+
             // Write delta header
             NetWriter.WriteByte(buffer, (byte)NetArraySyncFlags.Delta);
-            NetWriter.WriteUInt16(buffer, (ushort)Math.Min(pendingCount, ushort.MaxValue));
+            NetWriter.WriteUInt16(buffer, (ushort)toWrite);
 
             // Write this peer's pending indices and values - iterate without LINQ
             int written = 0;
-            for (int block = 0; block < state.PendingDirty.Length && written < pendingCount; block++)
+            for (int block = 0; block < state.PendingDirty.Length; block++)
             {
                 var mask = state.PendingDirty[block];
                 if (mask == 0) continue;
 
                 int baseIndex = block * 64;
-                while (mask != 0 && written < pendingCount)
+                while (mask != 0)
                 {
                     int bit = BitOperations.TrailingZeroCount(mask);
                     int index = baseIndex + bit;
-                    if (index < obj._length)
+                    ulong bitMask = 1UL << bit;
+                    mask &= mask - 1; // Clear lowest set bit
+
+                    if (index >= obj._length) continue;
+
+                    if (written < toWrite)
                     {
                         NetWriter.WriteUInt16(buffer, (ushort)index);
                         WriteElement(buffer, obj._data[index]);
                         written++;
                     }
-                    mask &= mask - 1; // Clear lowest set bit
+                    else
+                    {
+                        // Over budget: out of the pending set (which the ack will clear) and into the
+                        // deferred set (which it will not).
+                        state.DeferredDirty ??= new ulong[state.PendingDirty.Length];
+                        state.DeferredDirty[block] |= bitMask;
+                        state.PendingDirty[block] &= ~bitMask;
+                    }
                 }
             }
             // LastSendTick is stamped at enqueue (MergeDirtyIntoPending), not on this resend.
@@ -989,7 +1048,7 @@ namespace Nebula.Serialization
         }
 
         // Delta: only words that have a pending-dirty bit, sent whole as (wordIndex, word).
-        internal static void WriteDeltaSyncBool(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, Tick currentTick)
+        internal static void WriteDeltaSyncBool(NetArray<T> obj, NetBuffer buffer, ref PeerSyncState state, Tick currentTick, int maxBytes = int.MaxValue)
         {
             int wordCount = (obj._length + 63) >> 6;
             int pendingLen = state.PendingDirty?.Length ?? 0;
@@ -998,16 +1057,34 @@ namespace Nebula.Serialization
             for (int w = 0; w < wordCount && w < pendingLen; w++)
                 if (state.PendingDirty[w] != 0) changedWords++;
 
+            // Budgeted the same way as the element path: 2 (word index) + 8 (word) per entry.
+            const int wordEntrySize = 2 + 8;
+            int maxWords = maxBytes == int.MaxValue
+                ? int.MaxValue
+                : Math.Max(1, (maxBytes - DeltaHeaderBytes) / wordEntrySize);
+            int toWrite = Math.Min(changedWords, Math.Min(maxWords, ushort.MaxValue));
+
             NetWriter.WriteByte(buffer, (byte)NetArraySyncFlags.Delta);
-            NetWriter.WriteUInt16(buffer, (ushort)Math.Min(changedWords, ushort.MaxValue));
+            NetWriter.WriteUInt16(buffer, (ushort)toWrite);
 
             int written = 0;
-            for (int w = 0; w < wordCount && w < pendingLen && written < changedWords; w++)
+            for (int w = 0; w < wordCount && w < pendingLen; w++)
             {
                 if (state.PendingDirty[w] == 0) continue;
-                NetWriter.WriteUInt16(buffer, (ushort)w);
-                NetWriter.WriteUInt64(buffer, obj._bits[w]);
-                written++;
+                if (written < toWrite)
+                {
+                    NetWriter.WriteUInt16(buffer, (ushort)w);
+                    NetWriter.WriteUInt64(buffer, obj._bits[w]);
+                    written++;
+                }
+                else
+                {
+                    // Over budget: deferred, see the element path. For bool the pending mask's bits
+                    // ARE the changed bits within the word, so the whole word's mask moves across.
+                    state.DeferredDirty ??= new ulong[state.PendingDirty.Length];
+                    state.DeferredDirty[w] |= state.PendingDirty[w];
+                    state.PendingDirty[w] = 0;
+                }
             }
             // LastSendTick is stamped at enqueue (MergeDirtyIntoPending), not on this resend.
         }

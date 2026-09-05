@@ -614,6 +614,25 @@ namespace Nebula.Utility.Nodes
                             int ticksAdvanced = _hermiteLatestTick - _hermiteLastProcessedTick;
                             double tickDelta = 1.0 / NetRunner.TPS;
                             _hermiteTimeSincePhysicsUpdate -= ticksAdvanced * tickDelta;
+
+                            // FLOOR ONLY. Capping this at one tick here as well looks like the tidier
+                            // fix for the ratchet and is actively wrong: it makes the window sawtooth
+                            // 0 -> one tick every tick. For an OWNED entity that is invisible, because
+                            // the buffered physics position advances exactly one tick at the same
+                            // moment and the two cancel -- which is what the carry-over above exists
+                            // for. A NON-OWNED entity has no such cancellation: its source position
+                            // comes from interpolated NetPosition and advances smoothly, so a
+                            // sawtoothing window multiplied by its velocity is pure oscillation --
+                            // measured as remote ships juddering at several units per tick.
+                            //
+                            // And this branch DOES run for them: NetworkController.IsCurrentOwner is
+                            // `IsServer || (IsClient && InputAuthority.IsSet)`, which on a client is
+                            // true for any node that has an input authority at all, not just one this
+                            // peer owns. Treat "owner" here as "someone's owned entity".
+                            //
+                            // A standing offset is harmless -- it is constant, so it reads as the
+                            // entity simply being drawn slightly ahead. The ceiling below is what
+                            // bounds it; this floor is all that belongs here.
                             if (_hermiteTimeSincePhysicsUpdate < 0)
                                 _hermiteTimeSincePhysicsUpdate = 0;
                         }
@@ -626,6 +645,27 @@ namespace Nebula.Utility.Nodes
                         _hermiteVisualVelocity = physicsVel;
                         _hermiteInitialized = true;
                     }
+
+                    // BOUND THE EXTRAPOLATION WINDOW. Without this the accumulator above is an
+                    // unanchored integrator: frames add delta, ticks subtract ticksAdvanced * tickDelta,
+                    // and in steady state those balance exactly -- so it PRESERVES whatever offset it
+                    // holds instead of converging on the right one. The floor at zero clips downward
+                    // excursions while upward ones accumulate in full, making it a one-way ratchet that
+                    // a single startup hitch can wind up permanently.
+                    //
+                    // Measured before this clamp: pinned at 188ms (5.6 ticks) for an entire session,
+                    // which drew the player's ship 37 units AHEAD of its own simulated position at
+                    // 200 u/s -- worse than the Exponential mode's ~10 units of lag that Hermite was
+                    // chosen over. The tell was that visual error / speed was exactly 0.188s at every
+                    // speed from 143 to 200 u/s.
+                    //
+                    // The ceiling is derived, not tuned: extrapolation exists to cover the gap between
+                    // physics updates, so anything past one tick is drawing motion the simulation has
+                    // not produced. The half-tick over is headroom for frame jitter.
+                    const float MaxExtrapolationTicks = 1.5f;
+                    double maxExtrapolation = MaxExtrapolationTicks / NetRunner.TPS;
+                    if (_hermiteTimeSincePhysicsUpdate > maxExtrapolation)
+                        _hermiteTimeSincePhysicsUpdate = maxExtrapolation;
 
                     // Extrapolate physics to current frame time.
                     // Because we carry over excess time, this line is continuous
@@ -700,6 +740,7 @@ namespace Nebula.Utility.Nodes
 
             ApplyAbsorbedOffset(target, (float)delta);
         }
+
 
         /// <summary>
         /// Teleports to a position, skipping interpolation.

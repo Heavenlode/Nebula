@@ -493,6 +493,9 @@ namespace Nebula
         internal void AccumulateRenderTime(float delta)
         {
             TimeSinceLastTick += delta;
+
+            // Peak silence this window. Sampled here rather than on arrival because the gap that
+            // matters is the one still OPEN -- a stream that has stopped reports nothing at all.
         }
 
         /// <summary>
@@ -500,20 +503,324 @@ namespace Nebula
         /// </summary>
         internal void OnWorldTickReceived(int tick)
         {
+            // The gap that just ended is what the jitter buffer is sized from, so it is tallied here --
+            // the one place that knows an arrival happened.
+            if (NetRunner.Instance.IsClient) RecordTickGap(TimeSinceLastTick);
+
             // Reset accumulator when we receive a new tick
             TimeSinceLastTick = 0f;
         }
 
+        // ---------------------------------------------------------------- the render clock
+
+        /// <summary>
+        /// Continuous render tick. Advanced once per frame in <see cref="_Process"/>, never derived
+        /// per call -- see <see cref="AdvanceRenderClock"/>.
+        /// </summary>
+        private float _renderClock = float.NaN;
+
+        private float _renderClockError;
+        private int _renderClockSampledTick = int.MinValue;
+
+        /// <summary>How hard the clock is pulled toward the simulated tick, per tick of error.</summary>
+        private const float RenderClockGain = 0.25f;
+
+        /// <summary>Ceiling on that correction as a fraction of normal speed.</summary>
+        private const float RenderClockMaxRateAdjust = 0.05f;
+
+        /// <summary>Error past which the clock is re-seeded instead of corrected: a world change, a
+        /// long hitch, the first frame. Evaluated ONLY when a tick arrives -- see
+        /// <see cref="AdvanceRenderClock"/> for why silence must never trigger it.</summary>
+        private const float RenderClockResyncTicks = 3f;
+
+        /// <summary>How much of each once-per-tick error sample is taken.</summary>
+        private const float RenderClockSampleWeight = 0.25f;
+
+        /// <summary>
+        /// Advances the render clock one frame.
+        ///
+        /// <para>This replaced "last RECEIVED tick plus how long ago it arrived", which is exact and
+        /// stateless while packets arrive on a perfectly regular cadence -- the accumulator reaches one
+        /// tick exactly as the tick counter increments, so the result is continuous with no state at
+        /// all. Under jitter that coincidence breaks, and it breaks in a way that is easy to miss:
+        /// the value never went BACKWARD in measurement, but it advanced UNEVENLY. Measured at 50fps
+        /// against 30Hz ticks, remote entities should move 0.6 ticks per frame and instead alternated
+        /// between 0.4 and 1.0 -- a couple of units of positional wobble at half the frame rate, which
+        /// is a shimmer rather than a jump. Arrival jitter of 19-43ms against a 33.3ms nominal went
+        /// straight onto the screen.</para>
+        ///
+        /// <para>So the clock free-runs on real time and is pulled toward the simulated tick by a
+        /// small capped RATE adjustment. It cannot drift, because a standing error is always being
+        /// corrected, and it cannot judder, because it only ever advances -- slightly fast or slightly
+        /// slow. The error is sampled ONCE PER TICK, at arrival, because that is the only instant whose
+        /// meaning is unambiguous: continuous time is exactly T when tick T lands. Sampled every frame
+        /// against the tick counter instead, the error sawtooths by a full tick every tick however
+        /// well the clock tracks, and steering the rate with that reintroduces the very unevenness
+        /// this removes.</para>
+        /// </summary>
+        internal static (float Tick, float Error, int SampledTick) AdvanceRenderClock(
+            float clock, float error, int sampledTick, int currentTick, int delayTicks, float delta)
+        {
+            int targetTick = currentTick - delayTicks;
+
+            if (float.IsNaN(clock)) return (targetTick, 0f, currentTick);
+
+            // A RE-SEED IS ONLY EVER JUSTIFIED BY AN ARRIVAL, so both it and the error sample live
+            // behind this one gate.
+            //
+            // SILENCE IS ABSENCE OF NEWS, NOT EVIDENCE THAT RENDER TIME IS WRONG. While the stream is
+            // quiet the target stands still, so a free-running clock necessarily outruns it -- and a
+            // symmetric every-frame check read that as a three-tick error and "corrected" it by
+            // snapping render time BACKWARD, replaying motion already drawn. Measured under 200ms
+            // bursts every ~8s: a -3.4 tick step (~115ms of motion) on every single burst, and it
+            // persisted at the deepest buffer the controller can reach, because buffer depth and this
+            // are unrelated faults. The clock was right and the target was merely stale: the server
+            // kept ticking, we just had not heard, and when the stream resumes the target jumps by
+            // exactly the length of the silence and lands back on the clock -- no correction needed,
+            // which is why coasting costs nothing to recover from.
+            //
+            // A genuine pause is still caught, just one instant later: when the stream resumes with
+            // the target STILL far behind the clock, that arrival proves the server did not tick
+            // through the gap, and the re-seed below fires then.
+            //
+            // THE GATE IS THE TICK COUNTER, NOT THE TARGET, and the difference is not pedantic. The
+            // target is `currentTick - delayTicks`, so the ADAPTIVE BUFFER moves it too -- and the one
+            // moment it is most likely to move is the window a dropout was just detected in, which is
+            // exactly when the clock is coasting furthest ahead. Keyed on the target, a delay change
+            // mid-dropout opens this gate with no arrival behind it, and the re-seed fires against a
+            // stale target: observed once as a -8.3 tick step on a 300ms burst that grew the buffer
+            // from 4 to 5. Keyed on the counter, resizing the buffer only moves where the clock is
+            // AIMED, and the next real arrival slews to it.
+            if (currentTick != sampledTick)
+            {
+                if (Math.Abs(targetTick - clock) > RenderClockResyncTicks) return (targetTick, 0f, currentTick);
+
+                sampledTick = currentTick;
+                error = error + (targetTick - clock - error) * RenderClockSampleWeight;
+            }
+
+            var rate = 1f + Math.Clamp(
+                error * RenderClockGain, -RenderClockMaxRateAdjust, RenderClockMaxRateAdjust);
+            return (clock + delta * NetRunner.TPS * rate, error, sampledTick);
+        }
+
         /// <summary>
         /// Get the fractional render tick for interpolation (used by all entities).
+        ///
+        /// <para>A pure read of the clock advanced in <see cref="_Process"/>; every entity in the frame
+        /// therefore gets the same answer no matter when it asks.</para>
+        ///
+        /// <para>THE DELAY IS ALREADY IN THE CLOCK -- it is part of what the clock aims at, not
+        /// subtracted here. That is what lets <see cref="InterpolationDelayTicks"/> change at runtime:
+        /// a one-tick change moves the target by one tick and the rate correction absorbs it over
+        /// about a second, instead of teleporting render time the instant the buffer is resized.</para>
         /// </summary>
         public float GetRenderTick()
         {
-            float tickDuration = 1f / NetRunner.TPS;
-            float fractionalTick = TimeSinceLastTick / tickDuration;
-            // Clamp to avoid extrapolating too far if frame is slow
-            fractionalTick = Math.Min(fractionalTick, 1.5f);
-            return CurrentTick + fractionalTick - InterpolationDelayTicks;
+            if (float.IsNaN(_renderClock))
+            {
+                // Before the first frame has advanced it, fall back to the original derivation so a
+                // caller during startup still gets a sane answer.
+                float fallback = Math.Min(TimeSinceLastTick * NetRunner.TPS, 1.5f);
+                return CurrentTick + fallback - InterpolationDelayTicks;
+            }
+            return _renderClock;
+        }
+
+        // ------------------------------------------------------------- adaptive interpolation delay
+
+        /// <summary>
+        /// Shallowest buffer the controller will settle on, and the value shipped as the default.
+        ///
+        /// <para>NOT the theoretical minimum. One tick technically interpolates -- there is still a
+        /// snapshot on each side -- but it leaves no slack whatsoever: a single packet arriving late
+        /// starves it, the buffer grows back, and the controller hunts between one and two forever on
+        /// any link with jitter at all. Two ticks is the shallowest depth that absorbs one late
+        /// packet, so it is the right floor for a policy whose whole job is avoiding starvation.</para>
+        /// </summary>
+        private const int MinInterpolationDelayTicks = 2;
+
+        /// <summary>
+        /// Largest usable buffer, and a real ceiling rather than a chosen one:
+        /// <c>NetworkController.SNAPSHOT_BUFFER_SIZE</c> is 8 PER ENTITY, so beyond this the delay
+        /// would point past the oldest snapshot the buffer can still hold. At 30 TPS that caps the
+        /// jitter buffer at roughly 200ms. If the controller pins here under test, the buffer size is
+        /// the next thing to look at -- growing it costs memory per entity per property, so it is a
+        /// deliberate separate decision rather than something to raise quietly.
+        /// </summary>
+        private const int MaxInterpolationDelayTicks = 6;
+
+        /// <summary>Windows the target must stay below the current depth before a tick is given back.</summary>
+        private const int CleanWindowsBeforeShrink = 5;
+
+        /// <summary>
+        /// Arrival gaps are tallied in whole ticks; anything at or beyond the last bucket lands in it.
+        /// Sized past <see cref="MaxInterpolationDelayTicks"/> so an outage the buffer could never
+        /// cover is still COUNTED (it has to be, or it could not be outvoted by the ordinary traffic
+        /// around it) without needing a bucket per possible length.
+        /// </summary>
+        private const int GapHistogramBuckets = 16;
+
+        /// <summary>
+        /// Fraction of arrivals the buffer is sized to absorb without a freeze.
+        ///
+        /// <para>THE WHOLE POINT OF THE REWRITE. Sizing for the WORST gap means paying its latency on
+        /// every frame forever, and a rare outage is the one case where that trade is clearly bad: a
+        /// 200ms burst every 8s is 0.4% of arrivals, so covering it costs 100ms of permanent lag to
+        /// improve four seconds in a thousand. Sizing for a high percentile instead covers ordinary
+        /// jitter -- which is continuous, and what a jitter buffer is actually for -- and lets the rare
+        /// outage be the freeze it honestly is.</para>
+        /// </summary>
+        private const float TargetGapCoverage = 0.99f;
+
+        /// <summary>
+        /// Arrivals the percentile is taken over: a true sliding window, ~17s at 30 TPS.
+        ///
+        /// <para>SIZED BY WHAT THE PERCENTILE HAS TO RESOLVE, not by feel. A 99th percentile can only
+        /// step over an event that is genuinely rarer than 1% of samples, so the window has to hold
+        /// enough arrivals for a rare fault to BE rare in it. A burst every 8s is one arrival in 240;
+        /// measured against a decaying tally worth only ~56 effective samples, that single gap was 1.8%
+        /// of the distribution and dragged the target to the ceiling on every burst -- the percentile
+        /// was right and the sample count was too small for it to mean anything.</para>
+        /// </summary>
+        private const int GapWindowSamples = 512;
+
+        /// <summary>
+        /// Most the buffer may move in one window.
+        ///
+        /// <para>Kept strictly under <see cref="RenderClockResyncTicks"/>, and that is the entire
+        /// reason it exists: the delay is part of what the render clock aims at, so resizing the buffer
+        /// by more than the clock can absorb re-seeds it at the next arrival -- a visible jump
+        /// BACKWARD, which is exactly what the clock work removed. Observed as a -4.5 tick step when a
+        /// four-tick growth landed in one window.</para>
+        /// </summary>
+        private const int MaxDelayStepTicks = 2;
+
+        private ulong _delayWindowStartMsec;
+
+        /// <summary>How many arrivals in the window were separated by n whole ticks. Maintained
+        /// incrementally against <see cref="_gapSamples"/>, so the percentile is exact and costs
+        /// nothing to read.</summary>
+        private readonly int[] _gapHistogram = new int[GapHistogramBuckets];
+
+        /// <summary>The window itself: one bucket index per arrival, oldest overwritten first.
+        /// A byte because <see cref="GapHistogramBuckets"/> is 16.</summary>
+        private readonly byte[] _gapSamples = new byte[GapWindowSamples];
+        private int _gapSampleIndex;
+        private int _gapSampleCount;
+
+        /// <summary>Consecutive windows whose target sat below the current depth.</summary>
+        private int _windowsBelowTarget;
+
+        /// <summary>
+        /// Tallies one arrival gap. Called from <see cref="OnWorldTickReceived"/>, which is the only
+        /// place that knows an arrival happened -- and the level at which a dropout is distinguishable
+        /// from an idle entity at all. A per-entity view cannot tell them apart: both look like running
+        /// past the newest snapshot. An idle entity is quiet while every OTHER entity keeps arriving;
+        /// a dropout is the whole stream stopping, which is precisely what this measures.
+        /// </summary>
+        private void RecordTickGap(float gapSeconds)
+        {
+            int gapTicks = (int)(gapSeconds * NetRunner.TPS);
+            if (gapTicks < 0) gapTicks = 0;
+            if (gapTicks >= GapHistogramBuckets) gapTicks = GapHistogramBuckets - 1;
+
+            // Evict the sample this slot is about to overwrite, so the histogram always describes
+            // exactly the arrivals still in the window.
+            if (_gapSampleCount == GapWindowSamples) _gapHistogram[_gapSamples[_gapSampleIndex]]--;
+            else _gapSampleCount++;
+
+            _gapSamples[_gapSampleIndex] = (byte)gapTicks;
+            _gapHistogram[gapTicks]++;
+            _gapSampleIndex = (_gapSampleIndex + 1) % GapWindowSamples;
+        }
+
+        /// <summary>
+        /// The shallowest buffer that would have absorbed <paramref name="coverage"/> of the arrivals
+        /// tallied in <paramref name="histogram"/>, clamped to the usable range.
+        ///
+        /// <para>THE FIX FOR A BUFFER THAT HUNTS. The previous policy grew on ANY starvation and shrank
+        /// after a fixed clean run, which cannot settle against a repeating fault: measured against a
+        /// 200ms burst every 8s, it sawtoothed between 3 and 6 ticks forever -- 100ms of lag appearing
+        /// and disappearing -- while never once being deep enough, because nine of eleven bursts
+        /// exceeded even the ceiling. It was paying latency for coverage it could not reach.</para>
+        ///
+        /// <para>A percentile settles by construction. Ordinary jitter is continuous, so it dominates
+        /// the distribution and fixes the answer; a rare outage is a handful of samples that the
+        /// percentile steps over, so the buffer stops chasing what it cannot catch. When the link
+        /// genuinely degrades -- when big gaps stop being rare -- they cross the percentile on their
+        /// own and the buffer grows, which is the adaptation actually worth having.</para>
+        ///
+        /// <para>Pure so the policy is testable without a network, the same way
+        /// <see cref="AdvanceRenderClock"/> is.</para>
+        /// </summary>
+        internal static int DelayForCoverage(ReadOnlySpan<int> histogram, float coverage, int min, int max)
+        {
+            int total = 0;
+            for (int i = 0; i < histogram.Length; i++) total += histogram[i];
+
+            // No arrivals measured yet: the shipped default is the honest answer, not a guess.
+            if (total == 0) return min;
+
+            // Ceiling, so a coverage of 1.0 means every sample rather than all-but-rounding.
+            int needed = (int)Math.Ceiling(total * coverage);
+
+            int running = 0;
+            for (int gapTicks = 0; gapTicks < histogram.Length; gapTicks++)
+            {
+                running += histogram[gapTicks];
+
+                // A gap of n ticks is absorbed by a buffer of n ticks -- see the starvation rule in
+                // NetworkController.GetInterpolationSnapshots -- so the bucket index IS the depth.
+                if (running >= needed) return Math.Clamp(gapTicks, min, max);
+            }
+
+            return max;
+        }
+
+        /// <summary>
+        /// Moves the buffer toward <paramref name="target"/>: straight up, one tick at a time down.
+        ///
+        /// <para>The asymmetry survives the rewrite because its reasoning does. Under-buffering is
+        /// visible the moment it happens, so there is no case for approaching it slowly;
+        /// over-buffering only costs latency nobody can see directly, so there is no case for racing to
+        /// reclaim it, and a slow release keeps a link that is merely between faults from being
+        /// re-measured as healthy.</para>
+        /// </summary>
+        internal static int NextInterpolationDelay(int current, int target, int windowsBelowTarget)
+        {
+            if (target > current)
+                return Math.Min(Math.Min(target, current + MaxDelayStepTicks), MaxInterpolationDelayTicks);
+
+            if (target < current && windowsBelowTarget >= CleanWindowsBeforeShrink)
+                return Math.Max(current - 1, MinInterpolationDelayTicks);
+
+            return current;
+        }
+
+        /// <summary>
+        /// Resizes the jitter buffer once a second from what interpolation actually experienced.
+        /// Client-only: the server neither interpolates nor renders.
+        /// </summary>
+        private void UpdateInterpolationDelay()
+        {
+            var now = Time.GetTicksMsec();
+            if (_delayWindowStartMsec == 0) { _delayWindowStartMsec = now; return; }
+            if (now - _delayWindowStartMsec < 1000) return;
+            _delayWindowStartMsec = now;
+
+            int target = DelayForCoverage(
+                _gapHistogram, TargetGapCoverage, MinInterpolationDelayTicks, MaxInterpolationDelayTicks);
+
+            _windowsBelowTarget = target < InterpolationDelayTicks ? _windowsBelowTarget + 1 : 0;
+
+            int next = NextInterpolationDelay(InterpolationDelayTicks, target, _windowsBelowTarget);
+            if (next == InterpolationDelayTicks) return;
+
+            // Any move restarts the release run, so a buffer that steps down does not immediately
+            // qualify to step down again on the following window.
+            _windowsBelowTarget = 0;
+            InterpolationDelayTicks = next;
         }
 
         #endregion
@@ -832,6 +1139,29 @@ namespace Nebula
         }
 
         /// <summary>
+        /// Round-trip time as the APPLICATION experiences it: what the transport measured, plus any
+        /// delay the synthetic impairment is holding packets for.
+        ///
+        /// <para>WITHOUT THIS THE IMPAIRMENT SIMULATES A LINK THAT CANNOT EXIST. ENet measures RTT
+        /// inside the native transport, and <see cref="Diagnostics.NetworkImpairment"/> holds packets
+        /// AFTER ENet has delivered them -- so on loopback the peer still reports ~0ms however severe
+        /// the configured latency is. The lead is derived from that reading, so an impaired client
+        /// aimed for the loopback minimum of two ticks while its view of the server ran 80ms (2.4
+        /// ticks) behind: it stamped every input for a tick the server had ALREADY simulated, and the
+        /// server fell back to the previous tick's input (see GetServerBufferedInput) essentially
+        /// forever. Held keys survive that unharmed -- the repeated input is the same input -- but
+        /// every TRANSITION lands a tick late on the server, and a mistimed turn is a permanent
+        /// heading disagreement, because one tick of turning is a smaller change than the forward
+        /// direction's prediction tolerance and is therefore never reconciled.</para>
+        ///
+        /// <para>Only the configured latency is added, not the jitter: LEAD_JITTER_MARGIN_TICKS
+        /// already exists to cover variance, and paying for the worst jitter on every tick is the
+        /// same bad trade the interpolation buffer avoids.</para>
+        /// </summary>
+        internal static uint EffectiveRoundTripMs(uint measuredRttMs, int simulatedLatencyMs)
+            => measuredRttMs + (uint)Math.Max(0, simulatedLatencyMs);
+
+        /// <summary>
         /// Slew decision for one eligible frame: 1 is steady state; 0 sheds one tick of
         /// excess lead; 2 builds one tick of missing lead. Correction is rate-limited to
         /// one tick per SLEW_INTERVAL eligible frames so a 25-tick debt drains in a few
@@ -868,7 +1198,9 @@ namespace Nebula
                 // client can shed it. Warn on first engage, then every ~10s while pinned.
                 if ((_predictionThrottleLogCounter++ % 300) == 0)
                 {
-                    uint rtt = NetRunner.Instance.ServerPeer.IsSet ? NetRunner.Instance.ServerPeer.RoundTripTime : 0;
+                    uint rtt = EffectiveRoundTripMs(
+                        NetRunner.Instance.ServerPeer.IsSet ? NetRunner.Instance.ServerPeer.RoundTripTime : 0,
+                        NetRunner.Impairment.LatencyMs);
                     Log(Debugger.DebugLevel.WARN,
                         $"[Prediction] Lead capped: predicted {_clientPredictedTick} is {_clientPredictedTick - CurrentTick} ahead of confirmed {CurrentTick} " +
                         $"(rtt {rtt}ms, target lead {ComputeTargetLeadTicks(rtt, NetRunner.TPS)}) — confirmed timeline is falling behind faster than the slew can shed lead");
@@ -1351,7 +1683,17 @@ namespace Nebula
             // Process buffered player joins FIRST (tick-aligned)
             // This ensures OnPlayerJoined fires at a safe, predictable point before any Export iteration
             var phaseTs = Diagnostics.TickProfiler.Now();
+            // Timed unconditionally as well as through the profiler: the profiler averages over a
+            // second, which is exactly how a single multi-hundred-millisecond join tick disappears.
+            var joinsTs = System.Diagnostics.Stopwatch.GetTimestamp();
             ProcessPendingPlayerJoins();
+            var joinsMs = (System.Diagnostics.Stopwatch.GetTimestamp() - joinsTs)
+                * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
+            if (joinsMs >= Diagnostics.MainThreadWork.ReportThresholdMs)
+            {
+                Log(Debugger.DebugLevel.WARN,
+                    $"[JoinsPhase] ProcessPendingPlayerJoins took {joinsMs:F0} ms INSIDE the tick.");
+            }
             _profiler?.Record(Diagnostics.TickProfiler.Phase.Joins, phaseTs);
 
             phaseTs = Diagnostics.TickProfiler.Now();
@@ -1466,6 +1808,8 @@ namespace Nebula
                 // Timed separately from the scan around it: this is game code, and telling it apart
                 // from Nebula's own per-node bookkeeping is the whole point of the breakdown.
                 var gameplayTs = Diagnostics.TickProfiler.Now();
+                var censusTs = Diagnostics.PayloadCensus.Enabled
+                    ? System.Diagnostics.Stopwatch.GetTimestamp() : 0L;
                 netController._NetworkProcess(CurrentTick);
                 foreach (var networkChild in netController.StaticNetworkChildren)
                 {
@@ -1473,6 +1817,14 @@ namespace Nebula
                     if (networkChild.RawNode == null) continue;
                     if (networkChild.RawNode.ProcessMode == ProcessModeEnum.Disabled) continue;
                     networkChild._NetworkProcess(CurrentTick);
+                }
+                if (censusTs != 0L)
+                {
+                    // Charged to the ROOT scene including its static children, which is
+                    // the unit a reader can actually go and open.
+                    Diagnostics.PayloadCensus.RecordGameplay(
+                        netController.RawNode?.SceneFilePath,
+                        System.Diagnostics.Stopwatch.GetTimestamp() - censusTs);
                 }
                 _profiler?.Record(Diagnostics.TickProfiler.Phase.Gameplay, gameplayTs);
             }
@@ -1832,6 +2184,17 @@ namespace Nebula
             if (NetRunner.Instance.IsClient)
             {
                 AccumulateRenderTime((float)delta);
+                UpdateInterpolationDelay();
+
+                // The delay is part of the TARGET, so resizing the buffer is slewed by the rate
+                // correction rather than jumping render time. See GetRenderTick.
+                var advanced = AdvanceRenderClock(
+                    _renderClock, _renderClockError, _renderClockSampledTick,
+                    CurrentTick, InterpolationDelayTicks, (float)delta);
+                _renderClock = advanced.Tick;
+                _renderClockError = advanced.Error;
+                _renderClockSampledTick = advanced.SampledTick;
+
             }
         }
 
@@ -1846,12 +2209,19 @@ namespace Nebula
             /// <summary>Valid byte count -- rented arrays are oversized, only [0, Length) is packet data.</summary>
             public readonly int Length;
 
-            public InboundPacket(NetPeer peer, byte channel, byte[] payload, int length)
+            /// <summary>
+            /// Wall clock at which this may be applied. Zero for the normal path -- only synthetic
+            /// impairment ever sets it, so an unimpaired build compares against zero and moves on.
+            /// </summary>
+            public readonly ulong ReleaseAtMsec;
+
+            public InboundPacket(NetPeer peer, byte channel, byte[] payload, int length, ulong releaseAtMsec = 0)
             {
                 Peer = peer;
                 Channel = channel;
                 Payload = payload;
                 Length = length;
+                ReleaseAtMsec = releaseAtMsec;
             }
         }
 
@@ -1883,7 +2253,8 @@ namespace Nebula
         /// returns it to the pool on drop, after apply, or at world teardown. Callers must not
         /// touch the array after this returns.
         /// </summary>
-        internal void EnqueueInboundPacket(NetPeer peer, byte channel, byte[] payload, int length)
+        internal void EnqueueInboundPacket(
+            NetPeer peer, byte channel, byte[] payload, int length, ulong releaseAtMsec = 0)
         {
             lock (_inboundLock)
             {
@@ -1900,7 +2271,7 @@ namespace Nebula
                     return;
                 }
 
-                _inboundPackets[_inboundTail] = new InboundPacket(peer, channel, payload, length);
+                _inboundPackets[_inboundTail] = new InboundPacket(peer, channel, payload, length, releaseAtMsec);
                 _inboundTail = (_inboundTail + 1) % InboundQueueCapacity;
                 _inboundCount++;
             }
@@ -1921,6 +2292,8 @@ namespace Nebula
                 pending = _inboundCount;
             }
 
+            ulong nowMsec = Time.GetTicksMsec();
+
             while (pending-- > 0)
             {
                 InboundPacket packet;
@@ -1928,6 +2301,12 @@ namespace Nebula
                 {
                     if (_inboundCount == 0) return;
                     packet = _inboundPackets[_inboundHead];
+
+                    // Held back by synthetic impairment. Stop rather than skip: this is a queue, and
+                    // releasing later packets around a held one would reorder every channel including
+                    // the reliable ones, which is not what a delayed link does.
+                    if (packet.ReleaseAtMsec > nowMsec) return;
+
                     // Release the payload reference so a quiet world doesn't pin up to
                     // InboundQueueCapacity packets until the slot is reused.
                     _inboundPackets[_inboundHead] = default;
@@ -2046,6 +2425,38 @@ namespace Nebula
 
                 // Avoid allocating a Stopwatch object every tick.
                 long startTs = System.Diagnostics.Stopwatch.GetTimestamp();
+
+                // STARVATION vs OVERRUN. The guard below measures how long the tick TOOK; this
+                // measures how long since the previous one STARTED. They answer different
+                // questions and only the second can see a world that simply was not dispatched:
+                // the tick body runs on this world's SubThread process group, but the SceneTree
+                // walk that dispatches that group runs on MAIN, so a blocked main thread stops
+                // ticks happening at all while every "took Xms" number stays perfectly healthy.
+                // That is exactly the shape of a multi-second freeze that leaves no slow-tick line.
+                if (_lastTickEntryTs != 0)
+                {
+                    var gapMs = (startTs - _lastTickEntryTs) * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
+                    var expectedMs = 1000.0 / NetRunner.TPS;
+                    if (gapMs > expectedMs * 3)
+                    {
+                        // GC deltas across the gap: a pause this long is either someone doing
+                        // work on main or a collection stopping every thread, and those have
+                        // completely different fixes. Reading the counters costs nothing and
+                        // removes the guess.
+                        int g0 = GC.CollectionCount(0), g1 = GC.CollectionCount(1), g2 = GC.CollectionCount(2);
+                        Log(Debugger.DebugLevel.WARN,
+                            $"[TickStarved] {gapMs:F0} ms since the previous tick started "
+                            + $"(expected ~{expectedMs:F0} ms) - this world was NOT dispatched for "
+                            + $"~{gapMs / expectedMs:F0} ticks. The time was spent OUTSIDE the tick. "
+                            + $"gc across gap=[{g0 - _lastTickGc0},{g1 - _lastTickGc1},{g2 - _lastTickGc2}] "
+                            + $"heap={GC.GetTotalMemory(false) / (1024 * 1024)}MiB");
+                    }
+                }
+                _lastTickEntryTs = startTs;
+                _lastTickGc0 = GC.CollectionCount(0);
+                _lastTickGc1 = GC.CollectionCount(1);
+                _lastTickGc2 = GC.CollectionCount(2);
+
                 ServerProcessTick();
                 double elapsedMs = (System.Diagnostics.Stopwatch.GetTimestamp() - startTs) * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
                 if (elapsedMs > 15)
@@ -2073,6 +2484,13 @@ namespace Nebula
                     {
                         CollectPeerRtt(out int metricsPeers, out double rttMean, out uint rttMax);
                         var metricsJson = _metrics.Emit(WorldId, CurrentTick, metricsPeers, rttMean, rttMax, metricsWindow);
+
+                        // Same window, so the census shares the metrics line's peers/duration.
+                        if (Diagnostics.PayloadCensus.Enabled)
+                        {
+                            Diagnostics.PayloadCensus.Emit(
+                                metricsPeers, metricsWindow, _metrics.TicksInLastWindow);
+                        }
 
                         // Also ship it to any attached debugger for the Performance tab.
                         // ~400 bytes once a second - negligible next to the tick frames.
@@ -2121,9 +2539,11 @@ namespace Nebula
                         // Adaptive lead slew: steer the predicted timeline toward an
                         // RTT-derived lead instead of free-running (see the slew block
                         // above RunClientPredictionTick for why).
-                        uint rttMs = NetRunner.Instance.ServerPeer.IsSet
-                            ? NetRunner.Instance.ServerPeer.RoundTripTime
-                            : 0;
+                        uint rttMs = EffectiveRoundTripMs(
+                            NetRunner.Instance.ServerPeer.IsSet
+                                ? NetRunner.Instance.ServerPeer.RoundTripTime
+                                : 0,
+                            NetRunner.Impairment.LatencyMs);
                         int targetLead = ComputeTargetLeadTicks(rttMs, NetRunner.TPS);
                         int lead = _clientPredictedTick - CurrentTick;
                         int ticksToRun = PredictionTicksThisFrame(lead, targetLead, _eligibleFrameIndex);
@@ -2266,6 +2686,7 @@ namespace Nebula
         internal void ResetForWorldChange()
         {
             if (NetRunner.Instance.IsServer) return;
+
 
             // Let game-side singletons drop cached references to nodes we're about to free
             // (e.g. WorldPlayers.CurrentPlayer) before the nodes are disposed.
@@ -2800,6 +3221,14 @@ namespace Nebula
         /// </summary>
         private Dictionary<UUID, long> _peerPropsCursors = new();
 
+        /// <summary>
+        /// Per-peer partition of <see cref="_tickNodeList"/>, rebuilt once per peer per tick:
+        /// the nodes this peer has input authority over, and everything else. Reused buffers -
+        /// ExportPartition.Partition clears them on entry.
+        /// </summary>
+        private readonly List<NetworkController> _tickOwnedList = new(8);
+        private readonly List<NetworkController> _tickSharedList = new(64);
+
         /// <summary>Snapshot of NetScenes.Values, stable across the phases of one export.</summary>
         private readonly List<NetworkController> _tickNodeList = new(64);
 
@@ -2827,6 +3256,10 @@ namespace Nebula
 
         /// <summary>One-shot guard for the "spawn record can never fit" diagnostic.</summary>
         private bool _loggedUnfittableSpawnRecord;
+
+        /// <summary>Stopwatch timestamp at which the previous tick STARTED, for starvation detection.</summary>
+        private long _lastTickEntryTs;
+        private int _lastTickGc0, _lastTickGc1, _lastTickGc2;
         private NetBuffer _tempSerializerBuffer;
         private Dictionary<ushort, NetBuffer> _nodeBufferPool = new();
         // Hierarchical bitmask for tracking updated nodes per peer
@@ -2887,6 +3320,11 @@ namespace Nebula
                 _peerNodesBuffers.Clear();
                 _peerNodesSerializersList.Clear();
 
+                // Owner-priority: this peer's own nodes are served before the crowd, in every
+                // phase. Disjoint and exhaustive - see ExportPartition.Partition for why both
+                // properties are load-bearing rather than tidy.
+                ExportPartition.Partition(_tickNodeList, peer, _tickOwnedList, _tickSharedList);
+
                 // Fix #5: Get or create pending acks set for this peer
                 if (!_peerPendingAcks.TryGetValue(peerId, out var pendingAcks))
                 {
@@ -2896,79 +3334,171 @@ namespace Nebula
 
                 var ledger = new TickBudgetLedger(payloadBudget);
                 var peerState = PeerStates[peerId];
+                _traceWirePeer = peerId;
                 int spawnSectionsDeferred = 0;
                 int propsSectionsDeferred = 0;
+                // Counted apart from the shared totals: a peer's OWN node being deferred is the
+                // regression signal for owner-priority, and it is invisible inside a total that
+                // is dominated by the crowd.
+                int ownedSpawnSectionsDeferred = 0;
+                int ownedPropsSectionsDeferred = 0;
 
                 var exportPhaseTs = Diagnostics.TickProfiler.Now();
 
-                // ---- PHASE 1: spawns/despawns, world order, first-fit --------------
+                // ---- PHASE 1: spawns/despawns, OWNED then SHARED, world order, first-fit
                 // No cap and no cursor: the spawn set drains (each committed record
                 // leaves it within one RTT of shipping), records are small, and world
                 // order maximizes parent-before-child delivery for the child-spawn
                 // parent gate. A record that doesn't fit is dropped whole - the spawn
                 // serializer is atomic, and its packet-coupled stamps only happen in
                 // CommitExport, so a dropped record retries cleanly next tick.
-                for (var i = 0; i < _tickNodeList.Count; i++)
+                //
+                // The owned/shared split costs nothing here: the child-spawn gate requires the
+                // parent to be Spawned (ACKED, see HasSpawnedForClient), so a child can never
+                // ride the same tick as its parent whatever the iteration order - world order
+                // within each partition is all that gate can use.
+                //
+                // INVARIANT: each node's spawn serializer Exports at most ONCE per peer per
+                // tick. PropsMayRidePacket reads an ancestor's in-flight nested-table membership
+                // from state that a second Export would reset, so a "retry deferred spawns with
+                // leftover budget" pass here would silently corrupt that read.
+                for (var spawnPass = 0; spawnPass < 2; spawnPass++)
                 {
-                    var netController = _tickNodeList[i];
-                    var serializers = netController.NetNode.Serializers;
-                    if (serializers.Length <= SpawnSerializerIndex) continue;
-                    var serializer = serializers[SpawnSerializerIndex];
+                    var spawnPassList = spawnPass == 0 ? _tickOwnedList : _tickSharedList;
+                    for (var i = 0; i < spawnPassList.Count; i++)
+                    {
+                        var netController = spawnPassList[i];
+                        var serializers = netController.NetNode.Serializers;
+                        if (serializers.Length <= SpawnSerializerIndex) continue;
+                        var serializer = serializers[SpawnSerializerIndex];
 
-                    // Framing guess for the section budget: exact when the node already
-                    // has a local id, conservative (worst case +9) when registration
-                    // happens inside the spawn Export itself.
-                    bool hasLocalId = peerState.WorldToPeerNodeMap.TryGetValue(netController.NetId, out var knownLocalId);
-                    bool guessFirst = !hasLocalId || !NodeIdUtils.IsBitSet(_updatedNodesMask, knownLocalId);
-                    bool guessOpens = !hasLocalId || GroupIsClosed(knownLocalId);
+                        // Framing guess for the section budget: exact when the node already
+                        // has a local id, conservative (worst case +9) when registration
+                        // happens inside the spawn Export itself.
+                        bool hasLocalId = peerState.WorldToPeerNodeMap.TryGetValue(netController.NetId, out var knownLocalId);
+                        bool guessFirst = !hasLocalId || !NodeIdUtils.IsBitSet(_updatedNodesMask, knownLocalId);
+                        bool guessOpens = !hasLocalId || GroupIsClosed(knownLocalId);
+
+                        _tempSerializerBuffer.Reset();
+                        var result = serializer.Export(this, peer, _tempSerializerBuffer,
+                            ledger.SectionBudget(guessFirst, guessOpens));
+                        if (result == ExportResult.None || _tempSerializerBuffer.WritePosition == 0)
+                        {
+                            continue;
+                        }
+
+                        // Safety check: ensure node is registered before lookup
+                        if (!peerState.WorldToPeerNodeMap.TryGetValue(netController.NetId, out var localNodeId))
+                        {
+                            Log(Debugger.DebugLevel.ERROR,
+                                $"[ExportState] Node {netController.RawNode?.Name} (NetId={netController.NetId}) wrote data but isn't registered for peer {peerId}.");
+                            continue;
+                        }
+
+                        if (!TryAppendSection(localNodeId, SpawnSerializerIndex, ref ledger))
+                        {
+                            // Over budget: retries next tick. Should only ever be transient
+                            // (a crowded packet) - a record too big for an EMPTY packet can
+                            // never ship and means the budget math or the nested-table split
+                            // is broken. One loud line, not one per tick.
+                            if (!_loggedUnfittableSpawnRecord
+                                && _tempSerializerBuffer.WritePosition > payloadBudget - TickBudgetLedger.MaxSectionOverheadBytes)
+                            {
+                                _loggedUnfittableSpawnRecord = true;
+                                Log(Debugger.DebugLevel.ERROR,
+                                    $"[ExportState] BUG: spawn record for {netController.RawNode?.Name} (NetId={netController.NetId}) is {_tempSerializerBuffer.WritePosition} bytes and exceeds the whole tick budget ({payloadBudget}); it can never be delivered. Further occurrences suppressed.");
+                            }
+                            if (spawnPass == 0) ownedSpawnSectionsDeferred++; else spawnSectionsDeferred++;
+                            continue;
+                        }
+                        pendingAcks.Add(netController);
+                        serializer.CommitExport(this, peer, CurrentTick);
+                    }
+                }
+
+                _profiler?.Record(Diagnostics.TickProfiler.Phase.ExportSpawn, exportPhaseTs);
+                exportPhaseTs = Diagnostics.TickProfiler.Now();
+
+                // ---- PHASE 2a: props for the nodes this peer OWNS ------------------
+                // Served before any SHARED spawn or prop, which is the whole point: a player
+                // walking into a crowd must not have their own character's updates pushed into
+                // next tick by twenty strangers arriving. Running here rather than reserving
+                // budget up front makes it exact instead of predicted - a props section cannot
+                // be measured without committing it, because Export stamps delta-chain, lossy
+                // and chunk-frontier state that is only valid if the bytes actually ship.
+                //
+                // No rotation and no `serving` latch: the owned set is small (one net scene per
+                // player in practice), so a node skipped by PropsMayRidePacket must not stop the
+                // ones behind it. See the cursor note in 2b for why that latch exists there.
+                //
+                // "Never deferred" has real exceptions, all of them correct:
+                //   - a node still Spawning whose spawn record has not been committed cannot
+                //     have props ride (the client could not resolve the id);
+                //   - a section can still be Partial - owner-priority lands the section, it does
+                //     not guarantee every property inside it fits;
+                //   - interest can zero the section out, since owning a node and being
+                //     interested in it are independent.
+                // Start offset rotates with the tick so a fixed order cannot starve the tail
+                // deterministically. There is no per-peer cursor here on purpose: a player owns
+                // one net scene in practice, so a cursor would be per-peer state maintained for
+                // a case that does not arise, while this costs one modulo and removes the
+                // deterministic-starvation failure mode outright. If owned sets ever grow large
+                // enough that a partial rotation matters, promote this to a real cursor like 2b's.
+                var ownedCount = _tickOwnedList.Count;
+                var ownedStart = ownedCount > 1 ? (int)((uint)CurrentTick % (uint)ownedCount) : 0;
+                for (var i = 0; i < ownedCount; i++)
+                {
+                    var netController = _tickOwnedList[(ownedStart + i) % ownedCount];
+                    var serializers = netController.NetNode.Serializers;
+                    if (serializers.Length <= PropsSerializerIndex) continue;
+                    var serializer = serializers[PropsSerializerIndex];
+
+                    // Settled pre-gate: nothing owed, so skip PropsMayRidePacket and the
+                    // Export call outright. Safe to skip the bank-only call too - a
+                    // settled node has no dirty bits to bank by definition.
+                    if (serializer.NothingForPeer(peerId)) continue;
+
+                    bool hasRoom = ledger.Remaining >= PropsSectionFloor;
+                    ushort ownedLocalId = 0;
+                    bool ownedMaySail = hasRoom
+                        && PropsMayRidePacket(netController, peer, ref peerState, out ownedLocalId);
 
                     _tempSerializerBuffer.Reset();
-                    var result = serializer.Export(this, peer, _tempSerializerBuffer,
-                        ledger.SectionBudget(guessFirst, guessOpens));
-                    if (result == ExportResult.None || _tempSerializerBuffer.WritePosition == 0)
+                    if (!ownedMaySail)
+                    {
+                        // Bank this tick's dirty bits exactly as the shared path does - skipping
+                        // a peer without banking loses the tick's changes outright.
+                        serializer.Export(this, peer, _tempSerializerBuffer, 0);
+                        ownedPropsSectionsDeferred++;
+                        continue;
+                    }
+
+                    bool ownedFirst = !NodeIdUtils.IsBitSet(_updatedNodesMask, ownedLocalId);
+                    var ownedResult = serializer.Export(this, peer, _tempSerializerBuffer,
+                        ledger.SectionBudget(ownedFirst, ownedFirst && GroupIsClosed(ownedLocalId)));
+                    if (ownedResult == ExportResult.None || _tempSerializerBuffer.WritePosition == 0)
                     {
                         continue;
                     }
 
-                    // Safety check: ensure node is registered before lookup
-                    if (!peerState.WorldToPeerNodeMap.TryGetValue(netController.NetId, out var localNodeId))
+                    if (!TryAppendSection(ownedLocalId, PropsSerializerIndex, ref ledger))
                     {
                         Log(Debugger.DebugLevel.ERROR,
-                            $"[ExportState] Node {netController.RawNode?.Name} (NetId={netController.NetId}) wrote data but isn't registered for peer {peerId}.");
-                        continue;
-                    }
-
-                    if (!TryAppendSection(localNodeId, SpawnSerializerIndex, ref ledger))
-                    {
-                        // Over budget: retries next tick. Should only ever be transient
-                        // (a crowded packet) - a record too big for an EMPTY packet can
-                        // never ship and means the budget math or the nested-table split
-                        // is broken. One loud line, not one per tick.
-                        if (!_loggedUnfittableSpawnRecord
-                            && _tempSerializerBuffer.WritePosition > payloadBudget - TickBudgetLedger.MaxSectionOverheadBytes)
-                        {
-                            _loggedUnfittableSpawnRecord = true;
-                            Log(Debugger.DebugLevel.ERROR,
-                                $"[ExportState] BUG: spawn record for {netController.RawNode?.Name} (NetId={netController.NetId}) is {_tempSerializerBuffer.WritePosition} bytes and exceeds the whole tick budget ({payloadBudget}); it can never be delivered. Further occurrences suppressed.");
-                        }
-                        spawnSectionsDeferred++;
+                            $"[ExportState] BUG: owned props section for {netController.RawNode?.Name} (NetId={netController.NetId}) exceeded its budget and was dropped.");
                         continue;
                     }
                     pendingAcks.Add(netController);
                     serializer.CommitExport(this, peer, CurrentTick);
                 }
 
-                _profiler?.Record(Diagnostics.TickProfiler.Phase.ExportSpawn, exportPhaseTs);
-                exportPhaseTs = Diagnostics.TickProfiler.Now();
-
-                // ---- PHASE 2: props, round-robin from the per-peer cursor ----------
-                var nodeCount = _tickNodeList.Count;
+                // ---- PHASE 2b: props for everything else, round-robin from the cursor
+                var nodeCount = _tickSharedList.Count;
                 if (nodeCount > 0)
                 {
                     var startIdx = 0;
                     if (_peerPropsCursors.TryGetValue(peerId, out var cursorNetId))
                     {
-                        startIdx = ExportRotation.FindStartIndex(_tickNodeList, cursorNetId);
+                        startIdx = ExportRotation.FindStartIndex(_tickSharedList, cursorNetId);
                     }
 
                     bool serving = true;
@@ -2977,7 +3507,7 @@ namespace Nebula
 
                     for (var k = 0; k < nodeCount; k++)
                     {
-                        var netController = _tickNodeList[(startIdx + k) % nodeCount];
+                        var netController = _tickSharedList[(startIdx + k) % nodeCount];
                         var serializers = netController.NetNode.Serializers;
                         if (serializers.Length <= PropsSerializerIndex) continue;
                         var serializer = serializers[PropsSerializerIndex];
@@ -2990,6 +3520,12 @@ namespace Nebula
                             nextCursorNetId = netController.NetId.Value;
                             cursorPinned = true;
                         }
+
+                        // Settled pre-gate, after the budget latch so the cursor still
+                        // pins fairly: nothing owed means no PropsMayRidePacket lookups,
+                        // no Export, and no bank-only call (a settled node has no dirty
+                        // bits to bank by definition).
+                        if (serializer.NothingForPeer(peerId)) continue;
 
                         // A props section for an uncommitted spawn may only ride a packet
                         // that also carries the spawn data teaching the client the id.
@@ -3041,7 +3577,7 @@ namespace Nebula
                     {
                         // Full rotation served: rotate the start anyway so a fixed
                         // iteration bias can't freeze in.
-                        nextCursorNetId = _tickNodeList[(startIdx + 1) % nodeCount].NetId.Value;
+                        nextCursorNetId = _tickSharedList[(startIdx + 1) % nodeCount].NetId.Value;
                     }
                     _peerPropsCursors[peerId] = nextCursorNetId;
                 }
@@ -3081,10 +3617,11 @@ namespace Nebula
 
                 _profiler?.Record(Diagnostics.TickProfiler.Phase.ExportResync, exportPhaseTs);
 
-                if (_metrics != null)
+                    if (_metrics != null)
                 {
                     _metrics.RecordTickBudget(ledger.Used, ledger.Budget);
-                    _metrics.RecordDeferredSections(spawnSectionsDeferred, propsSectionsDeferred);
+                    _metrics.RecordDeferredSections(spawnSectionsDeferred, propsSectionsDeferred,
+                        ownedSpawnSectionsDeferred, ownedPropsSectionsDeferred);
                     int spawningCount = 0;
                     foreach (var spawnState in peerState.SpawnState.Values)
                     {
@@ -3194,8 +3731,23 @@ namespace Nebula
         /// it to the node's per-peer buffer, opening the node's packet entry on its first
         /// section. Returns false - nothing charged or appended - when it doesn't fit.
         /// </summary>
+        /// <summary>
+        /// <c>NEBULA_TRACE_WIRE=1</c>: logs every appended section on the server ([Wire][S]) and
+        /// every section import on the client ([Wire][C]) with tick, node id, serializer, length
+        /// and leading bytes; NetPropertiesSerializer adds per-property [Props.W]/[Props.R]
+        /// lines. Diff the two for one tick to find the first property whose size differs -
+        /// the only way to localise a framing desync ("invalid baseline age", "Scene ID not
+        /// found", "Parent node not found" bursts). Off by default; costs one static bool test.
+        /// </summary>
+        private static readonly bool TraceWire = System.Environment.GetEnvironmentVariable("NEBULA_TRACE_WIRE") != null;
+        private UUID _traceWirePeer;
         private bool TryAppendSection(ushort localNodeId, int serializerIdx, ref TickBudgetLedger ledger)
         {
+            if (TraceWire)
+            {
+                var span = _tempSerializerBuffer.WrittenSpan;
+                Log($"[Wire][S] tick={CurrentTick} peer={_traceWirePeer} node={localNodeId} ser={serializerIdx} len={span.Length} bytes={System.Convert.ToHexString(span.Length > 48 ? span.Slice(0,48) : span)}");
+            }
             bool firstSection = !NodeIdUtils.IsBitSet(_updatedNodesMask, localNodeId);
             bool opensGroup = firstSection && GroupIsClosed(localNodeId);
             if (!ledger.TryCommitSection(_tempSerializerBuffer.WritePosition, firstSection, opensGroup))
@@ -3393,6 +3945,12 @@ namespace Nebula
                         var serializerInstance = netController.NetNode.Serializers[serializerIdx];
                         // Log($"[ImportState] Node {localNodeId}: Running serializer {serializerIdx} ({serializerInstance.GetType().Name})");
 
+                        if (TraceWire)
+                        {
+                            var remaining = stateBytes.Length - stateBytes.ReadPosition;
+                            var peek = new System.ReadOnlySpan<byte>(stateBytes.RawBuffer, stateBytes.ReadPosition, System.Math.Min(48, remaining));
+                            Log($"[Wire][C] tick={CurrentTick} node={localNodeId} ser={serializerIdx} mask=0b{Convert.ToString(serializerMask, 2)} pos={stateBytes.ReadPosition}/{stateBytes.Length} scene={netController.NetSceneFilePath} next={System.Convert.ToHexString(peek)}");
+                        }
                         try
                         {
                             bool applied = serializerInstance.Import(this, stateBytes, out NetworkController nodeOut);
@@ -3618,7 +4176,13 @@ namespace Nebula
                 // Log(Debugger.DebugLevel.VERBOSE, $"Importing state bytes of size {stateBytes.Length}");
                 if (TryUnpackTickPayload(incomingTick, stateBytes, out var stateBuffer))
                 {
+                    // Whole-import timing, so a stall can be attributed: SpawnImportProfiler
+                    // reports the scene-building share, and the difference between that and this
+                    // is everything else (property apply, change notifications, despawns).
+                    var importTs = System.Diagnostics.Stopwatch.GetTimestamp();
                     importSucceeded = ImportState(stateBuffer);
+                    Diagnostics.SpawnImportProfiler.EndTick(incomingTick,
+                        Diagnostics.SpawnImportProfiler.Elapsed(importTs));
 
                     // Only an applied-and-acked payload may serve as a future baseline, so this is
                     // gated on exactly the same condition as the ack below.

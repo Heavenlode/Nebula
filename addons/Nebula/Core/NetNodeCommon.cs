@@ -10,7 +10,7 @@ namespace Nebula.Utility
 {
     /// <summary>
     /// This class contains methods for serializing and deserializing network nodes to and from BSON.
-    /// The logic is extracted to this utility class to reuse it across <see cref="NetNode"/>, <see cref="NetNode2D"/>, and <see cref="NetNode3D"/>.
+    /// The logic is extracted to this utility class to reuse it across <see cref="NetNode"/>, <see cref="NetNode2D"/>, <see cref="NetNode3D"/>, <see cref="NetRigidBody3D"/>, <see cref="NetStaticBody3D"/>, and <see cref="NetCharacterBody3D"/>.
     /// </summary>
     internal static class NetNodeCommon
     {
@@ -65,6 +65,12 @@ namespace Nebula.Utility
                         nn2d.WriteBsonProperties(nodeData, context);
                     else if (targetNode is NetNode nn)
                         nn.WriteBsonProperties(nodeData, context);
+                    else if (targetNode is NetRigidBody3D nrb3d)
+                        nrb3d.WriteBsonProperties(nodeData, context);
+                    else if (targetNode is NetCharacterBody3D ncb3d)
+                        ncb3d.WriteBsonProperties(nodeData, context);
+                    else if (targetNode is NetStaticBody3D nsb3d)
+                        nsb3d.WriteBsonProperties(nodeData, context);
                     
                     // Only add if there are actual properties
                     if (nodeData.ElementCount > 0)
@@ -238,6 +244,12 @@ namespace Nebula.Utility
                         nn2d.ReadBsonProperties(nodeProps);
                     else if (targetNode is NetNode nn)
                         nn.ReadBsonProperties(nodeProps);
+                    else if (targetNode is NetRigidBody3D nrb3d)
+                        nrb3d.ReadBsonProperties(nodeProps);
+                    else if (targetNode is NetCharacterBody3D ncb3d)
+                        ncb3d.ReadBsonProperties(nodeProps);
+                    else if (targetNode is NetStaticBody3D nsb3d)
+                        nsb3d.ReadBsonProperties(nodeProps);
                 }
                 catch (Exception e)
                 {

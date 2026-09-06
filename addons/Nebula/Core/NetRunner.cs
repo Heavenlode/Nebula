@@ -585,27 +585,21 @@ namespace Nebula
         /// <summary>Tick-channel packet header: the int32 tick number.</summary>
         private const int TickHeaderBytes = sizeof(int);
 
-        /// <summary>NebulaPack framing: the flags byte (see NebulaPack.WritePacket).</summary>
-        private const int PackFlagsBytes = 1;
-
-        /// <summary>NebulaPack framing: the optional uint16 checksum, budgeted worst-case.</summary>
-        private const int PackChecksumBytes = sizeof(ushort);
-
         /// <summary>
         /// Headroom subtracted from the tick payload budget to absorb small framing
-        /// variations (NebulaPack baseline-age byte, future flags).
+        /// variations (future flags).
         /// </summary>
         public const int TickBudgetHeadroom = 16;
 
         /// <summary>
         /// Per-peer byte budget for one tick's serialized payload (the ExportState output),
-        /// derived from the MTU: MTU minus the tick header, pack flags, checksum worst
-        /// case, and <see cref="TickBudgetHeadroom"/>. The export path keeps every peer
-        /// payload within this so the packet never exceeds the MTU and the client's decode
-        /// ceiling (MTU + 64) is unreachable.
+        /// derived from the MTU: MTU minus the tick header and <see cref="TickBudgetHeadroom"/>.
+        /// The export path keeps every peer payload within this so the packet never exceeds
+        /// the MTU. A tick packet is [tick:int32][payload]; there is no compression layer, the
+        /// payload is bit-packed by the serializers.
         /// </summary>
         public static int TickPayloadBudget(int mtu)
-            => mtu - TickHeaderBytes - PackFlagsBytes - PackChecksumBytes - TickBudgetHeadroom;
+            => mtu - TickHeaderBytes - TickBudgetHeadroom;
 
         private static bool? _logTickPayloads;
         /// <summary>
@@ -654,28 +648,6 @@ namespace Nebula
         public static bool TraceSpawnIds =>
             _traceSpawnIds ??= OS.HasEnvironment("NEBULA_TRACE_SPAWN_IDS")
                 || ProjectSettings.GetSetting("Nebula/config/debug/trace_spawn_ids", false).AsBool();
-
-        private static bool? _packEnabled;
-        /// <summary>
-        /// When enabled via <c>Nebula/config/pack/enabled</c>, the server delta-compresses tick
-        /// payloads against a baseline the peer has acknowledged (see NebulaPack).
-        ///
-        /// This is a server-side, per-packet decision — every packet says whether it is a delta or
-        /// raw — so clients decode both regardless of their own setting and no handshake is needed.
-        /// Cached on first read; toggling takes effect on the next run.
-        /// </summary>
-        public static bool PackEnabled =>
-            _packEnabled ??= ProjectSettings.GetSetting("Nebula/config/pack/enabled", true).AsBool();
-
-        private static bool? _packValidate;
-        /// <summary>
-        /// When enabled via <c>Nebula/config/pack/validate</c>, the server appends a checksum of the
-        /// raw payload and the client verifies it after decoding. Costs 2 bytes per packet and
-        /// catches any window divergence immediately instead of letting it corrupt state silently.
-        /// Recommended on in development.
-        /// </summary>
-        public static bool PackValidate =>
-            _packValidate ??= ProjectSettings.GetSetting("Nebula/config/pack/validate", true).AsBool();
 
         private static bool? _perWorldThreadGroup;
         /// <summary>

@@ -18,27 +18,6 @@ public class QuantizedCodecTests
 {
     private static NetBuffer Buffer() => new(64, usePool: false);
 
-    // ───────────── varints ─────────────
-
-    [NebulaUnitTest]
-    public void ZigZagVarInt_RoundTrips_WithExpectedWidths()
-    {
-        (int value, int bytes)[] cases =
-        {
-            (0, 1), (1, 1), (-1, 1), (63, 1), (-64, 1), (64, 2), (-65, 2),
-            (8191, 2), (-8192, 2), (8192, 3), (30000, 3), (-30000, 3),
-            (1 << 20, 4), (int.MaxValue, 5), (int.MinValue, 5),
-        };
-        foreach (var (value, bytes) in cases)
-        {
-            var buf = Buffer();
-            NetWriter.WriteZigZagVarInt(buf, value);
-            Assert.Equal(bytes, buf.Length);
-            buf.ResetRead();
-            Assert.Equal(value, NetReader.ReadZigZagVarInt(buf));
-        }
-    }
-
     // ───────────── grid ─────────────
 
     [NebulaUnitTest]
@@ -219,37 +198,48 @@ public class QuantizedCodecTests
 
     // ───────────── small-delta forms ─────────────
 
+    // [class:2][N x width]: the smallest class every component fits is chosen; a component
+    // beyond the widest class declines (nothing written) and the caller takes the full form.
     [NebulaUnitTest]
-    public void SmallDelta_RangeBoundaries_FallBackToFull()
+    public void SmallDelta_PicksSmallestClass_DeclinesBeyondWidest()
     {
-        (int count, int max)[] shapes = { (1, short.MaxValue), (2, 2047), (3, 511) };
-        foreach (var (count, max) in shapes)
+        (int count, int[] widths)[] shapes = { (1, new[] { 4, 6, 9, 16 }), (2, new[] { 5, 7, 9, 12 }), (3, new[] { 4, 6, 8, 10 }) };
+        foreach (var (count, widths) in shapes)
         {
             Span<int> d = stackalloc int[3];
             Span<int> rd = stackalloc int[3];
-            foreach (var edge in new[] { max, -max - 1, 0, 1, -1 })
+            for (int cls = 0; cls < widths.Length; cls++)
             {
-                for (int i = 0; i < count; i++) d[i] = i == 0 ? edge : -edge / 2;
-                var buf = Buffer();
-                Assert.True(QuantizedCodec.TryWriteSmallDelta(buf, d, count), $"N={count} edge {edge} should fit");
-                Assert.Equal(QuantizedCodec.SmallDeltaBytes(count), buf.Length);
-                buf.ResetRead();
-                QuantizedCodec.ReadSmallDelta(buf, rd, count);
-                for (int i = 0; i < count; i++) Assert.Equal(d[i], rd[i]);
+                int max = (1 << (widths[cls] - 1)) - 1;
+                foreach (var edge in new[] { max, -max - 1, cls == 0 ? 0 : (1 << (widths[cls - 1] - 1)) })
+                {
+                    for (int i = 0; i < count; i++) d[i] = i == 0 ? edge : -edge / 3;
+                    var buf = Buffer();
+                    Assert.True(QuantizedCodec.TryWriteSmallDelta(buf, d, count), $"N={count} class {cls} edge {edge} should fit");
+                    Assert.Equal(QuantizedCodec.SmallDeltaBits(count, cls), buf.WrittenBits);
+                    buf.ResetRead();
+                    QuantizedCodec.ReadSmallDelta(buf, rd, count);
+                    for (int i = 0; i < count; i++) Assert.Equal(d[i], rd[i]);
+                }
             }
-            foreach (var over in new[] { max + 1, -max - 2 })
+            int widest = QuantizedCodec.SmallDeltaMaxMagnitude(count);
+            foreach (var over in new[] { widest + 1, -widest - 2 })
             {
                 for (int i = 0; i < count; i++) d[i] = 0;
                 d[count - 1] = over;
                 var buf = Buffer();
                 Assert.False(QuantizedCodec.TryWriteSmallDelta(buf, d, count), $"N={count} {over} must not fit");
-                Assert.Equal(0, buf.Length);
+                Assert.Equal(0, buf.WrittenBits);
                 QuantizedCodec.WriteCodes(buf, d, count);
                 buf.ResetRead();
                 QuantizedCodec.ReadCodes(buf, rd, count);
                 for (int i = 0; i < count; i++) Assert.Equal(d[i], rd[i]);
             }
         }
+        // The walking case from the plan: two ~85-step components take the 9-bit class.
+        var walk = Buffer();
+        Assert.True(QuantizedCodec.TryWriteSmallDelta(walk, stackalloc[] { 85, -60 }, 2));
+        Assert.Equal(2 + 2 * 9, walk.WrittenBits);
     }
 
     // ───────────── quaternion ─────────────

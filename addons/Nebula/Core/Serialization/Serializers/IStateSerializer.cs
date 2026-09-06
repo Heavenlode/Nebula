@@ -10,14 +10,14 @@ namespace Nebula.Serialization.Serializers
 
         /// <summary>
         /// Everything the serializer wanted to send was written. A self-limiting
-        /// serializer guarantees the section is within maxBytes; an atomic serializer
+        /// serializer guarantees the section is within maxBits; an atomic serializer
         /// may have exceeded it, in which case the host drops the bytes and never calls
         /// CommitExport.
         /// </summary>
         Written,
 
         /// <summary>
-        /// The serializer self-limited to maxBytes and has more data queued for this
+        /// The serializer self-limited to maxBits and has more data queued for this
         /// peer. The host uses this to place the round-robin cursor.
         /// </summary>
         Partial,
@@ -58,8 +58,9 @@ namespace Nebula.Serialization.Serializers
         /// Server-side only. Serialize and write data to the provided buffer.
         /// Writes nothing if there's no data to export.
         ///
-        /// Budget contract: <paramref name="maxBytes"/> is the byte budget for this
-        /// section. maxBytes &lt;= 0 means "deferred this tick": write NOTHING, but
+        /// Budget contract: <paramref name="maxBits"/> is the BIT budget for this
+        /// section (packets are bit-packed; sections concatenate at bit granularity).
+        /// maxBits &lt;= 0 means "deferred this tick": write NOTHING, but
         /// preserve any would-be-sent data for a later tick (e.g. merge dirty bits into
         /// a pending mask) and still run delivery-independent state transitions.
         ///
@@ -68,16 +69,16 @@ namespace Nebula.Serialization.Serializers
         /// clears) — must NOT be stamped here. It belongs in <see cref="CommitExport"/>,
         /// which the host calls iff the bytes from the immediately preceding Export on
         /// this instance were committed to the packet. An atomic serializer (one that
-        /// cannot split its record) may write more than maxBytes; the host then discards
-        /// the bytes and never calls CommitExport — sound only because of this rule.
-        /// A self-limiting serializer must never exceed maxBytes; the host always
+        /// cannot split its record) may write more than maxBits; the host then discards
+        /// the bits and never calls CommitExport — sound only because of this rule.
+        /// A self-limiting serializer must never exceed maxBits; the host always
         /// commits what it wrote.
         /// </summary>
         /// <param name="currentWorld">The current world runner</param>
         /// <param name="peer">The target peer</param>
         /// <param name="buffer">Buffer to write serialized data into</param>
-        /// <param name="maxBytes">Byte budget for this section (see contract above)</param>
-        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes);
+        /// <param name="maxBits">Bit budget for this section (see contract above)</param>
+        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBits);
 
         /// <summary>
         /// Server-side only. The bytes written by the immediately preceding

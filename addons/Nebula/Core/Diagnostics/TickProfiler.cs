@@ -88,22 +88,10 @@ namespace Nebula.Diagnostics
             ExportResync,
             /// <summary>Per-tick serializer Cleanup across every node. Nested in Export.</summary>
             ExportCleanup,
-            /// <summary>NebulaPack compression plus handing each peer's packet to the transport.</summary>
-            PackSend,
-            /// <summary>NebulaPack.WritePacket: baseline pick, delta measure, encode. Nested in PackSend.</summary>
-            PackCompress,
-            /// <summary>Searching the acked window for the baseline that compresses best. Nested in PackCompress.</summary>
-            PackPick,
-            /// <summary>Encoding the delta against the chosen baseline. Nested in PackCompress.</summary>
-            PackEncode,
-            /// <summary>Copying the payload uncompressed, when no baseline won. Nested in PackCompress.</summary>
-            PackRaw,
-            /// <summary>Payload checksum. Nested in PackCompress.</summary>
-            PackChecksum,
-            /// <summary>Handing the finished packet to ENet. Nested in PackSend.</summary>
-            PackTransmit,
-            /// <summary>Recording the payload as a future delta baseline. Nested in PackSend.</summary>
-            PackBaseline,
+            /// <summary>Framing each peer's tick packet and handing it to the transport.</summary>
+            Send,
+            /// <summary>Handing the finished packet to ENet. Nested in Send.</summary>
+            Transmit,
             /// <summary>Despawn bookkeeping and deleting fully-acked nodes.</summary>
             Despawn,
 
@@ -114,8 +102,7 @@ namespace Nebula.Diagnostics
         {
             "inbound", "joins", "ack_sweep", "scene_scan", "gameplay", "netfunctions",
             "export", "exp_spawn", "exp_props", "exp_resync", "exp_cleanup",
-            "pack_send", "pack_compress", "pk_pick", "pk_encode", "pk_raw", "pk_checksum",
-            "pack_transmit", "pack_baseline", "despawn",
+            "send", "transmit", "despawn",
         };
 
         private const int PhaseCount = (int)Phase.Count;
@@ -147,7 +134,7 @@ namespace Nebula.Diagnostics
 
         /// <summary>
         /// The profiler for the world ticking on THIS thread, so library code reached from the tick
-        /// (NebulaPack, serializers) can report without every signature growing a profiler
+        /// (serializers, NetBuffer) can report without every signature growing a profiler
         /// parameter. Thread-static because worlds tick on their own threads when per-world thread
         /// groups are on — a plain static would interleave two worlds' numbers into one bucket.
         /// Null whenever profiling is off, or on any thread that is not mid-tick.
@@ -162,18 +149,6 @@ namespace Nebula.Diagnostics
         /// <summary>Things worth counting rather than timing.</summary>
         public enum Counter
         {
-            /// <summary>Baselines measured by PickBaseline. Distinguishes a wide search from a slow one.</summary>
-            PackCandidates,
-            /// <summary>Payload bytes fed to a measuring pass, i.e. the search's real workload.</summary>
-            PackBytesMeasured,
-            /// <summary>Packets where a baseline was chosen, i.e. the denominator for the two below.</summary>
-            PackDeltasChosen,
-            /// <summary>Sum of chosen baseline ages. Mean age says how far back the winner tends to be.</summary>
-            PackChosenAgeSum,
-            /// <summary>Bytes in literal (differing) runs — the half scanned one byte at a time.</summary>
-
-            /// <summary>Candidates that reached an exact measurement, after digest ranking.</summary>
-            PackMeasured,
             /// <summary>Props sections served from the section memo (bytes shared, writer skipped).</summary>
             PropsMemoHit,
             /// <summary>Eligible sections that encoded fresh and seeded a memo entry.</summary>
@@ -188,23 +163,28 @@ namespace Nebula.Diagnostics
             /// sent" x peers - the latter is what the pre-ring pending set cost.
             /// </summary>
             AckNodesVisited,
+            /// <summary>
+            /// Bits spent padding to a byte boundary by NetBuffer's silent auto-align (every
+            /// byte-granular op on a mid-byte cursor, plus the engine's end-of-section pads).
+            /// The honesty counter for the bit stream: padding is invisible everywhere else.
+            /// </summary>
+            PadBits,
             /// <summary>Interest resync sections committed (phase 3), summed over peers.</summary>
             ResyncSections,
             /// <summary>
-            /// Wire bytes those sections cost INCLUDING framing (node header, group header) -
-            /// the only attribution of resync cost; PayloadCensus never sees these bytes.
+            /// Wire bits those sections cost INCLUDING their worst-case framing charge - the
+            /// only attribution of resync cost; PayloadCensus never sees these bits.
             /// </summary>
-            ResyncBytes,
+            ResyncBits,
             Count,
         }
 
         private static readonly string[] CounterNames =
         {
-            "pk_candidates", "pk_bytes_measured", "pk_deltas_chosen",
-            "pk_chosen_age_sum", "pk_measured",
             "memo_hit", "memo_miss", "memo_slow", "memo_overflow",
             "ack_nodes_visited",
-            "resync_sections", "resync_bytes",
+            "pad_bits",
+            "resync_sections", "resync_bits",
         };
         private const int CounterCount = (int)Counter.Count;
 

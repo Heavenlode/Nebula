@@ -29,9 +29,10 @@ public class PropsQuantizedWireTests
     private const float GridStep = 0.01f;
     private const float QuatStep = 0.002f;
 
-    private const int MaskBytes = 1;
-    private const int AgeBytes = 1;
-    private const int FlagBytes = 1;
+    private const int PropertyCount = 4;
+    private const int MaskModeBits = 1;
+    private const int AgeBits = 5;
+    private const int EncodingBits = 2;
 
     private sealed class Fixture : IDisposable
     {
@@ -117,64 +118,86 @@ public class PropsQuantizedWireTests
         }
     }
 
-    private static DeltaEncodingFlags Flag(NetBuffer buf) => (DeltaEncodingFlags)buf.WrittenSpan[MaskBytes + AgeBytes];
+    /// <summary>Parses the header and returns the first property's encoding flag plus the header's bit cost.</summary>
+    private static DeltaEncodingFlags Flag(NetBuffer buf) => Flag(buf, out _);
+
+    private static DeltaEncodingFlags Flag(NetBuffer buf, out int headerBits)
+    {
+        buf.ResetRead();
+        bool reuse = buf.ReadBool();
+        buf.ReadBits(AgeBits);
+        if (!reuse) buf.ReadBits(PropertyCount);          // flat mask: one bit per property
+        headerBits = buf.ReadBitPosition;
+        return (DeltaEncodingFlags)buf.ReadBits(EncodingBits);
+    }
+
+    /// <summary>Section bytes for a header of <paramref name="headerBits"/> plus a value of <paramref name="valueBits"/>.</summary>
+    private static int Bytes(int headerBits, int valueBits) => (headerBits + EncodingBits + valueBits + 7) / 8;
 
     private static bool BitEqual(Vector3 a, Vector3 b)
         => BitConverter.SingleToInt32Bits(a.X) == BitConverter.SingleToInt32Bits(b.X)
         && BitConverter.SingleToInt32Bits(a.Y) == BitConverter.SingleToInt32Bits(b.Y)
         && BitConverter.SingleToInt32Bits(a.Z) == BitConverter.SingleToInt32Bits(b.Z);
 
-    // 1. Section sizes match the plan's table, absolute then delta, per type.
+    // 1. Section sizes match the plan's table, absolute then delta, per type. The header
+    //    is [reuse:1][age:5][mask:4 bits] on the first send (10 bits) and 6 bits when the
+    //    mask equals the acked baseline's; every value pays a 2-bit encoding selector.
     [NebulaUnitTest]
     public void SectionSizes_MatchTheTable()
     {
         using var f = new Fixture();
-        const int Overhead = MaskBytes + AgeBytes + FlagBytes;
+        const int FullHeader = MaskModeBits + AgeBits + PropertyCount;
+        const int ReuseHeader = MaskModeBits + AgeBits;
 
-        // Unit vector at rest (+Y): octahedral (0, 0) -> two 1-byte varints.
+        // Unit vector at rest (+Y): octahedral (0, 0) -> two 1-bit magnitude forms.
         var b = f.Tick(1, UnitDir);
-        Assert.Equal(DeltaEncodingFlags.Absolute, Flag(b));
-        Assert.Equal(Overhead + 2, b.Length);
-        // One walking tick (0.0017 rad): 2x12-bit small delta in 3 bytes.
+        Assert.Equal(DeltaEncodingFlags.Absolute, Flag(b, out int h));
+        Assert.Equal(FullHeader, h);
+        Assert.Equal(Bytes(FullHeader, 1 + 1), b.Length);
+        // One walking tick (0.0017 rad): 2x9-bit small delta with its 2-bit class, mask reused.
         f.Set(UnitDir, new Vector3(MathF.Sin(0.0017f), MathF.Cos(0.0017f), 0f));
         b = f.Tick(2, UnitDir);
-        Assert.Equal(DeltaEncodingFlags.DeltaSmall, Flag(b));
-        Assert.Equal(Overhead + 3, b.Length);
+        Assert.Equal(DeltaEncodingFlags.DeltaSmall, Flag(b, out h));
+        Assert.Equal(ReuseHeader, h);
+        Assert.Equal(Bytes(ReuseHeader, 2 + 2 * 9), b.Length);
 
-        // Float 601.23 at 0.01: code 60123 -> 3-byte varint; +0.05 -> int16 delta.
+        // Float 601.23 at 0.01: code 60123 -> 22-bit magnitude form; +0.05 -> 5 steps -> 4-bit class.
         b = f.Tick(3, Height);
-        Assert.Equal(DeltaEncodingFlags.Absolute, Flag(b));
-        Assert.Equal(Overhead + 3, b.Length);
+        Assert.Equal(DeltaEncodingFlags.Absolute, Flag(b, out h));
+        Assert.Equal(FullHeader, h);
+        Assert.Equal(Bytes(FullHeader, 22), b.Length);
         f.Set(Height, 601.28f);
         b = f.Tick(4, Height);
-        Assert.Equal(DeltaEncodingFlags.DeltaSmall, Flag(b));
-        Assert.Equal(Overhead + 2, b.Length);
+        Assert.Equal(DeltaEncodingFlags.DeltaSmall, Flag(b, out h));
+        Assert.Equal(ReuseHeader, h);
+        Assert.Equal(Bytes(ReuseHeader, 2 + 4), b.Length);
 
-        // Position (1200, -35.5, 4000) at 0.01: varints of 3, 2 and 3 bytes (codes 120000,
-        // -3550, 400000); a ship tick at 100 u/s (3.33 u) is 333 steps -> 3x10-bit in a
-        // uint32; at 200 u/s (667 steps) it overflows the small form and falls back to 3
-        // varints (2 bytes each).
+        // Position (1200, -35.5, 4000) at 0.01: codes 120000, -3550, 400000 -> magnitude
+        // forms of 23, 18 and 25 bits (bit length + 6); a ship tick at 100 u/s (333 steps) is the 10-bit
+        // class; at 200 u/s (667 steps) the small form declines and it falls back to three
+        // magnitude forms.
         b = f.Tick(5, Position);
-        Assert.Equal(DeltaEncodingFlags.Absolute, Flag(b));
-        Assert.Equal(Overhead + 3 + 2 + 3, b.Length);
+        Assert.Equal(DeltaEncodingFlags.Absolute, Flag(b, out h));
+        Assert.Equal(FullHeader, h);
+        Assert.Equal(Bytes(FullHeader, 23 + 18 + 25), b.Length);
         f.Set(Position, new Vector3(1203.33f, -35.5f, 4000f));
         b = f.Tick(6, Position);
-        Assert.Equal(DeltaEncodingFlags.DeltaSmall, Flag(b));
-        Assert.Equal(Overhead + 4, b.Length);
+        Assert.Equal(DeltaEncodingFlags.DeltaSmall, Flag(b, out h));
+        Assert.Equal(Bytes(ReuseHeader, 2 + 3 * 10), b.Length);
         f.Set(Position, new Vector3(1210f, -35.5f, 4000f));
         b = f.Tick(7, Position);
-        Assert.Equal(DeltaEncodingFlags.DeltaFull, Flag(b));
-        Assert.Equal(Overhead + 2 + 1 + 1, b.Length);
+        Assert.Equal(DeltaEncodingFlags.DeltaFull, Flag(b, out h));
+        Assert.Equal(Bytes(ReuseHeader, 16 + 1 + 1), b.Length);   // 667 steps: 16 bits; two zero components: 1 bit each
 
-        // Quaternion: packed uint32, absolute only, QuatCompressed flag.
+        // Quaternion: smallest-three at 10 bits, absolute only: 2 + 30 bits.
         f.Set(Rotation, new Quaternion(Vector3.Up, 0.3f));
         b = f.Tick(8, Rotation);
-        Assert.Equal(DeltaEncodingFlags.Absolute | DeltaEncodingFlags.QuatCompressed, Flag(b));
-        Assert.Equal(Overhead + 4, b.Length);
+        Assert.Equal(DeltaEncodingFlags.Absolute, Flag(b, out h));
+        Assert.Equal(Bytes(FullHeader, 2 + 3 * 10), b.Length);
         f.Set(Rotation, new Quaternion(Vector3.Up, 0.35f));
         b = f.Tick(9, Rotation);
-        Assert.Equal(DeltaEncodingFlags.Absolute | DeltaEncodingFlags.QuatCompressed, Flag(b));
-        Assert.Equal(Overhead + 4, b.Length);
+        Assert.Equal(DeltaEncodingFlags.Absolute, Flag(b, out h));
+        Assert.Equal(Bytes(ReuseHeader, 2 + 3 * 10), b.Length);
     }
 
     // 2. The walking script: 60 ticks of a direction advancing 0.0017 rad and a height

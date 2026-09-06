@@ -13,10 +13,10 @@ namespace Nebula.Testing.Unit;
 /// and a malformed age byte must discard rather than index the ring negatively and throw.
 ///
 /// Built on the Protocol-free test constructor; wire format per payload is
-/// [presence mask][baselineAge byte][property data], where the mask is flat for scenes with
-/// one or two mask bytes (this fixture: 2 props, 1 byte) and two-level ([header][nonzero
-/// bytes], see PresenceMask) for wider ones. These tests use an empty presence mask so no
-/// property bytes follow.
+/// [maskMode:1][baselineAge:5][presence mask][property data] padded to a byte, where the
+/// mask is flat (one bit per property; this fixture: 2 props, 2 bits) for scenes with one
+/// or two mask bytes and two-level for wider ones (see PresenceMask). These tests use an
+/// empty presence mask so no property bits follow.
 /// </summary>
 [NebulaUnitTest]
 public class SnapshotBaselineTests
@@ -29,12 +29,14 @@ public class SnapshotBaselineTests
             [SerialVariantType.Int, SerialVariantType.Bool]);
     }
 
-    /// <summary>One payload with an empty presence mask: [mask=0][age], no property bytes.</summary>
+    /// <summary>One payload with an empty presence mask: [reuse=0][age][mask=00], no property bits.</summary>
     private static NetBuffer Payload(byte baselineAge)
     {
         var buf = new NetBuffer(16, usePool: false);
-        NetWriter.WriteByte(buf, 0);
-        NetWriter.WriteByte(buf, baselineAge);
+        buf.WriteBool(false);
+        buf.WriteBits(baselineAge, 5);
+        buf.WriteBits(0, 2);
+        buf.AlignWrite();
         buf.ResetRead();
         return buf;
     }
@@ -90,13 +92,14 @@ public class SnapshotBaselineTests
         node.Free();
     }
 
-    // 4. A corrupt age byte (beyond MAX_DELTA_AGE) discards instead of trusting garbage.
+    // 4. A corrupt age (beyond MAX_DELTA_AGE = 30; the 5-bit field's only such value is 31)
+    //    discards instead of trusting garbage.
     [NebulaUnitTest]
     public void AgeBeyondMaxDeltaAge_Discarded()
     {
         var serializer = CreateClientSerializer(out var node);
 
-        Assert.False(serializer.DeserializeForTests(Payload(baselineAge: 200), currentTick: 300));
+        Assert.False(serializer.DeserializeForTests(Payload(baselineAge: 31), currentTick: 300));
 
         node.Free();
     }

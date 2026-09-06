@@ -204,15 +204,15 @@ public class PropsMemoTests
         var full = Buffer();
         Assert.Equal(ExportResult.Written, f.Serializer.Export(f.World, f.Peer, full, int.MaxValue));
 
-        // Budget one byte below the full section: the signature matches but P3 fails →
+        // Budget one bit below the full section: the signature matches but P3 fails →
         // no hit, and the writer self-limits exactly as before the memo existed (some
         // props ship, the last rewinds into PendingDirtyMask, result is Partial).
-        var tightBudget = full.WrittenSpan.Length - 1;
+        var tightBudget = full.WrittenBits - 1;
         var tight = Buffer();
         var result = f.Serializer.Export(f.World, f.Peer, tight, tightBudget);
         Assert.Equal(0, f.Serializer.MemoHitsForTests);
         Assert.Equal(ExportResult.Partial, result);
-        Assert.True(tight.WrittenSpan.Length <= tightBudget);
+        Assert.True(tight.WrittenBits <= tightBudget);
         Assert.NotEqual(0, f.Serializer.PendingDirtyByteForTests(f.PeerId, 0));
     }
 

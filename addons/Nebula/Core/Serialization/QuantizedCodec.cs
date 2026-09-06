@@ -10,10 +10,10 @@ namespace Nebula.Serialization
     ///
     /// <para>A quantized value is N signed integer step counts ("codes"): float N=1, Vector2
     /// N=2, Vector3 N=3, unit-vector Vector3 N=2 (octahedral u, w). Codes travel either
-    /// absolute (N zigzag varints), as a SMALL delta packed into one word (3x10 bits in a
-    /// uint32, 2x12 bits in three bytes, one int16), or as a FULL delta (N zigzag varints).
-    /// Quaternions are the exception: smallest-three packed into a uint32 at
-    /// <see cref="ResolveQuatBits"/> bits per component, absolute only.</para>
+    /// absolute (N magnitude forms, see BitCodec), as a SMALL delta (a 2-bit
+    /// width class + N x width bits), or as a FULL delta (N magnitude forms). Quaternions are
+    /// the exception: smallest-three at <see cref="ResolveQuatBits"/> bits per component,
+    /// absolute only.</para>
     ///
     /// <para><b>Exactness contract.</b> Deltas are exact because both sides compute
     /// <c>Quantize(baseline)</c> from bit-identical floats with identical code: the server's
@@ -34,7 +34,8 @@ namespace Nebula.Serialization
     internal static class QuantizedCodec
     {
         /// <summary>
-        /// Most bits per smallest-three component: 2 index bits + 3 * 10 fits a uint32.
+        /// Most bits per smallest-three component a QUANTIZED quaternion may use: 2 + 3 * 10
+        /// keeps the packed word inside 32 bits so it can serve as the dead-band's grid code.
         /// </summary>
         public const int MaxQuatBits = 10;
         public const int MinQuatBits = 2;
@@ -43,16 +44,6 @@ namespace Nebula.Serialization
         /// <summary>Largest component count of any quantized type (Vector3).</summary>
         public const int MaxComponents = 3;
 
-        // Small-delta word shapes. Ranges are the per-component limits; a delta outside falls
-        // back to the full varint form.
-        private const int Small3Bits = 10;
-        private const int Small3Bias = 1 << (Small3Bits - 1);          // 512
-        private const int Small3Max = Small3Bias - 1;                    // 511
-        private const int Small3Bytes = 4;
-        private const int Small2Bits = 12;
-        private const int Small2Bias = 1 << (Small2Bits - 1);          // 2048
-        private const int Small2Max = Small2Bias - 1;                    // 2047
-        private const int Small2Bytes = 3;
 
         /// <summary>Smallest-three components live in [-1/sqrt2, 1/sqrt2].</summary>
         private const float QuatHalfRange = 0.70710678f;
@@ -272,7 +263,7 @@ namespace Nebula.Serialization
         /// Smallest-three at <paramref name="bits"/> per component, largest forced positive,
         /// components rounded (not truncated) to the grid: [index:2][a][b][c] in a uint32.
         /// </summary>
-        public static uint PackQuat(Quaternion q, int bits)
+        public static ulong PackQuat(Quaternion q, int bits)
         {
             float absX = MathF.Abs(q.X), absY = MathF.Abs(q.Y), absZ = MathF.Abs(q.Z), absW = MathF.Abs(q.W);
             int maxIndex = 0;
@@ -301,7 +292,7 @@ namespace Nebula.Serialization
             uint ua = QuatComponentCode(a, maxCode);
             uint ub = QuatComponentCode(b, maxCode);
             uint uc = QuatComponentCode(c, maxCode);
-            return (uint)maxIndex | (ua << QuatIndexBits) | (ub << (QuatIndexBits + bits)) | (uc << (QuatIndexBits + 2 * bits));
+            return (ulong)maxIndex | ((ulong)ua << QuatIndexBits) | ((ulong)ub << (QuatIndexBits + bits)) | ((ulong)uc << (QuatIndexBits + 2 * bits));
         }
 
         private static uint QuatComponentCode(float component, uint maxCode)
@@ -313,14 +304,14 @@ namespace Nebula.Serialization
             return (uint)r;
         }
 
-        public static Quaternion UnpackQuat(uint packed, int bits)
+        public static Quaternion UnpackQuat(ulong packed, int bits)
         {
-            uint mask = (1u << bits) - 1;
+            ulong mask = (1UL << bits) - 1;
             uint maxCode = QuatMaxCode(bits);
-            int maxIndex = (int)(packed & ((1u << QuatIndexBits) - 1));
-            uint ua = Math.Min((packed >> QuatIndexBits) & mask, maxCode);
-            uint ub = Math.Min((packed >> (QuatIndexBits + bits)) & mask, maxCode);
-            uint uc = Math.Min((packed >> (QuatIndexBits + 2 * bits)) & mask, maxCode);
+            int maxIndex = (int)(packed & ((1UL << QuatIndexBits) - 1));
+            uint ua = Math.Min((uint)((packed >> QuatIndexBits) & mask), maxCode);
+            uint ub = Math.Min((uint)((packed >> (QuatIndexBits + bits)) & mask), maxCode);
+            uint uc = Math.Min((uint)((packed >> (QuatIndexBits + 2 * bits)) & mask), maxCode);
             float scale = 2f * QuatHalfRange / maxCode;
             float a = ua * scale - QuatHalfRange;
             float b = ub * scale - QuatHalfRange;
@@ -342,87 +333,92 @@ namespace Nebula.Serialization
         }
 
         // ───────────────────────────── wire forms ─────────────────────────────
+        //
+        // All bit-level. A quantized property's codes travel absolute as N magnitude forms
+        // (BitCodec.WriteMagnitude), as a SMALL delta with a 2-bit width class selecting one
+        // fixed signed width for every component, or as a FULL delta of N magnitude forms.
 
-        /// <summary>N zigzag varints.</summary>
+        /// <summary>Bits of the width-class selector that prefixes a small delta.</summary>
+        public const int WidthClassBits = 2;
+
+        // Per component count, the four signed widths a small delta may use (index = class).
+        private static readonly byte[] Widths1 = { 4, 6, 9, 16 };
+        private static readonly byte[] Widths2 = { 5, 7, 9, 12 };
+        private static readonly byte[] Widths3 = { 4, 6, 8, 10 };
+
+        private static byte[] Widths(int count) => count switch
+        {
+            1 => Widths1,
+            2 => Widths2,
+            3 => Widths3,
+            _ => throw new NotSupportedException($"QuantizedCodec: {count} components"),
+        };
+
+        /// <summary>The signed range of a width: [-2^(w-1), 2^(w-1) - 1], stored biased.</summary>
+        private static int WidthMin(int width) => -(1 << (width - 1));
+
+        /// <summary>N magnitude forms.</summary>
         public static void WriteCodes(NetBuffer buffer, ReadOnlySpan<int> codes, int count)
         {
-            for (int i = 0; i < count; i++) NetWriter.WriteZigZagVarInt(buffer, codes[i]);
+            for (int i = 0; i < count; i++) BitCodec.WriteMagnitude(buffer, codes[i]);
         }
 
         public static void ReadCodes(NetBuffer buffer, Span<int> codes, int count)
         {
-            for (int i = 0; i < count; i++) codes[i] = NetReader.ReadZigZagVarInt(buffer);
+            for (int i = 0; i < count; i++) codes[i] = BitCodec.ReadMagnitude(buffer);
         }
 
         /// <summary>
-        /// Packs the deltas into the small word for this component count if every one fits;
-        /// writes nothing and returns false otherwise (the caller then takes the full form).
+        /// Writes the deltas as [class: 2 bits][N x width bits] using the smallest width class
+        /// every component fits; writes nothing and returns false when even the widest class
+        /// overflows (the caller then takes the full form).
         /// </summary>
         public static bool TryWriteSmallDelta(NetBuffer buffer, ReadOnlySpan<int> deltas, int count)
         {
-            switch (count)
+            var widths = Widths(count);
+            for (int cls = 0; cls < widths.Length; cls++)
             {
-                case 1:
-                    if (deltas[0] < short.MinValue || deltas[0] > short.MaxValue) return false;
-                    NetWriter.WriteInt16(buffer, (short)deltas[0]);
-                    return true;
-                case 2:
+                int width = widths[cls];
+                int min = WidthMin(width);
+                int max = -min - 1;
+                bool fits = true;
+                for (int k = 0; k < count; k++)
                 {
-                    if (!Fits(deltas[0], Small2Max) || !Fits(deltas[1], Small2Max)) return false;
-                    uint word = (uint)(deltas[0] + Small2Bias) | ((uint)(deltas[1] + Small2Bias) << Small2Bits);
-                    var span = buffer.GetWriteSpan(Small2Bytes);
-                    span[0] = (byte)word;
-                    span[1] = (byte)(word >> 8);
-                    span[2] = (byte)(word >> 16);
-                    buffer.AdvanceWrite(Small2Bytes);
-                    return true;
+                    if (deltas[k] < min || deltas[k] > max) { fits = false; break; }
                 }
-                case 3:
-                {
-                    if (!Fits(deltas[0], Small3Max) || !Fits(deltas[1], Small3Max) || !Fits(deltas[2], Small3Max)) return false;
-                    uint word = (uint)(deltas[0] + Small3Bias)
-                        | ((uint)(deltas[1] + Small3Bias) << Small3Bits)
-                        | ((uint)(deltas[2] + Small3Bias) << (2 * Small3Bits));
-                    NetWriter.WriteUInt32(buffer, word);
-                    return true;
-                }
-                default:
-                    throw new NotSupportedException($"QuantizedCodec: {count} components");
-            }
-        }
+                if (!fits) continue;
 
-        private static bool Fits(int delta, int max) => delta >= -max - 1 && delta <= max;
+                buffer.WriteBits((ulong)cls, WidthClassBits);
+                for (int k = 0; k < count; k++) buffer.WriteBits((ulong)(uint)(deltas[k] - min), width);
+                return true;
+            }
+            return false;
+        }
 
         public static void ReadSmallDelta(NetBuffer buffer, Span<int> deltas, int count)
         {
-            switch (count)
-            {
-                case 1:
-                    deltas[0] = NetReader.ReadInt16(buffer);
-                    break;
-                case 2:
-                {
-                    var span = buffer.GetReadSpan(Small2Bytes);
-                    uint word = span[0] | ((uint)span[1] << 8) | ((uint)span[2] << 16);
-                    buffer.AdvanceRead(Small2Bytes);
-                    deltas[0] = (int)(word & (Small2Bias * 2 - 1)) - Small2Bias;
-                    deltas[1] = (int)((word >> Small2Bits) & (Small2Bias * 2 - 1)) - Small2Bias;
-                    break;
-                }
-                case 3:
-                {
-                    uint word = NetReader.ReadUInt32(buffer);
-                    deltas[0] = (int)(word & (Small3Bias * 2 - 1)) - Small3Bias;
-                    deltas[1] = (int)((word >> Small3Bits) & (Small3Bias * 2 - 1)) - Small3Bias;
-                    deltas[2] = (int)((word >> (2 * Small3Bits)) & (Small3Bias * 2 - 1)) - Small3Bias;
-                    break;
-                }
-                default:
-                    throw new NotSupportedException($"QuantizedCodec: {count} components");
-            }
+            int cls = (int)buffer.ReadBits(WidthClassBits);
+            int width = Widths(count)[cls];
+            int min = WidthMin(width);
+            for (int k = 0; k < count; k++) deltas[k] = (int)buffer.ReadBits(width) + min;
         }
 
-        /// <summary>Byte cost of the small form, for budget and census reasoning.</summary>
-        public static int SmallDeltaBytes(int count) => count switch { 1 => 2, 2 => Small2Bytes, 3 => Small3Bytes, _ => 0 };
+        /// <summary>Bits a small delta of this component count costs at a width class.</summary>
+        public static int SmallDeltaBits(int count, int widthClass) => WidthClassBits + count * Widths(count)[widthClass];
+
+        /// <summary>The widest small-delta range for a component count (per component).</summary>
+        public static int SmallDeltaMaxMagnitude(int count) => -WidthMin(Widths(count)[^1]) - 1;
+
+        /// <summary>Smallest-three bits per component for a quaternion that declared no step.</summary>
+        public const int UnquantizedQuatBits = 14;
+
+        /// <summary>Wire bits of a smallest-three quaternion at a component width.</summary>
+        public static int QuatWireBits(int bits) => QuatIndexBits + 3 * bits;
+
+        public static void WriteQuat(NetBuffer buffer, Quaternion q, int bits)
+            => buffer.WriteBits(PackQuat(q, bits), QuatWireBits(bits));
+
+        public static Quaternion ReadQuat(NetBuffer buffer, int bits)
+            => UnpackQuat(buffer.ReadBits(QuatWireBits(bits)), bits);
     }
 }

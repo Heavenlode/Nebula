@@ -5,7 +5,7 @@ using Godot;
 namespace Nebula.Serialization.Serializers
 {
     /// <summary>
-    /// Tells each peer whether it currently has interest in this node, as one byte (1/0),
+    /// Tells each peer whether it currently has interest in this node, as one bit,
     /// sent ON CHANGE and resent every tick until the peer acks a packet that carried it.
     ///
     /// <para>This used to be a periodic repeat (every node, every peer, every 3 ticks,
@@ -40,9 +40,8 @@ namespace Nebula.Serialization.Serializers
         /// <summary>Stagger period, in ticks, of the idle interest check (~10 Hz at 30 TPS).</summary>
         private const int SYNC_INTERVAL = 3;
 
-        private const byte InterestedByte = 1;
-        private const byte NotInterestedByte = 0;
-        private const int SectionBytes = 1;
+        /// <summary>The section is exactly one bit.</summary>
+        private const int SectionBits = 1;
 
         private NetworkController network;
 
@@ -100,7 +99,7 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes)
+        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBits)
         {
             _pendingCommit = false;
 
@@ -154,14 +153,14 @@ namespace Nebula.Serialization.Serializers
                 return ExportResult.None;
             }
 
-            // Self-limiting: the section is exactly 1 byte. A deferred tick just leaves a gap
-            // in the window (SendWindow restarts across gaps), which is always safe.
-            if (maxBytes < SectionBytes)
+            // Self-limiting: the section is one bit. A deferred tick just leaves a gap in
+            // the window (SendWindow restarts across gaps), which is always safe.
+            if (maxBits < SectionBits)
             {
                 return ExportResult.None;
             }
 
-            NetWriter.WriteByte(buffer, state.Sent ? InterestedByte : NotInterestedByte);
+            buffer.WriteBool(state.Sent);
             _pendingCommit = true;
             _pendingCommitPeer = peerId;
             return ExportResult.Written;
@@ -197,8 +196,7 @@ namespace Nebula.Serialization.Serializers
             nodeOut = network;
             if (network == null) return true;
 
-            byte interestByte = NetReader.ReadByte(buffer);
-            bool hasInterest = interestByte == InterestedByte;
+            bool hasInterest = buffer.ReadBool();
 
             // Only fire event if state actually changed
             if (hasInterest != clientHasInterest)

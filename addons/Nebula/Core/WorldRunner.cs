@@ -1638,8 +1638,6 @@ namespace Nebula
 
             PeerStates.Remove(peerId);
             _peerLastAckTick.Remove(peerId);
-            ResetPackState(peerId);
-            _peerPackWindows.Remove(peerId);
             _peerSentRings.Remove(peerId); // Per-tick ack routing
             _peerNetBufferPool.Remove(peerId); // Clean up pooled export buffer
             _peerPropsCursors.Remove(peerId); // Round-robin cursor for the props phase
@@ -1676,8 +1674,9 @@ namespace Nebula
         /// </summary>
         public void ServerProcessTick()
         {
-            // Bind the profiler to this tick's thread so library code reached from here (NebulaPack)
-            // can report into it without threading a parameter through every signature.
+            // Bind the profiler to this tick's thread so library code reached from here (the
+            // serializers, NetBuffer) can report into it without threading a parameter through
+            // every signature.
             _profiler?.MakeCurrent();
 
             // Process buffered player joins FIRST (tick-aligned)
@@ -1934,36 +1933,26 @@ namespace Nebula
                             continue;
                         }
 
-                        var packPayload = peerStateBuffer.WrittenSpan;
+                        var payload = peerStateBuffer.WrittenSpan;
 
-                        using var buffer = new NetBuffer();
-                        var packTs = Diagnostics.TickProfiler.Now();
+                        // Tick packet: [tick:int32][bit-packed payload]. The payload is already
+                        // as dense as the serializers make it; there is no per-packet
+                        // compression layer.
+                        var buffer = _sendPacketBuffer ??= new NetBuffer();
+                        buffer.Reset();
                         NetWriter.WriteInt32(buffer, CurrentTick);
-                        _peerPackWindows.TryGetValue(peerId, out var packWindow);
-                        NebulaPack.WritePacket(
-                            buffer, packPayload, packWindow, CurrentTick,
-                            NetRunner.PackEnabled, NetRunner.PackValidate);
-                        _profiler?.Record(Diagnostics.TickProfiler.Phase.PackCompress, packTs);
+                        NetWriter.WriteBytes(buffer, payload);
 
-                        // Check the UNCOMPRESSED size against the MTU. Checking the compressed size
-                        // would let compression mask a genuinely oversized world, and the payload
-                        // still has to fit whenever no baseline is available.
-                        var rawSize = sizeof(int) + 1 + packPayload.Length;
-                        if (rawSize > NetRunner.MTU)
+                        if (buffer.Length > NetRunner.MTU)
                         {
-                            Log(Debugger.DebugLevel.ERROR, $"[MTU EXCEEDED] Peer {peer.ID} tick {CurrentTick}: Uncompressed size {rawSize} exceeds MTU {NetRunner.MTU} (on wire {buffer.Length}) - PACKET MAY BE CORRUPTED!");
+                            Log(Debugger.DebugLevel.ERROR, $"[MTU EXCEEDED] Peer {peer.ID} tick {CurrentTick}: packet {buffer.Length} exceeds MTU {NetRunner.MTU} - PACKET MAY BE CORRUPTED!");
                             _metrics?.RecordMtuExceeded();
                         }
 
                         _metrics?.RecordPacket(buffer.Length);
-                        packTs = Diagnostics.TickProfiler.Now();
+                        var transmitTs = Diagnostics.TickProfiler.Now();
                         NetRunner.SendUnreliableSequenced(peer, (byte)NetRunner.ENetChannelId.Tick, buffer);
-                        _profiler?.Record(Diagnostics.TickProfiler.Phase.PackTransmit, packTs);
-
-                        // Remember what we sent; it becomes a delta baseline once this peer acks it.
-                        packTs = Diagnostics.TickProfiler.Now();
-                        RecordPackPayload(peerId, peerStateBuffer.WrittenSpan);
-                        _profiler?.Record(Diagnostics.TickProfiler.Phase.PackBaseline, packTs);
+                        _profiler?.Record(Diagnostics.TickProfiler.Phase.Transmit, transmitTs);
 
                         if (debugAttached)
                         {
@@ -1988,7 +1977,7 @@ namespace Nebula
                     // ExportState() now returns truly pooled NetBuffer instances that are reused between ticks.
                     // Do NOT dispose them - they will be Reset() and reused on the next tick.
                 }
-                _profiler?.Record(Diagnostics.TickProfiler.Phase.PackSend, phaseTs);
+                _profiler?.Record(Diagnostics.TickProfiler.Phase.Send, phaseTs);
             }
 
             phaseTs = Diagnostics.TickProfiler.Now();
@@ -2420,7 +2409,7 @@ namespace Nebula
                 // var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 #endif
                 // Created before the tick, not after: ServerProcessTick binds it to this thread so
-                // NebulaPack can report into it, which the first tick would otherwise miss.
+                // library code can report into it, which the first tick would otherwise miss.
                 if (Diagnostics.TickProfiler.Enabled) _profiler ??= new Diagnostics.TickProfiler();
 
                 // Avoid allocating a Stopwatch object every tick.
@@ -2742,10 +2731,6 @@ namespace Nebula
             _predictionInitialized = false;
             _clientPredictedTick = -1;
 
-            // Node ids are per-peer-per-world, so a payload captured in the old world would decode
-            // into entirely the wrong nodes. The destination world also restarts near tick 0, which
-            // would otherwise collide with retained ring slots.
-            _clientPackWindow.Reset();
 
             // A parked ack still references an old-world tick. Acks are routed by peer, not by
             // world, so flushing it after the migration would land it in the destination world's
@@ -2779,48 +2764,14 @@ namespace Nebula
         /// </summary>
         private Dictionary<UUID, Tick> _peerLastAckTick = new();
 
-        /// <summary>
-        /// NebulaPack, server side: the recent payloads sent to each peer. Each entry is marked
-        /// acked as that peer's ack for it arrives, and only marked entries may be used as a delta
-        /// baseline.
-        ///
-        /// Don't try to drive this off <see cref="_peerLastAckTick"/> above. That tracks only the
-        /// newest ack, which is fine for timeout detection but says nothing about whether any
-        /// particular older tick arrived.
-        /// </summary>
-        private Dictionary<UUID, NebulaPackWindow> _peerPackWindows = new();
+        /// <summary>Reused per-peer send buffer; the array is pooled but the object used to be allocated per peer per tick.</summary>
+        private NetBuffer _sendPacketBuffer;
 
         /// <summary>
-        /// NebulaPack, client side: the payloads this client has applied and acked, which is exactly
-        /// the set the server is allowed to delta against.
+        /// Client-side wrapper over the received tick body, re-attached per packet (no copy, no
+        /// allocation). The body is the bit-packed payload straight from ExportState.
         /// </summary>
-        private readonly NebulaPackWindow _clientPackWindow = new();
-        private NetBuffer _clientPackBuffer;
-
-        /// <summary>
-        /// Remembers the payload just sent to a peer, so it can be used as a delta baseline once
-        /// that peer acknowledges the tick.
-        /// </summary>
-        private void RecordPackPayload(UUID peerId, ReadOnlySpan<byte> payload)
-        {
-            if (!_peerPackWindows.TryGetValue(peerId, out var window))
-            {
-                window = new NebulaPackWindow();
-                _peerPackWindows[peerId] = window;
-            }
-            window.Record(CurrentTick, payload);
-        }
-
-
-        /// <summary>
-        /// Drops NebulaPack state for a peer. Called on disconnect, and on world migration where
-        /// node ids are reassigned — a payload from the previous world would decode into the wrong
-        /// nodes entirely.
-        /// </summary>
-        private void ResetPackState(UUID peerId)
-        {
-            if (_peerPackWindows.TryGetValue(peerId, out var window)) window.Reset();
-        }
+        private readonly NetBuffer _clientTickBuffer = new(Array.Empty<byte>());
 
         /// <summary>
         /// Server-side: the last tick this peer acknowledged receiving, or -1 if none yet.
@@ -3209,7 +3160,6 @@ namespace Nebula
             _peerSentRings.Remove(peerId);
             _peerNetBufferPool.Remove(peerId);
             _peerPropsCursors.Remove(peerId);
-            _peerPackWindows.Remove(peerId);
             _peerListDirty = true;
         }
 
@@ -3273,7 +3223,7 @@ namespace Nebula
         /// two-level header = 9; see PresenceMask) + age byte + smallest property write
         /// (2 bytes), rounded up for slack.
         /// </summary>
-        private const int PropsSectionFloor = 16;
+        private const int PropsSectionFloorBits = 16 * BitConstants.BitsInByte;
 
         /// <summary>
         /// Backstop for a misconfigured MTU so small the budget math goes non-positive;
@@ -3297,6 +3247,7 @@ namespace Nebula
         private Dictionary<UUID, NetBuffer> _peerNetBufferPool = new();
         // Pooled dictionary for ImportState - avoids per-tick allocation
         private Dictionary<ushort, byte> _importNodeSerializerMap = new();
+        private readonly long[] _importNodeMasks = new long[NodeIdUtils.NODE_GROUPS];
         // Pooled list for net function args - avoids per-call allocation
         private List<PropertyCache> _netFunctionArgsPool = new(8);
 
@@ -3364,7 +3315,7 @@ namespace Nebula
                 _tickNestedRiders.Clear();
                 Array.Clear(_tickRiderMask, 0, NodeIdUtils.NODE_GROUPS);
 
-                var ledger = new TickBudgetLedger(payloadBudget);
+                var ledger = new TickBudgetLedger(payloadBudget * BitConstants.BitsInByte);
                 var peerState = PeerStates[peerId];
                 _traceWirePeer = peerId;
                 int spawnSectionsDeferred = 0;
@@ -3414,7 +3365,7 @@ namespace Nebula
                         _tempSerializerBuffer.Reset();
                         var result = serializer.Export(this, peer, _tempSerializerBuffer,
                             ledger.SectionBudget(guessFirst, guessOpens));
-                        if (result == ExportResult.None || _tempSerializerBuffer.WritePosition == 0)
+                        if (result == ExportResult.None || _tempSerializerBuffer.WrittenBits == 0)
                         {
                             continue;
                         }
@@ -3434,11 +3385,11 @@ namespace Nebula
                             // never ship and means the budget math or the nested-table split
                             // is broken. One loud line, not one per tick.
                             if (!_loggedUnfittableSpawnRecord
-                                && _tempSerializerBuffer.WritePosition > payloadBudget - TickBudgetLedger.MaxSectionOverheadBytes)
+                                && _tempSerializerBuffer.WrittenBits > payloadBudget * BitConstants.BitsInByte - TickBudgetLedger.MaxSectionOverheadBits)
                             {
                                 _loggedUnfittableSpawnRecord = true;
                                 Log(Debugger.DebugLevel.ERROR,
-                                    $"[ExportState] BUG: spawn record for {netController.RawNode?.Name} (NetId={netController.NetId}) is {_tempSerializerBuffer.WritePosition} bytes and exceeds the whole tick budget ({payloadBudget}); it can never be delivered. Further occurrences suppressed.");
+                                    $"[ExportState] BUG: spawn record for {netController.RawNode?.Name} (NetId={netController.NetId}) is {_tempSerializerBuffer.WrittenBits} bits and exceeds the whole tick budget ({payloadBudget} bytes); it can never be delivered. Further occurrences suppressed.");
                             }
                             if (spawnPass == 0) ownedSpawnSectionsDeferred++; else spawnSectionsDeferred++;
                             continue;
@@ -3489,7 +3440,7 @@ namespace Nebula
                     // settled node has no dirty bits to bank by definition.
                     if (serializer.NothingForPeer(peerId)) continue;
 
-                    bool hasRoom = ledger.Remaining >= PropsSectionFloor;
+                    bool hasRoom = ledger.Remaining >= PropsSectionFloorBits;
                     ushort ownedLocalId = 0;
                     bool ownedMaySail = hasRoom
                         && PropsMayRidePacket(netController, peer, ref peerState, out ownedLocalId);
@@ -3507,7 +3458,7 @@ namespace Nebula
                     bool ownedFirst = !NodeIdUtils.IsBitSet(_updatedNodesMask, ownedLocalId);
                     var ownedResult = serializer.Export(this, peer, _tempSerializerBuffer,
                         ledger.SectionBudget(ownedFirst, ownedFirst && GroupIsClosed(ownedLocalId)));
-                    if (ownedResult == ExportResult.None || _tempSerializerBuffer.WritePosition == 0)
+                    if (ownedResult == ExportResult.None || _tempSerializerBuffer.WrittenBits == 0)
                     {
                         continue;
                     }
@@ -3542,7 +3493,7 @@ namespace Nebula
                         if (serializers.Length <= PropsSerializerIndex) continue;
                         var serializer = serializers[PropsSerializerIndex];
 
-                        if (serving && ledger.Remaining < PropsSectionFloor)
+                        if (serving && ledger.Remaining < PropsSectionFloorBits)
                         {
                             // Out of room: this node is first in line next tick, and the
                             // rest of the rotation defers below.
@@ -3576,7 +3527,7 @@ namespace Nebula
                         bool first = !NodeIdUtils.IsBitSet(_updatedNodesMask, localNodeId);
                         var result = serializer.Export(this, peer, _tempSerializerBuffer,
                             ledger.SectionBudget(first, first && GroupIsClosed(localNodeId)));
-                        if (result == ExportResult.None || _tempSerializerBuffer.WritePosition == 0)
+                        if (result == ExportResult.None || _tempSerializerBuffer.WrittenBits == 0)
                         {
                             continue;
                         }
@@ -3633,11 +3584,11 @@ namespace Nebula
                     _tempSerializerBuffer.Reset();
                     var result = serializer.Export(this, peer, _tempSerializerBuffer,
                         ledger.SectionBudget(first, opensGroup));
-                    if (result == ExportResult.None || _tempSerializerBuffer.WritePosition == 0)
+                    if (result == ExportResult.None || _tempSerializerBuffer.WrittenBits == 0)
                     {
                         continue;
                     }
-                    int resyncSectionBytes = _tempSerializerBuffer.WritePosition;
+                    int resyncSectionBits = _tempSerializerBuffer.WrittenBits;
                     if (!TryAppendSection(netController, localNodeId, InterestResyncSerializerIndex, ref ledger))
                     {
                         continue; // dropped: resent next tick, no packet-coupled state stamped
@@ -3645,8 +3596,8 @@ namespace Nebula
                     if (_profiler != null)
                     {
                         _profiler.Add(Diagnostics.TickProfiler.Counter.ResyncSections, 1);
-                        _profiler.Add(Diagnostics.TickProfiler.Counter.ResyncBytes,
-                            resyncSectionBytes + TickBudgetLedger.FramingCostForDiagnostics(first, opensGroup));
+                        _profiler.Add(Diagnostics.TickProfiler.Counter.ResyncBits,
+                            resyncSectionBits + TickBudgetLedger.FramingCostForDiagnostics(first, opensGroup));
                     }
                     serializer.CommitExport(this, peer, CurrentTick);
                 }
@@ -3655,7 +3606,7 @@ namespace Nebula
 
                     if (_metrics != null)
                 {
-                    _metrics.RecordTickBudget(ledger.Used, ledger.Budget);
+                    _metrics.RecordTickBudget(ledger.UsedBytes, ledger.BudgetBytes);
                     _metrics.RecordDeferredSections(spawnSectionsDeferred, propsSectionsDeferred,
                         ownedSpawnSectionsDeferred, ownedPropsSectionsDeferred);
                     int spawningCount = 0;
@@ -3666,18 +3617,23 @@ namespace Nebula
                     _metrics.RecordSpawnBacklog(spawningCount);
                 }
 
-                // Write hierarchical bitmask: groupMask (1 byte) + nodeMasks for active groups
+                // Bit-packed framing (see PacketFraming): group presence, then per present
+                // group its node set (dense or gap-coded, whichever is shorter), then per
+                // node its serializers-run word, then the node bodies at bit granularity,
+                // padded to a byte once at the end. The ledger charged the worst case of each
+                // framing word, so the assembled packet can only come in under budget.
+                var packet = _exportPeerBuffers[peerId];
                 byte groupMask = NodeIdUtils.ComputeGroupMask(_updatedNodesMask);
-                NetWriter.WriteByte(_exportPeerBuffers[peerId], groupMask);
+                packet.WriteBits(groupMask, PacketFraming.GroupPresenceBits);
                 for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
                 {
                     if ((groupMask & (1 << g)) != 0)
                     {
-                        NetWriter.WriteInt64(_exportPeerBuffers[peerId], _updatedNodesMask[g]);
+                        PacketFraming.WriteNodeSet(packet, _updatedNodesMask[g]);
                     }
                 }
 
-                // Write serializerMasks and node data in bitmask iteration order (ascending nodeId)
+                // Write serializer words and node data in bitmask iteration order (ascending nodeId)
                 // This is zero-allocation and produces sorted order since Combine(g,local) = (g<<6)|local
                 for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
                 {
@@ -3687,7 +3643,7 @@ namespace Nebula
                         if ((_updatedNodesMask[g] & (1L << local)) == 0) continue;
                         ushort nodeId = NodeIdUtils.Combine(g, local);
                         var serializersRun = _peerNodesSerializersList[nodeId];
-                        NetWriter.WriteByte(_exportPeerBuffers[peerId], serializersRun);
+                        PacketFraming.WriteSerializersRun(packet, serializersRun, PropsSerializerIndex);
 
                         // This mask is, by construction, the deduplicated set of nodes with
                         // a committed section in this packet - so it is also the exact set
@@ -3752,9 +3708,12 @@ namespace Nebula
                     {
                         if ((_updatedNodesMask[g] & (1L << local)) == 0) continue;
                         ushort nodeId = NodeIdUtils.Combine(g, local);
-                        NetWriter.WriteBytes(_exportPeerBuffers[peerId], _peerNodesBuffers[nodeId].WrittenSpan);
+                        // The final stream: pad at the sections' align marks here.
+                        packet.AppendBitsApplyingMarks(_peerNodesBuffers[nodeId]);
                     }
                 }
+                // Whole bytes go on the wire; the parser is mask-driven and ignores the pad.
+                packet.AlignWrite();
             }
 
             var exportTime = sw.ElapsedMilliseconds;
@@ -3803,11 +3762,14 @@ namespace Nebula
             if (TraceWire)
             {
                 var span = _tempSerializerBuffer.WrittenSpan;
-                Log($"[Wire][S] tick={CurrentTick} peer={_traceWirePeer} node={localNodeId} ser={serializerIdx} len={span.Length} bytes={System.Convert.ToHexString(span.Length > 48 ? span.Slice(0,48) : span)}");
+                Log($"[Wire][S] tick={CurrentTick} peer={_traceWirePeer} node={localNodeId} ser={serializerIdx} bits={_tempSerializerBuffer.WrittenBits} bytes={System.Convert.ToHexString(span.Length > 48 ? span.Slice(0,48) : span)}");
             }
             bool firstSection = !NodeIdUtils.IsBitSet(_updatedNodesMask, localNodeId);
             bool opensGroup = firstSection && GroupIsClosed(localNodeId);
-            if (!ledger.TryCommitSection(_tempSerializerBuffer.WritePosition, firstSection, opensGroup))
+            // Each align mark can cost up to 7 pad bits at assembly; charge them here.
+            int sectionBits = _tempSerializerBuffer.WrittenBits
+                + _tempSerializerBuffer.AlignMarkCount * (BitConstants.BitsInByte - 1);
+            if (!ledger.TryCommitSection(sectionBits, firstSection, opensGroup))
             {
                 return false;
             }
@@ -3826,7 +3788,8 @@ namespace Nebula
                 _peerNodesSerializersList[localNodeId] = 0;
             }
 
-            NetWriter.WriteBytes(_peerNodesBuffers[localNodeId], _tempSerializerBuffer.WrittenSpan);
+            // Sections concatenate at bit granularity; the node buffer holds bits.
+            _peerNodesBuffers[localNodeId].AppendBits(_tempSerializerBuffer);
             _peerNodesSerializersList[localNodeId] |= (byte)(1 << serializerIdx);
             return true;
         }
@@ -3912,14 +3875,16 @@ namespace Nebula
             // discarded payload latches delta encoding onto a baseline we never recorded.
             bool anyDiscarded = false;
 
-            // Read hierarchical bitmask: groupMask (1 byte) + nodeMasks for active groups
-            var groupMask = NetReader.ReadByte(stateBytes);
-            var nodeMasks = new long[NodeIdUtils.NODE_GROUPS];
+            // Bit-packed framing (see PacketFraming): group presence, then a node set per
+            // present group. Pooled scratch - this ran once per received tick.
+            var groupMask = (byte)stateBytes.ReadBits(PacketFraming.GroupPresenceBits);
+            var nodeMasks = _importNodeMasks;
+            Array.Clear(nodeMasks, 0, nodeMasks.Length);
             for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
             {
                 if ((groupMask & (1 << g)) != 0)
                 {
-                    nodeMasks[g] = NetReader.ReadInt64(stateBytes);
+                    nodeMasks[g] = PacketFraming.ReadNodeSet(stateBytes);
                 }
             }
 
@@ -3934,7 +3899,7 @@ namespace Nebula
                     if ((nodeMasks[g] & (1L << local)) == 0) continue;
 
                     ushort nodeId = NodeIdUtils.Combine(g, local);
-                    var serializersRun = NetReader.ReadByte(stateBytes);
+                    var serializersRun = PacketFraming.ReadSerializersRun(stateBytes, PropsSerializerIndex);
                     _importNodeSerializerMap[nodeId] = serializersRun;
                 }
             }
@@ -4142,11 +4107,6 @@ namespace Nebula
             // Update last ack tick for timeout tracking
             _peerLastAckTick[peerId] = tick;
 
-            // Mark this exact tick as received, so NebulaPack may use it as a delta baseline.
-            // Per-tick on purpose: acks are lossy too, so "everything below the newest ack" is not
-            // a safe assumption (see NebulaPackWindow.MarkAcked).
-            if (_peerPackWindows.TryGetValue(peerId, out var packWindow)) packWindow.MarkAcked(tick);
-
             var isFirstAck = peerState.Status == PeerSyncStatus.INITIAL;
             if (isFirstAck)
             {
@@ -4184,27 +4144,6 @@ namespace Nebula
                     serializers[serializerIdx].Acknowledge(this, peer, tick);
                 }
             }
-        }
-
-        /// <summary>
-        /// Client-side. Turns a received tick body back into the raw payload ImportState expects.
-        /// Returns false if the packet can't be trusted, in which case the caller must neither
-        /// apply nor acknowledge the tick — that is what makes the server fall back to raw.
-        /// </summary>
-        private bool TryUnpackTickPayload(Tick tick, byte[] wire, out NetBuffer payload)
-        {
-            _clientPackBuffer ??= new NetBuffer(NetRunner.MTU + 64, usePool: true);
-
-            var result = NebulaPack.ReadPacket(wire, tick, _clientPackWindow, _clientPackBuffer);
-            if (result != PackResult.Ok)
-            {
-                payload = null;
-                Log(Debugger.DebugLevel.ERROR, $"[Nebula][Pack] tick {tick} rejected: {result}");
-                return false;
-            }
-
-            payload = _clientPackBuffer;
-            return true;
         }
 
 
@@ -4251,23 +4190,14 @@ namespace Nebula
             try
             {
                 // Log(Debugger.DebugLevel.VERBOSE, $"Importing state bytes of size {stateBytes.Length}");
-                if (TryUnpackTickPayload(incomingTick, stateBytes, out var stateBuffer))
-                {
-                    // Whole-import timing, so a stall can be attributed: SpawnImportProfiler
-                    // reports the scene-building share, and the difference between that and this
-                    // is everything else (property apply, change notifications, despawns).
-                    var importTs = System.Diagnostics.Stopwatch.GetTimestamp();
-                    importSucceeded = ImportState(stateBuffer);
-                    Diagnostics.SpawnImportProfiler.EndTick(incomingTick,
-                        Diagnostics.SpawnImportProfiler.Elapsed(importTs));
-
-                    // Only an applied-and-acked payload may serve as a future baseline, so this is
-                    // gated on exactly the same condition as the ack below.
-                    if (importSucceeded)
-                    {
-                        _clientPackWindow.Record(incomingTick, stateBuffer.WrittenSpan);
-                    }
-                }
+                _clientTickBuffer.Attach(stateBytes, stateBytes.Length);
+                // Whole-import timing, so a stall can be attributed: SpawnImportProfiler
+                // reports the scene-building share, and the difference between that and this
+                // is everything else (property apply, change notifications, despawns).
+                var importTs = System.Diagnostics.Stopwatch.GetTimestamp();
+                importSucceeded = ImportState(_clientTickBuffer);
+                Diagnostics.SpawnImportProfiler.EndTick(incomingTick,
+                    Diagnostics.SpawnImportProfiler.Elapsed(importTs));
             }
             catch (Exception ex)
             {
@@ -4374,7 +4304,7 @@ namespace Nebula
                 //
                 // If an ack is already waiting, this frame received two state packets. Flush the
                 // older one standalone rather than overwriting it: the server marks baselines
-                // per-tick, so dropping one would cost NebulaPack a baseline it could have used.
+                // per-tick; dropping one would cost the props serializers a baseline they could have used.
                 if (_pendingAckTick >= 0) SendStandaloneAck(_pendingAckTick);
                 _pendingAckTick = incomingTick;
             }
@@ -4537,7 +4467,7 @@ namespace Nebula
 
             // Read the ack FIRST. Every guard below returns early, and an acknowledgement must not
             // be lost just because the input half of the packet was rejected - acks drive the
-            // INITIAL -> IN_WORLD transition, NebulaPack's baselines, and property resend clearing.
+            // INITIAL -> IN_WORLD transition and property resend clearing.
             var inputFlags = NetReader.ReadByte(buffer);
             if ((inputFlags & ~InputFlagMask) != 0)
             {

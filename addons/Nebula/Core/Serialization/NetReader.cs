@@ -29,6 +29,14 @@ namespace Nebula.Serialization
             return ReadByte(buffer) != 0;
         }
 
+        /// <summary>One bit; mirror of <see cref="NetWriter.WriteBit"/>.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ReadBit(NetBuffer buffer) => buffer.ReadBool();
+
+        /// <summary><paramref name="count"/> bits (1..64); mirror of <see cref="NetWriter.WriteBits"/>.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ulong ReadBits(NetBuffer buffer, int count) => buffer.ReadBits(count);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static short ReadInt16(NetBuffer buffer)
         {
@@ -240,22 +248,6 @@ namespace Nebula.Serialization
             }
             
             return new Quaternion(x, y, z, w);
-        }
-
-        /// <summary>Inverse of <see cref="NetWriter.WriteZigZagVarInt"/>.</summary>
-        public static int ReadZigZagVarInt(NetBuffer buffer)
-        {
-            uint zig = 0;
-            int shift = 0;
-            while (true)
-            {
-                byte b = ReadByte(buffer);
-                zig |= (uint)(b & 0x7F) << shift;
-                if ((b & 0x80) == 0) break;
-                shift += 7;
-                if (shift > 28) throw new InvalidOperationException("ZigZag varint longer than 5 bytes");
-            }
-            return (int)(zig >> 1) ^ -(int)(zig & 1);
         }
 
         #endregion

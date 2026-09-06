@@ -92,19 +92,25 @@ namespace Nebula.Serialization.Serializers
         /// <summary>One-shot guard so an unpackable spawn path logs once, not every tick.</summary>
         private bool _loggedUnpackableSpawnPath = false;
 
-        /// <summary>
-        /// Despawn marker byte - when first byte is 255, it's a despawn message.
-        /// </summary>
-        private const byte DESPAWN_MARKER = 255;
+        // Wire record, bit-packed and padded to a byte at the end of the section:
+        //   [isDespawn:1]
+        //   despawn: [localNodeId:9]
+        //   spawn:   [sceneId:8][parentId:9] then, for a child, [nodePathId:8][hasInputAuth:1];
+        //            then [nestedCount:8] and per entry [sceneId:8][nodePathId:8][netId:9][hasInputAuth:1]
+        // Peer-local node ids are 8 groups x 64 (NodeIdUtils), so 9 bits.
+        private const int SCENE_ID_BITS = 8;
+        private const int NODE_ID_BITS = 9;
+        private const int NODE_PATH_BITS = 8;
+        private const int INPUT_AUTH_BITS = 1;
 
-        /// <summary>The nested-table count byte preceding the entries.</summary>
-        private const int NESTED_COUNT_BYTES = 1;
+        /// <summary>The nested-table count preceding the entries.</summary>
+        private const int NESTED_COUNT_BITS = 8;
 
         /// <summary>
-        /// One nested-table entry: sceneId (1) + nodePathId (1) + netId (2) +
-        /// hasInputAuthority (1). Must match ExportNestedScenes' writes.
+        /// One nested-table entry: sceneId + nodePathId + netId + hasInputAuthority. Must
+        /// match ExportNestedScenes' writes.
         /// </summary>
-        private const int NESTED_ENTRY_BYTES = 5;
+        private const int NESTED_ENTRY_BITS = SCENE_ID_BITS + NODE_PATH_BITS + NODE_ID_BITS + INPUT_AUTH_BITS;
 
         public SpawnSerializer(NetworkController controller)
         {
@@ -208,16 +214,16 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
-        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes)
+        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBits)
         {
             // Atomic serializer: a spawn/despawn record cannot be split, so this may
-            // write more than maxBytes; the host then drops the bytes and skips
+            // write more than maxBits; the host then drops the bits and skips
             // CommitExport. Packet-coupled stamps live in CommitExport, so a dropped
             // record retries cleanly next tick.
             _pendingCommit = PendingCommit.None;
-            var start = buffer.WritePosition;
-            ExportCore(currentWorld, peer, buffer, maxBytes);
-            return buffer.WritePosition == start ? ExportResult.None : ExportResult.Written;
+            var start = buffer.WriteBitPosition;
+            ExportCore(currentWorld, peer, buffer, maxBits);
+            return buffer.WriteBitPosition == start ? ExportResult.None : ExportResult.Written;
         }
 
         public void CommitExport(WorldRunner currentWorld, NetPeer peer, Tick tick)
@@ -300,7 +306,7 @@ namespace Nebula.Serialization.Serializers
             // NestedSceneRodeLastSpawnExport after this commit.
         }
 
-        private void ExportCore(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes)
+        private void ExportCore(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBits)
         {
             var peerId = NetRunner.Instance.GetPeerId(peer);
             var spawnState = currentWorld.GetClientSpawnState(netController.NetId, peer);
@@ -429,14 +435,15 @@ namespace Nebula.Serialization.Serializers
                 }
             }
 
-            NetWriter.WriteByte(buffer, sceneId);
+            buffer.WriteBool(false); // not a despawn
+            buffer.WriteBits(sceneId, SCENE_ID_BITS);
 
             if (netController.NetParent == null)
             {
-                NetWriter.WriteUInt16(buffer, 0);
+                buffer.WriteBits(0, NODE_ID_BITS); // parentId 0 = root
 
                 // Write nested NetScenes for root scene
-                ExportNestedScenes(currentWorld, peer, buffer, firstSend, maxBytes);
+                ExportNestedScenes(currentWorld, peer, buffer, firstSend, maxBits);
 
                 // Window stamp, Spawning flip, and nested-child stamps apply in
                 // CommitExport - only if these bytes actually ride the packet.
@@ -446,17 +453,17 @@ namespace Nebula.Serialization.Serializers
             }
 
             var parentId = currentWorld.GetPeerNodeId(peer, netController.NetParent);
-            NetWriter.WriteUInt16(buffer, parentId);
+            buffer.WriteBits(parentId, NODE_ID_BITS);
 
             // Attachment path within the parent scene, resolved (or bailed on) above.
-            NetWriter.WriteByte(buffer, nodePathId);
+            buffer.WriteBits(nodePathId, NODE_PATH_BITS);
 
             // Use ID comparison instead of Equals - more reliable for ENet.Peer structs
-            var hasInputAuth = netController.InputAuthority.IsSet && netController.InputAuthority.ID == peer.ID ? (byte)1 : (byte)0;
-            NetWriter.WriteByte(buffer, hasInputAuth);
+            bool hasInputAuth = netController.InputAuthority.IsSet && netController.InputAuthority.ID == peer.ID;
+            buffer.WriteBool(hasInputAuth);
 
             // Write nested NetScenes
-            ExportNestedScenes(currentWorld, peer, buffer, firstSend, maxBytes);
+            ExportNestedScenes(currentWorld, peer, buffer, firstSend, maxBits);
 
             // Window stamp, Spawning flip, and nested-child stamps apply in
             // CommitExport - only if these bytes actually ride the packet.
@@ -529,28 +536,27 @@ namespace Nebula.Serialization.Serializers
 
         /// <summary>
         /// Writes the despawn data to the buffer.
-        /// Format: [DESPAWN_MARKER (1 byte)] [LocalNodeId (2 bytes)]
+        /// Format: [isDespawn = 1][localNodeId:9]
         /// </summary>
         private void WriteDespawnData(WorldRunner currentWorld, NetPeer peer, UUID peerId, ushort localNodeId, NetBuffer buffer)
         {
-            // Write despawn marker
-            NetWriter.WriteByte(buffer, DESPAWN_MARKER);
+            buffer.WriteBool(true);
 
             // Write the local node ID for this peer so client knows which node to despawn
-            NetWriter.WriteUInt16(buffer, localNodeId);
+            buffer.WriteBits(localNodeId, NODE_ID_BITS);
 
             currentWorld.Debug?.Send("Despawn", $"Exported despawn for {netController.RawNode?.Name}, localNodeId={localNodeId}");
         }
 
         /// <summary>
         /// Exports all nested NetScenes in the subtree that the peer has interest in.
-        /// On a FIRST send the table is capped to what fits <paramref name="maxBytes"/>:
+        /// On a FIRST send the table is capped to what fits <paramref name="maxBits"/>:
         /// excluded children simply stay NotSpawned - they are never part of the frozen
         /// membership, so resends stay consistent, and once this parent commits Spawned
         /// they spawn through their own child-spawn Export. On a resend the frozen table
         /// rides whole (the host drops the whole record if it no longer fits).
         /// </summary>
-        private void ExportNestedScenes(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, bool firstSend, int maxBytes)
+        private void ExportNestedScenes(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, bool firstSend, int maxBits)
         {
             var peerUUID = NetRunner.Instance.GetPeerId(peer);
 
@@ -603,15 +609,18 @@ namespace Nebula.Serialization.Serializers
             {
                 // Budget cap: entries that don't fit are left out of this first send
                 // entirely (never flipped Spawning, never in the frozen set).
-                var entryBudget = maxBytes - buffer.WritePosition - NESTED_COUNT_BYTES;
-                var maxEntries = entryBudget > 0 ? entryBudget / NESTED_ENTRY_BYTES : 0;
+                // The host resets the section buffer before every Export, so the write
+                // cursor IS the section size so far. Bits, with a long so an unbounded
+                // test budget cannot overflow.
+                long entryBudget = (long)maxBits - buffer.WriteBitPosition - NESTED_COUNT_BITS;
+                var maxEntries = entryBudget > 0 ? (int)Math.Min(int.MaxValue, entryBudget / NESTED_ENTRY_BITS) : 0;
                 if (includeCount > maxEntries)
                 {
                     includeCount = maxEntries;
                 }
             }
 
-            NetWriter.WriteByte(buffer, (byte)includeCount);
+            buffer.WriteBits((ulong)includeCount, NESTED_COUNT_BITS);
 
             _pendingNestedCommit.Clear();
             for (int i = 0; i < includeCount; i++)
@@ -623,10 +632,7 @@ namespace Nebula.Serialization.Serializers
                 if (nestedPeerId == 0)
                 {
                     // Failed to allocate ID - write zeros so client can skip
-                    NetWriter.WriteByte(buffer, 0);
-                    NetWriter.WriteByte(buffer, 0);
-                    NetWriter.WriteUInt16(buffer, 0);
-                    NetWriter.WriteByte(buffer, 0);
+                    buffer.WriteBits(0, NESTED_ENTRY_BITS);
                     continue;
                 }
 
@@ -644,12 +650,12 @@ namespace Nebula.Serialization.Serializers
                 }
 
                 // Check if this peer owns the nested scene
-                var nestedHasInputAuth = nested.InputAuthority.IsSet && nested.InputAuthority.ID == peer.ID ? (byte)1 : (byte)0;
+                bool nestedHasInputAuth = nested.InputAuthority.IsSet && nested.InputAuthority.ID == peer.ID;
 
-                NetWriter.WriteByte(buffer, nestedSceneId);
-                NetWriter.WriteByte(buffer, nested.CachedNodePathIdInParent);
-                NetWriter.WriteUInt16(buffer, nestedPeerId);
-                NetWriter.WriteByte(buffer, nestedHasInputAuth);
+                buffer.WriteBits(nestedSceneId, SCENE_ID_BITS);
+                buffer.WriteBits(nested.CachedNodePathIdInParent, NODE_PATH_BITS);
+                buffer.WriteBits(nestedPeerId, NODE_ID_BITS);
+                buffer.WriteBool(nestedHasInputAuth);
             }
         }
 
@@ -779,17 +785,14 @@ namespace Nebula.Serialization.Serializers
         {
             controllerOut = netController;
 
-            // Check if this is a despawn message (first byte is DESPAWN_MARKER)
-            var firstByte = NetReader.ReadByte(buffer);
-            if (firstByte == DESPAWN_MARKER)
+            // Despawn or spawn record.
+            if (buffer.ReadBool())
             {
-                ImportDespawn(currentWorld, buffer);
+                ImportDespawn(currentWorld, (ushort)buffer.ReadBits(NODE_ID_BITS));
                 return true;
             }
 
-            // Not a despawn - continue with normal spawn import
-            // We already read the classId, so reconstruct the data
-            var data = DeserializeAfterClassId(buffer, firstByte);
+            var data = Deserialize(buffer);
 
             // Skip if this node was already properly imported
             if (hasImported)
@@ -897,10 +900,8 @@ namespace Nebula.Serialization.Serializers
         /// <summary>
         /// Handles importing a despawn message on the client.
         /// </summary>
-        private void ImportDespawn(WorldRunner currentWorld, NetBuffer buffer)
+        private void ImportDespawn(WorldRunner currentWorld, ushort localNodeId)
         {
-            // Read the local node ID
-            var localNodeId = NetReader.ReadUInt16(buffer);
 
             // Look up the node
             var node = currentWorld.GetNodeFromNetId(localNodeId);
@@ -929,35 +930,6 @@ namespace Nebula.Serialization.Serializers
                 // There was a pending despawn for this node
                 controller.handleDespawn();
             }
-        }
-
-        /// <summary>
-        /// Deserializes spawn data after the classId has already been read.
-        /// </summary>
-        private Data DeserializeAfterClassId(NetBuffer buffer, byte classId)
-        {
-            var spawnData = new Data
-            {
-                classId = classId,
-                parentId = NetReader.ReadUInt16(buffer),
-            };
-
-            if (spawnData.parentId == 0)
-            {
-                // Root scene - read nested count
-                spawnData.nestedCount = NetReader.ReadByte(buffer);
-                DeserializeNestedScenes(buffer, spawnData.nestedCount);
-                return spawnData;
-            }
-
-            spawnData.nodePathId = NetReader.ReadByte(buffer);
-            spawnData.hasInputAuthority = NetReader.ReadByte(buffer);
-
-            // Read nested scenes
-            spawnData.nestedCount = NetReader.ReadByte(buffer);
-            DeserializeNestedScenes(buffer, spawnData.nestedCount);
-
-            return spawnData;
         }
 
         /// <summary>
@@ -1151,27 +1123,28 @@ namespace Nebula.Serialization.Serializers
             }
         }
 
+        /// <summary>Reads a spawn record after its isDespawn bit (0) has been consumed.</summary>
         private Data Deserialize(NetBuffer buffer)
         {
             var spawnData = new Data
             {
-                classId = NetReader.ReadByte(buffer),
-                parentId = NetReader.ReadUInt16(buffer),
+                classId = (byte)buffer.ReadBits(SCENE_ID_BITS),
+                parentId = (ushort)buffer.ReadBits(NODE_ID_BITS),
             };
 
             if (spawnData.parentId == 0)
             {
                 // Root scene - read nested count
-                spawnData.nestedCount = NetReader.ReadByte(buffer);
+                spawnData.nestedCount = (byte)buffer.ReadBits(NESTED_COUNT_BITS);
                 DeserializeNestedScenes(buffer, spawnData.nestedCount);
                 return spawnData;
             }
 
-            spawnData.nodePathId = NetReader.ReadByte(buffer);
-            spawnData.hasInputAuthority = NetReader.ReadByte(buffer);
+            spawnData.nodePathId = (byte)buffer.ReadBits(NODE_PATH_BITS);
+            spawnData.hasInputAuthority = buffer.ReadBool() ? (byte)1 : (byte)0;
 
             // Read nested scenes
-            spawnData.nestedCount = NetReader.ReadByte(buffer);
+            spawnData.nestedCount = (byte)buffer.ReadBits(NESTED_COUNT_BITS);
             DeserializeNestedScenes(buffer, spawnData.nestedCount);
 
             return spawnData;
@@ -1183,10 +1156,10 @@ namespace Nebula.Serialization.Serializers
 
             for (int i = 0; i < count && i < NestedDataBuffer.Length; i++)
             {
-                var sceneId = NetReader.ReadByte(buffer);
-                var nodePathId = NetReader.ReadByte(buffer);
-                var netId = NetReader.ReadUInt16(buffer);
-                var hasInputAuth = NetReader.ReadByte(buffer);
+                var sceneId = (byte)buffer.ReadBits(SCENE_ID_BITS);
+                var nodePathId = (byte)buffer.ReadBits(NODE_PATH_BITS);
+                var netId = (ushort)buffer.ReadBits(NODE_ID_BITS);
+                var hasInputAuth = buffer.ReadBool() ? (byte)1 : (byte)0;
 
                 // Skip entries where allocation failed on server (netId == 0)
                 // Note: sceneId=0 is valid (first registered scene), but netId=0 means no allocation

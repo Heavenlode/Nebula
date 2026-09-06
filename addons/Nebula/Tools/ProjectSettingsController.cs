@@ -40,8 +40,6 @@ public partial class ProjectSettingsController : Node
         ("Nebula/config/default_port",          "Nebula/config/network/default_port"),
         ("Nebula/config/mtu",                   "Nebula/config/network/mtu"),
         ("Nebula/config/default_scene",         "Nebula/config/world/default_scene"),
-        ("Nebula/config/pack_enabled",          "Nebula/config/pack/enabled"),
-        ("Nebula/config/pack_validate",         "Nebula/config/pack/validate"),
         ("Nebula/config/log_level",             "Nebula/config/debug/log_level"),
         ("Nebula/config/log_tick_payloads",     "Nebula/config/debug/log_tick_payloads"),
         ("Nebula/config/debug_export_interval", "Nebula/config/debug/export_interval"),
@@ -241,21 +239,6 @@ public partial class ProjectSettingsController : Node
             {"type", (int)Variant.Type.Int},
             {"hint", (int)PropertyHint.Range},
             {"hint_string", "0,5000,10"},
-        });
-
-        // ── Pack ─────────────────────────────────────────────────────────
-        // NebulaPack: delta-compress tick payloads against a baseline the peer has acknowledged.
-        // Server-side and per-packet - every packet says whether it is a delta or raw - so clients
-        // decode both regardless and no handshake is involved.
-        Register("Nebula/config/pack/enabled", true, new(){
-            {"type", (int)Variant.Type.Bool},
-        });
-
-        // NebulaPack: append a checksum of the raw payload and verify it after decoding. Costs 2
-        // bytes per packet and turns any window divergence into an immediate, loud failure rather
-        // than silently corrupted state. Worth leaving on until the feature has real mileage.
-        Register("Nebula/config/pack/validate", true, new(){
-            {"type", (int)Variant.Type.Bool},
         });
 
         // ── Threading ────────────────────────────────────────────────────

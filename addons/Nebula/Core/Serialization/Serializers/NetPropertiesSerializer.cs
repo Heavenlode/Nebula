@@ -19,8 +19,9 @@ namespace Nebula.Serialization.Serializers
         DeltaSmall = 1,
         /// <summary>Full delta: same type as property</summary>
         DeltaFull = 2,
-        /// <summary>Quaternion uses smallest-three encoding (6 bytes)</summary>
-        QuatCompressed = 0x80,
+        // Two bits on the wire (NetPropertiesSerializer.EncodingBits). A quaternion has no
+        // flag of its own: the reader knows the type, and quaternion absolutes are always
+        // smallest-three packed.
     }
 
     /// <summary>
@@ -93,6 +94,12 @@ namespace Nebula.Serialization.Serializers
             /// forever, for any peer whose RTT exceeds one tick.
             /// </summary>
             public long DirtySentMask;
+            /// <summary>
+            /// The section's presence mask as it went on the WIRE (primitives, node refs AND
+            /// object properties). The mask-reuse bit compares against this, never against
+            /// <see cref="SentMask"/>, which omits object properties.
+            /// </summary>
+            public long WireMask;
         }
 
         /// <summary>
@@ -104,6 +111,8 @@ namespace Nebula.Serialization.Serializers
         {
             public Tick Tick;
             public PropertyCache[] Values;
+            /// <summary>Client: the wire mask of the section applied at this tick (mask reuse reference).</summary>
+            public long Mask;
         }
 
         /// <summary>
@@ -250,12 +259,22 @@ namespace Nebula.Serialization.Serializers
 
         /// <summary>
         /// Bytes reserved at the head of a section for the presence mask before its contents
-        /// are known: <see cref="PresenceMask.ReservedBytes"/> of <see cref="_byteCount"/>.
+        /// are known: <see cref="PresenceMask.WorstCaseBits"/> of <see cref="_byteCount"/>.
         /// Wide masks ship two-level (header + nonzero bytes), so the reservation is the
         /// worst case and the section is compacted once the mask is final. Every budget check
         /// measures against this width, never the compact one - see the backfill in ExportCore.
         /// </summary>
-        private readonly int _reservedMaskBytes;
+        private readonly int _worstCaseHeaderBits;
+        /// <summary>
+        /// Properties whose value is written with a BYTE codec (object properties, INetValue
+        /// objects, strings, packed arrays). Those codecs auto-align to the body scratch, which
+        /// is at phase 0; for their bytes to land byte-aligned in the final stream the body
+        /// must start on a byte boundary there too. So a section whose wire mask touches any
+        /// of these pads once between header and body - both sides decide that from the mask,
+        /// and a section of bit-coded values (the steady-state case) pays nothing.
+        /// </summary>
+        private readonly long _byteCodedMask;
+        private const int BodyAlignPadBits = BitConstants.BitsInByte - 1;
 
         /// <summary>Pre-cached: does this scene have any object (INetSerializable) properties?</summary>
         private readonly bool _hasObjectProps;
@@ -296,15 +315,19 @@ namespace Nebula.Serialization.Serializers
         /// The baseline-age header byte written right after the presence mask
         /// (0 = every property in the payload is absolute).
         /// </summary>
-        private const int AGE_HEADER_BYTES = 1;
+        private const int MaskModeBits = 1;
+        /// <summary>Baseline age on the wire; MAX_DELTA_AGE = 30 fits.</summary>
+        private const int AgeBits = 5;
+        /// <summary>Per-primitive encoding selector (DeltaEncodingFlags).</summary>
+        private const int EncodingBits = 2;
 
         /// <summary>
         /// The smallest possible property write: a DeltaEncodingFlags byte plus a
         /// one-byte value (e.g. bool). A section budget below
-        /// [<see cref="_reservedMaskBytes"/> + <see cref="AGE_HEADER_BYTES"/> + this] cannot
+        /// [<see cref="_worstCaseHeaderBits"/> + <see cref="AgeBits"/> + this] cannot
         /// ship anything.
         /// </summary>
-        private const int MIN_PROPERTY_WRITE_BYTES = 2;
+        private const int MinPropertyWriteBits = EncodingBits + 1;
 
         /// <summary>
         /// Server: ring of property value snapshots per exported tick, shared by all peers.
@@ -384,7 +407,7 @@ namespace Nebula.Serialization.Serializers
             // server that spawned nothing while the unit suite stayed green, because the
             // suite only exercises the Protocol-free ctor.
             _byteCount = (_propertyCount + BitConstants.BitsInByte - 1) / BitConstants.BitsInByte;
-            _reservedMaskBytes = PresenceMask.ReservedBytes(_byteCount);
+            _worstCaseHeaderBits = MaskModeBits + AgeBits + PresenceMask.WorstCaseBits(_byteCount, _propertyCount) + BodyAlignPadBits;
 
             _propSupportsDelta = new bool[_propertyCount];
             _propIsNodeRef = new bool[_propertyCount];
@@ -407,6 +430,7 @@ namespace Nebula.Serialization.Serializers
                 ResolveQuantization(i, prop.VariantType, prop.Quantize, prop.UnitVector);
                 _propTypes[i] = prop.VariantType;
                 _propSupportsDelta[i] = SupportsDelta(prop.VariantType);
+                if (prop.IsObjectProperty || IsByteCoded(prop.VariantType)) _byteCodedMask |= 1L << i;
                 _propIsNodeRef[i] = prop.IsObjectProperty && Protocol.IsNodeReferenceClass(prop.ClassIndex);
                 _propIsObject[i] = prop.IsObjectProperty;
                 _propClassIndex[i] = prop.ClassIndex;
@@ -648,6 +672,11 @@ namespace Nebula.Serialization.Serializers
             _gridSeededMask |= bit;
             return false;
         }
+
+        /// <summary>Value types written with a byte codec rather than bit fields (see _byteCodedMask).</summary>
+        private static bool IsByteCoded(SerialVariantType type)
+            => type is SerialVariantType.Object or SerialVariantType.String
+                or SerialVariantType.PackedByteArray or SerialVariantType.PackedInt32Array or SerialVariantType.PackedInt64Array;
 
         /// <summary>
         /// Determines if a property type supports delta encoding.
@@ -989,13 +1018,17 @@ namespace Nebula.Serialization.Serializers
 
             _propertyCount = propTypes.Length;
             _byteCount = (_propertyCount + BitConstants.BitsInByte - 1) / BitConstants.BitsInByte;
-            _reservedMaskBytes = PresenceMask.ReservedBytes(_byteCount);
+            _worstCaseHeaderBits = MaskModeBits + AgeBits + PresenceMask.WorstCaseBits(_byteCount, _propertyCount) + BodyAlignPadBits;
 
             _propTypes = propTypes;
             // Mirrors the real ctor: without this, useDelta was false for every test and the
             // delta/lossy write paths had no unit coverage at all.
             _propSupportsDelta = new bool[_propertyCount];
-            for (int i = 0; i < _propertyCount; i++) _propSupportsDelta[i] = SupportsDelta(propTypes[i]);
+            for (int i = 0; i < _propertyCount; i++)
+            {
+                _propSupportsDelta[i] = SupportsDelta(propTypes[i]);
+                if (IsByteCoded(propTypes[i])) _byteCodedMask |= 1L << i;
+            }
             _propIsNodeRef = new bool[_propertyCount];
             _propIsObject = new bool[_propertyCount];
             _propClassIndex = new int[_propertyCount];
@@ -1124,7 +1157,6 @@ namespace Nebula.Serialization.Serializers
 
         private Data Deserialize(NetBuffer buffer, Tick currentTick, out bool discarded)
         {
-            int startPos = buffer.ReadPosition;
             int byteCount = _byteCount;
 
             // Decode into reusable scratch. _incomingMask is fully overwritten by the decode
@@ -1135,15 +1167,12 @@ namespace Nebula.Serialization.Serializers
             byte[] propertiesUpdated = _incomingMask;
             Array.Clear(_decodedMask, 0, byteCount);
 
-            if (!PresenceMask.Decode(buffer, propertiesUpdated.AsSpan(0, byteCount)))
-            {
-                // Unlike a bad age byte (consumed either way, so parsing can continue and
-                // discard), a header naming a byte beyond the mask leaves the stream
-                // unalignable. Throwing lands in ImportState's per-serializer catch, which
-                // logs with node context and aborts the tick import un-acked.
-                throw new InvalidOperationException(
-                    $"NetId={network.NetId} corrupt presence-mask header for a {byteCount}-byte mask; the section cannot be realigned.");
-            }
+            // Header: [maskMode:1][age:5][mask unless maskMode]. The age is read first because
+            // mask reuse ("same mask as the section applied at the baseline tick") needs the
+            // baseline resolved before the mask can be known.
+            bool maskReuse = buffer.ReadBool();
+            int baselineAge = (int)buffer.ReadBits(AgeBits);
+            int sectionStartBits = buffer.ReadBitPosition - MaskModeBits - AgeBits;
 
             // ============================================================
             // BASELINE RESOLUTION (snapshot-delta)
@@ -1152,10 +1181,9 @@ namespace Nebula.Serialization.Serializers
             // snapshot at baselineTick - a tick this client received, applied, and acked.
             // They must be applied against OUR recorded state at that same tick, never
             // against the running value (which may include newer in-flight updates).
-            int baselineAge = NetReader.ReadByte(buffer);
             PropertyCache[] baselineValues = null;
+            long baselineMask = 0;
             bool discardPayload = false;
-            if (TraceWire) Debugger.Instance.Log($"[Props.R] {_cachedSceneFilePath} byteCount={byteCount} mask={Convert.ToHexString(propertiesUpdated, 0, byteCount)} age={baselineAge} pos={buffer.ReadPosition}");
 
             // Scratch baseline handed to ReadDeltaOrAbsolute when this payload has no
             // resolvable baseline. A local (not a shared static) so that a future edit which
@@ -1165,11 +1193,11 @@ namespace Nebula.Serialization.Serializers
             {
                 Tick baselineTick = currentTick - baselineAge;
 
-                // The age byte comes off the wire unvalidated. A server never writes more
-                // than MAX_DELTA_AGE, so anything larger means a desynced/corrupt stream;
-                // and a negative baselineTick (age exceeding a young world's tick count)
-                // would index the ring with a negative value and throw, aborting the whole
-                // tick import. Both are handled as a discard, same as a missing baseline.
+                // The age comes off the wire unvalidated. A server never writes more than
+                // MAX_DELTA_AGE, so anything larger means a desynced/corrupt stream; and a
+                // negative baselineTick (age exceeding a young world's tick count) would
+                // index the ring with a negative value and throw, aborting the whole tick
+                // import. Both are handled as a discard, same as a missing baseline.
                 if (baselineAge > MAX_DELTA_AGE || baselineTick < 0)
                 {
                     Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
@@ -1184,6 +1212,7 @@ namespace Nebula.Serialization.Serializers
                         if (baseEntry.Values != null && baseEntry.Tick == baselineTick)
                         {
                             baselineValues = baseEntry.Values;
+                            baselineMask = baseEntry.Mask;
                         }
                     }
 
@@ -1200,6 +1229,32 @@ namespace Nebula.Serialization.Serializers
                     }
                 }
             }
+
+            if (maskReuse)
+            {
+                // The mask is not on the wire; without the baseline entry the section cannot
+                // be parsed at all, so this is an abort (ImportState's catch, tick un-acked),
+                // not a per-node discard. It self-heals: the server keeps deltaing against
+                // the stale acked tick until the age passes MAX_DELTA_AGE, then goes absolute
+                // with age 0, which always carries the full mask.
+                if (baselineValues == null)
+                {
+                    throw new InvalidOperationException(
+                        $"NetId={network.NetId} section reuses the mask of baseline tick {currentTick - baselineAge}, which this client has not applied; the section cannot be parsed.");
+                }
+                LongToMask(baselineMask, propertiesUpdated, byteCount);
+            }
+            else
+            {
+                PresenceMask.Read(buffer, propertiesUpdated.AsSpan(0, byteCount), _propertyCount);
+            }
+            long wireMask = MaskToLong(propertiesUpdated, byteCount);
+            // Mirror of the writer's body pad for byte-coded values (see _byteCodedMask).
+            if ((wireMask & _byteCodedMask) != 0)
+            {
+                buffer.AlignRead();
+            }
+            if (TraceWire) Debugger.Instance.Log($"[Props.R] {_cachedSceneFilePath} byteCount={byteCount} mask={Convert.ToHexString(propertiesUpdated, 0, byteCount)} reuse={maskReuse} age={baselineAge} bit={buffer.ReadBitPosition}");
 
             // ============================================================
             // TWO-PASS DESERIALIZATION (must match server Export order)
@@ -1256,7 +1311,7 @@ namespace Nebula.Serialization.Serializers
                     if (propType == SerialVariantType.Object)
                     {
                         // Read the delta encoding flag byte (will always be Absolute for Object types since they don't support delta)
-                        var flags = (DeltaEncodingFlags)NetReader.ReadByte(buffer);
+                        var flags = (DeltaEncodingFlags)buffer.ReadBits(EncodingBits);
                         if (flags != DeltaEncodingFlags.Absolute)
                         {
                             Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Expected Absolute encoding for INetValue Object type {PropertyNameForLog(propertyIndex)}, got {flags}");
@@ -1399,10 +1454,11 @@ namespace Nebula.Serialization.Serializers
                 }
 
                 entry.Tick = currentTick;
+                entry.Mask = wireMask;
                 _lastAppliedTick = currentTick;
             }
 
-            // Debugger.Instance.Log(Debugger.DebugLevel.VERBOSE, $"[Props.Import] NetId={network.NetId} total={buffer.ReadPosition - startPos} endPos={buffer.ReadPosition}");
+            if (TraceWire) Debugger.Instance.Log($"[Props.R] NetId={network.NetId} sectionBits={buffer.ReadBitPosition - sectionStartBits}");
             discarded = discardPayload;
             return new Data(_decodedMask, _decodedValues);
         }
@@ -1415,28 +1471,25 @@ namespace Nebula.Serialization.Serializers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ReadDeltaOrAbsolute(NetBuffer buffer, int propIndex, SerialVariantType type, IntWidth intWidth, ref PropertyCache baseline, ref PropertyCache cache)
         {
-            var flags = (DeltaEncodingFlags)NetReader.ReadByte(buffer);
+            var flags = (DeltaEncodingFlags)buffer.ReadBits(EncodingBits);
             cache.Type = type;
 
             // Quantized properties have their own forms for every flag value, decided by
-            // the protocol table, so this must come before the QuatCompressed shortcut.
+            // the protocol table.
             if (_propQuantStep[propIndex] > 0f)
             {
                 ReadQuantized(buffer, flags, propIndex, type, ref baseline, ref cache);
                 return;
             }
 
-            // Check for quaternion compressed encoding
-            if ((flags & DeltaEncodingFlags.QuatCompressed) != 0)
+            // A quaternion is always a smallest-three absolute; no flag bit marks it.
+            if (type == SerialVariantType.Quaternion)
             {
-                cache.QuatValue = NetReader.ReadQuatSmallestThree(buffer);
+                cache.QuatValue = QuantizedCodec.ReadQuat(buffer, QuantizedCodec.UnquantizedQuatBits);
                 return;
             }
 
-            // Get base encoding type (mask out compression flags)
-            var encoding = flags & (DeltaEncodingFlags)0x7F;
-
-            switch (encoding)
+            switch (flags)
             {
                 case DeltaEncodingFlags.Absolute:
                     // Full absolute value
@@ -1470,11 +1523,7 @@ namespace Nebula.Serialization.Serializers
         {
             if (type == SerialVariantType.Quaternion)
             {
-                if ((flags & DeltaEncodingFlags.QuatCompressed) == 0)
-                {
-                    throw new InvalidOperationException($"quantized quaternion property {propIndex} arrived without QuatCompressed (flags={flags})");
-                }
-                cache.QuatValue = QuantizedCodec.UnpackQuat(NetReader.ReadUInt32(buffer), _propQuantBits[propIndex]);
+                cache.QuatValue = QuantizedCodec.ReadQuat(buffer, _propQuantBits[propIndex]);
                 return;
             }
 
@@ -1482,7 +1531,7 @@ namespace Nebula.Serialization.Serializers
             bool unit = _propUnitVector[propIndex];
             float step = _propQuantStep[propIndex];
             Span<int> codes = stackalloc int[QuantizedCodec.MaxComponents];
-            switch (flags & (DeltaEncodingFlags)0x7F)
+            switch (flags)
             {
                 case DeltaEncodingFlags.Absolute:
                     QuantizedCodec.ReadCodes(buffer, codes, count);
@@ -1491,7 +1540,7 @@ namespace Nebula.Serialization.Serializers
                 case DeltaEncodingFlags.DeltaFull:
                 {
                     Span<int> deltas = stackalloc int[QuantizedCodec.MaxComponents];
-                    if ((flags & (DeltaEncodingFlags)0x7F) == DeltaEncodingFlags.DeltaSmall)
+                    if (flags == DeltaEncodingFlags.DeltaSmall)
                         QuantizedCodec.ReadSmallDelta(buffer, deltas, count);
                     else
                         QuantizedCodec.ReadCodes(buffer, deltas, count);
@@ -1518,32 +1567,55 @@ namespace Nebula.Serialization.Serializers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void ReadAbsoluteValue(NetBuffer buffer, SerialVariantType type, IntWidth intWidth, ref PropertyCache cache)
         {
-            if (type != SerialVariantType.Int)
+            switch (type)
             {
-                NetReader.ReadAbsoluteValue(buffer, type, null, ref cache);
-                return;
-            }
-            cache.LongValue = 0;
-            switch (intWidth)
-            {
-                case IntWidth.Byte:
-                    cache.ByteValue = NetReader.ReadByte(buffer);
+                case SerialVariantType.Bool:
+                    cache.BoolValue = buffer.ReadBool();
                     break;
-                case IntWidth.Int16:
-                    cache.IntValue = NetReader.ReadInt16(buffer);
+                case SerialVariantType.Int:
+                    cache.LongValue = 0;
+                    switch (intWidth)
+                    {
+                        case IntWidth.Byte:
+                            cache.ByteValue = (byte)buffer.ReadBits(BitConstants.BitsInByte);
+                            break;
+                        case IntWidth.Int16:
+                            cache.IntValue = (short)(ushort)buffer.ReadBits(BitConstants.BitsInShort);
+                            break;
+                        case IntWidth.UInt16:
+                            cache.IntValue = (ushort)buffer.ReadBits(BitConstants.BitsInShort);
+                            break;
+                        case IntWidth.Int32:
+                        case IntWidth.UInt32:
+                            cache.IntValue = (int)(uint)buffer.ReadBits(BitConstants.BitsInInt);
+                            break;
+                        default:
+                            cache.LongValue = (long)buffer.ReadBits(BitConstants.BitsInLong);
+                            break;
+                    }
                     break;
-                case IntWidth.UInt16:
-                    cache.IntValue = NetReader.ReadUInt16(buffer);
+                case SerialVariantType.Float:
+                    cache.FloatValue = GetFloat(buffer);
                     break;
-                case IntWidth.Int32:
-                    cache.IntValue = NetReader.ReadInt32(buffer);
+                case SerialVariantType.Vector2:
+                    cache.Vec2Value = GetVector2(buffer);
                     break;
-                case IntWidth.UInt32:
-                    cache.IntValue = (int)NetReader.ReadUInt32(buffer);
+                case SerialVariantType.Vector3:
+                    cache.Vec3Value = GetVector3(buffer);
+                    break;
+                case SerialVariantType.Quaternion:
+                    cache.QuatValue = QuantizedCodec.ReadQuat(buffer, QuantizedCodec.UnquantizedQuatBits);
+                    break;
+                // Byte-granular codecs shared with NetFunction arguments: the buffer
+                // auto-aligns on the first byte read.
+                case SerialVariantType.String:
+                case SerialVariantType.PackedByteArray:
+                case SerialVariantType.PackedInt32Array:
+                case SerialVariantType.PackedInt64Array:
+                    NetReader.ReadAbsoluteValue(buffer, type, null, ref cache);
                     break;
                 default:
-                    cache.LongValue = NetReader.ReadInt64(buffer);
-                    break;
+                    throw new NotSupportedException($"ReadAbsoluteValue: unsupported type {type}");
             }
         }
 
@@ -1556,13 +1628,13 @@ namespace Nebula.Serialization.Serializers
             switch (type)
             {
                 case SerialVariantType.Float:
-                    float deltaF = NetReader.ReadHalfFloat(buffer);
+                    float deltaF = GetHalf(buffer);
                     cache.FloatValue = baseline.FloatValue + deltaF;
                     break;
 
                 case SerialVariantType.Int:
                     // Small delta uses Int16 for all integer types
-                    short deltaS = NetReader.ReadInt16(buffer);
+                    short deltaS = (short)(ushort)buffer.ReadBits(BitConstants.BitsInShort);
                     // Store result in the field this width uses (see IntWidth)
                     cache.LongValue = 0; // Clear first
                     switch (intWidth)
@@ -1580,15 +1652,15 @@ namespace Nebula.Serialization.Serializers
                     break;
 
                 case SerialVariantType.Vector2:
-                    float dx2 = NetReader.ReadHalfFloat(buffer);
-                    float dy2 = NetReader.ReadHalfFloat(buffer);
+                    float dx2 = GetHalf(buffer);
+                    float dy2 = GetHalf(buffer);
                     cache.Vec2Value = new Vector2(baseline.Vec2Value.X + dx2, baseline.Vec2Value.Y + dy2);
                     break;
 
                 case SerialVariantType.Vector3:
-                    float dx3 = NetReader.ReadHalfFloat(buffer);
-                    float dy3 = NetReader.ReadHalfFloat(buffer);
-                    float dz3 = NetReader.ReadHalfFloat(buffer);
+                    float dx3 = GetHalf(buffer);
+                    float dy3 = GetHalf(buffer);
+                    float dz3 = GetHalf(buffer);
                     cache.Vec3Value = new Vector3(
                         baseline.Vec3Value.X + dx3,
                         baseline.Vec3Value.Y + dy3,
@@ -1612,7 +1684,7 @@ namespace Nebula.Serialization.Serializers
             switch (type)
             {
                 case SerialVariantType.Float:
-                    float deltaF = NetReader.ReadFloat(buffer);
+                    float deltaF = GetFloat(buffer);
                     cache.FloatValue = baseline.FloatValue + deltaF;
                     break;
 
@@ -1624,34 +1696,34 @@ namespace Nebula.Serialization.Serializers
                     {
                         case IntWidth.Byte:
                             // Byte types use Int16 for full delta (more range than byte)
-                            short deltaB = NetReader.ReadInt16(buffer);
+                            short deltaB = (short)(ushort)buffer.ReadBits(BitConstants.BitsInShort);
                             cache.ByteValue = (byte)(baseline.ByteValue + deltaB);
                             break;
                         case IntWidth.Int16:
                         case IntWidth.UInt16:
-                            short deltaS = NetReader.ReadInt16(buffer);
+                            short deltaS = (short)(ushort)buffer.ReadBits(BitConstants.BitsInShort);
                             cache.IntValue = baseline.IntValue + deltaS;
                             break;
                         case IntWidth.Int32:
                         case IntWidth.UInt32:
-                            int deltaI = NetReader.ReadInt32(buffer);
+                            int deltaI = (int)(uint)buffer.ReadBits(BitConstants.BitsInInt);
                             cache.IntValue = baseline.IntValue + deltaI;
                             break;
                         default:
                             // Int64: long, ulong, or an unrecognised subtype
-                            long deltaL = NetReader.ReadInt64(buffer);
+                            long deltaL = (long)buffer.ReadBits(BitConstants.BitsInLong);
                             cache.LongValue = baseline.LongValue + deltaL;
                             break;
                     }
                     break;
 
                 case SerialVariantType.Vector2:
-                    Vector2 deltaV2 = NetReader.ReadVector2(buffer);
+                    Vector2 deltaV2 = GetVector2(buffer);
                     cache.Vec2Value = baseline.Vec2Value + deltaV2;
                     break;
 
                 case SerialVariantType.Vector3:
-                    Vector3 deltaV3 = NetReader.ReadVector3(buffer);
+                    Vector3 deltaV3 = GetVector3(buffer);
                     cache.Vec3Value = baseline.Vec3Value + deltaV3;
                     break;
 
@@ -2000,8 +2072,8 @@ namespace Nebula.Serialization.Serializers
             public long MaskSig;
             public long UseDeltaSig;
             public byte Age;
-            public byte[] Blob;          // [age byte][primitive bytes], buffer reused across ticks
-            public int BlobLen;
+            public byte[] Blob;          // primitive body bits at phase 0, buffer reused across ticks
+            public int BlobBits;
             public long LossyResultMask; // WriteDelta lossy returns, for the stamp replay
         }
         private const int MemoCapacity = 4;
@@ -2081,9 +2153,9 @@ namespace Nebula.Serialization.Serializers
         /// <summary>Scratch for the incoming presence mask read off the wire.</summary>
         private byte[] _incomingMask;
 
-        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes)
+        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBits)
         {
-            // Self-limiting serializer: never writes more than maxBytes, so the host
+            // Self-limiting serializer: never writes more than maxBits, so the host
             // always commits what was written (in-write stamps like DeltaChain, LossyMask
             // and object-prop chunk frontiers stay valid). Packet-coupled stamps
             // (SentHistory, PendingDirtyMask for shipped bits, initial-sync, per-peer
@@ -2097,25 +2169,25 @@ namespace Nebula.Serialization.Serializers
             if (VerifySettledEnabled && !_settledDisabled)
             {
                 bool claimedNothing = NothingForPeerUnchecked(NetRunner.Instance.GetPeerId(peer));
-                int before = buffer.WritePosition;
-                var verified = ExportCore(currentWorld, peer, buffer, maxBytes);
-                if (claimedNothing && (verified != ExportResult.None || buffer.WritePosition != before))
+                int before = buffer.WriteBitPosition;
+                var verified = ExportCore(currentWorld, peer, buffer, maxBits);
+                if (claimedNothing && (verified != ExportResult.None || buffer.WriteBitPosition != before))
                 {
                     _settledDisabled = true;
                     Debugger.Instance.Log(
                         $"[SettledVerify] DIVERGENCE on {_cachedSceneFilePath}: the settled flag "
                         + $"claimed nothing to send but the full run produced {verified} with "
-                        + $"{buffer.WritePosition - before} byte(s). Settled skipping disabled for "
+                        + $"{buffer.WriteBitPosition - before} bit(s). Settled skipping disabled for "
                         + "this run; a wake-up source is missing.",
                         Debugger.DebugLevel.ERROR);
                 }
                 return verified;
             }
 
-            return ExportCore(currentWorld, peer, buffer, maxBytes);
+            return ExportCore(currentWorld, peer, buffer, maxBits);
         }
 
-        private ExportResult ExportCore(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes)
+        private ExportResult ExportCore(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBits)
         {
             var peerId = NetRunner.Instance.GetPeerId(peer);
 
@@ -2330,7 +2402,7 @@ namespace Nebula.Serialization.Serializers
             // ============================================================
             // DEFER (budget)
             // ============================================================
-            // The section can't fit its fixed overhead (presence mask + age byte) plus
+            // The section can't fit its fixed overhead (header + worst-case mask) plus
             // even the smallest property write. Preserve the would-be-shipped primitive
             // bits in PendingDirtyMask: processingDirtyMask dies at the end of this tick,
             // and a budget-skipped peer would otherwise silently lose those changes
@@ -2340,15 +2412,14 @@ namespace Nebula.Serialization.Serializers
             // re-derive next tick, so over-merging them here is harmless. Object props
             // keep their own resumable per-peer state and need nothing.
             //
-            // Measured against the RESERVED mask width (worst case), as is every budget
-            // check below. The compact width is unknowable until the mask is final: an
-            // object write later in this call can set a bit in a mask byte the primitives
-            // left empty, so any estimate taken here could still grow, and a section that
-            // ends over maxBytes is dropped by the host after the memo stamps and chunk
-            // frontiers have already advanced. The pessimism is bounded (reserved minus
-            // compact, at most 7 bytes for a 64-prop scene) and only ever defers a tail
-            // node one tick earlier; it can never make a section unshippable.
-            if (maxBytes < _reservedMaskBytes + AGE_HEADER_BYTES + MIN_PROPERTY_WRITE_BYTES)
+            // Every budget check in this method measures against the WORST-CASE header
+            // (mask reuse off, every mask byte nonzero): the mask is only final after the
+            // object loop, so any narrower estimate could still grow. The pessimism is
+            // bounded (worst minus actual, under 9 bytes for a 64-prop scene) and only
+            // ever defers a tail node a tick early; it can never make a section
+            // unshippable.
+            int worstHeaderBits = _worstCaseHeaderBits;
+            if (maxBits < worstHeaderBits + MinPropertyWriteBits)
             {
                 for (var i = 0; i < byteCount; i++)
                 {
@@ -2446,21 +2517,18 @@ namespace Nebula.Serialization.Serializers
             }
 
             // ============================================================
-            // RESERVE-AND-BACKFILL PATTERN
+            // BODY-FIRST WRITE
             // ============================================================
+            // The section is [maskMode:1][age:5][mask unless reused][primitives][objects],
+            // padded to a byte. The mask is only final after the object loop, so the body
+            // is written into a thread-local scratch at phase 0 and appended after the
+            // header once the mask is known - no reserve, no backfill, no memmove. Memo
+            // blobs are captured from and served into that scratch, so a hit is a byte
+            // memcpy at phase 0 and only the final AppendBits ever shifts.
+            var body = BodyScratch;
+            body.Reset();
 
-            // Reserve the mask's WORST-CASE width; the backfill writes the compact encoding
-            // and shifts the body down over any slack. Everything below that measures the
-            // section (`WritePosition - maskStartPos`) sees the reserved width, which is the
-            // conservative side of every budget decision.
-            int maskStartPos = buffer.WritePosition;
-            int reservedMaskBytes = _reservedMaskBytes;
-            for (var i = 0; i < reservedMaskBytes; i++)
-            {
-                NetWriter.WriteByte(buffer, 0); // Placeholder
-            }
-
-            // Track which properties actually got written (for combined mask).
+            // Track which properties actually got written (for the wire mask).
             // Reused scratch, not a fresh array: Export runs once per peer per node per
             // tick, so allocating here was one of the largest per-tick GC sources in the
             // netcode. Fully overwritten by the copy below, so no clear is needed.
@@ -2474,8 +2542,9 @@ namespace Nebula.Serialization.Serializers
             // (P1) or INetValue primitive (P2) makes the BYTES per-peer, so any such bit
             // in the mask disqualifies every peer with that mask. P3 (whole segment fits
             // this peer's budget) is checked against the candidate entry; P4 (clean
-            // leader encode) is enforced at capture. The second-loop object properties
-            // are untouched by the memo - they run per peer below either way.
+            // leader encode) is enforced at capture. The object properties are untouched
+            // by the memo - they run per peer below either way. The header (mask mode,
+            // age, mask) is outside the blob and always written per peer.
             bool memoEligible = MemoEnabled && !_memoDisabled
                 && writtenPrimMask != 0
                 && (writtenPrimMask & (_perPeerPrimMask | _objectValuePrimMask)) == 0;
@@ -2489,7 +2558,7 @@ namespace Nebula.Serialization.Serializers
                     if (candidate.MaskSig == writtenPrimMask
                         && candidate.UseDeltaSig == useDeltaMask
                         && candidate.Age == (byte)baselineAge
-                        && reservedMaskBytes + candidate.BlobLen <= maxBytes)
+                        && worstHeaderBits + candidate.BlobBits <= maxBits)
                     {
                         memoHit = m;
                         break;
@@ -2512,20 +2581,19 @@ namespace Nebula.Serialization.Serializers
 
             if (memoHit >= 0 && !VerifyMemoEnabled)
             {
-                // FAST PATH: the blob is [age][primitives] captured from a clean encode
-                // with this exact signature this tick. Copy it, then apply the per-peer
-                // stamps the writer would have applied. No rewind is possible (P3 held),
-                // so the rewind-restoration bookkeeping has nothing to do.
+                // FAST PATH: the blob is the primitive body captured from a clean encode
+                // with this exact signature this tick, at phase 0. Copy it, then apply the
+                // per-peer stamps the writer would have applied. No rewind is possible (P3
+                // held), so the rewind-restoration bookkeeping has nothing to do.
                 ref var hitEntry = ref _memo[memoHit];
-                NetWriter.WriteBytes(buffer, hitEntry.Blob.AsSpan(0, hitEntry.BlobLen));
+                hitEntry.Blob.AsSpan(0, BytesFor(hitEntry.BlobBits)).CopyTo(body.RawBuffer);
+                body.WriteBitPosition = hitEntry.BlobBits;
                 ReplayMemoStamps(ref state, writtenPrimMask, useDeltaMask, hitEntry.LossyResultMask);
                 MemoHitsForTests++;
             }
             else
             {
                 long lossyResultBits = 0;
-                // Baseline age header: 0 = every property in this payload is absolute
-                NetWriter.WriteByte(buffer, (byte)baselineAge);
 
                 // Write PRIMITIVE properties (only dirty ones)
                 for (var i = 0; i < byteCount; i++)
@@ -2541,7 +2609,7 @@ namespace Nebula.Serialization.Serializers
                         // Skip object properties - handled in next loop
                         if (_propIsObject[propIndex]) continue;
 
-                        int propStartPos = buffer.WritePosition;
+                        int propStartBits = body.WriteBitPosition;
                         // Snapshot the in-write stamps so a budget rewind can restore them -
                         // a rewound property must leave no trace of the aborted encoding.
                         var deltaChainBefore = state.DeltaChain[propIndex];
@@ -2576,7 +2644,7 @@ namespace Nebula.Serialization.Serializers
                                 // A later lossless delta does NOT clear the flag: applied to an
                                 // already-drifted base, the result is still drifted. Only an
                                 // absolute restores exactness.
-                                if (WriteDelta(buffer, propIndex, ref current, ref baselineValues[propIndex]))
+                                if (WriteDelta(body, propIndex, ref current, ref baselineValues[propIndex]))
                                 {
                                     state.LossyMask[i] |= (byte)(1 << j);
                                     lossyResultBits |= 1L << propIndex;
@@ -2585,18 +2653,18 @@ namespace Nebula.Serialization.Serializers
                             }
                             else
                             {
-                                WriteAbsolute(currentWorld, peer, buffer, propIndex, ref current);
+                                WriteAbsolute(currentWorld, peer, body, propIndex, ref current);
                                 state.DeltaChain[propIndex] = 0;
                                 state.LossyMask[i] &= (byte)~(1 << j);
                             }
 
-                            // Budget: the write pushed the section past maxBytes. Rewind it,
+                            // Budget: the write pushed the section past maxBits. Rewind it,
                             // restore its stamps, and defer the bit - smaller later
-                            // properties may still fit (the mask is backfilled below, so the
-                            // wire stays consistent).
-                            if (buffer.WritePosition - maskStartPos > maxBytes)
+                            // properties may still fit (the mask is written after the body,
+                            // so the wire stays consistent).
+                            if (worstHeaderBits + body.WriteBitPosition > maxBits)
                             {
-                                buffer.WritePosition = propStartPos;
+                                body.WriteBitPosition = propStartBits;
                                 state.DeltaChain[propIndex] = deltaChainBefore;
                                 state.LossyMask[i] = lossyByteBefore;
                                 actualMask[i] &= (byte)~(1 << j);
@@ -2608,22 +2676,22 @@ namespace Nebula.Serialization.Serializers
                                 var censusProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                                 Diagnostics.PayloadCensus.Record(
                                     $"{censusProp.NodePath}.{censusProp.Name}",
-                                    buffer.WritePosition - propStartPos, useDelta);
+                                    body.WriteBitPosition - propStartBits, useDelta);
                             }
                             if (TraceWire)
                             {
                                 var tp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-                                Debugger.Instance.Log($"[Props.W] idx={propIndex} '{tp.NodePath}.{tp.Name}' type={tp.VariantType} delta={useDelta} bytes={buffer.WritePosition - propStartPos} end={buffer.WritePosition - maskStartPos}");
+                                Debugger.Instance.Log($"[Props.W] idx={propIndex} '{tp.NodePath}.{tp.Name}' type={tp.VariantType} delta={useDelta} bits={body.WriteBitPosition - propStartBits} bodyEnd={body.WriteBitPosition}");
                             }
                         }
                         catch (Exception ex)
                         {
                             Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
                                 $"Error serializing property {PropertyNameForLog(propIndex)}: {ex.InnerException?.Message ?? ex.Message}");
-                            // Clear the bit AND rewind - stray partial bytes would desync the
+                            // Clear the bit AND rewind - stray partial bits would desync the
                             // whole stream for every property and node after this one
                             actualMask[i] &= (byte)~(1 << j);
-                            buffer.WritePosition = propStartPos;
+                            body.WriteBitPosition = propStartBits;
                             encodeThrew = true;
                         }
                     }
@@ -2632,21 +2700,22 @@ namespace Nebula.Serialization.Serializers
                 if (memoHit >= 0)
                 {
                     // NEBULA_VERIFY_MEMO: this peer matched an entry, and the real writer
-                    // just ran anyway. Compare the bytes; a divergence means the signature
+                    // just ran anyway. Compare the bits; a divergence means the signature
                     // missed an input, which is the one failure mode this cache cannot
                     // afford - latch the memo off for the whole run and say so loudly.
+                    // Both sides are phase-0 with zero pad bits, so byte equality is exact.
                     ref var verifyEntry = ref _memo[memoHit];
-                    int writtenLen = buffer.WritePosition - (maskStartPos + reservedMaskBytes);
-                    bool identical = writtenLen == verifyEntry.BlobLen
-                        && buffer.RawBuffer.AsSpan(maskStartPos + reservedMaskBytes, writtenLen)
-                            .SequenceEqual(verifyEntry.Blob.AsSpan(0, verifyEntry.BlobLen));
+                    int writtenBits = body.WrittenBits;
+                    bool identical = writtenBits == verifyEntry.BlobBits
+                        && body.RawBuffer.AsSpan(0, BytesFor(writtenBits))
+                            .SequenceEqual(verifyEntry.Blob.AsSpan(0, BytesFor(verifyEntry.BlobBits)));
                     if (!identical)
                     {
                         _memoDisabled = true;
                         Debugger.Instance.Log(
                             $"[MemoVerify] DIVERGENCE on {_cachedSceneFilePath}: sig=(mask={writtenPrimMask:X}, delta={useDeltaMask:X}, age={baselineAge}) "
-                            + $"slow={Convert.ToHexString(buffer.RawBuffer.AsSpan(maskStartPos + reservedMaskBytes, writtenLen))} "
-                            + $"memo={Convert.ToHexString(verifyEntry.Blob.AsSpan(0, verifyEntry.BlobLen))}. "
+                            + $"slow={Convert.ToHexString(body.RawBuffer.AsSpan(0, BytesFor(writtenBits)))}/{writtenBits}b "
+                            + $"memo={Convert.ToHexString(verifyEntry.Blob.AsSpan(0, BytesFor(verifyEntry.BlobBits)))}/{verifyEntry.BlobBits}b. "
                             + "Section memo disabled for this run; the signature is missing an input.",
                             Debugger.DebugLevel.ERROR);
                     }
@@ -2654,7 +2723,7 @@ namespace Nebula.Serialization.Serializers
                 else if (memoEligible && !encodeThrew && _memoCount < MemoCapacity)
                 {
                     // CAPTURE (P4): only a clean encode may seed a shareable entry - a
-                    // budget rewind or an exception produced bytes that do not match the
+                    // budget rewind or an exception produced bits that do not match the
                     // signature's promise.
                     bool leftoverClean = true;
                     for (var i = 0; i < byteCount; i++)
@@ -2668,20 +2737,23 @@ namespace Nebula.Serialization.Serializers
                         slot.MaskSig = writtenPrimMask;
                         slot.UseDeltaSig = useDeltaMask;
                         slot.Age = (byte)baselineAge;
-                        int blobLen = buffer.WritePosition - (maskStartPos + reservedMaskBytes);
-                        if (slot.Blob == null || slot.Blob.Length < blobLen)
+                        int blobBits = body.WrittenBits;
+                        int blobBytes = BytesFor(blobBits);
+                        if (slot.Blob == null || slot.Blob.Length < blobBytes)
                         {
-                            slot.Blob = new byte[Math.Max(blobLen, 256)];
+                            slot.Blob = new byte[Math.Max(blobBytes, 256)];
                         }
-                        buffer.RawBuffer.AsSpan(maskStartPos + reservedMaskBytes, blobLen).CopyTo(slot.Blob);
-                        slot.BlobLen = blobLen;
+                        body.RawBuffer.AsSpan(0, blobBytes).CopyTo(slot.Blob);
+                        slot.BlobBits = blobBits;
                         slot.LossyResultMask = lossyResultBits;
                     }
                 }
             }
 
             // Write OBJECT properties (INetSerializable) - always call, they self-filter
-            // These return true if they wrote data, false if nothing to send
+            // These return true if they wrote data, false if nothing to send. Their codecs
+            // are byte-granular: the scratch auto-aligns on the delegate's first byte
+            // write and the reader mirrors it, so a delegate never aligns by hand.
             bool objectDeferred = false;
             for (int propIndex = 0; propIndex < _propertyCount; propIndex++)
             {
@@ -2711,9 +2783,11 @@ namespace Nebula.Serialization.Serializers
                 // Budget: object serializers cannot be rewound (chunk streams stamp their
                 // per-peer frontier state during the write), so one is only invoked while
                 // the section still has room for its full chunk budget - the size the
-                // serializer is designed to respect. A skipped object keeps its own
-                // resumable per-peer state and simply resumes on a later tick.
-                if (maxBytes - (buffer.WritePosition - maskStartPos) < _propChunkBudget[propIndex])
+                // serializer is designed to respect - plus the align pad in front of it.
+                // A skipped object keeps its own resumable per-peer state and simply
+                // resumes on a later tick.
+                if (maxBits - (worstHeaderBits + body.WriteBitPosition)
+                    < _propChunkBudget[propIndex] * BitConstants.BitsInByte + (BitConstants.BitsInByte - 1))
                 {
                     // A dirty NODE-REF skipped here must bank its bit or the change is
                     // lost outright: its dirty mask died in Begin(), CommitExport banks
@@ -2733,12 +2807,12 @@ namespace Nebula.Serialization.Serializers
                 ref var cache = ref ResolveObjectCache(propIndex, peerId);
 
                 // Remember position in case we need to rewind
-                int startPos = buffer.WritePosition;
+                int startBits = body.WriteBitPosition;
 
                 try
                 {
                     // Object serializers return true if they wrote data
-                    bool wroteData = serializer(currentWorld, peer, ref cache, buffer, _propChunkBudget[propIndex]);
+                    bool wroteData = serializer(currentWorld, peer, ref cache, body, _propChunkBudget[propIndex]);
 
                     if (wroteData)
                     {
@@ -2749,7 +2823,7 @@ namespace Nebula.Serialization.Serializers
                         if (TraceWire)
                         {
                             var tp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
-                            Debugger.Instance.Log($"[Props.W] obj idx={propIndex} '{tp.NodePath}.{tp.Name}' bytes={buffer.WritePosition - startPos} end={buffer.WritePosition - maskStartPos}");
+                            Debugger.Instance.Log($"[Props.W] obj idx={propIndex} '{tp.NodePath}.{tp.Name}' bits={body.WriteBitPosition - startBits} bodyEnd={body.WriteBitPosition}");
                         }
 
                         if (Diagnostics.PayloadCensus.Enabled)
@@ -2757,13 +2831,14 @@ namespace Nebula.Serialization.Serializers
                             var censusProp = Protocol.UnpackProperty(_cachedSceneFilePath, propIndex);
                             Diagnostics.PayloadCensus.Record(
                                 $"{censusProp.NodePath}.{censusProp.Name} (obj)",
-                                buffer.WritePosition - startPos, false);
+                                body.WriteBitPosition - startBits, false);
                         }
                     }
                     else
                     {
-                        // Rewind buffer - nothing was written
-                        buffer.WritePosition = startPos;
+                        // Rewind - nothing was written (a delegate that rewound itself with
+                        // the byte setter lands here too; both leave no stale bits).
+                        body.WriteBitPosition = startBits;
                         // A refused node-ref write (target spawn not yet acked) banks for
                         // the same reason as the budget skip above - the dirty bit is
                         // already consumed and nothing else re-arms a changed value.
@@ -2776,7 +2851,7 @@ namespace Nebula.Serialization.Serializers
                     Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
                         $"Error serializing object property {PropertyNameForLog(propIndex)}: {ex.InnerException?.Message ?? ex.Message}");
                     // Rewind on error
-                    buffer.WritePosition = startPos;
+                    body.WriteBitPosition = startBits;
                     BankNodeRefIfMasked(propIndex);
                     ClearActualMaskBit(actualMask, propIndex);
                 }
@@ -2807,8 +2882,7 @@ namespace Nebula.Serialization.Serializers
 
             if (!hasAnyData)
             {
-                // Nothing to send - rewind buffer to before mask
-                buffer.WritePosition = maskStartPos;
+                // Nothing to send; nothing has touched the section buffer.
 
                 // SETTLE: an empty section, produced by a clean run, with no latent
                 // obligations. Raw masks, not inference - the interest filter can strip
@@ -2829,32 +2903,37 @@ namespace Nebula.Serialization.Serializers
                 return ExportResult.None;
             }
 
-            // BACKFILL: the mask is final now, so encode it compactly over the placeholder.
-            // A wide mask ships as [header][nonzero bytes] (see PresenceMask), which is
-            // usually far narrower than the reserved worst case; the body is then shifted
-            // down over the slack with one overlapping copy (bodies are tens of bytes).
-            // Nothing records an absolute buffer position during the write - object
-            // serializers stamp per-peer frontiers, the memo captured its blob above - so
-            // moving the body is safe. Only the host's TryAppendSection reads the section,
-            // and it reads WritePosition after this returns.
-            int endPos = buffer.WritePosition;
-            Span<byte> compactMask = stackalloc byte[PresenceMask.HeaderBytes + PresenceMask.MaxMaskBytes];
-            int compactLen = PresenceMask.Encode(actualMask.AsSpan(0, byteCount), compactMask);
-            compactMask.Slice(0, compactLen).CopyTo(buffer.RawBuffer.AsSpan(maskStartPos, compactLen));
-            int maskSlack = reservedMaskBytes - compactLen;
-            if (maskSlack > 0)
+            // HEADER, then the body. Mask reuse: when the wire mask equals the one this
+            // peer applied at the baseline tick, a single bit replaces the mask. The
+            // reference is the WIRE mask stamped in CommitExport (object bits included);
+            // the client recorded the same mask when it applied that tick, and a delta
+            // already requires that tick to be applied, so the reference is loss-safe.
+            long wireMask = MaskToLong(actualMask, byteCount);
+            bool maskReuse = false;
+            if (baselineAge > 0)
             {
-                int bodyStart = maskStartPos + reservedMaskBytes;
-                int bodyLen = endPos - bodyStart;
-                buffer.RawBuffer.AsSpan(bodyStart, bodyLen).CopyTo(buffer.RawBuffer.AsSpan(bodyStart - maskSlack, bodyLen));
-                endPos -= maskSlack;
+                ref var baseRecord = ref state.SentHistory[state.LatestAckedTick % SNAPSHOT_RING_SIZE];
+                maskReuse = baseRecord.Tick == state.LatestAckedTick && baseRecord.WireMask == wireMask;
             }
-            buffer.WritePosition = endPos;
+            int sectionStartBits = buffer.WriteBitPosition;
+            buffer.WriteBool(maskReuse);
+            buffer.WriteBits((ulong)baselineAge, AgeBits);
+            if (!maskReuse)
+            {
+                PresenceMask.Write(buffer, actualMask.AsSpan(0, byteCount), _propertyCount);
+            }
+            // Byte-coded values inside the body were aligned to the scratch's phase 0; the body
+            // must start on a byte boundary in the FINAL stream too. Only the packet assembler
+            // knows that phase, so mark the spot and let it pad there (NetBuffer.MarkAlign);
+            // the reader aligns at the same logical point. See _byteCodedMask.
+            if ((wireMask & _byteCodedMask) != 0)
+            {
+                buffer.MarkAlign();
+            }
+            buffer.AppendBits(body);
             if (TraceWire)
             {
-                // The per-property [Props.W] `end=` offsets above are reserved-relative; this
-                // line is what reconciles them against the client's [Props.R] positions.
-                Debugger.Instance.Log($"[Props.W] mask={Convert.ToHexString(compactMask.Slice(0, compactLen))} reserved={reservedMaskBytes} compact={compactLen} sectionLen={endPos - maskStartPos}");
+                Debugger.Instance.Log($"[Props.W] mask={Convert.ToHexString(actualMask, 0, byteCount)} reuse={maskReuse} age={baselineAge} bodyBits={body.WrittenBits} sectionBits={buffer.WriteBitPosition - sectionStartBits}");
             }
 
             // Packet-coupled stamps (SentHistory, shipped-bit pending, initial sync,
@@ -2862,6 +2941,48 @@ namespace Nebula.Serialization.Serializers
             // bytes to the packet.
             return hasLeftover || objectDeferred ? ExportResult.Partial : ExportResult.Written;
         }
+
+        /// <summary>
+        /// The primitive body of the section under construction, at phase 0. One per thread
+        /// (per-world thread groups export concurrently; a node lives in exactly one world),
+        /// reached only through this property so it is created on first use on that thread -
+        /// the SpawnSerializer idiom. A per-instance buffer would rent 2 KB per net node.
+        /// </summary>
+        private const int BodyScratchCapacity = 4096;
+        [ThreadStatic] private static NetBuffer _bodyScratch;
+        private static NetBuffer BodyScratch => _bodyScratch ??= new NetBuffer(BodyScratchCapacity, usePool: false);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int BytesFor(int bits) => (bits + BitConstants.BitsInByte - 1) / BitConstants.BitsInByte;
+
+        /// <summary>The mask bytes as one 64-bit word, bit i = property i.</summary>
+        private static long MaskToLong(byte[] mask, int byteCount)
+        {
+            long result = 0;
+            for (int i = 0; i < byteCount; i++) result |= (long)mask[i] << (i * BitConstants.BitsInByte);
+            return result;
+        }
+
+        private static void LongToMask(long value, byte[] mask, int byteCount)
+        {
+            for (int i = 0; i < byteCount; i++) mask[i] = (byte)(value >> (i * BitConstants.BitsInByte));
+        }
+
+        // Unaligned numeric forms for the bit stream. The reader mirrors each one.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void PutFloat(NetBuffer buffer, float value) => buffer.WriteBits(BitConverter.SingleToUInt32Bits(value), BitConstants.BitsInInt);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static float GetFloat(NetBuffer buffer) => BitConverter.UInt32BitsToSingle((uint)buffer.ReadBits(BitConstants.BitsInInt));
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void PutHalf(NetBuffer buffer, float value) => buffer.WriteBits(BitConverter.HalfToUInt16Bits((Half)value), BitConstants.BitsInShort);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static float GetHalf(NetBuffer buffer) => (float)BitConverter.UInt16BitsToHalf((ushort)buffer.ReadBits(BitConstants.BitsInShort));
+        /// <summary>Two halves, matching NetWriter.WriteVector2's precision.</summary>
+        private static void PutVector2(NetBuffer buffer, Vector2 v) { PutHalf(buffer, v.X); PutHalf(buffer, v.Y); }
+        private static Vector2 GetVector2(NetBuffer buffer) => new(GetHalf(buffer), GetHalf(buffer));
+        /// <summary>Three floats, matching NetWriter.WriteVector3's precision.</summary>
+        private static void PutVector3(NetBuffer buffer, Vector3 v) { PutFloat(buffer, v.X); PutFloat(buffer, v.Y); PutFloat(buffer, v.Z); }
+        private static Vector3 GetVector3(NetBuffer buffer) => new(GetFloat(buffer), GetFloat(buffer), GetFloat(buffer));
 
         /// <summary>
         /// Banks a node-reference property whose write was skipped or refused while its
@@ -2996,6 +3117,7 @@ namespace Nebula.Serialization.Serializers
             sentRecord.Tick = tick;
             sentRecord.SentMask = primitiveSentMask;
             sentRecord.DirtySentMask = dirtySentMask & primitiveSentMask;
+            sentRecord.WireMask = MaskToLong(_actualMask, _byteCount);
         }
 
         /// <summary>
@@ -3004,34 +3126,29 @@ namespace Nebula.Serialization.Serializers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void WriteAbsolute(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int propIndex, ref PropertyCache current)
         {
+            buffer.WriteBits((ulong)DeltaEncodingFlags.Absolute, EncodingBits);
             if (_propQuantStep[propIndex] > 0f)
             {
                 if (_propTypes[propIndex] == SerialVariantType.Quaternion)
                 {
-                    NetWriter.WriteByte(buffer, (byte)(DeltaEncodingFlags.Absolute | DeltaEncodingFlags.QuatCompressed));
-                    NetWriter.WriteUInt32(buffer, QuantizedCodec.PackQuat(current.QuatValue, _propQuantBits[propIndex]));
+                    QuantizedCodec.WriteQuat(buffer, current.QuatValue, _propQuantBits[propIndex]);
                 }
                 else
                 {
                     Span<int> codes = stackalloc int[QuantizedCodec.MaxComponents];
                     GridCodes(propIndex, in current, codes);
-                    NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.Absolute);
                     QuantizedCodec.WriteCodes(buffer, codes, _propQuantComponents[propIndex]);
                 }
                 return;
             }
 
-            // Quaternion: use smallest-three compression
+            // Quaternion: always smallest-three; the reader knows the type, so no flag.
             if (_propTypes[propIndex] == SerialVariantType.Quaternion)
             {
-                NetWriter.WriteByte(buffer, (byte)(DeltaEncodingFlags.Absolute | DeltaEncodingFlags.QuatCompressed));
-                NetWriter.WriteQuatSmallestThree(buffer, current.QuatValue);
+                QuantizedCodec.WriteQuat(buffer, current.QuatValue, QuantizedCodec.UnquantizedQuatBits);
+                return;
             }
-            else
-            {
-                NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.Absolute);
-                WriteAbsoluteValue(currentWorld, peer, buffer, propIndex, ref current);
-            }
+            WriteAbsoluteValue(currentWorld, peer, buffer, propIndex, ref current);
         }
 
         /// <summary>
@@ -3073,7 +3190,7 @@ namespace Nebula.Serialization.Serializers
                 // Integer step-count delta against the canonical ring value: exact by
                 // construction (the client adds it to Quantize(its identical baseline)),
                 // so never lossy. Small packed word when every component fits, else the
-                // varint form - TryWriteSmallDelta writes nothing when it declines.
+                // magnitude form - TryWriteSmallDelta writes nothing when it declines.
                 int count = _propQuantComponents[propIndex];
                 Span<int> codes = stackalloc int[QuantizedCodec.MaxComponents];
                 Span<int> baseCodes = stackalloc int[QuantizedCodec.MaxComponents];
@@ -3081,12 +3198,12 @@ namespace Nebula.Serialization.Serializers
                 GridCodes(propIndex, in baseline, baseCodes);
                 for (int k = 0; k < count; k++) codes[k] -= baseCodes[k];
 
-                int flagPos = buffer.WritePosition;
-                NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
+                int flagBits = buffer.WriteBitPosition;
+                buffer.WriteBits((ulong)DeltaEncodingFlags.DeltaSmall, EncodingBits);
                 if (!QuantizedCodec.TryWriteSmallDelta(buffer, codes, count))
                 {
-                    buffer.WritePosition = flagPos;
-                    NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
+                    buffer.WriteBitPosition = flagBits;
+                    buffer.WriteBits((ulong)DeltaEncodingFlags.DeltaFull, EncodingBits);
                     QuantizedCodec.WriteCodes(buffer, codes, count);
                 }
                 return false;
@@ -3098,14 +3215,14 @@ namespace Nebula.Serialization.Serializers
                     float deltaF = current.FloatValue - baseline.FloatValue;
                     if (MathF.Abs(deltaF) < SmallDeltaThreshold)
                     {
-                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
-                        NetWriter.WriteHalfFloat(buffer, deltaF);
+                        buffer.WriteBits((ulong)DeltaEncodingFlags.DeltaSmall, EncodingBits);
+                        PutHalf(buffer, deltaF);
                         return !HalfDeltaIsLossless(baseline.FloatValue, deltaF, current.FloatValue);
                     }
                     else
                     {
-                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
-                        NetWriter.WriteFloat(buffer, deltaF);
+                        buffer.WriteBits((ulong)DeltaEncodingFlags.DeltaFull, EncodingBits);
+                        PutFloat(buffer, deltaF);
                         return !FullDeltaIsLossless(baseline.FloatValue, deltaF, current.FloatValue);
                     }
 
@@ -3135,26 +3252,26 @@ namespace Nebula.Serialization.Serializers
                     // Use small encoding for deltas that fit in short range
                     if (deltaL >= short.MinValue && deltaL <= short.MaxValue)
                     {
-                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
-                        NetWriter.WriteInt16(buffer, (short)deltaL);
+                        buffer.WriteBits((ulong)DeltaEncodingFlags.DeltaSmall, EncodingBits);
+                        buffer.WriteBits((ushort)(short)deltaL, BitConstants.BitsInShort);
                     }
                     else
                     {
                         // Full delta - write appropriate size based on width
-                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
+                        buffer.WriteBits((ulong)DeltaEncodingFlags.DeltaFull, EncodingBits);
                         switch (intWidth)
                         {
                             case IntWidth.Byte:
                             case IntWidth.Int16:
                             case IntWidth.UInt16:
-                                NetWriter.WriteInt16(buffer, (short)deltaL);
+                                buffer.WriteBits((ushort)(short)deltaL, BitConstants.BitsInShort);
                                 break;
                             case IntWidth.Int32:
                             case IntWidth.UInt32:
-                                NetWriter.WriteInt32(buffer, (int)deltaL);
+                                buffer.WriteBits((uint)(int)deltaL, BitConstants.BitsInInt);
                                 break;
                             default:
-                                NetWriter.WriteInt64(buffer, deltaL);
+                                buffer.WriteBits((ulong)deltaL, BitConstants.BitsInLong);
                                 break;
                         }
                     }
@@ -3165,16 +3282,16 @@ namespace Nebula.Serialization.Serializers
                     float mag2 = deltaV2.LengthSquared();
                     if (mag2 < SmallDeltaThresholdSq)
                     {
-                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
-                        NetWriter.WriteHalfFloat(buffer, deltaV2.X);
-                        NetWriter.WriteHalfFloat(buffer, deltaV2.Y);
+                        buffer.WriteBits((ulong)DeltaEncodingFlags.DeltaSmall, EncodingBits);
+                        PutHalf(buffer, deltaV2.X);
+                        PutHalf(buffer, deltaV2.Y);
                         return !(HalfDeltaIsLossless(baseline.Vec2Value.X, deltaV2.X, current.Vec2Value.X)
                             && HalfDeltaIsLossless(baseline.Vec2Value.Y, deltaV2.Y, current.Vec2Value.Y));
                     }
                     else
                     {
-                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
-                        NetWriter.WriteVector2(buffer, deltaV2);
+                        buffer.WriteBits((ulong)DeltaEncodingFlags.DeltaFull, EncodingBits);
+                        PutVector2(buffer, deltaV2);
                         return !(FullDeltaIsLossless(baseline.Vec2Value.X, deltaV2.X, current.Vec2Value.X)
                             && FullDeltaIsLossless(baseline.Vec2Value.Y, deltaV2.Y, current.Vec2Value.Y));
                     }
@@ -3184,18 +3301,18 @@ namespace Nebula.Serialization.Serializers
                     float mag3 = deltaV3.LengthSquared();
                     if (mag3 < SmallDeltaThresholdSq)
                     {
-                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaSmall);
-                        NetWriter.WriteHalfFloat(buffer, deltaV3.X);
-                        NetWriter.WriteHalfFloat(buffer, deltaV3.Y);
-                        NetWriter.WriteHalfFloat(buffer, deltaV3.Z);
+                        buffer.WriteBits((ulong)DeltaEncodingFlags.DeltaSmall, EncodingBits);
+                        PutHalf(buffer, deltaV3.X);
+                        PutHalf(buffer, deltaV3.Y);
+                        PutHalf(buffer, deltaV3.Z);
                         return !(HalfDeltaIsLossless(baseline.Vec3Value.X, deltaV3.X, current.Vec3Value.X)
                             && HalfDeltaIsLossless(baseline.Vec3Value.Y, deltaV3.Y, current.Vec3Value.Y)
                             && HalfDeltaIsLossless(baseline.Vec3Value.Z, deltaV3.Z, current.Vec3Value.Z));
                     }
                     else
                     {
-                        NetWriter.WriteByte(buffer, (byte)DeltaEncodingFlags.DeltaFull);
-                        NetWriter.WriteVector3(buffer, deltaV3);
+                        buffer.WriteBits((ulong)DeltaEncodingFlags.DeltaFull, EncodingBits);
+                        PutVector3(buffer, deltaV3);
                         return !(FullDeltaIsLossless(baseline.Vec3Value.X, deltaV3.X, current.Vec3Value.X)
                             && FullDeltaIsLossless(baseline.Vec3Value.Y, deltaV3.Y, current.Vec3Value.Y)
                             && FullDeltaIsLossless(baseline.Vec3Value.Z, deltaV3.Z, current.Vec3Value.Z));
@@ -3216,49 +3333,49 @@ namespace Nebula.Serialization.Serializers
             switch (cache.Type)
             {
                 case SerialVariantType.Bool:
-                    NetWriter.WriteBool(buffer, cache.BoolValue);
+                    buffer.WriteBool(cache.BoolValue);
                     break;
                 case SerialVariantType.Int:
                     // Sized integer types (enums, byte, short, int, long). Must mirror
-                    // NetReader.ReadAbsoluteValue's Int case exactly - a width mismatch
-                    // misaligns every value after this one in the packet.
+                    // ReadAbsoluteValue's Int case exactly - a width mismatch misaligns
+                    // every value after this one in the packet.
                     switch (_propIntWidth[propIndex])
                     {
                         case IntWidth.Byte:
-                            NetWriter.WriteByte(buffer, cache.ByteValue);
+                            buffer.WriteBits(cache.ByteValue, BitConstants.BitsInByte);
                             break;
                         case IntWidth.Int16:
-                            NetWriter.WriteInt16(buffer, (short)cache.IntValue);
+                            buffer.WriteBits((ushort)(short)cache.IntValue, BitConstants.BitsInShort);
                             break;
                         case IntWidth.UInt16:
-                            NetWriter.WriteUInt16(buffer, (ushort)cache.IntValue);
+                            buffer.WriteBits((ushort)cache.IntValue, BitConstants.BitsInShort);
                             break;
                         case IntWidth.Int32:
-                            NetWriter.WriteInt32(buffer, cache.IntValue);
+                            buffer.WriteBits((uint)cache.IntValue, BitConstants.BitsInInt);
                             break;
                         case IntWidth.UInt32:
-                            NetWriter.WriteUInt32(buffer, (uint)cache.IntValue);
+                            buffer.WriteBits((uint)cache.IntValue, BitConstants.BitsInInt);
                             break;
                         default:
                             // Int64: long, ulong, or an unrecognised subtype
-                            NetWriter.WriteInt64(buffer, cache.LongValue);
+                            buffer.WriteBits((ulong)cache.LongValue, BitConstants.BitsInLong);
                             break;
                     }
                     break;
                 case SerialVariantType.Float:
-                    NetWriter.WriteFloat(buffer, cache.FloatValue);
+                    PutFloat(buffer, cache.FloatValue);
                     break;
                 case SerialVariantType.String:
                     NetWriter.WriteString(buffer, cache.StringValue ?? "");
                     break;
                 case SerialVariantType.Vector2:
-                    NetWriter.WriteVector2(buffer, cache.Vec2Value);
+                    PutVector2(buffer, cache.Vec2Value);
                     break;
                 case SerialVariantType.Vector3:
-                    NetWriter.WriteVector3(buffer, cache.Vec3Value);
+                    PutVector3(buffer, cache.Vec3Value);
                     break;
                 case SerialVariantType.Quaternion:
-                    NetWriter.WriteQuaternion(buffer, cache.QuatValue);
+                    QuantizedCodec.WriteQuat(buffer, cache.QuatValue, QuantizedCodec.UnquantizedQuatBits);
                     break;
                 case SerialVariantType.PackedByteArray:
                     NetWriter.WriteBytesWithLength(buffer, cache.RefValue as byte[] ?? Array.Empty<byte>());

@@ -189,6 +189,8 @@ namespace Nebula.Diagnostics
 
         public void RecordMtuExceeded() => _mtuExceeded++;
 
+
+
         public void RecordAckTimeout() => _ackTimeouts++;
 
         /// <summary>Records one per-peer tick payload against its byte budget. Hot path.</summary>
@@ -294,9 +296,8 @@ namespace Nebula.Diagnostics
                  .Append(GC.CollectionCount(2) - _gc2).Append(']');
             _line.Append(",\"mtu_exceeded\":").Append(_mtuExceeded);
             _line.Append(",\"ack_timeouts\":").Append(_ackTimeouts);
-            // One sample per peer per tick, in PRE-pack bytes - the size the splitting
-            // logic bounds. What actually goes on the wire is this minus NebulaPack's
-            // delta compression, so these run larger than bytes_out/packets_out.
+            // One sample per peer per tick: the ledger's payload bytes, the size the splitting
+            // logic bounds. The wire adds the 4-byte tick header per packet.
             _line.Append(",\"payload\":{\"p50\":").Append(payloadP50.ToString("F0", Inv));
             _line.Append(",\"p95\":").Append(payloadP95.ToString("F0", Inv));
             _line.Append(",\"p99\":").Append(payloadP99.ToString("F0", Inv));

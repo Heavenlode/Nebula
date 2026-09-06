@@ -55,6 +55,15 @@ public class PropsBudgetTests
         }
     }
 
+    /// <summary>The flat presence mask of a section: skips [maskMode:1][age:5], reads propertyCount bits.</summary>
+    private static int MaskBitsOf(NetBuffer buf, int propertyCount)
+    {
+        buf.ResetRead();
+        Assert.False(buf.ReadBool());   // no baseline in these fixtures -> mask always on the wire
+        buf.ReadBits(5);
+        return (int)buf.ReadBits(propertyCount);
+    }
+
     private static NetBuffer Buffer() => new(512, usePool: false);
 
     // 1. THE data-loss hazard of splitting: Begin() consumes the global dirty mask, so a
@@ -83,7 +92,7 @@ public class PropsBudgetTests
         result = f.Serializer.Export(f.World, f.Peer, buf, int.MaxValue);
 
         Assert.Equal(ExportResult.Written, result);
-        Assert.Equal(0b11, buf.WrittenSpan[0]);
+        Assert.Equal(0b11, MaskBitsOf(buf, 2));
     }
 
     // 2. A deferred export with nothing eligible banks nothing.
@@ -116,7 +125,7 @@ public class PropsBudgetTests
             sizing.Serializer.Begin();
             var sizingBuf = Buffer();
             Assert.Equal(ExportResult.Written, sizing.Serializer.Export(sizing.World, sizing.Peer, sizingBuf, int.MaxValue));
-            fullSize = sizingBuf.WrittenSpan.Length;
+            fullSize = sizingBuf.WrittenBits;
         }
 
         using var f = new Fixture(SerialVariantType.Int, SerialVariantType.Int);
@@ -125,12 +134,12 @@ public class PropsBudgetTests
         f.Serializer.Begin();
 
         var buf = Buffer();
-        var maxBytes = fullSize - 1;
-        var result = f.Serializer.Export(f.World, f.Peer, buf, maxBytes);
+        var maxBits = fullSize - 1;
+        var result = f.Serializer.Export(f.World, f.Peer, buf, maxBits);
 
         Assert.Equal(ExportResult.Partial, result);
-        Assert.True(buf.WrittenSpan.Length <= maxBytes);
-        Assert.Equal(0b01, buf.WrittenSpan[0]);
+        Assert.True(buf.WrittenBits <= maxBits);
+        Assert.Equal(0b01, MaskBitsOf(buf, 2));
         Assert.Equal(0b10, f.Serializer.PendingDirtyByteForTests(f.PeerId, 0));
     }
 

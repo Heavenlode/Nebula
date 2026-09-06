@@ -23,8 +23,8 @@ namespace Nebula.Serialization
         /// <summary>
         /// How many ticks back an acknowledgement can still be matched to its packet, ~2 s at
         /// 30 TPS. Nothing else in the system acts on an older ack: the props sent-history is
-        /// 32 deep and <see cref="NebulaPackWindow.MaxPackAge"/> is 30, so 64 is a 2x margin
-        /// over the oldest ack any consumer can use. An ack older than this is ignored, which
+        /// 32 deep (and MAX_DELTA_AGE is 30), so 64 is a 2x margin over the oldest ack any
+        /// consumer can use. An ack older than this is ignored, which
         /// costs one extra resend round for a spawn window or an object property's pending
         /// set - both resend every tick until acked. The 30 s join window is covered by that
         /// resend-until-acked rule, not by ack depth, so it does not size this.

@@ -32,7 +32,7 @@ public class PeerAckRingTests
             nodeOut = null;
             return true;
         }
-        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBytes) => ExportResult.None;
+        public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBits) => ExportResult.None;
         public void Acknowledge(WorldRunner currentWorld, NetPeer peer, Tick tick) => AckedTicks.Add(tick);
         public void Cleanup() { }
     }

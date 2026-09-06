@@ -56,20 +56,21 @@ public class InterestResyncTests
             return tick;
         }
 
-        /// <summary>Export at a tick; returns the byte written, or -1 for nothing. Commits when written.</summary>
-        public int Tick(int tick, int maxBytes = int.MaxValue)
+        /// <summary>Export at a tick; returns the bit written (0/1), or -1 for nothing. Commits when written.</summary>
+        public int Tick(int tick, int maxBits = int.MaxValue)
         {
             World.CurrentTick = tick;
             var buf = new NetBuffer(8, usePool: false);
-            var result = Server.Export(World, Peer, buf, maxBytes);
+            var result = Server.Export(World, Peer, buf, maxBits);
             if (result == ExportResult.None)
             {
-                Assert.Equal(0, buf.Length);
+                Assert.Equal(0, buf.WrittenBits);
                 return -1;
             }
-            Assert.Equal(1, buf.Length);
+            Assert.Equal(1, buf.WrittenBits);
             Server.CommitExport(World, Peer, tick);
-            return buf.WrittenSpan[0];
+            buf.ResetRead();
+            return buf.ReadBool() ? 1 : 0;
         }
 
         public void Ack(int tick) => Server.Acknowledge(World, Peer, tick);
@@ -150,7 +151,7 @@ public class InterestResyncTests
         int t = f.NextSlot(1);
         Assert.Equal(0, f.Tick(t));
         Assert.Equal(0, f.Tick(t + 1));
-        Assert.Equal(-1, f.Tick(t + 2, maxBytes: 0));   // deferred, nothing committed
+        Assert.Equal(-1, f.Tick(t + 2, maxBits: 0));   // deferred, nothing committed
         Assert.Equal(0, f.Tick(t + 3));
 
         f.Ack(t + 1);                        // pre-gap

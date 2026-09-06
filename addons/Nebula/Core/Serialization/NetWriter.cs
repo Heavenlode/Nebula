@@ -28,6 +28,21 @@ namespace Nebula.Serialization
             WriteByte(buffer, value ? (byte)1 : (byte)0);
         }
 
+        /// <summary>
+        /// One bit. Mixes freely with the byte-granular calls: a following byte call pads to the
+        /// next byte on its own and the mirrored reader skips the same pad, so a custom type
+        /// never aligns by hand. The reader must call <see cref="NetReader.ReadBit"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteBit(NetBuffer buffer, bool value) => buffer.WriteBool(value);
+
+        /// <summary>
+        /// The low <paramref name="count"/> bits (1..64) of <paramref name="value"/>. The reader
+        /// must call <see cref="NetReader.ReadBits"/> with the same count.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteBits(NetBuffer buffer, ulong value, int count) => buffer.WriteBits(value, count);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteInt16(NetBuffer buffer, short value)
         {
@@ -238,23 +253,6 @@ namespace Nebula.Serialization
             BinaryPrimitives.WriteUInt16LittleEndian(span.Slice(2), ub);
             BinaryPrimitives.WriteUInt16LittleEndian(span.Slice(4), uc);
             buffer.AdvanceWrite(6);
-        }
-
-        /// <summary>
-        /// Zigzag-mapped LEB128 varint: small magnitudes of either sign cost one byte, and any
-        /// int fits in five. Used for quantized property step counts (see QuantizedCodec);
-        /// nothing else in the protocol uses a varint, so this is the only place the shape
-        /// needs to be agreed on.
-        /// </summary>
-        public static void WriteZigZagVarInt(NetBuffer buffer, int value)
-        {
-            uint zig = (uint)((value << 1) ^ (value >> 31));
-            while (zig >= 0x80)
-            {
-                WriteByte(buffer, (byte)(zig | 0x80));
-                zig >>= 7;
-            }
-            WriteByte(buffer, (byte)zig);
         }
 
         #endregion

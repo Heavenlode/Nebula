@@ -72,6 +72,8 @@ public partial class Main : EditorPlugin
     private NetSceneInspector netSceneInspectorInstance;
     private Node addonManagerInstance;
     private ProjectSettingsController projectSettingsController;
+    /// <summary>Per-export BSON switch; see Tools/Export/BsonSupportExportPlugin.cs.</summary>
+    private BsonSupportExportPlugin bsonSupportExportPlugin;
 
     /// <summary>
     /// Gets the plugin name for the Godot editor.
@@ -123,6 +125,11 @@ public partial class Main : EditorPlugin
         projectSettingsController = new ProjectSettingsController();
         AddChild(projectSettingsController);
 
+        // Export-time BSON switch. Registered here rather than as its own addon so every Nebula
+        // consumer gets the "nebula/bson_support" preset option without further setup.
+        bsonSupportExportPlugin = new BsonSupportExportPlugin();
+        AddExportPlugin(bsonSupportExportPlugin);
+
         // Main-screen tab (live network debugger)
         CreateMainScreen(visible: false);
 
@@ -166,6 +173,12 @@ public partial class Main : EditorPlugin
     /// </summary>
     public override void _ExitTree()
     {
+        if (bsonSupportExportPlugin is not null)
+        {
+            RemoveExportPlugin(bsonSupportExportPlugin);
+            bsonSupportExportPlugin = null;
+        }
+
         // Unconditional: the plugin can be disabled mid-session, and a run bar
         // left hidden would be indistinguishable from a broken editor.
         if (editorRunBar is not null && GodotObject.IsInstanceValid(editorRunBar))

@@ -1,3 +1,4 @@
+#if NEBULA_BSON_SUPPORT
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -203,3 +204,4 @@ namespace Nebula.Serialization
         }
     }
 }
+#endif

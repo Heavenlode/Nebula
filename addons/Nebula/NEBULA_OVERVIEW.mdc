@@ -779,3 +779,19 @@ Install in project settings or via `NebulaPlugins.cs`.
 7. **"Reached maximum amount of nodes"** - Peer has 512 nodes. Use aggregate patterns (e.g., one node managing many objects via properties)
 8. **NEBULA001** - Property has `NotifyOnChange=true` but `OnNetChange{PropertyName}` partial method not implemented
 9. **NEBULA002** - Property has `Predicted=true` but `{PropertyName}PredictionTolerance` property not defined
+
+## BSON support (persistence) per build
+
+MongoDB.Bson and the BSON persistence API (`IBsonSerializable`, `NetNode*.BsonSerialize/BsonDeserialize`,
+`BsonTypeHelper`, the generated `Write/ReadBsonProperties`) compile only when `NEBULA_BSON_SUPPORT` is
+defined. Nebula.props decides it, off by default:
+
+- Exports: the preset's `nebula/bson_support` export option (added by `BsonSupportExportPlugin`). Turn it
+  on for server presets. The plugin passes it to the .NET publish as the `NEBULA_BSON_SUPPORT` variable.
+- Editor build: the project setting `Nebula/config/build/bson_support`, so a dev server run from the
+  editor can persist.
+- Manual `dotnet` invocations: `-p:NebulaBsonSupport=true|false`.
+
+Game code that persists goes under `#if NEBULA_BSON_SUPPORT`; a build that cannot reach persistence fails
+to compile on any leak, which is the intended detector. The protocol hash ignores the BSON static-method
+bit so a client without BSON support and a server with it still handshake.

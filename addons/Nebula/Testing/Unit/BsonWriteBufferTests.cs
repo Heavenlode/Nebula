@@ -1,3 +1,4 @@
+#if NEBULA_BSON_SUPPORT
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -224,3 +225,4 @@ public class BsonWriteBufferTests
         BsonWriteBuffer.ClearPoolForTests();
     }
 }
+#endif

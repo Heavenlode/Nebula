@@ -1,7 +1,33 @@
 <Project>
+  <!--
+    BSON support: MongoDB.Bson, IBsonSerializable/IBsonValue, NetNode*.BsonSerialize/BsonDeserialize,
+    NetNodeCommon.ToBSONDocument/FromBSON, BsonTypeHelper/BsonTransformer/BsonWriteBuffer and the generated
+    Write/ReadBsonProperties. OFF by default: a build that never persists carries neither the package nor
+    any of that code, and a code path that still reaches it fails to compile, which is the point.
+
+    Where a build's answer comes from, first match wins:
+      1. NEBULA_BSON_SUPPORT=1|0 in the environment. Nebula's export plugin sets this per export from
+         the preset's "nebula/bson_support" option, so an exported server and an exported client are
+         built from one project with different answers.
+      2. The editor (Debug) build reads the project setting Nebula/config/build/bson_support from
+         project.godot, so a dev server run from the editor can persist.
+      3. Otherwise off.
+    -p:NebulaBsonSupport=true|false on a manual dotnet invocation overrides all of the above.
+  -->
+  <PropertyGroup>
+    <NebulaBsonSupport Condition="'$(NebulaBsonSupport)' == '' And '$(NEBULA_BSON_SUPPORT)' == '1'">true</NebulaBsonSupport>
+    <NebulaBsonSupport Condition="'$(NebulaBsonSupport)' == '' And '$(NEBULA_BSON_SUPPORT)' == '0'">false</NebulaBsonSupport>
+    <NebulaProjectGodot>$(MSBuildProjectDirectory)/project.godot</NebulaProjectGodot>
+    <NebulaBsonSupport Condition="'$(NebulaBsonSupport)' == '' And '$(Configuration)' == 'Debug' And Exists('$(NebulaProjectGodot)') And $([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('$(NebulaProjectGodot)')), '(?m)^config/build/bson_support=true\s*$'))">true</NebulaBsonSupport>
+    <NebulaBsonSupport Condition="'$(NebulaBsonSupport)' == ''">false</NebulaBsonSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(NebulaBsonSupport)' == 'true'">
+    <DefineConstants>$(DefineConstants);NEBULA_BSON_SUPPORT</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="LiteDB" Version="5.0.21" />
-    <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
+    <PackageReference Include="MongoDB.Bson" Version="2.28.0" Condition="'$(NebulaBsonSupport)' == 'true'" />
     <PackageReference Include="FixedMathSharp" Version="1.2.2" />
     <PackageReference Include="xunit" Version="2.9.0" />
 
@@ -9,7 +35,7 @@
       ENet. Upstream stopped publishing to NuGet at 2.4.8, so both the managed
       bindings (ENet/ENet.cs, compiled by the default source glob) and the
       native libraries below are vendored from the ENet-CSharp submodule
-      instead. These land beside the built assembly, where ENet/ENetNativeResolver.cs
+      instead. These land beside the built assembly, where ENet/VendoredNativeResolver.cs
       picks them up; the package's deps.json entries used to do that job. macOS is
       a universal binary, which replaces the old arm64 copy-over-the-x86_64 hack.
       Run native/build-natives.sh to regenerate all four from the submodule.

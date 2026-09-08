@@ -106,7 +106,11 @@ namespace Nebula {
         #endregion
     }
 
-    public interface INetNode<T> : INetNodeBase, INetSerializable<T>, IBsonSerializable<T> where T : Godot.Node { }
+    public interface INetNode<T> : INetNodeBase, INetSerializable<T>
+#if NEBULA_BSON_SUPPORT
+        , IBsonSerializable<T>
+#endif
+        where T : Godot.Node { }
 
     /// <summary>
     /// Implemented by net nodes whose sync can be deliberately suspended at runtime (e.g.

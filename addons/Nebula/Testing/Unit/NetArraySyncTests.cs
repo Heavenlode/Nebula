@@ -549,6 +549,7 @@ public class NetArraySyncTests
         AssertArraysEqual(server, client);
     }
 
+#if NEBULA_BSON_SUPPORT
     // B9. BSON persistence round-trips bool arrays (save/reload path).
     [NebulaUnitTest]
     public void Bool_BsonRoundTrip()
@@ -563,6 +564,7 @@ public class NetArraySyncTests
         for (int i = 0; i < arr.Length; i++)
             Assert.Equal(arr[i], restored[i]);
     }
+#endif
 
     // ------------------------------------------------------------------------------------------------
     // Per-peer forking (NetProperty.PerPeerState on a NetArray). The server keeps one instance per

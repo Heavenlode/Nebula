@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Nebula.Serialization;
 
 namespace Nebula.Generators
 {
@@ -193,7 +194,11 @@ namespace Nebula.Generators
                 Mix("type");
                 Mix(classIndex.ToString(CultureInfo.InvariantCulture));
                 Mix(method.TypeFullName);
-                Mix(method.MethodType.ToString(CultureInfo.InvariantCulture));
+                // Only the wire-facing bits take part. BsonDeserialize is persistence-only: a client
+                // compiled without NEBULA_BSON_SUPPORT has no IBsonSerializable types at all, yet must
+                // hash identically to the server it connects to.
+                const int wireMethodMask = (int)(StaticMethodType.NetworkSerialize | StaticMethodType.NetworkDeserialize);
+                Mix((method.MethodType & wireMethodMask).ToString(CultureInfo.InvariantCulture));
                 Mix(method.IsValueType ? "1" : "0");
             }
 

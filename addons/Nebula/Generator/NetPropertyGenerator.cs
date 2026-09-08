@@ -983,6 +983,12 @@ public class NetPropertyGenerator : IIncrementalGenerator
             sb.AppendLine("    }");
             sb.AppendLine();
 
+            // Everything BSON is persistence-only. The base virtuals the overrides below replace, and
+            // MongoDB.Bson itself, exist only when the project defines NEBULA_BSON_SUPPORT (Nebula.props,
+            // NebulaBsonSupport=true). Emitted as preprocessor text rather than decided here: generated
+            // sources compile against the project's own defines, so the generator needs no input for it.
+            sb.AppendLine("#if NEBULA_BSON_SUPPORT");
+
             // Generate SetBsonPropertyByName - sets BSON-serializable properties by name
             var bsonProps = propList.Where(p => p!.IsBsonSerializable).ToList();
             if (bsonProps.Count > 0)
@@ -1017,10 +1023,12 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine();
             }
 
+            sb.AppendLine("#endif");
             sb.AppendLine("    #endregion");
             sb.AppendLine();
 
-            // Generate BSON serialization helpers
+            // Generate BSON serialization helpers (persistence-only, see above)
+            sb.AppendLine("#if NEBULA_BSON_SUPPORT");
             sb.AppendLine("    #region BSON Serialization");
             sb.AppendLine();
 
@@ -1072,6 +1080,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
             sb.AppendLine();
 
             sb.AppendLine("    #endregion");
+            sb.AppendLine("#endif");
             sb.AppendLine();
 
             // Generate interpolation methods for properties with Interpolate = true

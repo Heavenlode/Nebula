@@ -123,6 +123,15 @@ public partial class ProjectSettingsController : Node
             {"hint_string", "100,65535,1"},
         });
 
+        // ── Build ────────────────────────────────────────────────────────
+        // Whether the EDITOR build compiles MongoDB.Bson and the BSON persistence API; Nebula.props
+        // reads this key straight from project.godot. Exports decide per preset through the
+        // "nebula/bson_support" export option (see Tools/Export/BsonSupportExportPlugin.cs). Off by
+        // default: a project that never persists ships no BSON anywhere.
+        Register(BsonSupportExportPlugin.ProjectSettingName, false, new(){
+            {"type", (int)Variant.Type.Bool},
+        });
+
         // Liveness cutoff for in-world peers: seconds without a tick ack before the
         // server force-disconnects.
         Register(NetRunner.ACK_TIMEOUT_SETTING, NetRunner.DefaultAckTimeoutSeconds, new(){

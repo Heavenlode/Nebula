@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Godot;
+#if NEBULA_BSON_SUPPORT
 using MongoDB.Bson;
+#endif
 using Nebula.Internal.Editor.DTO;
 using Nebula.Serialization;
 using Nebula.Serialization.Serializers;
@@ -365,12 +367,14 @@ namespace Nebula
             Hub?.UnregisterWorld(this);
         }
 
+#if NEBULA_BSON_SUPPORT
         private int _debugExportCounter;
 
         /// <summary>
         /// Cycle-guard set for the world-state export, reused between exports.
         /// </summary>
         private readonly HashSet<Node> _debugVisited = new();
+#endif
 
         /// <summary>
         /// Writes an id's raw 16 bytes into a debug payload.
@@ -401,6 +405,7 @@ namespace Nebula
         /// </summary>
         private void EmitDebugWorldState(DebugHub hub)
         {
+#if NEBULA_BSON_SUPPORT
             if (RootScene?.NetNode is not IBsonSerializableBase root)
                 return;
             if (_debugExportCounter++ % NetRunner.DebugExportInterval != 0)
@@ -434,6 +439,9 @@ namespace Nebula
             using var buffer = new NetBuffer(json.Length * 4 + 64, usePool: true);
             NetWriter.WriteString(buffer, json);
             hub.Enqueue(WorldId, DebugDataType.EXPORT, buffer, lossy: true);
+#endif
+            // Without persistence there is no BsonSerialize to export from; the debugger's world-state
+            // tab is simply empty on such builds.
         }
 
         /// <summary>

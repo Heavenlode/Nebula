@@ -80,7 +80,7 @@ namespace Nebula
 
         public static void NetworkSerialize(WorldRunner currentWorld, NetPeer peer, in NetId value, NetBuffer buffer)
         {
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 NetWriter.WriteUInt16(buffer, currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[value]);
             }
@@ -92,7 +92,7 @@ namespace Nebula
 
         public static NetId NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 var id = NetReader.ReadUInt16(buffer);
                 return currentWorld.GetNetIdFromPeerId(peer, id);

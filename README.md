@@ -19,6 +19,7 @@ Nebula is a tick-based, server-authoritative networking framework that makes bui
 - [Installation](#installation)
   - [Requirements](#requirements)
   - [Setup](#setup)
+  - [Build configuration](#build-configuration)
 - [Core Concepts](#core-concepts)
   - [Network Nodes](#network-nodes)
   - [Network Properties](#network-properties)
@@ -152,6 +153,14 @@ If you're eager to get started quickly, you can follow the [Big Chungus tutorial
 4. **Enable the plugin**
    
    In Godot: Project → Project Settings → Plugins → Enable "Nebula"
+
+### Build configuration
+
+Exports can fix the network role at compile time (`NetRunner.IsServer` / `IsClient` become `const`, so the
+other role's code is compiled out), opt into BSON persistence support (off by default), and opt into
+trimming the game assembly on NativeAOT platforms. All three are preset options set by Nebula's export
+plugin; the editor build is unaffected. See
+[Build Configuration](Documentation/getting-started/build-configuration.md).
 
 ## Core Concepts
 

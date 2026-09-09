@@ -134,7 +134,7 @@ namespace Nebula.Utility.Nodes
         protected virtual void OnNetChangeNetPosition(int tick, Vector3 oldVal, Vector3 newVal)
         {
             // During spawn (before world ready), sync imported position to SourceNode
-            if (!Network.IsWorldReady && Network.IsClient)
+            if (!Network.IsWorldReady && NetRunner.IsClient)
             {
                 SourceNode ??= GetParent3D();
                 if (SourceNode != null)
@@ -153,7 +153,7 @@ namespace Nebula.Utility.Nodes
             // For owned predicted entities post-spawn, don't modify NetRotation here.
             // Reconciliation will handle applying confirmed state if needed.
             // Only normalize and apply for non-owned or during spawn.
-            if (Network.IsCurrentOwner && Network.IsWorldReady && NetRunner.Instance.IsClient)
+            if (Network.IsCurrentOwner && Network.IsWorldReady && NetRunner.IsClient)
             {
                 // Owned + world ready + client = prediction is active, don't interfere
                 return;
@@ -163,7 +163,7 @@ namespace Nebula.Utility.Nodes
             NetRotation = SafeNormalize(newVal);
 
             // During spawn (before world ready), sync imported rotation to SourceNode
-            if (!Network.IsWorldReady && Network.IsClient)
+            if (!Network.IsWorldReady && NetRunner.IsClient)
             {
                 SourceNode ??= GetParent3D();
                 if (SourceNode != null)
@@ -221,7 +221,7 @@ namespace Nebula.Utility.Nodes
         {
             _isTeleporting = true;
             // Clear snapshot buffer on teleport to prevent interpolating from old position
-            if (newVal && Network.IsClient)
+            if (newVal && NetRunner.IsClient)
             {
                 Network.ClearSnapshotBuffer();
             }
@@ -233,13 +233,13 @@ namespace Nebula.Utility.Nodes
             base._WorldReady();
             SourceNode ??= GetParent3D();
 
-            if (Network.IsServer && SourceNode != null)
+            if (NetRunner.IsServer && SourceNode != null)
             {
                 // Server: initialize NetPosition from SourceNode so first state export is correct
                 NetPosition = SourceNode.Position;
                 NetRotation = SafeNormalize(SourceNode.Quaternion);
             }
-            if (Network.IsClient && SourceNode != null)
+            if (NetRunner.IsClient && SourceNode != null)
             {
                 SourceNode.Position = NetPosition;
                 SourceNode.Quaternion = SafeNormalize(NetRotation);
@@ -257,12 +257,12 @@ namespace Nebula.Utility.Nodes
             // Position was the visible half only because rotation was partly covered: it got touched
             // here, and RotationSnapThreshold catches whatever error survived. Position has no such
             // threshold, so nothing caught it.
-            if (Network.IsClient && TargetNode != null && SourceNode != null)
+            if (NetRunner.IsClient && TargetNode != null && SourceNode != null)
             {
                 TargetNode.Position = SourceNode.Position;
                 TargetNode.Quaternion = SafeNormalize(SourceNode.Quaternion);
             }
-            else if (Network.IsClient && TargetNode != null)
+            else if (NetRunner.IsClient && TargetNode != null)
             {
                 // No source to seed from -- keep the old guarantee that the quaternion is at least valid.
                 TargetNode.Quaternion = SafeNormalize(TargetNode.Quaternion);
@@ -282,7 +282,7 @@ namespace Nebula.Utility.Nodes
 
         public void Face(Vector3 direction)
         {
-            if (Network.IsClient)
+            if (NetRunner.IsClient)
             {
                 return;
             }
@@ -356,7 +356,7 @@ namespace Nebula.Utility.Nodes
                 // Server: skip entirely — no need to serialize global transform during matched state.
                 // Owned client: still read from SourceNode to keep the prediction buffer current,
                 // so RestoreToPredictedState always has valid values.
-                if (Network.IsClient && Network.IsCurrentOwner && SourceNode != null)
+                if (NetRunner.IsClient && Network.IsCurrentOwner && SourceNode != null)
                 {
                     NetPosition = SourceNode.Position;
                     NetRotation = SafeNormalize(SourceNode.Quaternion);
@@ -371,7 +371,7 @@ namespace Nebula.Utility.Nodes
             }
 
             // Non-owned clients don't run simulation - interpolation handles them
-            if (Network.IsClient && !Network.IsCurrentOwner) return;
+            if (NetRunner.IsClient && !Network.IsCurrentOwner) return;
 
             // Server AND owned client: read from SourceNode (physics simulation node)
             if (SourceNode != null)
@@ -381,7 +381,7 @@ namespace Nebula.Utility.Nodes
             }
 
             // Buffer position/velocity for Hermite interpolation (owned client, forward simulation only)
-            if (Network.IsClient && Network.IsCurrentOwner && !Network.IsResimulating
+            if (NetRunner.IsClient && Network.IsCurrentOwner && !Network.IsResimulating
                 && InterpolationMode == VisualInterpolationMode.Hermite && SourceNode != null)
             {
                 BufferHermiteState(tick);
@@ -472,7 +472,7 @@ namespace Nebula.Utility.Nodes
         /// </summary>
         public void AbsorbVisualDiscontinuity(float seconds = DefaultAbsorbSeconds)
         {
-            if (!Network.IsClient || seconds <= 0f) return;
+            if (!NetRunner.IsClient || seconds <= 0f) return;
 
             var target = TargetNode ?? SourceNode;
             if (target == null) return;
@@ -495,7 +495,7 @@ namespace Nebula.Utility.Nodes
         /// being resumed, so extrapolation starts correct rather than ramping up to it.</param>
         public void ResumeInterpolation(Vector3 velocity, float seconds = DefaultAbsorbSeconds)
         {
-            if (!Network.IsClient) return;
+            if (!NetRunner.IsClient) return;
 
             AbsorbVisualDiscontinuity(seconds);
             VisualSmoothing = true;
@@ -577,7 +577,7 @@ namespace Nebula.Utility.Nodes
         {
             base._Process(delta);
             if (!Network.IsWorldReady) return;
-            if (!Network.IsClient) return;
+            if (!NetRunner.IsClient) return;
 
             // Skip visual interpolation during resimulation - physics is replaying history
             if (Network.IsResimulating) return;

@@ -60,6 +60,10 @@ internal static class VendoredNativeResolver
         }
     }
 
+    // Assembly.Location is empty under NativeAOT and single-file; the loop below skips an empty
+    // directory and falls through to AppContext.BaseDirectory, which is where the natives sit there.
+    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("SingleFile", "IL3000",
+        Justification = "An empty Location is skipped; AppContext.BaseDirectory is the fallback.")]
     private static IntPtr Resolve(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
     {
         // "__Internal" (statically linked, iOS) and explicit paths are the runtime's business.

@@ -367,7 +367,7 @@ namespace Nebula
 
             // string is length-prefixed UTF-8; size generously, this is rare.
             using var payload = new NetBuffer(scenePath.Length * 4 + 32, usePool: false);
-            NetWriter.WriteBool(payload, NetRunner.Instance != null && NetRunner.Instance.IsServer);
+            NetWriter.WriteBool(payload, NetRunner.IsServer);
             NetWriter.WriteString(payload, scenePath);
             NetWriter.WriteInt32(payload, world.CurrentTick);
 

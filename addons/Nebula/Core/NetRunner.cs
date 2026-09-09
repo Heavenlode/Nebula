@@ -91,11 +91,43 @@ namespace Nebula
         }
 
         /// <summary>
-        /// This is set after <see cref="StartClient"/> or <see cref="StartServer"/> is called, i.e. when <see cref="NetStarted"/> == true. Before that, this value is unreliable.
+        /// The process's network role.
+        ///
+        /// <para>Fixed at compile time in exported builds (NebulaRole in Nebula.props), so
+        /// <c>if (NetRunner.IsClient) return;</c> and every branch like it folds away and the other
+        /// role's code is never emitted. Decided at runtime in the editor build, which hosts the dev
+        /// server and whose tests fake both roles in one process: there it is set by
+        /// <see cref="StartServer"/> and false before that, which is also what a client is.</para>
         /// </summary>
-        internal bool IsServer { get; private set; }
+#if NEBULA_ROLE_SERVER
+        public const bool RoleIsFixed = true;
+        public const bool IsServer = true;
+        public const bool IsClient = false;
+#elif NEBULA_ROLE_CLIENT
+        public const bool RoleIsFixed = true;
+        public const bool IsServer = false;
+        public const bool IsClient = true;
+#else
+        public const bool RoleIsFixed = false;
+        public static bool IsServer { get; private set; }
+        public static bool IsClient => !IsServer;
+#endif
 
-        internal bool IsClient => !IsServer;
+        /// <summary>
+        /// Test seam: lets a test exercise the server path in a process that never started a
+        /// network. Replaces flipping the flag by reflection, which a constant cannot support.
+        /// </summary>
+        internal static void ForceRoleForTests(bool isServer)
+        {
+#if NEBULA_ROLE_SERVER || NEBULA_ROLE_CLIENT
+            throw new InvalidOperationException("The network role is fixed in this build.");
+#else
+            IsServer = isServer;
+#endif
+        }
+
+        /// <summary>Exit code of a role-fixed build launched as the other role.</summary>
+        private const int RoleMismatchExitCode = 4;
 
         /// <summary>
         /// This is set to true once <see cref="StartClient"/> or <see cref="StartServer"/> have succeeded.
@@ -193,6 +225,16 @@ namespace Nebula
 
         public override void _Ready()
         {
+            // A role-fixed build launched as the other role would run with a role constant that
+            // contradicts every process-level decision made from the command line and feature tags.
+            if (RoleIsFixed && Env.Instance != null && Env.Instance.HasServerFeatures != IsServer)
+            {
+                GD.PrintErr($"[Nebula] FATAL: this build is compiled as a {(IsServer ? "server" : "client")} "
+                    + $"but was launched as a {(Env.Instance.HasServerFeatures ? "server" : "client")}.");
+                GetTree().Quit(RoleMismatchExitCode);
+                return;
+            }
+
             _ = MTU;
             // Protocol is fully static - no initialization needed
             StartTelemetryHub();
@@ -403,6 +445,10 @@ namespace Nebula
 
         public void StartServer()
         {
+            // Folds to nothing on a server build and to an unconditional throw on a client build.
+            if (RoleIsFixed && !IsServer)
+                throw new InvalidOperationException("StartServer on a client build (NebulaRole=client).");
+
             System.Runtime.GCSettings.LatencyMode = System.Runtime.GCLatencyMode.SustainedLowLatency;
 
             if (Authentication == null)
@@ -410,7 +456,9 @@ namespace Nebula
                 SetAuthentication(new DefaultAuthenticator());
             }
 
+#if !NEBULA_ROLE_SERVER && !NEBULA_ROLE_CLIENT
             IsServer = true;
+#endif
             Debugger.Instance.Log("Starting Server");
             GetTree().MultiplayerPoll = false;
 
@@ -448,6 +496,9 @@ namespace Nebula
 
         public void StartClient()
         {
+            if (RoleIsFixed && IsServer)
+                throw new InvalidOperationException("StartClient on a server build (NebulaRole=server).");
+
             System.Runtime.GCSettings.LatencyMode = System.Runtime.GCLatencyMode.Interactive;
 
             if (Authentication == null)

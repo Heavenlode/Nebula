@@ -126,11 +126,22 @@ public partial class ProjectSettingsController : Node
         // ── Build ────────────────────────────────────────────────────────
         // Whether the EDITOR build compiles MongoDB.Bson and the BSON persistence API; Nebula.props
         // reads this key straight from project.godot. Exports decide per preset through the
-        // "nebula/bson_support" export option (see Tools/Export/BsonSupportExportPlugin.cs). Off by
+        // "nebula/bson_support" export option (see Tools/Export/NebulaBuildExportPlugin.cs). Off by
         // default: a project that never persists ships no BSON anywhere.
-        Register(BsonSupportExportPlugin.ProjectSettingName, false, new(){
+        Register(NebulaBuildExportPlugin.ProjectSettingName, false, new(){
             {"type", (int)Variant.Type.Bool},
         });
+
+        // Probe for the export plugin, not a user setting: the preset API exposes no "is this a
+        // dedicated server" query to plugins, but EditorExportPreset.GetProjectSetting answers with the
+        // preset's feature tags applied. Base value false, feature override true, so
+        // GetProjectSetting(probe) is true exactly for presets carrying the dedicated_server tag.
+        ProjectSettings.SetSetting(NebulaBuildExportPlugin.DedicatedServerProbeSetting, false);
+        ProjectSettings.SetInitialValue(NebulaBuildExportPlugin.DedicatedServerProbeSetting, false);
+        ProjectSettings.SetAsInternal(NebulaBuildExportPlugin.DedicatedServerProbeSetting, true);
+        ProjectSettings.SetSetting(NebulaBuildExportPlugin.DedicatedServerProbeOverride, true);
+        ProjectSettings.SetInitialValue(NebulaBuildExportPlugin.DedicatedServerProbeOverride, true);
+        ProjectSettings.SetAsInternal(NebulaBuildExportPlugin.DedicatedServerProbeOverride, true);
 
         // Liveness cutoff for in-world peers: seconds without a tick ack before the
         // server force-disconnects.

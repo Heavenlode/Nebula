@@ -186,7 +186,7 @@ public class NetFunctionGenerator : IIncrementalGenerator
                 sb.AppendLine("    /// </summary>");
                 sb.AppendLine($"    public void {func.FunctionName}({sigBuilder})");
                 sb.AppendLine("    {");
-                sb.AppendLine("        if (!Network.IsServer)");
+                sb.AppendLine("        if (!global::Nebula.NetRunner.IsServer)");
                 sb.AppendLine($"            throw new global::System.InvalidOperationException(\"{func.FunctionName}(global::Nebula.UUID[], ...) is a server-only peer-targeted variant and cannot be called on a client.\");");
                 sb.AppendLine("        global::Nebula.NetFunctionCall.TargetPeers = peers;");
                 sb.AppendLine("        try");

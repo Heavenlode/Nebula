@@ -38,12 +38,12 @@ namespace Nebula
                     args.FlowBehavior = FlowBehavior.Return;
                 }
 
-                if (NetRunner.Instance.IsServer && (Source & NetworkSources.Server) == 0)
+                if (NetRunner.IsServer && (Source & NetworkSources.Server) == 0)
                 {
                     return;
                 }
 
-                if (NetRunner.Instance.IsClient && (Source & NetworkSources.Client) == 0)
+                if (NetRunner.IsClient && (Source & NetworkSources.Client) == 0)
                 {
                     return;
                 }

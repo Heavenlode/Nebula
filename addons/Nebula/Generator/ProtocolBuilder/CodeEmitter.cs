@@ -225,7 +225,7 @@ namespace Nebula.Generators
             
             foreach (var kvp in data.StaticMethods)
             {
-                sb.AppendLine($"                [{kvp.Key}] = new StaticMethodInfo((StaticMethodType){kvp.Value.MethodType}, \"{Escape(kvp.Value.TypeFullName)}\"),");
+                sb.AppendLine($"                [{kvp.Key}] = new StaticMethodInfo((StaticMethodType){kvp.Value.MethodType}, \"{Escape(kvp.Value.TypeFullName)}\", {(kvp.Value.IsNodeReference ? "true" : "false")}, {(kvp.Value.IsNetArray ? "true" : "false")}),");
             }
             
             sb.AppendLine("            }.ToFrozenDictionary();");

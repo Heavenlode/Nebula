@@ -74,7 +74,7 @@ public partial class Player : NetNode
     public override void _WorldReady() {
         base._WorldReady();
 
-        if (Network.IsClient && Network.IsCurrentOwner) {
+        if (NetRunner.IsClient && Network.IsCurrentOwner) {
             var camera = new Camera3D();
             camera.Position = new Vector3(0, 10, 0);
             GetNode("Model").AddChild(camera);

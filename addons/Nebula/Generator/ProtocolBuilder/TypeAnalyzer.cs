@@ -85,6 +85,10 @@ namespace Nebula.Generators
             /// True if this type implements INetValue (value type), false if INetSerializable (reference type).
             /// </summary>
             public bool IsValueType { get; init; }
+            /// <summary>Implements INetNodeBase: a property of this type is a node reference.</summary>
+            public bool IsNodeReference { get; init; }
+            /// <summary>Is NetArray&lt;T&gt; (any T).</summary>
+            public bool IsNetArray { get; init; }
         }
 
         public sealed class AnalysisResult
@@ -126,6 +130,9 @@ namespace Nebula.Generators
                     HasNetworkDeserialize = hasAnyNetSerializable && HasStaticMethod(type, "NetworkDeserialize"),
                     HasBsonDeserialize = hasBsonSerializable && HasStaticMethod(type, "BsonDeserialize"),
                     IsValueType = hasNetValue,
+                    // Decided here rather than by reflection at runtime (which trimming cannot see).
+                    IsNodeReference = interfaces.Any(i => i.Name == "INetNodeBase"),
+                    IsNetArray = type.IsGenericType && type.OriginalDefinition.Name == "NetArray",
                 };
 
                 result.SerializableTypes.Add(info);

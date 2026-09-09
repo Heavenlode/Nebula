@@ -10,7 +10,7 @@
 # enet_linked_version(), so ENet.cs and the three natives must always be
 # regenerated from the same tag.
 #
-# Requires clang (macOS) and a running Docker daemon (Linux + Windows).
+# Requires clang and the iOS SDKs (macOS, Xcode) and a running Docker daemon (Linux + Windows).
 
 set -euo pipefail
 
@@ -49,6 +49,21 @@ echo "==> managed bindings"
 echo "==> macOS (universal arm64 + x86_64)"
 clang -O2 -shared -fPIC -DENET_DLL -arch arm64 -arch x86_64 -mmacosx-version-min=11.0 \
 	-o "$here/osx/libenet.dylib" "$src/enet.c"
+
+echo "==> iOS (static: device arm64, simulator arm64, simulator x86_64)"
+# Linked into the NativeAOT image by Nebula.props; ENet.cs binds "__Internal" under __IOS__.
+ios_sdk="$(xcrun -sdk iphoneos --show-sdk-path)"
+sim_sdk="$(xcrun -sdk iphonesimulator --show-sdk-path)"
+tmp="$(mktemp -d)"
+build_ios_static() { # <rid> <arch> <sdk> <min-version-flag>
+	mkdir -p "$here/$1"
+	clang -O2 -fPIC -c -arch "$2" -isysroot "$3" "$4" -o "$tmp/enet-$1.o" "$src/enet.c"
+	ar rcs "$here/$1/libenet.a" "$tmp/enet-$1.o"
+}
+build_ios_static ios-arm64 arm64 "$ios_sdk" -miphoneos-version-min=15.0
+build_ios_static iossimulator-arm64 arm64 "$sim_sdk" -mios-simulator-version-min=15.0
+build_ios_static iossimulator-x64 x86_64 "$sim_sdk" -mios-simulator-version-min=15.0
+rm -rf "$tmp"
 
 echo "==> Linux x64 and Windows x64 (via Docker)"
 docker run --rm --platform linux/amd64 \

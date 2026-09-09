@@ -43,6 +43,10 @@
   <PropertyGroup Condition="'$(NebulaRole)' == 'server'">
     <DefineConstants>$(DefineConstants);NEBULA_ROLE_SERVER</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="$(RuntimeIdentifier.StartsWith('ios'))">
+    <!-- Statically linked ENet on iOS; see the NativeLibrary item below. -->
+    <DefineConstants>$(DefineConstants);__IOS__</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(NebulaRole)' == 'client'">
     <DefineConstants>$(DefineConstants);NEBULA_ROLE_CLIENT</DefineConstants>
   </PropertyGroup>
@@ -87,11 +91,21 @@
       Run native/build-natives.sh to regenerate all four from the submodule.
     -->
     <Content Include="$(MSBuildThisFileDirectory)native\osx\libenet.dylib" Link="enet.dylib"
-      CopyToOutputDirectory="PreserveNewest" Visible="false" />
+      CopyToOutputDirectory="PreserveNewest" Visible="false" Condition="!$(RuntimeIdentifier.StartsWith('ios'))" />
     <Content Include="$(MSBuildThisFileDirectory)native\linux-x64\libenet.so" Link="libenet.so"
-      CopyToOutputDirectory="PreserveNewest" Visible="false" />
+      CopyToOutputDirectory="PreserveNewest" Visible="false" Condition="!$(RuntimeIdentifier.StartsWith('ios'))" />
     <Content Include="$(MSBuildThisFileDirectory)native\win-x64\enet.dll" Link="enet.dll"
-      CopyToOutputDirectory="PreserveNewest" Visible="false" />
+      CopyToOutputDirectory="PreserveNewest" Visible="false" Condition="!$(RuntimeIdentifier.StartsWith('ios'))" />
+    <!--
+      iOS cannot load a vendored native library at runtime, so ENet is linked into the AOT image:
+      ENet.cs binds "__Internal" under __IOS__, and the static library for the runtime identifier
+      being published (device, simulator arm64, simulator x64) goes to the native linker.
+    -->
+    <NativeLibrary Include="$(MSBuildThisFileDirectory)native\$(RuntimeIdentifier)\libenet.a"
+      Condition="$(RuntimeIdentifier.StartsWith('ios'))" />
+    <!-- Bind the "__Internal" imports at link time. Without this ILC looks them up by name at
+         runtime, nothing references the archive, and the linker drops it. -->
+    <DirectPInvoke Include="__Internal" Condition="$(RuntimeIdentifier.StartsWith('ios'))" />
 
     <!-- Fody Weavers -->
     <PackageReference Include="Fody" Version="6.8.0" />
@@ -119,8 +133,15 @@
   <PropertyGroup>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
   </PropertyGroup>
+  <!--
+    Garbage collector. The server GC (one heap per core) is for the dedicated server and the editor
+    build that hosts a dev server. A client-role build uses the workstation GC: one player's process
+    does not want a heap per core, and the NativeAOT mobile targets refuse to start with the server
+    GC runtime linked in ("Fatal error. .NET runtime failed to initialize." on iOS).
+  -->
   <PropertyGroup>
-    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <ServerGarbageCollection Condition="'$(ServerGarbageCollection)' == '' And '$(NebulaRole)' == 'client'">false</ServerGarbageCollection>
+    <ServerGarbageCollection Condition="'$(ServerGarbageCollection)' == ''">true</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
   </PropertyGroup>
 </Project>

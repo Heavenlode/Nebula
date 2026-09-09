@@ -33,7 +33,7 @@ public partial class Scene : NetNode3D
         if (command.StartsWith("Input:"))
         {
             // Only the client should handle input commands (clients set input, server receives it)
-            if (NetRunner.Instance.IsServer) return;
+            if (NetRunner.IsServer) return;
             
             var inputParts = command.Substring("Input:".Length).Trim().Split(':');
             if (inputParts.Length != 2)
@@ -82,7 +82,7 @@ public partial class Scene : NetNode3D
         if (command == "CanDespawnNodes")
         {
             verifyingDespawn = true;
-            if (NetRunner.Instance.IsClient)
+            if (NetRunner.IsClient)
             {
                 return;
             }

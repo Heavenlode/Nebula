@@ -52,7 +52,7 @@ public partial class Player : NetNode3D
     public override void _NetworkProcess(int tick)
     {
         base._NetworkProcess(tick);
-        if (!NetRunner.Instance.IsServer) return;
+        if (!NetRunner.IsServer) return;
 
         ref readonly var input = ref Network.GetInput<TestInput>();
         

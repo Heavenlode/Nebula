@@ -10,6 +10,7 @@ config_version=5
 
 [Nebula]
 
+config/build/bson_support=true
 config/log_level=8
 
 [application]

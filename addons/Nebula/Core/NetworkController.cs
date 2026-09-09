@@ -625,10 +625,30 @@ namespace Nebula
 			if (what == NotificationPredelete)
 			{
 				if (!IsWorldReady) return;
-				if (NetParent != null && NetParent.RawNode is INetNodeBase _netNodeParent)
-				{
-					_netNodeParent.Network.DynamicNetworkChildren.Remove(this);
-				}
+				DetachFromWorld();
+			}
+		}
+
+		/// <summary>
+		/// Drops what the world-ready path registered on the world. Called by the WorldRunner when
+		/// it removes this node's NetScene. Necessary rather than nice: this controller is a
+		/// RefCounted the node refers to, and the world's join event is a multicast delegate, so
+		/// a despawned root that stayed subscribed kept itself, its subtree and its serializer
+		/// state alive for the life of the world (measured: one full player per departed peer).
+		/// Removing a handler that was never added is a no-op, so there is no bookkeeping.
+		/// </summary>
+		internal void DetachFromWorld()
+		{
+			if (CurrentWorld != null)
+			{
+				CurrentWorld.OnPlayerJoined -= _OnPeerConnected;
+			}
+			// The parent's dynamic-children set is the other strong reference a despawned child
+			// leaves behind; this used to live only in NotificationPredelete, which a RefCounted
+			// that is still referenced never receives.
+			if (NetParent != null && NetParent.RawNode is INetNodeBase netNodeParent)
+			{
+				netNodeParent.Network.DynamicNetworkChildren.Remove(this);
 			}
 		}
 

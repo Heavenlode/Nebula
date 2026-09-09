@@ -2834,7 +2834,10 @@ namespace Nebula
             if (_isProcessingNetScenes)
                 _netIdsToRemove.Add(id);
             else
-                NetScenes.Remove(id);
+            {
+                if (NetScenes.Remove(id, out var removed))
+                    removed?.DetachFromWorld();
+            }
             
             // Clean up networkIds (used on client for GetNodeFromNetId(long) lookups)
             networkIds.Remove(id.Value);
@@ -2850,7 +2853,10 @@ namespace Nebula
             _pendingNetSceneAdds.Clear();
 
             foreach (var id in _netIdsToRemove)
-                NetScenes.Remove(id);
+            {
+                if (NetScenes.Remove(id, out var removed))
+                    removed?.DetachFromWorld();
+            }
             _netIdsToRemove.Clear();
         }
 

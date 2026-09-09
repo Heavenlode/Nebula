@@ -102,8 +102,12 @@ namespace Nebula.Generators
         {
             var result = new AnalysisResult();
             
-            // Find all types
-            var allTypes = GetAllTypes(compilation.GlobalNamespace).ToList();
+            // Find all types. Test fixtures are left out: they compile only into the editor
+            // build, and a protocol that counted them would make the editor's dev server reject
+            // every exported client with a hash mismatch.
+            var allTypes = GetAllTypes(compilation.GlobalNamespace)
+                .Where(type => !IsTestFixture(type))
+                .ToList();
 
             // Find serializable types (INetSerializable<T> and IBsonSerializable<T>)
             var serializableIndex = 0;
@@ -181,6 +185,13 @@ namespace Nebula.Generators
             }
 
             return result;
+        }
+
+        /// <summary>Nebula's own tests live under the Nebula.Testing namespace (addons/Nebula/Testing).</summary>
+        private static bool IsTestFixture(INamedTypeSymbol type)
+        {
+            var ns = type.ContainingNamespace?.ToDisplayString() ?? "";
+            return ns == "Nebula.Testing" || ns.StartsWith("Nebula.Testing.", System.StringComparison.Ordinal);
         }
 
         private static IEnumerable<INamedTypeSymbol> GetAllTypes(INamespaceSymbol ns)

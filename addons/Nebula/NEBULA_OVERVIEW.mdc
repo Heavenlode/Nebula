@@ -820,3 +820,13 @@ script registration, scenes and generated dispatch reach. Default: false.
 - Verify on a device. A class whose trim warnings disappear after enabling this was removed, not fixed.
 - Exports never compile `addons/Nebula/Testing/**` or xunit. Game projects should exclude their own tests:
   `<Compile Remove="**\*Tests.cs" Condition="'$(Configuration)' != 'Debug'" />`.
+
+## iOS
+
+- Client-role builds use the workstation GC. The server GC runtime does not initialize on iOS.
+- ENet is linked into the AOT image from `addons/Nebula/native/<rid>/libenet.a` (device and both
+  simulators); `ENet.cs` binds `__Internal` there, and `DirectPInvoke Include="__Internal"` makes ILC
+  bind it at link time (otherwise it is a runtime lookup and the archive is dropped).
+  `native/build-natives.sh` rebuilds the archives with the rest.
+- Godot's iOS output goes to the system log, not the console: `sudo log collect --device-udid <udid>`,
+  then `log show --predicate 'process == "<app>"'`.

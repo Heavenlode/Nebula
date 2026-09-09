@@ -494,6 +494,47 @@ namespace Nebula
             // listening before the network starts.
         }
 
+        /// <summary>
+        /// Picks the one address a connect should go to out of everything a name resolves to.
+        /// IPv4 first, then a global IPv6. A link-local IPv6 is never picked: ENet's address
+        /// carries no scope id, so packets to it cannot be routed. iOS answers a Bonjour
+        /// (.local) name with the link-local address first, which is how that was found.
+        /// </summary>
+        internal static System.Net.IPAddress PickServerAddress(System.Net.IPAddress[] candidates)
+        {
+            System.Net.IPAddress globalV6 = null;
+            foreach (var candidate in candidates)
+            {
+                if (candidate.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    return candidate;
+                }
+                if (candidate.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6
+                    && !candidate.IsIPv6LinkLocal && globalV6 == null)
+                {
+                    globalV6 = candidate;
+                }
+            }
+            return globalV6;
+        }
+
+        private static System.Net.IPAddress ResolveServerAddress(string host)
+        {
+            if (System.Net.IPAddress.TryParse(host, out var literal))
+            {
+                return literal;
+            }
+            try
+            {
+                return PickServerAddress(System.Net.Dns.GetHostAddresses(host));
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
+                return null;
+            }
+        }
+
+
         public void StartClient()
         {
             if (RoleIsFixed && IsServer)
@@ -509,9 +550,18 @@ namespace Nebula
             ENetHost = new Host();
             ENetHost.Create();
 
+            // Resolved here rather than by ENet, which takes the resolver's first answer whatever
+            // it is; see PickServerAddress for why that is not good enough.
+            var serverIp = ResolveServerAddress(ServerAddress);
+            if (serverIp == null)
+            {
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Cannot resolve server address '{ServerAddress}' to a reachable address.");
+                return;
+            }
             var address = new Address();
-            address.SetHost(ServerAddress);
+            address.SetIP(serverIp.ToString());
             address.Port = (ushort)Port;
+            Debugger.Instance.Log($"Connecting to {ServerAddress}:{Port} ({serverIp})");
 
             // The connect packet carries our protocol hash; the server validates it before
             // admitting the peer and rejects mismatched builds (see ProtocolMismatchException)

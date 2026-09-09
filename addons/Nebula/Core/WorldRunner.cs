@@ -3740,6 +3740,16 @@ namespace Nebula
             }
             _profiler?.Record(Diagnostics.TickProfiler.Phase.ExportCleanup, cleanupTs);
 
+            // The per-tick buffers are only overwritten by the next partition, so left alone they
+            // pin the last tick's controllers (and, through them, freed nodes' managed state) for as
+            // long as no peer causes another partition. Clear keeps the capacity; nothing allocates.
+            _tickNodeList.Clear();
+            _tickOwnedList.Clear();
+            _tickSharedList.Clear();
+            // Same for the per-packet node-id table: a slot written for a node that is later
+            // despawned kept that controller (and everything it references) until the id was reused.
+            Array.Clear(_peerNodesControllers);
+
             return _exportPeerBuffers;
         }
 

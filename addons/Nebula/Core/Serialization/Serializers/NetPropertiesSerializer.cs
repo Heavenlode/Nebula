@@ -466,7 +466,7 @@ namespace Nebula.Serialization.Serializers
             _validPropsMask = _propertyCount >= 64 ? -1L : (1L << _propertyCount) - 1;
             _initSyncEligibleBytes ??= new byte[_byteCount];
 
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 // Dirty tracking is now handled by NetworkController.MarkDirty() which sets DirtyMask
                 // and populates CachedProperties. No more Godot signal subscription needed.
@@ -899,7 +899,7 @@ namespace Nebula.Serialization.Serializers
             network.CachedProperties[prop.Index] = newValue;
 
             // Store in snapshot buffer for interpolation (client-side, interpolated properties only)
-            if (NetRunner.Instance.IsClient && network.IsWorldReady && prop.Interpolate)
+            if (NetRunner.IsClient && network.IsWorldReady && prop.Interpolate)
             {
                 network.UpdateSnapshotProperty(prop.Index, ref newValue);
             }
@@ -916,7 +916,7 @@ namespace Nebula.Serialization.Serializers
             bool isOwnedPredicted = network.IsCurrentOwner
                 && prop.Predicted
                 && !network.IsResimulating
-                && NetRunner.Instance.IsClient
+                && NetRunner.IsClient
                 && network.IsWorldReady;  // Allow initial spawn to apply values
 
             if (isOwnedPredicted)
@@ -1801,7 +1801,7 @@ namespace Nebula.Serialization.Serializers
             // Capture this tick's property values for delta baselines. Runs once per node
             // per tick, before any per-peer Export. All peers' deltas for this tick are
             // computed against entries of this ring at their respective acked ticks.
-            if (_propertyCount > 0 && (NetRunner.Instance.IsServer || ForceRingCaptureForTests) && network.CurrentWorld != null)
+            if (_propertyCount > 0 && (NetRunner.IsServer || ForceRingCaptureForTests) && network.CurrentWorld != null)
             {
                 // Quantized dead-band: a dirty property whose value still encodes to the
                 // grid cell last shipped has nothing to say on the wire. Dropped from the
@@ -1880,7 +1880,7 @@ namespace Nebula.Serialization.Serializers
             }
 
             // Begin snapshot for this tick (client-side only, for interpolation)
-            if (NetRunner.Instance.IsClient && network.IsWorldReady)
+            if (NetRunner.IsClient && network.IsWorldReady)
             {
                 network.BeginSnapshotForTick(currentWorld.CurrentTick);
             }
@@ -3428,7 +3428,7 @@ namespace Nebula.Serialization.Serializers
             // End-of-tick hook for object properties with global dirty state (e.g. NetArray):
             // every peer's Export has now absorbed the global dirty bits into per-peer
             // pending state, so the object can safely clear its global set.
-            if (!_hasObjectProps || !NetRunner.Instance.IsServer) return;
+            if (!_hasObjectProps || !NetRunner.IsServer) return;
             for (int i = 0; i < _propertyCount; i++)
             {
                 if (!_propIsObject[i]) continue;

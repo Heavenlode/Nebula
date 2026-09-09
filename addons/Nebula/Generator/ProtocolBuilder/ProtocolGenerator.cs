@@ -217,7 +217,9 @@ namespace Nebula.Generators
                 {
                     MethodType = methodType,
                     TypeFullName = serType.TypeFullName,
-                    IsValueType = serType.IsValueType
+                    IsValueType = serType.IsValueType,
+                    IsNodeReference = serType.IsNodeReference,
+                    IsNetArray = serType.IsNetArray,
                 };
                 data.SerialTypePack[serType.TypeFullName] = methodIndex;
                 methodIndex++;

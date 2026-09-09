@@ -72,8 +72,8 @@ public partial class Main : EditorPlugin
     private NetSceneInspector netSceneInspectorInstance;
     private Node addonManagerInstance;
     private ProjectSettingsController projectSettingsController;
-    /// <summary>Per-export BSON switch; see Tools/Export/BsonSupportExportPlugin.cs.</summary>
-    private BsonSupportExportPlugin bsonSupportExportPlugin;
+    /// <summary>Per-export BSON switch; see Tools/Export/NebulaBuildExportPlugin.cs.</summary>
+    private NebulaBuildExportPlugin bsonSupportExportPlugin;
 
     /// <summary>
     /// Gets the plugin name for the Godot editor.
@@ -127,7 +127,7 @@ public partial class Main : EditorPlugin
 
         // Export-time BSON switch. Registered here rather than as its own addon so every Nebula
         // consumer gets the "nebula/bson_support" preset option without further setup.
-        bsonSupportExportPlugin = new BsonSupportExportPlugin();
+        bsonSupportExportPlugin = new NebulaBuildExportPlugin();
         AddExportPlugin(bsonSupportExportPlugin);
 
         // Main-screen tab (live network debugger)

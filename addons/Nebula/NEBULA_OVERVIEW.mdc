@@ -137,8 +137,8 @@ The main network manager. Handles:
 
 ```csharp
 // Key properties
-Network.IsServer      // True if running as server
-Network.IsClient      // True if running as client
+NetRunner.IsServer    // True if running as server (const in exported builds)
+NetRunner.IsClient    // True if running as client (const in exported builds)
 NetRunner.Instance.NetStarted    // True after Start* called
 NetRunner.TPS                    // Ticks per second
 ```
@@ -187,7 +187,7 @@ public partial class MyNetworkNode : NetNode3D
     public override void _NetworkProcess(int tick)
     {
         // Both server and owning client process for prediction
-        if (Network.IsServer || Network.IsCurrentOwner)
+        if (NetRunner.IsServer || Network.IsCurrentOwner)
         {
             ref readonly var input = ref Network.GetInput<PlayerInput>();
             // ... handle input ...
@@ -326,7 +326,7 @@ public partial class Player : NetNode3D
         base._PhysicsProcess(delta);
         
         // Only the owning client samples input
-        if (!Network.IsCurrentOwner || Network.IsServer) return;
+        if (!Network.IsCurrentOwner || NetRunner.IsServer) return;
         
         Network.SetInput(new PlayerInput
         {
@@ -349,7 +349,7 @@ public override void _NetworkProcess(int tick)
     // Client (owner): prediction processing  
     // Client (non-owner): skip (no input authority)
     
-    if (Network.IsServer || Network.IsCurrentOwner)
+    if (NetRunner.IsServer || Network.IsCurrentOwner)
     {
         ref readonly var input = ref Network.GetInput<PlayerInput>();
         Velocity = new Vector3(input.Movement.X, 0, input.Movement.Y) * Speed;
@@ -786,7 +786,7 @@ MongoDB.Bson and the BSON persistence API (`IBsonSerializable`, `NetNode*.BsonSe
 `BsonTypeHelper`, the generated `Write/ReadBsonProperties`) compile only when `NEBULA_BSON_SUPPORT` is
 defined. Nebula.props decides it, off by default:
 
-- Exports: the preset's `nebula/bson_support` export option (added by `BsonSupportExportPlugin`). Turn it
+- Exports: the preset's `nebula/bson_support` export option (added by `NebulaBuildExportPlugin`). Turn it
   on for server presets. The plugin passes it to the .NET publish as the `NEBULA_BSON_SUPPORT` variable.
 - Editor build: the project setting `Nebula/config/build/bson_support`, so a dev server run from the
   editor can persist.
@@ -795,3 +795,28 @@ defined. Nebula.props decides it, off by default:
 Game code that persists goes under `#if NEBULA_BSON_SUPPORT`; a build that cannot reach persistence fails
 to compile on any leak, which is the intended detector. The protocol hash ignores the BSON static-method
 bit so a client without BSON support and a server with it still handshake.
+
+## Network role per build
+
+`NetRunner.IsServer` / `NetRunner.IsClient` are static. In an exported build they are `const`
+(`NEBULA_ROLE_SERVER` / `NEBULA_ROLE_CLIENT`, from Nebula.props), so `if (NetRunner.IsClient) return;`
+and every branch like it folds away and the other role's code is never emitted. In the editor build they
+are a runtime property set by `StartServer()`. The role of an export comes from the preset's
+`nebula/role` option (default Auto: server when the preset has `dedicated_server`, client otherwise;
+Runtime keeps the editor behaviour), passed to the .NET publish as `NEBULA_ROLE` by
+`NebulaBuildExportPlugin`. Read the role only through `NetRunner.IsServer` / `IsClient`; there is no
+instance form. A role-fixed build launched as the other role exits at startup (code 4). Tests that need
+the server path in the editor call `NetRunner.ForceRoleForTests(true)`.
+
+## Trimming (NativeAOT platforms)
+
+Godot's SDK roots the whole game assembly, so nothing in it is ever trimmed. Setting `NebulaTrimGame=true`
+(csproj property or `-p:NebulaTrimGame=true`) removes that root; the trimmer then keeps only what Godot's
+script registration, scenes and generated dispatch reach. Default: false.
+
+- Applies where `PublishAot` is true (iOS today). No effect elsewhere.
+- Code reached only by name (reflection, GDScript `load("X.cs").new()`) must be listed in an
+  `ILLink.Descriptors.xml` embedded in the game project, or it is removed.
+- Verify on a device. A class whose trim warnings disappear after enabling this was removed, not fixed.
+- Exports never compile `addons/Nebula/Testing/**` or xunit. Game projects should exclude their own tests:
+  `<Compile Remove="**\*Tests.cs" Condition="'$(Configuration)' != 'Debug'" />`.

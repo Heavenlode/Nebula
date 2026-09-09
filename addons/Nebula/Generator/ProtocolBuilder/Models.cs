@@ -154,5 +154,7 @@ namespace Nebula.Generators
         /// Used by CodeEmitter to generate correct PropertyCache field access.
         /// </summary>
         public bool IsValueType { get; set; }
+        public bool IsNodeReference { get; set; }
+        public bool IsNetArray { get; set; }
     }
 }

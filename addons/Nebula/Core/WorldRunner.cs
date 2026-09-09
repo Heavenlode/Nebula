@@ -272,7 +272,7 @@ namespace Nebula
             // Buffer for the debug channel only while something is there to read it:
             // ServerProcessTick drains this under `debugAttached` and clears it either
             // way, so with no debugger attached every entry was allocated and dropped.
-            if (NetRunner.Instance.IsServer && Hub is { HasClients: true, DebugFramesEnabled: true })
+            if (NetRunner.IsServer && Hub is { HasClients: true, DebugFramesEnabled: true })
             {
                 tickLogBuffer.Add(new TickLog
                 {
@@ -323,7 +323,7 @@ namespace Nebula
                 TreeExiting += OnTreeExitingUnregisterDebug;
             }
 
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 _onPeerDisconnectedHandler = (uint nativePeerId) =>
                 {
@@ -350,7 +350,7 @@ namespace Nebula
         {
             base._ExitTree();
 
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 NetRunner.Instance.OnPeerDisconnected -= _onPeerDisconnectedHandler;
                 ReleaseInboundPackets();
@@ -513,7 +513,7 @@ namespace Nebula
         {
             // The gap that just ended is what the jitter buffer is sized from, so it is tallied here --
             // the one place that knows an arrival happened.
-            if (NetRunner.Instance.IsClient) RecordTickGap(TimeSinceLastTick);
+            if (NetRunner.IsClient) RecordTickGap(TimeSinceLastTick);
 
             // Reset accumulator when we receive a new tick
             TimeSinceLastTick = 0f;
@@ -1538,7 +1538,7 @@ namespace Nebula
         /// <param name="peer"></param>
         public void CleanupPlayer(NetPeer peer)
         {
-            if (!NetRunner.Instance.IsServer) return;
+            if (!NetRunner.IsServer) return;
 
             var peerId = NetRunner.Instance.GetPeerId(peer);
 
@@ -1566,7 +1566,7 @@ namespace Nebula
         /// </summary>
         public void PreparePeerDeparture(NetPeer peer)
         {
-            if (!NetRunner.Instance.IsServer) return;
+            if (!NetRunner.IsServer) return;
 
             var peerId = NetRunner.Instance.GetPeerId(peer);
             if (!PeerStates.ContainsKey(peerId)) return;
@@ -2178,7 +2178,7 @@ namespace Nebula
         public override void _Process(double delta)
         {
             base._Process(delta);
-            if (NetRunner.Instance.IsClient)
+            if (NetRunner.IsClient)
             {
                 AccumulateRenderTime((float)delta);
                 UpdateInterpolationDelay();
@@ -2385,7 +2385,7 @@ namespace Nebula
 
             // Debug clients are accepted process-wide by NetRunner._Process.
 
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 if (!_loggedTickThread)
                 {
@@ -2519,7 +2519,7 @@ namespace Nebula
             }
 
             // CLIENT: Independent prediction tick loop
-            if (NetRunner.Instance.IsClient)
+            if (NetRunner.IsClient)
             {
                 if (_predictionInitialized)
                 {
@@ -2635,7 +2635,7 @@ namespace Nebula
 
         public void ChangeScene(NetworkController netController)
         {
-            if (NetRunner.Instance.IsServer) return;
+            if (NetRunner.IsServer) return;
 
             if (RootScene != null)
             {
@@ -2682,7 +2682,7 @@ namespace Nebula
         /// </summary>
         internal void ResetForWorldChange()
         {
-            if (NetRunner.Instance.IsServer) return;
+            if (NetRunner.IsServer) return;
 
 
             // Let game-side singletons drop cached references to nodes we're about to free
@@ -2964,7 +2964,7 @@ namespace Nebula
 
         internal void DeregisterPeerNode(NetworkController node, NetPeer peer = default)
         {
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 if (!peer.IsSet)
                 {
@@ -2991,7 +2991,7 @@ namespace Nebula
         // Up to 512 nodes can be networked per peer at a time (8 groups × 64 nodes).
         internal ushort TryRegisterPeerNode(NetworkController node, NetPeer peer = default)
         {
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 if (!peer.IsSet)
                 {
@@ -3036,7 +3036,7 @@ namespace Nebula
             NodePath netNodePath = default
         ) where T : Node, INetNodeBase
         {
-            if (NetRunner.Instance.IsClient) return null;
+            if (NetRunner.IsClient) return null;
 
             // Live-tree AddChild plus NetId allocation plus a pass over NetRunner.Instance.Peers --
             // none of which is safe off the main thread.
@@ -4327,7 +4327,7 @@ namespace Nebula
         /// <returns></returns>
         public bool CheckStaticInitialization(NetworkController network)
         {
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 network.NetId = AllocateNetId();
                 AddNetScene(network.NetId, network);
@@ -4401,7 +4401,7 @@ namespace Nebula
 
         internal void SendInput(NetworkController netNode)
         {
-            if (NetRunner.Instance.IsServer) return;
+            if (NetRunner.IsServer) return;
 
             // Check if the node supports input
             if (!netNode.HasInputSupport)
@@ -4471,7 +4471,7 @@ namespace Nebula
 
         internal void ReceiveInput(NetPeer peer, NetBuffer buffer)
         {
-            if (NetRunner.Instance.IsClient) return;
+            if (NetRunner.IsClient) return;
 
             // Read the ack FIRST. Every guard below returns early, and an acknowledgement must not
             // be lost just because the input half of the packet was rejected - acks drive the
@@ -4595,7 +4595,7 @@ namespace Nebula
         /// </summary>
         internal void SendNetFunction(NetId netId, ProtocolNetFunction functionInfo, object[] args, UUID[] targetPeers = null)
         {
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 var node = GetNodeFromNetId(netId);
                 if (targetPeers == null)
@@ -4661,7 +4661,7 @@ namespace Nebula
         {
             var netId = NetReader.ReadUInt16(buffer);
             var functionId = NetReader.ReadByte(buffer);
-            var netController = NetRunner.Instance.IsServer ? GetPeerNode(peer, netId) : GetNodeFromNetId(netId);
+            var netController = NetRunner.IsServer ? GetPeerNode(peer, netId) : GetNodeFromNetId(netId);
             if (netController == null)
             {
                 Log(Debugger.DebugLevel.ERROR, $"Received net function for unknown node {netId}");
@@ -4676,11 +4676,11 @@ namespace Nebula
                 NetReader.ReadAbsoluteValue(buffer, arg.VariantType, arg.Metadata.TypeIdentifier, ref cache);
                 _netFunctionArgsPool.Add(cache);
             }
-            if (NetRunner.Instance.IsServer && (functionInfo.Sources & NetworkSources.Client) == 0)
+            if (NetRunner.IsServer && (functionInfo.Sources & NetworkSources.Client) == 0)
             {
                 return;
             }
-            if (NetRunner.Instance.IsClient && (functionInfo.Sources & NetworkSources.Server) == 0)
+            if (NetRunner.IsClient && (functionInfo.Sources & NetworkSources.Server) == 0)
             {
                 return;
             }

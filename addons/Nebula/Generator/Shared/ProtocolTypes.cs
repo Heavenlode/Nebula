@@ -226,11 +226,17 @@ namespace Nebula.Serialization
     {
         public readonly StaticMethodType MethodType;
         public readonly string TypeFullName;
+        /// <summary>The type is a networked node (INetNodeBase): the property is a node REFERENCE.</summary>
+        public readonly bool IsNodeReference;
+        /// <summary>The type is a NetArray&lt;T&gt;.</summary>
+        public readonly bool IsNetArray;
 
-        public StaticMethodInfo(StaticMethodType methodType, string typeFullName)
+        public StaticMethodInfo(StaticMethodType methodType, string typeFullName, bool isNodeReference, bool isNetArray)
         {
             MethodType = methodType;
             TypeFullName = typeFullName;
+            IsNodeReference = isNodeReference;
+            IsNetArray = isNetArray;
         }
     }
 

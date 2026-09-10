@@ -124,7 +124,7 @@ public partial class Player : NetNode
     {
         base._WorldReady();
 
-        if (Network.IsClient && Network.IsCurrentOwner)
+        if (NetRunner.IsClient && Network.IsCurrentOwner)
         {
             ScoreLabel = Network.CurrentWorld.RootScene.RawNode.GetNode<Label>("%ScoreLabel");
             ScoreLabel?.Text = $"Score: {Score}";
@@ -289,7 +289,7 @@ public partial class GameScoreManager : NetNode
     {
         base._NetworkProcess(tick);
 
-        if (Network.IsClient)
+        if (NetRunner.IsClient)
         {
             return;
         }
@@ -346,7 +346,7 @@ public partial class GameScoreManager : NetNode
     {
         base._NetworkProcess(tick);
 
-        if (Network.IsClient)
+        if (NetRunner.IsClient)
         {
             return;
         }
@@ -389,7 +389,7 @@ Note that the GameScoreManager has a list of Players. We'll need to make sure th
     {
         base._WorldReady();
 
-        if (Network.IsClient && Network.IsCurrentOwner)
+        if (NetRunner.IsClient && Network.IsCurrentOwner)
         {
             ScoreLabel = Network.CurrentWorld.RootScene.RawNode.GetNode<Label>("%ScoreLabel");
             ScoreLabel?.Text = $"Score: {Score}";
@@ -399,7 +399,7 @@ Note that the GameScoreManager has a list of Players. We'll need to make sure th
             camera.LookAt(new Vector3(0, 0, 0));
         }
 
-        if (Network.IsServer)
+        if (NetRunner.IsServer)
         {
             var scoreManager = Network.CurrentWorld.RootScene.RawNode.GetNode<GameScoreManager>("GameScoreManager");
             scoreManager?.Players.Add(this);

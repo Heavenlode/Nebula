@@ -240,7 +240,7 @@ Now we'll have the server define random positions for all the initial pellets in
     {
         base._WorldReady();
 
-        if (Network.IsClient)
+        if (NetRunner.IsClient)
         {
             return;
         }
@@ -305,7 +305,7 @@ public partial class PelletSpawner : NetNode
     {
         base._WorldReady();
 
-        if (Network.IsClient)
+        if (NetRunner.IsClient)
         {
             return;
         }

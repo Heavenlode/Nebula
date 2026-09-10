@@ -104,13 +104,20 @@ namespace Nebula.Utility.Tools
 
         /// <summary>
         /// Reads a boolean switch from the process environment, falling back to this
-        /// process's .env file (<c>.env.server</c> or <c>.env.client</c>). <c>"0"</c> and
-        /// <c>"false"</c> mean off; any other non-empty value means on.
+        /// process's .env file (<c>.env.server</c> or <c>.env.client</c>). Only <c>"1"</c>
+        /// and <c>"true"</c> mean on. Every other value means OFF — including ones that
+        /// read as affirmative to a human (<c>"yes"</c>, <c>"on"</c>, <c>"enabled"</c>).
+        /// These switches all gate diagnostics, so an unrecognised value resolving to off
+        /// costs a run its telemetry, whereas the opposite silently leaves instrumentation
+        /// on in a build that asked for none.
         /// </summary>
         /// <returns>
         /// False when the variable is absent everywhere, leaving <paramref name="value"/>
         /// untouched — callers use that to fall back to a project setting rather than
-        /// treating "unset" as "off".
+        /// treating "unset" as "off". A variable that IS present reports true whatever its
+        /// value: writing it at all is a decision to configure the switch, so falling back
+        /// to a project setting that says the opposite would be worse than reading an
+        /// unrecognised value as off.
         /// </returns>
         public static bool TryGetFlag(string name, out bool value)
         {
@@ -125,7 +132,7 @@ namespace Nebula.Utility.Tools
             if (string.IsNullOrEmpty(raw))
                 return false;
 
-            value = raw != "0" && !raw.Equals("false", StringComparison.OrdinalIgnoreCase);
+            value = raw == "1" || raw.Equals("true", StringComparison.OrdinalIgnoreCase);
             return true;
         }
 

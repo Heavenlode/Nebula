@@ -15,7 +15,8 @@
     <Content Remove="test\**" />
     <EmbeddedResource Remove="test\**" />
     <None Remove="test\**" />
-    <!-- Exclude ENet-CSharp submodule (we use the NuGet package instead) -->
+    <!-- Exclude the ENet-CSharp submodule; it is upstream source only. The bits we
+         build against are vendored under addons/Nebula (see Nebula.props). -->
     <Compile Remove="ENet-CSharp\**" />
     <Content Remove="ENet-CSharp\**" />
     <EmbeddedResource Remove="ENet-CSharp\**" />

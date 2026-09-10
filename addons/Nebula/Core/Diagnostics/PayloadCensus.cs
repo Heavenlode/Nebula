@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Nebula.Serialization.Serializers;
 
 namespace Nebula.Diagnostics
 {
@@ -46,7 +47,8 @@ namespace Nebula.Diagnostics
 
         private sealed class Entry
         {
-            public long Bytes;
+            /// <summary>Wire bits (the props section is bit-packed); reported as bytes.</summary>
+            public long Bits;
             public long Writes;
             public long DeltaWrites;
         }
@@ -55,10 +57,10 @@ namespace Nebula.Diagnostics
         private static readonly StringBuilder _line = new(2048);
         private static int _peerSections;
 
-        /// <summary>Records one property write. <paramref name="key"/> is scene-scoped.</summary>
-        public static void Record(string key, int bytes, bool delta)
+        /// <summary>Records one property write of <paramref name="bits"/> wire bits. <paramref name="key"/> is scene-scoped.</summary>
+        public static void Record(string key, int bits, bool delta)
         {
-            if (bytes <= 0) return;
+            if (bits <= 0) return;
             lock (_entries)
             {
                 if (!_entries.TryGetValue(key, out var entry))
@@ -66,7 +68,7 @@ namespace Nebula.Diagnostics
                     entry = new Entry();
                     _entries[key] = entry;
                 }
-                entry.Bytes += bytes;
+                entry.Bits += bits;
                 entry.Writes++;
                 if (delta) entry.DeltaWrites++;
             }
@@ -161,17 +163,18 @@ namespace Nebula.Diagnostics
                 if (_entries.Count == 0) return;
 
                 var ordered = new List<KeyValuePair<string, Entry>>(_entries);
-                ordered.Sort((a, b) => b.Value.Bytes.CompareTo(a.Value.Bytes));
+                ordered.Sort((a, b) => b.Value.Bits.CompareTo(a.Value.Bits));
 
-                long total = 0;
-                foreach (var kv in ordered) total += kv.Value.Bytes;
+                long totalBits = 0;
+                foreach (var kv in ordered) totalBits += kv.Value.Bits;
+                double total = totalBits / (double)BitConstants.BitsInByte;
 
                 _line.Clear();
                 _line.Append(LinePrefix);
                 _line.Append("{\"peers\":").Append(peers.ToString(Inv));
                 _line.Append(",\"window_s\":").Append(elapsedSeconds.ToString("F2", Inv));
                 _line.Append(",\"sections\":").Append(_peerSections.ToString(Inv));
-                _line.Append(",\"total_bytes\":").Append(total.ToString(Inv));
+                _line.Append(",\"total_bytes\":").Append(total.ToString("F1", Inv));
                 // Bytes of property payload per peer per second: the bandwidth number,
                 // before framing and before pack compression.
                 double perPeerSec = peers > 0 && elapsedSeconds > 0
@@ -186,12 +189,13 @@ namespace Nebula.Diagnostics
                     if (listed > 0) _line.Append(',');
                     var e = kv.Value;
                     _line.Append("{\"prop\":\"").Append(kv.Key).Append('"');
-                    _line.Append(",\"bytes\":").Append(e.Bytes.ToString(Inv));
+                    double bytes = e.Bits / (double)BitConstants.BitsInByte;
+                    _line.Append(",\"bytes\":").Append(bytes.ToString("F1", Inv));
                     _line.Append(",\"pct\":")
-                         .Append((total > 0 ? e.Bytes * 100.0 / total : 0).ToString("F1", Inv));
+                         .Append((totalBits > 0 ? e.Bits * 100.0 / totalBits : 0).ToString("F1", Inv));
                     _line.Append(",\"writes\":").Append(e.Writes.ToString(Inv));
                     _line.Append(",\"b_per_write\":")
-                         .Append((e.Writes > 0 ? e.Bytes / (double)e.Writes : 0).ToString("F1", Inv));
+                         .Append((e.Writes > 0 ? bytes / e.Writes : 0).ToString("F2", Inv));
                     // The share of writes that used delta encoding rather than an
                     // absolute. A hot property sitting at 0 means the delta gate is
                     // never opening for it.

@@ -1,15 +1,119 @@
 <Project>
+  <!--
+    BSON support: MongoDB.Bson, IBsonSerializable/IBsonValue, NetNode*.BsonSerialize/BsonDeserialize,
+    NetNodeCommon.ToBSONDocument/FromBSON, BsonTypeHelper/BsonTransformer/BsonWriteBuffer and the generated
+    Write/ReadBsonProperties. OFF by default: a build that never persists carries neither the package nor
+    any of that code, and a code path that still reaches it fails to compile, which is the point.
+
+    Where a build's answer comes from, first match wins:
+      1. NEBULA_BSON_SUPPORT=1|0 in the environment. Nebula's export plugin sets this per export from
+         the preset's "nebula/bson_support" option, so an exported server and an exported client are
+         built from one project with different answers.
+      2. The editor (Debug) build reads the project setting Nebula/config/build/bson_support from
+         project.godot, so a dev server run from the editor can persist.
+      3. Otherwise off.
+    -p:NebulaBsonSupport=true|false on a manual dotnet invocation overrides all of the above.
+  -->
+  <PropertyGroup>
+    <NebulaBsonSupport Condition="'$(NebulaBsonSupport)' == '' And '$(NEBULA_BSON_SUPPORT)' == '1'">true</NebulaBsonSupport>
+    <NebulaBsonSupport Condition="'$(NebulaBsonSupport)' == '' And '$(NEBULA_BSON_SUPPORT)' == '0'">false</NebulaBsonSupport>
+    <NebulaProjectGodot>$(MSBuildProjectDirectory)/project.godot</NebulaProjectGodot>
+    <NebulaBsonSupport Condition="'$(NebulaBsonSupport)' == '' And '$(Configuration)' == 'Debug' And Exists('$(NebulaProjectGodot)') And $([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('$(NebulaProjectGodot)')), '(?m)^config/build/bson_support=true\s*$'))">true</NebulaBsonSupport>
+    <NebulaBsonSupport Condition="'$(NebulaBsonSupport)' == ''">false</NebulaBsonSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(NebulaBsonSupport)' == 'true'">
+    <DefineConstants>$(DefineConstants);NEBULA_BSON_SUPPORT</DefineConstants>
+  </PropertyGroup>
+
+  <!--
+    Network role. An exported build knows at compile time whether it is a server or a client:
+    NetRunner.IsServer / IsClient become constants, so `if (NetRunner.IsClient) return;` and every
+    branch like it folds away and the other role's code is never emitted. The editor (Debug) build is
+    never role-fixed: it hosts the dev server, and the tests fake both roles in one process.
+    Exports get the role from Nebula's export plugin (NEBULA_ROLE in the environment, derived from the
+    preset's dedicated_server flag or its "nebula/role" option); an export made without the plugin
+    keeps the runtime role, never a wrong constant. -p:NebulaRole=server|client|runtime overrides.
+  -->
+  <PropertyGroup>
+    <NebulaRole Condition="'$(Configuration)' == 'Debug'">runtime</NebulaRole>
+    <NebulaRole Condition="'$(NebulaRole)' == '' And '$(NEBULA_ROLE)' == 'server'">server</NebulaRole>
+    <NebulaRole Condition="'$(NebulaRole)' == '' And '$(NEBULA_ROLE)' == 'client'">client</NebulaRole>
+    <NebulaRole Condition="'$(NebulaRole)' == ''">runtime</NebulaRole>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(NebulaRole)' == 'server'">
+    <DefineConstants>$(DefineConstants);NEBULA_ROLE_SERVER</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(RuntimeIdentifier.StartsWith('ios'))">
+    <!-- Statically linked ENet on iOS; see the NativeLibrary item below. -->
+    <DefineConstants>$(DefineConstants);__IOS__</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(NebulaRole)' == 'client'">
+    <DefineConstants>$(DefineConstants);NEBULA_ROLE_CLIENT</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(NebulaRole)' != 'runtime'">
+    <!-- A folded role guard leaves the other role's statements unreachable on purpose. -->
+    <NoWarn>$(NoWarn);CS0162;CS0429</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    Trimming the game assembly (NativeAOT platforms; iOS today). Godot's SDK roots the whole game
+    assembly, so folding a role guard empties a method but never removes it. With NebulaTrimGame=true
+    that root is dropped and the trimmer keeps only what Godot's script registration, the scenes and
+    the generated dispatch reach. Opt-in: anything reached only by name (the dialogue system's method
+    lookups, say) must be preserved through an ILLink.Descriptors.xml in the game project, and the
+    result is only ever proven on a device.
+  -->
+  <PropertyGroup>
+    <NebulaTrimGame Condition="'$(NebulaTrimGame)' == ''">false</NebulaTrimGame>
+  </PropertyGroup>
+  <Target Name="NebulaUnrootGameAssembly" BeforeTargets="ComputeIlcCompileInputs;ILLink"
+          Condition="'$(NebulaTrimGame)' == 'true' And '$(PublishAot)' == 'true'">
+    <ItemGroup>
+      <TrimmerRootAssembly Remove="$(TargetName)" />
+    </ItemGroup>
+    <Message Importance="high" Text="Nebula: the game assembly is not rooted; the trimmer decides what stays." />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="LiteDB" Version="5.0.21" />
-    <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
+    <PackageReference Include="MongoDB.Bson" Version="2.28.0" Condition="'$(NebulaBsonSupport)' == 'true'" />
     <PackageReference Include="FixedMathSharp" Version="1.2.2" />
-    <PackageReference Include="xunit" Version="2.9.0" />
-    <PackageReference Include="ENet-CSharp" Version="2.4.8" />
+    <!-- Tests are compiled only into the editor build (see the Compile Remove below). -->
+    <PackageReference Include="xunit" Version="2.9.0" Condition="'$(Configuration)' == 'Debug'" />
+
+    <!--
+      ENet. Upstream stopped publishing to NuGet at 2.4.8, so both the managed
+      bindings (ENet/ENet.cs, compiled by the default source glob) and the
+      native libraries below are vendored from the ENet-CSharp submodule
+      instead. These land beside the built assembly, where ENet/VendoredNativeResolver.cs
+      picks them up; the package's deps.json entries used to do that job. macOS is
+      a universal binary, which replaces the old arm64 copy-over-the-x86_64 hack.
+      Run native/build-natives.sh to regenerate all four from the submodule.
+    -->
+    <Content Include="$(MSBuildThisFileDirectory)native\osx\libenet.dylib" Link="enet.dylib"
+      CopyToOutputDirectory="PreserveNewest" Visible="false" Condition="!$(RuntimeIdentifier.StartsWith('ios'))" />
+    <Content Include="$(MSBuildThisFileDirectory)native\linux-x64\libenet.so" Link="libenet.so"
+      CopyToOutputDirectory="PreserveNewest" Visible="false" Condition="!$(RuntimeIdentifier.StartsWith('ios'))" />
+    <Content Include="$(MSBuildThisFileDirectory)native\win-x64\enet.dll" Link="enet.dll"
+      CopyToOutputDirectory="PreserveNewest" Visible="false" Condition="!$(RuntimeIdentifier.StartsWith('ios'))" />
+    <!--
+      iOS cannot load a vendored native library at runtime, so ENet is linked into the AOT image:
+      ENet.cs binds "__Internal" under __IOS__, and the static library for the runtime identifier
+      being published (device, simulator arm64, simulator x64) goes to the native linker.
+    -->
+    <NativeLibrary Include="$(MSBuildThisFileDirectory)native\$(RuntimeIdentifier)\libenet.a"
+      Condition="$(RuntimeIdentifier.StartsWith('ios'))" />
+    <!-- Bind the "__Internal" imports at link time. Without this ILC looks them up by name at
+         runtime, nothing references the archive, and the linker drops it. -->
+    <DirectPInvoke Include="__Internal" Condition="$(RuntimeIdentifier.StartsWith('ios'))" />
 
     <!-- Fody Weavers -->
     <PackageReference Include="Fody" Version="6.8.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageReference Include="MethodBoundaryAspect.Fody" Version="2.0.149" />
+
+    <!-- Nebula's tests run from the editor build only; an export carries neither them nor xunit. -->
+    <Compile Remove="$(MSBuildThisFileDirectory)Testing\**" Condition="'$(Configuration)' != 'Debug'" />
 
     <!-- Source Generator -->
     <Compile Remove="$(MSBuildThisFileDirectory)Generator\**" />
@@ -29,18 +133,15 @@
   <PropertyGroup>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
   </PropertyGroup>
+  <!--
+    Garbage collector. The server GC (one heap per core) is for the dedicated server and the editor
+    build that hosts a dev server. A client-role build uses the workstation GC: one player's process
+    does not want a heap per core, and the NativeAOT mobile targets refuse to start with the server
+    GC runtime linked in ("Fatal error. .NET runtime failed to initialize." on iOS).
+  -->
   <PropertyGroup>
-    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <ServerGarbageCollection Condition="'$(ServerGarbageCollection)' == '' And '$(NebulaRole)' == 'client'">false</ServerGarbageCollection>
+    <ServerGarbageCollection Condition="'$(ServerGarbageCollection)' == ''">true</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
   </PropertyGroup>
-
-  <!-- Override ENet native library with arm64 version on Apple Silicon -->
-  <Target Name="CopyArm64ENet" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-    <PropertyGroup>
-      <ENetSourcePath>$(MSBuildThisFileDirectory)native/osx-arm64/libenet.dylib</ENetSourcePath>
-      <ENetTargetPath>$(OutputPath)runtimes/osx/native/libenet.dylib</ENetTargetPath>
-    </PropertyGroup>
-    <Copy SourceFiles="$(ENetSourcePath)" DestinationFiles="$(ENetTargetPath)" Condition="Exists('$(ENetSourcePath)')" />
-    <Message Importance="high" Text="Copied arm64 libenet.dylib to $(ENetTargetPath)" Condition="Exists('$(ENetSourcePath)')" />
-  </Target>
 </Project>

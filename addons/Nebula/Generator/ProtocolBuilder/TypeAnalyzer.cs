@@ -42,6 +42,10 @@ namespace Nebula.Generators
             /// When true, this property stores per-peer values (different value for each connected peer).
             /// </summary>
             public bool IsPerPeer { get; init; } = false;
+            /// <summary>Wire grid step; 0 = not quantized. See NetProperty.Quantize.</summary>
+            public float Quantize { get; init; } = 0f;
+            /// <summary>Vector3 sent as an octahedral unit direction. See NetProperty.UnitVector.</summary>
+            public bool UnitVector { get; init; } = false;
         }
 
         public sealed class NetFunctionInfo
@@ -81,6 +85,10 @@ namespace Nebula.Generators
             /// True if this type implements INetValue (value type), false if INetSerializable (reference type).
             /// </summary>
             public bool IsValueType { get; init; }
+            /// <summary>Implements INetNodeBase: a property of this type is a node reference.</summary>
+            public bool IsNodeReference { get; init; }
+            /// <summary>Is NetArray&lt;T&gt; (any T).</summary>
+            public bool IsNetArray { get; init; }
         }
 
         public sealed class AnalysisResult
@@ -94,8 +102,12 @@ namespace Nebula.Generators
         {
             var result = new AnalysisResult();
             
-            // Find all types
-            var allTypes = GetAllTypes(compilation.GlobalNamespace).ToList();
+            // Find all types. Test fixtures are left out: they compile only into the editor
+            // build, and a protocol that counted them would make the editor's dev server reject
+            // every exported client with a hash mismatch.
+            var allTypes = GetAllTypes(compilation.GlobalNamespace)
+                .Where(type => !IsTestFixture(type))
+                .ToList();
 
             // Find serializable types (INetSerializable<T> and IBsonSerializable<T>)
             var serializableIndex = 0;
@@ -122,6 +134,9 @@ namespace Nebula.Generators
                     HasNetworkDeserialize = hasAnyNetSerializable && HasStaticMethod(type, "NetworkDeserialize"),
                     HasBsonDeserialize = hasBsonSerializable && HasStaticMethod(type, "BsonDeserialize"),
                     IsValueType = hasNetValue,
+                    // Decided here rather than by reflection at runtime (which trimming cannot see).
+                    IsNodeReference = interfaces.Any(i => i.Name == "INetNodeBase"),
+                    IsNetArray = type.IsGenericType && type.OriginalDefinition.Name == "NetArray",
                 };
 
                 result.SerializableTypes.Add(info);
@@ -170,6 +185,13 @@ namespace Nebula.Generators
             }
 
             return result;
+        }
+
+        /// <summary>Nebula's own tests live under the Nebula.Testing namespace (addons/Nebula/Testing).</summary>
+        private static bool IsTestFixture(INamedTypeSymbol type)
+        {
+            var ns = type.ContainingNamespace?.ToDisplayString() ?? "";
+            return ns == "Nebula.Testing" || ns.StartsWith("Nebula.Testing.", System.StringComparison.Ordinal);
         }
 
         private static IEnumerable<INamedTypeSymbol> GetAllTypes(INamespaceSymbol ns)
@@ -362,6 +384,8 @@ namespace Nebula.Generators
                         Predicted = GetNamedArgument(netPropAttr, "Predicted", false),
                         ChunkBudget = GetNamedArgument(netPropAttr, "ChunkBudget", 256),
                         IsPerPeer = GetNamedArgument(netPropAttr, "PerPeerState", false),
+                        Quantize = GetNamedArgument(netPropAttr, "Quantize", 0f),
+                        UnitVector = GetNamedArgument(netPropAttr, "UnitVector", false),
                     };
                 }
 

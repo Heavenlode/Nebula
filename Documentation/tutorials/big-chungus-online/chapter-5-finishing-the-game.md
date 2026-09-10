@@ -102,7 +102,7 @@ public partial class GameScoreManager : NetNode
     {
         base._NetworkProcess(tick);
 
-        if (Network.IsClient)
+        if (NetRunner.IsClient)
         {
             return;
         }
@@ -219,7 +219,7 @@ Then we need to call that method when the Player node actually despawns. To do t
     public override void _Despawn()
     {
         base._Despawn();
-        if (Network.IsClient && Network.IsCurrentOwner)
+        if (NetRunner.IsClient && Network.IsCurrentOwner)
         {
             var manager = Network.CurrentWorld?.RootScene?.RawNode?.GetNode<PlayerSpawner>("PlayerSpawner");
             manager?.OnPlayerDespawn();

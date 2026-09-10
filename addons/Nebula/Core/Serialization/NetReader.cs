@@ -29,6 +29,14 @@ namespace Nebula.Serialization
             return ReadByte(buffer) != 0;
         }
 
+        /// <summary>One bit; mirror of <see cref="NetWriter.WriteBit"/>.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ReadBit(NetBuffer buffer) => buffer.ReadBool();
+
+        /// <summary><paramref name="count"/> bits (1..64); mirror of <see cref="NetWriter.WriteBits"/>.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ulong ReadBits(NetBuffer buffer, int count) => buffer.ReadBits(count);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static short ReadInt16(NetBuffer buffer)
         {

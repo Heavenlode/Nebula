@@ -1,6 +1,8 @@
 using System;
 using Nebula.Serialization;
+#if NEBULA_BSON_SUPPORT
 using MongoDB.Bson;
+#endif
 using Godot;
 
 namespace Nebula
@@ -10,7 +12,11 @@ namespace Nebula
     /// This is a value type (struct) to avoid allocations.
     /// </summary>
     [NetValueLayout(16)] // sizeof(Guid)
-    public readonly struct UUID : INetValue<UUID>, IBsonValue<UUID>, IEquatable<UUID>
+    public readonly struct UUID : INetValue<UUID>,
+#if NEBULA_BSON_SUPPORT
+        IBsonValue<UUID>,
+#endif
+        IEquatable<UUID>
     {
         /// <summary>
         /// The underlying GUID value.
@@ -124,6 +130,7 @@ namespace Nebula
 
         #endregion
 
+#if NEBULA_BSON_SUPPORT
         #region BSON Serialization
 
         public static BsonValue BsonSerialize(in UUID value)
@@ -147,5 +154,6 @@ namespace Nebula
         }
 
         #endregion
+#endif
     }   
 }

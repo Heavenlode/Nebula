@@ -65,7 +65,9 @@ public class ImpairedSoakTests : IntegrationTestBase
             WorldId = worldId,
             InitialWorldScene = WorldScene,
             DebugPort = SoakServerDebugPort,
-            // One JSON line per interval on stdout; the assertions below read it.
+            // One JSON line per interval on stdout; the assertions below scrape it. It has to
+            // be the --metrics ARG specifically — NEBULA_PERFORMANCE enables collection and the
+            // debug-channel copy but prints nothing, and nothing here reads that copy.
             ExtraArgs = { ["metrics"] = "" },
         });
 

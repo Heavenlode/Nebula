@@ -3,3 +3,5 @@
 - name: Network Lifecycle
   href: network-lifecycle.md
 
+- name: Build Configuration
+  href: build-configuration.md

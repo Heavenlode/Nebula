@@ -91,11 +91,43 @@ namespace Nebula
         }
 
         /// <summary>
-        /// This is set after <see cref="StartClient"/> or <see cref="StartServer"/> is called, i.e. when <see cref="NetStarted"/> == true. Before that, this value is unreliable.
+        /// The process's network role.
+        ///
+        /// <para>Fixed at compile time in exported builds (NebulaRole in Nebula.props), so
+        /// <c>if (NetRunner.IsClient) return;</c> and every branch like it folds away and the other
+        /// role's code is never emitted. Decided at runtime in the editor build, which hosts the dev
+        /// server and whose tests fake both roles in one process: there it is set by
+        /// <see cref="StartServer"/> and false before that, which is also what a client is.</para>
         /// </summary>
-        internal bool IsServer { get; private set; }
+#if NEBULA_ROLE_SERVER
+        public const bool RoleIsFixed = true;
+        public const bool IsServer = true;
+        public const bool IsClient = false;
+#elif NEBULA_ROLE_CLIENT
+        public const bool RoleIsFixed = true;
+        public const bool IsServer = false;
+        public const bool IsClient = true;
+#else
+        public const bool RoleIsFixed = false;
+        public static bool IsServer { get; private set; }
+        public static bool IsClient => !IsServer;
+#endif
 
-        internal bool IsClient => !IsServer;
+        /// <summary>
+        /// Test seam: lets a test exercise the server path in a process that never started a
+        /// network. Replaces flipping the flag by reflection, which a constant cannot support.
+        /// </summary>
+        internal static void ForceRoleForTests(bool isServer)
+        {
+#if NEBULA_ROLE_SERVER || NEBULA_ROLE_CLIENT
+            throw new InvalidOperationException("The network role is fixed in this build.");
+#else
+            IsServer = isServer;
+#endif
+        }
+
+        /// <summary>Exit code of a role-fixed build launched as the other role.</summary>
+        private const int RoleMismatchExitCode = 4;
 
         /// <summary>
         /// This is set to true once <see cref="StartClient"/> or <see cref="StartServer"/> have succeeded.
@@ -193,6 +225,16 @@ namespace Nebula
 
         public override void _Ready()
         {
+            // A role-fixed build launched as the other role would run with a role constant that
+            // contradicts every process-level decision made from the command line and feature tags.
+            if (RoleIsFixed && Env.Instance != null && Env.Instance.HasServerFeatures != IsServer)
+            {
+                GD.PrintErr($"[Nebula] FATAL: this build is compiled as a {(IsServer ? "server" : "client")} "
+                    + $"but was launched as a {(Env.Instance.HasServerFeatures ? "server" : "client")}.");
+                GetTree().Quit(RoleMismatchExitCode);
+                return;
+            }
+
             _ = MTU;
             // Protocol is fully static - no initialization needed
             StartTelemetryHub();
@@ -241,16 +283,21 @@ namespace Nebula
 
         /// <summary>
         /// Environment/.env switch for <see cref="DebugServerEnabled"/>, checked before
-        /// the project setting so a deployment can turn the channel off per process kind
-        /// (<c>.env.server</c> vs <c>.env.client</c>) without editing project.godot.
+        /// the project setting so a deployment can turn the channel on or off per process
+        /// kind (<c>.env.server</c> vs <c>.env.client</c>) without editing project.godot.
         /// Off means fully inert: no listener, no frames built, no per-tick debug work.
+        ///
+        /// <para>OFF unless something says otherwise — <c>NEBULA_DEBUG=1</c>, or the project
+        /// setting turned on deliberately. It used to default ON, which meant every process
+        /// handed a <c>--debugPort</c> got a debug channel whether or not the project had
+        /// ever opted in.</para>
         /// </summary>
         public const string DEBUG_SERVER_ENV_VAR = "NEBULA_DEBUG";
 
         private static bool ResolveDebugServerEnabled()
             => Env.TryGetFlag(DEBUG_SERVER_ENV_VAR, out bool fromEnv)
                 ? fromEnv
-                : ProjectSettings.GetSetting(DEBUG_SERVER_SETTING, true).AsBool();
+                : ProjectSettings.GetSetting(DEBUG_SERVER_SETTING, false).AsBool();
 
         /// <summary>Project setting key for <see cref="DebugServerEnabled"/>.</summary>
         public const string DEBUG_SERVER_SETTING = "Nebula/config/debug/enable_debug_server";
@@ -398,6 +445,10 @@ namespace Nebula
 
         public void StartServer()
         {
+            // Folds to nothing on a server build and to an unconditional throw on a client build.
+            if (RoleIsFixed && !IsServer)
+                throw new InvalidOperationException("StartServer on a client build (NebulaRole=client).");
+
             System.Runtime.GCSettings.LatencyMode = System.Runtime.GCLatencyMode.SustainedLowLatency;
 
             if (Authentication == null)
@@ -405,7 +456,9 @@ namespace Nebula
                 SetAuthentication(new DefaultAuthenticator());
             }
 
+#if !NEBULA_ROLE_SERVER && !NEBULA_ROLE_CLIENT
             IsServer = true;
+#endif
             Debugger.Instance.Log("Starting Server");
             GetTree().MultiplayerPoll = false;
 
@@ -441,8 +494,52 @@ namespace Nebula
             // listening before the network starts.
         }
 
+        /// <summary>
+        /// Picks the one address a connect should go to out of everything a name resolves to.
+        /// IPv4 first, then a global IPv6. A link-local IPv6 is never picked: ENet's address
+        /// carries no scope id, so packets to it cannot be routed. iOS answers a Bonjour
+        /// (.local) name with the link-local address first, which is how that was found.
+        /// </summary>
+        internal static System.Net.IPAddress PickServerAddress(System.Net.IPAddress[] candidates)
+        {
+            System.Net.IPAddress globalV6 = null;
+            foreach (var candidate in candidates)
+            {
+                if (candidate.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    return candidate;
+                }
+                if (candidate.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6
+                    && !candidate.IsIPv6LinkLocal && globalV6 == null)
+                {
+                    globalV6 = candidate;
+                }
+            }
+            return globalV6;
+        }
+
+        private static System.Net.IPAddress ResolveServerAddress(string host)
+        {
+            if (System.Net.IPAddress.TryParse(host, out var literal))
+            {
+                return literal;
+            }
+            try
+            {
+                return PickServerAddress(System.Net.Dns.GetHostAddresses(host));
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
+                return null;
+            }
+        }
+
+
         public void StartClient()
         {
+            if (RoleIsFixed && IsServer)
+                throw new InvalidOperationException("StartClient on a server build (NebulaRole=server).");
+
             System.Runtime.GCSettings.LatencyMode = System.Runtime.GCLatencyMode.Interactive;
 
             if (Authentication == null)
@@ -453,9 +550,18 @@ namespace Nebula
             ENetHost = new Host();
             ENetHost.Create();
 
+            // Resolved here rather than by ENet, which takes the resolver's first answer whatever
+            // it is; see PickServerAddress for why that is not good enough.
+            var serverIp = ResolveServerAddress(ServerAddress);
+            if (serverIp == null)
+            {
+                Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Cannot resolve server address '{ServerAddress}' to a reachable address.");
+                return;
+            }
             var address = new Address();
-            address.SetHost(ServerAddress);
+            address.SetIP(serverIp.ToString());
             address.Port = (ushort)Port;
+            Debugger.Instance.Log($"Connecting to {ServerAddress}:{Port} ({serverIp})");
 
             // The connect packet carries our protocol hash; the server validates it before
             // admitting the peer and rejects mismatched builds (see ProtocolMismatchException)
@@ -580,27 +686,21 @@ namespace Nebula
         /// <summary>Tick-channel packet header: the int32 tick number.</summary>
         private const int TickHeaderBytes = sizeof(int);
 
-        /// <summary>NebulaPack framing: the flags byte (see NebulaPack.WritePacket).</summary>
-        private const int PackFlagsBytes = 1;
-
-        /// <summary>NebulaPack framing: the optional uint16 checksum, budgeted worst-case.</summary>
-        private const int PackChecksumBytes = sizeof(ushort);
-
         /// <summary>
         /// Headroom subtracted from the tick payload budget to absorb small framing
-        /// variations (NebulaPack baseline-age byte, future flags).
+        /// variations (future flags).
         /// </summary>
         public const int TickBudgetHeadroom = 16;
 
         /// <summary>
         /// Per-peer byte budget for one tick's serialized payload (the ExportState output),
-        /// derived from the MTU: MTU minus the tick header, pack flags, checksum worst
-        /// case, and <see cref="TickBudgetHeadroom"/>. The export path keeps every peer
-        /// payload within this so the packet never exceeds the MTU and the client's decode
-        /// ceiling (MTU + 64) is unreachable.
+        /// derived from the MTU: MTU minus the tick header and <see cref="TickBudgetHeadroom"/>.
+        /// The export path keeps every peer payload within this so the packet never exceeds
+        /// the MTU. A tick packet is [tick:int32][payload]; there is no compression layer, the
+        /// payload is bit-packed by the serializers.
         /// </summary>
         public static int TickPayloadBudget(int mtu)
-            => mtu - TickHeaderBytes - PackFlagsBytes - PackChecksumBytes - TickBudgetHeadroom;
+            => mtu - TickHeaderBytes - TickBudgetHeadroom;
 
         private static bool? _logTickPayloads;
         /// <summary>
@@ -649,28 +749,6 @@ namespace Nebula
         public static bool TraceSpawnIds =>
             _traceSpawnIds ??= OS.HasEnvironment("NEBULA_TRACE_SPAWN_IDS")
                 || ProjectSettings.GetSetting("Nebula/config/debug/trace_spawn_ids", false).AsBool();
-
-        private static bool? _packEnabled;
-        /// <summary>
-        /// When enabled via <c>Nebula/config/pack/enabled</c>, the server delta-compresses tick
-        /// payloads against a baseline the peer has acknowledged (see NebulaPack).
-        ///
-        /// This is a server-side, per-packet decision — every packet says whether it is a delta or
-        /// raw — so clients decode both regardless of their own setting and no handshake is needed.
-        /// Cached on first read; toggling takes effect on the next run.
-        /// </summary>
-        public static bool PackEnabled =>
-            _packEnabled ??= ProjectSettings.GetSetting("Nebula/config/pack/enabled", true).AsBool();
-
-        private static bool? _packValidate;
-        /// <summary>
-        /// When enabled via <c>Nebula/config/pack/validate</c>, the server appends a checksum of the
-        /// raw payload and the client verifies it after decoding. Costs 2 bytes per packet and
-        /// catches any window divergence immediately instead of letting it corrupt state silently.
-        /// Recommended on in development.
-        /// </summary>
-        public static bool PackValidate =>
-            _packValidate ??= ProjectSettings.GetSetting("Nebula/config/pack/validate", true).AsBool();
 
         private static bool? _perWorldThreadGroup;
         /// <summary>

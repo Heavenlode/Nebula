@@ -28,6 +28,21 @@ namespace Nebula.Serialization
             WriteByte(buffer, value ? (byte)1 : (byte)0);
         }
 
+        /// <summary>
+        /// One bit. Mixes freely with the byte-granular calls: a following byte call pads to the
+        /// next byte on its own and the mirrored reader skips the same pad, so a custom type
+        /// never aligns by hand. The reader must call <see cref="NetReader.ReadBit"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteBit(NetBuffer buffer, bool value) => buffer.WriteBool(value);
+
+        /// <summary>
+        /// The low <paramref name="count"/> bits (1..64) of <paramref name="value"/>. The reader
+        /// must call <see cref="NetReader.ReadBits"/> with the same count.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteBits(NetBuffer buffer, ulong value, int count) => buffer.WriteBits(value, count);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteInt16(NetBuffer buffer, short value)
         {

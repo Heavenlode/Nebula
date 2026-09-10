@@ -34,6 +34,13 @@ var _log_lines: PackedStringArray = PackedStringArray()
 ## can reconnect to a live session after a .NET assembly reload recreates it.
 var _debug_ports: PackedInt32Array = PackedInt32Array()
 var _was_running := false
+## True from the moment a launch begins until stop(), or until every instance has
+## exited. Broader than is_running(), which only knows about spawned pids:
+## play_custom_scene runs the C# build first, so there is a window - seconds, on a
+## cold build - where the session is unmistakably a Nebula one and no instance
+## exists yet. The toolbar hides Godot's run bar on this rather than on
+## is_running(), so the built-in buttons don't flash back during a launch.
+var _active := false
 
 
 ## Entry point for the C# tab. Deferred so the caller's C# frame is off the
@@ -47,6 +54,12 @@ func _do_launch(dummy_scene: String, exe: String, server_args: PackedStringArray
 	if is_running():
 		_log("[play] instances already running — stop them first")
 		return
+
+	# Set before play_custom_scene: that call runs the C# build and any pending
+	# assembly reload, so the toolbar may repaint several times before the first
+	# instance pid exists.
+	_active = true
+	state_changed.emit()
 
 	if not EditorInterface.is_playing_scene():
 		EditorInterface.play_custom_scene(dummy_scene)
@@ -84,9 +97,13 @@ func _do_launch(dummy_scene: String, exe: String, server_args: PackedStringArray
 	_config_name = config_name
 	_debug_ports = debug_ports
 	_was_running = is_running()
+	# A launch that spawned nothing is not an active session; leaving _active set
+	# would hide the built-in run bar with no Nebula session to stop.
+	_active = _was_running
 	state_changed.emit()
 
 func stop() -> void:
+	_active = false
 	_launch_generation += 1
 	for pid in _pids:
 		var err := OS.kill(pid)
@@ -115,12 +132,16 @@ func _process(_delta: float) -> void:
 	var running := is_running()
 	if running == _was_running:
 		return
-	_was_running = running
 	if not running:
-		_pids.clear()
-		_config_name = ""
-		_debug_ports = PackedInt32Array()
+		# Tear the whole session down, not just the pid bookkeeping: the dummy
+		# editor play only exists to serve those instances, and left running it
+		# holds the debug server open with no visible owner - and the toolbar
+		# reads a Nebula dummy session with no Nebula session behind it as a
+		# plain editor play, and hides the Nebula button.
 		_log("[play] all instances exited")
+		stop()
+		return
+	_was_running = running
 	state_changed.emit()
 
 
@@ -129,6 +150,12 @@ func is_running() -> bool:
 		if OS.is_process_running(pid):
 			return true
 	return false
+
+
+## Whether a Nebula session is live in the broad sense - launching, running, or
+## staggering its instances. See _active.
+func is_active() -> bool:
+	return _active
 
 
 func get_config_name() -> String:

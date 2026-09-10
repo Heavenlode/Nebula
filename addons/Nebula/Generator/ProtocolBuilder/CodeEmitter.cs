@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Nebula.Serialization;
 
 namespace Nebula.Generators
 {
@@ -154,6 +155,10 @@ namespace Nebula.Generators
                         Mix(prop.IsPerPeer ? "1" : "0");
                         Mix(prop.IsEnum ? "1" : "0");
                         Mix(prop.ChunkBudget.ToString(CultureInfo.InvariantCulture));
+                        // Quantization is wire layout (integer step counts instead of floats),
+                        // unlike the client-local NotifyOnChange/Interpolate/Predicted flags.
+                        Mix(prop.Quantize.ToString("R", CultureInfo.InvariantCulture));
+                        Mix(prop.UnitVector ? "1" : "0");
                     }
                 }
 
@@ -189,7 +194,11 @@ namespace Nebula.Generators
                 Mix("type");
                 Mix(classIndex.ToString(CultureInfo.InvariantCulture));
                 Mix(method.TypeFullName);
-                Mix(method.MethodType.ToString(CultureInfo.InvariantCulture));
+                // Only the wire-facing bits take part. BsonDeserialize is persistence-only: a client
+                // compiled without NEBULA_BSON_SUPPORT has no IBsonSerializable types at all, yet must
+                // hash identically to the server it connects to.
+                const int wireMethodMask = (int)(StaticMethodType.NetworkSerialize | StaticMethodType.NetworkDeserialize);
+                Mix((method.MethodType & wireMethodMask).ToString(CultureInfo.InvariantCulture));
                 Mix(method.IsValueType ? "1" : "0");
             }
 
@@ -216,7 +225,7 @@ namespace Nebula.Generators
             
             foreach (var kvp in data.StaticMethods)
             {
-                sb.AppendLine($"                [{kvp.Key}] = new StaticMethodInfo((StaticMethodType){kvp.Value.MethodType}, \"{Escape(kvp.Value.TypeFullName)}\"),");
+                sb.AppendLine($"                [{kvp.Key}] = new StaticMethodInfo((StaticMethodType){kvp.Value.MethodType}, \"{Escape(kvp.Value.TypeFullName)}\", {(kvp.Value.IsNodeReference ? "true" : "false")}, {(kvp.Value.IsNetArray ? "true" : "false")}),");
             }
             
             sb.AppendLine("            }.ToFrozenDictionary();");
@@ -450,7 +459,9 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    {prop.Predicted.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.ChunkBudget},");
             sb.AppendLine($"{indent}    {prop.IsObjectProperty.ToString().ToLowerInvariant()},");
-            sb.AppendLine($"{indent}    {prop.IsPerPeer.ToString().ToLowerInvariant()}),");
+            sb.AppendLine($"{indent}    {prop.IsPerPeer.ToString().ToLowerInvariant()},");
+            sb.AppendLine($"{indent}    {prop.Quantize.ToString("R", CultureInfo.InvariantCulture)}f,");
+            sb.AppendLine($"{indent}    {prop.UnitVector.ToString().ToLowerInvariant()}),");
         }
 
         private static void EmitPropertyWithIntKey(StringBuilder sb, int key, PropertyData prop, string indent)
@@ -484,7 +495,9 @@ namespace Nebula.Generators
             sb.AppendLine($"{indent}    {prop.Predicted.ToString().ToLowerInvariant()},");
             sb.AppendLine($"{indent}    {prop.ChunkBudget},");
             sb.AppendLine($"{indent}    {prop.IsObjectProperty.ToString().ToLowerInvariant()},");
-            sb.AppendLine($"{indent}    {prop.IsPerPeer.ToString().ToLowerInvariant()}),");
+            sb.AppendLine($"{indent}    {prop.IsPerPeer.ToString().ToLowerInvariant()},");
+            sb.AppendLine($"{indent}    {prop.Quantize.ToString("R", CultureInfo.InvariantCulture)}f,");
+            sb.AppendLine($"{indent}    {prop.UnitVector.ToString().ToLowerInvariant()}),");
         }
 
         private static void EmitFunctionsMap(StringBuilder sb, ProtocolData data)

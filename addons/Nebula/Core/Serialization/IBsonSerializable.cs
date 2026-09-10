@@ -1,3 +1,4 @@
+#if NEBULA_BSON_SUPPORT
 using System.Threading.Tasks;
 using MongoDB.Bson;
 
@@ -92,3 +93,4 @@ namespace Nebula.Serialization
         Task<T> BsonDeserialize(NetBsonContext context, byte[] bson);
     }
 }
+#endif

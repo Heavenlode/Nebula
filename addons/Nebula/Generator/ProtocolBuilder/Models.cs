@@ -77,6 +77,10 @@ namespace Nebula.Generators
         /// When true, this property stores per-peer values (different value for each connected peer).
         /// </summary>
         public bool IsPerPeer { get; set; } = false;
+        /// <summary>Wire grid step; 0 = not quantized. Part of the protocol hash.</summary>
+        public float Quantize { get; set; } = 0f;
+        /// <summary>Vector3 sent as an octahedral unit direction. Part of the protocol hash.</summary>
+        public bool UnitVector { get; set; } = false;
     }
 
     internal sealed class FunctionData
@@ -150,5 +154,7 @@ namespace Nebula.Generators
         /// Used by CodeEmitter to generate correct PropertyCache field access.
         /// </summary>
         public bool IsValueType { get; set; }
+        public bool IsNodeReference { get; set; }
+        public bool IsNetArray { get; set; }
     }
 }

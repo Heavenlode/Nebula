@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
+#if NEBULA_BSON_SUPPORT
 using MongoDB.Bson;
+#endif
 using Nebula.Serialization;
 using Nebula.Utility.Tools;
 
@@ -14,6 +16,7 @@ namespace Nebula.Utility
     /// </summary>
     internal static class NetNodeCommon
     {
+#if NEBULA_BSON_SUPPORT
         readonly public static BsonDocument NullBsonDocument = new BsonDocument("value", BsonNull.Value);
 
         internal static BsonDocument ToBSONDocument(
@@ -281,6 +284,7 @@ namespace Nebula.Utility
             }
             return node;
         }
+#endif
 
         /// <summary>One-shot guard for the "reference can never be packed" diagnostic.</summary>
         private static bool _loggedUnpackableReference;

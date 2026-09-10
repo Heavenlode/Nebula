@@ -141,6 +141,16 @@ namespace Nebula.Serialization
         /// The serializer will look up the value for the specific peer being exported to.
         /// </summary>
         public readonly bool IsPerPeer;
+        /// <summary>
+        /// Wire grid step in the property's units; 0 = float/half encoding. Values travel
+        /// as integer step counts (see QuantizedCodec). Part of the protocol hash.
+        /// </summary>
+        public readonly float Quantize;
+        /// <summary>
+        /// Vector3 sent as an octahedral unit direction; Quantize is the step in octahedral
+        /// units. Part of the protocol hash.
+        /// </summary>
+        public readonly bool UnitVector;
 
         public ProtocolNetProperty(
             string nodePath,
@@ -158,7 +168,9 @@ namespace Nebula.Serialization
             bool predicted = false,
             int chunkBudget = 256,
             bool isObjectProperty = false,
-            bool isPerPeer = false)
+            bool isPerPeer = false,
+            float quantize = 0f,
+            bool unitVector = false)
         {
             NodePath = nodePath;
             Name = name;
@@ -176,6 +188,8 @@ namespace Nebula.Serialization
             ChunkBudget = chunkBudget;
             IsObjectProperty = isObjectProperty;
             IsPerPeer = isPerPeer;
+            Quantize = quantize;
+            UnitVector = unitVector;
         }
     }
 
@@ -212,11 +226,17 @@ namespace Nebula.Serialization
     {
         public readonly StaticMethodType MethodType;
         public readonly string TypeFullName;
+        /// <summary>The type is a networked node (INetNodeBase): the property is a node REFERENCE.</summary>
+        public readonly bool IsNodeReference;
+        /// <summary>The type is a NetArray&lt;T&gt;.</summary>
+        public readonly bool IsNetArray;
 
-        public StaticMethodInfo(StaticMethodType methodType, string typeFullName)
+        public StaticMethodInfo(StaticMethodType methodType, string typeFullName, bool isNodeReference, bool isNetArray)
         {
             MethodType = methodType;
             TypeFullName = typeFullName;
+            IsNodeReference = isNodeReference;
+            IsNetArray = isNetArray;
         }
     }
 

@@ -68,6 +68,15 @@ public class NetPropertyGenerator : IIncrementalGenerator
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
+    // Diagnostic for invalid wire quantization declarations
+    private static readonly DiagnosticDescriptor QuantizeInvalidDiagnostic = new(
+        id: "NEBULA010",
+        title: "Invalid quantization declaration",
+        messageFormat: "Property '{0}': {1}",
+        category: "Nebula",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -93,6 +102,8 @@ public class NetPropertyGenerator : IIncrementalGenerator
         float interpolateSpeed = 15f;
         bool predicted = false;
         bool perPeerState = false;
+        float quantize = 0f;
+        bool unitVector = false;
 
         foreach (var attr in propertySymbol.GetAttributes())
         {
@@ -117,6 +128,12 @@ public class NetPropertyGenerator : IIncrementalGenerator
                             break;
                         case "PerPeerState" when namedArg.Value.Value is bool b4:
                             perPeerState = b4;
+                            break;
+                        case "Quantize" when namedArg.Value.Value is float q:
+                            quantize = q;
+                            break;
+                        case "UnitVector" when namedArg.Value.Value is bool b5:
+                            unitVector = b5;
                             break;
                     }
                 }
@@ -207,7 +224,9 @@ public class NetPropertyGenerator : IIncrementalGenerator
             implementsINetSerializable,
             perPeerState,
             isPartial,
-            GetAccessibilityKeyword(propertySymbol.DeclaredAccessibility));
+            GetAccessibilityKeyword(propertySymbol.DeclaredAccessibility),
+            quantize,
+            unitVector);
     }
 
     private static string GetAccessibilityKeyword(Accessibility accessibility) => accessibility switch
@@ -363,6 +382,37 @@ public class NetPropertyGenerator : IIncrementalGenerator
     /// <summary>
     /// Returns true if the type is a NetArray type.
     /// </summary>
+    /// <summary>
+    /// The NEBULA010 rule set. Null when the declaration is valid (including the default of
+    /// no quantization at all).
+    /// </summary>
+    private static string? QuantizeProblem(PropertyInfo prop)
+    {
+        var normalizedType = prop.PropertyType.Replace("Godot.", "");
+        bool quantizable = normalizedType is "float" or "System.Single" or "Vector2" or "Vector3" or "Quaternion";
+        if (prop.Quantize < 0f)
+        {
+            return "Quantize must be >= 0";
+        }
+        if (prop.Quantize > 0f && !quantizable)
+        {
+            return $"Quantize is only supported on float, Vector2, Vector3 and Quaternion properties, not '{prop.PropertyType}'";
+        }
+        if (prop.Quantize > 0f && prop.IsPerPeer)
+        {
+            return "Quantize cannot be combined with PerPeerState (per-peer values bypass the shared grid baseline)";
+        }
+        if (prop.UnitVector && normalizedType != "Vector3")
+        {
+            return $"UnitVector is only supported on Vector3 properties, not '{prop.PropertyType}'";
+        }
+        if (prop.UnitVector && prop.Quantize <= 0f)
+        {
+            return "UnitVector requires Quantize > 0 (the octahedral step)";
+        }
+        return null;
+    }
+
     private static bool IsNetArrayType(string propertyType)
     {
         return propertyType.StartsWith("Nebula.Serialization.NetArray<");
@@ -585,6 +635,23 @@ public class NetPropertyGenerator : IIncrementalGenerator
                         prop.PropertyLocation,
                         prop.PropertyName,
                         prop.PropertyType));
+                }
+            }
+
+            // Report diagnostics for invalid quantization declarations (NEBULA010). The
+            // serializer dispatches on "Quantize > 0" per property, so anything that reaches
+            // the protocol table with a step on an unsupported type would misalign the wire.
+            foreach (var prop in propList)
+            {
+                if (prop!.PropertyLocation == null) continue;
+                string? problem = QuantizeProblem(prop);
+                if (problem != null)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        QuantizeInvalidDiagnostic,
+                        prop.PropertyLocation,
+                        prop.PropertyName,
+                        problem));
                 }
             }
 
@@ -916,6 +983,12 @@ public class NetPropertyGenerator : IIncrementalGenerator
             sb.AppendLine("    }");
             sb.AppendLine();
 
+            // Everything BSON is persistence-only. The base virtuals the overrides below replace, and
+            // MongoDB.Bson itself, exist only when the project defines NEBULA_BSON_SUPPORT (Nebula.props,
+            // NebulaBsonSupport=true). Emitted as preprocessor text rather than decided here: generated
+            // sources compile against the project's own defines, so the generator needs no input for it.
+            sb.AppendLine("#if NEBULA_BSON_SUPPORT");
+
             // Generate SetBsonPropertyByName - sets BSON-serializable properties by name
             var bsonProps = propList.Where(p => p!.IsBsonSerializable).ToList();
             if (bsonProps.Count > 0)
@@ -950,10 +1023,12 @@ public class NetPropertyGenerator : IIncrementalGenerator
                 sb.AppendLine();
             }
 
+            sb.AppendLine("#endif");
             sb.AppendLine("    #endregion");
             sb.AppendLine();
 
-            // Generate BSON serialization helpers
+            // Generate BSON serialization helpers (persistence-only, see above)
+            sb.AppendLine("#if NEBULA_BSON_SUPPORT");
             sb.AppendLine("    #region BSON Serialization");
             sb.AppendLine();
 
@@ -1005,6 +1080,7 @@ public class NetPropertyGenerator : IIncrementalGenerator
             sb.AppendLine();
 
             sb.AppendLine("    #endregion");
+            sb.AppendLine("#endif");
             sb.AppendLine();
 
             // Generate interpolation methods for properties with Interpolate = true
@@ -1303,5 +1379,8 @@ public class NetPropertyGenerator : IIncrementalGenerator
         // Per-peer fields
         bool IsPerPeer,
         bool IsPartial,
-        string Accessibility);
+        string Accessibility,
+        // Wire quantization (see NetProperty.Quantize / UnitVector)
+        float Quantize,
+        bool UnitVector);
 }

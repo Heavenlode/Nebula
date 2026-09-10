@@ -50,6 +50,11 @@ namespace Nebula.Bots
         /// </summary>
         internal static BotRunner TryCreate(Node parent)
         {
+            // Bots are launched from the editor's Play bar only; an exported build never carries the
+            // runtime. Folded away with the role constant, which also keeps the type discovery below
+            // (a reflection scan a trimmed build could not honour) out of every export.
+            if (NetRunner.RoleIsFixed) return null;
+
             string behaviorName = null;
             int botId = 0;
             bool isBot = false;

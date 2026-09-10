@@ -1,3 +1,4 @@
+#if NEBULA_BSON_SUPPORT
 using System;
 using System.IO;
 using MongoDB.Bson;
@@ -118,3 +119,4 @@ namespace Nebula.Serialization
         }
     }
 }
+#endif

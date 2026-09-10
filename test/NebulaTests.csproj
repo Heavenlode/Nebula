@@ -11,7 +11,8 @@
     <!-- xunit is already included via Nebula.props -->
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
-  <!-- Exclude ENet-CSharp submodule from parent directory (we use the NuGet package instead) -->
+  <!-- Exclude the ENet-CSharp submodule; it is upstream source only. The bits we
+       build against are vendored under addons/Nebula (see Nebula.props). -->
   <ItemGroup>
     <Compile Remove="..\ENet-CSharp\**" />
     <Content Remove="..\ENet-CSharp\**" />

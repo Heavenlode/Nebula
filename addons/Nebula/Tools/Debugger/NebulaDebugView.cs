@@ -184,11 +184,17 @@ namespace Nebula.Internal.Editor
             targetPorts.Clear();
 
             var orchestrator = EditorInterface.Singleton.GetBaseControl().GetNodeOrNull(ORCHESTRATOR_NODE_NAME);
-            // Read live rather than through NetRunner.DebugServerEnabled, which caches
-            // for the lifetime of a run: in the editor the setting can be toggled at
-            // any time and the tab should reflect it immediately.
-            if (IsDebugServerEnabled
-                && orchestrator is not null && orchestrator.Call("is_running").AsBool())
+            // Deliberately NOT gated on the debug-server setting. That setting governs the
+            // SPAWNED PROCESSES, and it is only their fallback — NEBULA_DEBUG in the
+            // process's own .env overrides it, per process kind, so the editor cannot know
+            // from here whether a given instance will produce frames. Worse, the same
+            // socket also carries METRICS, which NEBULA_PERFORMANCE governs independently:
+            // gating the reader on the debug switch made the Performance tab go blank
+            // whenever the debugger was off, which is exactly the combination its own
+            // placeholder advertises as supported. Attaching costs an async connect per
+            // port per retry interval, and "nothing listening yet" is already the normal
+            // case during a launch.
+            if (orchestrator is not null && orchestrator.Call("is_running").AsBool())
             {
                 foreach (int port in orchestrator.Call("get_debug_ports").AsInt32Array())
                 {
@@ -210,13 +216,6 @@ namespace Nebula.Internal.Editor
             UpdatePlaceholder();
         }
 
-        /// <summary>
-        /// Whether the debug channel is switched on for this project. Uncached so a
-        /// toggle in Project Settings shows up without an editor restart.
-        /// </summary>
-        private static bool IsDebugServerEnabled =>
-            ProjectSettings.GetSetting(NetRunner.DEBUG_SERVER_SETTING, true).AsBool();
-
         public override void _Process(double delta)
         {
             // Drains regardless of visibility. An attached-but-undrained socket fills
@@ -224,14 +223,6 @@ namespace Nebula.Internal.Editor
             // which is unrecoverable for the session — so "the user switched tabs" must
             // never stop the reader. (This also can't be delegated to a flag set from
             // outside: assembly reloads reset plain fields without re-running _Ready.)
-
-            if (!IsDebugServerEnabled)
-            {
-                // Nothing is listening, so don't sit in a connect-retry loop. Any
-                // connections from before the toggle are dropped by RefreshSessionTargets.
-                RefreshSessionTargets();
-                return;
-            }
 
             DrainConnections();
 
@@ -557,13 +548,14 @@ namespace Nebula.Internal.Editor
             if (worldSelector is not null)
                 worldSelector.GetParent<Control>().Visible = !empty;
 
-            // Distinguish "switched off" from "nothing running" — otherwise the tab
-            // tells you to press Play, which would never produce anything.
+            // One message covering both empty cases. It used to read the project setting
+            // and claim "Debug Server Disabled", but that setting is only the spawned
+            // processes' FALLBACK — a process whose .env sets NEBULA_DEBUG=1 reports
+            // regardless — so the editor cannot tell the two apart and should say what to
+            // check instead of asserting a cause.
             if (empty)
             {
-                placeholder.Text = IsDebugServerEnabled
-                    ? "No worlds — press Play in the toolbar."
-                    : "Debug Server Disabled";
+                placeholder.Text = "Enable NEBULA_DEBUG=true in your .env and run your game.\n";
             }
         }
 

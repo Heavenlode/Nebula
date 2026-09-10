@@ -40,7 +40,7 @@ public partial class PlayableCharacter : NetNode3D
 	public override void _NetworkProcess(int _tick)
 	{
 		base._NetworkProcess(_tick);
-		if (NetRunner.Instance.IsServer)
+		if (NetRunner.IsServer)
 		{
 			Money += 1;
 		}
@@ -68,10 +68,10 @@ So if the function was instead like:
 public override void _NetworkProcess(int _tick)
 {
 	base._NetworkProcess(_tick);
-	if (NetRunner.Instance.IsServer)
+	if (NetRunner.IsServer)
 	{
 		Money += 1;
-	} else if (NetRunner.Instance.IsClient)
+	} else if (NetRunner.IsClient)
 	{
 		Money += 100;
 	}
@@ -98,12 +98,12 @@ public partial class PlayableCharacter : NetNode3D
 	public override void _NetworkProcess(int _tick)
 	{
 		base._NetworkProcess(_tick);
-		if (NetRunner.Instance.IsServer)
+		if (NetRunner.IsServer)
 		{
 			Money += 1;
 		}
 		
-		if (NetRunner.Instance.IsClient)  {
+		if (NetRunner.IsClient)  {
 			if (Money > 100) {
 				if (!IsRich) {
 					IsRich = true;
@@ -155,7 +155,7 @@ On the client, set the input each frame:
 ```cs
 public override void _Process(double delta)
 {
-    if (NetRunner.Instance.IsClient)
+    if (NetRunner.IsClient)
     {
         Network.SetInput(new PlayerInput
         {
@@ -174,7 +174,7 @@ public override void _NetworkProcess(int tick)
 {
     base._NetworkProcess(tick);
     
-    if (NetRunner.Instance.IsServer)
+    if (NetRunner.IsServer)
     {
         ref readonly var input = ref Network.GetInput<PlayerInput>();
         

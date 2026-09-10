@@ -100,5 +100,28 @@ namespace Nebula
         /// </list>
         /// </summary>
         public bool PerPeerState = false;
+
+        /// <summary>
+        /// Grid step for wire quantization, in the property's own units; 0 (default) keeps the
+        /// float/half-float encoding. Only float, Vector2, Vector3 and Quaternion may set it
+        /// (NEBULA010). The value is rounded to the nearest multiple of the step on the server
+        /// and replicated as integer step counts, so every delta is exact: the client
+        /// reconstructs the server's grid value bit for bit and no lossy "settle" absolute is
+        /// ever needed. A change smaller than one step is not sent at all (server-side
+        /// dead-band). For a Quaternion the step is per smallest-three component and resolves
+        /// to a bit width (at most 10 bits per component). Cannot combine with PerPeerState.
+        /// Wire encoding, so it is part of the protocol hash.
+        /// </summary>
+        public float Quantize = 0f;
+
+        /// <summary>
+        /// Vector3 only: the value is a unit direction. It is replicated as an octahedral
+        /// projection (two components in [-1, 1]) instead of three coordinates, and
+        /// <see cref="Quantize"/> is the step in those octahedral units (roughly the angular
+        /// resolution in radians / 2). Requires Quantize > 0. A zero-length input is not a
+        /// direction and is sent as +Y, so properties that use Vector3.Zero as a sentinel must
+        /// not set this. Renormalised on decode.
+        /// </summary>
+        public bool UnitVector = false;
     }
 }

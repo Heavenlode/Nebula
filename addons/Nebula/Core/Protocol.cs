@@ -481,72 +481,6 @@ namespace Nebula.Serialization
         #region Static Method Invocation
 
         /// <summary>
-        /// Invoke a static serialization method (NetworkSerialize, NetworkDeserialize, BsonDeserialize).
-        /// Returns null if the method doesn't exist.
-        /// </summary>
-        public static object InvokeStaticMethod(ProtocolNetProperty prop, StaticMethodType methodType, params object[] args)
-        {
-            if (prop.ClassIndex < 0)
-                return null;
-
-            if (!GeneratedProtocol.StaticMethods.TryGetValue(prop.ClassIndex, out var methodInfo))
-                return null;
-
-            if ((methodInfo.MethodType & methodType) == 0)
-                return null;
-
-            var method = GetCachedMethod(methodInfo.TypeFullName, methodType.ToString());
-            if (method == null)
-                return null;
-
-            return method.Invoke(null, args);
-        }
-
-        /// <summary>
-        /// Get a Callable for a static method. For backwards compatibility with existing code.
-        /// Returns null if the method doesn't exist.
-        /// </summary>
-        public static Callable? GetStaticMethodCallable(ProtocolNetProperty prop, StaticMethodType methodType)
-        {
-            if (prop.ClassIndex < 0)
-                return null;
-
-            if (!GeneratedProtocol.StaticMethods.TryGetValue(prop.ClassIndex, out var methodInfo))
-                return null;
-
-            if ((methodInfo.MethodType & methodType) == 0)
-                return null;
-
-            var type = GetCachedType(methodInfo.TypeFullName);
-            if (type == null)
-                return null;
-
-            var methodName = methodType.ToString();
-            return Callable.From((Func<object[], object>)(args => 
-            {
-                var method = GetCachedMethod(methodInfo.TypeFullName, methodName);
-                return method?.Invoke(null, args);
-            }));
-        }
-
-        /// <summary>
-        /// Get a delegate for a static method. More efficient than Callable for hot paths.
-        /// </summary>
-        public static MethodInfo GetStaticMethod(ProtocolNetProperty prop, StaticMethodType methodType)
-        {
-            if (prop.ClassIndex < 0)
-                return null;
-
-            if (!GeneratedProtocol.StaticMethods.TryGetValue(prop.ClassIndex, out var methodInfo))
-                return null;
-
-            if ((methodInfo.MethodType & methodType) == 0)
-                return null;
-
-            return GetCachedMethod(methodInfo.TypeFullName, methodType.ToString());
-        }
-
-        /// <summary>
         /// Get a generated deserializer delegate for a property's type.
         /// This is the preferred method for deserialization - no reflection or boxing.
         /// </summary>
@@ -590,24 +524,6 @@ namespace Nebula.Serialization
             return GeneratedProtocol.OnPeerDisconnectedFuncs.TryGetValue(classIndex, out var func) ? func : null;
         }
 
-        private static MethodInfo GetCachedMethod(string typeName, string methodName)
-        {
-            var key = (typeName, methodName);
-            if (_methodCache.TryGetValue(key, out var cached))
-                return cached;
-
-            var type = GetCachedType(typeName);
-            if (type == null)
-                return null;
-
-            // FlattenHierarchy is required to find static methods from base classes
-            var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            _methodCache[key] = method;
-            return method;
-        }
-
-        private static readonly Dictionary<int, bool> _nodeRefClassCache = new();
-
         /// <summary>
         /// Whether this class index serializes a NODE REFERENCE — an id lookup — rather than
         /// in-place-mutated content.
@@ -620,26 +536,16 @@ namespace Nebula.Serialization
         /// <see cref="NetworkController.MarkDirtyRef"/> already sets its bit, so the every-tick call
         /// is pure cost.</para>
         ///
-        /// <para>Resolved from the type rather than a hardcoded list of the three node classes, so a
-        /// property typed as any game subclass is covered — their <c>NetworkSerialize</c> is the
-        /// inherited static one on NetNode/NetNode2D/NetNode3D.</para>
+        /// <para>Decided by the generator from the type's interfaces rather than a hardcoded list of
+        /// the three node classes, so a property typed as any game subclass is covered — and decided
+        /// at build time rather than by reflection, which a trimmed build cannot rely on.</para>
         /// </summary>
         public static bool IsNodeReferenceClass(int classIndex)
         {
-            if (classIndex < 0) return false;
-            if (_nodeRefClassCache.TryGetValue(classIndex, out var cached)) return cached;
-
-            bool isNodeRef = false;
-            if (GeneratedProtocol.StaticMethods.TryGetValue(classIndex, out var info))
-            {
-                var type = GetCachedType(info.TypeFullName);
-                isNodeRef = type != null && typeof(INetNodeBase).IsAssignableFrom(type);
-            }
-            _nodeRefClassCache[classIndex] = isNodeRef;
-            return isNodeRef;
+            return classIndex >= 0
+                && GeneratedProtocol.StaticMethods.TryGetValue(classIndex, out var info)
+                && info.IsNodeReference;
         }
-
-        private static readonly Dictionary<int, bool> _netArrayClassCache = new();
 
         /// <summary>
         /// Whether this class index is a <c>NetArray&lt;T&gt;</c>. NetArray content changes
@@ -650,35 +556,9 @@ namespace Nebula.Serialization
         /// </summary>
         public static bool IsNetArrayClass(int classIndex)
         {
-            if (classIndex < 0) return false;
-            if (_netArrayClassCache.TryGetValue(classIndex, out var cached)) return cached;
-
-            bool isNetArray = false;
-            if (GeneratedProtocol.StaticMethods.TryGetValue(classIndex, out var info))
-            {
-                var type = GetCachedType(info.TypeFullName);
-                isNetArray = type is { IsGenericType: true }
-                    && type.GetGenericTypeDefinition() == typeof(NetArray<>);
-            }
-            _netArrayClassCache[classIndex] = isNetArray;
-            return isNetArray;
-        }
-
-        private static Type GetCachedType(string typeName)
-        {
-            if (_typeCache.TryGetValue(typeName, out var cached))
-                return cached;
-
-            Type type = null;
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                type = assembly.GetType(typeName);
-                if (type != null)
-                    break;
-            }
-
-            _typeCache[typeName] = type;
-            return type;
+            return classIndex >= 0
+                && GeneratedProtocol.StaticMethods.TryGetValue(classIndex, out var info)
+                && info.IsNetArray;
         }
 
         #endregion

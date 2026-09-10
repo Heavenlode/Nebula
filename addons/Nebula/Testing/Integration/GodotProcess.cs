@@ -120,6 +120,13 @@ public sealed class GodotProcess : IDisposable
             WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory
         };
 
+        // Every process this harness starts is driven through the debug channel, so it
+        // asks for one rather than inheriting whatever the project happens to default to.
+        // The process environment wins over the project's .env files (see Env.GetValue),
+        // which also stops a checked-in "NEBULA_DEBUG=0" in .env.server from quietly
+        // costing a test its debug events.
+        startInfo.Environment["NEBULA_DEBUG"] = "1";
+
         var process = new Process { StartInfo = startInfo };
 
         if (!process.Start())

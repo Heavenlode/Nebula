@@ -1,3 +1,4 @@
+#if NEBULA_BSON_SUPPORT
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -309,3 +310,4 @@ namespace Nebula.Serialization
         #endregion
     }
 }
+#endif

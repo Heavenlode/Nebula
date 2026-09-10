@@ -147,8 +147,7 @@ public partial class NebulaPerformanceView : Control
         placeholder = new Label
         {
             Name = PlaceholderName,
-            Text = "No metrics — the server reports only when NEBULA_PERFORMANCE is set"
-                + " (environment variable or .env entry). Independent of NEBULA_DEBUG.",
+            Text = "Enable NEBULA_PERFORMANCE=true in your .env and run your game.\n",
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
         };

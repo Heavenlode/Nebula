@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Godot;
 
 namespace Nebula.Serialization
@@ -1633,7 +1634,10 @@ namespace Nebula.Serialization
         public static void OnPeerAcknowledge(NetArray<T> obj, UUID peerId, Tick tick)
         {
             if (obj == null || obj._peerState == null) return;
-            if (!obj._peerState.TryGetValue(peerId, out var state)) return;
+            // In place: one hash, no struct copy, no write-back. This runs per array per peer
+            // per ack, which is the hottest per-node path the ack drain has.
+            ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(obj._peerState, peerId);
+            if (Unsafe.IsNullRef(ref state)) return;
 
             // Commit pending chunk progress, but only if this ack covers the chunk send
             if (state.HasPendingChunk && state.ChunkSentTick >= 0 && tick >= state.ChunkSentTick)
@@ -1659,9 +1663,6 @@ namespace Nebula.Serialization
                 Array.Clear(state.PendingDirty, 0, state.PendingDirty.Length);
                 state.LastSendTick = -1;
             }
-
-            // Write back the modified struct
-            obj._peerState[peerId] = state;
         }
 
         /// <summary>

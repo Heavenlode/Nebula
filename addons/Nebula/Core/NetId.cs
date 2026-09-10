@@ -1,6 +1,8 @@
 using System;
 using Nebula.Serialization;
+#if NEBULA_BSON_SUPPORT
 using MongoDB.Bson;
+#endif
 
 namespace Nebula
 {
@@ -12,7 +14,11 @@ namespace Nebula
     /// This is a value type (struct) to avoid allocations.
     /// </summary>
     [NetValueLayout(8)] // sizeof(long)
-    public readonly struct NetId : INetValue<NetId>, IBsonValue<NetId>, IEquatable<NetId>
+    public readonly struct NetId : INetValue<NetId>,
+#if NEBULA_BSON_SUPPORT
+        IBsonValue<NetId>,
+#endif
+        IEquatable<NetId>
     {
         /// <summary>
         /// Represents an invalid/unassigned NetId.
@@ -74,7 +80,7 @@ namespace Nebula
 
         public static void NetworkSerialize(WorldRunner currentWorld, NetPeer peer, in NetId value, NetBuffer buffer)
         {
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 NetWriter.WriteUInt16(buffer, currentWorld.GetPeerWorldState(peer).Value.WorldToPeerNodeMap[value]);
             }
@@ -86,7 +92,7 @@ namespace Nebula
 
         public static NetId NetworkDeserialize(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer)
         {
-            if (NetRunner.Instance.IsServer)
+            if (NetRunner.IsServer)
             {
                 var id = NetReader.ReadUInt16(buffer);
                 return currentWorld.GetNetIdFromPeerId(peer, id);
@@ -100,6 +106,7 @@ namespace Nebula
 
         #endregion
 
+#if NEBULA_BSON_SUPPORT
         #region BSON Serialization
 
         public static BsonValue BsonSerialize(in NetId value)
@@ -117,5 +124,6 @@ namespace Nebula
         }
 
         #endregion
+#endif
     }
 }

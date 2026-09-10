@@ -59,9 +59,6 @@ namespace Nebula
 			public PropertyCache[] Properties;
 		}
 
-		public bool IsClient => NetRunner.Instance.IsClient;
-		public bool IsServer => NetRunner.Instance.IsServer;
-
 		/// <summary>
 		/// Size of the circular snapshot buffer. ~130ms at 60Hz tick rate.
 		/// </summary>
@@ -628,10 +625,30 @@ namespace Nebula
 			if (what == NotificationPredelete)
 			{
 				if (!IsWorldReady) return;
-				if (NetParent != null && NetParent.RawNode is INetNodeBase _netNodeParent)
-				{
-					_netNodeParent.Network.DynamicNetworkChildren.Remove(this);
-				}
+				DetachFromWorld();
+			}
+		}
+
+		/// <summary>
+		/// Drops what the world-ready path registered on the world. Called by the WorldRunner when
+		/// it removes this node's NetScene. Necessary rather than nice: this controller is a
+		/// RefCounted the node refers to, and the world's join event is a multicast delegate, so
+		/// a despawned root that stayed subscribed kept itself, its subtree and its serializer
+		/// state alive for the life of the world (measured: one full player per departed peer).
+		/// Removing a handler that was never added is a no-op, so there is no bookkeeping.
+		/// </summary>
+		internal void DetachFromWorld()
+		{
+			if (CurrentWorld != null)
+			{
+				CurrentWorld.OnPlayerJoined -= _OnPeerConnected;
+			}
+			// The parent's dynamic-children set is the other strong reference a despawned child
+			// leaves behind; this used to live only in NotificationPredelete, which a RefCounted
+			// that is still referenced never receives.
+			if (NetParent != null && NetParent.RawNode is INetNodeBase netNodeParent)
+			{
+				netNodeParent.Network.DynamicNetworkChildren.Remove(this);
 			}
 		}
 
@@ -819,7 +836,7 @@ namespace Nebula
 		/// scope is open, but a scope can be opened before/without a NetRunner (tests, tools).
 		/// </summary>
 		private static bool PerPeerServerContext =>
-			ForcePerPeerServerContextForTests || (NetRunner.Instance?.IsServer ?? false);
+			ForcePerPeerServerContextForTests || NetRunner.IsServer;
 
 		public bool TryReadPerPeer(INetNodeBase sourceNode, string propertyName, ref int cachedIndex, ref NetworkController cachedRoot, out PropertyCache value)
 		{
@@ -1141,7 +1158,7 @@ namespace Nebula
 			// Skip caching for predicted properties on owned clients.
 			// This prevents client predictions from contaminating CachedProperties,
 			// which StoreConfirmedState reads to get the server's confirmed values.
-			bool isOwnedPredictedOnClient = NetRunner.Instance.IsClient
+			bool isOwnedPredictedOnClient = NetRunner.IsClient
 				&& sourceNode.Network.IsCurrentOwner
 				&& prop.Predicted;
 			if (!isOwnedPredictedOnClient)
@@ -1471,7 +1488,7 @@ namespace Nebula
 		/// <param name="input">The input struct to send to the server.</param>
 		public void SetInput<TInput>(in TInput input) where TInput : unmanaged
 		{
-			if (!IsWorldReady || !IsCurrentOwner || IsServer) return;
+			if (!IsWorldReady || !IsCurrentOwner || NetRunner.IsServer) return;
 
 			if (_inputData == null)
 			{
@@ -1706,7 +1723,7 @@ namespace Nebula
 		public NetPeer InputAuthority { get; internal set; }
 		public void SetInputAuthority(NetPeer inputAuthority)
 		{
-			if (!IsServer) throw new Exception("InputAuthority can only be set on the server");
+			if (!NetRunner.IsServer) throw new Exception("InputAuthority can only be set on the server");
 			if (CurrentWorld == null) throw new Exception("Can only set input authority after node is assigned to a world");
 			if (InputAuthority.IsSet)
 			{
@@ -1755,7 +1772,7 @@ namespace Nebula
 
 		public bool IsCurrentOwner
 		{
-			get { return IsServer || (IsClient && InputAuthority.IsSet); }
+			get { return NetRunner.IsServer || (NetRunner.IsClient && InputAuthority.IsSet); }
 		}
 
 		public static INetNodeBase FindFromChild(Node node)
@@ -1795,7 +1812,7 @@ namespace Nebula
 				nn.InitializeNetPropertyBindings();
 			if (IsNetScene())
 			{
-				if (IsServer)
+				if (NetRunner.IsServer)
 				{
 					foreach (var peer in NetRunner.Instance.Peers.Keys)
 					{
@@ -1813,7 +1830,7 @@ namespace Nebula
 					networkChild.InterestLayers = InterestLayers;
 					// On client, don't overwrite InputAuthority if child already has it set
 					// (server sends correct InputAuthority for each node via spawn data)
-					if (IsServer || !networkChild.InputAuthority.IsSet)
+					if (NetRunner.IsServer || !networkChild.InputAuthority.IsSet)
 					{
 						networkChild.InputAuthority = InputAuthority;
 					}
@@ -1827,7 +1844,7 @@ namespace Nebula
 					networkChild.InterestLayers = InterestLayers;
 					// On client, don't overwrite InputAuthority if child already has it set
 					// (server sends correct InputAuthority for each node via spawn data)
-					if (IsServer || !networkChild.InputAuthority.IsSet)
+					if (NetRunner.IsServer || !networkChild.InputAuthority.IsSet)
 					{
 						networkChild.InputAuthority = InputAuthority;
 					}
@@ -1835,7 +1852,7 @@ namespace Nebula
 					networkChild.NetParentId = NetId;
 					networkChild._NetworkPrepare(world);
 				}
-				if (IsClient)
+				if (NetRunner.IsClient)
 				{
 					return;
 				}
@@ -1937,7 +1954,7 @@ namespace Nebula
 
 		public void Despawn()
 		{
-			if (!IsServer)
+			if (!NetRunner.IsServer)
 			{
 				Debugger.Instance.Log(Debugger.DebugLevel.ERROR, $"Cannot despawn {RawNode.GetPath()}. Only the server can despawn nodes.");
 				return;

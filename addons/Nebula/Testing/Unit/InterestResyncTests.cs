@@ -172,7 +172,7 @@ public class InterestResyncTests
 
         f.Server.ResetPeerBaseline(f.PeerId);
         Assert.Equal(0, f.Server.PendingPeersForTests);
-        Assert.False(f.Server.HasPeerStateForTests(f.PeerId));
+        Assert.False(f.Server.InFlightForTests(f.PeerId));
 
         // Fresh instance assumes interest; the loss is re-detected on the next slot.
         int next = f.NextSlot(t + 1);

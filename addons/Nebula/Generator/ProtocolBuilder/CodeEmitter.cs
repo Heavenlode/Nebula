@@ -682,6 +682,9 @@ namespace Nebula.Generators
             sb.AppendLine("        /// <summary>Delegate for peer disconnect callback on INetSerializable types.</summary>");
             sb.AppendLine("        public delegate void OnPeerDisconnectedFunc(object obj, UUID peerId);");
             sb.AppendLine();
+            sb.AppendLine("        /// <summary>Delegate for the optional per-peer prepare hook on INetSerializable types (pre-creates per-peer state before the export lanes run).</summary>");
+            sb.AppendLine("        public delegate void OnPeerPrepareFunc(object obj, UUID peerId);");
+            sb.AppendLine();
             sb.AppendLine("        #endregion");
             sb.AppendLine();
         }
@@ -826,6 +829,22 @@ namespace Nebula.Generators
             
             sb.AppendLine("        #endregion");
             sb.AppendLine();
+
+            // Emit OnPeerPrepare methods: only for the reference types that declare the hook
+            sb.AppendLine("        #region OnPeerPrepare Methods");
+            sb.AppendLine();
+            foreach (var kvp in data.StaticMethods)
+            {
+                if (!HasOnPeerPrepare(kvp.Value))
+                    continue;
+                var typeName = kvp.Value.TypeFullName;
+                var methodName = $"OnPeerPrepare_{kvp.Key}";
+                sb.AppendLine($"        private static void {methodName}(object obj, UUID peerId)");
+                sb.AppendLine($"            => {typeName}.OnPeerPrepare(({typeName})obj, peerId);");
+                sb.AppendLine();
+            }
+            sb.AppendLine("        #endregion");
+            sb.AppendLine();
             
             // Now emit the dictionary using method group references
             sb.AppendLine("        public static readonly FrozenDictionary<int, NetworkSerializeFunc> Serializers =");
@@ -891,6 +910,30 @@ namespace Nebula.Generators
             
             sb.AppendLine("            }.ToFrozenDictionary();");
             sb.AppendLine();
+
+            // Emit OnPeerPrepare dictionary (declaring reference types only)
+            sb.AppendLine("        public static readonly FrozenDictionary<int, OnPeerPrepareFunc> OnPeerPrepareFuncs =");
+            sb.AppendLine("            new Dictionary<int, OnPeerPrepareFunc>");
+            sb.AppendLine("            {");
+            foreach (var kvp in data.StaticMethods)
+            {
+                if (!HasOnPeerPrepare(kvp.Value))
+                    continue;
+                sb.AppendLine($"                [{kvp.Key}] = OnPeerPrepare_{kvp.Key},");
+            }
+            sb.AppendLine("            }.ToFrozenDictionary();");
+            sb.AppendLine();
+        }
+
+        /// <summary>A closed reference type with NetworkSerialize that also declares static OnPeerPrepare.</summary>
+        private static bool HasOnPeerPrepare(SerializableMethodData method)
+        {
+            const int networkSerializeBit = (int)StaticMethodType.NetworkSerialize;
+            const int onPeerPrepareBit = (int)StaticMethodType.OnPeerPrepare;
+            return !method.IsValueType
+                && (method.MethodType & networkSerializeBit) != 0
+                && (method.MethodType & onPeerPrepareBit) != 0
+                && !IsOpenGenericType(method.TypeFullName);
         }
 
         /// <summary>

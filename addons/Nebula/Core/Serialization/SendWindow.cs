@@ -16,6 +16,13 @@ namespace Nebula.Serialization
         public Tick Last;
 
         /// <summary>
+        /// A send is in flight: the record rode at least one packet since the window was
+        /// last closed. Windows are pre-created per peer (see IStateSerializer.PreparePeer),
+        /// so "in flight" is this, never the entry's presence.
+        /// </summary>
+        public readonly bool IsOpen => First != 0;
+
+        /// <summary>
         /// Records that the record rode the packet exported at <paramref name="tick"/>.
         /// Consecutive sends extend the window; any skipped tick restarts it.
         /// </summary>

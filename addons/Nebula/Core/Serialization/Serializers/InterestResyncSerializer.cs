@@ -65,13 +65,10 @@ namespace Nebula.Serialization.Serializers
 
         /// <summary>
         /// Peers with an in-flight value. Zero is the idle fast path: off the stagger slot the
-        /// serializer returns without touching the dictionary at all.
+        /// serializer returns without touching the dictionary at all. Interlocked because
+        /// export lanes flip different peers in flight at the same time.
         /// </summary>
         private int _pendingPeers;
-
-        /// <summary>Export wrote a byte for this peer; CommitExport stamps the window.</summary>
-        private bool _pendingCommit;
-        private UUID _pendingCommitPeer;
 
         public InterestResyncSerializer(NetworkController controller)
         {
@@ -81,28 +78,46 @@ namespace Nebula.Serialization.Serializers
         public void Begin() { }
         public void Cleanup() { }
 
-        public void CleanupPeer(UUID peerId) => ForgetPeer(peerId);
+        public void PreparePeer(UUID peerId)
+        {
+            _peerStates ??= new Dictionary<UUID, PeerInterestState>();
+            ref var state = ref CollectionsMarshal.GetValueRefOrAddDefault(_peerStates, peerId, out bool exists);
+            if (!exists)
+            {
+                state.Acked = true;
+            }
+        }
 
-        /// <summary>
-        /// The peer is about to receive a fresh copy of this node, whose client-side instance
-        /// starts from "interested" like every spawn; whatever was in flight for the old
-        /// instance is meaningless to the new one.
-        /// </summary>
-        public void ResetPeerBaseline(UUID peerId) => ForgetPeer(peerId);
-
-        private void ForgetPeer(UUID peerId)
+        public void CleanupPeer(UUID peerId)
         {
             if (_peerStates == null) return;
             if (_peerStates.Remove(peerId, out var state) && state.InFlight)
             {
-                _pendingPeers--;
+                System.Threading.Interlocked.Decrement(ref _pendingPeers);
             }
+        }
+
+        /// <summary>
+        /// The peer is about to receive a fresh copy of this node, whose client-side instance
+        /// starts from "interested" like every spawn; whatever was in flight for the old
+        /// instance is meaningless to the new one. In place, never a removal: this runs from
+        /// the spawn serializer's commit inside an export lane.
+        /// </summary>
+        public void ResetPeerBaseline(UUID peerId)
+        {
+            if (_peerStates == null) return;
+            ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
+            if (System.Runtime.CompilerServices.Unsafe.IsNullRef(ref state)) return;
+            if (state.InFlight)
+            {
+                System.Threading.Interlocked.Decrement(ref _pendingPeers);
+            }
+            state = default;
+            state.Acked = true;
         }
 
         public ExportResult Export(WorldRunner currentWorld, NetPeer peer, NetBuffer buffer, int maxBits)
         {
-            _pendingCommit = false;
-
             // Only sync after the node has been spawned for this peer
             if (!currentWorld.HasSpawnedForClient(network.NetId, peer))
             {
@@ -124,6 +139,8 @@ namespace Nebula.Serialization.Serializers
             ref var state = ref CollectionsMarshal.GetValueRefOrAddDefault(_peerStates, peerId, out bool exists);
             if (!exists)
             {
+                // Prepare-pass backstop (see IStateSerializer.PreparePeer).
+                ExportContext.NoteUnpreparedInsert("InterestResyncSerializer state");
                 state.Acked = true;
             }
 
@@ -143,7 +160,7 @@ namespace Nebula.Serialization.Serializers
                 if (!state.InFlight)
                 {
                     state.InFlight = true;
-                    _pendingPeers++;
+                    System.Threading.Interlocked.Increment(ref _pendingPeers);
                 }
                 state.Sent = desired;
                 state.Window = default;
@@ -161,17 +178,20 @@ namespace Nebula.Serialization.Serializers
             }
 
             buffer.WriteBool(state.Sent);
-            _pendingCommit = true;
-            _pendingCommitPeer = peerId;
             return ExportResult.Written;
         }
 
+        /// <summary>
+        /// The host only commits a section it appended, and Export wrote one exactly when this
+        /// peer's value is in flight - so there is no pending flag to check: the peer's state
+        /// is the record of what was written.
+        /// </summary>
         public void CommitExport(WorldRunner currentWorld, NetPeer peer, Tick tick)
         {
-            if (!_pendingCommit) return;
-            _pendingCommit = false;
-            ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, _pendingCommitPeer);
-            if (System.Runtime.CompilerServices.Unsafe.IsNullRef(ref state)) return;
+            if (_peerStates == null) return;
+            var peerId = NetRunner.Instance.GetPeerId(peer);
+            ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
+            if (System.Runtime.CompilerServices.Unsafe.IsNullRef(ref state) || !state.InFlight) return;
             state.Window.RecordSend(tick);
         }
 
@@ -188,7 +208,7 @@ namespace Nebula.Serialization.Serializers
             state.Acked = state.Sent;
             state.InFlight = false;
             state.Window = default;
-            _pendingPeers--;
+            System.Threading.Interlocked.Decrement(ref _pendingPeers);
         }
 
         public bool Import(WorldRunner currentWorld, NetBuffer buffer, out NetworkController nodeOut)
@@ -210,7 +230,13 @@ namespace Nebula.Serialization.Serializers
         /// <summary>Test seam: peers with a value in flight.</summary>
         internal int PendingPeersForTests => _pendingPeers;
 
-        /// <summary>Test seam: whether any per-peer state exists for this peer.</summary>
+        /// <summary>Test seam: whether a value is in flight for this peer.</summary>
+        internal bool InFlightForTests(UUID peerId) => _peerStates != null && _peerStates.TryGetValue(peerId, out var s) && s.InFlight;
+
+        /// <summary>Test seam: per-peer entries held; must not change across Export/Commit/Ack/ResetPeerBaseline.</summary>
+        internal int PeerEntryCountForTests => _peerStates?.Count ?? 0;
+
+        /// <summary>Test seam: whether any per-peer state exists for this peer (CleanupPeer removes it).</summary>
         internal bool HasPeerStateForTests(UUID peerId) => _peerStates != null && _peerStates.ContainsKey(peerId);
     }
 }

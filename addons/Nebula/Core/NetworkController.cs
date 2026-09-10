@@ -377,11 +377,91 @@ namespace Nebula
 		public byte StaticChildId { get; internal set; } = 0;
 
 		/// <summary>
+		/// Node path id meaning "attach directly under the parent NetScene's root" in a spawn
+		/// record and in the nested spawn table; every other value is a Protocol.PackNode id.
+		/// </summary>
+		internal const byte DirectChildPathId = 255;
+
+		/// <summary>
 		/// Cached node path ID within parent NetScene for spawn serialization.
 		/// Set during scene instantiation or WorldRunner.Spawn().
-		/// 255 = direct child of parent root.
+		/// <see cref="DirectChildPathId"/> = direct child of parent root.
 		/// </summary>
-		internal byte CachedNodePathIdInParent = 255;
+		internal byte CachedNodePathIdInParent = DirectChildPathId;
+
+		#region Export facts
+
+		// Facts the export lanes need that only the world's thread may read from the Godot
+		// node (Godot's read thread guard rejects Node calls from any other thread). They are
+		// resolved on the world thread - in the ExportState prologue for any node whose facts
+		// are stale - and then read freely by every lane. Staleness is set at construction and
+		// whenever the net parent changes (the attachment path is relative to it).
+
+		/// <summary>The node's name, for diagnostics only. Empty until resolved.</summary>
+		internal string CachedName = "";
+
+		/// <summary>
+		/// The spawn record's attachment point: the packed path, within the net parent's scene,
+		/// of this node's Godot parent. <see cref="DirectChildPathId"/> for a direct child.
+		/// Only meaningful when <see cref="SpawnAttachPathPackable"/> is true.
+		/// </summary>
+		internal byte SpawnAttachPathId = DirectChildPathId;
+
+		/// <summary>
+		/// False when the Godot parent's path is not in the protocol registry (a node reparented
+		/// at runtime under an unregistered container): the spawn cannot be addressed and stays
+		/// pending. Logged once per resolution.
+		/// </summary>
+		internal bool SpawnAttachPathPackable = true;
+
+		private bool _exportFactsFresh;
+
+		/// <summary>
+		/// Resolves the export facts if they are stale. World thread (or main, before the world
+		/// runs) only: the fresh check is what keeps the lanes off the Godot reads.
+		/// </summary>
+		internal void EnsureExportFacts()
+		{
+			if (_exportFactsFresh) return;
+			RefreshExportFacts();
+		}
+
+		private void RefreshExportFacts()
+		{
+			if (RawNode == null) return;
+			CachedName = RawNode.Name;
+			// Warms the lazy NetSceneFilePath cache so no lane takes its SceneFilePath read.
+			var scenePath = NetSceneFilePath;
+			if (!RawNode.IsInsideTree())
+			{
+				// The attachment point does not exist yet; try again next tick.
+				SpawnAttachPathPackable = false;
+				return;
+			}
+
+			SpawnAttachPathPackable = true;
+			SpawnAttachPathId = DirectChildPathId;
+			var parent = NetParent;
+			if (parent != null)
+			{
+				var relativePath = parent.RawNode.GetPathTo(RawNode.GetParent());
+				if (relativePath == "." || relativePath.IsEmpty)
+				{
+					SpawnAttachPathId = DirectChildPathId;
+				}
+				else if (!Protocol.PackNode(parent.NetSceneFilePath, relativePath, out SpawnAttachPathId))
+				{
+					// Delivery becomes possible only if the path is registered in a future
+					// protocol build. Logged once per resolution, not per tick.
+					SpawnAttachPathPackable = false;
+					Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
+						$"[SpawnSerializer] Cannot spawn {RawNode.GetPath()}: node path '{relativePath}' is not in the protocol registry for scene '{parent.NetSceneFilePath}'. Spawn stays pending; further occurrences suppressed.");
+				}
+			}
+			_exportFactsFresh = !string.IsNullOrEmpty(scenePath);
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Bitmask of dirty properties. Bit N is set if property index N has changed since last export.
@@ -695,6 +775,7 @@ namespace Nebula
 					}
 				}
 				_networkParentId = value;
+				_exportFactsFresh = false; // the attachment path is relative to the new parent
 				{
 					var parentController = IsNetScene() && value.IsValid ? CurrentWorld.GetNodeFromNetId(value) : null;
 					if (parentController?.RawNode is INetNodeBase _netNodeParent)
@@ -1064,7 +1145,7 @@ namespace Nebula
 					var relativePath = treeRoot.GetPathTo(child);
 					if (relativePath == "." || relativePath.IsEmpty)
 					{
-						netNode.Network.CachedNodePathIdInParent = 255;
+						netNode.Network.CachedNodePathIdInParent = DirectChildPathId;
 					}
 					else if (Protocol.PackNode(NetSceneFilePath, relativePath, out var pathId))
 					{
@@ -1072,7 +1153,7 @@ namespace Nebula
 					}
 					else
 					{
-						netNode.Network.CachedNodePathIdInParent = 255;
+						netNode.Network.CachedNodePathIdInParent = DirectChildPathId;
 					}
 
 					// Recurse into nested NetScene to discover its children
@@ -1246,6 +1327,7 @@ namespace Nebula
 			{
 				CachedProperties[prop.Index].Type = SerialVariantType.Object;
 				CachedProperties[prop.Index].RefValue = value;
+				PreparedPeerSetVersion = -1; // a new object: its per-peer entries do not exist yet
 			}
 		}
 
@@ -1411,6 +1493,7 @@ namespace Nebula
 					{
 						cache.Type = SerialVariantType.Object;
 						cache.RefValue = value;
+						PreparedPeerSetVersion = -1; // a new object: its per-peer entries do not exist yet
 					}
 					break;
 			}
@@ -1903,6 +1986,29 @@ namespace Nebula
 
 		internal Dictionary<UUID, bool> spawnReady = [];
 		internal Dictionary<UUID, bool> preparingSpawn = [];
+
+		/// <summary>
+		/// The WorldRunner peer-set version this node's per-peer entries were last prepared
+		/// against (see <see cref="PrepareExportPeer"/>). -1 = never; reset to -1 whenever an
+		/// object property is re-assigned, since the new object has no per-peer entries yet.
+		/// </summary>
+		internal int PreparedPeerSetVersion = -1;
+
+		/// <summary>
+		/// Pre-creates every per-peer entry the export path would otherwise insert lazily for
+		/// this peer: the controller's own spawn-ready flag and each serializer's state (see
+		/// IStateSerializer.PreparePeer). World thread, before any export lane runs.
+		/// </summary>
+		internal void PrepareExportPeer(UUID peerId)
+		{
+			spawnReady.TryAdd(peerId, false);
+			var serializers = NetNode?.Serializers;
+			if (serializers == null) return;
+			for (int i = 0; i < serializers.Length; i++)
+			{
+				serializers[i].PreparePeer(peerId);
+			}
+		}
 
 		public void PrepareSpawn(NetPeer peer)
 		{

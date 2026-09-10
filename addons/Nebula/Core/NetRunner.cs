@@ -770,6 +770,16 @@ namespace Nebula
         public static bool PerWorldThreadGroup =>
             _perWorldThreadGroup ??= ProjectSettings.GetSetting("Nebula/config/threading/per_world_thread_group", false).AsBool();
 
+        private static int? _exportWorkers;
+
+        /// <summary>
+        /// Nebula/config/threading/export_workers: threads that export peers' tick packets
+        /// alongside each world's tick thread (see <see cref="ExportWorkers"/>). 0 (the
+        /// default) keeps the export on the tick thread. Cached on first read.
+        /// </summary>
+        public static int ExportWorkerCount =>
+            _exportWorkers ??= System.Math.Max(0, ProjectSettings.GetSetting("Nebula/config/threading/export_workers", 0).AsInt32());
+
         /// <summary>
         /// Serializes every touch of the shared ENet <see cref="Host"/>.
         ///

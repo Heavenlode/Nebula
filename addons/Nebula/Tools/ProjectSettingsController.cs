@@ -278,6 +278,18 @@ public partial class ProjectSettingsController : Node
             {"type", (int)Variant.Type.Bool},
         });
 
+        // Export worker threads per world. The per-peer export (each peer's tick packet) is the
+        // part of the server tick that grows fastest with player count and is independent per
+        // peer, so N workers plus the tick thread build packets on N+1 threads. 0 keeps it on
+        // the tick thread. Output is byte-identical either way; the setting changes CPU time,
+        // not behavior. Size it to the cores the server can spare (3 on a 4-vCPU host). Read
+        // once at startup.
+        Register("Nebula/config/threading/export_workers", 0, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "0,16,1"},
+        });
+
         // ── Editor ───────────────────────────────────────────────────────
         // Editor: suppress Nebula's toolbar Play button and its configuration
         // dropdown. Godot's own run bar is always left alone, and the debugger

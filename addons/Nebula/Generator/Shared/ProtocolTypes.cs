@@ -65,6 +65,8 @@ namespace Nebula.Serialization
         NetworkSerialize = 1 << 0,
         NetworkDeserialize = 1 << 1,
         BsonDeserialize = 1 << 2,
+        /// <summary>Optional static OnPeerPrepare(T, UUID): pre-creates the type's per-peer state.</summary>
+        OnPeerPrepare = 1 << 3,
     }
 
     /// <summary>

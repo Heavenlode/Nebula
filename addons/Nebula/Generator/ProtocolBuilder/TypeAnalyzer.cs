@@ -81,6 +81,7 @@ namespace Nebula.Generators
             public bool HasNetworkSerialize { get; init; }
             public bool HasNetworkDeserialize { get; init; }
             public bool HasBsonDeserialize { get; init; }
+            public bool HasOnPeerPrepare { get; init; }
             /// <summary>
             /// True if this type implements INetValue (value type), false if INetSerializable (reference type).
             /// </summary>
@@ -133,6 +134,7 @@ namespace Nebula.Generators
                     HasNetworkSerialize = hasAnyNetSerializable && HasStaticMethod(type, "NetworkSerialize"),
                     HasNetworkDeserialize = hasAnyNetSerializable && HasStaticMethod(type, "NetworkDeserialize"),
                     HasBsonDeserialize = hasBsonSerializable && HasStaticMethod(type, "BsonDeserialize"),
+                    HasOnPeerPrepare = hasNetSerializable && HasStaticMethod(type, "OnPeerPrepare"),
                     IsValueType = hasNetValue,
                     // Decided here rather than by reflection at runtime (which trimming cannot see).
                     IsNodeReference = interfaces.Any(i => i.Name == "INetNodeBase"),

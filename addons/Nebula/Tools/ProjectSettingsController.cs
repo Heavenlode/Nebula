@@ -123,6 +123,15 @@ public partial class ProjectSettingsController : Node
             {"hint_string", "100,65535,1"},
         });
 
+        // Maximum simultaneous connections. The per-instance override is --maxPeers= (or
+        // NEBULA_MAX_PEERS), because a load run needs a different limit from an editor session
+        // without editing the project. Upper bound is ENet's, not ours.
+        Register(NetRunner.MAX_PEERS_SETTING, NetRunner.DefaultMaxPeers, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", $"1,{NetRunner.MaxPeersLimit},1"},
+        });
+
         // ── Build ────────────────────────────────────────────────────────
         // Whether the EDITOR build compiles MongoDB.Bson and the BSON persistence API; Nebula.props
         // reads this key straight from project.godot. Exports decide per preset through the

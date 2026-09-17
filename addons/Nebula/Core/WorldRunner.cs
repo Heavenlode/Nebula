@@ -139,6 +139,15 @@ namespace Nebula
         private Dictionary<UUID, PeerState> PeerStates = [];
 
         /// <summary>
+        /// How many peers this world currently holds, mid-handoff ones included.
+        ///
+        /// <para>Exposed because <see cref="NetRunner.DestroyWorld"/> must refuse an occupied world
+        /// and <see cref="PeerStates"/> is private. Deliberately a count and not the dictionary: a
+        /// caller outside this class has no business enumerating peer state.</para>
+        /// </summary>
+        public int PeerCount => PeerStates.Count;
+
+        /// <summary>
         /// Invoked when a peer's sync status changes. Parameters: (peerId, newStatus)
         /// </summary>
         public event Action<UUID, PeerSyncStatus> OnPeerSyncStatusChange;
@@ -168,6 +177,14 @@ namespace Nebula
 
             /// <summary>Creation threw. The world is being torn down; nothing may reference it.</summary>
             Failed,
+
+            /// <summary>
+            /// Was Live, and is now being destroyed on purpose. Set BEFORE the world leaves
+            /// <see cref="NetRunner.Worlds"/>, so an admission already queued to the main thread
+            /// behind the teardown finds a world that refuses rather than one that still looks
+            /// joinable and is about to be freed.
+            /// </summary>
+            Closing,
         }
 
         /// <summary>
@@ -1592,21 +1609,143 @@ namespace Nebula
         /// (used by full disconnect, NOT by migration). <paramref name="despawnOwnedNodes"/> forces the
         /// peer's owned nodes to despawn even when their DespawnOnUnowned is false (used by migration).
         /// </summary>
-        private void TeardownPeer(NetPeer peer, UUID peerId, bool forgetIdentity, bool despawnOwnedNodes)
+        /// <summary>
+        /// Nodes a departing peer left behind, waiting to be despawned on this world's tick thread.
+        ///
+        /// <para>The buffer exists for thread affinity, not for batching. <c>TeardownPeer</c> runs on
+        /// the main thread, on this world's tick thread and on the ThreadPool, while
+        /// <c>handleDespawn</c> writes <see cref="QueueDespawnedNodes"/> -- a plain HashSet that
+        /// every export lane reads. Reads across threads were already the status quo here; adding a
+        /// write from three of them would not have been.</para>
+        /// </summary>
+        private readonly List<NetworkController> _teardownDespawns = new();
+
+        /// <summary>Guards <see cref="_teardownDespawns"/>. Uncontended in practice: a departure.</summary>
+        private readonly object _teardownDespawnsGate = new();
+
+        /// <summary>
+        /// Drain scratch, owned by the tick thread. Reused so a departure allocates nothing --
+        /// a ConcurrentQueue was the first shape here and cost ~15 B per owned node forever,
+        /// because it grows a fresh segment rather than reusing the one it just emptied.
+        /// </summary>
+        private readonly List<NetworkController> _teardownDespawnsScratch = new();
+
+        /// <summary>
+        /// Turns a departed peer's owned nodes into real, replicated despawns.
+        ///
+        /// <para>THE POINT OF THIS IS THE WIRE. Teardown used to call
+        /// <c>QueueNodeForDeletion()</c>, which is a local <c>QueueFree</c> and nothing else -- the
+        /// server dropped the node and no remaining client was ever told, so every other player
+        /// kept a frozen copy of the departed character standing in the world forever, and each of
+        /// them leaked the peer-local node id it was using (512 per connection). A despawn is only
+        /// replicated if the node is in <see cref="QueueDespawnedNodes"/>, which is what
+        /// <c>handleDespawn</c> does and what this drain is for.</para>
+        ///
+        /// <para>Called from <c>ServerProcessTick</c> immediately after the ack-timeout sweep and
+        /// before the scene scan, so a teardown raised by that sweep still ships its despawn on the
+        /// same tick; one raised from another thread ships on the next. It must run BEFORE the scan,
+        /// which is where a node that is merely marked for deletion silently leaves NetScenes.</para>
+        /// </summary>
+        /// <remarks>Internal so the teardown tests can drive it without a full tick.</remarks>
+        internal void DrainTeardownDespawns()
+        {
+            // Swapped out under the lock and processed outside it: handleDespawn reaches game code
+            // and the world's own collections, neither of which belongs inside a lock a departure
+            // on another thread is waiting on. Both lists keep their capacity, so a steady stream of
+            // departures allocates nothing.
+            lock (_teardownDespawnsGate)
+            {
+                if (_teardownDespawns.Count == 0) return;
+                _teardownDespawnsScratch.AddRange(_teardownDespawns);
+                _teardownDespawns.Clear();
+            }
+
+            for (int i = 0; i < _teardownDespawnsScratch.Count; i++)
+            {
+                var netController = _teardownDespawnsScratch[i];
+                if (netController == null) continue;
+                // Already gone by another route -- a world tearing down, or a game-side despawn that
+                // beat us to it.
+                if (netController.RawNode == null || !IsInstanceValid(netController.RawNode)) continue;
+                if (netController.IsMarkedForDeletion) continue;
+
+                // Only a NetScene has a despawn record on the wire. A static child does not, and
+                // freeing one on its own would tear a hole in the very subtree its root is trying to
+                // despawn -- so climb to the root that owns it and despawn that instead.
+                var target = netController;
+                while (target != null && !target.IsNetScene()) target = target.NetParent;
+
+                if (target == null)
+                {
+                    // No NetScene anywhere above it: nothing can carry this node's removal to the
+                    // clients. Fall back to the old local free rather than leak it -- migration
+                    // passes despawnOwnedNodes precisely to guarantee the node goes away.
+                    Log($"TeardownPeer: owned node {netController.CachedName} has no NetScene ancestor; freeing it locally, so remaining clients will keep a copy of it.",
+                        Debugger.DebugLevel.ERROR);
+                    netController.QueueNodeForDeletion();
+                    continue;
+                }
+
+                if (target.IsQueuedForDespawn) continue;
+                target.handleDespawn();
+            }
+
+            _teardownDespawnsScratch.Clear();
+        }
+
+        /// <remarks>Internal rather than private so the teardown tests can drive it directly,
+        /// following CreatePeerStateForTests.</remarks>
+        internal void TeardownPeer(NetPeer peer, UUID peerId, bool forgetIdentity, bool despawnOwnedNodes)
         {
             // Deliberately NOT asserted main-thread: the ack-timeout sweep calls this from inside
             // ServerProcessTick. The shared-registry mutations at the end are deferred instead.
             var peerState = PeerStates[peerId];
-            foreach (var netController in peerState.OwnedNodes)
+
+            // DRAINED, not enumerated, and deliberately without a scratch list.
+            //
+            // SetInputAuthority below removes the node from this very HashSet (see
+            // NetworkController.SetInputAuthority), so walking it with a foreach is mutation during
+            // enumeration. Measured: on .NET Core that does not actually throw -- HashSet.Remove
+            // leaves the enumerator's version alone, unlike Add -- but the BCL promises nothing
+            // about it, so this takes one element at a time and lets the set shrink underneath.
+            //
+            // No List to hold the two outcomes: this runs on three threads with no lock (main via
+            // the ENet disconnect and MigratePeerToWorld, this world's tick thread via the ack sweep,
+            // and the ThreadPool via a background character-save continuation), so a reusable field
+            // would be corrupted by two overlapping teardowns -- and a fresh list per departure is
+            // exactly the world-lifecycle garbage this codebase does not accept. Neither is needed:
+            // the despawn queue is already concurrent and is not drained until the tick thread
+            // reaches DrainTeardownDespawns, which is after every teardown in this frame has
+            // finished, so a node can be handed over the moment it is seen.
+            //
+            // The foreach/break is allocation-free: HashSet's enumerator is a struct.
+            while (peerState.OwnedNodes.Count > 0)
             {
+                NetworkController netController = null;
+                foreach (var owned in peerState.OwnedNodes) { netController = owned; break; }
+                if (netController == null) break;
+
+                // Removed HERE so the loop always advances. SetInputAuthority normally does this
+                // itself, but only for a node whose authority is actually set -- and a loop relying
+                // on that would spin forever on one whose authority somehow is not.
+                peerState.OwnedNodes.Remove(netController);
+
                 if (despawnOwnedNodes || netController.DespawnOnUnowned)
                 {
-                    netController.QueueNodeForDeletion();
+                    lock (_teardownDespawnsGate) _teardownDespawns.Add(netController);
                 }
-                else
-                {
-                    netController.SetInputAuthority(default);
-                }
+
+                // Ownership is dropped either way, and for a despawning node that is not tidiness:
+                // a despawn is not instant. The node stays alive and ticking until every remaining
+                // peer has acknowledged it, and game code gates "am I still driving this?" on
+                // InputAuthority. Player.UpdateVisibilityInterest is the case that bites -- left
+                // owned, it walks every NetScene in the world each tick and rewrites interest for a
+                // peer that has gone, refilling the very per-peer maps cleaned up below.
+                //
+                // MUST HAPPEN BEFORE PeerStates.Remove: SetInputAuthority reaches
+                // GetPeerWorldState(InputAuthority).Value, a nullable that throws once the peer's
+                // state is gone.
+                if (netController.CurrentWorld != null) netController.SetInputAuthority(default);
             }
 
             // Clean up per-peer cached data from all network controllers and serializers to prevent memory leaks
@@ -1627,34 +1766,23 @@ namespace Nebula
                 }
             }
 
-            // Treat any pending despawns as acknowledged for the departing peer.
-            // Check if any nodes queued for despawn can now be deleted
-            foreach (var netController in QueueDespawnedNodes)
-            {
-                // The peer's SpawnState entry will be removed with PeerStates below
-                // Check if all REMAINING peers have despawned (after this peer is removed)
-                bool allRemainingDespawned = true;
-                foreach (var otherPeerState in PeerStates.Values)
-                {
-                    if (otherPeerState.Id == peerId) continue; // Skip the departing peer
-                    var state = GetClientSpawnState(netController.NetId, otherPeerState.Peer);
-                    if (state != ClientSpawnState.Despawned && state != ClientSpawnState.NotSpawned)
-                    {
-                        allRemainingDespawned = false;
-                        break;
-                    }
-                }
-
-                if (allRemainingDespawned)
-                {
-                    _pendingDeletion.Add(netController);
-                }
-            }
-
             PeerStates.Remove(peerId);
             _peerLastAckTick.Remove(peerId);
             _peerExports.Remove(peerId); // Packet, ack ring, props cursor
             _peerListDirty = true; // Fix #1: Mark peer list as dirty
+
+            // Pending despawns this peer was the last holdout on can now complete.
+            //
+            // Deliberately AFTER the removal above, which is what lets this be AreAllPeersDespawned
+            // rather than a hand-rolled copy of it that skips the departing peer. The copy that used
+            // to live here skipped on `otherPeerState.Id == peerId` -- and PeerState.Id is not the
+            // peer id: game code overwrites it with the character id (see PlayerAdmission), so the
+            // test never matched and the departing peer was consulted anyway.
+            foreach (var netController in QueueDespawnedNodes)
+            {
+                if (AreAllPeersDespawned(netController.NetId)) _pendingDeletion.Add(netController);
+            }
+
 
             // Everything above is this world's own state, so it belongs on whichever thread is
             // running this world. NetRunner's registries are not: the ENet pump reads them every
@@ -1752,6 +1880,10 @@ namespace Nebula
             }
             _profiler?.Record(Diagnostics.TickProfiler.Phase.AckSweep, phaseTs);
 
+            // Before the scene scan below, which is where a node merely marked for deletion drops
+            // out of NetScenes without anybody being told.
+            DrainTeardownDespawns();
+
             phaseTs = Diagnostics.TickProfiler.Now();
             _netIdsToRemove.Clear();
             _isProcessingNetScenes = true;
@@ -1820,23 +1952,31 @@ namespace Nebula
                 // Timed separately from the scan around it: this is game code, and telling it apart
                 // from Nebula's own per-node bookkeeping is the whole point of the breakdown.
                 var gameplayTs = Diagnostics.TickProfiler.Now();
-                var censusTs = Diagnostics.PayloadCensus.Enabled
-                    ? System.Diagnostics.Stopwatch.GetTimestamp() : 0L;
+                var censusOn = Diagnostics.PayloadCensus.Enabled;
+                var censusTs = censusOn ? System.Diagnostics.Stopwatch.GetTimestamp() : 0L;
                 netController._NetworkProcess(CurrentTick);
+                if (censusOn)
+                {
+                    // Charged per node: the root scene, then each static child by its own
+                    // path, so the report names the script to go look at.
+                    var now = System.Diagnostics.Stopwatch.GetTimestamp();
+                    Diagnostics.PayloadCensus.RecordGameplay(netController.RawNode?.SceneFilePath, now - censusTs);
+                    censusTs = now;
+                }
                 foreach (var networkChild in netController.StaticNetworkChildren)
                 {
                     if (networkChild == null) continue;
                     if (networkChild.RawNode == null) continue;
                     if (networkChild.RawNode.ProcessMode == ProcessModeEnum.Disabled) continue;
                     networkChild._NetworkProcess(CurrentTick);
-                }
-                if (censusTs != 0L)
-                {
-                    // Charged to the ROOT scene including its static children, which is
-                    // the unit a reader can actually go and open.
-                    Diagnostics.PayloadCensus.RecordGameplay(
-                        netController.RawNode?.SceneFilePath,
-                        System.Diagnostics.Stopwatch.GetTimestamp() - censusTs);
+                    if (censusOn)
+                    {
+                        var now = System.Diagnostics.Stopwatch.GetTimestamp();
+                        Diagnostics.PayloadCensus.RecordGameplay(
+                            netController.RawNode?.SceneFilePath + " > " + networkChild.RawNode.Name,
+                            now - censusTs);
+                        censusTs = now;
+                    }
                 }
                 _profiler?.Record(Diagnostics.TickProfiler.Phase.Gameplay, gameplayTs);
             }
@@ -1972,6 +2112,11 @@ namespace Nebula
                         NetRunner.SendUnreliableSequenced(peer, (byte)NetRunner.ENetChannelId.Tick, buffer);
                         _profiler?.Record(Diagnostics.TickProfiler.Phase.Transmit, transmitTs);
 
+                        // After export, so a local id allocated inside this tick's spawn Export is
+                        // already visible and the map ships alongside the spawn record that made it
+                        // addressable. Null in every build that has not enabled the channel.
+                        NetRunner.Instance.TestHarness?.MaybeSendInputMap(this, peer, in peerState);
+
                         if (debugAttached)
                         {
                             // Sized from the payload, not NetBuffer's 1536-byte
@@ -2028,14 +2173,7 @@ namespace Nebula
             // The node stays in QueueDespawnedNodes until it's added to _pendingDeletion
             
             // Process nodes that all peers have acknowledged despawn for
-            foreach (var netController in _pendingDeletion)
-            {
-                QueueDespawnedNodes.Remove(netController);
-                netController.NetParentId = NetId.None;
-                RemoveNetScene(netController.NetId);
-                netController.QueueNodeForDeletion();
-            }
-            _pendingDeletion.Clear();
+            ProcessPendingDeletions();
             _profiler?.Record(Diagnostics.TickProfiler.Phase.Despawn, phaseTs);
         }
 
@@ -2157,6 +2295,36 @@ namespace Nebula
         /// Checks if all peers have acknowledged the despawn for a node.
         /// Returns true if all peers are in Despawned or NotSpawned state.
         /// </summary>
+        /// <summary>
+        /// Frees the nodes every peer has now acknowledged the despawn of. This is the ONLY correct
+        /// place a despawning node is actually deleted; anything that frees one earlier robs the
+        /// remaining peers of the despawn record.
+        /// </summary>
+        /// <remarks>Internal so the teardown tests can drive it without a full tick.</remarks>
+        internal void ProcessPendingDeletions()
+        {
+            foreach (var netController in _pendingDeletion)
+            {
+                QueueDespawnedNodes.Remove(netController);
+                netController.NetParentId = NetId.None;
+                RemoveNetScene(netController.NetId);
+
+                // The per-peer spawn bookkeeping for this node, which nothing else ever removes.
+                // SetClientSpawnState writes SpawnState and there is no other erase anywhere, so
+                // without this every node ever despawned leaves one entry per peer behind for the
+                // life of the connection -- and the export prologue walks that dictionary each tick.
+                // Ids are never recycled (networkIdCounter only counts up), so these are dead
+                // weight rather than a correctness hazard.
+                foreach (var peerState in PeerStates.Values)
+                {
+                    peerState.SpawnState.Remove(netController.NetId);
+                }
+
+                netController.QueueNodeForDeletion();
+            }
+            _pendingDeletion.Clear();
+        }
+
         internal bool AreAllPeersDespawned(NetId netId)
         {
             foreach (var peerState in PeerStates.Values)
@@ -3004,6 +3172,7 @@ namespace Nebula
                     NodeIdUtils.ClearBit(PeerStates[peerId].AvailableNodes, nodeId);
                     PeerStates[peerId].WorldToPeerNodeMap.Remove(node.NetId);
                     PeerStates[peerId].PeerToWorldNodeMap.Remove(nodeId);
+                    NetRunner.Instance.TestHarness?.MarkInputMapDirty(peer);
                 }
             }
             else
@@ -3042,6 +3211,9 @@ namespace Nebula
                 PeerStates[peerId].WorldToPeerNodeMap[node.NetId] = localNodeId;
                 PeerStates[peerId].PeerToWorldNodeMap[localNodeId] = node.NetId;
                 NodeIdUtils.SetBit(PeerStates[peerId].AvailableNodes, localNodeId);
+                // A newly addressable node may be one the peer has input authority over, and this
+                // is the moment the id it would be addressed by comes into existence.
+                NetRunner.Instance.TestHarness?.MarkInputMapDirty(peer);
                 return localNodeId;
             }
 
@@ -3175,6 +3347,11 @@ namespace Nebula
             // Fix #1: Mark peer list as dirty so it gets rebuilt
             _peerListDirty = true;
 
+            // Fresh PeerState means empty node maps, so whatever the peer was told about a previous
+            // world is now wrong. This is the world-migration case: the peer keeps its connection
+            // but everything it could address went with the old world.
+            NetRunner.Instance.TestHarness?.MarkInputMapDirty(peer);
+
             // Deliberately no per-peer export state here (the PeerExport: packet, ack ring,
             // props cursor): this runs on main, ExportState owns those on the world thread and
             // creates them in its prologue, where it also prepares every node's per-peer
@@ -3186,6 +3363,19 @@ namespace Nebula
             {
                 RootScene._OnPeerConnected(WorldId, peerId);
             }
+        }
+
+        /// <summary>
+        /// Notes that a peer's set of input-authority nodes changed, for the test-harness channel.
+        ///
+        /// <para>A forwarder so <see cref="NetworkController"/> — which is where authority actually
+        /// moves — never reaches into <c>Nebula.Diagnostics</c> itself. No-op in every build that
+        /// has not enabled the channel, which is all of them by default.</para>
+        /// </summary>
+        internal static void MarkTestInputMapDirty(NetPeer peer)
+        {
+            if (!peer.IsSet) return;
+            NetRunner.Instance?.TestHarness?.MarkInputMapDirty(peer);
         }
 
         internal void ExitPeer(NetPeer peer)
@@ -3204,6 +3394,19 @@ namespace Nebula
         /// against this world in unit tests. The caller is responsible for mapping the
         /// peer in NetRunner.Instance.PeerIds and removing it again.
         /// </summary>
+        /// <summary>
+        /// Test seam: puts a PeerState back exactly as it was, with no status-change bookkeeping.
+        ///
+        /// <para>Distinct from <see cref="SetPeerState"/>, which reads the existing entry first and
+        /// so cannot restore one that teardown removed, and from
+        /// <see cref="CreatePeerStateForTests"/>, which builds five fresh collections -- the cost the
+        /// allocation test is trying to keep out of its measurement window.</para>
+        /// </summary>
+        internal void RestorePeerStateForTests(UUID peerId, PeerState state)
+        {
+            PeerStates[peerId] = state;
+        }
+
         internal void CreatePeerStateForTests(NetPeer peer, UUID peerId)
         {
             _peerSetVersion++;
@@ -4439,6 +4642,39 @@ namespace Nebula
         private const byte InputFlagMask = InputFlagHasAck;
 
         /// <summary>
+        /// Writes everything in an input packet ahead of the record section:
+        /// <c>[flags u8][ackTick i32 if HasAck][netId u16][staticChildId u8][inputSize u16]</c>.
+        ///
+        /// <para>Shared so there is exactly ONE writer for this header. <see cref="SendInput"/> is
+        /// not the only caller: the synthetic load client builds the same packet without a scene
+        /// tree behind it, and a layout change that only reached one of them would show up as a
+        /// stream of <c>[Nebula][InvalidInput]</c> lines on the server rather than as a compile
+        /// error. <see cref="WriteInputRecords"/> is shared for the same reason.</para>
+        ///
+        /// <paramref name="peerLocalNetId"/> is the id in the SENDING PEER's space - for a static
+        /// child that is its parent's id, with <paramref name="staticChildId"/> naming the child.
+        ///
+        /// <paramref name="inputSize"/> rides the header rather than each record because the input
+        /// struct is a fixed size per node: sending it once instead of a 4-byte length on all 8
+        /// redundant copies is most of what the compact record encoding saves. It also drives every
+        /// subsequent read, which is why the server rejects a packet whose size disagrees with the
+        /// node's rather than trying to parse on.
+        /// </summary>
+        internal static void WriteInputHeader(
+            NetBuffer buffer, bool hasAck, Tick ackTick,
+            ushort peerLocalNetId, byte staticChildId, ushort inputSize)
+        {
+            NetWriter.WriteByte(buffer, hasAck ? InputFlagHasAck : (byte)0);
+            if (hasAck)
+            {
+                NetWriter.WriteInt32(buffer, ackTick);
+            }
+            NetWriter.WriteUInt16(buffer, peerLocalNetId);
+            NetWriter.WriteByte(buffer, staticChildId);
+            NetWriter.WriteUInt16(buffer, inputSize);
+        }
+
+        /// <summary>
         /// Writes the redundant-input section: <c>[count u8][baseTick i32]</c> then one
         /// <c>[tickDelta u8][payload]</c> per record. Returns how many records were written.
         ///
@@ -4514,33 +4750,31 @@ namespace Nebula
             // Carry the pending tick ack if nothing else has this frame. Only the first input
             // packet takes it - SendInput runs once per owned node, and the ack is per-peer.
             bool carriesAck = _pendingAckTick >= 0 && !_ackAttachedThisFrame;
-            NetWriter.WriteByte(inputBuffer, carriesAck ? InputFlagHasAck : (byte)0);
+
+            // Static children don't have their own NetId - use parent's NetId + StaticChildId.
+            bool isStaticChild = netNode.StaticChildId > 0 && netNode.NetParent != null;
+            var addressedNetId = isStaticChild ? netNode.NetParent.NetId : netNode.NetId;
+            byte staticChildId = isStaticChild ? netNode.StaticChildId : (byte)0;
+
+            // This runs on the client only (the IsServer guard above), and a client-side NetId IS
+            // the peer-local ushort - see NetId.NetworkSerialize, whose client branch writes
+            // exactly this cast. Doing it here keeps WriteInputHeader free of NetId and of the
+            // WorldRunner it would need to resolve one, so the load client can call it too.
+            //
+            // The header write also has to happen BEFORE the records: the size it carries is what
+            // tells the reader how wide each record is.
+            WriteInputHeader(
+                inputBuffer, carriesAck, _pendingAckTick,
+                (ushort)addressedNetId.Value, staticChildId, (ushort)inputBytes.Length);
+
             if (carriesAck)
             {
-                NetWriter.WriteInt32(inputBuffer, _pendingAckTick);
                 _pendingAckTick = -1;
                 _ackAttachedThisFrame = true;
             }
 
-            // Static children don't have their own NetId - use parent's NetId + StaticChildId
-            bool isStaticChild = netNode.StaticChildId > 0 && netNode.NetParent != null;
-            if (isStaticChild)
-            {
-                NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netNode.NetParent.NetId, inputBuffer);
-                NetWriter.WriteByte(inputBuffer, netNode.StaticChildId);
-            }
-            else
-            {
-                NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netNode.NetId, inputBuffer);
-                NetWriter.WriteByte(inputBuffer, 0); // StaticChildId = 0 means not a static child
-            }
-
             // Get recent inputs for redundancy
             var recentInputs = netNode.GetRecentInputs(NetworkController.INPUT_REDUNDANCY_COUNT);
-
-            // Every record has the same length (the input struct is fixed size per node), so send it
-            // once rather than repeating a 4-byte length on all 8 redundant copies.
-            NetWriter.WriteUInt16(inputBuffer, (ushort)inputBytes.Length);
 
             WriteInputRecords(inputBuffer, recentInputs, inputBytes.Length);
 

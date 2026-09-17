@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/Nebula/Testing/Load/LoadClientNode.cs" id="1_loadclient"]
+
+[node name="LoadClientNode" type="Node"]
+script = ExtResource("1_loadclient")

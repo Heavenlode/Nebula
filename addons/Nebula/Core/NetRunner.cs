@@ -52,15 +52,15 @@ namespace Nebula
         }
 
         /// <summary>
-        /// The maximum number of allowed connections before the server starts rejecting clients.
-        /// </summary>
-        [Export] public int MaxPeers = 100;
-
-        /// <summary>
         /// Maximum number of channels per connection.
         /// Must be at least 250 to support Blastoff admin channel (249).
+        ///
+        /// <para>internal, not private: a client must request the SAME limit or the channels above
+        /// its own would be unreachable — ENet negotiates min(requested, host limit) and refuses a
+        /// send above it. The synthetic load client opens its own hosts and so has to say this
+        /// number itself.</para>
         /// </summary>
-        private const int MaxChannels = 251;
+        internal const int MaxChannels = 251;
 
         public Dictionary<UUID, WorldRunner> Worlds { get; private set; } = [];
         internal Host ENetHost;
@@ -409,6 +409,12 @@ namespace Nebula
             }
         }
 
+        /// <summary>
+        /// The test-harness side channel, or null — which is the normal, production answer. See
+        /// <see cref="Diagnostics.TestHarnessChannel"/>; every call site is a <c>?.</c>.
+        /// </summary>
+        public Diagnostics.TestHarnessChannel TestHarness { get; private set; }
+
         public IAuthenticator Authentication { get; private set; }
 
         public void SetAuthentication(IAuthenticator authentication)
@@ -479,7 +485,26 @@ namespace Nebula
             }
 
             NetStarted = true;
-            Debugger.Instance.Log($"Started on port {Port}");
+            // Say the resolved peer limit, not the default: it now comes from a flag, an env var or
+            // a setting, and a soak that quietly hit the ceiling looks exactly like one whose peers
+            // failed to connect.
+            Debugger.Instance.Log($"Started on port {Port} (max peers {MaxPeers})");
+
+            // Off by default, and off means ABSENT: with no channel there is no handler, so the
+            // pump's reserved-channel dispatch drops anything that arrives here. Sized to MaxPeers
+            // because it indexes by ENet's dense native peer id.
+            TestHarness = Diagnostics.TestHarnessChannel.FromProcessConfig(MaxPeers);
+            if (TestHarness != null)
+            {
+                ReserveChannel(Diagnostics.TestHarnessChannel.ChannelId, TestHarness.HandleClientMessage);
+                // Loud on purpose, same rule as the impairment line below: this exposes internal
+                // per-peer state, and a log that does not say so is indistinguishable from a
+                // production one.
+                Debugger.Instance.Log(
+                    $"Test harness channel ACTIVE on channel {Diagnostics.TestHarnessChannel.ChannelId}. It hands peers internal state and must be OFF in production.",
+                    Debugger.DebugLevel.WARN);
+                OnPeerDisconnected += peerNativeId => TestHarness.ForgetPeer(peerNativeId);
+            }
 
             // A run under synthetic impairment must SAY SO. It is off by default and applies per
             // process, so without this line a log is indistinguishable from a healthy one and no
@@ -659,6 +684,65 @@ namespace Nebula
                 if (cached != 0) return cached;
                 return _mtu = ProjectSettings.GetSetting(MTU_SETTING, DefaultMTU).AsInt32();
             }
+        }
+
+        /// <summary>
+        /// The maximum number of allowed connections before the server starts rejecting clients.
+        ///
+        /// <para>Was an <c>[Export]</c> field, which could never actually be set: NetRunner is
+        /// autoloaded as a bare script, so there is no scene in which to author one, and the value
+        /// was effectively a compile-time constant. It is a real setting now because a load test
+        /// has to be able to raise it — a 100-peer run against a limit of 100 measures the
+        /// rejection path.</para>
+        ///
+        /// <para>A rejected peer is told nothing: ENet's connect handler simply returns without
+        /// replying, so on the client a full server is indistinguishable from an unreachable one
+        /// until its own connect timeout fires.</para>
+        /// </summary>
+        public const string MAX_PEERS_SETTING = "Nebula/config/network/max_peers";
+        public const string MaxPeersArg = "--maxPeers=";
+        public const string MaxPeersEnvVar = "NEBULA_MAX_PEERS";
+        public const int DefaultMaxPeers = 100;
+
+        /// <summary>
+        /// Ceiling imposed by the transport, not by us: <c>enet_host_create</c> refuses more, and
+        /// the vendored binding throws <c>ArgumentOutOfRangeException</c> before it gets that far.
+        /// </summary>
+        public static int MaxPeersLimit => (int)ENet.Library.maxPeers;
+
+        private static int _maxPeers;
+
+        /// <summary>
+        /// Resolved once and memoized, like <see cref="MTU"/> — an uncached
+        /// <c>ProjectSettings.GetSetting</c> marshals its key string on every call, which has
+        /// already shown up as a measurable share of a profiled tick once before.
+        /// </summary>
+        public static int MaxPeers
+        {
+            get
+            {
+                var cached = _maxPeers;
+                if (cached != 0) return cached;
+                return _maxPeers = Mathf.Clamp(ResolveMaxPeers(), 1, MaxPeersLimit);
+            }
+        }
+
+        private static int ResolveMaxPeers()
+        {
+            foreach (var argument in OS.GetCmdlineArgs())
+            {
+                if (!argument.StartsWith(MaxPeersArg)) continue;
+                if (int.TryParse(argument.Substring(MaxPeersArg.Length), out int fromArg))
+                    return fromArg;
+            }
+
+            if (OS.HasEnvironment(MaxPeersEnvVar)
+                && int.TryParse(OS.GetEnvironment(MaxPeersEnvVar), out int fromEnv))
+            {
+                return fromEnv;
+            }
+
+            return ProjectSettings.GetSetting(MAX_PEERS_SETTING, DefaultMaxPeers).AsInt32();
         }
 
         public const string ACK_TIMEOUT_SETTING = "Nebula/config/network/ack_timeout_seconds";
@@ -1510,8 +1594,10 @@ namespace Nebula
 
         // --- Live cross-world migration (World ENet channel) ---
 
-        private const byte WorldMsgChangeWorld = 0x00; // server -> client: reset and expect <worldId>
-        private const byte WorldMsgReady = 0x01;       // client -> server: reset done, ready to join
+        // internal, not private: the synthetic load client speaks this exchange too, and must read
+        // the same constants rather than a second copy that can drift.
+        internal const byte WorldMsgChangeWorld = 0x00; // server -> client: reset and expect <worldId>
+        internal const byte WorldMsgReady = 0x01;       // client -> server: reset done, ready to join
 
         private readonly struct PendingHandoff
         {
@@ -1800,6 +1886,109 @@ namespace Nebula
             AuthenticateWaitingPeers();
 
             return worldRunner;
+        }
+
+        /// <summary>What <see cref="DestroyWorld"/> did, or why it declined to.</summary>
+        public enum WorldDestroyResult
+        {
+            /// <summary>Unregistered and queued for freeing.</summary>
+            Destroyed,
+
+            /// <summary>Not on the main thread; the work was marshalled and will run there.</summary>
+            Deferred,
+
+            /// <summary>Still holds peers, or has one mid-handoff. Nothing was changed.</summary>
+            Occupied,
+
+            /// <summary>Not registered under its own id -- already destroyed, or never created here.</summary>
+            NotFound,
+
+            /// <summary>Clients do not own worlds.</summary>
+            NotServer,
+        }
+
+        /// <summary>
+        /// Raised when a world is about to be freed, while it is still fully readable.
+        ///
+        /// <para>Distinct from the world node's own <c>TreeExiting</c>, which fires at the end of the
+        /// frame once <c>QueueFree</c> is serviced: subscribers that need to read the world's state
+        /// (its scene, its runner) want this one; subscribers that only need to drop a registry entry
+        /// can use either.</para>
+        /// </summary>
+        public event Action<WorldRunner> OnWorldDestroying;
+
+        /// <summary>
+        /// Server-only. The other half of <see cref="CreateWorld"/>: unregisters a world and frees the
+        /// SubViewport that owns its runner, its scene and its World3D.
+        ///
+        /// <para>Nothing called this before expeditions began closing themselves, which is why
+        /// <c>Worlds</c> was previously pruned only on the creation-failure path -- and why every
+        /// per-world registry that hangs its cleanup off <c>TreeExiting</c> ran for the first time
+        /// when this landed.</para>
+        ///
+        /// <para>REFUSES AN OCCUPIED WORLD rather than evicting anyone. A peer freed out from under
+        /// <see cref="PeerWorldMap"/> leaves the pump routing packets into a dead runner, and there
+        /// is no correct place to put them: where a peer goes next is a decision for the game, not
+        /// for a teardown. Callers close a world once it is already empty.</para>
+        /// </summary>
+        public WorldDestroyResult DestroyWorld(WorldRunner world)
+        {
+            if (!IsServer) return WorldDestroyResult.NotServer;
+
+            // Frees nodes and mutates the shared world registry, both of which belong to the main
+            // thread -- and the normal caller is a world's own tick thread, which is not it. Same
+            // posture as MigratePeerToWorld.
+            if (!NebulaThread.IsMain)
+            {
+                RunOnMainThread(() => DestroyWorld(world));
+                return WorldDestroyResult.Deferred;
+            }
+
+            // Compared by reference as well as by id: a world that was already destroyed and whose
+            // id was reused would otherwise take its successor down with it.
+            if (world == null
+                || !Worlds.TryGetValue(world.WorldId, out var registered)
+                || !ReferenceEquals(registered, world))
+            {
+                return WorldDestroyResult.NotFound;
+            }
+
+            if (world.PeerCount > 0) return WorldDestroyResult.Occupied;
+
+            // A peer mid-handoff is in NO world's PeerStates -- PreparePeerDeparture has already
+            // removed them from the source and JoinPeer has not yet run on the target -- so the
+            // count above cannot see them. Freeing the target here would leave the client's ready
+            // ack driving CompletePeerHandoff into a destroyed world.
+            foreach (var handoff in _pendingHandoffs.Values)
+            {
+                if (ReferenceEquals(handoff.Target, world)) return WorldDestroyResult.Occupied;
+            }
+
+            // BEFORE the registry removal, and that order is load-bearing: a MigratePeerToWorld
+            // already queued to main behind us re-reads Lifecycle, and would otherwise see a world
+            // that is still Live and about to be freed.
+            world.Lifecycle = WorldRunner.WorldLifecycle.Closing;
+            Worlds.Remove(world.WorldId);
+
+            world.Debug?.Send("WorldDestroying", world.WorldId.ToString());
+            OnWorldDestroying?.Invoke(world);
+
+            if (world.GetParent() is SubViewport godotPhysicsWorld)
+            {
+                // Disabled first, for the reason SetupWorldInstance disables a half-built world:
+                // QueueFree is serviced at the end of the frame, and this stops the world's thread
+                // group ticking a tree that is coming apart in the meantime.
+                godotPhysicsWorld.ProcessMode = ProcessModeEnum.Disabled;
+                godotPhysicsWorld.QueueFree();
+            }
+            else
+            {
+                // A runner with no SubViewport parent is not a shape production ever builds -- it is
+                // what the unit harness registers. Freeing it directly keeps this method testable.
+                world.QueueFree();
+            }
+
+            return WorldDestroyResult.Destroyed;
         }
 
         public void _OnPeerDisconnected(Peer peer)

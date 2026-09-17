@@ -299,6 +299,12 @@ namespace Nebula
 		/// <summary>Test seam: exposes the IsNetScene cache state (null = not yet cached).</summary>
 		internal bool? IsNetSceneCacheForTests => _isNetScene;
 
+		/// <summary>
+		/// Test seam: answers IsNetScene for a node built with `new`, which has no SceneFilePath and
+		/// is not in the tree, so it would otherwise always report false.
+		/// </summary>
+		internal void SetIsNetSceneForTests(bool value) => _isNetScene = value;
+
 		public bool IsNetScene()
 		{
 			if (_isNetScene == null)
@@ -1816,6 +1822,9 @@ namespace Nebula
 			{
 				CurrentWorld.GetPeerWorldState(inputAuthority).Value.OwnedNodes.Add(this);
 			}
+			// Both sides: the loser's map shrinks and the winner's grows.
+			WorldRunner.MarkTestInputMapDirty(InputAuthority);
+			WorldRunner.MarkTestInputMapDirty(inputAuthority);
 			InputAuthority = inputAuthority;
 
 			// Propagate InputAuthority to all static network children
@@ -1843,6 +1852,8 @@ namespace Nebula
 					CurrentWorld.GetPeerWorldState(inputAuthority).Value.OwnedNodes.Add(this);
 				}
 			}
+			WorldRunner.MarkTestInputMapDirty(InputAuthority);
+			WorldRunner.MarkTestInputMapDirty(inputAuthority);
 			InputAuthority = inputAuthority;
 
 			// Recursively propagate to nested static children

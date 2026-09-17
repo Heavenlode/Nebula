@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 using Godot;
 using Nebula.Utility.Tools;
@@ -98,7 +96,7 @@ namespace Nebula.Bots
                 return;
             }
 
-            var type = ResolveBehaviorType(_behaviorName);
+            var type = TypeDiscovery.Resolve<BotBehavior>(_behaviorName);
             if (type == null)
             {
                 Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
@@ -144,59 +142,6 @@ namespace Nebula.Bots
                 Debugger.Instance.Log(Debugger.DebugLevel.ERROR,
                     $"[Bot {BotId}] BotStartup failed: {ex.Message}\n{ex.StackTrace}");
             }
-        }
-
-        /// <summary>
-        /// Finds a concrete <see cref="BotBehavior"/> subclass by full name or short name. Matching
-        /// on either means a configuration can hold the readable short name while a project with
-        /// colliding names can still disambiguate with the full one.
-        /// </summary>
-        public static Type ResolveBehaviorType(string name)
-        {
-            Type shortNameMatch = null;
-            foreach (var candidate in DiscoverBehaviorTypes())
-            {
-                if (candidate.FullName == name)
-                    return candidate;
-                if (candidate.Name == name)
-                    shortNameMatch = candidate;
-            }
-            return shortNameMatch;
-        }
-
-        /// <summary>
-        /// Every concrete <see cref="BotBehavior"/> subclass in the loaded assemblies. Used both to
-        /// resolve a configured name and to populate the editor's behavior dropdown.
-        /// </summary>
-        public static List<Type> DiscoverBehaviorTypes()
-        {
-            var found = new List<Type>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                Type[] types;
-                try
-                {
-                    types = assembly.GetTypes();
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    // A partially-loadable assembly still yields the types that did load, which is
-                    // enough — and is better than letting one bad reference hide every behavior.
-                    types = ex.Types;
-                }
-                catch (Exception)
-                {
-                    continue;
-                }
-
-                foreach (var type in types)
-                {
-                    if (type == null || type.IsAbstract) continue;
-                    if (!typeof(BotBehavior).IsAssignableFrom(type)) continue;
-                    found.Add(type);
-                }
-            }
-            return found;
         }
 
         public override void _PhysicsProcess(double delta)

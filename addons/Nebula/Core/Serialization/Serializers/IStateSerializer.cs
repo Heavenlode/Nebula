@@ -84,11 +84,23 @@ namespace Nebula.Serialization.Serializers
         /// Server-side only. The bytes written by the immediately preceding
         /// <see cref="Export"/> on this instance were committed to the tick packet being
         /// assembled — stamp packet-coupled state here (send windows, sent history).
-        /// Temporal contract: the host calls this before any other Export on the same
-        /// instance, on the same world tick thread, so instance scratch captured during
-        /// Export is still valid.
+        /// Temporal contract: the host calls this on the same thread as that Export and
+        /// before any other Export on the same instance from that thread (lanes export
+        /// different peers of one node at once, each on its own thread), so per-thread
+        /// scratch captured during Export is still valid.
         /// </summary>
         public void CommitExport(WorldRunner currentWorld, NetPeer peer, Tick tick) { }
+
+        /// <summary>
+        /// Server-side only. Creates whatever per-peer entry this serializer keeps for
+        /// <paramref name="peerId"/>, so that Export/CommitExport/Acknowledge for that peer
+        /// only ever overwrite existing entries. Called on the world thread, before any lane
+        /// runs, for every current peer of a node whose peer set changed (a peer joined or
+        /// left, or the node is new). Idempotent. This is what lets several lanes export
+        /// one node's peers at once: concurrent writes to DISTINCT EXISTING keys of a
+        /// Dictionary are safe, concurrent inserts are not.
+        /// </summary>
+        public void PreparePeer(UUID peerId) { }
 
         /// <summary>
         /// Server-side only. Called when a peer acknowledges the packet exported at

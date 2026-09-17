@@ -313,11 +313,12 @@ namespace Nebula.Utility
             {
                 targetNetId = network.NetId;
             }
-            else if (Protocol.PackNode(
-                network.NetSceneFilePath,
-                network.NetParent.RawNode.GetPathTo(network.RawNode),
-                out staticChildId))
+            else if (network.StaticChildId != 0)
             {
+                // Assigned at setup from the same registry Protocol.PackNode reads
+                // (StaticNetworkNodePathsMap), so it is the packed path without the Godot
+                // GetPathTo read - which the export lanes may not make.
+                staticChildId = network.StaticChildId;
                 targetNetId = network.NetParent.NetId;
             }
             else
@@ -329,8 +330,8 @@ namespace Nebula.Utility
                 {
                     _loggedUnpackableReference = true;
                     Debugger.Instance.Log(
-                        $"[NodeReference] Cannot pack {network.NetParent.NetSceneFilePath} static child "
-                        + $"{network.NetParent.RawNode.GetPathTo(network.RawNode)} ({network.RawNode.GetPath()}); "
+                        $"[NodeReference] Cannot pack {network.NetParent?.NetSceneFilePath} static child "
+                        + $"{network.CachedName} (no static child id); "
                         + "the reference will never replicate. Further occurrences suppressed.",
                         Debugger.DebugLevel.ERROR);
                 }

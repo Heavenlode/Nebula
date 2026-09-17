@@ -139,6 +139,15 @@ namespace Nebula
         private Dictionary<UUID, PeerState> PeerStates = [];
 
         /// <summary>
+        /// How many peers this world currently holds, mid-handoff ones included.
+        ///
+        /// <para>Exposed because <see cref="NetRunner.DestroyWorld"/> must refuse an occupied world
+        /// and <see cref="PeerStates"/> is private. Deliberately a count and not the dictionary: a
+        /// caller outside this class has no business enumerating peer state.</para>
+        /// </summary>
+        public int PeerCount => PeerStates.Count;
+
+        /// <summary>
         /// Invoked when a peer's sync status changes. Parameters: (peerId, newStatus)
         /// </summary>
         public event Action<UUID, PeerSyncStatus> OnPeerSyncStatusChange;
@@ -168,6 +177,14 @@ namespace Nebula
 
             /// <summary>Creation threw. The world is being torn down; nothing may reference it.</summary>
             Failed,
+
+            /// <summary>
+            /// Was Live, and is now being destroyed on purpose. Set BEFORE the world leaves
+            /// <see cref="NetRunner.Worlds"/>, so an admission already queued to the main thread
+            /// behind the teardown finds a world that refuses rather than one that still looks
+            /// joinable and is about to be freed.
+            /// </summary>
+            Closing,
         }
 
         /// <summary>
@@ -267,6 +284,8 @@ namespace Nebula
         public int DebugPort => Hub?.BoundPort ?? 0;
 
         private List<TickLog> tickLogBuffer = [];
+        /// <summary>Export lanes log concurrently; the tick thread drains between exports.</summary>
+        private readonly object _tickLogLock = new();
         public void Log(string message, Debugger.DebugLevel level = Debugger.DebugLevel.INFO)
         {
             // Buffer for the debug channel only while something is there to read it:
@@ -274,11 +293,14 @@ namespace Nebula
             // way, so with no debugger attached every entry was allocated and dropped.
             if (NetRunner.IsServer && Hub is { HasClients: true, DebugFramesEnabled: true })
             {
-                tickLogBuffer.Add(new TickLog
+                lock (_tickLogLock)
                 {
-                    Message = message,
-                    Level = level,
-                });
+                    tickLogBuffer.Add(new TickLog
+                    {
+                        Message = message,
+                        Level = level,
+                    });
+                }
             }
 
             Debugger.Instance.Log(message, level);
@@ -354,6 +376,8 @@ namespace Nebula
             {
                 NetRunner.Instance.OnPeerDisconnected -= _onPeerDisconnectedHandler;
                 ReleaseInboundPackets();
+                _exportWorkers?.Dispose();
+                _exportWorkers = null;
             }
         }
 
@@ -1585,21 +1609,143 @@ namespace Nebula
         /// (used by full disconnect, NOT by migration). <paramref name="despawnOwnedNodes"/> forces the
         /// peer's owned nodes to despawn even when their DespawnOnUnowned is false (used by migration).
         /// </summary>
-        private void TeardownPeer(NetPeer peer, UUID peerId, bool forgetIdentity, bool despawnOwnedNodes)
+        /// <summary>
+        /// Nodes a departing peer left behind, waiting to be despawned on this world's tick thread.
+        ///
+        /// <para>The buffer exists for thread affinity, not for batching. <c>TeardownPeer</c> runs on
+        /// the main thread, on this world's tick thread and on the ThreadPool, while
+        /// <c>handleDespawn</c> writes <see cref="QueueDespawnedNodes"/> -- a plain HashSet that
+        /// every export lane reads. Reads across threads were already the status quo here; adding a
+        /// write from three of them would not have been.</para>
+        /// </summary>
+        private readonly List<NetworkController> _teardownDespawns = new();
+
+        /// <summary>Guards <see cref="_teardownDespawns"/>. Uncontended in practice: a departure.</summary>
+        private readonly object _teardownDespawnsGate = new();
+
+        /// <summary>
+        /// Drain scratch, owned by the tick thread. Reused so a departure allocates nothing --
+        /// a ConcurrentQueue was the first shape here and cost ~15 B per owned node forever,
+        /// because it grows a fresh segment rather than reusing the one it just emptied.
+        /// </summary>
+        private readonly List<NetworkController> _teardownDespawnsScratch = new();
+
+        /// <summary>
+        /// Turns a departed peer's owned nodes into real, replicated despawns.
+        ///
+        /// <para>THE POINT OF THIS IS THE WIRE. Teardown used to call
+        /// <c>QueueNodeForDeletion()</c>, which is a local <c>QueueFree</c> and nothing else -- the
+        /// server dropped the node and no remaining client was ever told, so every other player
+        /// kept a frozen copy of the departed character standing in the world forever, and each of
+        /// them leaked the peer-local node id it was using (512 per connection). A despawn is only
+        /// replicated if the node is in <see cref="QueueDespawnedNodes"/>, which is what
+        /// <c>handleDespawn</c> does and what this drain is for.</para>
+        ///
+        /// <para>Called from <c>ServerProcessTick</c> immediately after the ack-timeout sweep and
+        /// before the scene scan, so a teardown raised by that sweep still ships its despawn on the
+        /// same tick; one raised from another thread ships on the next. It must run BEFORE the scan,
+        /// which is where a node that is merely marked for deletion silently leaves NetScenes.</para>
+        /// </summary>
+        /// <remarks>Internal so the teardown tests can drive it without a full tick.</remarks>
+        internal void DrainTeardownDespawns()
+        {
+            // Swapped out under the lock and processed outside it: handleDespawn reaches game code
+            // and the world's own collections, neither of which belongs inside a lock a departure
+            // on another thread is waiting on. Both lists keep their capacity, so a steady stream of
+            // departures allocates nothing.
+            lock (_teardownDespawnsGate)
+            {
+                if (_teardownDespawns.Count == 0) return;
+                _teardownDespawnsScratch.AddRange(_teardownDespawns);
+                _teardownDespawns.Clear();
+            }
+
+            for (int i = 0; i < _teardownDespawnsScratch.Count; i++)
+            {
+                var netController = _teardownDespawnsScratch[i];
+                if (netController == null) continue;
+                // Already gone by another route -- a world tearing down, or a game-side despawn that
+                // beat us to it.
+                if (netController.RawNode == null || !IsInstanceValid(netController.RawNode)) continue;
+                if (netController.IsMarkedForDeletion) continue;
+
+                // Only a NetScene has a despawn record on the wire. A static child does not, and
+                // freeing one on its own would tear a hole in the very subtree its root is trying to
+                // despawn -- so climb to the root that owns it and despawn that instead.
+                var target = netController;
+                while (target != null && !target.IsNetScene()) target = target.NetParent;
+
+                if (target == null)
+                {
+                    // No NetScene anywhere above it: nothing can carry this node's removal to the
+                    // clients. Fall back to the old local free rather than leak it -- migration
+                    // passes despawnOwnedNodes precisely to guarantee the node goes away.
+                    Log($"TeardownPeer: owned node {netController.CachedName} has no NetScene ancestor; freeing it locally, so remaining clients will keep a copy of it.",
+                        Debugger.DebugLevel.ERROR);
+                    netController.QueueNodeForDeletion();
+                    continue;
+                }
+
+                if (target.IsQueuedForDespawn) continue;
+                target.handleDespawn();
+            }
+
+            _teardownDespawnsScratch.Clear();
+        }
+
+        /// <remarks>Internal rather than private so the teardown tests can drive it directly,
+        /// following CreatePeerStateForTests.</remarks>
+        internal void TeardownPeer(NetPeer peer, UUID peerId, bool forgetIdentity, bool despawnOwnedNodes)
         {
             // Deliberately NOT asserted main-thread: the ack-timeout sweep calls this from inside
             // ServerProcessTick. The shared-registry mutations at the end are deferred instead.
             var peerState = PeerStates[peerId];
-            foreach (var netController in peerState.OwnedNodes)
+
+            // DRAINED, not enumerated, and deliberately without a scratch list.
+            //
+            // SetInputAuthority below removes the node from this very HashSet (see
+            // NetworkController.SetInputAuthority), so walking it with a foreach is mutation during
+            // enumeration. Measured: on .NET Core that does not actually throw -- HashSet.Remove
+            // leaves the enumerator's version alone, unlike Add -- but the BCL promises nothing
+            // about it, so this takes one element at a time and lets the set shrink underneath.
+            //
+            // No List to hold the two outcomes: this runs on three threads with no lock (main via
+            // the ENet disconnect and MigratePeerToWorld, this world's tick thread via the ack sweep,
+            // and the ThreadPool via a background character-save continuation), so a reusable field
+            // would be corrupted by two overlapping teardowns -- and a fresh list per departure is
+            // exactly the world-lifecycle garbage this codebase does not accept. Neither is needed:
+            // the despawn queue is already concurrent and is not drained until the tick thread
+            // reaches DrainTeardownDespawns, which is after every teardown in this frame has
+            // finished, so a node can be handed over the moment it is seen.
+            //
+            // The foreach/break is allocation-free: HashSet's enumerator is a struct.
+            while (peerState.OwnedNodes.Count > 0)
             {
+                NetworkController netController = null;
+                foreach (var owned in peerState.OwnedNodes) { netController = owned; break; }
+                if (netController == null) break;
+
+                // Removed HERE so the loop always advances. SetInputAuthority normally does this
+                // itself, but only for a node whose authority is actually set -- and a loop relying
+                // on that would spin forever on one whose authority somehow is not.
+                peerState.OwnedNodes.Remove(netController);
+
                 if (despawnOwnedNodes || netController.DespawnOnUnowned)
                 {
-                    netController.QueueNodeForDeletion();
+                    lock (_teardownDespawnsGate) _teardownDespawns.Add(netController);
                 }
-                else
-                {
-                    netController.SetInputAuthority(default);
-                }
+
+                // Ownership is dropped either way, and for a despawning node that is not tidiness:
+                // a despawn is not instant. The node stays alive and ticking until every remaining
+                // peer has acknowledged it, and game code gates "am I still driving this?" on
+                // InputAuthority. Player.UpdateVisibilityInterest is the case that bites -- left
+                // owned, it walks every NetScene in the world each tick and rewrites interest for a
+                // peer that has gone, refilling the very per-peer maps cleaned up below.
+                //
+                // MUST HAPPEN BEFORE PeerStates.Remove: SetInputAuthority reaches
+                // GetPeerWorldState(InputAuthority).Value, a nullable that throws once the peer's
+                // state is gone.
+                if (netController.CurrentWorld != null) netController.SetInputAuthority(default);
             }
 
             // Clean up per-peer cached data from all network controllers and serializers to prevent memory leaks
@@ -1620,36 +1766,23 @@ namespace Nebula
                 }
             }
 
-            // Treat any pending despawns as acknowledged for the departing peer.
-            // Check if any nodes queued for despawn can now be deleted
-            foreach (var netController in QueueDespawnedNodes)
-            {
-                // The peer's SpawnState entry will be removed with PeerStates below
-                // Check if all REMAINING peers have despawned (after this peer is removed)
-                bool allRemainingDespawned = true;
-                foreach (var otherPeerState in PeerStates.Values)
-                {
-                    if (otherPeerState.Id == peerId) continue; // Skip the departing peer
-                    var state = GetClientSpawnState(netController.NetId, otherPeerState.Peer);
-                    if (state != ClientSpawnState.Despawned && state != ClientSpawnState.NotSpawned)
-                    {
-                        allRemainingDespawned = false;
-                        break;
-                    }
-                }
-
-                if (allRemainingDespawned)
-                {
-                    _pendingDeletion.Add(netController);
-                }
-            }
-
             PeerStates.Remove(peerId);
             _peerLastAckTick.Remove(peerId);
-            _peerSentRings.Remove(peerId); // Per-tick ack routing
-            _peerNetBufferPool.Remove(peerId); // Clean up pooled export buffer
-            _peerPropsCursors.Remove(peerId); // Round-robin cursor for the props phase
+            _peerExports.Remove(peerId); // Packet, ack ring, props cursor
             _peerListDirty = true; // Fix #1: Mark peer list as dirty
+
+            // Pending despawns this peer was the last holdout on can now complete.
+            //
+            // Deliberately AFTER the removal above, which is what lets this be AreAllPeersDespawned
+            // rather than a hand-rolled copy of it that skips the departing peer. The copy that used
+            // to live here skipped on `otherPeerState.Id == peerId` -- and PeerState.Id is not the
+            // peer id: game code overwrites it with the character id (see PlayerAdmission), so the
+            // test never matched and the departing peer was consulted anyway.
+            foreach (var netController in QueueDespawnedNodes)
+            {
+                if (AreAllPeersDespawned(netController.NetId)) _pendingDeletion.Add(netController);
+            }
+
 
             // Everything above is this world's own state, so it belongs on whichever thread is
             // running this world. NetRunner's registries are not: the ENet pump reads them every
@@ -1747,6 +1880,10 @@ namespace Nebula
             }
             _profiler?.Record(Diagnostics.TickProfiler.Phase.AckSweep, phaseTs);
 
+            // Before the scene scan below, which is where a node merely marked for deletion drops
+            // out of NetScenes without anybody being told.
+            DrainTeardownDespawns();
+
             phaseTs = Diagnostics.TickProfiler.Now();
             _netIdsToRemove.Clear();
             _isProcessingNetScenes = true;
@@ -1815,23 +1952,31 @@ namespace Nebula
                 // Timed separately from the scan around it: this is game code, and telling it apart
                 // from Nebula's own per-node bookkeeping is the whole point of the breakdown.
                 var gameplayTs = Diagnostics.TickProfiler.Now();
-                var censusTs = Diagnostics.PayloadCensus.Enabled
-                    ? System.Diagnostics.Stopwatch.GetTimestamp() : 0L;
+                var censusOn = Diagnostics.PayloadCensus.Enabled;
+                var censusTs = censusOn ? System.Diagnostics.Stopwatch.GetTimestamp() : 0L;
                 netController._NetworkProcess(CurrentTick);
+                if (censusOn)
+                {
+                    // Charged per node: the root scene, then each static child by its own
+                    // path, so the report names the script to go look at.
+                    var now = System.Diagnostics.Stopwatch.GetTimestamp();
+                    Diagnostics.PayloadCensus.RecordGameplay(netController.RawNode?.SceneFilePath, now - censusTs);
+                    censusTs = now;
+                }
                 foreach (var networkChild in netController.StaticNetworkChildren)
                 {
                     if (networkChild == null) continue;
                     if (networkChild.RawNode == null) continue;
                     if (networkChild.RawNode.ProcessMode == ProcessModeEnum.Disabled) continue;
                     networkChild._NetworkProcess(CurrentTick);
-                }
-                if (censusTs != 0L)
-                {
-                    // Charged to the ROOT scene including its static children, which is
-                    // the unit a reader can actually go and open.
-                    Diagnostics.PayloadCensus.RecordGameplay(
-                        netController.RawNode?.SceneFilePath,
-                        System.Diagnostics.Stopwatch.GetTimestamp() - censusTs);
+                    if (censusOn)
+                    {
+                        var now = System.Diagnostics.Stopwatch.GetTimestamp();
+                        Diagnostics.PayloadCensus.RecordGameplay(
+                            netController.RawNode?.SceneFilePath + " > " + networkChild.RawNode.Name,
+                            now - censusTs);
+                        censusTs = now;
+                    }
                 }
                 _profiler?.Record(Diagnostics.TickProfiler.Phase.Gameplay, gameplayTs);
             }
@@ -1894,17 +2039,20 @@ namespace Nebula
             }
             queuedNetFunctions.Clear();
 
-            if (debugAttached)
+            lock (_tickLogLock)
             {
-                foreach (var log in tickLogBuffer)
+                if (debugAttached)
                 {
-                    using var logBuffer = new NetBuffer(log.Message.Length * 4 + 32, usePool: true);
-                    NetWriter.WriteByte(logBuffer, (byte)log.Level);
-                    NetWriter.WriteString(logBuffer, log.Message);
-                    debugHub.Enqueue(WorldId, DebugDataType.LOGS, logBuffer, lossy: false);
+                    foreach (var log in tickLogBuffer)
+                    {
+                        using var logBuffer = new NetBuffer(log.Message.Length * 4 + 32, usePool: true);
+                        NetWriter.WriteByte(logBuffer, (byte)log.Level);
+                        NetWriter.WriteString(logBuffer, log.Message);
+                        debugHub.Enqueue(WorldId, DebugDataType.LOGS, logBuffer, lossy: false);
+                    }
                 }
+                tickLogBuffer.Clear();
             }
-            tickLogBuffer.Clear();
             _profiler?.Record(Diagnostics.TickProfiler.Phase.NetFunctions, phaseTs);
 
             // If nobody is connected, skip ExportState entirely to avoid per-tick allocations.
@@ -1920,9 +2068,10 @@ namespace Nebula
                         _cachedPeerList.Add(peerState.Peer);
                     }
                     _peerListDirty = false;
+                    _peerSetVersion++;
                 }
                 phaseTs = Diagnostics.TickProfiler.Now();
-                var exportedState = ExportState(_cachedPeerList);
+                ExportState(_cachedPeerList);
                 _profiler?.Record(Diagnostics.TickProfiler.Phase.Export, phaseTs);
 
                 phaseTs = Diagnostics.TickProfiler.Now();
@@ -1936,10 +2085,11 @@ namespace Nebula
                         {
                             continue;
                         }
-                        if (!exportedState.TryGetValue(peerId, out var peerStateBuffer) || peerStateBuffer == null)
+                        if (!_peerExports.TryGetValue(peerId, out var peerExport) || !peerExport.Exported)
                         {
                             continue;
                         }
+                        var peerStateBuffer = peerExport.Packet;
 
                         var payload = peerStateBuffer.WrittenSpan;
 
@@ -1962,6 +2112,11 @@ namespace Nebula
                         NetRunner.SendUnreliableSequenced(peer, (byte)NetRunner.ENetChannelId.Tick, buffer);
                         _profiler?.Record(Diagnostics.TickProfiler.Phase.Transmit, transmitTs);
 
+                        // After export, so a local id allocated inside this tick's spawn Export is
+                        // already visible and the map ships alongside the spawn record that made it
+                        // addressable. Null in every build that has not enabled the channel.
+                        NetRunner.Instance.TestHarness?.MaybeSendInputMap(this, peer, in peerState);
+
                         if (debugAttached)
                         {
                             // Sized from the payload, not NetBuffer's 1536-byte
@@ -1982,8 +2137,8 @@ namespace Nebula
                 }
                 finally
                 {
-                    // ExportState() now returns truly pooled NetBuffer instances that are reused between ticks.
-                    // Do NOT dispose them - they will be Reset() and reused on the next tick.
+                    // The packet buffers are pooled per peer (PeerExport.Packet) and reused between
+                    // ticks. Do NOT dispose them - they are Reset() on the next export.
                 }
                 _profiler?.Record(Diagnostics.TickProfiler.Phase.Send, phaseTs);
             }
@@ -2018,14 +2173,7 @@ namespace Nebula
             // The node stays in QueueDespawnedNodes until it's added to _pendingDeletion
             
             // Process nodes that all peers have acknowledged despawn for
-            foreach (var netController in _pendingDeletion)
-            {
-                QueueDespawnedNodes.Remove(netController);
-                netController.NetParentId = NetId.None;
-                RemoveNetScene(netController.NetId);
-                netController.QueueNodeForDeletion();
-            }
-            _pendingDeletion.Clear();
+            ProcessPendingDeletions();
             _profiler?.Record(Diagnostics.TickProfiler.Phase.Despawn, phaseTs);
         }
 
@@ -2147,6 +2295,36 @@ namespace Nebula
         /// Checks if all peers have acknowledged the despawn for a node.
         /// Returns true if all peers are in Despawned or NotSpawned state.
         /// </summary>
+        /// <summary>
+        /// Frees the nodes every peer has now acknowledged the despawn of. This is the ONLY correct
+        /// place a despawning node is actually deleted; anything that frees one earlier robs the
+        /// remaining peers of the despawn record.
+        /// </summary>
+        /// <remarks>Internal so the teardown tests can drive it without a full tick.</remarks>
+        internal void ProcessPendingDeletions()
+        {
+            foreach (var netController in _pendingDeletion)
+            {
+                QueueDespawnedNodes.Remove(netController);
+                netController.NetParentId = NetId.None;
+                RemoveNetScene(netController.NetId);
+
+                // The per-peer spawn bookkeeping for this node, which nothing else ever removes.
+                // SetClientSpawnState writes SpawnState and there is no other erase anywhere, so
+                // without this every node ever despawned leaves one entry per peer behind for the
+                // life of the connection -- and the export prologue walks that dictionary each tick.
+                // Ids are never recycled (networkIdCounter only counts up), so these are dead
+                // weight rather than a correctness hazard.
+                foreach (var peerState in PeerStates.Values)
+                {
+                    peerState.SpawnState.Remove(netController.NetId);
+                }
+
+                netController.QueueNodeForDeletion();
+            }
+            _pendingDeletion.Clear();
+        }
+
         internal bool AreAllPeersDespawned(NetId netId)
         {
             foreach (var peerState in PeerStates.Values)
@@ -2868,30 +3046,41 @@ namespace Nebula
         private bool _peerListDirty = true;
 
         /// <summary>
-        /// Per peer: which nodes had a section committed into each recent tick's packet, so an
-        /// ack for tick T visits exactly those nodes (see <see cref="SentNodeRing"/>). Created
-        /// lazily inside ExportState on the world thread - never from JoinPeer, which runs on
-        /// main while this world may be mid-export - and dropped with the rest of the per-peer
-        /// state in TeardownPeer/ExitPeer.
+        /// Per peer: the packet being assembled, the ack ring (which nodes had a section in each
+        /// recent tick's packet, see <see cref="SentNodeRing"/>), the props cursor and the metric
+        /// tallies. Created in ExportState's prologue on the world thread - never from JoinPeer,
+        /// which runs on main while this world may be mid-export - and dropped with the rest of
+        /// the per-peer state in TeardownPeer/ExitPeer.
         /// </summary>
-        private readonly Dictionary<UUID, SentNodeRing> _peerSentRings = new();
+        private readonly Dictionary<UUID, PeerExport> _peerExports = new();
+
+        /// <summary>The tick thread's own export scratch (lane 0). Workers get their own.</summary>
+        private readonly ExportContext _tickContext = new(0);
 
         /// <summary>
-        /// Controller behind each peer-local node id that has a section in the packet being
-        /// assembled. Written by TryAppendSection on a node's first section; only ever read
-        /// behind a set bit of <c>_updatedNodesMask</c>, so entries left over from an earlier
-        /// peer are never observed.
+        /// Bumped whenever the exported peer set changes (the cached peer list is rebuilt).
+        /// A node whose <see cref="NetworkController.PreparedPeerSetVersion"/> differs gets
+        /// every current peer prepared in the ExportState prologue - one int compare per node
+        /// per tick otherwise.
         /// </summary>
-        private readonly NetworkController[] _peerNodesControllers = new NetworkController[NodeIdUtils.MAX_NETWORK_NODES];
+        private int _peerSetVersion;
+
+        /// <summary>Peer ids of this tick's peers, in peer-list order; prologue scratch.</summary>
+        private readonly List<UUID> _tickPeerIds = new(64);
 
         /// <summary>
-        /// Nested scenes that rode an ancestor's spawn table in the packet being assembled
-        /// without committing a section of their own (SpawnSerializer.CommitExport reports
-        /// them via <see cref="NoteNestedSpawnRider"/>). Registered into the ack ring after
-        /// the mask walk, minus any that also committed a section. Cleared per peer.
+        /// This world's export worker threads (lanes 1..N), created on the first export when
+        /// Nebula/config/threading/export_workers is above 0; null keeps the export on the tick
+        /// thread through the same lane job.
         /// </summary>
-        private readonly List<NetworkController> _tickNestedRiders = new(16);
-        private readonly long[] _tickRiderMask = NodeIdUtils.CreateMasks();
+        private ExportWorkers _exportWorkers;
+
+        // The tick's export job inputs, read by every lane: the peer list, its budget, and the
+        // shared claim counter each lane increments to take the next unexported peer.
+        private List<NetPeer> _tickPeers;
+        private int _tickPayloadBudget;
+        private int _exportPeerCursor;
+        private Action<ExportContext> _exportLaneJob; // bound once, on the first export
 
         /// <summary>
         /// Buffer for tick-aligned player joined events.
@@ -2983,6 +3172,7 @@ namespace Nebula
                     NodeIdUtils.ClearBit(PeerStates[peerId].AvailableNodes, nodeId);
                     PeerStates[peerId].WorldToPeerNodeMap.Remove(node.NetId);
                     PeerStates[peerId].PeerToWorldNodeMap.Remove(nodeId);
+                    NetRunner.Instance.TestHarness?.MarkInputMapDirty(peer);
                 }
             }
             else
@@ -3021,6 +3211,9 @@ namespace Nebula
                 PeerStates[peerId].WorldToPeerNodeMap[node.NetId] = localNodeId;
                 PeerStates[peerId].PeerToWorldNodeMap[localNodeId] = node.NetId;
                 NodeIdUtils.SetBit(PeerStates[peerId].AvailableNodes, localNodeId);
+                // A newly addressable node may be one the peer has input authority over, and this
+                // is the moment the id it would be addressed by comes into existence.
+                NetRunner.Instance.TestHarness?.MarkInputMapDirty(peer);
                 return localNodeId;
             }
 
@@ -3086,12 +3279,12 @@ namespace Nebula
                     }
                     else
                     {
-                        node.Network.CachedNodePathIdInParent = 255;
+                        node.Network.CachedNodePathIdInParent = NetworkController.DirectChildPathId;
                     }
                 }
                 else
                 {
-                    node.Network.CachedNodePathIdInParent = 255;
+                    node.Network.CachedNodePathIdInParent = NetworkController.DirectChildPathId;
                 }
             }
             else
@@ -3109,12 +3302,12 @@ namespace Nebula
                     }
                     else
                     {
-                        node.Network.CachedNodePathIdInParent = 255;
+                        node.Network.CachedNodePathIdInParent = NetworkController.DirectChildPathId;
                     }
                 }
                 else
                 {
-                    node.Network.CachedNodePathIdInParent = 255;
+                    node.Network.CachedNodePathIdInParent = NetworkController.DirectChildPathId;
                 }
             }
             node.Network._NetworkPrepare(this);
@@ -3154,8 +3347,15 @@ namespace Nebula
             // Fix #1: Mark peer list as dirty so it gets rebuilt
             _peerListDirty = true;
 
-            // Deliberately no per-peer export state here (ack ring, buffer pool, cursors): this
-            // runs on main, ExportState owns those on the world thread and creates them lazily.
+            // Fresh PeerState means empty node maps, so whatever the peer was told about a previous
+            // world is now wrong. This is the world-migration case: the peer keeps its connection
+            // but everything it could address went with the old world.
+            NetRunner.Instance.TestHarness?.MarkInputMapDirty(peer);
+
+            // Deliberately no per-peer export state here (the PeerExport: packet, ack ring,
+            // props cursor): this runs on main, ExportState owns those on the world thread and
+            // creates them in its prologue, where it also prepares every node's per-peer
+            // serializer entries for the new peer.
 
             // Initialize interest layers for the root scene immediately so properties
             // can be exported on the same tick as the spawn
@@ -3165,15 +3365,26 @@ namespace Nebula
             }
         }
 
+        /// <summary>
+        /// Notes that a peer's set of input-authority nodes changed, for the test-harness channel.
+        ///
+        /// <para>A forwarder so <see cref="NetworkController"/> — which is where authority actually
+        /// moves — never reaches into <c>Nebula.Diagnostics</c> itself. No-op in every build that
+        /// has not enabled the channel, which is all of them by default.</para>
+        /// </summary>
+        internal static void MarkTestInputMapDirty(NetPeer peer)
+        {
+            if (!peer.IsSet) return;
+            NetRunner.Instance?.TestHarness?.MarkInputMapDirty(peer);
+        }
+
         internal void ExitPeer(NetPeer peer)
         {
             var peerId = NetRunner.Instance.GetPeerId(peer);
             NetRunner.Instance.PeerWorldMap.Remove(peerId);
             PeerStates.Remove(peerId);
-            // Per-peer export state, same set TeardownPeer drops. These used to leak here.
-            _peerSentRings.Remove(peerId);
-            _peerNetBufferPool.Remove(peerId);
-            _peerPropsCursors.Remove(peerId);
+            // Per-peer export state, same as TeardownPeer drops. This used to leak here.
+            _peerExports.Remove(peerId);
             _peerListDirty = true;
         }
 
@@ -3183,8 +3394,22 @@ namespace Nebula
         /// against this world in unit tests. The caller is responsible for mapping the
         /// peer in NetRunner.Instance.PeerIds and removing it again.
         /// </summary>
+        /// <summary>
+        /// Test seam: puts a PeerState back exactly as it was, with no status-change bookkeeping.
+        ///
+        /// <para>Distinct from <see cref="SetPeerState"/>, which reads the existing entry first and
+        /// so cannot restore one that teardown removed, and from
+        /// <see cref="CreatePeerStateForTests"/>, which builds five fresh collections -- the cost the
+        /// allocation test is trying to keep out of its measurement window.</para>
+        /// </summary>
+        internal void RestorePeerStateForTests(UUID peerId, PeerState state)
+        {
+            PeerStates[peerId] = state;
+        }
+
         internal void CreatePeerStateForTests(NetPeer peer, UUID peerId)
         {
+            _peerSetVersion++;
             PeerStates[peerId] = new PeerState
             {
                 Id = peerId,
@@ -3199,25 +3424,6 @@ namespace Nebula
                 OwnedNodes = []
             };
         }
-
-        // Declare these as fields, not locals - reuse across ticks
-        private Dictionary<ushort, NetBuffer> _peerNodesBuffers = new();
-        private Dictionary<ushort, byte> _peerNodesSerializersList = new();
-
-        /// <summary>
-        /// Per-peer round-robin cursor for the props phase of ExportState: the NetId of
-        /// the next node owed property service. Without it, whichever nodes iterate first
-        /// would monopolize every budget-limited packet and later nodes would starve.
-        /// </summary>
-        private Dictionary<UUID, long> _peerPropsCursors = new();
-
-        /// <summary>
-        /// Per-peer partition of <see cref="_tickNodeList"/>, rebuilt once per peer per tick:
-        /// the nodes this peer has input authority over, and everything else. Reused buffers -
-        /// ExportPartition.Partition clears them on entry.
-        /// </summary>
-        private readonly List<NetworkController> _tickOwnedList = new(8);
-        private readonly List<NetworkController> _tickSharedList = new(64);
 
         /// <summary>Snapshot of NetScenes.Values, stable across the phases of one export.</summary>
         private readonly List<NetworkController> _tickNodeList = new(64);
@@ -3251,35 +3457,44 @@ namespace Nebula
         /// <summary>Stopwatch timestamp at which the previous tick STARTED, for starvation detection.</summary>
         private long _lastTickEntryTs;
         private int _lastTickGc0, _lastTickGc1, _lastTickGc2;
-        private NetBuffer _tempSerializerBuffer;
-        private Dictionary<ushort, NetBuffer> _nodeBufferPool = new();
-        // Hierarchical bitmask for tracking updated nodes per peer
-        private long[] _updatedNodesMask = NodeIdUtils.CreateMasks();
-        // Pooled dictionary for ExportState return value - avoids per-tick allocation
-        private Dictionary<UUID, NetBuffer> _exportPeerBuffers = new();
-        // Pooled NetBuffer instances per peer - avoids per-tick allocation
-        private Dictionary<UUID, NetBuffer> _peerNetBufferPool = new();
         // Pooled dictionary for ImportState - avoids per-tick allocation
         private Dictionary<ushort, byte> _importNodeSerializerMap = new();
         private readonly long[] _importNodeMasks = new long[NodeIdUtils.NODE_GROUPS];
         // Pooled list for net function args - avoids per-call allocation
         private List<PropertyCache> _netFunctionArgsPool = new(8);
 
-        internal Dictionary<UUID, NetBuffer> ExportState(List<NetPeer> peers)
+        /// <summary>
+        /// Builds this tick's packet for every peer. Serial prologue (node snapshot, Begin on
+        /// every serializer, per-peer objects), one <see cref="ExportPeer"/> per peer, serial
+        /// epilogue (metrics replay, Cleanup on every serializer). Each ExportPeer needs only its
+        /// lane's <see cref="ExportContext"/> and its own <see cref="PeerExport"/>, which is what
+        /// lets peers export on several lanes at once.
+        /// </summary>
+        internal void ExportState(List<NetPeer> peers)
         {
-            var sw = System.Diagnostics.Stopwatch.StartNew();
-            // Reuse pooled dictionary instead of allocating new each tick
-            _exportPeerBuffers.Clear();
-
-            // Lazy init the serializers buffers
-            _tempSerializerBuffer ??= new NetBuffer();
+            _tickPeerIds.Clear();
+            for (var i = 0; i < peers.Count; i++)
+            {
+                _tickPeerIds.Add(NetRunner.Instance.GetPeerId(peers[i]));
+            }
 
             // Stable node snapshot for this tick (world order: parents precede children)
-            // plus the once-per-tick Begin pass.
+            // plus the once-per-tick Begin pass and the per-peer preparation, both of which
+            // must run before any lane: Godot node reads only from the world thread, and no
+            // per-peer dictionary insert once peers export concurrently.
             _tickNodeList.Clear();
             foreach (var netController in NetScenes.Values)
             {
                 _tickNodeList.Add(netController);
+                netController.EnsureExportFacts();
+                if (netController.PreparedPeerSetVersion != _peerSetVersion)
+                {
+                    for (var i = 0; i < _tickPeerIds.Count; i++)
+                    {
+                        netController.PrepareExportPeer(_tickPeerIds[i]);
+                    }
+                    netController.PreparedPeerSetVersion = _peerSetVersion;
+                }
                 foreach (var serializer in netController.NetNode.Serializers)
                 {
                     serializer.Begin();
@@ -3293,447 +3508,51 @@ namespace Nebula
                 payloadBudget = MinTickPayloadBudget;
             }
 
-            foreach (NetPeer peer in peers)
+            // Per-peer objects exist before any lane runs: the only writes to the shared
+            // dictionary happen here, on the tick thread.
+            for (var i = 0; i < peers.Count; i++)
             {
-                var peerId = NetRunner.Instance.GetPeerId(peer);
-
-                // Reset hierarchical bitmask for this peer
-                Array.Clear(_updatedNodesMask, 0, NodeIdUtils.NODE_GROUPS);
-
-                // Get or create pooled NetBuffer for this peer
-                if (!_peerNetBufferPool.TryGetValue(peerId, out var peerBuffer))
+                var peerId = _tickPeerIds[i];
+                if (!_peerExports.TryGetValue(peerId, out var peerExport))
                 {
-                    peerBuffer = new NetBuffer();
-                    _peerNetBufferPool[peerId] = peerBuffer;
+                    peerExport = new PeerExport();
+                    _peerExports[peerId] = peerExport;
                 }
-                peerBuffer.Reset();
-                _exportPeerBuffers[peerId] = peerBuffer;
-
-                _peerNodesBuffers.Clear();
-                _peerNodesSerializersList.Clear();
-
-                // Owner-priority: this peer's own nodes are served before the crowd, in every
-                // phase. Disjoint and exhaustive - see ExportPartition.Partition for why both
-                // properties are load-bearing rather than tidy.
-                ExportPartition.Partition(_tickNodeList, peer, _tickOwnedList, _tickSharedList);
-
-                // Ack routing for this packet: every node that commits a section below is
-                // registered into this tick's slot after the phases run (mask walk at the
-                // end of the loop), so the ack for CurrentTick visits exactly those nodes.
-                if (!_peerSentRings.TryGetValue(peerId, out var sentRing))
-                {
-                    sentRing = new SentNodeRing();
-                    _peerSentRings[peerId] = sentRing;
-                }
-                sentRing.Begin(CurrentTick);
-                _tickNestedRiders.Clear();
-                Array.Clear(_tickRiderMask, 0, NodeIdUtils.NODE_GROUPS);
-
-                var ledger = new TickBudgetLedger(payloadBudget * BitConstants.BitsInByte);
-                var peerState = PeerStates[peerId];
-                _traceWirePeer = peerId;
-                int spawnSectionsDeferred = 0;
-                int propsSectionsDeferred = 0;
-                // Counted apart from the shared totals: a peer's OWN node being deferred is the
-                // regression signal for owner-priority, and it is invisible inside a total that
-                // is dominated by the crowd.
-                int ownedSpawnSectionsDeferred = 0;
-                int ownedPropsSectionsDeferred = 0;
-
-                var exportPhaseTs = Diagnostics.TickProfiler.Now();
-
-                // ---- PHASE 1: spawns/despawns, OWNED then SHARED, world order, first-fit
-                // No cap and no cursor: the spawn set drains (each committed record
-                // leaves it within one RTT of shipping), records are small, and world
-                // order maximizes parent-before-child delivery for the child-spawn
-                // parent gate. A record that doesn't fit is dropped whole - the spawn
-                // serializer is atomic, and its packet-coupled stamps only happen in
-                // CommitExport, so a dropped record retries cleanly next tick.
-                //
-                // The owned/shared split costs nothing here: the child-spawn gate requires the
-                // parent to be Spawned (ACKED, see HasSpawnedForClient), so a child can never
-                // ride the same tick as its parent whatever the iteration order - world order
-                // within each partition is all that gate can use.
-                //
-                // INVARIANT: each node's spawn serializer Exports at most ONCE per peer per
-                // tick. PropsMayRidePacket reads an ancestor's in-flight nested-table membership
-                // from state that a second Export would reset, so a "retry deferred spawns with
-                // leftover budget" pass here would silently corrupt that read.
-                for (var spawnPass = 0; spawnPass < 2; spawnPass++)
-                {
-                    var spawnPassList = spawnPass == 0 ? _tickOwnedList : _tickSharedList;
-                    for (var i = 0; i < spawnPassList.Count; i++)
-                    {
-                        var netController = spawnPassList[i];
-                        var serializers = netController.NetNode.Serializers;
-                        if (serializers.Length <= SpawnSerializerIndex) continue;
-                        var serializer = serializers[SpawnSerializerIndex];
-
-                        // Framing guess for the section budget: exact when the node already
-                        // has a local id, conservative (worst case +9) when registration
-                        // happens inside the spawn Export itself.
-                        bool hasLocalId = peerState.WorldToPeerNodeMap.TryGetValue(netController.NetId, out var knownLocalId);
-                        bool guessFirst = !hasLocalId || !NodeIdUtils.IsBitSet(_updatedNodesMask, knownLocalId);
-                        bool guessOpens = !hasLocalId || GroupIsClosed(knownLocalId);
-
-                        _tempSerializerBuffer.Reset();
-                        var result = serializer.Export(this, peer, _tempSerializerBuffer,
-                            ledger.SectionBudget(guessFirst, guessOpens));
-                        if (result == ExportResult.None || _tempSerializerBuffer.WrittenBits == 0)
-                        {
-                            continue;
-                        }
-
-                        // Safety check: ensure node is registered before lookup
-                        if (!peerState.WorldToPeerNodeMap.TryGetValue(netController.NetId, out var localNodeId))
-                        {
-                            Log(Debugger.DebugLevel.ERROR,
-                                $"[ExportState] Node {netController.RawNode?.Name} (NetId={netController.NetId}) wrote data but isn't registered for peer {peerId}.");
-                            continue;
-                        }
-
-                        if (!TryAppendSection(netController, localNodeId, SpawnSerializerIndex, ref ledger))
-                        {
-                            // Over budget: retries next tick. Should only ever be transient
-                            // (a crowded packet) - a record too big for an EMPTY packet can
-                            // never ship and means the budget math or the nested-table split
-                            // is broken. One loud line, not one per tick.
-                            if (!_loggedUnfittableSpawnRecord
-                                && _tempSerializerBuffer.WrittenBits > payloadBudget * BitConstants.BitsInByte - TickBudgetLedger.MaxSectionOverheadBits)
-                            {
-                                _loggedUnfittableSpawnRecord = true;
-                                Log(Debugger.DebugLevel.ERROR,
-                                    $"[ExportState] BUG: spawn record for {netController.RawNode?.Name} (NetId={netController.NetId}) is {_tempSerializerBuffer.WrittenBits} bits and exceeds the whole tick budget ({payloadBudget} bytes); it can never be delivered. Further occurrences suppressed.");
-                            }
-                            if (spawnPass == 0) ownedSpawnSectionsDeferred++; else spawnSectionsDeferred++;
-                            continue;
-                        }
-                        serializer.CommitExport(this, peer, CurrentTick);
-                    }
-                }
-
-                _profiler?.Record(Diagnostics.TickProfiler.Phase.ExportSpawn, exportPhaseTs);
-                exportPhaseTs = Diagnostics.TickProfiler.Now();
-
-                // ---- PHASE 2a: props for the nodes this peer OWNS ------------------
-                // Served before any SHARED spawn or prop, which is the whole point: a player
-                // walking into a crowd must not have their own character's updates pushed into
-                // next tick by twenty strangers arriving. Running here rather than reserving
-                // budget up front makes it exact instead of predicted - a props section cannot
-                // be measured without committing it, because Export stamps delta-chain, lossy
-                // and chunk-frontier state that is only valid if the bytes actually ship.
-                //
-                // No rotation and no `serving` latch: the owned set is small (one net scene per
-                // player in practice), so a node skipped by PropsMayRidePacket must not stop the
-                // ones behind it. See the cursor note in 2b for why that latch exists there.
-                //
-                // "Never deferred" has real exceptions, all of them correct:
-                //   - a node still Spawning whose spawn record has not been committed cannot
-                //     have props ride (the client could not resolve the id);
-                //   - a section can still be Partial - owner-priority lands the section, it does
-                //     not guarantee every property inside it fits;
-                //   - interest can zero the section out, since owning a node and being
-                //     interested in it are independent.
-                // Start offset rotates with the tick so a fixed order cannot starve the tail
-                // deterministically. There is no per-peer cursor here on purpose: a player owns
-                // one net scene in practice, so a cursor would be per-peer state maintained for
-                // a case that does not arise, while this costs one modulo and removes the
-                // deterministic-starvation failure mode outright. If owned sets ever grow large
-                // enough that a partial rotation matters, promote this to a real cursor like 2b's.
-                var ownedCount = _tickOwnedList.Count;
-                var ownedStart = ownedCount > 1 ? (int)((uint)CurrentTick % (uint)ownedCount) : 0;
-                for (var i = 0; i < ownedCount; i++)
-                {
-                    var netController = _tickOwnedList[(ownedStart + i) % ownedCount];
-                    var serializers = netController.NetNode.Serializers;
-                    if (serializers.Length <= PropsSerializerIndex) continue;
-                    var serializer = serializers[PropsSerializerIndex];
-
-                    // Settled pre-gate: nothing owed, so skip PropsMayRidePacket and the
-                    // Export call outright. Safe to skip the bank-only call too - a
-                    // settled node has no dirty bits to bank by definition.
-                    if (serializer.NothingForPeer(peerId)) continue;
-
-                    bool hasRoom = ledger.Remaining >= PropsSectionFloorBits;
-                    ushort ownedLocalId = 0;
-                    bool ownedMaySail = hasRoom
-                        && PropsMayRidePacket(netController, peer, ref peerState, out ownedLocalId);
-
-                    _tempSerializerBuffer.Reset();
-                    if (!ownedMaySail)
-                    {
-                        // Bank this tick's dirty bits exactly as the shared path does - skipping
-                        // a peer without banking loses the tick's changes outright.
-                        serializer.Export(this, peer, _tempSerializerBuffer, 0);
-                        ownedPropsSectionsDeferred++;
-                        continue;
-                    }
-
-                    bool ownedFirst = !NodeIdUtils.IsBitSet(_updatedNodesMask, ownedLocalId);
-                    var ownedResult = serializer.Export(this, peer, _tempSerializerBuffer,
-                        ledger.SectionBudget(ownedFirst, ownedFirst && GroupIsClosed(ownedLocalId)));
-                    if (ownedResult == ExportResult.None || _tempSerializerBuffer.WrittenBits == 0)
-                    {
-                        continue;
-                    }
-
-                    if (!TryAppendSection(netController, ownedLocalId, PropsSerializerIndex, ref ledger))
-                    {
-                        Log(Debugger.DebugLevel.ERROR,
-                            $"[ExportState] BUG: owned props section for {netController.RawNode?.Name} (NetId={netController.NetId}) exceeded its budget and was dropped.");
-                        continue;
-                    }
-                    serializer.CommitExport(this, peer, CurrentTick);
-                }
-
-                // ---- PHASE 2b: props for everything else, round-robin from the cursor
-                var nodeCount = _tickSharedList.Count;
-                if (nodeCount > 0)
-                {
-                    var startIdx = 0;
-                    if (_peerPropsCursors.TryGetValue(peerId, out var cursorNetId))
-                    {
-                        startIdx = ExportRotation.FindStartIndex(_tickSharedList, cursorNetId);
-                    }
-
-                    bool serving = true;
-                    long nextCursorNetId = 0;
-                    bool cursorPinned = false;
-
-                    for (var k = 0; k < nodeCount; k++)
-                    {
-                        var netController = _tickSharedList[(startIdx + k) % nodeCount];
-                        var serializers = netController.NetNode.Serializers;
-                        if (serializers.Length <= PropsSerializerIndex) continue;
-                        var serializer = serializers[PropsSerializerIndex];
-
-                        if (serving && ledger.Remaining < PropsSectionFloorBits)
-                        {
-                            // Out of room: this node is first in line next tick, and the
-                            // rest of the rotation defers below.
-                            serving = false;
-                            nextCursorNetId = netController.NetId.Value;
-                            cursorPinned = true;
-                        }
-
-                        // Settled pre-gate, after the budget latch so the cursor still
-                        // pins fairly: nothing owed means no PropsMayRidePacket lookups,
-                        // no Export, and no bank-only call (a settled node has no dirty
-                        // bits to bank by definition).
-                        if (serializer.NothingForPeer(peerId)) continue;
-
-                        // A props section for an uncommitted spawn may only ride a packet
-                        // that also carries the spawn data teaching the client the id.
-                        ushort localNodeId = 0;
-                        bool maySail = serving
-                            && PropsMayRidePacket(netController, peer, ref peerState, out localNodeId);
-
-                        _tempSerializerBuffer.Reset();
-                        if (!maySail)
-                        {
-                            // Defer: banks this tick's broadcast dirty bits for the peer
-                            // (they would otherwise die with processingDirtyMask).
-                            serializer.Export(this, peer, _tempSerializerBuffer, 0);
-                            propsSectionsDeferred++;
-                            continue;
-                        }
-
-                        bool first = !NodeIdUtils.IsBitSet(_updatedNodesMask, localNodeId);
-                        var result = serializer.Export(this, peer, _tempSerializerBuffer,
-                            ledger.SectionBudget(first, first && GroupIsClosed(localNodeId)));
-                        if (result == ExportResult.None || _tempSerializerBuffer.WrittenBits == 0)
-                        {
-                            continue;
-                        }
-
-                        if (!TryAppendSection(netController, localNodeId, PropsSerializerIndex, ref ledger))
-                        {
-                            // Contract breach: a self-limiting serializer wrote past its
-                            // section budget. The bytes are dropped and never committed,
-                            // so its in-write stamps (chunk frontiers) may now be ahead
-                            // of what the peer will receive - loud, not silent.
-                            Log(Debugger.DebugLevel.ERROR,
-                                $"[ExportState] BUG: props section for {netController.RawNode?.Name} (NetId={netController.NetId}) exceeded its budget and was dropped.");
-                            continue;
-                        }
-                        serializer.CommitExport(this, peer, CurrentTick);
-
-                        if (result == ExportResult.Partial && !cursorPinned)
-                        {
-                            // Node still has data queued - it resumes first next tick.
-                            nextCursorNetId = netController.NetId.Value;
-                            cursorPinned = true;
-                            serving = false;
-                        }
-                    }
-
-                    if (!cursorPinned)
-                    {
-                        // Full rotation served: rotate the start anyway so a fixed
-                        // iteration bias can't freeze in.
-                        nextCursorNetId = _tickSharedList[(startIdx + 1) % nodeCount].NetId.Value;
-                    }
-                    _peerPropsCursors[peerId] = nextCursorNetId;
-                }
-
-                _profiler?.Record(Diagnostics.TickProfiler.Phase.ExportProps, exportPhaseTs);
-                exportPhaseTs = Diagnostics.TickProfiler.Now();
-
-                // ---- PHASE 3: interest resync (1-byte sections) --------------------
-                for (var i = 0; i < _tickNodeList.Count; i++)
-                {
-                    var netController = _tickNodeList[i];
-                    var serializers = netController.NetNode.Serializers;
-                    if (serializers.Length <= InterestResyncSerializerIndex) continue;
-                    var serializer = serializers[InterestResyncSerializerIndex];
-
-                    // Resync only exports for Spawned nodes, which are always registered.
-                    if (!peerState.WorldToPeerNodeMap.TryGetValue(netController.NetId, out var localNodeId))
-                    {
-                        continue;
-                    }
-
-                    bool first = !NodeIdUtils.IsBitSet(_updatedNodesMask, localNodeId);
-                    bool opensGroup = first && GroupIsClosed(localNodeId);
-                    _tempSerializerBuffer.Reset();
-                    var result = serializer.Export(this, peer, _tempSerializerBuffer,
-                        ledger.SectionBudget(first, opensGroup));
-                    if (result == ExportResult.None || _tempSerializerBuffer.WrittenBits == 0)
-                    {
-                        continue;
-                    }
-                    int resyncSectionBits = _tempSerializerBuffer.WrittenBits;
-                    if (!TryAppendSection(netController, localNodeId, InterestResyncSerializerIndex, ref ledger))
-                    {
-                        continue; // dropped: resent next tick, no packet-coupled state stamped
-                    }
-                    if (_profiler != null)
-                    {
-                        _profiler.Add(Diagnostics.TickProfiler.Counter.ResyncSections, 1);
-                        _profiler.Add(Diagnostics.TickProfiler.Counter.ResyncBits,
-                            resyncSectionBits + TickBudgetLedger.FramingCostForDiagnostics(first, opensGroup));
-                    }
-                    serializer.CommitExport(this, peer, CurrentTick);
-                }
-
-                _profiler?.Record(Diagnostics.TickProfiler.Phase.ExportResync, exportPhaseTs);
-
-                    if (_metrics != null)
-                {
-                    _metrics.RecordTickBudget(ledger.UsedBytes, ledger.BudgetBytes);
-                    _metrics.RecordDeferredSections(spawnSectionsDeferred, propsSectionsDeferred,
-                        ownedSpawnSectionsDeferred, ownedPropsSectionsDeferred);
-                    int spawningCount = 0;
-                    foreach (var spawnState in peerState.SpawnState.Values)
-                    {
-                        if (spawnState == ClientSpawnState.Spawning) spawningCount++;
-                    }
-                    _metrics.RecordSpawnBacklog(spawningCount);
-                }
-
-                // Bit-packed framing (see PacketFraming): group presence, then per present
-                // group its node set (dense or gap-coded, whichever is shorter), then per
-                // node its serializers-run word, then the node bodies at bit granularity,
-                // padded to a byte once at the end. The ledger charged the worst case of each
-                // framing word, so the assembled packet can only come in under budget.
-                var packet = _exportPeerBuffers[peerId];
-                byte groupMask = NodeIdUtils.ComputeGroupMask(_updatedNodesMask);
-                packet.WriteBits(groupMask, PacketFraming.GroupPresenceBits);
-                for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
-                {
-                    if ((groupMask & (1 << g)) != 0)
-                    {
-                        PacketFraming.WriteNodeSet(packet, _updatedNodesMask[g]);
-                    }
-                }
-
-                // Write serializer words and node data in bitmask iteration order (ascending nodeId)
-                // This is zero-allocation and produces sorted order since Combine(g,local) = (g<<6)|local
-                for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
-                {
-                    if ((groupMask & (1 << g)) == 0) continue;
-                    for (int local = 0; local < NodeIdUtils.NODES_PER_GROUP; local++)
-                    {
-                        if ((_updatedNodesMask[g] & (1L << local)) == 0) continue;
-                        ushort nodeId = NodeIdUtils.Combine(g, local);
-                        var serializersRun = _peerNodesSerializersList[nodeId];
-                        PacketFraming.WriteSerializersRun(packet, serializersRun, PropsSerializerIndex);
-
-                        // This mask is, by construction, the deduplicated set of nodes with
-                        // a committed section in this packet - so it is also the exact set
-                        // the ack for CurrentTick must visit.
-                        sentRing.Add(_peerNodesControllers[nodeId]);
-
-                        // Spawn-contract breach detector: a packet may carry data WITHOUT
-                        // the spawn bit only for a node whose id the client provably has
-                        // or gets - spawn committed (Spawned), or riding an in-flight
-                        // ancestor's nested table in this same packet. Anything else and
-                        // the payload length is unknowable client-side - the exact
-                        // precondition of the "[ImportState] Data for unknown node"
-                        // abort. The props phase gate (PropsMayRidePacket) makes this
-                        // unreachable by construction; the detector stays as a backstop
-                        // that names the node and state at the SOURCE if it ever leaks.
-                        if (NetRunner.TraceSpawnIds && (serializersRun & (1 << SpawnSerializerIndex)) == 0
-                            && PeerStates[peerId].PeerToWorldNodeMap.TryGetValue(nodeId, out var worldNetId)
-                            && NetScenes.TryGetValue(worldNetId, out var tracedController))
-                        {
-                            var contractState = GetClientSpawnState(worldNetId, peer);
-                            if (contractState != ClientSpawnState.Spawned)
-                            {
-                                bool ridesInFlightAncestorTable = false;
-                                for (var ancestor = tracedController.NetParent; ancestor != null; ancestor = ancestor.NetParent)
-                                {
-                                    var ancestorState = GetClientSpawnState(ancestor.NetId, peer);
-                                    if (ancestorState == ClientSpawnState.NotSpawned || ancestorState == ClientSpawnState.Spawning)
-                                    {
-                                        ridesInFlightAncestorTable = contractState == ClientSpawnState.Spawning;
-                                        break;
-                                    }
-                                }
-                                if (!ridesInFlightAncestorTable)
-                                {
-                                    Log(Debugger.DebugLevel.ERROR,
-                                        $"[IdTrace] BREACH tick={CurrentTick} peer={peerId} id={nodeId} NetId={worldNetId} node={tracedController.RawNode?.Name} mask=0b{Convert.ToString(serializersRun, 2)} state={contractState}: exported without spawn data while spawn is not committed");
-                                }
-                            }
-                        }
-                    }
-                }
-                // Nested scenes that rode an ancestor's spawn table this packet had their
-                // spawn windows stamped for CurrentTick without a section of their own, so
-                // the mask walk above cannot see them. Register the ones it did not: a
-                // rider that ALSO committed its own section (its props phase ran after the
-                // parent's spawn commit) is already in the ring. Must run after the mask
-                // walk so the dedup reads the final mask.
-                for (int r = 0; r < _tickNestedRiders.Count; r++)
-                {
-                    var rider = _tickNestedRiders[r];
-                    if (!peerState.WorldToPeerNodeMap.TryGetValue(rider.NetId, out var riderLocalId)) continue;
-                    if (NodeIdUtils.IsBitSet(_updatedNodesMask, riderLocalId)) continue;
-                    if (NodeIdUtils.IsBitSet(_tickRiderMask, riderLocalId)) continue;
-                    NodeIdUtils.SetBit(_tickRiderMask, riderLocalId);
-                    sentRing.Add(rider);
-                }
-
-                for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
-                {
-                    if ((groupMask & (1 << g)) == 0) continue;
-                    for (int local = 0; local < NodeIdUtils.NODES_PER_GROUP; local++)
-                    {
-                        if ((_updatedNodesMask[g] & (1L << local)) == 0) continue;
-                        ushort nodeId = NodeIdUtils.Combine(g, local);
-                        // The final stream: pad at the sections' align marks here.
-                        packet.AppendBitsApplyingMarks(_peerNodesBuffers[nodeId]);
-                    }
-                }
-                // Whole bytes go on the wire; the parser is mask-driven and ignores the pad.
-                packet.AlignWrite();
+                peerExport.Exported = false;
             }
 
-            var exportTime = sw.ElapsedMilliseconds;
-            sw.Restart();
+            // Every lane - the workers and this thread - runs the same job: claim the next
+            // peer, export it, until none are left.
+            _tickPeers = peers;
+            _tickPayloadBudget = payloadBudget;
+            _exportPeerCursor = -1;
+            _exportLaneJob ??= ExportLane;
+            var workerCount = ExportWorkerCountOverrideForTests ?? NetRunner.ExportWorkerCount;
+            if (_exportWorkers == null && workerCount > 0)
+            {
+                _exportWorkers = new ExportWorkers(workerCount, WorldId, _profiler != null);
+            }
+            if (_exportWorkers != null)
+            {
+                _exportWorkers.Run(_exportLaneJob, _tickContext, _profiler);
+            }
+            else
+            {
+                ExportContext.Run(_tickContext, _exportLaneJob);
+            }
 
-            // Debugger.Instance.Log($"Export: {exportTime}ms");
+            if (_metrics != null)
+            {
+                for (var i = 0; i < peers.Count; i++)
+                {
+                    var peerExport = _peerExports[_tickPeerIds[i]];
+                    if (!peerExport.Exported) continue;
+                    _metrics.RecordTickBudget(peerExport.UsedBytes, peerExport.BudgetBytes);
+                    _metrics.RecordDeferredSections(peerExport.SpawnDeferred, peerExport.PropsDeferred,
+                        peerExport.OwnedSpawnDeferred, peerExport.OwnedPropsDeferred);
+                    _metrics.RecordSpawnBacklog(peerExport.SpawningCount);
+                }
+            }
 
             var cleanupTs = Diagnostics.TickProfiler.Now();
             foreach (var netController in NetScenes.Values)
@@ -3745,21 +3564,478 @@ namespace Nebula
                 }
             }
             _profiler?.Record(Diagnostics.TickProfiler.Phase.ExportCleanup, cleanupTs);
+        }
 
-            return _exportPeerBuffers;
+        /// <summary>One lane's share of the tick: export peers until the claim counter runs out.</summary>
+        private void ExportLane(ExportContext ctx)
+        {
+            var peers = _tickPeers;
+            while (true)
+            {
+                int i = System.Threading.Interlocked.Increment(ref _exportPeerCursor);
+                if (i >= peers.Count) break;
+                var peerId = _tickPeerIds[i];
+                ExportPeer(ctx, peers[i], peerId, _peerExports[peerId], _tickPayloadBudget);
+                ctx.PeersExported++;
+            }
+        }
+
+        /// <summary>Test seam: overrides Nebula/config/threading/export_workers for this world (set before the first export).</summary>
+        internal int? ExportWorkerCountOverrideForTests;
+
+        /// <summary>Test seam: peers exported by this world's worker lanes so far (0 without workers).</summary>
+        internal int PeersExportedByWorkersForTests => _exportWorkers?.PeersExportedByWorkersForTests ?? 0;
+
+        /// <summary>Test seam: a copy of the packet assembled for the peer by the last ExportState.</summary>
+        internal byte[] PeerPacketForTests(UUID peerId)
+            => _peerExports.TryGetValue(peerId, out var pe) && pe.Exported ? pe.Packet.WrittenSpan.ToArray() : null;
+
+        /// <summary>
+        /// Assembles one peer's tick packet into <paramref name="pe"/>.Packet using the lane's
+        /// scratch in <paramref name="ctx"/>. Reads shared world/node state, writes only the
+        /// context, the peer's own PeerExport, and per-peer entries keyed by this peer.
+        /// </summary>
+        private void ExportPeer(ExportContext ctx, NetPeer peer, UUID peerId, PeerExport pe, int payloadBudget)
+        {
+            // Reset hierarchical bitmask for this peer
+            Array.Clear(ctx.UpdatedNodesMask, 0, NodeIdUtils.NODE_GROUPS);
+
+            var peerBuffer = pe.Packet;
+            peerBuffer.Reset();
+
+            ctx.NodeBuffers.Clear();
+            ctx.NodeSerializersList.Clear();
+
+            // Owner-priority: this peer's own nodes are served before the crowd, in every
+            // phase. Disjoint and exhaustive - see ExportPartition.Partition for why both
+            // properties are load-bearing rather than tidy.
+            ExportPartition.Partition(_tickNodeList, peer, ctx.OwnedList, ctx.SharedList);
+
+            // Ack routing for this packet: every node that commits a section below is
+            // registered into this tick's slot after the phases run (mask walk at the
+            // end), so the ack for CurrentTick visits exactly those nodes.
+            var sentRing = pe.Ring;
+            sentRing.Begin(CurrentTick);
+            ctx.NestedRiders.Clear();
+            Array.Clear(ctx.RiderMask, 0, NodeIdUtils.NODE_GROUPS);
+
+            var ledger = new TickBudgetLedger(payloadBudget * BitConstants.BitsInByte);
+            var peerState = PeerStates[peerId];
+            ctx.TraceWirePeer = peerId;
+            int spawnSectionsDeferred = 0;
+            int propsSectionsDeferred = 0;
+            // Counted apart from the shared totals: a peer's OWN node being deferred is the
+            // regression signal for owner-priority, and it is invisible inside a total that
+            // is dominated by the crowd.
+            int ownedSpawnSectionsDeferred = 0;
+            int ownedPropsSectionsDeferred = 0;
+
+            var exportPhaseTs = Diagnostics.TickProfiler.Now();
+            var temp = ctx.TempSerializerBuffer;
+
+            // ---- PHASE 1: spawns/despawns, OWNED then SHARED, world order, first-fit
+            // No cap and no cursor: the spawn set drains (each committed record
+            // leaves it within one RTT of shipping), records are small, and world
+            // order maximizes parent-before-child delivery for the child-spawn
+            // parent gate. A record that doesn't fit is dropped whole - the spawn
+            // serializer is atomic, and its packet-coupled stamps only happen in
+            // CommitExport, so a dropped record retries cleanly next tick.
+            //
+            // The owned/shared split costs nothing here: the child-spawn gate requires the
+            // parent to be Spawned (ACKED, see HasSpawnedForClient), so a child can never
+            // ride the same tick as its parent whatever the iteration order - world order
+            // within each partition is all that gate can use.
+            //
+            // INVARIANT: each node's spawn serializer Exports at most ONCE per peer per
+            // tick. PropsMayRidePacket reads an ancestor's in-flight nested-table membership
+            // from state that a second Export would reset, so a "retry deferred spawns with
+            // leftover budget" pass here would silently corrupt that read.
+            for (var spawnPass = 0; spawnPass < 2; spawnPass++)
+            {
+                var spawnPassList = spawnPass == 0 ? ctx.OwnedList : ctx.SharedList;
+                for (var i = 0; i < spawnPassList.Count; i++)
+                {
+                    var netController = spawnPassList[i];
+                    var serializers = netController.NetNode.Serializers;
+                    if (serializers.Length <= SpawnSerializerIndex) continue;
+                    var serializer = serializers[SpawnSerializerIndex];
+
+                    // Framing guess for the section budget: exact when the node already
+                    // has a local id, conservative (worst case +9) when registration
+                    // happens inside the spawn Export itself.
+                    bool hasLocalId = peerState.WorldToPeerNodeMap.TryGetValue(netController.NetId, out var knownLocalId);
+                    bool guessFirst = !hasLocalId || !NodeIdUtils.IsBitSet(ctx.UpdatedNodesMask, knownLocalId);
+                    bool guessOpens = !hasLocalId || GroupIsClosed(ctx, knownLocalId);
+
+                    temp.Reset();
+                    var result = serializer.Export(this, peer, temp,
+                        ledger.SectionBudget(guessFirst, guessOpens));
+                    if (result == ExportResult.None || temp.WrittenBits == 0)
+                    {
+                        continue;
+                    }
+
+                    // Safety check: ensure node is registered before lookup
+                    if (!peerState.WorldToPeerNodeMap.TryGetValue(netController.NetId, out var localNodeId))
+                    {
+                        Log(Debugger.DebugLevel.ERROR,
+                            $"[ExportState] Node {netController.CachedName} (NetId={netController.NetId}) wrote data but isn't registered for peer {peerId}.");
+                        continue;
+                    }
+
+                    if (!TryAppendSection(ctx, netController, localNodeId, SpawnSerializerIndex, ref ledger))
+                    {
+                        // Over budget: retries next tick. Should only ever be transient
+                        // (a crowded packet) - a record too big for an EMPTY packet can
+                        // never ship and means the budget math or the nested-table split
+                        // is broken. One loud line, not one per tick.
+                        if (!_loggedUnfittableSpawnRecord
+                            && temp.WrittenBits > payloadBudget * BitConstants.BitsInByte - TickBudgetLedger.MaxSectionOverheadBits)
+                        {
+                            _loggedUnfittableSpawnRecord = true;
+                            Log(Debugger.DebugLevel.ERROR,
+                                $"[ExportState] BUG: spawn record for {netController.CachedName} (NetId={netController.NetId}) is {temp.WrittenBits} bits and exceeds the whole tick budget ({payloadBudget} bytes); it can never be delivered. Further occurrences suppressed.");
+                        }
+                        if (spawnPass == 0) ownedSpawnSectionsDeferred++; else spawnSectionsDeferred++;
+                        continue;
+                    }
+                    serializer.CommitExport(this, peer, CurrentTick);
+                }
+            }
+
+            Diagnostics.TickProfiler.Current?.Record(Diagnostics.TickProfiler.Phase.ExportSpawn, exportPhaseTs);
+            exportPhaseTs = Diagnostics.TickProfiler.Now();
+
+            // ---- PHASE 2a: props for the nodes this peer OWNS ------------------
+            // Served before any SHARED spawn or prop, which is the whole point: a player
+            // walking into a crowd must not have their own character's updates pushed into
+            // next tick by twenty strangers arriving. Running here rather than reserving
+            // budget up front makes it exact instead of predicted - a props section cannot
+            // be measured without committing it, because Export stamps delta-chain, lossy
+            // and chunk-frontier state that is only valid if the bytes actually ship.
+            //
+            // No rotation and no `serving` latch: the owned set is small (one net scene per
+            // player in practice), so a node skipped by PropsMayRidePacket must not stop the
+            // ones behind it. See the cursor note in 2b for why that latch exists there.
+            //
+            // "Never deferred" has real exceptions, all of them correct:
+            //   - a node still Spawning whose spawn record has not been committed cannot
+            //     have props ride (the client could not resolve the id);
+            //   - a section can still be Partial - owner-priority lands the section, it does
+            //     not guarantee every property inside it fits;
+            //   - interest can zero the section out, since owning a node and being
+            //     interested in it are independent.
+            // Start offset rotates with the tick so a fixed order cannot starve the tail
+            // deterministically. There is no per-peer cursor here on purpose: a player owns
+            // one net scene in practice, so a cursor would be per-peer state maintained for
+            // a case that does not arise, while this costs one modulo and removes the
+            // deterministic-starvation failure mode outright. If owned sets ever grow large
+            // enough that a partial rotation matters, promote this to a real cursor like 2b's.
+            var ownedCount = ctx.OwnedList.Count;
+            var ownedStart = ownedCount > 1 ? (int)((uint)CurrentTick % (uint)ownedCount) : 0;
+            for (var i = 0; i < ownedCount; i++)
+            {
+                var netController = ctx.OwnedList[(ownedStart + i) % ownedCount];
+                var serializers = netController.NetNode.Serializers;
+                if (serializers.Length <= PropsSerializerIndex) continue;
+                var serializer = serializers[PropsSerializerIndex];
+
+                // Settled pre-gate: nothing owed, so skip PropsMayRidePacket and the
+                // Export call outright. Safe to skip the bank-only call too - a
+                // settled node has no dirty bits to bank by definition.
+                if (serializer.NothingForPeer(peerId)) continue;
+
+                bool hasRoom = ledger.Remaining >= PropsSectionFloorBits;
+                ushort ownedLocalId = 0;
+                bool ownedMaySail = hasRoom
+                    && PropsMayRidePacket(ctx, netController, peer, ref peerState, out ownedLocalId);
+
+                temp.Reset();
+                if (!ownedMaySail)
+                {
+                    // Bank this tick's dirty bits exactly as the shared path does - skipping
+                    // a peer without banking loses the tick's changes outright.
+                    serializer.Export(this, peer, temp, 0);
+                    ownedPropsSectionsDeferred++;
+                    continue;
+                }
+
+                bool ownedFirst = !NodeIdUtils.IsBitSet(ctx.UpdatedNodesMask, ownedLocalId);
+                var ownedResult = serializer.Export(this, peer, temp,
+                    ledger.SectionBudget(ownedFirst, ownedFirst && GroupIsClosed(ctx, ownedLocalId)));
+                if (ownedResult == ExportResult.None || temp.WrittenBits == 0)
+                {
+                    continue;
+                }
+
+                if (!TryAppendSection(ctx, netController, ownedLocalId, PropsSerializerIndex, ref ledger))
+                {
+                    Log(Debugger.DebugLevel.ERROR,
+                        $"[ExportState] BUG: owned props section for {netController.CachedName} (NetId={netController.NetId}) exceeded its budget and was dropped.");
+                    continue;
+                }
+                serializer.CommitExport(this, peer, CurrentTick);
+            }
+
+            // ---- PHASE 2b: props for everything else, round-robin from the cursor
+            var nodeCount = ctx.SharedList.Count;
+            if (nodeCount > 0)
+            {
+                var startIdx = 0;
+                if (pe.HasPropsCursor)
+                {
+                    startIdx = ExportRotation.FindStartIndex(ctx.SharedList, pe.PropsCursor);
+                }
+
+                bool serving = true;
+                long nextCursorNetId = 0;
+                bool cursorPinned = false;
+
+                for (var k = 0; k < nodeCount; k++)
+                {
+                    var netController = ctx.SharedList[(startIdx + k) % nodeCount];
+                    var serializers = netController.NetNode.Serializers;
+                    if (serializers.Length <= PropsSerializerIndex) continue;
+                    var serializer = serializers[PropsSerializerIndex];
+
+                    if (serving && ledger.Remaining < PropsSectionFloorBits)
+                    {
+                        // Out of room: this node is first in line next tick, and the
+                        // rest of the rotation defers below.
+                        serving = false;
+                        nextCursorNetId = netController.NetId.Value;
+                        cursorPinned = true;
+                    }
+
+                    // Settled pre-gate, after the budget latch so the cursor still
+                    // pins fairly: nothing owed means no PropsMayRidePacket lookups,
+                    // no Export, and no bank-only call (a settled node has no dirty
+                    // bits to bank by definition).
+                    if (serializer.NothingForPeer(peerId)) continue;
+
+                    // A props section for an uncommitted spawn may only ride a packet
+                    // that also carries the spawn data teaching the client the id.
+                    ushort localNodeId = 0;
+                    bool maySail = serving
+                        && PropsMayRidePacket(ctx, netController, peer, ref peerState, out localNodeId);
+
+                    temp.Reset();
+                    if (!maySail)
+                    {
+                        // Defer: banks this tick's broadcast dirty bits for the peer
+                        // (they would otherwise die with processingDirtyMask).
+                        serializer.Export(this, peer, temp, 0);
+                        propsSectionsDeferred++;
+                        continue;
+                    }
+
+                    bool first = !NodeIdUtils.IsBitSet(ctx.UpdatedNodesMask, localNodeId);
+                    var result = serializer.Export(this, peer, temp,
+                        ledger.SectionBudget(first, first && GroupIsClosed(ctx, localNodeId)));
+                    if (result == ExportResult.None || temp.WrittenBits == 0)
+                    {
+                        continue;
+                    }
+
+                    if (!TryAppendSection(ctx, netController, localNodeId, PropsSerializerIndex, ref ledger))
+                    {
+                        // Contract breach: a self-limiting serializer wrote past its
+                        // section budget. The bytes are dropped and never committed,
+                        // so its in-write stamps (chunk frontiers) may now be ahead
+                        // of what the peer will receive - loud, not silent.
+                        Log(Debugger.DebugLevel.ERROR,
+                            $"[ExportState] BUG: props section for {netController.CachedName} (NetId={netController.NetId}) exceeded its budget and was dropped.");
+                        continue;
+                    }
+                    serializer.CommitExport(this, peer, CurrentTick);
+
+                    if (result == ExportResult.Partial && !cursorPinned)
+                    {
+                        // Node still has data queued - it resumes first next tick.
+                        nextCursorNetId = netController.NetId.Value;
+                        cursorPinned = true;
+                        serving = false;
+                    }
+                }
+
+                if (!cursorPinned)
+                {
+                    // Full rotation served: rotate the start anyway so a fixed
+                    // iteration bias can't freeze in.
+                    nextCursorNetId = ctx.SharedList[(startIdx + 1) % nodeCount].NetId.Value;
+                }
+                pe.PropsCursor = nextCursorNetId;
+                pe.HasPropsCursor = true;
+            }
+
+            Diagnostics.TickProfiler.Current?.Record(Diagnostics.TickProfiler.Phase.ExportProps, exportPhaseTs);
+            exportPhaseTs = Diagnostics.TickProfiler.Now();
+
+            // ---- PHASE 3: interest resync (1-byte sections) --------------------
+            for (var i = 0; i < _tickNodeList.Count; i++)
+            {
+                var netController = _tickNodeList[i];
+                var serializers = netController.NetNode.Serializers;
+                if (serializers.Length <= InterestResyncSerializerIndex) continue;
+                var serializer = serializers[InterestResyncSerializerIndex];
+
+                // Resync only exports for Spawned nodes, which are always registered.
+                if (!peerState.WorldToPeerNodeMap.TryGetValue(netController.NetId, out var localNodeId))
+                {
+                    continue;
+                }
+
+                bool first = !NodeIdUtils.IsBitSet(ctx.UpdatedNodesMask, localNodeId);
+                bool opensGroup = first && GroupIsClosed(ctx, localNodeId);
+                temp.Reset();
+                var result = serializer.Export(this, peer, temp,
+                    ledger.SectionBudget(first, opensGroup));
+                if (result == ExportResult.None || temp.WrittenBits == 0)
+                {
+                    continue;
+                }
+                int resyncSectionBits = temp.WrittenBits;
+                if (!TryAppendSection(ctx, netController, localNodeId, InterestResyncSerializerIndex, ref ledger))
+                {
+                    continue; // dropped: resent next tick, no packet-coupled state stamped
+                }
+                var laneProfiler = Diagnostics.TickProfiler.Current;
+                if (laneProfiler != null)
+                {
+                    laneProfiler.Add(Diagnostics.TickProfiler.Counter.ResyncSections, 1);
+                    laneProfiler.Add(Diagnostics.TickProfiler.Counter.ResyncBits,
+                        resyncSectionBits + TickBudgetLedger.FramingCostForDiagnostics(first, opensGroup));
+                }
+                serializer.CommitExport(this, peer, CurrentTick);
+            }
+
+            Diagnostics.TickProfiler.Current?.Record(Diagnostics.TickProfiler.Phase.ExportResync, exportPhaseTs);
+
+            // Tallies for the metrics; replayed by the tick thread after every peer has run.
+            pe.UsedBytes = ledger.UsedBytes;
+            pe.BudgetBytes = ledger.BudgetBytes;
+            pe.SpawnDeferred = spawnSectionsDeferred;
+            pe.PropsDeferred = propsSectionsDeferred;
+            pe.OwnedSpawnDeferred = ownedSpawnSectionsDeferred;
+            pe.OwnedPropsDeferred = ownedPropsSectionsDeferred;
+            int spawningCount = 0;
+            foreach (var spawnState in peerState.SpawnState.Values)
+            {
+                if (spawnState == ClientSpawnState.Spawning) spawningCount++;
+            }
+            pe.SpawningCount = spawningCount;
+
+            // Bit-packed framing (see PacketFraming): group presence, then per present
+            // group its node set (dense or gap-coded, whichever is shorter), then per
+            // node its serializers-run word, then the node bodies at bit granularity,
+            // padded to a byte once at the end. The ledger charged the worst case of each
+            // framing word, so the assembled packet can only come in under budget.
+            var packet = peerBuffer;
+            byte groupMask = NodeIdUtils.ComputeGroupMask(ctx.UpdatedNodesMask);
+            packet.WriteBits(groupMask, PacketFraming.GroupPresenceBits);
+            for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
+            {
+                if ((groupMask & (1 << g)) != 0)
+                {
+                    PacketFraming.WriteNodeSet(packet, ctx.UpdatedNodesMask[g]);
+                }
+            }
+
+            // Write serializer words and node data in bitmask iteration order (ascending nodeId)
+            // This is zero-allocation and produces sorted order since Combine(g,local) = (g<<6)|local
+            for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
+            {
+                if ((groupMask & (1 << g)) == 0) continue;
+                for (int local = 0; local < NodeIdUtils.NODES_PER_GROUP; local++)
+                {
+                    if ((ctx.UpdatedNodesMask[g] & (1L << local)) == 0) continue;
+                    ushort nodeId = NodeIdUtils.Combine(g, local);
+                    var serializersRun = ctx.NodeSerializersList[nodeId];
+                    PacketFraming.WriteSerializersRun(packet, serializersRun, PropsSerializerIndex);
+
+                    // This mask is, by construction, the deduplicated set of nodes with
+                    // a committed section in this packet - so it is also the exact set
+                    // the ack for CurrentTick must visit.
+                    sentRing.Add(ctx.NodeControllers[nodeId]);
+
+                    // Spawn-contract breach detector: a packet may carry data WITHOUT
+                    // the spawn bit only for a node whose id the client provably has
+                    // or gets - spawn committed (Spawned), or riding an in-flight
+                    // ancestor's nested table in this same packet. Anything else and
+                    // the payload length is unknowable client-side - the exact
+                    // precondition of the "[ImportState] Data for unknown node"
+                    // abort. The props phase gate (PropsMayRidePacket) makes this
+                    // unreachable by construction; the detector stays as a backstop
+                    // that names the node and state at the SOURCE if it ever leaks.
+                    if (NetRunner.TraceSpawnIds && (serializersRun & (1 << SpawnSerializerIndex)) == 0
+                        && peerState.PeerToWorldNodeMap.TryGetValue(nodeId, out var worldNetId)
+                        && NetScenes.TryGetValue(worldNetId, out var tracedController))
+                    {
+                        var contractState = GetClientSpawnState(worldNetId, peer);
+                        if (contractState != ClientSpawnState.Spawned)
+                        {
+                            bool ridesInFlightAncestorTable = false;
+                            for (var ancestor = tracedController.NetParent; ancestor != null; ancestor = ancestor.NetParent)
+                            {
+                                var ancestorState = GetClientSpawnState(ancestor.NetId, peer);
+                                if (ancestorState == ClientSpawnState.NotSpawned || ancestorState == ClientSpawnState.Spawning)
+                                {
+                                    ridesInFlightAncestorTable = contractState == ClientSpawnState.Spawning;
+                                    break;
+                                }
+                            }
+                            if (!ridesInFlightAncestorTable)
+                            {
+                                Log(Debugger.DebugLevel.ERROR,
+                                    $"[IdTrace] BREACH tick={CurrentTick} peer={peerId} id={nodeId} NetId={worldNetId} node={tracedController.CachedName} mask=0b{Convert.ToString(serializersRun, 2)} state={contractState}: exported without spawn data while spawn is not committed");
+                            }
+                        }
+                    }
+                }
+            }
+            // Nested scenes that rode an ancestor's spawn table this packet had their
+            // spawn windows stamped for CurrentTick without a section of their own, so
+            // the mask walk above cannot see them. Register the ones it did not: a
+            // rider that ALSO committed its own section (its props phase ran after the
+            // parent's spawn commit) is already in the ring. Must run after the mask
+            // walk so the dedup reads the final mask.
+            for (int r = 0; r < ctx.NestedRiders.Count; r++)
+            {
+                var rider = ctx.NestedRiders[r];
+                if (!peerState.WorldToPeerNodeMap.TryGetValue(rider.NetId, out var riderLocalId)) continue;
+                if (NodeIdUtils.IsBitSet(ctx.UpdatedNodesMask, riderLocalId)) continue;
+                if (NodeIdUtils.IsBitSet(ctx.RiderMask, riderLocalId)) continue;
+                NodeIdUtils.SetBit(ctx.RiderMask, riderLocalId);
+                sentRing.Add(rider);
+            }
+
+            for (int g = 0; g < NodeIdUtils.NODE_GROUPS; g++)
+            {
+                if ((groupMask & (1 << g)) == 0) continue;
+                for (int local = 0; local < NodeIdUtils.NODES_PER_GROUP; local++)
+                {
+                    if ((ctx.UpdatedNodesMask[g] & (1L << local)) == 0) continue;
+                    ushort nodeId = NodeIdUtils.Combine(g, local);
+                    // The final stream: pad at the sections' align marks here.
+                    packet.AppendBitsApplyingMarks(ctx.NodeBuffers[nodeId]);
+                }
+            }
+            // Whole bytes go on the wire; the parser is mask-driven and ignores the pad.
+            packet.AlignWrite();
+            pe.Exported = true;
         }
 
         /// <summary>True when the node's 64-node group has no included node yet (its int64 node mask is unwritten).</summary>
-        private bool GroupIsClosed(ushort nodeId)
+        private static bool GroupIsClosed(ExportContext ctx, ushort nodeId)
         {
             var (group, _) = NodeIdUtils.Split(nodeId);
-            return _updatedNodesMask[group] == 0;
+            return ctx.UpdatedNodesMask[group] == 0;
         }
 
         /// <summary>
-        /// Charges the ledger for the section sitting in _tempSerializerBuffer and appends
-        /// it to the node's per-peer buffer, opening the node's packet entry on its first
-        /// section. Returns false - nothing charged or appended - when it doesn't fit.
+        /// Charges the ledger for the section sitting in the lane's TempSerializerBuffer and
+        /// appends it to the node's per-peer buffer, opening the node's packet entry on its
+        /// first section. Returns false - nothing charged or appended - when it doesn't fit.
         /// </summary>
         /// <summary>
         /// <c>NEBULA_TRACE_WIRE=1</c>: logs every appended section on the server ([Wire][S]) and
@@ -3770,19 +4046,19 @@ namespace Nebula
         /// found", "Parent node not found" bursts). Off by default; costs one static bool test.
         /// </summary>
         private static readonly bool TraceWire = System.Environment.GetEnvironmentVariable("NEBULA_TRACE_WIRE") != null;
-        private UUID _traceWirePeer;
-        private bool TryAppendSection(NetworkController netController, ushort localNodeId, int serializerIdx, ref TickBudgetLedger ledger)
+        private bool TryAppendSection(ExportContext ctx, NetworkController netController, ushort localNodeId, int serializerIdx, ref TickBudgetLedger ledger)
         {
+            var temp = ctx.TempSerializerBuffer;
             if (TraceWire)
             {
-                var span = _tempSerializerBuffer.WrittenSpan;
-                Log($"[Wire][S] tick={CurrentTick} peer={_traceWirePeer} node={localNodeId} ser={serializerIdx} bits={_tempSerializerBuffer.WrittenBits} bytes={System.Convert.ToHexString(span.Length > 48 ? span.Slice(0,48) : span)}");
+                var span = temp.WrittenSpan;
+                Log($"[Wire][S] tick={CurrentTick} peer={ctx.TraceWirePeer} node={localNodeId} ser={serializerIdx} bits={temp.WrittenBits} bytes={System.Convert.ToHexString(span.Length > 48 ? span.Slice(0,48) : span)}");
             }
-            bool firstSection = !NodeIdUtils.IsBitSet(_updatedNodesMask, localNodeId);
-            bool opensGroup = firstSection && GroupIsClosed(localNodeId);
+            bool firstSection = !NodeIdUtils.IsBitSet(ctx.UpdatedNodesMask, localNodeId);
+            bool opensGroup = firstSection && GroupIsClosed(ctx, localNodeId);
             // Each align mark can cost up to 7 pad bits at assembly; charge them here.
-            int sectionBits = _tempSerializerBuffer.WrittenBits
-                + _tempSerializerBuffer.AlignMarkCount * (BitConstants.BitsInByte - 1);
+            int sectionBits = temp.WrittenBits
+                + temp.AlignMarkCount * (BitConstants.BitsInByte - 1);
             if (!ledger.TryCommitSection(sectionBits, firstSection, opensGroup))
             {
                 return false;
@@ -3790,21 +4066,21 @@ namespace Nebula
 
             if (firstSection)
             {
-                NodeIdUtils.SetBit(_updatedNodesMask, localNodeId);
-                _peerNodesControllers[localNodeId] = netController;
-                if (!_nodeBufferPool.TryGetValue(localNodeId, out var nodeBuffer))
+                NodeIdUtils.SetBit(ctx.UpdatedNodesMask, localNodeId);
+                ctx.NodeControllers[localNodeId] = netController;
+                if (!ctx.NodeBufferPool.TryGetValue(localNodeId, out var nodeBuffer))
                 {
                     nodeBuffer = new NetBuffer();
-                    _nodeBufferPool[localNodeId] = nodeBuffer;
+                    ctx.NodeBufferPool[localNodeId] = nodeBuffer;
                 }
                 nodeBuffer.Reset();
-                _peerNodesBuffers[localNodeId] = nodeBuffer;
-                _peerNodesSerializersList[localNodeId] = 0;
+                ctx.NodeBuffers[localNodeId] = nodeBuffer;
+                ctx.NodeSerializersList[localNodeId] = 0;
             }
 
             // Sections concatenate at bit granularity; the node buffer holds bits.
-            _peerNodesBuffers[localNodeId].AppendBits(_tempSerializerBuffer);
-            _peerNodesSerializersList[localNodeId] |= (byte)(1 << serializerIdx);
+            ctx.NodeBuffers[localNodeId].AppendBits(temp);
+            ctx.NodeSerializersList[localNodeId] |= (byte)(1 << serializerIdx);
             return true;
         }
 
@@ -3818,7 +4094,7 @@ namespace Nebula
         /// kills the whole tick and its ack. Nodes refused here are deferred instead
         /// (their dirty bits bank in PendingDirtyMask).
         /// </summary>
-        private bool PropsMayRidePacket(NetworkController netController, NetPeer peer, ref PeerState peerState, out ushort localNodeId)
+        private bool PropsMayRidePacket(ExportContext ctx, NetworkController netController, NetPeer peer, ref PeerState peerState, out ushort localNodeId)
         {
             localNodeId = 0;
             var state = GetClientSpawnState(netController.NetId, peer);
@@ -3837,7 +4113,7 @@ namespace Nebula
             }
 
             // Own spawn section committed into this packet?
-            if (_peerNodesSerializersList.TryGetValue(localNodeId, out var ownMask)
+            if (ctx.NodeSerializersList.TryGetValue(localNodeId, out var ownMask)
                 && (ownMask & (1 << SpawnSerializerIndex)) != 0)
             {
                 return true;
@@ -3845,8 +4121,8 @@ namespace Nebula
 
             // Riding an in-flight ancestor's spawn table in this packet? The ancestor's
             // SpawnSerializer still holds the nested set of its last Export for this
-            // peer (valid: phase 1 for this peer ran immediately before this phase), so
-            // membership is checked exactly, not inferred from the hierarchy.
+            // peer (valid: phase 1 for this peer ran immediately before this phase),
+            // so membership is checked exactly, not inferred from the hierarchy.
             //
             // Only AUTHORED nested scenes can answer yes now - runtime spawns no longer ride
             // an ancestor's table (see SpawnSerializer.CollectNestedNetScenesRecursive) and
@@ -3859,7 +4135,7 @@ namespace Nebula
                     continue;
                 }
                 if (!peerState.WorldToPeerNodeMap.TryGetValue(ancestor.NetId, out var ancestorLocalId)
-                    || !_peerNodesSerializersList.TryGetValue(ancestorLocalId, out var ancestorMask)
+                    || !ctx.NodeSerializersList.TryGetValue(ancestorLocalId, out var ancestorMask)
                     || (ancestorMask & (1 << SpawnSerializerIndex)) == 0)
                 {
                     continue;
@@ -4071,7 +4347,7 @@ namespace Nebula
         /// </summary>
         internal void NoteNestedSpawnRider(NetworkController child)
         {
-            _tickNestedRiders.Add(child);
+            ExportContext.Current.NestedRiders.Add(child);
         }
 
         /// <summary>
@@ -4081,11 +4357,12 @@ namespace Nebula
         /// </summary>
         internal void RegisterSentNodeForTests(UUID peerId, Tick tick, NetworkController node)
         {
-            if (!_peerSentRings.TryGetValue(peerId, out var ring))
+            if (!_peerExports.TryGetValue(peerId, out var peerExport))
             {
-                ring = new SentNodeRing();
-                _peerSentRings[peerId] = ring;
+                peerExport = new PeerExport();
+                _peerExports[peerId] = peerExport;
             }
+            var ring = peerExport.Ring;
             if (!ring.TryGet(tick, out _))
             {
                 ring.Begin(tick);
@@ -4137,7 +4414,7 @@ namespace Nebula
             // else can have anything to do with this ack. An ack older than the ring's depth
             // finds no slot and is dropped; every consumer resends until acked, so that
             // costs one extra round (see SentNodeRing.Depth).
-            if (!_peerSentRings.TryGetValue(peerId, out var sentRing) || !sentRing.TryGet(tick, out var sentNodes))
+            if (!_peerExports.TryGetValue(peerId, out var ackExport) || !ackExport.Ring.TryGet(tick, out var sentNodes))
             {
                 return;
             }
@@ -4365,6 +4642,39 @@ namespace Nebula
         private const byte InputFlagMask = InputFlagHasAck;
 
         /// <summary>
+        /// Writes everything in an input packet ahead of the record section:
+        /// <c>[flags u8][ackTick i32 if HasAck][netId u16][staticChildId u8][inputSize u16]</c>.
+        ///
+        /// <para>Shared so there is exactly ONE writer for this header. <see cref="SendInput"/> is
+        /// not the only caller: the synthetic load client builds the same packet without a scene
+        /// tree behind it, and a layout change that only reached one of them would show up as a
+        /// stream of <c>[Nebula][InvalidInput]</c> lines on the server rather than as a compile
+        /// error. <see cref="WriteInputRecords"/> is shared for the same reason.</para>
+        ///
+        /// <paramref name="peerLocalNetId"/> is the id in the SENDING PEER's space - for a static
+        /// child that is its parent's id, with <paramref name="staticChildId"/> naming the child.
+        ///
+        /// <paramref name="inputSize"/> rides the header rather than each record because the input
+        /// struct is a fixed size per node: sending it once instead of a 4-byte length on all 8
+        /// redundant copies is most of what the compact record encoding saves. It also drives every
+        /// subsequent read, which is why the server rejects a packet whose size disagrees with the
+        /// node's rather than trying to parse on.
+        /// </summary>
+        internal static void WriteInputHeader(
+            NetBuffer buffer, bool hasAck, Tick ackTick,
+            ushort peerLocalNetId, byte staticChildId, ushort inputSize)
+        {
+            NetWriter.WriteByte(buffer, hasAck ? InputFlagHasAck : (byte)0);
+            if (hasAck)
+            {
+                NetWriter.WriteInt32(buffer, ackTick);
+            }
+            NetWriter.WriteUInt16(buffer, peerLocalNetId);
+            NetWriter.WriteByte(buffer, staticChildId);
+            NetWriter.WriteUInt16(buffer, inputSize);
+        }
+
+        /// <summary>
         /// Writes the redundant-input section: <c>[count u8][baseTick i32]</c> then one
         /// <c>[tickDelta u8][payload]</c> per record. Returns how many records were written.
         ///
@@ -4440,33 +4750,31 @@ namespace Nebula
             // Carry the pending tick ack if nothing else has this frame. Only the first input
             // packet takes it - SendInput runs once per owned node, and the ack is per-peer.
             bool carriesAck = _pendingAckTick >= 0 && !_ackAttachedThisFrame;
-            NetWriter.WriteByte(inputBuffer, carriesAck ? InputFlagHasAck : (byte)0);
+
+            // Static children don't have their own NetId - use parent's NetId + StaticChildId.
+            bool isStaticChild = netNode.StaticChildId > 0 && netNode.NetParent != null;
+            var addressedNetId = isStaticChild ? netNode.NetParent.NetId : netNode.NetId;
+            byte staticChildId = isStaticChild ? netNode.StaticChildId : (byte)0;
+
+            // This runs on the client only (the IsServer guard above), and a client-side NetId IS
+            // the peer-local ushort - see NetId.NetworkSerialize, whose client branch writes
+            // exactly this cast. Doing it here keeps WriteInputHeader free of NetId and of the
+            // WorldRunner it would need to resolve one, so the load client can call it too.
+            //
+            // The header write also has to happen BEFORE the records: the size it carries is what
+            // tells the reader how wide each record is.
+            WriteInputHeader(
+                inputBuffer, carriesAck, _pendingAckTick,
+                (ushort)addressedNetId.Value, staticChildId, (ushort)inputBytes.Length);
+
             if (carriesAck)
             {
-                NetWriter.WriteInt32(inputBuffer, _pendingAckTick);
                 _pendingAckTick = -1;
                 _ackAttachedThisFrame = true;
             }
 
-            // Static children don't have their own NetId - use parent's NetId + StaticChildId
-            bool isStaticChild = netNode.StaticChildId > 0 && netNode.NetParent != null;
-            if (isStaticChild)
-            {
-                NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netNode.NetParent.NetId, inputBuffer);
-                NetWriter.WriteByte(inputBuffer, netNode.StaticChildId);
-            }
-            else
-            {
-                NetId.NetworkSerialize(this, NetRunner.Instance.ServerPeer, netNode.NetId, inputBuffer);
-                NetWriter.WriteByte(inputBuffer, 0); // StaticChildId = 0 means not a static child
-            }
-
             // Get recent inputs for redundancy
             var recentInputs = netNode.GetRecentInputs(NetworkController.INPUT_REDUNDANCY_COUNT);
-
-            // Every record has the same length (the input struct is fixed size per node), so send it
-            // once rather than repeating a 4-byte length on all 8 redundant copies.
-            NetWriter.WriteUInt16(inputBuffer, (ushort)inputBytes.Length);
 
             WriteInputRecords(inputBuffer, recentInputs, inputBytes.Length);
 

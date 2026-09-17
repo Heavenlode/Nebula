@@ -376,10 +376,6 @@ namespace Nebula.Serialization.Serializers
                 _propQuantBits = Array.Empty<byte>();
                 _propUnitVector = Array.Empty<bool>();
                 _propQuantComponents = Array.Empty<byte>();
-                _propertiesUpdated = Array.Empty<byte>();
-                _actualMask = Array.Empty<byte>();
-                _dirtyOnlyMask = Array.Empty<byte>();
-                _leftoverMask = Array.Empty<byte>();
                 _decodedMask = Array.Empty<byte>();
                 _decodedValues = Array.Empty<PropertyCache>();
                 _incomingMask = Array.Empty<byte>();
@@ -456,10 +452,6 @@ namespace Nebula.Serialization.Serializers
                 if (prop.IsObjectProperty) _hasObjectProps = true;
             }
 
-            _propertiesUpdated = new byte[_byteCount];
-            _actualMask = new byte[_byteCount];
-            _dirtyOnlyMask = new byte[_byteCount];
-            _leftoverMask = new byte[_byteCount];
             _decodedMask = new byte[_byteCount];
             _decodedValues = new PropertyCache[_propertyCount];
             _incomingMask = new byte[_byteCount];
@@ -1056,10 +1048,6 @@ namespace Nebula.Serialization.Serializers
                     unitVectors != null && unitVectors[i]);
             }
 
-            _propertiesUpdated = new byte[_byteCount];
-            _actualMask = new byte[_byteCount];
-            _dirtyOnlyMask = new byte[_byteCount];
-            _leftoverMask = new byte[_byteCount];
             _decodedMask = new byte[_byteCount];
             _decodedValues = new PropertyCache[_propertyCount];
             _incomingMask = new byte[_byteCount];
@@ -1773,13 +1761,13 @@ namespace Nebula.Serialization.Serializers
                 return;
             }
 
-            // Reuse pooled buffer instead of allocating new one each time
-            _customTypeBuffer ??= new NetBuffer();
-            _customTypeBuffer.Reset();
+            // Reuse the thread's pooled buffer instead of allocating one each time
+            var customTypeBuffer = Scratch.CustomTypeBuffer;
+            customTypeBuffer.Reset();
             // Note: For object types, the serializer returns bool (true if wrote data)
             // But here we're in the absolute value path, so we always expect data to be written
-            serializer(currentWorld, peer, ref cache, _customTypeBuffer, _propChunkBudget[propIndex]);
-            NetWriter.WriteBytes(buffer, _customTypeBuffer.WrittenSpan);
+            serializer(currentWorld, peer, ref cache, customTypeBuffer, _propChunkBudget[propIndex]);
+            NetWriter.WriteBytes(buffer, customTypeBuffer.WrittenSpan);
         }
 
         public void Begin()
@@ -1789,7 +1777,12 @@ namespace Nebula.Serialization.Serializers
             network.ClearDirtyMask();
 
             // New tick, new memo: the cached blobs describe THIS tick's values only.
-            _memoCount = 0;
+            if (_memoCount == null || _memoCount.Length != ExportContext.LaneCount)
+            {
+                _memoCount = new int[ExportContext.LaneCount];
+                _memo = new MemoEntry[MemoCapacity * ExportContext.LaneCount];
+            }
+            Array.Clear(_memoCount, 0, _memoCount.Length);
 
             // Track which properties have ever been set (for initial sync to new peers).
             // Bounded by _propertyCount, not the mask width: indices at or above it have no
@@ -1946,9 +1939,6 @@ namespace Nebula.Serialization.Serializers
         /// <summary>Per byte: props eligible for the initial-sync merge (primitives + node refs).</summary>
         private byte[] _initSyncEligibleBytes;
 
-        // Pooled buffer for custom type serialization
-        private NetBuffer _customTypeBuffer;
-
         private bool TryGetInterestLayers(UUID peerId, out long layers)
         {
             layers = 0;
@@ -2028,31 +2018,43 @@ namespace Nebula.Serialization.Serializers
             mask[byteIndex] &= (byte)~(1 << bitOffset);
         }
 
-        private byte[] _propertiesUpdated;
-
         /// <summary>
-        /// Scratch mask of properties actually written by the current Export. Instance
-        /// scratch rather than a per-call allocation; safe because Export is driven
-        /// serially by WorldRunner.ExportState (one peer, one node at a time).
+        /// The masks one Export works in, and that its adjacent CommitExport reads back. One
+        /// per thread rather than per instance or per call: an export lane runs Export and
+        /// CommitExport for one node back to back on one thread, so the scratch is never
+        /// shared, never allocated per call, and two lanes exporting the same node for two
+        /// peers do not see each other's masks. Sized for the widest scene; every loop bounds
+        /// itself by the instance's _byteCount, never by these lengths.
         /// </summary>
-        private byte[] _actualMask;
+        private sealed class PropsScratch
+        {
+            /// <summary>Properties scheduled to ship in the current Export.</summary>
+            public readonly byte[] PropertiesUpdated = new byte[PresenceMask.MaxMaskBytes];
 
-        /// <summary>
-        /// Scratch mask of properties that are genuinely dirty THIS tick for the peer being
-        /// exported — captured before the non-default/pending/settle merges widen the send
-        /// set. Deltas are only valid for freshly-changed values: resends and settle
-        /// absolutes must go absolute so the value is exact on arrival. Same serial-access
-        /// assumption as _actualMask.
-        /// </summary>
-        private byte[] _dirtyOnlyMask;
+            /// <summary>Properties actually written by the current Export (the wire mask).</summary>
+            public readonly byte[] ActualMask = new byte[PresenceMask.MaxMaskBytes];
 
-        /// <summary>
-        /// Scratch mask of primitive properties that were eligible to ship in the current
-        /// Export but were rewound (or never written) for budget. Merged into
-        /// PendingDirtyMask before Export returns, so they retry as absolutes on a later
-        /// tick. Same serial-access assumption as _actualMask.
-        /// </summary>
-        private byte[] _leftoverMask;
+            /// <summary>
+            /// Properties that are genuinely dirty THIS tick for the peer being exported —
+            /// captured before the non-default/pending/settle merges widen the send set.
+            /// Deltas are only valid for freshly-changed values: resends and settle absolutes
+            /// must go absolute so the value is exact on arrival.
+            /// </summary>
+            public readonly byte[] DirtyOnlyMask = new byte[PresenceMask.MaxMaskBytes];
+
+            /// <summary>
+            /// Primitive properties that were eligible to ship in the current Export but were
+            /// rewound (or never written) for budget. Merged into PendingDirtyMask before
+            /// Export returns, so they retry as absolutes on a later tick.
+            /// </summary>
+            public readonly byte[] LeftoverMask = new byte[PresenceMask.MaxMaskBytes];
+
+            /// <summary>Staging buffer for a custom-typed value's bytes.</summary>
+            public readonly NetBuffer CustomTypeBuffer = new();
+        }
+
+        [ThreadStatic] private static PropsScratch _scratch;
+        private static PropsScratch Scratch => _scratch ??= new PropsScratch();
 
         // ─── Section memo ─────────────────────────────────────────────────
         //
@@ -2077,8 +2079,14 @@ namespace Nebula.Serialization.Serializers
             public long LossyResultMask; // WriteDelta lossy returns, for the stamp replay
         }
         private const int MemoCapacity = 4;
+        /// <summary>
+        /// One MemoCapacity-sized run per export lane (lane * MemoCapacity is the base): a lane
+        /// captures into and serves from its own run only, so lanes exporting the same node
+        /// for different peers never publish to each other. Sharing is bounded to the peers a
+        /// lane serves that tick - a section is encoded at most once per lane per tick.
+        /// </summary>
         private MemoEntry[] _memo;
-        private int _memoCount;
+        private int[] _memoCount;
         /// <summary>Primitive props whose VALUE is per-peer (P1). Signature-stable: any
         /// written bit here makes every peer ineligible for that mask.</summary>
         private long _perPeerPrimMask;
@@ -2109,6 +2117,10 @@ namespace Nebula.Serialization.Serializers
         }
         internal static void DisableSettledForRun() => _settledDisabled = true;
         internal int MemoHitsForTests;
+        /// <summary>Test seam: per-peer entries held (delta state, initial-sync masks); must not change across Export/Commit/Ack.</summary>
+        internal (int states, int initialSync) PeerEntryCountsForTests => (_peerStates.Count, peerInitialPropSync.Count);
+        /// <summary>Test seam: memo entries captured on a lane this tick.</summary>
+        internal int MemoEntriesForTests(int lane) => _memoCount != null && lane < _memoCount.Length ? _memoCount[lane] : 0;
         /// <summary>
         /// Test-only off switch. The memo is UNCONDITIONAL in production — it ships
         /// byte-identical output (soak-verified via NEBULA_VERIFY_MEMO) and exists only
@@ -2137,7 +2149,7 @@ namespace Nebula.Serialization.Serializers
         /// Scratch for the payload currently being imported: which property indices decoded
         /// a value, and the values themselves.
         ///
-        /// Same serial-access assumption as _actualMask, and one step stronger: the values
+        /// Per-serializer scratch (unlike the export masks, which are per thread), and one step stronger: the values
         /// are still being read while ImportProperty fires OnNetworkChange handlers, so a
         /// handler that synchronously drove another Import of THIS node would overwrite the
         /// buffer mid-apply. WorldRunner applies packets one node at a time off the network
@@ -2232,12 +2244,15 @@ namespace Nebula.Serialization.Serializers
             }
 
             int byteCount = _byteCount;
+            var scratch = Scratch;
 
-            Array.Clear(_propertiesUpdated, 0, byteCount);
-            Array.Clear(_leftoverMask, 0, byteCount);
+            Array.Clear(scratch.PropertiesUpdated, 0, byteCount);
+            Array.Clear(scratch.LeftoverMask, 0, byteCount);
 
             if (!peerInitialPropSync.TryGetValue(peerId, out var initialSync))
             {
+                // Prepare-pass backstop (see IStateSerializer.PreparePeer).
+                ExportContext.NoteUnpreparedInsert("NetPropertiesSerializer initial sync");
                 initialSync = new byte[byteCount];
                 peerInitialPropSync[peerId] = initialSync;
             }
@@ -2253,6 +2268,8 @@ namespace Nebula.Serialization.Serializers
             ref var state = ref CollectionsMarshal.GetValueRefOrAddDefault(_peerStates, peerId, out bool exists);
             if (!exists || !state.IsInitialized)
             {
+                // Prepare-pass backstop (see IStateSerializer.PreparePeer).
+                ExportContext.NoteUnpreparedInsert("NetPropertiesSerializer peer state");
                 state = CreateOrGetPooledState();
             }
 
@@ -2306,7 +2323,7 @@ namespace Nebula.Serialization.Serializers
 
                 if (isDirty)
                 {
-                    _propertiesUpdated[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
+                    scratch.PropertiesUpdated[propIndex / BitConstants.BitsInByte] |= (byte)(1 << (propIndex % BitConstants.BitsInByte));
                 }
             }
 
@@ -2314,7 +2331,7 @@ namespace Nebula.Serialization.Serializers
             // Only these props may be delta-encoded; everything merged in later (initial
             // sync, pending resends, settle absolutes) carries an unchanged value and must
             // be written absolute so it is exact on arrival.
-            Array.Copy(_propertiesUpdated, _dirtyOnlyMask, byteCount);
+            Array.Copy(scratch.PropertiesUpdated, scratch.DirtyOnlyMask, byteCount);
 
             // Include non-default properties that haven't been synced yet. Node references
             // join the primitives here: their dirty bit is real (MarkDirtyRef sets it), so a
@@ -2327,7 +2344,7 @@ namespace Nebula.Serialization.Serializers
                 var pendingInitial = (byte)((_nonDefaultMask >> (i * BitConstants.BitsInByte))
                     & _initSyncEligibleBytes[i]
                     & ~initialSync[i]);
-                _propertiesUpdated[i] |= pendingInitial;
+                scratch.PropertiesUpdated[i] |= pendingInitial;
             }
 
             // Per-peer overrides join initial sync directly: per-peer writes never enter the
@@ -2346,7 +2363,7 @@ namespace Nebula.Serialization.Serializers
                     var propSlot = (byte)(1 << (propIndex % BitConstants.BitsInByte));
                     if ((initialSync[byteIndex] & propSlot) == 0)
                     {
-                        _propertiesUpdated[byteIndex] |= propSlot;
+                        scratch.PropertiesUpdated[byteIndex] |= propSlot;
                     }
                 }
             }
@@ -2354,7 +2371,7 @@ namespace Nebula.Serialization.Serializers
             // Include properties that were sent but not yet acknowledged (for re-sending).
             // Node references ride this too: once they are only sent on change, this is the
             // ONLY thing that recovers a reference lost in flight.
-            for (var i = 0; i < state.PendingDirtyMask.Length && i < _propertiesUpdated.Length; i++)
+            for (var i = 0; i < state.PendingDirtyMask.Length && i < byteCount; i++)
             {
                 var pendingByte = state.PendingDirtyMask[i];
                 for (int j = 0; j < 8; j++)
@@ -2364,7 +2381,7 @@ namespace Nebula.Serialization.Serializers
                     if (_propIsObject[propIndex] && !_propIsNodeRef[propIndex]) continue;
                     if ((pendingByte & (1 << j)) != 0)
                     {
-                        _propertiesUpdated[i] |= (byte)(1 << j);
+                        scratch.PropertiesUpdated[i] |= (byte)(1 << j);
                     }
                 }
             }
@@ -2372,19 +2389,19 @@ namespace Nebula.Serialization.Serializers
             // SETTLE ABSOLUTE: a property whose last landed encoding included a lossy delta
             // holds a slightly-wrong value on the peer (half-precision rounding). While it
             // keeps changing the stream corrects itself; once it goes quiet nothing would
-            // ever fix the residue. Schedule it once more — it is not in _dirtyOnlyMask, so
+            // ever fix the residue. Schedule it once more — it is not in scratch.DirtyOnlyMask, so
             // the write loop sends it absolute, and WriteAbsolute clears its LossyMask bit.
             for (var i = 0; i < byteCount; i++)
             {
                 var lossyByte = state.LossyMask[i];
                 if (lossyByte == 0) continue;
-                _propertiesUpdated[i] |= lossyByte;
+                scratch.PropertiesUpdated[i] |= lossyByte;
             }
 
             // Apply interest filter to primitive properties
-            for (var byteIndex = 0; byteIndex < _propertiesUpdated.Length; byteIndex++)
+            for (var byteIndex = 0; byteIndex < byteCount; byteIndex++)
             {
-                var b = _propertiesUpdated[byteIndex];
+                var b = scratch.PropertiesUpdated[byteIndex];
                 if (b == 0) continue;
                 for (var bitIndex = 0; bitIndex < 8; bitIndex++)
                 {
@@ -2393,7 +2410,7 @@ namespace Nebula.Serialization.Serializers
                         var propIndex = byteIndex * 8 + bitIndex;
                         if (!PeerHasInterestInProperty(propIndex, peerInterestLayers))
                         {
-                            _propertiesUpdated[byteIndex] &= (byte)~(1 << bitIndex);
+                            scratch.PropertiesUpdated[byteIndex] &= (byte)~(1 << bitIndex);
                         }
                     }
                 }
@@ -2423,7 +2440,7 @@ namespace Nebula.Serialization.Serializers
             {
                 for (var i = 0; i < byteCount; i++)
                 {
-                    var b = _propertiesUpdated[i];
+                    var b = scratch.PropertiesUpdated[i];
                     if (b == 0) continue;
                     for (var j = 0; j < 8; j++)
                     {
@@ -2466,7 +2483,7 @@ namespace Nebula.Serialization.Serializers
             //
             // This is the seam the section memo stands on: the per-peer state that can
             // influence the primitive bytes (AckedMask, SentHistory, DeltaChain,
-            // _dirtyOnlyMask, the per-peer flag) reaches the writer EXCLUSIVELY through
+            // scratch.DirtyOnlyMask, the per-peer flag) reaches the writer EXCLUSIVELY through
             // the per-prop useDelta boolean computed here. Everything else the writer
             // reads is shared node-level state (CachedProperties, the baseline ring, the
             // property metadata). So (writtenPrimMask, baselineAge, useDeltaMask) is a
@@ -2480,7 +2497,7 @@ namespace Nebula.Serialization.Serializers
             long useDeltaMask = 0;
             for (var i = 0; i < byteCount; i++)
             {
-                var propSegment = _propertiesUpdated[i];
+                var propSegment = scratch.PropertiesUpdated[i];
                 if (propSegment == 0) continue;
                 for (var j = 0; j < BitConstants.BitsInByte; j++)
                 {
@@ -2490,7 +2507,7 @@ namespace Nebula.Serialization.Serializers
                     writtenPrimMask |= 1L << propIndex;
 
                     bool gateHasAcked = (state.AckedMask[i] & (1 << j)) != 0;
-                    bool gateDirtyThisTick = (_dirtyOnlyMask[i] & (1 << j)) != 0;
+                    bool gateDirtyThisTick = (scratch.DirtyOnlyMask[i] & (1 << j)) != 0;
                     bool gateSentLastTick = false;
                     if (currentTick >= 1)
                     {
@@ -2532,8 +2549,8 @@ namespace Nebula.Serialization.Serializers
             // Reused scratch, not a fresh array: Export runs once per peer per node per
             // tick, so allocating here was one of the largest per-tick GC sources in the
             // netcode. Fully overwritten by the copy below, so no clear is needed.
-            byte[] actualMask = _actualMask;
-            Array.Copy(_propertiesUpdated, actualMask, byteCount);
+            byte[] actualMask = scratch.ActualMask;
+            Array.Copy(scratch.PropertiesUpdated, actualMask, byteCount);
 
             // ============================================================
             // SECTION MEMO (encode once per signature per node per tick)
@@ -2548,19 +2565,24 @@ namespace Nebula.Serialization.Serializers
             bool memoEligible = MemoEnabled && !_memoDisabled
                 && writtenPrimMask != 0
                 && (writtenPrimMask & (_perPeerPrimMask | _objectValuePrimMask)) == 0;
+            // memoHit indexes _memo directly (lane base included), so a hit reads back
+            // without re-deriving the lane.
             int memoHit = -1;
             bool encodeThrew = false;
+            int memoLane = ExportContext.CurrentLane;
+            int memoBase = memoLane * MemoCapacity;
+            int memoLaneCount = _memoCount != null && memoLane < _memoCount.Length ? _memoCount[memoLane] : 0;
             if (memoEligible)
             {
-                for (int m = 0; m < _memoCount; m++)
+                for (int m = 0; m < memoLaneCount; m++)
                 {
-                    ref var candidate = ref _memo[m];
+                    ref var candidate = ref _memo[memoBase + m];
                     if (candidate.MaskSig == writtenPrimMask
                         && candidate.UseDeltaSig == useDeltaMask
                         && candidate.Age == (byte)baselineAge
                         && worstHeaderBits + candidate.BlobBits <= maxBits)
                     {
-                        memoHit = m;
+                        memoHit = memoBase + m;
                         break;
                     }
                 }
@@ -2574,7 +2596,7 @@ namespace Nebula.Serialization.Serializers
                 ? Diagnostics.TickProfiler.Counter.PropsMemoHit
                 : !memoEligible
                     ? Diagnostics.TickProfiler.Counter.PropsMemoSlow
-                    : _memoCount >= MemoCapacity
+                    : memoLaneCount >= MemoCapacity
                         ? Diagnostics.TickProfiler.Counter.PropsMemoOverflow
                         : Diagnostics.TickProfiler.Counter.PropsMemoMiss;
             Diagnostics.TickProfiler.Current?.Add(memoCounter, 1);
@@ -2589,7 +2611,7 @@ namespace Nebula.Serialization.Serializers
                 hitEntry.Blob.AsSpan(0, BytesFor(hitEntry.BlobBits)).CopyTo(body.RawBuffer);
                 body.WriteBitPosition = hitEntry.BlobBits;
                 ReplayMemoStamps(ref state, writtenPrimMask, useDeltaMask, hitEntry.LossyResultMask);
-                MemoHitsForTests++;
+                System.Threading.Interlocked.Increment(ref MemoHitsForTests);
             }
             else
             {
@@ -2598,7 +2620,7 @@ namespace Nebula.Serialization.Serializers
                 // Write PRIMITIVE properties (only dirty ones)
                 for (var i = 0; i < byteCount; i++)
                 {
-                    var propSegment = _propertiesUpdated[i];
+                    var propSegment = scratch.PropertiesUpdated[i];
                     if (propSegment == 0) continue;
 
                     for (var j = 0; j < BitConstants.BitsInByte; j++)
@@ -2668,7 +2690,7 @@ namespace Nebula.Serialization.Serializers
                                 state.DeltaChain[propIndex] = deltaChainBefore;
                                 state.LossyMask[i] = lossyByteBefore;
                                 actualMask[i] &= (byte)~(1 << j);
-                                _leftoverMask[i] |= (byte)(1 << j);
+                                scratch.LeftoverMask[i] |= (byte)(1 << j);
                                 lossyResultBits &= ~(1L << propIndex);
                             }
                             else if (Diagnostics.PayloadCensus.Enabled)
@@ -2720,7 +2742,7 @@ namespace Nebula.Serialization.Serializers
                             Debugger.DebugLevel.ERROR);
                     }
                 }
-                else if (memoEligible && !encodeThrew && _memoCount < MemoCapacity)
+                else if (memoEligible && !encodeThrew && _memoCount != null && memoLaneCount < MemoCapacity)
                 {
                     // CAPTURE (P4): only a clean encode may seed a shareable entry - a
                     // budget rewind or an exception produced bits that do not match the
@@ -2728,12 +2750,11 @@ namespace Nebula.Serialization.Serializers
                     bool leftoverClean = true;
                     for (var i = 0; i < byteCount; i++)
                     {
-                        if (_leftoverMask[i] != 0) { leftoverClean = false; break; }
+                        if (scratch.LeftoverMask[i] != 0) { leftoverClean = false; break; }
                     }
                     if (leftoverClean)
                     {
-                        _memo ??= new MemoEntry[MemoCapacity];
-                        ref var slot = ref _memo[_memoCount++];
+                        ref var slot = ref _memo[memoBase + _memoCount[memoLane]++];
                         slot.MaskSig = writtenPrimMask;
                         slot.UseDeltaSig = useDeltaMask;
                         slot.Age = (byte)baselineAge;
@@ -2768,7 +2789,7 @@ namespace Nebula.Serialization.Serializers
                 // merged mask the primitives use, so it inherits initial sync for late joiners
                 // and resend-until-acked for loss, and costs nothing while it sits unchanged.
                 if (_propIsNodeRef[propIndex]
-                    && (_propertiesUpdated[propIndex / BitConstants.BitsInByte]
+                    && (scratch.PropertiesUpdated[propIndex / BitConstants.BitsInByte]
                         & (1 << (propIndex % BitConstants.BitsInByte))) == 0)
                 {
                     continue;
@@ -2875,9 +2896,9 @@ namespace Nebula.Serialization.Serializers
             bool hasLeftover = false;
             for (var i = 0; i < byteCount; i++)
             {
-                if (_leftoverMask[i] == 0) continue;
+                if (scratch.LeftoverMask[i] == 0) continue;
                 hasLeftover = true;
-                state.PendingDirtyMask[i] |= _leftoverMask[i];
+                state.PendingDirtyMask[i] |= scratch.LeftoverMask[i];
             }
 
             if (!hasAnyData)
@@ -3009,8 +3030,8 @@ namespace Nebula.Serialization.Serializers
             if (!_propIsNodeRef[propIndex]) return;
             int byteIdx = propIndex / BitConstants.BitsInByte;
             byte bit = (byte)(1 << (propIndex % BitConstants.BitsInByte));
-            if ((_propertiesUpdated[byteIdx] & bit) == 0) return;
-            _leftoverMask[byteIdx] |= bit;
+            if ((Scratch.PropertiesUpdated[byteIdx] & bit) == 0) return;
+            Scratch.LeftoverMask[byteIdx] |= bit;
         }
 
         /// <summary>
@@ -3072,15 +3093,17 @@ namespace Nebula.Serialization.Serializers
             long primitiveSentMask = 0;
             long perPeerSentMask = 0;
             long dirtySentMask = 0;
+            // This thread's masks are the ones the Export being committed filled in: CommitExport
+            // is contractually adjacent to that Export, on the same thread.
+            var scratch = Scratch;
             for (var byteIdx = 0; byteIdx < _byteCount; byteIdx++)
             {
-                var b = _actualMask[byteIdx];
+                var b = scratch.ActualMask[byteIdx];
                 if (b == 0) continue;
                 initialSync[byteIdx] |= b;
-                // _dirtyOnlyMask is this export's snapshot of freshly-dirty bits; valid here
-                // because CommitExport is contractually adjacent to the Export it commits.
+                // DirtyOnlyMask is this export's snapshot of freshly-dirty bits.
                 if (byteIdx * 8 < 64)
-                    dirtySentMask |= (long)(b & _dirtyOnlyMask[byteIdx]) << (byteIdx * 8);
+                    dirtySentMask |= (long)(b & scratch.DirtyOnlyMask[byteIdx]) << (byteIdx * 8);
 
                 for (int bit = 0; bit < 8; bit++)
                 {
@@ -3117,7 +3140,7 @@ namespace Nebula.Serialization.Serializers
             sentRecord.Tick = tick;
             sentRecord.SentMask = primitiveSentMask;
             sentRecord.DirtySentMask = dirtySentMask & primitiveSentMask;
-            sentRecord.WireMask = MaskToLong(_actualMask, _byteCount);
+            sentRecord.WireMask = MaskToLong(scratch.ActualMask, _byteCount);
         }
 
         /// <summary>
@@ -3466,12 +3489,47 @@ namespace Nebula.Serialization.Serializers
         /// </summary>
         public void ResetPeerBaseline(UUID peerId)
         {
-            peerInitialPropSync.Remove(peerId);
+            // In place, never a removal: this runs from the spawn serializer's commit inside
+            // an export lane. A zeroed sync mask is exactly what a fresh entry would hold.
+            if (peerInitialPropSync.TryGetValue(peerId, out var initialSync))
+            {
+                Array.Clear(initialSync, 0, initialSync.Length);
+            }
 
             ref var state = ref CollectionsMarshal.GetValueRefOrNullRef(_peerStates, peerId);
             if (!Unsafe.IsNullRef(ref state) && state.IsInitialized)
             {
                 ClearPeerState(ref state);
+            }
+        }
+
+        public void PreparePeer(UUID peerId)
+        {
+            if (!peerInitialPropSync.ContainsKey(peerId))
+            {
+                peerInitialPropSync[peerId] = new byte[_byteCount];
+            }
+            ref var state = ref CollectionsMarshal.GetValueRefOrAddDefault(_peerStates, peerId, out bool exists);
+            if (!exists || !state.IsInitialized)
+            {
+                state = CreateOrGetPooledState();
+            }
+
+            // Object properties keep their own per-peer entries (NetArray sync state, the
+            // game's snapshot send gates): let each create the peer's entry now.
+            if (!_hasObjectProps) return;
+            for (int i = 0; i < _propertyCount; i++)
+            {
+                if (!_propIsObject[i]) continue;
+                var classIndex = _propClassIndex[i];
+                if (classIndex < 0) continue;
+                var onPrepare = Protocol.GetOnPeerPrepare(classIndex);
+                if (onPrepare == null) continue;
+                ref var cache = ref ResolveObjectCache(i, peerId);
+                if (cache.RefValue != null)
+                {
+                    onPrepare(cache.RefValue, peerId);
+                }
             }
         }
 

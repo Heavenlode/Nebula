@@ -78,13 +78,13 @@ namespace Nebula.Diagnostics
             Gameplay,
             /// <summary>Dispatching queued net functions.</summary>
             NetFunctions,
-            /// <summary>Whole serialization pass. Contains the four Export* phases below.</summary>
+            /// <summary>Whole serialization pass (wall time). Contains the four Export* phases below.</summary>
             Export,
-            /// <summary>Export phase 1: spawn/despawn records.</summary>
+            /// <summary>Export phase 1: spawn/despawn records. CPU time summed over export lanes.</summary>
             ExportSpawn,
-            /// <summary>Export phase 2: property sections, round-robin across nodes.</summary>
+            /// <summary>Export phase 2: property sections, round-robin across nodes. CPU time summed over export lanes.</summary>
             ExportProps,
-            /// <summary>Export phase 3: interest resync.</summary>
+            /// <summary>Export phase 3: interest resync. CPU time summed over export lanes.</summary>
             ExportResync,
             /// <summary>Per-tick serializer Cleanup across every node. Nested in Export.</summary>
             ExportCleanup,
@@ -193,6 +193,25 @@ namespace Nebula.Diagnostics
 
         /// <summary>Adds to a per-tick counter. No-op when profiling is off.</summary>
         public void Add(Counter counter, long amount) => _counterCurrent[(int)counter] += amount;
+
+        /// <summary>
+        /// Folds an export worker's shard into this profiler's current tick and clears the
+        /// shard. Phase time recorded on several lanes adds up, so the merged Export* phases
+        /// are CPU time across lanes, not wall time - the report labels them so.
+        /// </summary>
+        public void MergeFrom(TickProfiler shard)
+        {
+            for (int i = 0; i < PhaseCount; i++)
+            {
+                _currentPhase[i] += shard._currentPhase[i];
+                shard._currentPhase[i] = 0;
+            }
+            for (int i = 0; i < CounterCount; i++)
+            {
+                _counterCurrent[i] += shard._counterCurrent[i];
+                shard._counterCurrent[i] = 0;
+            }
+        }
 
         /// <summary>
         /// Timestamp for a phase about to start, or 0 when profiling is off. Pair with

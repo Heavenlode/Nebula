@@ -525,6 +525,16 @@ namespace Nebula.Serialization
         }
 
         /// <summary>
+        /// Get a generated OnPeerPrepare delegate for an INetSerializable type, or null when the
+        /// type does not declare one (the hook is optional; NetArray and the game's snapshot
+        /// types use it to pre-create per-peer state before the export lanes run).
+        /// </summary>
+        public static GeneratedProtocol.OnPeerPrepareFunc GetOnPeerPrepare(int classIndex)
+        {
+            return GeneratedProtocol.OnPeerPrepareFuncs.TryGetValue(classIndex, out var func) ? func : null;
+        }
+
+        /// <summary>
         /// Whether this class index serializes a NODE REFERENCE — an id lookup — rather than
         /// in-place-mutated content.
         ///

@@ -212,6 +212,7 @@ namespace Nebula.Generators
                 if (serType.HasNetworkSerialize) methodType |= 1;
                 if (serType.HasNetworkDeserialize) methodType |= 2;
                 if (serType.HasBsonDeserialize) methodType |= 4;
+                if (serType.HasOnPeerPrepare) methodType |= 8;
 
                 data.StaticMethods[methodIndex] = new SerializableMethodData
                 {

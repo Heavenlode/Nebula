@@ -123,6 +123,15 @@ public partial class ProjectSettingsController : Node
             {"hint_string", "100,65535,1"},
         });
 
+        // Maximum simultaneous connections. The per-instance override is --maxPeers= (or
+        // NEBULA_MAX_PEERS), because a load run needs a different limit from an editor session
+        // without editing the project. Upper bound is ENet's, not ours.
+        Register(NetRunner.MAX_PEERS_SETTING, NetRunner.DefaultMaxPeers, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", $"1,{NetRunner.MaxPeersLimit},1"},
+        });
+
         // ── Build ────────────────────────────────────────────────────────
         // Whether the EDITOR build compiles MongoDB.Bson and the BSON persistence API; Nebula.props
         // reads this key straight from project.godot. Exports decide per preset through the
@@ -276,6 +285,18 @@ public partial class ProjectSettingsController : Node
         // have been audited first. Read once at startup.
         Register("Nebula/config/threading/per_world_thread_group", false, new(){
             {"type", (int)Variant.Type.Bool},
+        });
+
+        // Export worker threads per world. The per-peer export (each peer's tick packet) is the
+        // part of the server tick that grows fastest with player count and is independent per
+        // peer, so N workers plus the tick thread build packets on N+1 threads. 0 keeps it on
+        // the tick thread. Output is byte-identical either way; the setting changes CPU time,
+        // not behavior. Size it to the cores the server can spare (3 on a 4-vCPU host). Read
+        // once at startup.
+        Register("Nebula/config/threading/export_workers", 0, new(){
+            {"type", (int)Variant.Type.Int},
+            {"hint", (int)PropertyHint.Range},
+            {"hint_string", "0,16,1"},
         });
 
         // ── Editor ───────────────────────────────────────────────────────

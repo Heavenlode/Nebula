@@ -554,14 +554,14 @@ namespace Nebula.Serialization
         {
             _peerState ??= new Dictionary<UUID, PeerSyncState>();
 
-            if (!_peerState.ContainsKey(peerId))
+            ref var state = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(_peerState, peerId, out bool exists);
+            if (!exists)
             {
-                _peerState[peerId] = PeerSyncState.Create();
+                // Expected from OnPeerPrepare; from NetworkSerialize it is the prepare-pass backstop.
+                ExportContext.NoteUnpreparedInsert("NetArray peer state");
+                state = PeerSyncState.Create();
             }
-
-            // Note: We need to get the value, modify it, and put it back since it's a struct
-            // This is a limitation of Dictionary with struct values
-            return ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(_peerState, peerId, out _);
+            return ref state;
         }
 
         /// <summary>
@@ -1663,6 +1663,16 @@ namespace Nebula.Serialization
                 Array.Clear(state.PendingDirty, 0, state.PendingDirty.Length);
                 state.LastSendTick = -1;
             }
+        }
+
+        /// <summary>
+        /// Creates the peer's sync state ahead of its first export, so NetworkSerialize only
+        /// ever finds an existing entry (see IStateSerializer.PreparePeer).
+        /// </summary>
+        public static void OnPeerPrepare(NetArray<T> obj, UUID peerId)
+        {
+            if (obj == null) return;
+            obj.GetOrCreatePeerState(peerId);
         }
 
         /// <summary>

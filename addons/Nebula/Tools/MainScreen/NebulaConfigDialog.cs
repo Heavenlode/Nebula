@@ -229,7 +229,7 @@ public partial class NebulaConfigDialog : AcceptDialog
         botBehaviorPicker.AddItem("(none)");
         botBehaviorNames.Add("");
 
-        foreach (var type in Nebula.Bots.BotRunner.DiscoverBehaviorTypes())
+        foreach (var type in Nebula.Utility.Tools.TypeDiscovery.Discover<Nebula.Bots.BotBehavior>())
         {
             botBehaviorPicker.AddItem(type.Name);
             botBehaviorNames.Add(type.Name);

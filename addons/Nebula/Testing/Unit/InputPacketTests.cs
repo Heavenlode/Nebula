@@ -18,7 +18,9 @@ namespace Nebula.Testing.Unit;
 [NebulaUnitTest]
 public class InputPacketTests
 {
-    private const int InputSize = 26;   // PlayerShipInput: 14 bools + a Vector3, Pack = 1
+    // Any fixed-size input struct will do; the encoding only ever sees a byte count. Deliberately
+    // not named after a game's struct - the addon must not reference game types, in prose either.
+    private const int InputSize = 14;
 
     private static byte[] Payload(byte seed)
     {

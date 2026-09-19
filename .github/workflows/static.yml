@@ -12,13 +12,20 @@ permissions:
   pages: write
   id-token: write
 
+# Redundant runs on the same ref are pointless once a newer commit exists, but a push to main is
+# never cancelled: its run is the one that deploys. The Pages lock this used to hold at workflow
+# level now sits on deploy-docs alone - as a workflow-level group it serialized every run against
+# every other, so a single wedged job stalled CI for every branch behind it.
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    # The suite runs in minutes. Anything approaching this is wedged, and without a ceiling it
+    # burns the full 6h runner limit before anyone finds out.
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,12 +33,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Setup Godot
         uses: chickensoft-games/setup-godot@v2
         with:
-          version: 4.5.0
+          version: 4.7.1
           use-dotnet: true
 
       - name: Restore dependencies
@@ -53,6 +60,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # GitHub Pages permits one deployment at a time, and a deploy in flight is never cancelled.
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -60,12 +72,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Setup Godot
         uses: chickensoft-games/setup-godot@v2
         with:
-          version: 4.5.0
+          version: 4.7.1
           use-dotnet: true
 
       - name: Build Nebula

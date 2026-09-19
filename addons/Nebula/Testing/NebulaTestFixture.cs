@@ -1,7 +1,5 @@
 #nullable enable
 using System;
-using System.Diagnostics;
-using System.IO;
 using Xunit;
 
 namespace Nebula.Testing;
@@ -15,6 +13,9 @@ public class NebulaTestFixture : IDisposable
 {
     private static readonly object _buildLock = new();
     private static bool _protocolBuilt = false;
+
+    /// <summary>Generous: a cold build imports the whole test project first.</summary>
+    private static readonly TimeSpan BuildTimeout = TimeSpan.FromMinutes(5);
 
     public NebulaTestFixture()
     {
@@ -37,15 +38,7 @@ public class NebulaTestFixture : IDisposable
 
     private void BuildProtocol()
     {
-        var godotBin = Environment.GetEnvironmentVariable("GODOT");
-        if (string.IsNullOrEmpty(godotBin))
-        {
-            throw new InvalidOperationException(
-                "GODOT environment variable is not set. " +
-                "Set it to the path of your Godot executable.");
-        }
-
-        var testProjectPath = FindTestProjectPath();
+        var testProjectPath = HeadlessGodot.FindTestProjectPath();
         if (testProjectPath == null)
         {
             throw new InvalidOperationException(
@@ -53,65 +46,26 @@ public class NebulaTestFixture : IDisposable
                 "Make sure you're running tests from the correct directory.");
         }
 
-        var startInfo = new ProcessStartInfo
-        {
-            FileName = godotBin,
-            Arguments = $"--path \"{testProjectPath}\" --headless res://addons/Nebula/Testing/ProtocolBuilder/ProtocolBuilder.tscn",
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true,
-            WorkingDirectory = testProjectPath
-        };
+        var result = HeadlessGodot.Run(
+            $"--path \"{testProjectPath}\" --headless res://addons/Nebula/Testing/ProtocolBuilder/ProtocolBuilder.tscn",
+            BuildTimeout,
+            testProjectPath);
 
-        using var process = new Process { StartInfo = startInfo };
-        process.Start();
-
-        var output = process.StandardOutput.ReadToEnd();
-        var stderr = process.StandardError.ReadToEnd();
-        
-        process.WaitForExit();
-
-        if (process.ExitCode != 0)
+        if (result.ExitCode != 0)
         {
             throw new InvalidOperationException(
-                $"Protocol build failed with exit code {process.ExitCode}.\n" +
-                $"Output:\n{output}\n" +
-                $"Stderr:\n{stderr}");
+                $"Protocol build failed with exit code {result.ExitCode}.\n" +
+                $"Output:\n{result.StandardOutput}\n" +
+                $"Stderr:\n{result.StandardError}");
         }
 
-        if (!output.Contains("[PROTOCOL_BUILD_SUCCESS]"))
+        if (!result.StandardOutput.Contains("[PROTOCOL_BUILD_SUCCESS]"))
         {
             throw new InvalidOperationException(
                 $"Protocol build did not report success.\n" +
-                $"Output:\n{output}\n" +
-                $"Stderr:\n{stderr}");
+                $"Output:\n{result.StandardOutput}\n" +
+                $"Stderr:\n{result.StandardError}");
         }
-    }
-
-    private static string? FindTestProjectPath()
-    {
-        // Try to find from base directory
-        var dir = AppDomain.CurrentDomain.BaseDirectory;
-        while (!string.IsNullOrEmpty(dir))
-        {
-            var projectFile = Path.Combine(dir, "project.godot");
-            if (File.Exists(projectFile))
-            {
-                return dir;
-            }
-            dir = Path.GetDirectoryName(dir);
-        }
-
-        // Fallback - try current directory
-        var workspaceRoot = Environment.CurrentDirectory;
-        var testPath = Path.Combine(workspaceRoot, "test");
-        if (Directory.Exists(testPath) && File.Exists(Path.Combine(testPath, "project.godot")))
-        {
-            return testPath;
-        }
-
-        return null;
     }
 
     public void Dispose()
@@ -129,4 +83,3 @@ public class NebulaTestFixture : IDisposable
 public class NebulaTestCollection : ICollectionFixture<NebulaTestFixture>
 {
 }
-

@@ -1,8 +1,6 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -19,6 +17,16 @@ public class NebulaUnitTests
     private static List<string>? _cachedTestNames;
     private static readonly object _lock = new();
     private static bool _hasRun = false;
+
+    /// <summary>
+    /// The whole in-engine suite runs in this one spawn, so the budget covers every test at once.
+    /// Its job is to turn a wedged suite into a failure with output attached, well inside the CI
+    /// job limit, rather than a run that stops printing and is killed hours later.
+    /// </summary>
+    private static readonly TimeSpan RunTimeout = TimeSpan.FromMinutes(10);
+
+    /// <summary>Discovery only reflects over the assembly and quits; it never runs a test.</summary>
+    private static readonly TimeSpan DiscoverTimeout = TimeSpan.FromMinutes(5);
 
     /// <summary>
     /// Discovers test names by spawning Godot with --discover flag.
@@ -68,38 +76,20 @@ public class NebulaUnitTests
     private static List<string> DiscoverTests()
     {
         var tests = new List<string>();
-        var godotBin = Environment.GetEnvironmentVariable("GODOT");
-        
-        if (string.IsNullOrEmpty(godotBin))
-        {
-            // Return empty list - tests will fail with clear message
-            return tests;
-        }
 
-        var testProjectPath = FindTestProjectPath();
+        var testProjectPath = HeadlessGodot.FindTestProjectPath();
         if (testProjectPath == null)
         {
             return tests;
         }
 
-        var startInfo = new ProcessStartInfo
-        {
-            FileName = godotBin,
-            Arguments = $"--path \"{testProjectPath}\" --headless res://addons/Nebula/Testing/Unit/TestRunnerNode.tscn --discover",
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true
-        };
-
         try
         {
-            using var process = new Process { StartInfo = startInfo };
-            process.Start();
-            var output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
+            var result = HeadlessGodot.Run(
+                $"--path \"{testProjectPath}\" --headless res://addons/Nebula/Testing/Unit/TestRunnerNode.tscn --discover",
+                DiscoverTimeout);
 
-            foreach (var line in output.Split('\n'))
+            foreach (var line in result.StandardOutput.Split('\n'))
             {
                 if (line.StartsWith("[TEST]"))
                 {
@@ -119,36 +109,19 @@ public class NebulaUnitTests
     private static Dictionary<string, TestResult> RunAllTests()
     {
         var results = new Dictionary<string, TestResult>();
-        var godotBin = Environment.GetEnvironmentVariable("GODOT");
 
-        if (string.IsNullOrEmpty(godotBin))
-        {
-            throw new Exception("GODOT environment variable is not set");
-        }
-
-        var testProjectPath = FindTestProjectPath();
+        var testProjectPath = HeadlessGodot.FindTestProjectPath();
         if (testProjectPath == null)
         {
             throw new Exception("Could not find test project path (project.godot)");
         }
 
-        var startInfo = new ProcessStartInfo
-        {
-            FileName = godotBin,
-            Arguments = $"--path \"{testProjectPath}\" --headless res://addons/Nebula/Testing/Unit/TestRunnerNode.tscn",
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true
-        };
-
-        using var process = new Process { StartInfo = startInfo };
-        process.Start();
-        var output = process.StandardOutput.ReadToEnd();
-        process.WaitForExit();
+        var run = HeadlessGodot.Run(
+            $"--path \"{testProjectPath}\" --headless res://addons/Nebula/Testing/Unit/TestRunnerNode.tscn",
+            RunTimeout);
 
         // Parse results
-        foreach (var line in output.Split('\n'))
+        foreach (var line in run.StandardOutput.Split('\n'))
         {
             if (line.StartsWith("[PASS]"))
             {
@@ -172,32 +145,18 @@ public class NebulaUnitTests
             }
         }
 
+        // A run that printed no verdict at all crashed before the suite started - a protocol
+        // mismatch, a load error. Every RunTest would otherwise report the same misleading
+        // "was not found in Godot output" with nothing to go on.
+        if (results.Count == 0)
+        {
+            throw new Exception(
+                $"The in-engine suite reported no results (exit code {run.ExitCode}).\n" +
+                $"Output:\n{run.StandardOutput}\n" +
+                $"Stderr:\n{run.StandardError}");
+        }
+
         return results;
-    }
-
-    private static string? FindTestProjectPath()
-    {
-        // Try to find from base directory
-        var dir = AppDomain.CurrentDomain.BaseDirectory;
-        while (!string.IsNullOrEmpty(dir))
-        {
-            var projectFile = Path.Combine(dir, "project.godot");
-            if (File.Exists(projectFile))
-            {
-                return dir;
-            }
-            dir = Path.GetDirectoryName(dir);
-        }
-
-        // Fallback - try current directory
-        var workspaceRoot = Environment.CurrentDirectory;
-        var testPath = Path.Combine(workspaceRoot, "test");
-        if (Directory.Exists(testPath) && File.Exists(Path.Combine(testPath, "project.godot")))
-        {
-            return testPath;
-        }
-
-        return null;
     }
 
     private class TestResult
@@ -206,5 +165,3 @@ public class NebulaUnitTests
         public string? ErrorMessage { get; set; }
     }
 }
-
-

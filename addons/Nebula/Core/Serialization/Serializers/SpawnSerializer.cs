@@ -96,7 +96,7 @@ namespace Nebula.Serialization.Serializers
             public List<NetworkController> Nested;
         }
 
-        private readonly LanePending[] _lanePending;
+        private LanePending[] _lanePending;
 
         /// <summary>The calling lane's pending-commit slot.</summary>
         private ref LanePending Pending => ref _lanePending[ExportContext.CurrentLane];
@@ -128,14 +128,34 @@ namespace Nebula.Serialization.Serializers
         public SpawnSerializer(NetworkController controller)
         {
             netController = controller;
-            _lanePending = new LanePending[ExportContext.LaneCount];
-            for (int lane = 0; lane < _lanePending.Length; lane++)
-            {
-                _lanePending[lane].Nested = new List<NetworkController>(64);
-            }
+            EnsureLaneScratch();
         }
 
-        public void Begin() { }
+        public void Begin() => EnsureLaneScratch();
+
+        /// <summary>
+        /// Sizes the per-lane scratch to the current lane count. Read at construction AND on every
+        /// Begin, which is the tick's serial prologue, because a node can be built before the world
+        /// that exports it knows how many lanes it will use - <see cref="NetPropertiesSerializer"/>
+        /// sizes its own memo the same way and for the same reason. Allocates only when the count
+        /// actually changes, which is once.
+        /// </summary>
+        private void EnsureLaneScratch()
+        {
+            var lanes = ExportContext.LaneCount;
+            if (_lanePending != null && _lanePending.Length == lanes) return;
+
+            var grown = new LanePending[lanes];
+            for (int lane = 0; lane < grown.Length; lane++)
+            {
+                // Existing lanes carry their list over rather than regrowing one: Begin runs in
+                // the tick's serial prologue, with no lane exporting, so reuse is safe here.
+                grown[lane].Nested = _lanePending != null && lane < _lanePending.Length
+                    ? _lanePending[lane].Nested
+                    : new List<NetworkController>(64);
+            }
+            _lanePending = grown;
+        }
 
         public void Cleanup()
         {

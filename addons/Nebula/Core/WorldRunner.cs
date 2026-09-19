@@ -3472,6 +3472,13 @@ namespace Nebula
         /// </summary>
         internal void ExportState(List<NetPeer> peers)
         {
+            // This world's lane count, before the Begin pass below sizes every serializer's
+            // per-lane scratch to it. Hoisted above that pass rather than read at the point the
+            // workers are created further down: by then Begin has already run for this tick, and
+            // the workers would export on lanes the scratch was never sized for.
+            var workerCount = ExportWorkerCountOverrideForTests ?? NetRunner.ExportWorkerCount;
+            ExportContext.EnsureLaneCount(workerCount + 1);
+
             _tickPeerIds.Clear();
             for (var i = 0; i < peers.Count; i++)
             {
@@ -3527,7 +3534,6 @@ namespace Nebula
             _tickPayloadBudget = payloadBudget;
             _exportPeerCursor = -1;
             _exportLaneJob ??= ExportLane;
-            var workerCount = ExportWorkerCountOverrideForTests ?? NetRunner.ExportWorkerCount;
             if (_exportWorkers == null && workerCount > 0)
             {
                 _exportWorkers = new ExportWorkers(workerCount, WorldId, _profiler != null);

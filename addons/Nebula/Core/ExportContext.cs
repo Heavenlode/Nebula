@@ -27,7 +27,8 @@ namespace Nebula
         /// </summary>
         public static int CurrentLane => _current?.Lane ?? 0;
 
-        private static int? _laneCount;
+        /// <summary>Backing store for <see cref="LaneCount"/>; 0 until first read seeds it.</summary>
+        private static int _laneCount;
 
         /// <summary>
         /// Number of lanes that can export at once: the export workers
@@ -37,8 +38,35 @@ namespace Nebula
         /// </summary>
         public static int LaneCount
         {
-            get => _laneCount ??= NetRunner.ExportWorkerCount + 1;
+            get
+            {
+                var count = _laneCount;
+                if (count == 0) _laneCount = count = NetRunner.ExportWorkerCount + 1;
+                return count;
+            }
             set => _laneCount = value;
+        }
+
+        /// <summary>
+        /// Raises <see cref="LaneCount"/> to cover a world that exports on <paramref name="lanes"/>
+        /// lanes, called from the tick's serial prologue before the Begin pass that sizes the
+        /// serializers' scratch. A world's worker count is its own (WorldRunner takes an override),
+        /// so it can exceed the global setting this property is otherwise seeded from - and a lane
+        /// number no serializer sized its scratch for is an index out of range deep inside the
+        /// export, not a diagnosable error. Never lowers it: scratch already sized wider stays
+        /// valid, and another world may still be exporting on those lanes.
+        ///
+        /// Worlds tick on their own threads, so the raise is a CAS loop rather than a compare and
+        /// a store: two worlds starting together must not leave the smaller of the two counts.
+        /// </summary>
+        internal static void EnsureLaneCount(int lanes)
+        {
+            while (true)
+            {
+                var current = LaneCount;
+                if (lanes <= current) return;
+                if (System.Threading.Interlocked.CompareExchange(ref _laneCount, lanes, current) == current) return;
+            }
         }
 
         /// <summary>Binds <paramref name="ctx"/> to this thread around <paramref name="job"/>.</summary>
